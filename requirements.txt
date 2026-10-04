@@ -1,8 +1,11 @@
 langgraph
-langchain-chroma
-langchain-huggingface
 pydantic
 python-dotenv
 langchain-groq
 fastapi
 uvicorn
+langchain-chroma
+langchain-huggingface
+sentence-transformers
+sqlalchemy
+psycopg2-binary
