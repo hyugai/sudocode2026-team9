@@ -13,12 +13,12 @@ class LocalActor(Actor):
       returns EXECUTED directly so the response text flows through.
     """
 
-    # Actions that don't require a tool call
     _NON_TOOL_ACTIONS = {
         "respond_to_customer",
         "clarify",
         "acknowledge",
         "end_call",
+        "transfer_to_human",
     }
 
     async def act(self, context: TurnContext) -> ActionResult:

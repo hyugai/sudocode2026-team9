@@ -16,6 +16,10 @@ class LLMPersister(Persister):
         self.model = os.getenv("MODEL_NAME", "openai/gpt-oss-120b")
 
     async def persist(self, context: TurnContext) -> None:
+        if os.environ.get("IS_EVAL") == "true":
+            print("[PERSIST] Skipped during evaluation run.")
+            return
+
         print(f"[PERSIST] Checking messages length: {len(context.state.messages)}")
         if len(context.state.messages) < 2:
             print("[PERSIST] Not enough messages, skipping persist.")

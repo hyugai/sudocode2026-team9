@@ -22,15 +22,36 @@ AVAILABLE_TOOLS = [
         "name": "order.create",
         "description": "Create a new order for the customer.",
         "parameters": {
+
+            "customer_phone": "String, customer's phone number",
             "sku": "String, the product SKU code to order (e.g., 'SKU-AP-Y')",
-            "price_vnd": "Integer, the agreed price in VND (e.g., 5200000)"
+            "qty": "Integer, quantity to order",
+            "price_vnd": "Integer, the agreed price in VND (e.g., 5200000)",
+            "payment": "String, payment method (e.g., 'COD')",
+            "address": "String, delivery address"
         }
     },
     {
-        "name": "catalog.check_stock",
+        "name": "inventory.check",
         "description": "Check inventory for a product.",
         "parameters": {
             "sku": "String, the product SKU code"
+        }
+    },
+    {
+        "name": "pricing.get_quote",
+        "description": "Get the final price and active promotions for a product.",
+        "parameters": {
+            "sku": "String, the product SKU code",
+            "qty": "Integer, quantity (default 1)"
+        }
+    },
+    {
+        "name": "schedule.callback",
+        "description": "Schedule a callback for a customer who needs time to think.",
+        "parameters": {
+            "customer_phone": "String, customer's phone number",
+            "callback_at": "String, callback time (e.g., '2026-10-17T10:00')"
         }
     }
 ]
@@ -48,6 +69,16 @@ class LLMPlanner(Planner):
         self.llm = ChatGroq(temperature=0.3, model_name=model_name, groq_api_key=api_key)
         self.structured_llm = self.llm.with_structured_output(ActionPlanSchema)
         
+    def _format_steps(self, steps) -> str:
+        if not steps:
+            return "No previous actions in this turn."
+        formatted = []
+        for i, step in enumerate(steps, 1):
+            tool = step.plan.tool_name or step.plan.action
+            output = step.action_result.output if step.action_result else "No output"
+            formatted.append(f"Step {i}: Called '{tool}' with args {step.plan.arguments}. Result: {json.dumps(output, ensure_ascii=False)}")
+        return "\n".join(formatted)
+
     async def plan(self, context: TurnContext) -> ActionPlan:
         intent = context.perception.intent if context.perception else "unknown"
         transcript = context.perception.transcript if context.perception else ""
@@ -81,6 +112,9 @@ Call Brief:
 -- RETRIEVED KNOWLEDGE (RAG) --
 {json.dumps(knowledge, ensure_ascii=False, indent=2)}
 
+-- RECENT AGENT ACTIONS IN THIS TURN --
+{self._format_steps(context.steps)}
+
 -- AVAILABLE TOOLS --
 You can use the following tools if the customer requests an action (like placing an order or checking stock):
 {json.dumps(AVAILABLE_TOOLS, ensure_ascii=False, indent=2)}
@@ -90,10 +124,11 @@ You can use the following tools if the customer requests an action (like placing
    - 'respond_to_customer': If you just need to talk or answer a question.
    - 'call_api': If you need to trigger a system action (like creating an order). You MUST provide `tool_name` and `arguments`.
    - 'transfer_to_human': If the request is beyond your capability.
-2. ALWAYS provide a `response_text` naturally and politely in Vietnamese, even if you are calling an API (e.g., "Dạ vâng, em đang lên đơn cho chị...").
+9. ALWAYS provide a `response_text` naturally and politely in Vietnamese, even if you are calling an API (e.g., "Dạ vâng, em đang lên đơn cho chị...").
 3. USE the CRM Profile (like customer's name, honorific, past orders) to personalize your greeting.
 4. Base your pricing and policy answers STRICTLY on the RETRIEVED KNOWLEDGE. Do not hallucinate information.
-5. If the customer agrees to buy, use action='call_api', tool_name='order.create', and extract the correct SKU and price from the context.
+5. IMPORTANT ORDERING RULE: If the customer agrees to buy, you MUST collect their delivery address and payment method BEFORE calling `order.create`. If they haven't provided them, ask for them (action='respond_to_customer'). Once you have SKU, price, address, and payment method, use action='call_api' and tool_name='order.create'.
+6. If the customer wants to think about it and asks you to call back later, use tool_name='schedule.callback'.
 
 Formulate your action plan:"""
 
