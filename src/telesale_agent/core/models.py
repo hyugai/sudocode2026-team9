@@ -51,6 +51,7 @@ class Perception:
     intent: str = "unknown"
     intents: list[str] = field(default_factory=list)
     entities: JsonObject = field(default_factory=dict)
+    memory_deltas: JsonObject = field(default_factory=dict)
     confidence: float = 1.0
 
 
@@ -137,10 +138,13 @@ class ConversationState:
     conversation_id: str
     turn_number: int = 0
     identity: CustomerIdentity | None = None
+    customer_profile: JsonObject | None = None
+    past_history: JsonObject | None = None
     retrieved_data: RetrievedContext | None = None
     call_brief: CallBrief | None = None
     messages: list[Message] = field(default_factory=list)
     working_memory: JsonObject = field(default_factory=dict)
+    memory_deltas: JsonObject = field(default_factory=dict)
 
 
 @dataclass(slots=True)

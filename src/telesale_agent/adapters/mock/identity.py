@@ -9,5 +9,5 @@ class HintIdentityResolver(IdentityResolver):
         return CustomerIdentity(
             customer_id=hint,
             confidence=0.9,
-            profile={"name": "Demo User"},
+            profile={},
         )

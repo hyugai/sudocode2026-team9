@@ -9,41 +9,51 @@ graph TD
     classDef initPhase fill:#fff2cc,stroke:#d6b656,stroke-width:2px;
     classDef turnPhase fill:#d4f1f4,stroke:#05445e,stroke-width:2px;
 
-    SessionStart(("Start Session")) --> Identity
-    
+    SessionStart(("Start Session")) --> RouteStart
+
     subgraph Init ["Session Initialization (Once per session)"]
         direction TB
         Identity["1. Resolve Identity"]
-        Retrieve["2. Retrieve (Fetch User Data)"]
+        CRM["2. Load CRM Profile"]
+        Precompute["3. Precompute Call Brief"]
         
-        Identity --> Retrieve
+        Identity --> CRM
+        CRM --> Precompute
     end
 
-    User(("User Input")) -->|Message| Perceive
+    RouteStart{{"New Session?"}}
+    RouteStart -->|Yes| Identity
+    RouteStart -->|Known| ASR
+
+    User(("User Input")) -->|Audio/Text| ASR
 
     subgraph TurnLoop ["Turn Loop (Per message)"]
         direction TB
-        Perceive["3. Perceive (Recognize Intent)"]
-        CallBrief["4. Call Brief (Context Summary)"]
-        Plan["5. Plan (Decide Action)"]
-        Guardrail["6. Guardrail (Safety Check)"]
-        Act["7. Act (Execute Tool)"]
-        Observe["8. Observe (Observe Result)"]
-        Persist["9. Persist (Save State)"]
+        ASR["3.5. ASR (Audio to Text)"]
+        Perceive["4. Perceive (Recognize Intent)"]
+        RAG["5. Retrieve (Fetch Knowledge)"]
+        CallBrief["6. Call Brief (Context Summary)"]
+        Plan["7. Plan (Decide Action)"]
+        Guardrail["8. Guardrail (Safety Check)"]
+        Act["9. Act (Execute Tool)"]
+        Observe["10. Observe (Result)"]
+        Persist["11. Persist (Save State)"]
 
-        Perceive --> CallBrief
+        ASR --> Perceive
+        Perceive --> RAG
+        RAG --> CallBrief
         CallBrief --> Plan
         Plan --> Guardrail
         Guardrail --> Act
         Act --> Observe
         Observe -.->|"Should continue?"| Plan
-        Observe -->|"Done/Failed"| Persist
+        Observe -->|"Done / Await Input"| Persist
     end
 
-    Retrieve -->|Pass Initial Data| TurnLoop
+    Precompute -->|Pass Initial Data| TurnLoop
 
-    class Identity,Retrieve initPhase;
-    class Perceive,CallBrief,Plan,Guardrail,Act,Observe,Persist turnPhase;
+    class Identity,CRM,Precompute initPhase;
+    class ASR,Perceive,RAG,CallBrief,Plan,Guardrail,Act,Observe,Persist turnPhase;
 ```
 
 ### 1. Resolve Identity

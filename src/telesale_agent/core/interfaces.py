@@ -4,7 +4,7 @@ This module defines the Ports (Protocols) that the core AgentHarness interacts w
 Implementations (Adapters) must satisfy these protocols.
 """
 
-from typing import Protocol
+from typing import Protocol, Any
 
 from telesale_agent.core.models import (
     ActionPlan,
@@ -17,6 +17,15 @@ from telesale_agent.core.models import (
     RetrievedContext,
     TurnContext,
 )
+
+
+class ASREngine(Protocol):
+    async def transcribe(self, context: TurnContext) -> str | None: ...
+
+
+class CRMRetriever(Protocol):
+    async def retrieve_profile(self, context: TurnContext) -> dict[str, Any]: ...
+    async def precompute_brief(self, context: TurnContext) -> dict[str, Any]: ...
 
 
 class Perceiver(Protocol):
