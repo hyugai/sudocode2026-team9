@@ -1,4 +1,6 @@
 langgraph
+langchain-chroma
+langchain-huggingface
 pydantic
 python-dotenv
 langchain-groq
