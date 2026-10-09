@@ -1,11 +1,13 @@
 import os
 from mcp.server.fastmcp import FastMCP
 from typing import Any
+import sys
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 # Import existing tool functions
-from telesale_agent.tools.crm import crm_retrieve_profile
-from telesale_agent.tools.catalog import catalog_search, inventory_check, pricing_get_quote
-from telesale_agent.tools.order import order_create, order_status
+from mcp_servers.tools.crm import crm_get_customer
+from mcp_servers.tools.catalog import catalog_search, inventory_check, pricing_get_quote
+from mcp_servers.tools.order import order_create, order_status
 
 # Initialize FastMCP Server
 mcp = FastMCP("DB-Server")
@@ -13,7 +15,7 @@ mcp = FastMCP("DB-Server")
 @mcp.tool()
 def retrieve_customer_profile(phone: str = None, zalo_id: str = None, fb_id: str = None) -> dict[str, Any]:
     """Retrieve customer profile and history by phone or social ID."""
-    return crm_retrieve_profile(phone=phone, zalo_id=zalo_id, fb_id=fb_id)
+    return crm_get_customer(phone=phone, zalo_id=zalo_id, fb_id=fb_id)
 
 @mcp.tool()
 def search_catalog(query: str = None, category: str = None, sku: str = None, max_price_vnd: int = None) -> dict[str, Any]:
@@ -26,19 +28,19 @@ def check_inventory(sku: str, on: str = None) -> dict[str, Any]:
     return inventory_check(sku=sku, on=on)
 
 @mcp.tool()
-def get_pricing_quote(cart_skus: list[str], cart_categories: list[str], region: str) -> dict[str, Any]:
+def get_pricing_quote(sku: str, qty: int = 1, basket_skus: list[str] = None, region: str = None) -> dict[str, Any]:
     """Get active promotions and pricing rules."""
-    return pricing_get_quote(cart_skus=cart_skus, cart_categories=cart_categories, region=region)
+    return pricing_get_quote(sku=sku, qty=qty, basket_skus=basket_skus)
 
 @mcp.tool()
-def create_new_order(customer_id: str, sku: str, price_vnd: int, delivery_address: str, payment_method: str) -> dict[str, Any]:
+def create_new_order(customer_phone: str, sku: str, price_vnd: int, qty: int, payment_method: str = "COD", address: str = None) -> dict[str, Any]:
     """Create a new order in the system."""
-    return order_create(customer_id=customer_id, sku=sku, price_vnd=price_vnd, delivery_address=delivery_address, payment_method=payment_method)
+    return order_create(customer_phone=customer_phone, sku=sku, qty=qty, price_vnd=price_vnd, payment=payment_method, address=address)
 
 @mcp.tool()
-def check_order_status(order_id: str) -> dict[str, Any]:
+def check_order_status(order_id: str = None, customer_phone: str = None) -> dict[str, Any]:
     """Check the status of an existing order."""
-    return order_status(order_id=order_id)
+    return order_status(order_id=order_id, customer_phone=customer_phone)
 
 if __name__ == "__main__":
     mcp.run()

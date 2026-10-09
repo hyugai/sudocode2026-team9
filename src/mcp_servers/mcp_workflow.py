@@ -1,21 +1,23 @@
 import os
 from mcp.server.fastmcp import FastMCP
 from typing import Any
+import sys
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 # Import existing workflow tools
-from telesale_agent.tools.workflow import schedule_callback, escalate_to_human
+from mcp_servers.tools.workflow import schedule_callback, handoff_transfer
 
 mcp = FastMCP("Workflow-Server")
 
 @mcp.tool()
-def mcp_schedule_callback(customer_id: str, reason: str, preferred_time: str) -> dict[str, Any]:
+def mcp_schedule_callback(customer_phone: str, callback_at: str, note: str = None) -> dict[str, Any]:
     """Schedule a callback for the customer."""
-    return schedule_callback(customer_id=customer_id, reason=reason, preferred_time=preferred_time)
+    return schedule_callback(customer_phone=customer_phone, callback_at=callback_at, note=note)
 
 @mcp.tool()
-def mcp_escalate_to_human(customer_id: str, reason: str, urgency: str) -> dict[str, Any]:
+def mcp_escalate_to_human(reason: str, customer_id: str, summary: str) -> dict[str, Any]:
     """Escalate the conversation to a human agent."""
-    return escalate_to_human(customer_id=customer_id, reason=reason, urgency=urgency)
+    return handoff_transfer(brief={"reason": reason, "customer_id": customer_id, "summary": summary})
 
 if __name__ == "__main__":
     mcp.run()
