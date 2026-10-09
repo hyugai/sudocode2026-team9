@@ -9,3 +9,4 @@ langchain-huggingface
 sentence-transformers
 sqlalchemy
 psycopg2-binary
+mcp

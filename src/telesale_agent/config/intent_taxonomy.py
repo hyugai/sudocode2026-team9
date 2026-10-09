@@ -80,6 +80,24 @@ INTENT_TAXONOMY: list[IntentDef] = [
         skip_retrieval=True,
     ),
     IntentDef(
+        name="greeting",
+        description="Customer greets the agent or initiates the call.",
+        examples=["Alo", "Chào em", "Ai đấy?"],
+        skip_retrieval=True,
+    ),
+    IntentDef(
+        name="acknowledge",
+        description="Customer acknowledges what the agent said without asking a new question.",
+        examples=["Ừ em", "Dạ", "Chị nghe đây", "Ok em"],
+        skip_retrieval=True,
+    ),
+    IntentDef(
+        name="out_of_domain",
+        description="Customer asks something completely unrelated to the shop, products, or services (e.g. general knowledge, chit-chat).",
+        examples=["Thời tiết hôm nay thế nào?", "Tổng thống Mỹ là ai?", "Em ăn cơm chưa?"],
+        skip_retrieval=True,
+    ),
+    IntentDef(
         name="unknown",
         description="Cannot determine intent from the utterance.",
         examples=[],

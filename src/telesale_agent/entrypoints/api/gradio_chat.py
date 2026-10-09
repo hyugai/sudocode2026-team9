@@ -8,12 +8,11 @@ import dataclasses
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "..")))
 
-from telesale_agent.bootstrap import build_default_harness
+from telesale_agent.bootstrap import build_default_harness, build_deepagent_harness_async
 from telesale_agent.core.models import TurnInput, ConversationState
-from telesale_agent.core.langgraph_pipeline import LangGraphAgentHarness
 
 # Khởi tạo Global Instances
-harness: LangGraphAgentHarness = build_default_harness()
+harness = None
 state = ConversationState(conversation_id="gradio_test_session")
 
 def format_json(obj) -> str:
@@ -31,8 +30,12 @@ def format_json(obj) -> str:
 
 async def chat_interaction(user_message, history):
     """Hàm xử lý khi user gửi tin nhắn."""
-    global state
+    global state, harness
     
+    if harness is None:
+        print("Khởi tạo kết nối MCP Servers lần đầu (Chỉ chạy 1 lần)...")
+        harness = await build_deepagent_harness_async()
+        
     # 1. Tạo input
     input_data = TurnInput(
         conversation_id=state.conversation_id,

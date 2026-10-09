@@ -21,10 +21,12 @@ class SupabaseClient:
         return cls._instance
         
     def _initialize(self, db_url: str = None):
+        from dotenv import load_dotenv
+        load_dotenv()
         if not db_url:
-            encoded_password = quote_plus("2+#TpJd3RgT2WW/")
-            default_url = f"postgresql+psycopg2://postgres:{encoded_password}@db.bgglqoxddueswfzjmpkh.supabase.co:5432/postgres"
-            db_url = os.environ.get("DATABASE_URL", default_url)
+            db_url = os.environ.get("DATABASE_URL")
+            if not db_url:
+                raise ValueError("DATABASE_URL is not set in .env")
             
         # Ensure that if environment variable uses postgresql:// it is replaced by postgresql+psycopg2://
         if db_url.startswith("postgresql://"):
@@ -206,6 +208,30 @@ class SupabaseClient:
                 "orders": orders_data,
                 "sessions": sessions_data
             }
+
+    def create_customer(self, phone: str) -> str:
+        """Tạo khách hàng mới nếu chưa có, auto-generate mã CXXX."""
+        with self.get_session() as session:
+            # Tìm mã CXXX lớn nhất
+            last_customer = session.query(Customer).filter(Customer.customer_id.like("C%")).order_by(Customer.customer_id.desc()).first()
+            if last_customer and len(last_customer.customer_id) >= 4:
+                try:
+                    last_num = int(last_customer.customer_id[1:])
+                    new_id = f"C{last_num + 1:03d}"
+                except ValueError:
+                    new_id = "C001"
+            else:
+                new_id = "C001"
+                
+            new_customer = Customer(
+                customer_id=new_id,
+                phone=phone,
+                name="Khách hàng mới",
+                honorific="Anh/Chị"
+            )
+            session.add(new_customer)
+            session.commit()
+            return new_id
 
     def add_customer_session(self, phone: str, summary: str, outcome: str = "completed"):
         import uuid

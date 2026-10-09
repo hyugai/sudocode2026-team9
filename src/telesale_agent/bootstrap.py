@@ -36,3 +36,35 @@ def build_default_harness() -> LangGraphAgentHarness:
         .with_observer(BasicObserver())
         .with_persister(LLMPersister())
         .build())
+
+def build_deepagent_harness():
+    """Build a harness that uses the new deepagents loop."""
+    load_dotenv()
+    from telesale_agent.core.deepagent_pipeline import DeepAgentHarness
+    
+    return DeepAgentHarness(
+        asr=MockASREngine(),
+        perceive=LLMPerceiver(),
+        identity=HintIdentityResolver(),
+        crm=SupabaseCRMRetriever(),
+        retrieve=VectorDBRetriever(),
+        call_brief=LLMCallBriefBuilder()
+    )
+
+async def build_deepagent_harness_async():
+    """Build and initialize a harness that uses MCP Clients."""
+    load_dotenv()
+    from telesale_agent.core.deepagent_pipeline import DeepAgentHarness
+    
+    harness = DeepAgentHarness(
+        asr=MockASREngine(),
+        perceive=LLMPerceiver(),
+        identity=HintIdentityResolver(),
+        crm=SupabaseCRMRetriever(),
+        retrieve=VectorDBRetriever(),
+        call_brief=LLMCallBriefBuilder()
+    )
+    
+    # Initialize MCP clients and keep them open
+    await harness.__aenter__()
+    return harness

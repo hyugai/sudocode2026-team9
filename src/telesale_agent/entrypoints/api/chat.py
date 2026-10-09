@@ -7,10 +7,24 @@ import os
 # Add src to Python path so we can import the agent
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "..")))
 
-from telesale_agent.bootstrap import build_default_harness
+from telesale_agent.bootstrap import build_default_harness, build_deepagent_harness_async
 from telesale_agent.core.models import TurnInput, ConversationState
+from contextlib import asynccontextmanager
 
-app = FastAPI(title="Telesale Agent API")
+# Global harness reference
+harness = None
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    global harness
+    print("🚀 Khởi tạo kết nối MCP Servers cho API Backend...")
+    harness = await build_deepagent_harness_async()
+    yield
+    print("🛑 Đóng kết nối MCP Servers...")
+    if harness:
+        await harness.__aexit__(None, None, None)
+
+app = FastAPI(title="Telesale Agent API", lifespan=lifespan)
 
 # Allow CORS for local dev
 app.add_middleware(
@@ -20,8 +34,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-harness = build_default_harness()
 
 # Simple in-memory session store for the UI
 sessions = {}

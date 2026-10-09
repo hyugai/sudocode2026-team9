@@ -17,6 +17,7 @@ from telesale_agent.tools.crm import TOOLS as _CRM
 from telesale_agent.tools.catalog import TOOLS as _CATALOG
 from telesale_agent.tools.order import TOOLS as _ORDER
 from telesale_agent.tools.workflow import TOOLS as _WORKFLOW
+from telesale_agent.tools.memory import TOOLS as _MEMORY
 
 # Master registry — BTC tool name → callable
 TOOL_REGISTRY: dict[str, Any] = {
@@ -24,6 +25,7 @@ TOOL_REGISTRY: dict[str, Any] = {
     **_CATALOG,
     **_ORDER,
     **_WORKFLOW,
+    **_MEMORY,
 }
 
 

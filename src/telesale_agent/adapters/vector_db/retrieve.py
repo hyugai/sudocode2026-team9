@@ -19,7 +19,7 @@ class VectorDBRetriever(Retriever):
         if db_dir is None:
             # Default to the dataset/chroma_db folder created by ingest script
             project_root = Path(__file__).resolve().parents[4]
-            db_dir = project_root / "dataset" / "chroma_db"
+            db_dir = project_root / "data" / "chroma_db"
             
         self.db_dir = str(db_dir)
         
