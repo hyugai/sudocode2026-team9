@@ -1,70 +1,62 @@
-"""Create a runnable harness by choosing one implementation for each stage."""
+"""Create the production Deep Agent harness."""
 
 import os
-from dotenv import load_dotenv
+from typing import Literal
 
-from telesale_agent.core.langgraph_pipeline import LangGraphAgentHarness
-from telesale_agent.core.builder import AgentHarnessBuilder
+from dotenv import load_dotenv
 
 from telesale_agent.adapters.mock.asr import MockASREngine
 from telesale_agent.adapters.llm.llm_perceive import LLMPerceiver
 from telesale_agent.adapters.mock.identity import HintIdentityResolver
 from telesale_agent.adapters.vector_db.retrieve import VectorDBRetriever
 from telesale_agent.adapters.llm.llm_call_brief import LLMCallBriefBuilder
-from telesale_agent.adapters.llm.llm_planner import LLMPlanner
-from telesale_agent.adapters.rules.pii_guardrail import PIIGuardrail
-from telesale_agent.adapters.crm import SupabaseCRMRetriever
-
-from telesale_agent.adapters.mock.act import LocalActor
-from telesale_agent.adapters.mock.observe import BasicObserver
+from telesale_agent.adapters.crm import PostgresCRMRetriever
+from telesale_agent.adapters.memory import (
+    FileCustomerMemoryRepository,
+    InMemoryCustomerMemoryRepository,
+    TurnMemoryPersister,
+)
 from telesale_agent.adapters.llm.llm_persist import LLMPersister
 
-def build_default_harness() -> LangGraphAgentHarness:
-    """Build a dependency-free harness for local development and tests using Builder."""
-    load_dotenv()
-    
-    return (AgentHarnessBuilder()
-        .with_asr(MockASREngine())
-        .with_perceiver(LLMPerceiver())
-        .with_identity_resolver(HintIdentityResolver())
-        .with_crm(SupabaseCRMRetriever())
-        .with_retriever(VectorDBRetriever())
-        .with_call_brief_builder(LLMCallBriefBuilder())
-        .with_planner(LLMPlanner())
-        .with_guardrail(PIIGuardrail())
-        .with_actor(LocalActor())
-        .with_observer(BasicObserver())
-        .with_persister(LLMPersister())
-        .build())
+MemoryMode = Literal["durable", "evaluation", "disabled"]
 
-def build_deepagent_harness():
-    """Build a harness that uses the new deepagents loop."""
+
+def build_deepagent_harness(memory_mode: MemoryMode = "durable"):
+    """Configure an unstarted Deep Agent harness for use with ``async with``."""
     load_dotenv()
     from telesale_agent.core.deepagent_pipeline import DeepAgentHarness
-    
+
+    model_name = (
+        os.environ.get("GROQ_MODEL")
+        or os.environ.get("MODEL_NAME")
+        or "openai/gpt-oss-20b"
+    )
+    durable_memory = FileCustomerMemoryRepository()
+    if memory_mode == "durable":
+        memory = durable_memory
+        persist = LLMPersister(memory)
+    elif memory_mode == "evaluation":
+        memory = InMemoryCustomerMemoryRepository(seed=durable_memory)
+        persist = TurnMemoryPersister(memory)
+    elif memory_mode == "disabled":
+        memory = InMemoryCustomerMemoryRepository()
+        persist = None
+    else:
+        raise ValueError(f"Unsupported memory_mode: {memory_mode}")
+
     return DeepAgentHarness(
         asr=MockASREngine(),
-        perceive=LLMPerceiver(),
+        perceive=LLMPerceiver(model_name=model_name),
         identity=HintIdentityResolver(),
-        crm=SupabaseCRMRetriever(),
+        crm=PostgresCRMRetriever(),
+        memory=memory,
         retrieve=VectorDBRetriever(),
-        call_brief=LLMCallBriefBuilder()
+        call_brief=LLMCallBriefBuilder(model_name=model_name),
+        persist=persist,
     )
 
-async def build_deepagent_harness_async():
+async def build_deepagent_harness_async(memory_mode: MemoryMode = "durable"):
     """Build and initialize a harness that uses MCP Clients."""
-    load_dotenv()
-    from telesale_agent.core.deepagent_pipeline import DeepAgentHarness
-    
-    harness = DeepAgentHarness(
-        asr=MockASREngine(),
-        perceive=LLMPerceiver(),
-        identity=HintIdentityResolver(),
-        crm=SupabaseCRMRetriever(),
-        retrieve=VectorDBRetriever(),
-        call_brief=LLMCallBriefBuilder()
-    )
-    
-    # Initialize MCP clients and keep them open
+    harness = build_deepagent_harness(memory_mode=memory_mode)
     await harness.__aenter__()
     return harness

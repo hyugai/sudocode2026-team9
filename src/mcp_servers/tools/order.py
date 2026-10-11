@@ -6,7 +6,7 @@ import uuid
 from datetime import date, timedelta
 from typing import Any
 
-from telesale_agent.tools.catalog import inventory_check, REFERENCE_DATE
+from mcp_servers.tools.catalog import inventory_check, REFERENCE_DATE
 
 
 def _today(on: str | None) -> date:

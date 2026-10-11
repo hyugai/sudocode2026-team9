@@ -7,7 +7,7 @@ import os
 # Add src to Python path so we can import the agent
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "..")))
 
-from telesale_agent.bootstrap import build_default_harness, build_deepagent_harness_async
+from telesale_agent.bootstrap import build_deepagent_harness_async
 from telesale_agent.core.models import TurnInput, ConversationState
 from contextlib import asynccontextmanager
 
@@ -60,6 +60,7 @@ async def chat_endpoint(req: ChatRequest):
         "intent": result.perception.intent if result.perception else "unknown",
         "retrieved_knowledge": result.retrieved.knowledge if result.retrieved else [],
         "crm_profile": result.state.customer_profile,
+        "customer_memory": result.state.customer_memory,
         "past_history": result.state.past_history,
         "steps": [
             {

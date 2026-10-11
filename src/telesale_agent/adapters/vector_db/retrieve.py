@@ -56,7 +56,7 @@ class VectorDBRetriever(Retriever):
                     "section": doc.metadata.get("Header 2", "") or doc.metadata.get("Header 1", "")
                 })
                 
-        # 2. Handle Product retrieval using Supabase Database (db_client)
+        # 2. Handle product retrieval using PostgreSQL (db_client)
         if "ask_product" in intents:
             from telesale_agent.adapters.db.client import db_client
             

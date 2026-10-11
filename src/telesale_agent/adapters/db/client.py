@@ -6,17 +6,17 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 from telesale_agent.adapters.db.models import (
-    Product, ProductVariant, Promotion, InventoryEvent, Customer, Order, CustomerSession
+    Product, ProductVariant, Promotion, InventoryEvent, Customer, Order
 )
 
-class SupabaseClient:
-    """Client kết nối và thực hiện các query database qua SQLAlchemy."""
+class PostgresClient:
+    """Client kết nối PostgreSQL và thực hiện query qua SQLAlchemy."""
     
     _instance = None
     
     def __new__(cls, db_url: str = None):
         if cls._instance is None:
-            cls._instance = super(SupabaseClient, cls).__new__(cls)
+            cls._instance = super(PostgresClient, cls).__new__(cls)
             cls._instance._initialize(db_url)
         return cls._instance
         
@@ -149,6 +149,35 @@ class SupabaseClient:
     # CRM QUERIES
     # =========================================================
 
+    @staticmethod
+    def _serialize_customer(customer):
+        orders_data = [{
+            "order_id": order.order_id,
+            "sku": order.sku,
+            "status": order.status,
+            "order_date": str(order.order_date),
+        } for order in customer.orders]
+
+        return {
+            "found": True,
+            "ambiguous": False,
+            "customer_id": customer.customer_id,
+            "name": customer.name,
+            "honorific": customer.honorific,
+            "phone": customer.phone,
+            "region": customer.region,
+            "attributes": customer.attributes or {},
+            "orders": orders_data,
+        }
+
+    def get_customer_by_id(self, customer_id: str):
+        """Retrieve one customer using the canonical CRM identifier."""
+        with self.get_session() as session:
+            customer = session.query(Customer).filter_by(customer_id=customer_id).first()
+            if customer is None:
+                return {"found": False, "orders": []}
+            return self._serialize_customer(customer)
+
     def get_customer(self, phone: str = None, zalo_id: str = None, fb_id: str = None):
         with self.get_session() as session:
             stmt = session.query(Customer)
@@ -160,12 +189,12 @@ class SupabaseClient:
             elif fb_id:
                 stmt = stmt.filter_by(fb_id=fb_id)
             else:
-                return {"found": False, "orders": [], "sessions": []}
+                return {"found": False, "orders": []}
                 
             customers = stmt.all()
             
             if len(customers) == 0:
-                return {"found": False, "orders": [], "sessions": []}
+                return {"found": False, "orders": []}
                 
             ambiguous = len(customers) > 1
             
@@ -178,36 +207,9 @@ class SupabaseClient:
                         "name": c.name,
                         "phone": c.phone
                     })
-                return {"found": True, "ambiguous": True, "candidates": candidates, "orders": [], "sessions": []}
+                return {"found": True, "ambiguous": True, "candidates": candidates, "orders": []}
             
-            # Trả về chi tiết customer duy nhất
-            c = customers[0]
-            orders_data = [{
-                "order_id": o.order_id,
-                "sku": o.sku,
-                "status": o.status,
-                "order_date": str(o.order_date)
-            } for o in c.orders]
-            
-            sessions_data = [{
-                "session_id": s.session_id,
-                "date": str(s.session_date),
-                "summary": s.summary,
-                "outcome": s.outcome
-            } for s in c.sessions]
-            
-            return {
-                "found": True,
-                "ambiguous": False,
-                "customer_id": c.customer_id,
-                "name": c.name,
-                "honorific": c.honorific,
-                "phone": c.phone,
-                "region": c.region,
-                "attributes": c.attributes or {},
-                "orders": orders_data,
-                "sessions": sessions_data
-            }
+            return self._serialize_customer(customers[0])
 
     def create_customer(self, phone: str) -> str:
         """Tạo khách hàng mới nếu chưa có, auto-generate mã CXXX."""
@@ -233,25 +235,6 @@ class SupabaseClient:
             session.commit()
             return new_id
 
-    def add_customer_session(self, phone: str, summary: str, outcome: str = "completed"):
-        import uuid
-        from datetime import date
-        with self.get_session() as session:
-            c = session.query(Customer).filter_by(phone=phone).first()
-            if not c:
-                return None
-            new_session = CustomerSession(
-                session_id=str(uuid.uuid4()),
-                customer_id=c.customer_id,
-                session_date=date.today(),
-                channel="voice",
-                summary=summary,
-                outcome=outcome
-            )
-            session.add(new_session)
-            session.commit()
-            return new_session.session_id
-
     def update_customer_attributes(self, phone: str, deltas: dict):
         if not deltas:
             return
@@ -267,4 +250,7 @@ class SupabaseClient:
                 return c.attributes
 
 # Khởi tạo singleton instance
-db_client = SupabaseClient()
+db_client = PostgresClient()
+
+# Backward-compatible import for modules that still use the old class name.
+SupabaseClient = PostgresClient

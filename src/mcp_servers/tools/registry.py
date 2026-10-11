@@ -13,11 +13,11 @@ from __future__ import annotations
 
 from typing import Any
 
-from telesale_agent.tools.crm import TOOLS as _CRM
-from telesale_agent.tools.catalog import TOOLS as _CATALOG
-from telesale_agent.tools.order import TOOLS as _ORDER
-from telesale_agent.tools.workflow import TOOLS as _WORKFLOW
-from telesale_agent.tools.memory import TOOLS as _MEMORY
+from mcp_servers.tools.crm import TOOLS as _CRM
+from mcp_servers.tools.catalog import TOOLS as _CATALOG
+from mcp_servers.tools.order import TOOLS as _ORDER
+from mcp_servers.tools.workflow import TOOLS as _WORKFLOW
+from mcp_servers.tools.memory import TOOLS as _MEMORY
 
 # Master registry — BTC tool name → callable
 TOOL_REGISTRY: dict[str, Any] = {

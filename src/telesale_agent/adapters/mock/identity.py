@@ -21,6 +21,10 @@ class HintIdentityResolver(IdentityResolver):
             
         return CustomerIdentity(
             customer_id=customer_id,
+            phone=phone,
             confidence=1.0,
-            profile={},
+            profile={
+                "name": result.get("name"),
+                "honorific": result.get("honorific"),
+            } if result.get("found") and not result.get("ambiguous") else {},
         )

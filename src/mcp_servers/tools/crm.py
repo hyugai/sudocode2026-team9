@@ -15,7 +15,7 @@ def crm_get_customer(
     """Look up a customer by phone or channel identity.
 
     BTC tool name: crm.get_customer
-    Uses SQLAlchemy to query Supabase database.
+    Uses SQLAlchemy to query PostgreSQL.
     """
     return db_client.get_customer(phone=phone, zalo_id=zalo_id, fb_id=fb_id)
 

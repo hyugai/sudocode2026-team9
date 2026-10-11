@@ -17,7 +17,7 @@ class IntentSchema(BaseModel):
         description="Entities extracted from the utterance. Must be a flat dictionary (e.g., {'product_name': 'headphones', 'price': 500000}), NOT a list.", 
         default_factory=dict
     )
-    memory_deltas: dict = Field(
+    memory_deltas: Any = Field(
         description="Profile facts established in this utterance to be saved into long-term memory (e.g. {'room_size': '25m2', 'has_kids': True, 'budget': 5000000}). Return empty dict if no new facts.",
         default_factory=dict
     )
@@ -70,15 +70,16 @@ Customer utterance: "{sanitised_transcript}"
                     parsed_entities = parsed_entities[0]
                 else:
                     parsed_entities = {}
-            if not isinstance(parsed_entities, dict):
-                parsed_entities = {}
-                
+            parsed_deltas = result.memory_deltas
+            if not isinstance(parsed_deltas, dict):
+                parsed_deltas = {}
+
             return Perception(
                 transcript=transcript,
                 intent=result.intents[0] if result.intents else "unknown",
                 intents=result.intents,
                 entities=parsed_entities,
-                memory_deltas=result.memory_deltas,
+                memory_deltas=parsed_deltas,
                 confidence=1.0
             )
         except Exception as e:

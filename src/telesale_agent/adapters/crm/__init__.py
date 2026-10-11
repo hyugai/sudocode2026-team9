@@ -1,3 +1,3 @@
-from .crm_retriever import SupabaseCRMRetriever
+from .crm_retriever import PostgresCRMRetriever, SupabaseCRMRetriever
 
-__all__ = ["SupabaseCRMRetriever"]
+__all__ = ["PostgresCRMRetriever", "SupabaseCRMRetriever"]

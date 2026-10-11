@@ -1,12 +1,12 @@
 # Telesale Agent
 
-Telesale Agent là ứng dụng thử nghiệm hội thoại bán hàng bằng tiếng Việt. Luồng xử lý được xây dựng bằng LangGraph, sử dụng Groq làm LLM và có giao diện Gradio để chat, đồng thời theo dõi dữ liệu ở từng bước của pipeline.
+Telesale Agent là ứng dụng thử nghiệm hội thoại bán hàng bằng tiếng Việt. Luồng chính sử dụng `DeepAgentHarness`, Groq làm LLM và MCP cho các business tools. LangGraph chỉ còn là dependency nội bộ của thư viện `deepagents`.
 
 ## Yêu cầu
 
 - Python 3.11 trở lên
 - Tài khoản Groq và một `GROQ_API_KEY` hợp lệ
-- Chạy các lệnh bên dưới từ thư mục gốc của repository (thư mục chứa `pyproject.toml` và `langgraph.json`)
+- Chạy các lệnh bên dưới từ thư mục gốc của repository (thư mục chứa `pyproject.toml`)
 
 ## Cài đặt
 
@@ -66,22 +66,6 @@ python -m telesale_agent.entrypoints.api.gradio_chat
 Mở trình duyệt tại [http://localhost:7860](http://localhost:7860). Nhập câu hỏi tiếng Việt vào ô chat; cột bên phải sẽ hiển thị dữ liệu của các bước Perceive, Identity, Retrieve, Call Brief và Agent Loop.
 
 Dừng chương trình bằng `Ctrl+C` trong terminal.
-
-## Chạy với LangGraph Studio (tùy chọn)
-
-Cài thêm LangGraph CLI vào môi trường ảo:
-
-```powershell
-python -m pip install -U "langgraph-cli[inmem]"
-```
-
-Từ thư mục gốc của repository, chạy:
-
-```powershell
-langgraph dev
-```
-
-CLI sẽ đọc cấu hình trong `langgraph.json`, nạp graph `telesale_agent` và in địa chỉ local server/Studio trong terminal. Cách này phù hợp để xem graph và debug từng node; để thử hội thoại trực tiếp, giao diện Gradio ở trên thuận tiện hơn.
 
 ## Xử lý lỗi thường gặp
 

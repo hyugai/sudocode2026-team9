@@ -76,7 +76,6 @@ class Customer(Base):
     attributes = Column(JSONB, default=dict)
     
     orders = relationship("Order", back_populates="customer", cascade="all, delete-orphan")
-    sessions = relationship("CustomerSession", back_populates="customer", cascade="all, delete-orphan")
 
 class Order(Base):
     __tablename__ = 'orders'
@@ -90,13 +89,3 @@ class Order(Base):
     
     customer = relationship("Customer", back_populates="orders")
 
-class CustomerSession(Base):
-    __tablename__ = 'customer_sessions'
-    session_id = Column(String(50), primary_key=True)
-    customer_id = Column(String(50), ForeignKey('customers.customer_id', ondelete="CASCADE"), nullable=False, index=True)
-    session_date = Column(Date)
-    channel = Column(String(50))
-    summary = Column(String)
-    outcome = Column(String(50))
-    
-    customer = relationship("Customer", back_populates="sessions")

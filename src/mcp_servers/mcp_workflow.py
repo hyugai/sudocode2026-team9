@@ -10,9 +10,19 @@ from mcp_servers.tools.workflow import schedule_callback, handoff_transfer
 mcp = FastMCP("Workflow-Server")
 
 @mcp.tool()
-def mcp_schedule_callback(customer_phone: str, callback_at: str, note: str = None) -> dict[str, Any]:
+def mcp_schedule_callback(
+    customer_phone: str,
+    callback_at: str,
+    note: str | None = None,
+    on: str | None = None,
+) -> dict[str, Any]:
     """Schedule a callback for the customer."""
-    return schedule_callback(customer_phone=customer_phone, callback_at=callback_at, note=note)
+    return schedule_callback(
+        customer_phone=customer_phone,
+        callback_at=callback_at,
+        note=note,
+        on=on,
+    )
 
 @mcp.tool()
 def mcp_escalate_to_human(reason: str, customer_id: str, summary: str) -> dict[str, Any]:

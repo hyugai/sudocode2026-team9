@@ -4,27 +4,40 @@ import logging
 from groq import AsyncGroq
 from telesale_agent.core.interfaces import Persister
 from telesale_agent.core.models import TurnContext
-from telesale_agent.adapters.db.client import db_client
+from telesale_agent.core.interfaces import CustomerMemoryRepository
+from telesale_agent.adapters.memory.turn_persist import persist_turn_memory
 
 logger = logging.getLogger(__name__)
 
 class LLMPersister(Persister):
-    """Sử dụng LLM để tóm tắt các cuộc gọi kết thúc và lưu vào Supabase."""
+    """Summarize a turn and persist durable memory through the memory port."""
 
-    def __init__(self):
+    def __init__(self, memory: CustomerMemoryRepository):
         self.client = AsyncGroq(api_key=os.getenv("GROQ_API_KEY"))
-        self.model = os.getenv("MODEL_NAME", "openai/gpt-oss-120b")
+        self.model = (
+            os.getenv("GROQ_MODEL")
+            or os.getenv("MODEL_NAME")
+            or "openai/gpt-oss-20b"
+        )
+        self.memory = memory
 
-    async def persist(self, context: TurnContext) -> None:
+    async def persist(self, context: TurnContext) -> list[dict]:
         if os.environ.get("IS_EVAL") == "true":
             print("[PERSIST] Skipped during evaluation run.")
-            return
+            return []
+
+        writes = persist_turn_memory(self.memory, context)
 
         print(f"[PERSIST] Checking messages length: {len(context.state.messages)}")
         if len(context.state.messages) < 2:
             print("[PERSIST] Not enough messages, skipping persist.")
-            return
-        
+            return writes
+
+        customer_id = (
+            context.identity.customer_id
+            if context.identity and context.identity.customer_id
+            else None
+        )
         system_prompt = """
         Bạn là trợ lý tổng hợp thông tin cuộc gọi bán hàng.
         Dựa vào lịch sử chat, hãy tóm tắt ngắn gọn các thông tin sau (nếu có):
@@ -42,8 +55,9 @@ class LLMPersister(Persister):
         Chỉ trả về JSON hợp lệ, không có markdown.
         """
 
+        # Persist an episode for this turn, not a growing summary of the full call.
         chat_history = []
-        for msg in context.state.messages:
+        for msg in context.state.messages[-2:]:
             role = "USER" if msg.role == "customer" else "AGENT"
             chat_history.append(f"{role}: {msg.content}")
         
@@ -65,24 +79,14 @@ class LLMPersister(Persister):
             
             print(f"[PERSIST] LLMPersister generated summary: {summary_dict}")
             
-            if context.identity and context.identity.customer_id:
-                # 1. Update M1 Profile (Short-term -> Long-term memory_deltas)
-                if context.state.memory_deltas:
-                    db_client.update_customer_attributes(
-                        phone=context.identity.customer_id,
-                        deltas=context.state.memory_deltas
-                    )
-                    print(f"[PERSIST] Updated Profile attributes for {context.identity.customer_id}: {context.state.memory_deltas}")
-
-                # 2. Update M1 Episodic (Session summary)
+            if customer_id:
+                # Persist an episodic summary as .md.
                 summary_str = f"Facts: {summary_dict.get('facts_established')} | Product: {summary_dict.get('product_advised')} | Blocker: {summary_dict.get('blocker')}"
-                
-                db_client.add_customer_session(
-                    phone=context.identity.customer_id,
-                    summary=summary_str,
-                    outcome="pending"
-                )
-                print(f"[PERSIST] Saved session to Supabase for customer {context.identity.customer_id}")
+                self.memory.record_episode(customer_id, summary_str)
+                context.state.customer_memory = self.memory.load(customer_id)
+                print(f"[PERSIST] Saved .md episode for customer {customer_id}")
 
         except Exception as e:
             print(f"[PERSIST] Error in LLMPersister: {e}")
+
+        return writes

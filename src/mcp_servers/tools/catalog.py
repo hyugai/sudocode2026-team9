@@ -33,7 +33,7 @@ def inventory_check(sku: str, on: str | None = None) -> dict[str, Any]:
     """Check inventory for a SKU on a given date.
 
     BTC tool name: inventory.check
-    Uses SQLAlchemy to query Supabase inventory events.
+    Uses SQLAlchemy to query PostgreSQL inventory events.
     """
     call_date = _today(on)
     return db_client.check_stock(sku, call_date)

@@ -8,7 +8,9 @@ class SimpleCallBriefBuilder(CallBriefBuilder):
         if context.identity is None or context.retrieved is None:
             raise ValueError("identity and retrieved context are required")
 
-        customer_name = context.identity.profile.get("name")
+        crm_profile = context.state.customer_profile or {}
+        memory = context.state.customer_memory or {}
+        customer_name = crm_profile.get("name") or context.identity.profile.get("name")
         
         needs = []
         if context.perception:
@@ -27,4 +29,12 @@ class SimpleCallBriefBuilder(CallBriefBuilder):
             else "Customer history is available for this conversation.",
             needs=needs,
             active_promotions=context.retrieved.active_promotions,
+            verified_customer_data=crm_profile,
+            remembered_preferences={
+                "profile": memory.get("profile", ""),
+                "behaviors": memory.get("behaviors", ""),
+                "atomic_facts": memory.get("atomic_facts", []),
+                "foresights": memory.get("foresights", []),
+            },
+            relevant_episodes=memory.get("episodes", []),
         )
