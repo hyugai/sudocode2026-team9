@@ -8,11 +8,30 @@ version = "0.1.0"
 description = "Extensible agent harness for multi-channel telesale conversations."
 requires-python = ">=3.11"
 dependencies = [
-    "langgraph",
-    "pydantic",
-    "gradio",
-    "python-dotenv",
-    "langchain-groq"
+    "deepagents==0.7.22",
+    "langgraph==1.2.11",
+    "langchain-mcp-adapters==0.3.2",
+    "mcp==1.30.0",
+    "pydantic==2.13.5",
+    "python-dotenv==1.2.3",
+    "langchain-groq==1.1.3",
+    "langchain-google-genai==4.4.0",
+    "groq==0.37.1",
+    "fastapi==0.141.1",
+    "uvicorn[standard]==0.53.0",
+    "sqlalchemy==2.1.1",
+    "psycopg2-binary==2.9.13",
+    "langchain-chroma==1.1.0",
+    "langchain-huggingface==1.2.2",
+    "chromadb==1.5.9",
+    "sentence-transformers==6.1.0",
+    "gradio==6.27.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest==9.1.1",
+    "pytest-asyncio==1.4.0",
 ]
 
 [tool.setuptools.packages.find]
