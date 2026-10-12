@@ -26,11 +26,6 @@ def build_deepagent_harness(memory_mode: MemoryMode = "durable"):
     load_dotenv()
     from telesale_agent.core.deepagent_pipeline import DeepAgentHarness
 
-    model_name = (
-        os.environ.get("GROQ_MODEL")
-        or os.environ.get("MODEL_NAME")
-        or "openai/gpt-oss-20b"
-    )
     durable_memory = FileCustomerMemoryRepository()
     if memory_mode == "durable":
         memory = durable_memory
@@ -53,12 +48,12 @@ def build_deepagent_harness(memory_mode: MemoryMode = "durable"):
 
     return DeepAgentHarness(
         asr=MockASREngine(),
-        perceive=LLMPerceiver(model_name=model_name),
+        perceive=LLMPerceiver(),
         identity=HintIdentityResolver(),
         crm=PostgresCRMRetriever(),
         memory=memory,
         retrieve=VectorDBRetriever(),
-        call_brief=LLMCallBriefBuilder(model_name=model_name),
+        call_brief=LLMCallBriefBuilder(),
         persist=persist,
     )
 

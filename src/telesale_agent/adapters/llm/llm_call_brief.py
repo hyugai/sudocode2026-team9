@@ -1,30 +1,14 @@
-import os
-import json
-from pydantic import BaseModel, Field
-from langchain_groq import ChatGroq
-
 from telesale_agent.core.interfaces import CallBriefBuilder
 from telesale_agent.core.models import CallBrief, TurnContext
-from telesale_agent.config.settings import settings
-
-class NeedsSchema(BaseModel):
-    needs: list[str] = Field(
-        description="List of facts or needs established in previous sessions (e.g. 'Customer wants AirPure X', 'Price budget is 5,000,000 VND', 'Customer is asking family'). Empty list if no history."
-    )
-    summary: str = Field(
-        description="A brief summary of the customer's history."
-    )
 
 class LLMCallBriefBuilder(CallBriefBuilder):
-    """Uses LLM to summarize past sessions into a list of facts/needs."""
+    """Build a compact call brief deterministically from CRM and memory."""
 
-    def __init__(self, model_name: str = "openai/gpt-oss-120b"):
-        api_key = settings.GROQ_API_KEY
-        if not api_key:
-            raise ValueError("GROQ_API_KEY is not set in environment variables.")
-        
-        self.llm = ChatGroq(temperature=0, model_name=model_name, groq_api_key=api_key)
-        self.structured_llm = self.llm.with_structured_output(NeedsSchema, method="json_mode")
+    def __init__(self, model_name: str | None = None):
+        # Keep the argument for callers written against the old API. Call brief
+        # construction is intentionally local so it cannot add an extra model
+        # request per turn.
+        self.model_name = model_name
 
     async def build_call_brief(self, context: TurnContext) -> CallBrief:
         if context.identity is None:

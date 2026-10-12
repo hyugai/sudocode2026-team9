@@ -1,13 +1,11 @@
-import os
 from typing import Any
 from pydantic import BaseModel, Field
-from langchain_groq import ChatGroq
 
 from telesale_agent.core.interfaces import Perceiver
 from telesale_agent.core.models import Perception, TurnContext
-from telesale_agent.config.settings import settings
 from telesale_agent.config.intent_taxonomy import INTENT_NAMES, build_intent_prompt_section
 from telesale_agent.adapters.rules.pii_utils import mask_pii
+from telesale_agent.adapters.llm.model_factory import create_chat_model
 
 class IntentSchema(BaseModel):
     intents: list[str] = Field(
@@ -23,30 +21,11 @@ class IntentSchema(BaseModel):
     )
 
 class LLMPerceiver(Perceiver):
-    """Uses Groq LLM (LLaMA) to extract intents and entities from customer utterances."""
+    """Use the configured LLM to extract intents and entities."""
     
-    def __init__(self, model_name: str = "openai/gpt-oss-20b"):
-        api_key = settings.GROQ_API_KEY
-        if not api_key:
-            raise ValueError("GROQ_API_KEY is not set in environment variables. Please check your .env file.")
-        
-        # Temperature = 0 for accurate, non-creative extraction
-        try:
-            timeout = float(os.environ.get("GROQ_REQUEST_TIMEOUT_SECONDS", "30"))
-        except ValueError:
-            timeout = 30.0
-        try:
-            max_retries = int(os.environ.get("GROQ_MAX_RETRIES", "0"))
-        except ValueError:
-            max_retries = 0
-        self.llm = ChatGroq(
-            temperature=0,
-            model_name=model_name,
-            groq_api_key=api_key,
-            timeout=timeout if timeout > 0 else 30.0,
-            max_retries=max(0, max_retries),
-        )
-        self.structured_llm = self.llm.with_structured_output(IntentSchema, method="json_mode")
+    def __init__(self, model_name: str | None = None):
+        self.llm = create_chat_model(temperature=0, model_name=model_name)
+        self.structured_llm = self.llm.with_structured_output(IntentSchema)
 
     async def perceive(self, context: TurnContext) -> Perception:
         if context.input.text is None:
@@ -73,7 +52,7 @@ Respond ONLY with a valid JSON object. Do not include markdown formatting or ext
 Customer utterance: "{sanitised_transcript}"
 """
         
-        # Call Groq API for structured JSON
+        # Call the configured provider for structured output.
         try:
             result = await self.structured_llm.ainvoke(prompt)
             

@@ -1,12 +1,10 @@
-import os
 import json
 import dataclasses
 from pydantic import BaseModel, Field
-from langchain_groq import ChatGroq
 
 from telesale_agent.core.interfaces import Planner
 from telesale_agent.core.models import ActionPlan, TurnContext
-from telesale_agent.config.settings import settings
+from telesale_agent.adapters.llm.model_factory import create_chat_model
 
 class ActionPlanSchema(BaseModel):
     action: str = Field(description="The next action to take: 'respond_to_customer', 'transfer_to_human', or 'call_api'")
@@ -58,15 +56,11 @@ AVAILABLE_TOOLS = [
 
 class LLMPlanner(Planner):
     """
-    Planner using Groq LLM (LLaMA) to decide the next action and generate a response.
+    Planner using the configured LLM to decide the next action and response.
     """
     
-    def __init__(self, model_name: str = "openai/gpt-oss-120b"):
-        api_key = settings.GROQ_API_KEY
-        if not api_key:
-            raise ValueError("GROQ_API_KEY is not set in environment variables.")
-        
-        self.llm = ChatGroq(temperature=0.3, model_name=model_name, groq_api_key=api_key)
+    def __init__(self, model_name: str | None = None):
+        self.llm = create_chat_model(temperature=0.3, model_name=model_name)
         self.structured_llm = self.llm.with_structured_output(ActionPlanSchema)
         
     def _format_steps(self, steps) -> str:

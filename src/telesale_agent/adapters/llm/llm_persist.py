@@ -1,36 +1,27 @@
 import os
-import json
 import logging
-from groq import AsyncGroq
+from pydantic import BaseModel, Field
+
 from telesale_agent.core.interfaces import Persister
 from telesale_agent.core.models import TurnContext
 from telesale_agent.core.interfaces import CustomerMemoryRepository
 from telesale_agent.adapters.memory.turn_persist import persist_turn_memory
+from telesale_agent.adapters.llm.model_factory import create_chat_model
 
 logger = logging.getLogger(__name__)
+
+
+class EpisodeSummarySchema(BaseModel):
+    facts_established: str = Field(default="")
+    product_advised: str = Field(default="")
+    blocker: str = Field(default="")
 
 class LLMPersister(Persister):
     """Summarize a turn and persist durable memory through the memory port."""
 
     def __init__(self, memory: CustomerMemoryRepository):
-        try:
-            timeout = float(os.getenv("GROQ_REQUEST_TIMEOUT_SECONDS", "30"))
-        except ValueError:
-            timeout = 30.0
-        try:
-            max_retries = int(os.getenv("GROQ_MAX_RETRIES", "0"))
-        except ValueError:
-            max_retries = 0
-        self.client = AsyncGroq(
-            api_key=os.getenv("GROQ_API_KEY"),
-            timeout=timeout if timeout > 0 else 30.0,
-            max_retries=max(0, max_retries),
-        )
-        self.model = (
-            os.getenv("GROQ_MODEL")
-            or os.getenv("MODEL_NAME")
-            or "openai/gpt-oss-20b"
-        )
+        self.llm = create_chat_model(temperature=0)
+        self.structured_llm = self.llm.with_structured_output(EpisodeSummarySchema)
         self.memory = memory
 
     async def persist(self, context: TurnContext) -> list[dict]:
@@ -76,18 +67,13 @@ class LLMPersister(Persister):
         history_text = "\n".join(chat_history)
 
         try:
-            response = await self.client.chat.completions.create(
-                model=self.model,
-                messages=[
+            summary = await self.structured_llm.ainvoke(
+                [
                     {"role": "system", "content": system_prompt},
                     {"role": "user", "content": f"Lịch sử cuộc gọi:\n{history_text}"}
-                ],
-                temperature=0.0,
-                response_format={"type": "json_object"}
+                ]
             )
-            
-            raw_content = response.choices[0].message.content
-            summary_dict = json.loads(raw_content)
+            summary_dict = summary.model_dump()
             
             print(f"[PERSIST] LLMPersister generated summary: {summary_dict}")
             
