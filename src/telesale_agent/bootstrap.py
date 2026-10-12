@@ -30,11 +30,11 @@ def build_deepagent_harness(memory_mode: MemoryMode = "durable"):
     if memory_mode == "durable":
         memory = durable_memory
         persister_mode = os.environ.get(
-            "MEMORY_PERSISTER_MODE", "deterministic"
+            "MEMORY_PERSISTER_MODE", "llm_learning"
         ).strip().lower()
         persist = (
             LLMPersister(memory)
-            if persister_mode == "llm_episode"
+            if persister_mode in {"llm_episode", "llm_learning"}
             else TurnMemoryPersister(memory)
         )
     elif memory_mode == "evaluation":

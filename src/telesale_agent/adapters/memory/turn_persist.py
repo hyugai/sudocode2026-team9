@@ -94,7 +94,9 @@ def persist_turn_memory(
     writes = []
     for key, value in candidates.items():
         previous = memory.latest_fact(customer_id, key)
-        operation = "supersede" if previous is not None and previous != value else "set"
+        if previous == value:
+            continue
+        operation = "supersede" if previous is not None else "set"
         memory.upsert_fact(customer_id, key, value)
         writes.append(
             {

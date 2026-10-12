@@ -1,90 +1,120 @@
-import os
+from __future__ import annotations
+
+import json
 import logging
+
 from pydantic import BaseModel, Field
 
-from telesale_agent.core.interfaces import Persister
-from telesale_agent.core.models import TurnContext
-from telesale_agent.core.interfaces import CustomerMemoryRepository
-from telesale_agent.adapters.memory.turn_persist import persist_turn_memory
 from telesale_agent.adapters.llm.model_factory import create_chat_model
+from telesale_agent.adapters.memory.turn_persist import persist_turn_memory
+from telesale_agent.core.interfaces import CustomerMemoryRepository, Persister
+from telesale_agent.core.models import TurnContext
+
 
 logger = logging.getLogger(__name__)
 
 
 class EpisodeSummarySchema(BaseModel):
-    facts_established: str = Field(default="")
-    product_advised: str = Field(default="")
-    blocker: str = Field(default="")
+    facts_established: str = Field(
+        default="",
+        description="Confirmed customer facts learned in this turn only.",
+    )
+    product_advised: str = Field(
+        default="",
+        description="Product or variant discussed in this turn.",
+    )
+    blocker: str = Field(
+        default="",
+        description="Confirmed reason the customer has not completed the purchase.",
+    )
+    foresights: list[str] = Field(
+        default_factory=list,
+        description=(
+            "Zero to three concrete recommendations for a future call, supported "
+            "by this turn. Return an empty list instead of generic advice."
+        ),
+    )
+
 
 class LLMPersister(Persister):
-    """Summarize a turn and persist durable memory through the memory port."""
+    """Persist canonical facts plus learned episodic memory after each turn."""
 
     def __init__(self, memory: CustomerMemoryRepository):
         self.llm = create_chat_model(temperature=0)
         self.structured_llm = self.llm.with_structured_output(EpisodeSummarySchema)
         self.memory = memory
 
+    @staticmethod
+    def _source_id(context: TurnContext) -> str:
+        call_key = context.input.metadata.get("call_key", "call")
+        return f"{call_key}#turn{context.state.turn_number + 1}"
+
     async def persist(self, context: TurnContext) -> list[dict]:
-        if os.environ.get("IS_EVAL") == "true":
-            print("[PERSIST] Skipped during evaluation run.")
-            return []
-
+        # Bootstrap selects either isolated in-memory storage or durable files.
         writes = persist_turn_memory(self.memory, context)
-
-        print(f"[PERSIST] Checking messages length: {len(context.state.messages)}")
-        if len(context.state.messages) < 2:
-            print("[PERSIST] Not enough messages, skipping persist.")
-            return writes
 
         customer_id = (
             context.identity.customer_id
             if context.identity and context.identity.customer_id
             else None
         )
-        system_prompt = """
-        Bạn là trợ lý tổng hợp thông tin cuộc gọi bán hàng.
-        Dựa vào lịch sử chat, hãy tóm tắt ngắn gọn các thông tin sau (nếu có):
-        - Nhu cầu khách hàng (diện tích, sở thích...)
-        - Sản phẩm đang quan tâm
-        - Rào cản/Lý do chưa chốt đơn (nếu có)
-        
-        Hãy trả về kết quả định dạng JSON với cấu trúc:
-        {
-            "facts_established": "Các sự kiện đã xác nhận",
-            "product_advised": "Sản phẩm được tư vấn",
-            "blocker": "Lý do chưa chốt"
-        }
-        Nếu không có thông tin, hãy để chuỗi rỗng "".
-        Chỉ trả về JSON hợp lệ, không có markdown.
-        """
+        if not customer_id:
+            return writes
 
-        # Persist an episode for this turn, not a growing summary of the full call.
+        # Atomic facts are an append-only audit trail. facts.md remains the
+        # latest-value snapshot and is updated by persist_turn_memory above.
+        for write in writes:
+            value = json.dumps(write["value"], ensure_ascii=False)
+            self.memory.record_atomic_fact(
+                customer_id,
+                f"{write['key']}: {value} | source: {write['source']}",
+            )
+
+        if len(context.state.messages) < 2:
+            context.state.customer_memory = self.memory.load(customer_id)
+            return writes
+
+        system_prompt = """You summarize one Vietnamese telesales turn for long-term memory.
+Use only information explicitly present in the two messages. Do not infer private
+attributes, intent, preferences, or future actions without evidence. Return the
+requested structured fields. Keep every field concise. Foresights must be concrete
+next-call recommendations supported by the conversation; otherwise return none."""
+
         chat_history = []
-        for msg in context.state.messages[-2:]:
-            role = "USER" if msg.role == "customer" else "AGENT"
-            chat_history.append(f"{role}: {msg.content}")
-        
-        history_text = "\n".join(chat_history)
+        for message in context.state.messages[-2:]:
+            role = "CUSTOMER" if message.role == "customer" else "AGENT"
+            chat_history.append(f"{role}: {message.content}")
 
         try:
             summary = await self.structured_llm.ainvoke(
                 [
                     {"role": "system", "content": system_prompt},
-                    {"role": "user", "content": f"Lịch sử cuộc gọi:\n{history_text}"}
+                    {"role": "user", "content": "\n".join(chat_history)},
                 ]
             )
-            summary_dict = summary.model_dump()
-            
-            print(f"[PERSIST] LLMPersister generated summary: {summary_dict}")
-            
-            if customer_id:
-                # Persist an episodic summary as .md.
-                summary_str = f"Facts: {summary_dict.get('facts_established')} | Product: {summary_dict.get('product_advised')} | Blocker: {summary_dict.get('blocker')}"
-                self.memory.record_episode(customer_id, summary_str)
-                context.state.customer_memory = self.memory.load(customer_id)
-                print(f"[PERSIST] Saved .md episode for customer {customer_id}")
 
-        except Exception as e:
-            print(f"[PERSIST] Error in LLMPersister: {e}")
+            episode_parts = []
+            if summary.facts_established:
+                episode_parts.append(f"Facts: {summary.facts_established}")
+            if summary.product_advised:
+                episode_parts.append(f"Product: {summary.product_advised}")
+            if summary.blocker:
+                episode_parts.append(f"Blocker: {summary.blocker}")
+
+            if episode_parts:
+                self.memory.record_episode(
+                    customer_id,
+                    " | ".join(episode_parts),
+                    source_id=self._source_id(context),
+                )
+
+            for foresight in summary.foresights[:3]:
+                if foresight.strip():
+                    self.memory.record_foresight(customer_id, foresight.strip())
+
+            context.state.customer_memory = self.memory.load(customer_id)
+        except Exception as exc:
+            # Reliable facts remain saved even if LLM summarization fails.
+            logger.warning("LLM memory summarization failed: %s", exc)
 
         return writes

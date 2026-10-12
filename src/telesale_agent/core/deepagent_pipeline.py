@@ -30,6 +30,11 @@ from telesale_agent.core.models import (
 )
 from telesale_agent.core.interfaces import ASREngine, CustomerMemoryRepository
 from telesale_agent.application import CustomerContextService
+from telesale_agent.adapters.llm.model_factory import (
+    create_chat_model,
+    model_provider_key,
+    resolve_model_config,
+)
 from telesale_agent.core.tool_orchestration import (
     IntentToolRoutingMiddleware,
     TelesaleAgentRuntimeContext,
@@ -58,24 +63,6 @@ def _positive_int_env(name: str, default: int) -> int:
     """Read a positive integer limit without making startup fragile."""
     try:
         value = int(os.environ.get(name, default))
-    except (TypeError, ValueError):
-        return default
-    return value if value > 0 else default
-
-
-def _nonnegative_int_env(name: str, default: int) -> int:
-    """Read a non-negative integer setting (zero disables SDK retries)."""
-    try:
-        value = int(os.environ.get(name, default))
-    except (TypeError, ValueError):
-        return default
-    return value if value >= 0 else default
-
-
-def _positive_float_env(name: str, default: float) -> float:
-    """Read a positive floating-point setting."""
-    try:
-        value = float(os.environ.get(name, default))
     except (TypeError, ValueError):
         return default
     return value if value > 0 else default
@@ -392,7 +379,7 @@ class DeepAgentHarness:
         # Keep instructions as version-controlled .md files in memory-root,
         # but load them once at startup. MemoryMiddleware would append a large
         # generic self-edit guide on every model call even though customer
-        # memory is owned by TurnMemoryPersister in this application.
+        # memory is owned by the configured application persister.
         instruction_prompt = "\n\n".join(
             (agent_dir / name).read_text(encoding="utf-8").strip()
             for name in ("soul.md", "agent.md", "tools.md")
@@ -430,30 +417,16 @@ class DeepAgentHarness:
             if isinstance(getattr(tool, "name", None), str)
         }
                 
-        model_name = (
-            os.environ.get("GROQ_MODEL")
-            or os.environ.get("MODEL_NAME")
-            or "openai/gpt-oss-20b"
-        )
-        from langchain_groq import ChatGroq
-        max_output_tokens = _positive_int_env("GROQ_MAX_OUTPUT_TOKENS", 768)
-        try:
-            model = ChatGroq(
-                temperature=0.3,
-                model_name=model_name,
-                max_tokens=max_output_tokens,
-                timeout=_positive_float_env("GROQ_REQUEST_TIMEOUT_SECONDS", 30.0),
-                max_retries=_nonnegative_int_env("GROQ_MAX_RETRIES", 0),
-            )
-        except Exception:
-            model = f"groq:{model_name}"
+        model_config = resolve_model_config()
+        model = create_chat_model(temperature=0.3)
+        provider_key = model_provider_key(model, model_config.provider)
 
         # DeepAgent ships general filesystem/execution/subagent tools. This
         # telesales harness only needs the MCP business tools; hiding unused
-        # schemas materially reduces every Groq request while retaining the
+        # schemas materially reduces every provider request while retaining the
         # DeepAgent runtime and middleware.
         register_harness_profile(
-            "groq",
+            provider_key,
             HarnessProfile(
                 excluded_tools=frozenset(
                     {
