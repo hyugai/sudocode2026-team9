@@ -2,6 +2,9 @@
 
 Telesale Agent là ứng dụng thử nghiệm hội thoại bán hàng bằng tiếng Việt. Luồng chính sử dụng `DeepAgentHarness`, Groq làm LLM và MCP cho các business tools. LangGraph chỉ còn là dependency nội bộ của thư viện `deepagents`.
 
+Hướng dẫn đóng gói Docker và deploy backend lên Render nằm tại
+[`docs/deployment/render.md`](../../docs/deployment/render.md).
+
 ## Yêu cầu
 
 - Python 3.11 trở lên

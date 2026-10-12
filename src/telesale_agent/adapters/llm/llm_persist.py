@@ -13,7 +13,19 @@ class LLMPersister(Persister):
     """Summarize a turn and persist durable memory through the memory port."""
 
     def __init__(self, memory: CustomerMemoryRepository):
-        self.client = AsyncGroq(api_key=os.getenv("GROQ_API_KEY"))
+        try:
+            timeout = float(os.getenv("GROQ_REQUEST_TIMEOUT_SECONDS", "30"))
+        except ValueError:
+            timeout = 30.0
+        try:
+            max_retries = int(os.getenv("GROQ_MAX_RETRIES", "0"))
+        except ValueError:
+            max_retries = 0
+        self.client = AsyncGroq(
+            api_key=os.getenv("GROQ_API_KEY"),
+            timeout=timeout if timeout > 0 else 30.0,
+            max_retries=max(0, max_retries),
+        )
         self.model = (
             os.getenv("GROQ_MODEL")
             or os.getenv("MODEL_NAME")

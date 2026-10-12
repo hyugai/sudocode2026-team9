@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from datetime import date
+import re
 from typing import Any
 
 from telesale_agent.adapters.db.client import db_client
@@ -24,9 +25,79 @@ def catalog_search(
 
     BTC tool name: catalog.search
     """
-    # Khai báo mapping các danh mục con nếu cần hoặc để query thẳng DB
-    # Giữ nguyên logic query qua SQLAlchemy
-    return db_client.search_products(query=query, category=category, sku=sku, max_price_vnd=max_price_vnd)
+    result = db_client.search_products(
+        query=query,
+        category=category,
+        sku=sku,
+        max_price_vnd=max_price_vnd,
+    )
+    if result.get("items") or not query or sku:
+        return _filter_requested_variants(result, query)
+
+    # LLM queries often include variant words ("Urban Classic 39 đen") and a
+    # human category ("Giày sneaker") that do not literally match DB columns.
+    # Retry inside the same tool execution so this does not cost another model
+    # round-trip or another tool call.
+    stopwords = {
+        "giày", "giay", "sneaker", "size", "màu", "mau",
+        "đen", "den", "trắng", "trang", "xám", "xam",
+    }
+    tokens = [
+        token
+        for token in re.findall(r"[\w-]+", query, flags=re.UNICODE)
+        if token.casefold() not in stopwords and not token.isdigit()
+    ]
+    compact_query = " ".join(tokens).strip()
+    if compact_query and compact_query.casefold() != query.casefold():
+        result = db_client.search_products(
+            query=compact_query,
+            max_price_vnd=max_price_vnd,
+        )
+    return _filter_requested_variants(result, query)
+
+
+def _filter_requested_variants(
+    result: dict[str, Any], query: str | None
+) -> dict[str, Any]:
+    """Keep only requested size/color variants to minimize tool payload."""
+    if not query or not result.get("items"):
+        return result
+
+    normalized = query.casefold()
+    size_match = re.search(r"\b(\d{2}|s|m|l|xl)\b", normalized)
+    requested_size = size_match.group(1) if size_match else None
+    color_aliases = {
+        "đen": "den",
+        "den": "den",
+        "trắng": "trang",
+        "trang": "trang",
+        "xám": "xam",
+        "xam": "xam",
+        "navy": "navy",
+        "be": "be",
+    }
+    requested_color = next(
+        (value for key, value in color_aliases.items() if key in normalized),
+        None,
+    )
+    if not requested_size and not requested_color:
+        return result
+
+    for item in result["items"]:
+        variants = item.get("variants") or []
+        item["variants"] = [
+            variant
+            for variant in variants
+            if (
+                not requested_size
+                or str(variant.get("size", "")).casefold() == requested_size
+            )
+            and (
+                not requested_color
+                or str(variant.get("color", "")).casefold() == requested_color
+            )
+        ]
+    return result
 
 
 def inventory_check(sku: str, on: str | None = None) -> dict[str, Any]:

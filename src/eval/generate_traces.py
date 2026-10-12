@@ -100,6 +100,7 @@ async def run_scenario(
     run_id: str,
     max_turns: int | None = None,
     sleep_turn: float = 0.0,
+    max_retries: int = 1,
 ) -> list[dict]:
     rows = []
     scenario_id = scenario["scenario_id"]
@@ -170,7 +171,6 @@ async def run_scenario(
                         "scenario_id": scenario_id,
                     },
                 )
-                max_retries = 5
                 result = None
                 for attempt in range(max_retries):
                     try:
@@ -309,8 +309,17 @@ async def main():
     parser.add_argument(
         "--sleep",
         type=float,
-        default=2.0,
-        help="Số giây nghỉ giữa mỗi turn để tránh chạm giới hạn TPM/RPM (default: 2.0)",
+        default=20.0,
+        help="Số giây nghỉ giữa mỗi turn để tránh chạm giới hạn TPM/RPM (default: 20.0)",
+    )
+    parser.add_argument(
+        "--max-retries",
+        type=int,
+        default=1,
+        help=(
+            "Số lần thử tối đa cho mỗi turn (default: 1 = không tự retry). "
+            "Tránh chạy lại cả NLU + agent khi Groq báo 429."
+        ),
     )
     parser.add_argument(
         "--sleep-scenario",
@@ -375,6 +384,7 @@ async def main():
                     args.run_id,
                     max_turns=args.max_turns,
                     sleep_turn=args.sleep,
+                    max_retries=max(1, args.max_retries),
                 )
                 elapsed = time.perf_counter() - t0
 

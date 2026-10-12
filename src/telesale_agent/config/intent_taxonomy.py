@@ -63,6 +63,18 @@ INTENT_TAXONOMY: list[IntentDef] = [
         skip_retrieval=True,
     ),
     IntentDef(
+        name="update_order",
+        description=(
+            "Customer wants to exchange size/product, return an item, change an "
+            "existing order, or reports that a received size is too tight/loose."
+        ),
+        examples=[
+            "Giày size 39 hơi chật",
+            "Đổi lên size 40 được không?",
+            "Em làm thủ tục đổi cho anh nhé",
+        ],
+    ),
+    IntentDef(
         name="complain",
         description="Customer is unhappy or reporting a problem with a product or service.",
         examples=["Máy bị lỗi rồi", "Chị đợi mãi không thấy hàng"],

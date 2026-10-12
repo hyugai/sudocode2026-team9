@@ -28,11 +28,17 @@ class PostgresClient:
             if not db_url:
                 raise ValueError("DATABASE_URL is not set in .env")
             
-        # Ensure that if environment variable uses postgresql:// it is replaced by postgresql+psycopg2://
-        if db_url.startswith("postgresql://"):
+        # Normalize common provider URL schemes for SQLAlchemy/psycopg2.
+        if db_url.startswith("postgres://"):
+            db_url = db_url.replace("postgres://", "postgresql+psycopg2://", 1)
+        elif db_url.startswith("postgresql://"):
             db_url = db_url.replace("postgresql://", "postgresql+psycopg2://", 1)
             
-        self.engine = create_engine(db_url)
+        self.engine = create_engine(
+            db_url,
+            pool_pre_ping=True,
+            pool_recycle=300,
+        )
         self.SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=self.engine)
         
     def get_session(self):
@@ -47,7 +53,14 @@ class PostgresClient:
             stmt = session.query(Product).filter(Product.is_discontinued == False)
             
             if sku:
-                stmt = stmt.filter(Product.sku == sku)
+                variant = (
+                    session.query(ProductVariant)
+                    .filter(ProductVariant.variant_sku == sku)
+                    .first()
+                )
+                stmt = stmt.filter(
+                    Product.sku == (variant.product_sku if variant else sku)
+                )
             if query:
                 stmt = stmt.filter(Product.name.ilike(f"%{query}%"))
             if category:
@@ -69,7 +82,6 @@ class PostgresClient:
                             "size": v.size, 
                             "color": v.color, 
                             "price_delta": float(v.price_delta_vnd) if v.price_delta_vnd else 0,
-                            "stock": v.stock
                         } for v in p.variants
                     ]
                 })

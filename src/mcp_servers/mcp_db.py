@@ -7,7 +7,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 # Import existing tool functions
 from mcp_servers.tools.crm import crm_get_customer
 from mcp_servers.tools.catalog import catalog_search, inventory_check, pricing_get_quote
-from mcp_servers.tools.order import order_create, order_status
+from mcp_servers.tools.order import order_create, order_status, order_update
 
 # Initialize FastMCP Server
 mcp = FastMCP("DB-Server")
@@ -85,6 +85,23 @@ def check_order_status(
 ) -> dict[str, Any]:
     """Check the status of an existing order."""
     return order_status(order_id=order_id, customer_phone=customer_phone)
+
+@mcp.tool()
+def update_order(
+    order_id: str,
+    action: str,
+    new_variant_sku: str | None = None,
+    reason: str | None = None,
+    on: str | None = None,
+) -> dict[str, Any]:
+    """Update an existing order for exchange, return, or address changes."""
+    return order_update(
+        order_id=order_id,
+        action=action,
+        new_variant_sku=new_variant_sku,
+        reason=reason,
+        on=on,
+    )
 
 if __name__ == "__main__":
     mcp.run()

@@ -34,7 +34,14 @@ def build_deepagent_harness(memory_mode: MemoryMode = "durable"):
     durable_memory = FileCustomerMemoryRepository()
     if memory_mode == "durable":
         memory = durable_memory
-        persist = LLMPersister(memory)
+        persister_mode = os.environ.get(
+            "MEMORY_PERSISTER_MODE", "deterministic"
+        ).strip().lower()
+        persist = (
+            LLMPersister(memory)
+            if persister_mode == "llm_episode"
+            else TurnMemoryPersister(memory)
+        )
     elif memory_mode == "evaluation":
         memory = InMemoryCustomerMemoryRepository(seed=durable_memory)
         persist = TurnMemoryPersister(memory)

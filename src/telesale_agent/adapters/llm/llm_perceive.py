@@ -31,7 +31,21 @@ class LLMPerceiver(Perceiver):
             raise ValueError("GROQ_API_KEY is not set in environment variables. Please check your .env file.")
         
         # Temperature = 0 for accurate, non-creative extraction
-        self.llm = ChatGroq(temperature=0, model_name=model_name, groq_api_key=api_key)
+        try:
+            timeout = float(os.environ.get("GROQ_REQUEST_TIMEOUT_SECONDS", "30"))
+        except ValueError:
+            timeout = 30.0
+        try:
+            max_retries = int(os.environ.get("GROQ_MAX_RETRIES", "0"))
+        except ValueError:
+            max_retries = 0
+        self.llm = ChatGroq(
+            temperature=0,
+            model_name=model_name,
+            groq_api_key=api_key,
+            timeout=timeout if timeout > 0 else 30.0,
+            max_retries=max(0, max_retries),
+        )
         self.structured_llm = self.llm.with_structured_output(IntentSchema, method="json_mode")
 
     async def perceive(self, context: TurnContext) -> Perception:

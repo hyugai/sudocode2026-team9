@@ -1,6 +1,7 @@
 import os
 import sys
 import json
+import re
 from typing import Any, Optional
 
 from deepagents import (
@@ -9,10 +10,12 @@ from deepagents import (
     create_deep_agent,
     register_harness_profile,
 )
-from deepagents.backends import FilesystemBackend
 from deepagents.middleware.filesystem import FilesystemMiddleware
-from deepagents.middleware.memory import MemoryMiddleware
 from langgraph.checkpoint.memory import MemorySaver
+from langchain.agents.middleware import (
+    ModelCallLimitMiddleware,
+    ToolCallLimitMiddleware,
+)
 
 from contextlib import AsyncExitStack
 from mcp import ClientSession, StdioServerParameters
@@ -27,6 +30,11 @@ from telesale_agent.core.models import (
 )
 from telesale_agent.core.interfaces import ASREngine, CustomerMemoryRepository
 from telesale_agent.application import CustomerContextService
+from telesale_agent.core.tool_orchestration import (
+    IntentToolRoutingMiddleware,
+    TelesaleAgentRuntimeContext,
+    select_tools_for_turn,
+)
 
 
 _BTC_TOOL_NAMES = {
@@ -36,6 +44,7 @@ _BTC_TOOL_NAMES = {
     "get_pricing_quote": "pricing.get_quote",
     "create_new_order": "order.create",
     "check_order_status": "order.status",
+    "update_order": "order.update",
     "mcp_schedule_callback": "schedule.callback",
     "mcp_escalate_to_human": "handoff.transfer",
 }
@@ -49,6 +58,24 @@ def _positive_int_env(name: str, default: int) -> int:
     """Read a positive integer limit without making startup fragile."""
     try:
         value = int(os.environ.get(name, default))
+    except (TypeError, ValueError):
+        return default
+    return value if value > 0 else default
+
+
+def _nonnegative_int_env(name: str, default: int) -> int:
+    """Read a non-negative integer setting (zero disables SDK retries)."""
+    try:
+        value = int(os.environ.get(name, default))
+    except (TypeError, ValueError):
+        return default
+    return value if value >= 0 else default
+
+
+def _positive_float_env(name: str, default: float) -> float:
+    """Read a positive floating-point setting."""
+    try:
+        value = float(os.environ.get(name, default))
     except (TypeError, ValueError):
         return default
     return value if value > 0 else default
@@ -117,12 +144,128 @@ def _message_text(message: Any) -> str:
 
 
 def _decode_tool_result(content: Any) -> Any:
+    if isinstance(content, list):
+        text_blocks = [
+            block.get("text", "")
+            for block in content
+            if isinstance(block, dict)
+            and block.get("type") == "text"
+            and block.get("text")
+        ]
+        if len(text_blocks) == 1:
+            return _decode_tool_result(text_blocks[0])
+        if text_blocks:
+            return [_decode_tool_result(block) for block in text_blocks]
+        return content
     if not isinstance(content, str):
         return content
     try:
         return json.loads(content)
     except (json.JSONDecodeError, TypeError):
         return content
+
+
+def _single_variant_sku(result: Any) -> str | None:
+    """Return a SKU only when a catalog result resolves unambiguously."""
+    if not isinstance(result, dict):
+        return None
+    variants = [
+        variant.get("variant_sku")
+        for item in result.get("items", [])
+        if isinstance(item, dict)
+        for variant in (item.get("variants") or [])
+        if isinstance(variant, dict) and variant.get("variant_sku")
+    ]
+    unique = list(dict.fromkeys(str(sku) for sku in variants))
+    return unique[0] if len(unique) == 1 else None
+
+
+def _known_variant_sku(context: TurnContext) -> str | None:
+    """Resolve a previously verified SKU without asking the model to infer it."""
+    if context.perception and isinstance(context.perception.entities, dict):
+        for key in ("variant_sku", "sku"):
+            value = context.perception.entities.get(key)
+            if isinstance(value, str) and value:
+                return value
+    if context.call_brief and isinstance(
+        context.call_brief.remembered_preferences, dict
+    ):
+        facts = context.call_brief.remembered_preferences.get("facts") or {}
+        if isinstance(facts, dict):
+            for key in ("variant_sku", "product_advised"):
+                value = facts.get(key)
+                if isinstance(value, str) and value:
+                    return value
+    return None
+
+
+def _known_fact(context: TurnContext, key: str) -> Any:
+    if context.call_brief and isinstance(
+        context.call_brief.remembered_preferences, dict
+    ):
+        facts = context.call_brief.remembered_preferences.get("facts") or {}
+        if isinstance(facts, dict):
+            return facts.get(key)
+    return None
+
+
+def _requested_exchange_sku(context: TurnContext) -> str | None:
+    """Derive a new apparel variant only from a verified prior SKU + new size."""
+    entities = (
+        context.perception.entities
+        if context.perception and isinstance(context.perception.entities, dict)
+        else {}
+    )
+    explicit = entities.get("new_variant_sku")
+    if isinstance(explicit, str) and explicit:
+        return explicit
+    requested_size = entities.get("requested_size") or entities.get("size")
+    if requested_size is None:
+        match = re.search(
+            r"\bsize\s*(\d+|s|m|l|xl)\b",
+            context.input.text or "",
+            flags=re.IGNORECASE,
+        )
+        requested_size = match.group(1) if match else None
+    current_sku = _known_variant_sku(context)
+    if requested_size is None or not current_sku:
+        return None
+    match = re.fullmatch(
+        r"(?P<product>SKU-[A-Z0-9-]+)-(?P<size>\d+|S|M|L|XL)-(?P<color>[A-Z]+)",
+        current_sku,
+        flags=re.IGNORECASE,
+    )
+    if not match:
+        return None
+    return (
+        f"{match.group('product')}-{str(requested_size).upper()}-"
+        f"{match.group('color')}"
+    ).upper()
+
+
+def _catalog_query(context: TurnContext) -> str:
+    """Build a compact catalog query while retaining requested variant data."""
+    entities = (
+        context.perception.entities
+        if context.perception and isinstance(context.perception.entities, dict)
+        else {}
+    )
+    product = next(
+        (
+            entities.get(key)
+            for key in ("product_name", "product", "name", "query")
+            if entities.get(key)
+        ),
+        None,
+    )
+    if not product:
+        return context.input.text or ""
+    parts = [str(product)]
+    if entities.get("size") is not None:
+        parts.append(f"size {entities['size']}")
+    if entities.get("color"):
+        parts.append(f"màu {entities['color']}")
+    return " ".join(parts)
 
 
 def _current_turn_messages(messages: list[Any]) -> list[Any]:
@@ -224,17 +367,35 @@ class DeepAgentHarness:
         self.checkpointer = MemorySaver()
         self.exit_stack = AsyncExitStack()
         self.agent = None
+        self.mcp_tools: dict[str, Any] = {}
 
     async def __aenter__(self):
         if self.agent is not None:
             return self
 
         project_root = Path(__file__).resolve().parents[3]
-        agent_dir = project_root / "data" / "memory-root" / "agents" / "telesales_agent"
-        instruction_files = ["/soul.md", "/agent.md", "/tools.md"]
-        instruction_memory = MemoryMiddleware(
-            backend=FilesystemBackend(root_dir=agent_dir, virtual_mode=True),
-            sources=instruction_files,
+        configured_agent_dir = os.environ.get("AGENT_INSTRUCTIONS_ROOT")
+        agent_dir = (
+            Path(configured_agent_dir)
+            if configured_agent_dir
+            else project_root / "data" / "memory-root" / "agents" / "telesales_agent"
+        )
+        missing_instructions = [
+            name for name in ("soul.md", "agent.md", "tools.md")
+            if not (agent_dir / name).is_file()
+        ]
+        if missing_instructions:
+            raise FileNotFoundError(
+                f"Missing DeepAgent instruction files in {agent_dir}: "
+                + ", ".join(missing_instructions)
+            )
+        # Keep instructions as version-controlled .md files in memory-root,
+        # but load them once at startup. MemoryMiddleware would append a large
+        # generic self-edit guide on every model call even though customer
+        # memory is owned by TurnMemoryPersister in this application.
+        instruction_prompt = "\n\n".join(
+            (agent_dir / name).read_text(encoding="utf-8").strip()
+            for name in ("soul.md", "agent.md", "tools.md")
         )
         minimal_filesystem = FilesystemMiddleware(
             tools=["read_file"],
@@ -263,6 +424,11 @@ class DeepAgentHarness:
                 await session.initialize()
                 tools = await load_mcp_tools(session)
                 all_mcp_tools.extend(tools)
+        self.mcp_tools = {
+            tool.name: tool
+            for tool in all_mcp_tools
+            if isinstance(getattr(tool, "name", None), str)
+        }
                 
         model_name = (
             os.environ.get("GROQ_MODEL")
@@ -276,6 +442,8 @@ class DeepAgentHarness:
                 temperature=0.3,
                 model_name=model_name,
                 max_tokens=max_output_tokens,
+                timeout=_positive_float_env("GROQ_REQUEST_TIMEOUT_SECONDS", 30.0),
+                max_retries=_nonnegative_int_env("GROQ_MAX_RETRIES", 0),
             )
         except Exception:
             model = f"groq:{model_name}"
@@ -301,14 +469,30 @@ class DeepAgentHarness:
                 general_purpose_subagent=GeneralPurposeSubagentProfile(
                     enabled=False
                 ),
+                excluded_middleware=frozenset(
+                    {"SummarizationMiddleware", "PatchToolCallsMiddleware"}
+                ),
             ),
         )
 
         self.agent = create_deep_agent(
             model=model,
             tools=all_mcp_tools,
-            middleware=[minimal_filesystem, instruction_memory],
-            checkpointer=self.checkpointer
+            system_prompt=instruction_prompt,
+            middleware=[
+                IntentToolRoutingMiddleware(),
+                ModelCallLimitMiddleware(
+                    run_limit=_positive_int_env("DEEPAGENT_MAX_MODEL_CALLS", 4),
+                    exit_behavior="end",
+                ),
+                ToolCallLimitMiddleware(
+                    run_limit=_positive_int_env("DEEPAGENT_MAX_TOOL_CALLS", 3),
+                    exit_behavior="end",
+                ),
+                minimal_filesystem,
+            ],
+            context_schema=TelesaleAgentRuntimeContext,
+            checkpointer=self.checkpointer,
         )
         return self
 
@@ -321,6 +505,106 @@ class DeepAgentHarness:
         reset = getattr(self.memory, "reset", None)
         if callable(reset):
             reset()
+
+    async def _prefetch_read_tools(
+        self,
+        context: TurnContext,
+        allowed_tools: frozenset[str],
+    ) -> tuple[list[dict[str, Any]], frozenset[str]]:
+        """Execute deterministic read chains without extra model round-trips.
+
+        DeepAgent still owns the response and every mutating business action.
+        The orchestrator only collapses read-only chains whose arguments can be
+        derived from verified turn context. Calls remain visible in the trace
+        and are fed to the normal memory persister as AgentSteps.
+        """
+        remaining = set(allowed_tools)
+        calls: list[dict[str, Any]] = []
+        call_date = context.input.metadata.get("call_date")
+
+        async def invoke(name: str, args: dict[str, Any]) -> dict[str, Any] | None:
+            tool = self.mcp_tools.get(name)
+            if tool is None:
+                return None
+            try:
+                raw_result = await tool.ainvoke(args)
+                result = _decode_tool_result(raw_result)
+            except Exception as exc:
+                result = {"error": str(exc)}
+            record = {
+                "id": f"prefetch-{len(calls) + 1}",
+                "name": _canonical_tool_name(name),
+                "args": _canonical_tool_args(_canonical_tool_name(name), args),
+                "result": result,
+            }
+            calls.append(record)
+            remaining.discard(name)
+            return record
+
+        # Catalog + inventory is a deterministic dependency chain when the
+        # requested size/color resolves to exactly one variant. Running it here
+        # replaces search->model->inventory->model with search->inventory->model.
+        if {"search_catalog", "check_inventory"}.issubset(remaining):
+            catalog_args: dict[str, Any] = {
+                "query": _catalog_query(context),
+            }
+            if call_date:
+                catalog_args["on"] = call_date
+            catalog_call = await invoke("search_catalog", catalog_args)
+            catalog_result = catalog_call.get("result") if catalog_call else None
+            if not (
+                isinstance(catalog_result, dict) and catalog_result.get("items")
+            ):
+                # Let the model retry with a different query rather than making
+                # a prefetch miss terminal for this turn.
+                remaining.add("search_catalog")
+            variant_sku = _single_variant_sku(
+                catalog_result
+            )
+            if variant_sku:
+                inventory_args: dict[str, Any] = {"sku": variant_sku}
+                if call_date:
+                    inventory_args["on"] = call_date
+                await invoke("check_inventory", inventory_args)
+
+        # On order confirmation the SKU was already established and persisted
+        # by an earlier turn, so stock can be verified without asking the model
+        # to repeat that choice. Exchange turns are excluded because they need
+        # the newly requested variant, not the old persisted SKU.
+        if "check_inventory" in remaining and "update_order" not in remaining:
+            sku = _known_variant_sku(context)
+            if sku:
+                inventory_args = {"sku": sku}
+                if call_date:
+                    inventory_args["on"] = call_date
+                await invoke("check_inventory", inventory_args)
+
+        if "check_order_status" in remaining:
+            order_id = _known_fact(context, "order_id")
+            if isinstance(order_id, str) and order_id:
+                await invoke("check_order_status", {"order_id": order_id})
+
+        if "check_inventory" in remaining and "update_order" in remaining:
+            exchange_sku = _requested_exchange_sku(context)
+            if exchange_sku:
+                inventory_args = {"sku": exchange_sku}
+                if call_date:
+                    inventory_args["on"] = call_date
+                await invoke("check_inventory", inventory_args)
+
+        # A price-only follow-up can reuse the variant persisted by the prior
+        # catalog/inventory turn, avoiding another model call just to choose SKU.
+        if "get_pricing_quote" in remaining:
+            sku = _known_variant_sku(context)
+            if sku:
+                pricing_args: dict[str, Any] = {"sku": sku, "qty": 1}
+                if call_date:
+                    pricing_args["on"] = call_date
+                if context.input.customer_hint:
+                    pricing_args["customer_phone"] = context.input.customer_hint
+                await invoke("get_pricing_quote", pricing_args)
+
+        return calls, frozenset(remaining)
 
     async def run_turn(
         self,
@@ -494,23 +778,66 @@ class DeepAgentHarness:
             thread_id = state.conversation_id
         else:
             thread_id = f"{state.conversation_id}__turn_{state.turn_number + 1}"
-        config = {"configurable": {"thread_id": thread_id}}
+        config = {
+            "configurable": {"thread_id": thread_id},
+            "recursion_limit": _positive_int_env("DEEPAGENT_RECURSION_LIMIT", 30),
+        }
+        allowed_tools = select_tools_for_turn(
+            context.perception,
+            context.input.text,
+        )
+        prefetched_calls, allowed_tools = await self._prefetch_read_tools(
+            context,
+            allowed_tools,
+        )
+        if prefetched_calls:
+            verified_reads = [
+                {
+                    "name": call["name"],
+                    "args": call["args"],
+                    "result": call["result"],
+                }
+                for call in prefetched_calls
+            ]
+            enriched_user_msg += (
+                "\n\n[Verified read-tool results: "
+                + _clip_text(
+                    json.dumps(verified_reads, ensure_ascii=False),
+                    _positive_int_env("DEEPAGENT_PREFETCH_CONTEXT_CHARS", 2_400),
+                )
+                + "]"
+            )
+        allowed_tool_text = ", ".join(sorted(allowed_tools)) or "none"
+        enriched_user_msg += (
+            f"\n\n[System Note - Tool Budget: The complete allowlist for this "
+            f"turn is: {allowed_tool_text}. Never call a tool outside this "
+            "allowlist even if general instructions mention it. Do not claim "
+            "price, stock, order, or address facts without corresponding verified "
+            "context/tool results. If the customer did not ask about price, do "
+            "not call pricing and do not state a price. Do not repeat a tool call. "
+            "After the necessary allowed tools succeed, answer immediately.]"
+        )
 
         print(
             f"   -> Context: scope={checkpoint_scope or 'turn'}, "
             f"prompt_chars={len(enriched_user_msg)}, "
-            f"recent_messages={min(len(prior_messages), _positive_int_env('DEEPAGENT_RECENT_MESSAGE_COUNT', _DEFAULT_RECENT_MESSAGE_COUNT))}"
+            f"recent_messages={min(len(prior_messages), _positive_int_env('DEEPAGENT_RECENT_MESSAGE_COUNT', _DEFAULT_RECENT_MESSAGE_COUNT))}, "
+            f"allowed_tools={sorted(allowed_tools)}"
         )
         
         result = await self.agent.ainvoke(
             {"messages": [{"role": "user", "content": enriched_user_msg}]},
-            config=config
+            config=config,
+            context={"allowed_tools": sorted(allowed_tools)},
         )
         
         # Extract the current response and every tool call/result produced for
         # this turn. LangGraph returns the whole checkpoint message history.
         messages = result.get("messages", [])
-        tool_calls = extract_deepagent_tool_calls(messages)
+        tool_calls = [
+            *prefetched_calls,
+            *extract_deepagent_tool_calls(messages),
+        ]
         steps = _tool_calls_to_steps(tool_calls)
         context.steps = steps
         context.tool_results = {

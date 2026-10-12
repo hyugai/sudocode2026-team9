@@ -1,4 +1,5 @@
 import logging
+import os
 from pathlib import Path
 
 from langchain_chroma import Chroma
@@ -16,12 +17,25 @@ class VectorDBRetriever(Retriever):
     """
     
     def __init__(self, db_dir: str | Path | None = None):
+        enabled = os.environ.get("ENABLE_VECTOR_RAG", "true").strip().lower()
+        if enabled not in {"1", "true", "yes", "on"}:
+            logger.info("VectorDB retrieval is disabled by ENABLE_VECTOR_RAG.")
+            self.db_dir = ""
+            self.embeddings = None
+            self.vector_store = None
+            return
+
         if db_dir is None:
-            # Default to the dataset/chroma_db folder created by ingest script
             project_root = Path(__file__).resolve().parents[4]
-            db_dir = project_root / "data" / "chroma_db"
+            db_dir = os.environ.get("CHROMA_DB_DIR") or project_root / "data" / "chroma_db"
             
         self.db_dir = str(db_dir)
+
+        if not Path(self.db_dir).is_dir():
+            logger.warning("VectorDB directory does not exist: %s", self.db_dir)
+            self.embeddings = None
+            self.vector_store = None
+            return
         
         try:
             logger.info("Initializing VectorDB Retriever (loading Embeddings & Chroma)...")

@@ -88,7 +88,8 @@ Chức năng:
 1. Load environment và chọn model từ `GROQ_MODEL`, sau đó `MODEL_NAME`; mặc định
    là `openai/gpt-oss-20b`.
 2. Chọn memory adapter theo chế độ:
-   - `durable`: file `.md` + `LLMPersister`;
+   - `durable`: file `.md` + deterministic `TurnMemoryPersister` mặc định;
+     chỉ dùng `LLMPersister` khi `MEMORY_PERSISTER_MODE=llm_episode`;
    - `evaluation`: repository trong RAM, có thể seed từ file, +
      `TurnMemoryPersister`;
    - `disabled`: repository rỗng và không persist.
@@ -97,8 +98,8 @@ Chức năng:
 4. Mở hai MCP server qua stdio:
    - DB server: CRM, catalog, inventory, pricing và order;
    - Workflow server: callback và human handoff.
-5. Load `soul.md`, `agent.md`, `tools.md` bằng `MemoryMiddleware`. Đây là memory
-   cấu hình/persona của agent, không phải customer memory.
+5. Đọc `soul.md`, `agent.md`, `tools.md` một lần và truyền trực tiếp làm system
+   prompt. Đây là cấu hình/persona của agent, không phải customer memory.
 6. Tạo graph bằng `create_deep_agent()`.
 
 DeepAgent mặc định có filesystem, shell và general-purpose subagent. Telesale
@@ -437,10 +438,12 @@ Mỗi scenario được cô lập:
 Runner phân biệt hai lỗi Groq:
 
 - HTTP 413/request too large: prompt vượt giới hạn, không retry cùng payload;
-- HTTP 429/rolling TPM: backoff rồi thử lại.
+- HTTP 429/rolling TPM: mặc định dừng turn ngay để không replay toàn bộ NLU và
+  DeepAgent. Chỉ backoff/retry khi người chạy chủ động đặt `--max-retries > 1`.
 
-Việc thêm `--sleep` chỉ giúp 429. Nó không thể sửa 413; 413 phải được xử lý bằng
-bounded context, checkpoint theo turn và giảm system/tool schema.
+Runner mặc định nghỉ 20 giây giữa các turn. `--sleep` chỉ giúp 429. Nó không thể
+sửa 413; 413 phải được xử lý bằng bounded context, checkpoint theo turn và giảm
+system/tool schema.
 
 ## 6. Invariants cần giữ khi mở rộng
 
@@ -472,15 +475,89 @@ bounded context, checkpoint theo turn và giảm system/tool schema.
 Phần giải thích riêng về memory/upsert/context limit nằm tại
 `docs/agent/deepagent_context_memory_flow.md`.
 
+Báo cáo trạng thái hoàn thiện, kết quả SAMPLE-03 và backlog ưu tiên nằm tại
+`docs/agent/deep_agent_implementation_status.md`.
+
 ## 8. Giới hạn hiện tại
 
 - File memory chưa có lock cho nhiều process cùng ghi một customer. Production
   nhiều worker cần single-writer service hoặc file lock.
-- Durable `LLMPersister` tạo episode bằng một LLM call bổ sung; cần tính phần
-  request này vào RPM/TPM production.
+- Nếu bật `MEMORY_PERSISTER_MODE=llm_episode`, `LLMPersister` tạo episode bằng
+  một LLM call bổ sung; mặc định deterministic không có request này.
 - In-process `MemorySaver` vẫn giữ checkpoint của các turn cho tới khi harness
   bị đóng. Nó không làm prompt turn sau lớn lên khi dùng turn scope, nhưng eval
   cực lớn có thể cần cleanup để giảm RAM.
 - Compact RAG hints hiện chỉ inject trực tiếp ở turn đầu. Nếu muốn dùng RAG ở
   mọi turn, phải giữ cap theo item/character hoặc route qua một retrieval tool,
   không inject toàn bộ kết quả.
+
+## 9. Orchestration chống 429/413
+
+Biểu đồ Groq cho thấy uncached input lớn hơn output rất nhiều. Vì vậy pipeline
+không giải quyết bằng cách giảm độ dài câu trả lời đơn thuần mà giảm cả kích
+thước request lẫn số vòng model.
+
+### 9.1 Instruction memory không dùng `MemoryMiddleware`
+
+Ba file sau vẫn là nguồn cấu hình duy nhất của agent:
+
+```text
+data/memory-root/agents/telesales_agent/soul.md
+data/memory-root/agents/telesales_agent/agent.md
+data/memory-root/agents/telesales_agent/tools.md
+```
+
+Harness đọc chúng một lần khi startup và truyền thẳng qua `system_prompt` của
+`create_deep_agent`. Không dùng `MemoryMiddleware`, vì middleware này tự thêm
+hơn 5.100 ký tự hướng dẫn self-edit vào mọi model request. Agent telesale không
+cần phần đó: customer memory được application persister ghi sau turn.
+
+Điều này không đổi format `.md`, không chuyển instruction vào code và không
+cho model quyền sửa instruction files.
+
+### 9.2 Tool allowlist theo intent
+
+`select_tools_for_turn()` chỉ expose schema cần cho intent hiện tại. Ví dụ:
+
+| Intent | Tool có thể nhìn thấy |
+|---|---|
+| hỏi sản phẩm | catalog, inventory |
+| hỏi giá/giảm giá | pricing |
+| tạo đơn | inventory, pricing, order.create |
+| đổi size | order.status, inventory, order.update |
+| hỏi policy | không có business tool; dùng context đã retrieve |
+
+Các filesystem/execute/subagent tool của DeepAgent bị ẩn. Model call tối đa 4
+và business tool call tối đa 3 cho một turn.
+
+### 9.3 Deterministic read prefetch
+
+Read chain có dependency rõ ràng được thực thi bởi orchestrator trước model:
+
+```text
+catalog.search
+    -> đúng một variant SKU
+    -> inventory.check
+    -> compact verified results
+    -> một DeepAgent response call
+```
+
+Ở turn hỏi giá hoặc chốt đơn, SKU đã được persist từ turn trước nên pricing và
+inventory cũng có thể được prefetch mà không cần model chọn lại SKU. Mutation
+như `order.create` và `order.update` vẫn do DeepAgent gọi.
+
+Prefetch không làm mất trace. Mỗi call vẫn được normalize thành `tool_calls`,
+đổi thành `AgentStep`, đi qua memory persistence và được ghi vào JSONL eval.
+
+### 9.4 Chống retry storm
+
+- `GROQ_MAX_RETRIES=0`: SDK không tự gửi lại request ngầm.
+- `GROQ_REQUEST_TIMEOUT_SECONDS=30`: request treo không giữ turn vô hạn.
+- eval `--max-retries 1`: mặc định không replay cả turn sau 429.
+- eval `--sleep 20`: dãn turn theo quota thấp; có thể tăng nếu Groq account có
+  TPM thấp hơn workload thực tế.
+- mỗi model request log ước lượng input token từ system/messages/tool schema để
+  tìm turn phình context trước khi xem dashboard.
+
+Ước lượng cục bộ là cảnh báo, không phải số billing chính xác. Dashboard Groq
+vẫn là nguồn xác nhận cuối cùng.

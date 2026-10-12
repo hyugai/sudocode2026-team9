@@ -38,14 +38,17 @@ $env:GROQ_MODEL = "openai/gpt-oss-20b"
   --scenarios "dataset\BTC-Data-Vong1-TEAMS\test_set\public_sample" `
   --config full `
   --run-id full_public `
-  --sleep 3 `
-  --sleep-scenario 5
+  --sleep 20 `
+  --sleep-scenario 20 `
+  --max-retries 1
 ```
 
 > **Mẹo tránh Rate Limit (TPM/RPM) trên Groq**:
-> - Dùng cờ `--sleep <số_giây>` (mặc định 2s) để dãn khoảng cách giữa các turn.
+> - Dùng cờ `--sleep <số_giây>` (mặc định 20s) để dãn khoảng cách giữa các turn.
 > - Dùng cờ `--sleep-scenario <số_giây>` (mặc định 3s) để nghỉ giữa các kịch bản.
-> - Hệ thống đã tích hợp **tự động bắt lỗi RateLimitError (429 / TPM limit) và retry backoff** (tự động ngủ đúng số giây Groq yêu cầu rồi tiếp tục lượt hội thoại mà không bị hủy).
+> - Mặc định `--max-retries 1`, tức không tự replay cả turn khi gặp 429. Chỉ
+>   tăng giá trị này khi muốn runner backoff theo thời gian Groq trả về.
+> - `GROQ_MAX_RETRIES=0` tắt retry ngầm trong SDK, tránh SDK và runner cùng retry.
 
 ## 3. Chấm trace
 
@@ -81,6 +84,12 @@ Không dùng report làm kết quả chính thức nếu trace còn `_error`.
 - `baseline_no_memory` dùng repository rỗng và không persist memory.
 - Các call được tách `ConversationState`; carry-over giữa call chỉ đi qua customer memory.
 - DeepAgent ẩn các built-in filesystem/execute/subagent tool không dùng để giảm tool-schema token.
+- Instruction `.md` được đọc một lần lúc startup; không còn generic
+  `MemoryMiddleware` self-edit prompt trong mọi request.
+- Read chain catalog → inventory và lookup price/stock từ SKU đã biết được
+  prefetch để giảm model round-trip; call vẫn xuất hiện trong trace.
+- Log `Model request estimate` cho biết system/message/tool-schema đang chiếm
+  khoảng bao nhiêu input token trước mỗi request.
 
 Các giới hạn context có thể chỉnh qua `.env`: `GROQ_MAX_OUTPUT_TOKENS`,
 `DEEPAGENT_RECENT_MESSAGE_COUNT`, `DEEPAGENT_RECENT_MESSAGE_CHARS` và

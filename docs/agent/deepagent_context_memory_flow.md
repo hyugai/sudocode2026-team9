@@ -199,9 +199,10 @@ Ví dụ:
 Facts: phòng 25m2 | Product: AirPure Y | Blocker: cần hỏi chồng
 ```
 
-Trong durable mode, `LLMPersister` dùng hai message gần nhất — customer và
-agent — để tạo episode summary. Nhiều episode trong cùng ngày được append vào
-`episode-YYYY-MM-DD.md`.
+Khi bật tùy chọn `MEMORY_PERSISTER_MODE=llm_episode`, `LLMPersister` dùng hai
+message gần nhất — customer và agent — để tạo episode summary. Nhiều episode
+trong cùng ngày được append vào `episode-YYYY-MM-DD.md`. Mặc định durable mode
+dùng deterministic persister để tránh thêm một Groq request sau mỗi turn.
 
 Episode trả lời câu hỏi “đã xảy ra chuyện gì?”, còn `facts.md` trả lời câu hỏi
 “thông tin hiện tại của khách là gì?”.
@@ -472,13 +473,13 @@ updated_at hoặc intent-based selection thay vì chỉ tăng giới hạn.
 ### Durable/production mode
 
 ```text
-FileCustomerMemoryRepository + LLMPersister
+FileCustomerMemoryRepository + TurnMemoryPersister (mặc định)
 ```
 
 - Fact được upsert xuống `facts.md`.
-- `LLMPersister` có thể gọi thêm Groq để tóm tắt hai message gần nhất thành
-  episode.
-- Episode được append vào `episodes/episode-YYYY-MM-DD.md`.
+- Không gọi thêm Groq sau turn.
+- Nếu đặt `MEMORY_PERSISTER_MODE=llm_episode`, dùng `LLMPersister` để tạo và
+  append episode vào `episodes/episode-YYYY-MM-DD.md`.
 - Dữ liệu tồn tại qua restart và qua các cuộc gọi.
 
 ### Evaluation/full mode
@@ -526,8 +527,8 @@ Turn memory không được ghi nếu:
 - memory mode là `disabled`;
 - agent/tool loop throw exception trước persistence;
 - Perceiver không tìm thấy delta và không có pricing/order fact;
-- durable `LLMPersister` đang bị `IS_EVAL=true` chặn trong một flow cấu hình
-  không chuẩn.
+- flow tùy chọn `LLMPersister` đang bị `IS_EVAL=true` chặn trong một cấu hình
+  không chuẩn (deterministic mode không có điều kiện này).
 
 Nếu không có `customer_id`, persister clear `state.memory_deltas` và trả danh
 sách write rỗng để không vô tình gắn fact vào sai customer.
@@ -628,3 +629,36 @@ Khi số fact lớn, nên có selector thay vì nâng context limit.
 
 Kiến trúc pipeline đầy đủ được mô tả tại
 `docs/agent/deep_agent_architecture.md`.
+
+## 15. Phân biệt customer memory và agent instruction memory
+
+Hai nhóm cùng nằm dưới `memory-root` nhưng không có cùng lifecycle:
+
+| Nhóm | Đường dẫn | Ai ghi | Khi nào nạp vào model |
+|---|---|---|---|
+| Customer memory | `users/<customer_id>/*.md` | Persister sau mỗi turn | Chọn lọc qua CallBrief |
+| Agent instructions | `agents/telesales_agent/*.md` | Developer/version control | Đọc một lần lúc harness startup |
+
+Agent instructions không đi qua DeepAgents `MemoryMiddleware`. Lý do là
+middleware đó thêm generic self-learning/edit-file prompt vào từng model call,
+trong khi thiết kế này đã có application-owned persistence. Nội dung
+`soul.md`, `agent.md`, `tools.md` vẫn được dùng đầy đủ làm system prompt; chỉ bỏ
+wrapper dư thừa.
+
+Read-tool prefetch vẫn tạo `AgentStep`, nên flow memory không đổi:
+
+```text
+orchestrator gọi read tool
+  -> normalize tool call/result
+  -> DeepAgent tạo response
+  -> context.steps gồm prefetch + agent tool calls
+  -> TurnMemoryPersister lấy fact authoritative
+  -> upsert facts.md
+  -> turn sau refresh memory và rebuild CallBrief
+```
+
+Ví dụ SAMPLE-03: inventory call với
+`SKU-SN-CAS-39-DEN` tạo các fact `product_advised`, `variant_sku`, `size`,
+`color`. Turn hỏi giá bổ sung `price_quoted_vnd`; order tool bổ sung `order_id`
+và `payment`. Call 2 vì thế đọc lại đúng dữ kiện qua CallBrief thay vì replay
+raw transcript/tool history của Call 1.

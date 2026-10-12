@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 import re
 from datetime import datetime
 from pathlib import Path
@@ -20,7 +21,12 @@ class FileCustomerMemoryRepository:
 
     def __init__(self, root: str | Path | None = None):
         project_root = Path(__file__).resolve().parents[4]
-        self.root = Path(root) if root else project_root / "data" / "memory-root" / "users"
+        configured_root = root or os.environ.get("CUSTOMER_MEMORY_ROOT")
+        self.root = (
+            Path(configured_root)
+            if configured_root
+            else project_root / "data" / "memory-root" / "users"
+        )
 
     def _user_dir(self, customer_id: str, *, create: bool = False) -> Path:
         if not customer_id or not _SAFE_CUSTOMER_ID.fullmatch(customer_id):
