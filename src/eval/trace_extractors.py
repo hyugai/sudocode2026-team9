@@ -52,11 +52,23 @@ def extract_questions(response_text: str) -> list[dict[str, str]]:
 def extract_claims(
     tool_calls: list[dict[str, Any]],
     *,
+    response_text: str,
     call_date: str | None = None,
 ) -> list[dict[str, Any]]:
-    """Build verifiable claims from authoritative tool results."""
+    """Build claims that were both spoken and backed by authoritative tools.
+
+    A silent tool result is not an agent claim and must not enter HR.
+    """
     claims: list[dict[str, Any]] = []
     seen: set[tuple[str, str]] = set()
+    response_folded = response_text.casefold()
+    response_compact = re.sub(r"[\s.,]", "", response_folded)
+
+    def spoken_number(value: Any) -> bool:
+        return str(value).split(".")[0] in response_compact
+
+    def spoken_phrase(*patterns: str) -> bool:
+        return any(re.search(pattern, response_folded, re.I) for pattern in patterns)
 
     def add(field: str, value: Any) -> None:
         marker = (field, json.dumps(value, ensure_ascii=False, sort_keys=True))
@@ -71,23 +83,35 @@ def extract_claims(
             continue
 
         if name == "pricing.get_quote":
-            if result.get("final_price_vnd") is not None:
+            if result.get("final_price_vnd") is not None and spoken_number(
+                result["final_price_vnd"]
+            ):
                 add("price_vnd", result["final_price_vnd"])
-            if result.get("list_price_vnd") is not None:
+            if result.get("list_price_vnd") is not None and spoken_number(
+                result["list_price_vnd"]
+            ):
                 add("list_price_vnd", result["list_price_vnd"])
             applied = result.get("applied_promos") or []
-            add("promo_active", bool(applied))
+            if spoken_phrase(r"khuyến\s*mãi", r"ưu\s*đãi", r"mã\s*giảm", r"promo"):
+                add("promo_active", bool(applied))
             for promo in applied:
                 code = promo.get("promo_code") if isinstance(promo, dict) else promo
-                if code:
+                if code and str(code).casefold() in response_folded:
                     add(f"promo_{code}_active", True)
             for promo in result.get("expired_promos") or []:
                 code = promo.get("promo_code") if isinstance(promo, dict) else promo
-                if code:
+                if code and str(code).casefold() in response_folded:
                     add(f"promo_{code}_active", False)
 
         elif name == "inventory.check" and "in_stock" in result:
-            add("in_stock", bool(result["in_stock"]))
+            if result["in_stock"] and spoken_phrase(
+                r"còn\s*hàng", r"có\s*sẵn", r"sẵn\s*hàng"
+            ):
+                add("in_stock", True)
+            elif not result["in_stock"] and spoken_phrase(
+                r"hết\s*hàng", r"chưa\s*có\s*hàng"
+            ):
+                add("in_stock", False)
 
         elif name == "order.create" and result.get("estimated_delivery") and call_date:
             try:
@@ -95,7 +119,11 @@ def extract_claims(
                     date.fromisoformat(str(result["estimated_delivery"])[:10])
                     - date.fromisoformat(call_date)
                 ).days
-                add("delivery_days", delivery_days)
+                if spoken_phrase(
+                    rf"\b{delivery_days}\s*ngày\b",
+                    re.escape(str(result["estimated_delivery"])[:10]),
+                ):
+                    add("delivery_days", delivery_days)
             except ValueError:
                 pass
 
@@ -116,6 +144,11 @@ _FACT_PATTERNS: dict[str, re.Pattern[str]] = {
         re.I,
     ),
     "competitor_price_vnd": re.compile(r"đối thủ|bên khác|nơi khác", re.I),
+    "variant_sku": re.compile(r"\bSKU-[A-Z0-9-]+\b", re.I),
+    "size": re.compile(r"\bsize\s*(?:\d+|s|m|l|xl)\b", re.I),
+    "color": re.compile(r"màu\s+[\w-]+", re.I),
+    "order_id": re.compile(r"\b(?:ORD-|OD)\w+\b", re.I),
+    "payment": re.compile(r"\bCOD\b|chuyển khoản|thanh toán", re.I),
 }
 
 
@@ -140,6 +173,35 @@ def extract_facts_used(
     used = []
     for key, pattern in _FACT_PATTERNS.items():
         if key in brief_blob and pattern.search(evidence):
+            used.append(key)
+
+    # Tool arguments are stronger evidence than surface wording. Map their
+    # runtime schema back to the canonical memory schema used by scenarios.
+    # This also captures size/color carried inside a canonical variant SKU.
+    argument_keys: set[str] = set()
+    variant_values: list[str] = []
+    for call in tool_calls:
+        args = call.get("args", {})
+        if not isinstance(args, dict):
+            continue
+        if args.get("order_id"):
+            argument_keys.add("order_id")
+        if args.get("payment") or args.get("payment_method"):
+            argument_keys.add("payment")
+        if args.get("price_vnd") is not None:
+            argument_keys.add("price_quoted_vnd")
+        for field in ("sku", "new_variant_sku"):
+            value = args.get(field)
+            if isinstance(value, str) and value:
+                variant_values.append(value)
+
+    if variant_values:
+        argument_keys.update({"product_advised", "variant_sku"})
+        if any(re.search(r"-(?:\d+|S|M|L|XL)-[A-Z]+$", sku, re.I) for sku in variant_values):
+            argument_keys.update({"size", "color"})
+
+    for key in _FACT_PATTERNS:
+        if key in argument_keys and key in brief_blob and key not in used:
             used.append(key)
     return used
 
