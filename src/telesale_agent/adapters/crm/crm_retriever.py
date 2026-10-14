@@ -42,7 +42,15 @@ class PostgresCRMRetriever(CRMRetriever):
                 "candidates": result.get("candidates", [])
             }
 
-        # Do not flatten attributes or return session memory through the CRM port.
+        attributes = result.get("attributes") or {}
+        saved_address = (
+            attributes.get("address")
+            or attributes.get("delivery_address")
+            or attributes.get("shipping_address")
+        )
+
+        # Expose only verified operational fields. Conversation memory remains
+        # file-backed and is never flattened into the CRM profile.
         return {
             "found": True,
             "customer_id": result.get("customer_id"),
@@ -50,6 +58,7 @@ class PostgresCRMRetriever(CRMRetriever):
             "honorific": result.get("honorific"),
             "phone": result.get("phone"),
             "region": result.get("region"),
+            "address": saved_address,
         }
 
     async def precompute_brief(self, ctx: TurnContext) -> Dict[str, Any]:

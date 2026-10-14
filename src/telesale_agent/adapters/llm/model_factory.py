@@ -7,8 +7,11 @@ the old ``GROQ_*`` variables as backwards-compatible fallbacks.
 from __future__ import annotations
 
 import os
+import re
 from dataclasses import dataclass, field
 from typing import Any
+
+from telesale_agent.adapters.llm.usage_tracking import usage_tracking_callback
 
 
 _PROVIDER_ALIASES = {
@@ -21,6 +24,9 @@ _DEFAULT_MODELS = {
     "groq": "openai/gpt-oss-20b",
     "gemini": "gemini-2.5-flash",
 }
+_GEMINI_FIXED_SAMPLING_MODELS = frozenset(
+    {"gemini-3.5-flash-lite", "gemini-3.6-flash"}
+)
 
 
 def _first_env(*names: str) -> str | None:
@@ -52,6 +58,13 @@ def _positive_int(value: str | None, default: int) -> int:
     return parsed if parsed > 0 else default
 
 
+def _gemini_uses_fixed_sampling(model_name: str) -> bool:
+    """Return whether Gemini ignores custom temperature/top-k/top-p values."""
+    normalized = model_name.lower().rsplit("/", 1)[-1]
+    normalized = re.sub(r"-\d{3}$", "", normalized)
+    return normalized in _GEMINI_FIXED_SAMPLING_MODELS
+
+
 @dataclass(frozen=True)
 class ModelConfig:
     provider: str
@@ -59,7 +72,7 @@ class ModelConfig:
     api_key: str = field(repr=False)
     timeout: float = 30.0
     max_retries: int = 0
-    max_output_tokens: int = 768
+    max_output_tokens: int = 1024
 
 
 def resolve_model_config(
@@ -106,9 +119,8 @@ def resolve_model_config(
         _first_env("LLM_MAX_RETRIES", provider_retries_var), 0
     )
     token_limit = max_output_tokens or _positive_int(
-        _first_env("LLM_MAX_OUTPUT_TOKENS", provider_tokens_var), 768
+        _first_env("LLM_MAX_OUTPUT_TOKENS", provider_tokens_var), 1024
     )
-
     return ModelConfig(
         provider=selected_provider,
         model=selected_model,
@@ -149,6 +161,7 @@ def create_chat_model(
             max_tokens=config.max_output_tokens,
             timeout=config.timeout,
             max_retries=config.max_retries,
+            callbacks=[usage_tracking_callback],
         )
 
     try:
@@ -158,13 +171,28 @@ def create_chat_model(
             "Gemini requires langchain-google-genai. Install project dependencies first."
         ) from exc
 
+    gemini_options: dict[str, Any] = {
+        "model": config.model,
+        "google_api_key": config.api_key,
+        "max_output_tokens": config.max_output_tokens,
+        "timeout": config.timeout,
+        "max_retries": config.max_retries,
+        "callbacks": [usage_tracking_callback],
+    }
+    if not _gemini_uses_fixed_sampling(config.model):
+        gemini_options["temperature"] = temperature
+    # Gemini 3+ thinks by default and bills thinking tokens as output tokens.
+    # LLM_THINKING_LEVEL (minimal|low|medium|high) caps that hidden cost.
+    thinking_level = os.environ.get("LLM_THINKING_LEVEL", "").strip().lower()
+    if thinking_level:
+        if thinking_level not in {"minimal", "low", "medium", "high"}:
+            raise ValueError(
+                "LLM_THINKING_LEVEL must be one of: minimal, low, medium, high"
+            )
+        gemini_options["thinking_level"] = thinking_level
+
     return ChatGoogleGenerativeAI(
-        model=config.model,
-        google_api_key=config.api_key,
-        temperature=temperature,
-        max_output_tokens=config.max_output_tokens,
-        timeout=config.timeout,
-        max_retries=config.max_retries,
+        **gemini_options,
     )
 
 

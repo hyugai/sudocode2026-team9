@@ -90,6 +90,7 @@ async def chat_endpoint(req: ChatRequest):
             "past_history": result.state.past_history,
             "tool_calls": result.tool_calls,
             "memory_writes": result.memory_writes,
+            "usage": result.usage,
         }
     return response
 

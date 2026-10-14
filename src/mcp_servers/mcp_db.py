@@ -42,6 +42,7 @@ def get_pricing_quote(
     qty: int = 1,
     basket_skus: list[str] | None = None,
     customer_phone: str | None = None,
+    customer_id: str | None = None,
     address: str | None = None,
     on: str | None = None,
 ) -> dict[str, Any]:
@@ -51,6 +52,7 @@ def get_pricing_quote(
         qty=qty,
         basket_skus=basket_skus,
         customer_phone=customer_phone,
+        customer_id=customer_id,
         address=address,
         on=on,
     )
@@ -61,10 +63,12 @@ def create_new_order(
     sku: str,
     price_vnd: int,
     qty: int,
+    address: str,
     payment_method: str = "COD",
-    address: str | None = None,
     promo_code: str | None = None,
     on: str | None = None,
+    idempotency_key: str | None = None,
+    customer_id: str | None = None,
 ) -> dict[str, Any]:
     """Create a new order in the system."""
     return order_create(
@@ -76,6 +80,8 @@ def create_new_order(
         payment=payment_method,
         address=address,
         on=on,
+        idempotency_key=idempotency_key,
+        customer_id=customer_id,
     )
 
 @mcp.tool()

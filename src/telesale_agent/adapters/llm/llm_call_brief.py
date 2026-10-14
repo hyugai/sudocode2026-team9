@@ -19,10 +19,18 @@ class LLMCallBriefBuilder(CallBriefBuilder):
         history = context.state.past_history or {}
         customer_name = crm_profile.get("name") or context.identity.profile.get("name")
         past_sessions = memory.get("episodes", [])
+        raw_facts = memory.get("facts", {})
+        if not isinstance(raw_facts, dict):
+            raw_facts = {}
+        canonical_facts = {
+            key: value
+            for key, value in raw_facts.items()
+            if value not in (None, "", [])
+        }
         remembered_preferences = {
             "profile": memory.get("profile", ""),
             "behaviors": memory.get("behaviors", ""),
-            "facts": memory.get("facts", {}),
+            "facts": canonical_facts,
             "atomic_facts": memory.get("atomic_facts", []),
             "foresights": memory.get("foresights", []),
         }

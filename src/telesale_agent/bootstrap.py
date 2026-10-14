@@ -17,6 +17,7 @@ from telesale_agent.adapters.memory import (
     TurnMemoryPersister,
 )
 from telesale_agent.adapters.llm.llm_persist import LLMPersister
+from telesale_agent.adapters.rules.pii_guardrail import PIIGuardrail
 
 MemoryMode = Literal["durable", "evaluation", "disabled"]
 
@@ -54,6 +55,7 @@ def build_deepagent_harness(memory_mode: MemoryMode = "durable"):
         memory=memory,
         retrieve=VectorDBRetriever(),
         call_brief=LLMCallBriefBuilder(),
+        guardrail=PIIGuardrail(),
         persist=persist,
     )
 

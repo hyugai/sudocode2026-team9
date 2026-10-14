@@ -1,3 +1,4 @@
+import re
 from typing import Any
 from pydantic import BaseModel, Field
 
@@ -16,9 +17,129 @@ class IntentSchema(BaseModel):
         default_factory=dict
     )
     memory_deltas: Any = Field(
-        description="Profile facts established in this utterance to be saved into long-term memory (e.g. {'room_size': '25m2', 'has_kids': True, 'budget': 5000000}). Return empty dict if no new facts.",
+        description=(
+            "Durable customer facts explicitly stated in this utterance. Use "
+            "canonical keys such as room_area_m2, has_children, budget_vnd, "
+            "blocker, family_approved, size, color, quantity, payment, or "
+            "callback_at. Never infer product_advised, price_quoted_vnd, "
+            "promo_code, order_id, address, phone, or agent suggestions."
+        ),
         default_factory=dict
     )
+
+
+_MEMORY_KEY_ALIASES = {
+    "room_size": "room_area_m2",
+    "room_area": "room_area_m2",
+    "budget": "budget_vnd",
+    "has_kids": "has_children",
+    "has_children": "has_children",
+    "payment_method": "payment",
+    "shipping_address": "delivery_address",
+    "address": "delivery_address",
+    "product": "product_advised",
+    "sku": "product_advised",
+    "price": "price_quoted_vnd",
+    "price_vnd": "price_quoted_vnd",
+}
+_AUTHORITATIVE_ONLY_MEMORY_KEYS = {
+    "product_advised",
+    "variant_sku",
+    "price_quoted_vnd",
+    "promo_code",
+    "order_id",
+    "basket_skus",
+    "removed_sku",
+}
+_SENSITIVE_OR_TRANSACTIONAL_KEYS = {
+    "address",
+    "delivery_address",
+    "shipping_address",
+    "phone",
+    "customer_phone",
+    "customer_id",
+    "bank_account",
+    "cccd",
+    "cmnd",
+}
+
+
+def _number(value: Any) -> int | float | Any:
+    if isinstance(value, (int, float)) and not isinstance(value, bool):
+        return value
+    if not isinstance(value, str):
+        return value
+    compact = re.sub(r"(?<=\d)[.,\s](?=\d{3}\b)", "", value.strip())
+    match = re.fullmatch(r"(\d+(?:[.,]\d+)?)\s*(?:m[²2])?", compact, re.I)
+    if not match:
+        return value
+    numeric = match.group(1).replace(",", ".")
+    parsed = float(numeric)
+    return int(parsed) if parsed.is_integer() else parsed
+
+
+def canonicalize_memory_deltas(
+    deltas: dict[str, Any], transcript: str
+) -> dict[str, Any]:
+    """Normalize NLU output and reject facts that require tool authority."""
+    normalized: dict[str, Any] = {}
+    transcript_folded = transcript.casefold()
+    for raw_key, raw_value in deltas.items():
+        if not isinstance(raw_key, str):
+            continue
+        key = re.sub(r"[^a-z0-9_]+", "_", raw_key.strip().casefold()).strip("_")
+        key = _MEMORY_KEY_ALIASES.get(key, key)
+        if (
+            not key
+            or key in _AUTHORITATIVE_ONLY_MEMORY_KEYS
+            or key.startswith("basket_item_")
+            or key in _SENSITIVE_OR_TRANSACTIONAL_KEYS
+        ):
+            continue
+        if key == "budget_vnd" and not re.search(
+            r"ngân\s*sách|ngan\s*sach|tầm\s+\d|tam\s+\d|đổ\s*lại",
+            transcript_folded,
+            re.I,
+        ):
+            continue
+        value = raw_value
+        if key in {"budget_vnd", "room_area_m2", "size", "quantity"}:
+            value = _number(value)
+        elif key in {"family_approved", "has_children"}:
+            if isinstance(value, str):
+                folded = value.strip().casefold()
+                if folded in {
+                    "true", "yes", "y", "1", "có", "đồng ý", "đã đồng ý"
+                }:
+                    value = True
+                elif folded in {
+                    "false", "no", "n", "0", "không", "chưa đồng ý"
+                }:
+                    value = False
+        normalized[key] = value
+
+    # Deterministic guards fill the two high-value cross-call facts when the
+    # structured model omits them. Both require literal customer evidence.
+    if re.search(
+        r"(?:cần|phải|còn\s+phải|để)\s+hỏi\s+(?:người\s+nhà|chồng|vợ)",
+        transcript_folded,
+        re.IGNORECASE,
+    ):
+        normalized.setdefault("blocker", "cần hỏi người nhà")
+    if re.search(
+        r"(?:người\s+nhà|chồng|vợ)\s+(?:đã\s+)?đồng\s+ý",
+        transcript_folded,
+        re.IGNORECASE,
+    ):
+        normalized["family_approved"] = True
+    if re.search(
+        r"(?:thuốc\s+kê\s+đơn|liều\s+thuốc|chẩn\s+đoán|điều\s+trị|"
+        r"vấn\s+đề\s+sức\s+khỏe|câu\s+hỏi\s+y\s+tế)",
+        transcript_folded,
+        re.IGNORECASE,
+    ):
+        normalized["medical_question"] = transcript.strip()
+    return normalized
 
 class LLMPerceiver(Perceiver):
     """Use the configured LLM to extract intents and entities."""
@@ -45,7 +166,11 @@ Your task: extract ALL intents and entities from the customer utterance below.
 1. A single utterance CAN have multiple intents — return ALL that apply.
 2. If the utterance mentions both a product AND a fee/policy keyword → return BOTH intents.
 3. Extract entities as key-value pairs (product_name, brand, quantity).
-4. Extract `memory_deltas` for any long-term profile facts the customer reveals (e.g., room_size, budget, has_kids).
+4. Extract `memory_deltas` only for durable facts explicitly stated by the customer.
+5. Use canonical memory keys: room_area_m2, has_children, budget_vnd, blocker,
+   family_approved, size, color, quantity, payment, callback_at.
+6. Never put product, quoted price, promotion, order ID, address, phone, or an
+   agent recommendation in memory_deltas; those require verified tools/storage.
 
 Respond ONLY with a valid JSON object. Do not include markdown formatting or extra text.
 
@@ -66,6 +191,7 @@ Customer utterance: "{sanitised_transcript}"
             parsed_deltas = result.memory_deltas
             if not isinstance(parsed_deltas, dict):
                 parsed_deltas = {}
+            parsed_deltas = canonicalize_memory_deltas(parsed_deltas, transcript)
 
             return Perception(
                 transcript=transcript,
