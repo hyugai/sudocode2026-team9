@@ -25,6 +25,7 @@ dependencies = [
     "langchain-huggingface==1.2.2",
     "chromadb==1.5.9",
     "sentence-transformers==6.1.0",
+    "pinecone>=10,<11",
     "gradio==6.27.0",
 ]
 
