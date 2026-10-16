@@ -17,6 +17,7 @@ from telesale_agent.core.models import (
     Observation,
 )
 from telesale_agent.core.errors import ASRUnavailableError, AudioInputError
+from telesale_agent.application.asr_normalization import normalize_asr_transcript
 from telesale_agent.adapters.llm.rate_limits import is_rate_limit_error
 from telesale_agent.adapters.llm.usage_tracking import (
     begin_usage_collection,
@@ -90,7 +91,8 @@ async def run_turn_impl(
         transcript = await harness.asr.transcribe(context)
         if not transcript or not transcript.strip():
             raise AudioInputError("Không nhận dạng được giọng nói trong ghi âm.")
-        context.input.text = transcript.strip()
+        context.input.metadata["raw_asr_transcript"] = transcript.strip()
+        context.input.text = normalize_asr_transcript(transcript)
 
     # 2. Pre-processing Nodes
     # 2a. Initialization phase (Only runs once per conversation)

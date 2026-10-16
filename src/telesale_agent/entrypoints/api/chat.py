@@ -157,6 +157,7 @@ async def run_chat_turn(turn_input: TurnInput):
         response["retry_after_seconds"] = provider_cooldown.remaining()
     if os.environ.get("ENABLE_DEBUG_RESPONSE", "false").lower() == "true":
         response["debug"] = {
+            "raw_asr_transcript": turn_input.metadata.get("raw_asr_transcript"),
             "intent": result.perception.intent if result.perception else "unknown",
             "retrieved_knowledge": (
                 result.retrieved.knowledge if result.retrieved else []

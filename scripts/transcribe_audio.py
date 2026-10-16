@@ -10,6 +10,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 from dotenv import load_dotenv
 
 from telesale_agent.adapters.asr import ZipformerASREngine
+from telesale_agent.application.asr_normalization import normalize_asr_transcript
 from telesale_agent.core.models import Channel, ConversationState, TurnContext, TurnInput
 
 
@@ -21,7 +22,7 @@ async def main(path: Path) -> None:
         input=TurnInput(conversation_id="local-asr-check", audio=audio, channel=Channel.VOICE),
         state=ConversationState(conversation_id="local-asr-check"),
     )
-    print(await engine.transcribe(context))
+    print(normalize_asr_transcript(await engine.transcribe(context)))
 
 
 if __name__ == "__main__":

@@ -182,16 +182,38 @@ class PipelineASRTests(unittest.IsolatedAsyncioTestCase):
 
         async def perceive(context):
             self.assertEqual(context.input.text, "xin chào từ ghi âm")
+            self.assertEqual(context.input.metadata["raw_asr_transcript"], "XIN CHÀO TỪ GHI ÂM")
             raise ReachedPerception
 
         harness = SimpleNamespace(
-            agent=object(), asr=SimpleNamespace(transcribe=AsyncMock(return_value=" xin chào từ ghi âm ")),
+            agent=object(), asr=SimpleNamespace(transcribe=AsyncMock(return_value=" XIN CHÀO TỪ GHI ÂM ")),
             perceive=SimpleNamespace(perceive=perceive), identity=None, customer_context=None,
         )
         state = ConversationState(conversation_id="test")
         with self.assertRaises(ReachedPerception):
             await run_turn_impl(harness, context_for(audio=b"recording").input, state)
         self.assertEqual(state.messages, [])
+
+    async def test_asr_numbers_are_normalized_before_identity_and_perception(self):
+        from telesale_agent.application.deepagent.turn import run_turn_impl
+
+        raw = "GIÁ BỐN TRIỆU TÁM TRĂM CHÍN MƯƠI, GỌI SỐ KHÔNG CHÍN TÁM BỐN BẢY HAI SÁU BẢY MỘT BỐN VÀO NGÀY MƯỜI BẢY THÁNG MƯỜI NĂM HAI KHÔNG HAI SÁU"
+        expected = "giá 4.890.000, gọi số 0984726714 vào 17/10/2026"
+
+        class ReachedIdentity(Exception):
+            pass
+
+        async def resolve(context):
+            self.assertEqual(context.input.text, expected)
+            self.assertEqual(context.input.metadata["raw_asr_transcript"], raw)
+            raise ReachedIdentity
+
+        harness = SimpleNamespace(
+            agent=object(), asr=SimpleNamespace(transcribe=AsyncMock(return_value=raw)),
+            identity=SimpleNamespace(resolve_identity=resolve),
+        )
+        with self.assertRaises(ReachedIdentity):
+            await run_turn_impl(harness, context_for(audio=b"recording").input)
 
     async def test_asr_failure_never_reaches_perception_or_history(self):
         from telesale_agent.application.deepagent.turn import run_turn_impl

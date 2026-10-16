@@ -30,6 +30,25 @@ ASR_MAX_DURATION_SECONDS=120
 
 API đọc các giới hạn từ cấu hình; bộ chọn file trên web áp dụng tối đa 25 MB và hiển thị giới hạn mặc định 120 giây. File quá dài bị từ chối, không âm thầm cắt mất nội dung. WAV, MP3, M4A, FLAC, OGG và WebM được giải mã thành mono 16 kHz. File tạm bị xóa sau khi giải mã; ứng dụng không lưu ghi âm vào lịch sử hoặc memory.
 
+## Chuẩn hóa văn bản sau ASR
+
+Ngay sau ASR, pipeline chuẩn hóa text hoàn toàn local trước bước identity, che PII và perception. Văn bản đã chuẩn hóa được dùng cho LLM, lịch sử hội thoại và trường `transcript` trả về web/Gradio. Tin nhắn người dùng gõ trực tiếp giữ nguyên cách viết. CLI `scripts/transcribe_audio.py` cũng trả text đã chuẩn hóa.
+
+| ASR đầu ra | Text sau chuẩn hóa |
+| --- | --- |
+| `EM MUỐN MUA ÁO` | `em muốn mua áo` |
+| `bốn triệu tám trăm chín mươi` | `4.890.000` |
+| `hai trăm bốn chín k` | `249.000` |
+| `sáu trăm chín mươi nghìn đồng không` | `690.000 đồng không` |
+| `Ngày mười bảy tháng mười năm hai không hai sáu` | `17/10/2026` |
+| `Không chín tám bốn bảy hai sáu bảy một bốn` | `0984726714` |
+
+Tiền dùng quy ước bán lẻ trong yêu cầu: phần sau `triệu` không đọc đầy đủ đơn vị được hiểu là phần nghìn (`bốn triệu tám trăm chín mươi` → `4.890.000`, `hai triệu năm` → `2.500.000`). Đơn vị tường minh như `nghìn/ngàn/k/đồng` và tiền thập phân như `2,5 triệu` được nhận diện. Số đếm thiếu dấu hiệu tiền tệ không tự đổi thành tiền. Tên/mã sản phẩm không được tự sửa theo phỏng đoán; chỉ chuyển chữ thường.
+
+Ngày được kiểm tra tính hợp lệ theo lịch, giữ nguyên nếu không hợp lệ; nếu người dùng chưa đọc năm thì chỉ chuẩn hóa thành `dd/mm`, không tự thêm năm. Các mốc tương đối như `ngày mai`, `thứ sáu tuần sau` và giờ hẹn tiếp tục do luồng hội thoại hiện có xử lý. Số điện thoại đủ 10 chữ số bắt đầu bằng `0` được ghép lại, giữ số `0` đầu; `+84`/`cộng tám bốn` được đổi về dạng `0...`. Số điện thoại này vẫn phải qua quy trình xác minh hiện có, không tự ghi đè số điện thoại đã xác thực từ CRM.
+
+Khi `ENABLE_DEBUG_RESPONSE=true`, `debug.raw_asr_transcript` chứa bản ASR ban đầu để đối chiếu. Bước chuẩn hóa không gọi thêm LLM hay dịch vụ ngoài và không sửa giá trong catalog hoặc tự quyết định lịch gọi lại.
+
 ## Chạy và sử dụng
 
 Khởi động backend với cấu hình CRM/LLM/MCP hiện có:

@@ -6,3 +6,7 @@
 - Confirm the customer’s preferred contact method and time for the callback to ensure timely communication
 - Ask the customer to specify which product they want to remember (e.g., name, model, variant)
 - Confirm the product details (name, model, storage, variant) so they can be stored for future reference
+- Offer to provide a summary of the items they have requested to confirm before the callback
+- Ask the customer to specify the preferred callback time
+- Confirm the current price of 690,000 VND and provide a price confirmation
+- Ask the customer to specify the desired size to check availability
