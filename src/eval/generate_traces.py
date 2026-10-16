@@ -134,9 +134,14 @@ async def run_scenario(
                 flush=True,
             )
 
-    # Each scenario is isolated. Calls use different checkpoint threads so the
-    # only cross-call context is the configured customer memory repository.
-    harness.reset_customer_memory()
+    # Each scenario is an independent experiment. Durable file memory selects
+    # a scenario namespace while in-memory repositories reset their state.
+    # Calls inside this scenario continue sharing the selected repository.
+    select_namespace = getattr(harness.memory, "select_namespace", None)
+    if callable(select_namespace):
+        select_namespace(scenario_id)
+    else:
+        harness.reset_customer_memory()
     if config == "full":
         seed_history = [
             episode
@@ -377,6 +382,13 @@ async def main():
     parser.add_argument("--scenario-id", default=None, dest="scenario_id",
                         help="Chỉ chạy một scenario cụ thể, vd: SC-001")
     parser.add_argument(
+        "--scenario-ids",
+        nargs="+",
+        default=None,
+        dest="scenario_ids",
+        help="Chạy danh sách scenario cụ thể, vd: --scenario-ids SC-001 SC-002",
+    )
+    parser.add_argument(
         "--max-turns",
         type=int,
         default=None,
@@ -445,7 +457,14 @@ async def main():
         print(f"[ERROR] Không tìm thấy file JSON trong: {scenarios_dir}", file=sys.stderr)
         sys.exit(1)
 
-    if args.scenario_id:
+    if args.scenario_ids:
+        file_map = {path.stem: path for path in all_files}
+        missing = [sid for sid in args.scenario_ids if sid not in file_map]
+        if missing:
+            print(f"[ERROR] Không tìm thấy các scenario: {', '.join(missing)}", file=sys.stderr)
+            sys.exit(1)
+        all_files = [file_map[sid] for sid in args.scenario_ids]
+    elif args.scenario_id:
         all_files = [path for path in all_files if path.stem == args.scenario_id]
         if not all_files:
             print(f"[ERROR] Không tìm thấy: {args.scenario_id}", file=sys.stderr)
@@ -481,35 +500,41 @@ async def main():
                 with open(fpath, encoding="utf-8") as scenario_file:
                     scenario = json.load(scenario_file)
                 sid = scenario.get("scenario_id", fpath.stem)
-                print(f"[{i:3d}/{len(all_files)}] {sid} ...", end=" ", flush=True)
+                print(f"[{i:3d}/{len(all_files)}] {sid} starting...", flush=True)
 
                 t0 = time.perf_counter()
-                rows = await run_scenario(
-                    scenario,
-                    harness,
-                    args.config,
-                    args.run_id,
-                    max_turns=args.max_turns,
-                    sleep_turn=args.sleep,
-                    max_retries=args.max_retries,
-                    cleanup_orders=args.cleanup_orders,
-                )
-                elapsed = time.perf_counter() - t0
-
-                print(f"✓ {len(rows)} turns, {elapsed:.1f}s")
-                for row in rows:
-                    out_f.write(json.dumps(row, ensure_ascii=False) + "\n")
-                    out_f.flush()
-                total_rows += len(rows)
+                try:
+                    rows = await run_scenario(
+                        scenario,
+                        harness,
+                        args.config,
+                        args.run_id,
+                        max_turns=args.max_turns,
+                        sleep_turn=args.sleep,
+                        max_retries=args.max_retries,
+                        cleanup_orders=args.cleanup_orders,
+                    )
+                    elapsed = time.perf_counter() - t0
+                    print(f"[{i:3d}/{len(all_files)}] {sid}: ✓ {len(rows)} turns, {elapsed:.1f}s", flush=True)
+                    for row in rows:
+                        out_f.write(json.dumps(row, ensure_ascii=False) + "\n")
+                        out_f.flush()
+                    total_rows += len(rows)
+                except Exception as scenario_exc:
+                    elapsed = time.perf_counter() - t0
+                    print(f"[{i:3d}/{len(all_files)}] {sid}: FAILED ({elapsed:.1f}s) - {scenario_exc}", flush=True)
     finally:
         await harness.__aexit__(None, None, None)
 
     report_path = out_path.with_name(f"{out_path.stem}_report.json")
-    selector = (
-        f" --scenario-id {args.scenario_id}"
-        if args.scenario_id
-        else (f" --limit {args.limit}" if args.limit is not None else "")
-    )
+    if args.scenario_ids:
+        selector = f" --limit {len(args.scenario_ids)}"
+    elif args.scenario_id:
+        selector = f" --scenario-id {args.scenario_id}"
+    elif args.limit is not None:
+        selector = f" --limit {args.limit}"
+    else:
+        selector = ""
     print(f"\n[Runner] Hoàn thành! {total_rows} rows → {out_path}")
     print("\n[Runner] Để chấm điểm bằng team evaluator, chạy:")
     print(

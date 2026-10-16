@@ -1,7 +1,0 @@
-{
-  "dependencies": ["."],
-  "graphs": {
-    "telesale_agent": "./src/telesale_agent/entrypoints/api/studio_app.py:graph"
-  },
-  "env": ".env"
-}

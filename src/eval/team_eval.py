@@ -385,9 +385,16 @@ def select_scenarios(
     scenarios: dict[str, Any],
     *,
     scenario_id: str | None = None,
+    scenario_ids: list[str] | None = None,
     limit: int | None = None,
 ) -> dict[str, Any]:
     """Apply the same scenario selection used by trace generation."""
+    if scenario_ids:
+        targets = {s.strip().casefold() for s in scenario_ids if s.strip()}
+        matched = {k: v for k, v in scenarios.items() if k.casefold() in targets}
+        if not matched:
+            raise ValueError(f"No scenarios found matching IDs: {scenario_ids}")
+        return matched
     if scenario_id:
         if scenario_id not in scenarios:
             raise ValueError(f"Scenario not found: {scenario_id}")
@@ -407,6 +414,7 @@ def main() -> int:
     parser.add_argument("--trace", required=True)
     parser.add_argument("--baseline")
     parser.add_argument("--scenario-id")
+    parser.add_argument("--scenario-ids", help="Comma-separated scenario IDs")
     parser.add_argument("--limit", type=int)
     parser.add_argument("--asr")
     parser.add_argument("--rag", help="RAG results JSON")
@@ -421,10 +429,12 @@ def main() -> int:
     parser.add_argument("--out", default="team_report.json")
     args = parser.parse_args()
 
+    scenario_ids = [s.strip() for s in args.scenario_ids.split(",")] if args.scenario_ids else None
     try:
         scenarios = select_scenarios(
             REFERENCE.load_scenarios(args.scenarios),
             scenario_id=args.scenario_id,
+            scenario_ids=scenario_ids,
             limit=args.limit,
         )
     except ValueError as exc:
