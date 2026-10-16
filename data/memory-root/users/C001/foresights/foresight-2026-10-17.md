@@ -1,0 +1,8 @@
+- Ask if the customer would like to place an order for the Áo Khoác Giò Win Break Sivesbom màu xanh NIVE
+- Ask about preferred size and shipping method
+- Ask the customer to clarify which specific change conditions they want to discuss (e.g., delivery date, product variant, price adjustments) so you can prepare relevant information
+- Offer to provide product images or arrange a viewing for the Áo Khoác Giò Win Break Sivesbom màu xanh NIVE
+- Offer to send a product catalog or brochure for the customer to review before the callback
+- Confirm the customer’s preferred contact method and time for the callback to ensure timely communication
+- Ask the customer to specify which product they want to remember (e.g., name, model, variant)
+- Confirm the product details (name, model, storage, variant) so they can be stored for future reference

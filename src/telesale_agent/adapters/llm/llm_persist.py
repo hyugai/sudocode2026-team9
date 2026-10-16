@@ -192,6 +192,10 @@ otherwise return an empty list."""
 
             context.state.customer_memory = self.memory.load(customer_id)
         except Exception as exc:
+            from telesale_agent.adapters.llm.rate_limits import is_rate_limit_error, provider_cooldown
+
+            if is_rate_limit_error(exc):
+                provider_cooldown.record(exc)
             # Reliable facts remain saved even if LLM summarization fails.
             logger.warning("LLM memory summarization failed: %s", exc)
 

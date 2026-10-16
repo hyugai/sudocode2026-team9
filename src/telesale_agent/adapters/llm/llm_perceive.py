@@ -250,6 +250,10 @@ Customer utterance: "{sanitised_transcript}"
                 confidence=1.0
             )
         except Exception as e:
+            from telesale_agent.adapters.llm.rate_limits import is_rate_limit_error
+
+            if is_rate_limit_error(e):
+                raise
             # Fallback if LLM fails
             print(f"LLMPerceiver Error: {e}")
             return Perception(

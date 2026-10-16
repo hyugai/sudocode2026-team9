@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+import logging
 
 from telesale_agent.core.models import (
     TurnContext,
@@ -15,6 +16,8 @@ from telesale_agent.core.models import (
     ActionStatus,
     Observation,
 )
+from telesale_agent.core.errors import ASRUnavailableError, AudioInputError
+from telesale_agent.adapters.llm.rate_limits import is_rate_limit_error
 from telesale_agent.adapters.llm.usage_tracking import (
     begin_usage_collection,
     finish_usage_collection,
@@ -81,10 +84,13 @@ async def run_turn_impl(
         context.retrieved = state.retrieved_data
     
     # 1. ASR
-    if harness.asr and context.input.audio and not context.input.text:
+    if context.input.audio is not None and not context.input.text:
+        if harness.asr is None:
+            raise ASRUnavailableError("Chưa cấu hình ASR cho input giọng nói.")
         transcript = await harness.asr.transcribe(context)
-        if transcript:
-            context.input.text = transcript
+        if not transcript or not transcript.strip():
+            raise AudioInputError("Không nhận dạng được giọng nói trong ghi âm.")
+        context.input.text = transcript.strip()
 
     # 2. Pre-processing Nodes
     # 2a. Initialization phase (Only runs once per conversation)
@@ -202,11 +208,23 @@ async def run_turn_impl(
     )
     
     with usage_stage("main_agent"):
-        result = await harness.agent.ainvoke(
-            {"messages": [{"role": "user", "content": enriched_user_msg}]},
-            config=config,
-            context={"allowed_tools": sorted(allowed_tools)},
-        )
+        try:
+            result = await harness.agent.ainvoke(
+                {"messages": [{"role": "user", "content": enriched_user_msg}]},
+                config=config,
+                context={"allowed_tools": sorted(allowed_tools)},
+            )
+        except Exception as exc:
+            if is_rate_limit_error(exc):
+                # Do not accumulate customer messages or append to a failed turn
+                # checkpoint when the user sends the recording again after cooldown.
+                state.messages[:] = prior_messages
+                if checkpoint_scope != "conversation":
+                    try:
+                        await harness.checkpointer.adelete_thread(thread_id)
+                    except Exception:
+                        logging.getLogger(__name__).exception("Could not clear failed turn checkpoint")
+            raise
     
     # Extract the current response and every tool call/result produced for
     # this turn. LangGraph returns the whole checkpoint message history.

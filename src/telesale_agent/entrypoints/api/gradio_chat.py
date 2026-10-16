@@ -5,11 +5,15 @@ import os
 import gradio as gr
 import json
 import dataclasses
+import asyncio
+from pathlib import Path
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "..")))
 
-from telesale_agent.bootstrap import build_default_harness, build_deepagent_harness_async
-from telesale_agent.core.models import TurnInput, ConversationState
+from telesale_agent.bootstrap import build_deepagent_harness_async
+from telesale_agent.adapters.asr.config import ASRConfig
+from telesale_agent.core.errors import ASRUnavailableError, AudioInputError
+from telesale_agent.core.models import Channel, TurnInput, ConversationState
 
 # Khởi tạo Global Instances
 harness = None
@@ -28,7 +32,7 @@ def format_json(obj) -> str:
     except Exception:
         return str(obj)
 
-async def chat_interaction(user_message, history):
+async def chat_interaction(user_message, history, audio=None):
     """Hàm xử lý khi user gửi tin nhắn."""
     global state, harness
     
@@ -39,12 +43,17 @@ async def chat_interaction(user_message, history):
     # 1. Tạo input
     input_data = TurnInput(
         conversation_id=state.conversation_id,
-        text=user_message,
-        channel="chat"
+        text=user_message if audio is None else None,
+        audio=audio,
+        channel=Channel.VOICE if audio is not None else Channel.CHAT,
     )
     
     # 2. Chạy qua Graph
-    result = await harness.run_turn(input_data, state)
+    try:
+        result = await harness.run_turn(input_data, state)
+    except (ASRUnavailableError, AudioInputError) as exc:
+        raise gr.Error(str(exc)) from exc
+    state = result.state
     
     # 3. Lấy kết quả
     bot_message = result.response_text or "No response from agent."
@@ -69,19 +78,34 @@ async def chat_interaction(user_message, history):
         steps_md = "_Không có vòng lặp Agent nào được kích hoạt._"
 
     # 6. Cập nhật lịch sử chat UI
-    history.append({"role": "user", "content": user_message})
+    history.append({"role": "user", "content": input_data.text})
     history.append({"role": "assistant", "content": bot_message})
     
     return history, "", perceive_text, identity_text, retrieve_text, brief_text, steps_md
+
+
+async def audio_interaction(audio_path, history):
+    if not audio_path:
+        raise gr.Error("Vui lòng chọn file ghi âm.")
+    limit = ASRConfig.from_env().max_upload_bytes
+    if Path(audio_path).stat().st_size > limit:
+        raise gr.Error("File ghi âm vượt quá dung lượng cho phép.")
+
+    def read_audio():
+        with open(audio_path, "rb") as source:
+            return source.read(limit + 1)
+
+    audio = await asyncio.to_thread(read_audio)
+    return (*await chat_interaction(None, history, audio=audio), None)
 
 def clear_chat():
     """Reset lại State và xóa trắng UI."""
     global state
     state = ConversationState(conversation_id="gradio_test_session")
-    return [], "", "{}", "{}", "{}", "{}", "_Chờ dữ liệu..._"
+    return [], "", "{}", "{}", "{}", "{}", "_Chờ dữ liệu..._", None
 
 # ======= GIAO DIỆN UI GRADIO =======
-with gr.Blocks(title="Telesale Agent Debugger", theme=gr.themes.Soft()) as demo:
+with gr.Blocks(title="Telesale Agent Debugger") as demo:
     gr.Markdown("# 🤖 Telesale Agent - Bảng Điều Khiển (LangGraph)")
     
     with gr.Row():
@@ -89,6 +113,8 @@ with gr.Blocks(title="Telesale Agent Debugger", theme=gr.themes.Soft()) as demo:
         with gr.Column(scale=4):
             chatbot = gr.Chatbot(label="Cuộc trò chuyện", height=600)
             msg = gr.Textbox(label="Khách hàng nhắn:", placeholder="Nhập tin nhắn vào đây và ấn Enter hoặc Gửi...", lines=2)
+            audio = gr.Audio(label="Hoặc tải file ghi âm cho lượt thoại tiếp theo", sources=["upload"], type="filepath")
+            send_audio_btn = gr.Button("🎙️ Gửi ghi âm (ASR local)")
             with gr.Row():
                 send_btn = gr.Button("📩 Gửi tin nhắn", variant="primary")
                 clear = gr.Button("🔄 Xóa hội thoại & Reset State")
@@ -116,19 +142,29 @@ with gr.Blocks(title="Telesale Agent Debugger", theme=gr.themes.Soft()) as demo:
     msg.submit(
         chat_interaction,
         inputs=[msg, chatbot],
-        outputs=[chatbot, msg, perceive_out, identity_out, retrieve_out, brief_out, steps_out]
+        outputs=[chatbot, msg, perceive_out, identity_out, retrieve_out, brief_out, steps_out],
+        concurrency_id="conversation",
     )
     
     send_btn.click(
         chat_interaction,
         inputs=[msg, chatbot],
-        outputs=[chatbot, msg, perceive_out, identity_out, retrieve_out, brief_out, steps_out]
+        outputs=[chatbot, msg, perceive_out, identity_out, retrieve_out, brief_out, steps_out],
+        concurrency_id="conversation",
+    )
+
+    send_audio_btn.click(
+        audio_interaction,
+        inputs=[audio, chatbot],
+        outputs=[chatbot, msg, perceive_out, identity_out, retrieve_out, brief_out, steps_out, audio],
+        concurrency_id="conversation",
     )
     
     clear.click(
         clear_chat,
-        outputs=[chatbot, msg, perceive_out, identity_out, retrieve_out, brief_out, steps_out]
+        outputs=[chatbot, msg, perceive_out, identity_out, retrieve_out, brief_out, steps_out, audio],
+        concurrency_id="conversation",
     )
 
 if __name__ == "__main__":
-    demo.launch(server_port=7860)
+    demo.launch(server_port=7860, theme=gr.themes.Soft())

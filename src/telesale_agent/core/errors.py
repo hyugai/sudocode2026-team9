@@ -13,3 +13,15 @@ class PipelineStageError(RuntimeError):
 class AgentLoopLimitError(RuntimeError):
     """Error raised when the agent does not finish within the configured limit."""
 
+
+class AudioInputError(ValueError):
+    """The uploaded recording cannot be used as a conversation turn."""
+
+
+class AudioTooLargeError(AudioInputError):
+    """The recording exceeds the configured upload size."""
+
+
+class ASRUnavailableError(RuntimeError):
+    """Local speech recognition dependencies or model files are unavailable."""
+

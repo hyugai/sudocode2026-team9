@@ -29,8 +29,10 @@ Copy-Item .env.example .env
 Sửa dòng `DATABASE_URL` trong `.env` thành:
 
 ```dotenv
-DATABASE_URL=postgresql://telesale:telesale_dev_password@localhost:5432/telesale?sslmode=disable
+DATABASE_URL=postgresql+psycopg2://telesale:telesale_dev_password@localhost:5432/telesale?sslmode=disable
 ```
+
+Chỉ định `+psycopg2` để dùng driver `psycopg2-binary` đã khai báo trong dependencies; SQLAlchemy 2.1 mặc định chọn `psycopg` khi URL chỉ có `postgresql://`.
 
 Không commit `.env`. Mật khẩu ở đây chỉ là ví dụ local; nếu đổi mật khẩu trong lệnh Docker thì đổi tương ứng trong URL.
 

@@ -1,12 +1,13 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { ChatApiError, createChatClient, type DebugInfo } from "@/utils/chat-api";
 
-interface DebugInfo {
-  intent: string;
-  retrieved_knowledge: any[];
-  steps: { action: string; rationale: string; tool: string | null; tool_args: any }[];
-}
+const apiBase = (process.env.NEXT_PUBLIC_API_BASE_URL || (
+  process.env.NODE_ENV === "development"
+    ? "http://localhost:8000"
+    : "https://sudo-code-2026-group-9.onrender.com"
+)).replace(/\/$/, "");
 
 interface LogEntry {
   userMessage: string;
@@ -22,14 +23,41 @@ export default function Chat() {
   const [input, setInput] = useState("");
   const [customerPhone, setCustomerPhone] = useState("0984726714");
   const [isLoading, setIsLoading] = useState(false);
+  const [audioFile, setAudioFile] = useState<File | null>(null);
+  const [audioPreviewUrl, setAudioPreviewUrl] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [backendReady, setBackendReady] = useState(false);
+  const [cooldownSeconds, setCooldownSeconds] = useState(0);
+  const [chatClient] = useState(() => createChatClient(apiBase));
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Generate a random session ID on client mount to prevent SSR hydration mismatch
+  // Create the conversation ID on the first send, then reuse it for text and voice.
   const [sessionId, setSessionId] = useState("");
 
   useEffect(() => {
-    setSessionId(Math.random().toString(36).substring(7));
-  }, []);
+    const controller = new AbortController();
+    let timer: ReturnType<typeof setTimeout>;
+    const check = async () => {
+      const ready = await chatClient.isReady(AbortSignal.any([
+        controller.signal, AbortSignal.timeout(5000),
+      ]));
+      if (controller.signal.aborted) return;
+      setBackendReady(ready);
+      timer = setTimeout(check, ready ? 5000 : 2000);
+    };
+    void check();
+    return () => {
+      controller.abort();
+      clearTimeout(timer);
+    };
+  }, [chatClient]);
+
+  useEffect(() => {
+    if (!cooldownSeconds) return;
+    const timer = setTimeout(() => setCooldownSeconds(chatClient.retryAfterSeconds), 1000);
+    return () => clearTimeout(timer);
+  }, [chatClient, cooldownSeconds]);
 
   useEffect(() => {
     if (activeTab === "chat") {
@@ -37,39 +65,68 @@ export default function Chat() {
     }
   }, [messages, activeTab]);
 
+  useEffect(() => {
+    return () => {
+      if (audioPreviewUrl) URL.revokeObjectURL(audioPreviewUrl);
+    };
+  }, [audioPreviewUrl]);
+
+  const clearAudio = () => {
+    setAudioFile(null);
+    setAudioPreviewUrl("");
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+
+  const selectAudio = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    setErrorMessage("");
+    if (!file.size || file.size > 25 * 1024 * 1024) {
+      setErrorMessage("Hãy chọn file ghi âm có dung lượng từ 1 byte đến 25 MB.");
+      clearAudio();
+      return;
+    }
+    setAudioFile(file);
+    setAudioPreviewUrl(URL.createObjectURL(file));
+  };
+
   const sendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!input.trim() || isLoading) return;
+    if ((!input.trim() && !audioFile) || chatClient.isSending || !backendReady || chatClient.retryAfterSeconds) return;
 
     const userMessage = input.trim();
-    setInput("");
-    setMessages((prev) => [...prev, { role: "user", text: userMessage }]);
+    const conversationId = sessionId || crypto.randomUUID();
+    if (!sessionId) setSessionId(conversationId);
     setIsLoading(true);
+    setErrorMessage("");
 
     try {
-      const apiUrl = process.env.NODE_ENV === "development" 
-        ? "http://localhost:8000/api/chat" 
-        : "https://sudo-code-2026-group-9.onrender.com/api/chat"; 
-
-      const response = await fetch(apiUrl, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          conversation_id: sessionId,
-          message: userMessage,
-          customer_phone: customerPhone || null,
-        }),
+      const data = await chatClient.send({
+        conversationId, message: userMessage, audioFile, customerPhone,
       });
-
-      const data = await response.json();
-      setMessages((prev) => [...prev, { role: "agent", text: data.response || "Sorry, I couldn't process that." }]);
-      
+      if (!data) return;
+      setCooldownSeconds(chatClient.retryAfterSeconds);
+      const transcript = audioFile ? data.transcript : userMessage;
+      if (typeof transcript !== "string" || !transcript.trim()) {
+        throw new Error("Không nhận được văn bản từ ghi âm. Vui lòng thử lại.");
+      }
+      setMessages((prev) => [
+        ...prev,
+        { role: "user", text: transcript },
+        { role: "agent", text: data.response || "Chưa nhận được phản hồi từ tư vấn viên." },
+      ]);
+      if (audioFile) clearAudio();
+      else setInput("");
       if (data.debug) {
-        setDebugLogs((prev) => [...prev, { userMessage, debug: data.debug }]);
+        const debug = data.debug;
+        setDebugLogs((prev) => [...prev, { userMessage: transcript, debug }]);
       }
     } catch (error) {
-      console.error(error);
-      setMessages((prev) => [...prev, { role: "agent", text: "Connection error. Please try again." }]);
+      if (error instanceof ChatApiError && error.connectionLost) setBackendReady(false);
+      if (error instanceof ChatApiError) setCooldownSeconds(error.retryAfterSeconds);
+      setErrorMessage(error instanceof ChatApiError && error.retryAfterSeconds > 0
+        ? ""
+        : error instanceof Error ? error.message : "Lỗi kết nối. Vui lòng thử lại.");
     } finally {
       setIsLoading(false);
     }
@@ -135,9 +192,10 @@ export default function Chat() {
               onChange={(e) => setCustomerPhone(e.target.value)}
               className="text-xs text-black/80 bg-white border border-black/10 px-3 py-1.5 rounded-full outline-none focus:border-black/30 placeholder-black/30 w-36"
               title="Nhập SĐT khách hàng (VD: 0984726714)"
+              disabled={isLoading}
             />
             <div className="text-xs text-black/60 bg-black/5 px-3 py-1.5 rounded-full font-semibold tracking-wide hidden sm:block">
-              Session: {sessionId}
+              Session: {sessionId ? sessionId.slice(0, 8) : "Mới"}
             </div>
           </div>
         </header>
@@ -193,21 +251,58 @@ export default function Chat() {
             {/* Input Area */}
             <div className="bg-[#F4F1EA] p-4 sm:p-6 border-t border-black/10 shrink-0">
               <div className="max-w-3xl mx-auto">
+                <div className="mb-3 flex flex-wrap items-center gap-3">
+                  <input
+                    ref={fileInputRef}
+                    id="voice-upload"
+                    type="file"
+                    accept=".wav,.mp3,.m4a,.flac,.ogg,.webm,audio/*"
+                    onChange={selectAudio}
+                    disabled={isLoading}
+                    className="hidden"
+                    aria-label="Chọn file ghi âm"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    disabled={isLoading}
+                    className="rounded-full border border-black/20 bg-white px-4 py-2 text-sm font-medium disabled:opacity-50"
+                  >
+                    Tải file ghi âm
+                  </button>
+                  <span className="text-xs text-black/60">WAV, MP3, M4A, FLAC, OGG, WebM · tối đa 25 MB / 120 giây</span>
+                </div>
+                {audioFile && (
+                  <div className="mb-3 rounded-2xl border border-black/10 bg-white p-3">
+                    <div className="flex items-center justify-between gap-3 text-sm">
+                      <span className="truncate">{audioFile.name}</span>
+                      <button type="button" onClick={clearAudio} disabled={isLoading} className="shrink-0 underline disabled:opacity-50">
+                        Bỏ ghi âm
+                      </button>
+                    </div>
+                    {audioPreviewUrl && <audio controls src={audioPreviewUrl} className="mt-2 w-full" />}
+                    <p className="mt-2 text-xs text-black/60">Bấm Gửi ghi âm để chuyển giọng nói thành văn bản và gửi vào hội thoại.</p>
+                  </div>
+                )}
+                {errorMessage && <p role="alert" className="mb-3 text-sm text-red-700">{errorMessage}</p>}
+                {cooldownSeconds > 0 && <p role="status" className="mb-3 text-sm text-black/60">Dịch vụ hội thoại đang tạm giới hạn. Có thể gửi tiếp sau {cooldownSeconds} giây.</p>}
+                {!backendReady && !isLoading && <p role="status" className="mb-3 text-sm text-black/60">Đang chờ kết nối backend sẵn sàng. Hệ thống sẽ tự kiểm tra lại...</p>}
+                {isLoading && <p role="status" className="mb-3 text-sm text-black/60">{audioFile ? "Đang nhận dạng ghi âm và chờ phản hồi..." : "Đang chờ phản hồi..."}</p>}
                 <form onSubmit={sendMessage} className="flex gap-3">
                   <input
                     type="text"
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
-                    placeholder="Nhắn tin cho tư vấn viên..."
-                    className="flex-1 border border-black/15 bg-white text-black rounded-full px-6 py-3.5 focus:outline-none focus:ring-2 focus:ring-black/20 focus:border-black shadow-sm transition-all"
-                    disabled={isLoading}
+                    placeholder={audioFile ? "Đã chọn ghi âm cho lượt thoại này" : "Nhắn tin cho tư vấn viên..."}
+                    className="min-w-0 flex-1 border border-black/15 bg-white text-black rounded-full px-6 py-3.5 focus:outline-none focus:ring-2 focus:ring-black/20 focus:border-black shadow-sm transition-all disabled:opacity-50"
+                    disabled={isLoading || !!audioFile}
                   />
                   <button
                     type="submit"
-                    disabled={isLoading || !input.trim()}
-                    className="bg-[#111111] text-[#F4F1EA] px-8 py-3.5 rounded-full font-medium hover:bg-black disabled:opacity-50 transition-all shadow-sm flex items-center gap-2"
+                    disabled={isLoading || !backendReady || cooldownSeconds > 0 || (!input.trim() && !audioFile)}
+                    className="bg-[#111111] text-[#F4F1EA] px-5 py-3.5 rounded-full font-medium hover:bg-black disabled:opacity-50 transition-all shadow-sm flex shrink-0 items-center gap-2"
                   >
-                    Gửi
+                    {audioFile ? "Gửi ghi âm" : "Gửi"}
                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
                   </button>
                 </form>
@@ -234,7 +329,7 @@ export default function Chat() {
                     <div key={i} className="border border-gray-200 rounded-2xl p-5 sm:p-6 shadow-sm bg-[#F4F1EA]/30">
                       <div className="flex items-center gap-3 mb-6">
                         <div className="bg-black text-white px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide">Lượt {i + 1}</div>
-                        <div className="font-semibold text-lg text-gray-900">"{log.userMessage}"</div>
+                        <div className="font-semibold text-lg text-gray-900">&quot;{log.userMessage}&quot;</div>
                       </div>
                       
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
@@ -277,7 +372,7 @@ export default function Chat() {
                           <span className="text-xs uppercase font-bold tracking-wider">Suy nghĩ của LLM (Planner)</span>
                         </div>
                         <div className="space-y-3">
-                          {log.debug.steps.map((step, j) => (
+                          {(log.debug.steps ?? []).map((step, j) => (
                             <div key={j} className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm relative overflow-hidden">
                               <div className="absolute top-0 left-0 w-1 h-full bg-black"></div>
                               <div className="flex justify-between items-start mb-3 pl-2">

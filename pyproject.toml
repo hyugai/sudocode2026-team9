@@ -27,9 +27,15 @@ dependencies = [
     "sentence-transformers==6.1.0",
     "pinecone>=10,<11",
     "gradio==6.27.0",
+    "python-multipart>=0.0.22,<1",
 ]
 
 [project.optional-dependencies]
+voice = [
+    "sherpa-onnx>=1.12.25,<2",
+    "imageio-ffmpeg>=0.6,<0.7",
+    "numpy>=1.26,<3",
+]
 dev = [
     "pytest==9.1.1",
     "pytest-asyncio==1.4.0",

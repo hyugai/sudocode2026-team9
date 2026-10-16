@@ -5,7 +5,7 @@ from typing import Literal
 
 from dotenv import load_dotenv
 
-from telesale_agent.adapters.mock.asr import MockASREngine
+from telesale_agent.adapters.asr import ZipformerASREngine
 from telesale_agent.adapters.llm.llm_perceive import LLMPerceiver
 from telesale_agent.adapters.mock.identity import HintIdentityResolver
 from telesale_agent.adapters.vector_db.retrieve import VectorDBRetriever
@@ -48,7 +48,7 @@ def build_deepagent_harness(memory_mode: MemoryMode = "durable"):
         raise ValueError(f"Unsupported memory_mode: {memory_mode}")
 
     return DeepAgentHarness(
-        asr=MockASREngine(),
+        asr=ZipformerASREngine(),
         perceive=LLMPerceiver(),
         identity=HintIdentityResolver(),
         crm=PostgresCRMRetriever(),
