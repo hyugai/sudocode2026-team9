@@ -4,6 +4,8 @@ from pydantic import BaseModel, Field
 
 from telesale_agent.core.interfaces import Perceiver
 from telesale_agent.core.models import Perception, TurnContext
+from telesale_agent.application.deepagent.understanding.policy_intent import deferred_policy_topic
+from telesale_agent.application.deepagent.understanding.unverified_question import unit_specific_question
 from telesale_agent.config.intent_taxonomy import INTENT_NAMES, build_intent_prompt_section
 from telesale_agent.adapters.rules.pii_utils import mask_pii
 from telesale_agent.adapters.llm.model_factory import create_chat_model
@@ -25,6 +27,22 @@ class IntentSchema(BaseModel):
             "promo_code, order_id, address, phone, or agent suggestions."
         ),
         default_factory=dict
+    )
+    unit_specific_question_detected: bool = Field(
+        default=False,
+        description=(
+            "True only when the customer asks for an unverified detail of one "
+            "physical item, such as its serial, production batch/shift, "
+            "inspection record, or warehouse measurement. False for generic "
+            "product specifications and questions about previous conversations."
+        ),
+    )
+    unit_specific_question_text: str = Field(
+        default="",
+        description=(
+            "If detected, copy the exact customer question verbatim. Never "
+            "paraphrase it or invent an answer; otherwise use an empty string."
+        ),
     )
 
 
@@ -79,7 +97,11 @@ def _number(value: Any) -> int | float | Any:
 
 
 def canonicalize_memory_deltas(
-    deltas: dict[str, Any], transcript: str
+    deltas: dict[str, Any],
+    transcript: str,
+    *,
+    unit_specific_by_model: bool = False,
+    unit_question_excerpt: str | None = None,
 ) -> dict[str, Any]:
     """Normalize NLU output and reject facts that require tool authority."""
     normalized: dict[str, Any] = {}
@@ -92,6 +114,7 @@ def canonicalize_memory_deltas(
         if (
             not key
             or key in _AUTHORITATIVE_ONLY_MEMORY_KEYS
+            or key == "unresolved_question"
             or key.startswith("basket_item_")
             or key in _SENSITIVE_OR_TRANSACTIONAL_KEYS
         ):
@@ -139,6 +162,17 @@ def canonicalize_memory_deltas(
         re.IGNORECASE,
     ):
         normalized["medical_question"] = transcript.strip()
+    pending_policy_topic = deferred_policy_topic(transcript)
+    if pending_policy_topic:
+        normalized["blocker"] = f"chưa rõ {pending_policy_topic}"
+    question = unit_specific_question(
+        transcript,
+        model_detected=unit_specific_by_model,
+        model_excerpt=unit_question_excerpt,
+    )
+    if question:
+        # Preserve the customer's wording, never an LLM paraphrase or answer.
+        normalized["unresolved_question"] = mask_pii(question)[0]
     return normalized
 
 class LLMPerceiver(Perceiver):
@@ -171,6 +205,11 @@ Your task: extract ALL intents and entities from the customer utterance below.
    family_approved, size, color, quantity, payment, callback_at.
 6. Never put product, quoted price, promotion, order ID, address, phone, or an
    agent recommendation in memory_deltas; those require verified tools/storage.
+7. Detect questions about one physical item's unknown serial, batch, production
+   shift, inspection record, or warehouse measurement. Set
+   unit_specific_question_detected=true and copy the exact question into
+   unit_specific_question_text. Do not flag generic model specifications or
+   "do you remember my earlier question?" as a new item-specific question.
 
 Respond ONLY with a valid JSON object. Do not include markdown formatting or extra text.
 
@@ -191,7 +230,16 @@ Customer utterance: "{sanitised_transcript}"
             parsed_deltas = result.memory_deltas
             if not isinstance(parsed_deltas, dict):
                 parsed_deltas = {}
-            parsed_deltas = canonicalize_memory_deltas(parsed_deltas, transcript)
+            parsed_deltas = canonicalize_memory_deltas(
+                parsed_deltas,
+                transcript,
+                unit_specific_by_model=bool(
+                    getattr(result, "unit_specific_question_detected", False)
+                ),
+                unit_question_excerpt=getattr(
+                    result, "unit_specific_question_text", ""
+                ),
+            )
 
             return Perception(
                 transcript=transcript,
@@ -208,5 +256,6 @@ Customer utterance: "{sanitised_transcript}"
                 transcript=transcript,
                 intent="unknown",
                 entities={},
+                memory_deltas=canonicalize_memory_deltas({}, transcript),
                 confidence=0.0
             )

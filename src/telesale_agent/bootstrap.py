@@ -9,7 +9,7 @@ from telesale_agent.adapters.mock.asr import MockASREngine
 from telesale_agent.adapters.llm.llm_perceive import LLMPerceiver
 from telesale_agent.adapters.mock.identity import HintIdentityResolver
 from telesale_agent.adapters.vector_db.retrieve import VectorDBRetriever
-from telesale_agent.adapters.llm.llm_call_brief import LLMCallBriefBuilder
+from telesale_agent.application.memory.call_brief import CallBriefProjector
 from telesale_agent.adapters.crm import PostgresCRMRetriever
 from telesale_agent.adapters.memory import (
     FileCustomerMemoryRepository,
@@ -25,7 +25,7 @@ MemoryMode = Literal["durable", "evaluation", "disabled"]
 def build_deepagent_harness(memory_mode: MemoryMode = "durable"):
     """Configure an unstarted Deep Agent harness for use with ``async with``."""
     load_dotenv()
-    from telesale_agent.core.deepagent_pipeline import DeepAgentHarness
+    from telesale_agent.application.deepagent.harness import DeepAgentHarness
 
     durable_memory = FileCustomerMemoryRepository()
     if memory_mode == "durable":
@@ -54,7 +54,7 @@ def build_deepagent_harness(memory_mode: MemoryMode = "durable"):
         crm=PostgresCRMRetriever(),
         memory=memory,
         retrieve=VectorDBRetriever(),
-        call_brief=LLMCallBriefBuilder(),
+        call_brief=CallBriefProjector(),
         guardrail=PIIGuardrail(),
         persist=persist,
     )

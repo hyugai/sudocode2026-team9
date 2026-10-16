@@ -8,7 +8,7 @@ from difflib import SequenceMatcher
 from pydantic import BaseModel, Field
 
 from telesale_agent.adapters.llm.model_factory import create_chat_model
-from telesale_agent.adapters.memory.turn_persist import persist_turn_memory
+from telesale_agent.application.memory.persist import persist_turn_memory
 from telesale_agent.core.interfaces import CustomerMemoryRepository, Persister
 from telesale_agent.core.models import TurnContext
 from telesale_agent.adapters.rules.pii_utils import mask_pii
@@ -123,6 +123,8 @@ customer evidence and is intentionally absent from this prompt. Never include ph
 numbers, delivery addresses, identity numbers, bank details, or payment secrets.
 Keep every field concise. Foresights must be concrete next-call recommendations
 supported by the customer message and must not repeat EXISTING FORESIGHTS;
+for an unanswered per-unit question, retain the question without inventing
+where a serial/batch number will appear or promising a warehouse process;
 otherwise return an empty list."""
 
         safe_customer_text, _ = mask_pii(customer_text)
