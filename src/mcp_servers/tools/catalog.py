@@ -157,8 +157,9 @@ def pricing_get_quote(
         return {"error": "product_not_found"}
 
     product = product_res["items"][0]
+    base_sku = product.get("sku")
     list_price = int(product.get("list_price_vnd", 0))
-    if sku != product.get("sku"):
+    if sku != base_sku:
         requested_variant = next(
             (
                 variant
@@ -174,15 +175,12 @@ def pricing_get_quote(
     skus_in_basket = list(basket_skus or [])
     if sku not in skus_in_basket:
         skus_in_basket.append(sku)
-    categories_in_basket = [category] if category else []
-    for basket_sku in skus_in_basket:
-        if basket_sku == sku:
-            continue
-        item = db_client.search_products(
-            sku=basket_sku, include_discontinued=True
-        ).get("items", [])
-        if item and item[0].get("category"):
-            categories_in_basket.append(item[0]["category"])
+    # Promotion targeting is about the item being quoted. A variant inherits
+    # its product's base-SKU promotions, but another basket item's promotion
+    # must not discount this item.
+    eligible_skus = {sku}
+    if isinstance(base_sku, str) and base_sku:
+        eligible_skus.add(base_sku)
 
     customer = db_client.get_pricing_customer_context(
         customer_phone=customer_phone,
@@ -197,14 +195,11 @@ def pricing_get_quote(
         if "*" in targets:
             return True
         for target in targets:
-            if target in skus_in_basket:
+            if target in eligible_skus:
                 return True
             if isinstance(target, str) and target.startswith("category:"):
                 expected = target.split(":", 1)[1]
-                if any(
-                    current == expected or current.startswith(expected + "/")
-                    for current in categories_in_basket
-                ):
+                if category == expected or category.startswith(expected + "/"):
                     return True
         return False
 

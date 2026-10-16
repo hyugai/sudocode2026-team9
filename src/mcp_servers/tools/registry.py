@@ -18,6 +18,7 @@ from mcp_servers.tools.catalog import TOOLS as _CATALOG
 from mcp_servers.tools.order import TOOLS as _ORDER
 from mcp_servers.tools.workflow import TOOLS as _WORKFLOW
 from mcp_servers.tools.memory import TOOLS as _MEMORY
+from mcp_servers.tools.knowledge import TOOLS as _KNOWLEDGE
 
 # Master registry — BTC tool name → callable
 TOOL_REGISTRY: dict[str, Any] = {
@@ -26,6 +27,7 @@ TOOL_REGISTRY: dict[str, Any] = {
     **_ORDER,
     **_WORKFLOW,
     **_MEMORY,
+    **_KNOWLEDGE,
 }
 
 
