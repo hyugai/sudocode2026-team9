@@ -11,6 +11,7 @@ from typing import Any, TypedDict
 from langchain.agents.middleware import AgentMiddleware, ModelRequest, ModelResponse
 
 from telesale_agent.core.models import Perception
+from telesale_agent.application.deepagent.understanding.policy_intent import deferred_policy_topic
 
 
 class TelesaleAgentRuntimeContext(TypedDict):
@@ -21,9 +22,7 @@ class TelesaleAgentRuntimeContext(TypedDict):
 
 _INTENT_TOOLS: dict[str, frozenset[str]] = {
     "ask_product": frozenset({"search_catalog", "check_inventory"}),
-    # Policy text is retrieved by the application before DeepAgent runs. Order
-    # tools are added below only when the utterance actually concerns an order.
-    "ask_policy": frozenset(),
+    "ask_policy": frozenset({"search_policy"}),
     "price_objection": frozenset({"get_pricing_quote"}),
     "create_order": frozenset(
         {"create_new_order", "get_pricing_quote", "check_inventory"}
@@ -34,6 +33,68 @@ _INTENT_TOOLS: dict[str, frozenset[str]] = {
     "complain": frozenset({"check_order_status"}),
     "end_call": frozenset(),
 }
+
+
+def is_knowledge_request(transcript: str | None) -> bool:
+    """Catch policy/shipping questions even when intent classification misses."""
+    text = (transcript or "").casefold()
+    phrases = (
+        "chính sách",
+        "quy định",
+        "điều khoản",
+        "điều lệ",
+        "điều kiện khuyến mãi",
+        "thể lệ khuyến mãi",
+        "điều kiện voucher",
+        "điều kiện đổi",
+        "đổi trả",
+        "đổi size",
+        "đổi màu",
+        "hoàn tiền",
+        "bảo hành",
+        "phí đổi",
+        "phí ship",
+        "phí giao",
+        "vận chuyển",
+        "giao hàng mất",
+        "bao lâu nhận",
+        "bao nhiêu ngày",
+        "bài cũ",
+        "hết hiệu lực",
+    )
+    return any(phrase in text for phrase in phrases) or bool(
+        re.search(r"\bđổi\s+trong\s+\d+\s+ngày\b", text)
+    )
+
+
+def is_policy_explanation_request(transcript: str | None) -> bool:
+    """Return true for informational policy questions, not exchange actions."""
+    text = (transcript or "").casefold()
+    return any(
+        phrase in text
+        for phrase in (
+            "chính sách",
+            "quy định",
+            "điều khoản",
+            "điều lệ",
+            "điều kiện khuyến mãi",
+            "thể lệ khuyến mãi",
+            "điều kiện voucher",
+            "điều kiện đổi",
+            "đổi trả",
+            "phí đổi",
+            "phí ship",
+            "phí giao",
+            "vận chuyển",
+            "giao hàng mất",
+            "bảo hành",
+            "hoàn tiền",
+            "bao nhiêu ngày",
+            "bài cũ",
+            "hết hiệu lực",
+            "lần đầu",
+        )
+    ) or bool(re.search(r"\bđổi\s+trong\s+\d+\s+ngày\b", text))
 
 
 def is_explicit_callback_request(transcript: str | None) -> bool:
@@ -116,6 +177,8 @@ def select_tools_for_turn(
 
     text = (transcript or "").casefold()
     facts = memory_facts if isinstance(memory_facts, dict) else {}
+    if is_knowledge_request(text):
+        selected.add("search_policy")
     if any(
         word in text
         for word in (
@@ -129,6 +192,9 @@ def select_tools_for_turn(
             "báo giá",
             "bao nhiêu",
         )
+    ) or re.search(
+        r"\b\d[\d.,]*(?:\s+\d{3})*\s*(?:(?:đồng|vnd|đ)\b|₫)",
+        text,
     ):
         selected.add("get_pricing_quote")
     exchange_signal = any(
@@ -232,6 +298,25 @@ def select_tools_for_turn(
             selected.discard("check_order_status")
             selected.discard("update_order")
 
+    # Asking how a policy works for a prospective purchase is not an order
+    # lookup. This prevents SC-031--040 from querying order.status merely
+    # because the words "đổi size" appear in an informational question.
+    explicit_order_reference = bool(facts.get("order_id")) or bool(
+        re.search(r"\b(?:OD|ORD)-?[A-Z0-9]+\b", transcript or "", re.IGNORECASE)
+    ) or any(
+        phrase in text
+        for phrase in ("đã nhận", "đã mua", "đơn của", "mã đơn")
+    )
+    if (
+        is_policy_explanation_request(text)
+        and not explicit_order_reference
+        and not update_confirmation
+    ):
+        selected.discard("check_order_status")
+        selected.discard("update_order")
+        if "ask_product" not in intents:
+            selected.discard("check_inventory")
+
     # Durable facts are routing signals, not merely prompt text. A known order
     # lets follow-up complaint/exchange turns expose the order workflow even if
     # the NLU misses a terse confirmation such as "ừ, làm thủ tục đi em".
@@ -245,6 +330,11 @@ def select_tools_for_turn(
         selected.add("mcp_schedule_callback")
     if is_medical_handoff_request(text, facts):
         selected.add("mcp_escalate_to_human")
+
+    # A plan to ask about policy on a later call is a memory cue, not a
+    # request to spend a retrieval call now.
+    if deferred_policy_topic(transcript):
+        selected.discard("search_policy")
 
     return frozenset(selected)
 
