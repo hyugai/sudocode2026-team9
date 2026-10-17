@@ -10,6 +10,7 @@ from telesale_agent.core.basket import (
     mentioned_catalog_items,
 )
 from telesale_agent.core.models import TurnContext
+from telesale_agent.application.customer_text import literal_customer_text
 from telesale_agent.application.deepagent.tools.protocol import (
     canonical_tool_args as _canonical_tool_args,
     canonical_tool_name as _canonical_tool_name,
@@ -166,12 +167,17 @@ class ReadToolExecutor:
                 # Let the model retry with a different query rather than making
                 # a prefetch miss terminal for this turn.
                 remaining.add("search_catalog")
-            selected_items = mentioned_catalog_items(
-                context.input.text or "",
+            catalog_items = (
                 catalog_result.get("items", [])
                 if isinstance(catalog_result, dict)
-                else [],
+                else []
             )
+            literal_text = literal_customer_text(context.input)
+            selected_items = mentioned_catalog_items(literal_text, catalog_items)
+            if not selected_items and literal_text != (context.input.text or ""):
+                selected_items = mentioned_catalog_items(
+                    context.input.text or "", catalog_items
+                )
             if 2 <= len(selected_items) <= 4:
                 selected_multi_skus = [str(item["sku"]) for item in selected_items]
                 for item in selected_items:

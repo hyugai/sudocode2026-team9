@@ -6,6 +6,7 @@ import re
 from datetime import datetime
 from typing import Any
 
+from telesale_agent.core.basket import declines_order_creation, starts_basket_checkout
 from telesale_agent.core.models import TurnContext
 from telesale_agent.application.deepagent.tools.protocol import (
     canonical_tool_args as _canonical_tool_args,
@@ -103,16 +104,23 @@ class MutationToolExecutor:
         # invented arguments or retry after a deterministic attempt.
         remaining.discard("mcp_schedule_callback")
 
+        remembered_basket = _basket_skus(context)
+        if declines_order_creation(context.input.text or ""):
+            context.state.working_memory.pop("pending_order", None)
+        elif remembered_basket and starts_basket_checkout(context.input.text or ""):
+            # This is checkout consent, not merely a remembered address. Keep
+            # it only within the live conversation until payment completes.
+            pending = context.state.working_memory.get("pending_order")
+            pending = dict(pending) if isinstance(pending, dict) else {}
+            pending.update(
+                basket_skus=remembered_basket,
+                address=_delivery_address(context),
+                checkout_confirmed=True,
+            )
+            context.state.working_memory["pending_order"] = pending
         pending_order = context.state.working_memory.get("pending_order")
         address = _delivery_address(context)
-        create_negated = bool(
-            re.search(
-                r"\b(?:chưa|không|đừng)\b[^.!?]{0,24}"
-                r"(?:lên\s+đơn|chốt(?:\s+đơn)?|đặt\s+mua|đặt\s+hàng|tạo\s+đơn|mua\s+ngay)",
-                text,
-                flags=re.IGNORECASE,
-            )
-        )
+        create_negated = declines_order_creation(context.input.text or "")
         qty_unit_pattern = (
             r"(?:\d+|một|hai|ba|bốn|năm)\s*"
             r"(?:chiếc|cái|bộ|sản\s*phẩm|máy|đôi|hộp|bình|gói|cuộn|cây|áo|quần)"
@@ -173,6 +181,7 @@ class MutationToolExecutor:
             and (
                 (not pending_order.get("address") and explicit_address)
                 or (not pending_order.get("payment") and explicit_payment)
+                or (pending_order.get("checkout_confirmed") and explicit_payment)
             )
         )
         create_confirmed = not create_negated and (
@@ -302,6 +311,8 @@ class MutationToolExecutor:
                     pending_payload["price_vnd"] = verified_items[0][1]
                 if address:
                     pending_payload["address"] = address
+                if pending_order.get("checkout_confirmed"):
+                    pending_payload["checkout_confirmed"] = True
                 context.state.working_memory["pending_order"] = pending_payload
 
         # order.create is a deterministic, identity-bound mutation. Never

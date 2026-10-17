@@ -26,6 +26,12 @@ _ALIASES = {
     "saleoff": "sale", "freeship": "miễn phí ship", "freeshipping": "miễn phí ship",
     "pls": "vui lòng", "plz": "vui lòng", "oke": "ok", "okie": "ok",
 }
+# Uppercase words inside a mixed-case message are often product technology,
+# brand, or model acronyms (for example DC), not chat shorthand. These common
+# shopping abbreviations remain expandable even when typed in uppercase.
+_UPPERCASE_CHAT_ALIASES = frozenset({
+    "sp", "ko", "sdt", "ck", "sz", "ib", "inb", "ord", "cod",
+})
 _PHRASES = {
     "san pham": "sản phẩm", "san pham nay": "sản phẩm này", "sp nay": "sản phẩm này",
     "ban co": "bạn có", "ban con": "bạn còn", "shop co": "shop có", "shop con": "shop còn",
@@ -92,6 +98,7 @@ def _fold(text: str) -> str:
 def normalize_chat_text(message: str) -> str:
     """Normalize typed input without another LLM call or guessed proper names."""
     text = " ".join(unicodedata.normalize("NFC", message).split())
+    mixed_case_message = any(char.islower() for char in text)
     first_word = re.search(r"[^\W\d_]+", text)
     sentence_case = bool(first_word and first_word.start() == 0 and _fold(first_word[0]) in _SENTENCE_START)
     protected: list[tuple[str, str]] = []
@@ -146,6 +153,16 @@ def normalize_chat_text(message: str) -> str:
             continue
         if lower == "hong" and prev in {"mau", "ao", "quan", "giay"}:
             value = "hồng"
+        elif (
+            mixed_case_message
+            and len(word) > 1
+            and word.isupper()
+            and lower in _ALIASES
+            and lower not in _UPPERCASE_CHAT_ALIASES
+        ):
+            # Preserve literal uppercase acronyms in product names. An
+            # all-uppercase shorthand message still follows the alias map.
+            value = word
         elif lower in _ALIASES:
             value = _ALIASES[lower]
         elif lower == "k":

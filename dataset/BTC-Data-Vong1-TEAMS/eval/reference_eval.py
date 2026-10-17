@@ -353,6 +353,7 @@ def rag_eval(qa_path, results_path):
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--scenarios", required=True)
+    ap.add_argument("--scenario-id", help="Chỉ chấm một scenario cụ thể")
     ap.add_argument("--trace", required=True, help="trace JSONL của hệ thống (config=full)")
     ap.add_argument("--baseline", help="trace JSONL của baseline không bộ nhớ")
     ap.add_argument("--asr", help="thư mục chứa ground_truth.json và hypotheses.json")
@@ -361,6 +362,10 @@ if __name__ == "__main__":
     a = ap.parse_args()
 
     sc = load_scenarios(a.scenarios)
+    if a.scenario_id:
+        if a.scenario_id not in sc:
+            ap.error(f"Không tìm thấy scenario: {a.scenario_id}")
+        sc = {a.scenario_id: sc[a.scenario_id]}
     full = evaluate(sc, load_trace(a.trace))
     rep = {"n_scenarios": len(sc), "system": full}
     if a.baseline:

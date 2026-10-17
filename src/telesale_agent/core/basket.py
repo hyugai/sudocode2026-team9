@@ -6,6 +6,8 @@ import re
 import unicodedata
 from typing import Any
 
+from telesale_agent.core.address import extract_explicit_delivery_address
+
 
 def _normalize(value: str) -> str:
     decomposed = unicodedata.normalize("NFD", value.casefold())
@@ -60,7 +62,7 @@ def is_basket_recap_request(customer_text: str) -> bool:
     text = _normalize(customer_text)
     if re.search(
         r"\b(?:chinh sach|bao hanh|doi tra|hoan tien|phi ship|"
-        r"len don|tao don|dat hang|thanh toan|tu van|so sanh)\b",
+        r"len don|tao don|dat hang|thanh toan|so sanh)\b",
         text,
     ):
         return False
@@ -74,4 +76,43 @@ def asks_basket_total(customer_text: str) -> bool:
     text = _normalize(customer_text)
     return is_basket_recap_request(customer_text) and bool(
         re.search(r"\b(?:tong tien|tong gia|thanh tien|bao nhieu tien)\b", text)
+    )
+
+
+def declines_order_creation(customer_text: str) -> bool:
+    """A current refusal overrides checkout state from an earlier turn."""
+    text = _normalize(customer_text)
+    return bool(
+        re.search(
+            r"\b(?:chua|khong|dung)\b[^.!?]{0,30}"
+            r"\b(?:len don|chot(?: don)?|dat(?: mua| hang| don)?|tao don|mua(?: ngay)?)\b",
+            text,
+        )
+    )
+
+
+def starts_basket_checkout(customer_text: str) -> bool:
+    """Recognize an accepted cart/quote plus quantity and delivery details.
+
+    A remembered address, a budget question, or payment choice alone must not
+    grant purchase consent. The caller must also have a verified saved basket.
+    """
+    if declines_order_creation(customer_text):
+        return False
+    text = _normalize(customer_text)
+    accepted = re.search(
+        r"\b(?:dong y|chap nhan|nam trong ngan sach|vua ngan sach|"
+        r"gia (?:nay )?on|gia (?:nay )?hop ly|tong (?:nay )?on|"
+        r"tong (?:nay )?hop ly)\b",
+        text,
+    )
+    quantity = re.search(
+        r"\b(?:moi mon|moi thu|moi loai)\s+"
+        r"(?:\d+|mot|hai|ba|bon|nam)\b",
+        text,
+    )
+    return bool(
+        accepted
+        and quantity
+        and extract_explicit_delivery_address(customer_text)
     )

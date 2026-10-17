@@ -10,7 +10,13 @@ from typing import Any, TypedDict
 
 from langchain.agents.middleware import AgentMiddleware, ModelRequest, ModelResponse
 
-from telesale_agent.core.basket import asks_basket_total, is_multi_product_request
+from telesale_agent.core.basket import (
+    asks_basket_total,
+    declines_order_creation,
+    is_basket_recap_request,
+    is_multi_product_request,
+    starts_basket_checkout,
+)
 from telesale_agent.core.models import Perception
 from telesale_agent.application.deepagent.understanding.policy_intent import deferred_policy_topic
 
@@ -240,13 +246,7 @@ def select_tools_for_turn(
         selected.add("check_inventory")
         if not exchange_signal:
             selected.add("search_catalog")
-    order_negated = bool(
-        re.search(
-            r"\b(?:chưa|không|đừng)\b[^.!?]{0,24}"
-            r"(?:lên\s+đơn|chốt(?:\s+đơn)?|đặt\s+mua|đặt\s+hàng|tạo\s+đơn|mua\s+ngay)",
-            text,
-        )
-    )
+    order_negated = declines_order_creation(transcript or "")
     qty_unit_pattern = (
         r"(?:\d+|một|hai|ba|bốn|năm)\s*"
         r"(?:chiếc|cái|bộ|sản\s*phẩm|máy|đôi|hộp|bình|gói|cuộn|cây|áo|quần)"
@@ -289,6 +289,10 @@ def select_tools_for_turn(
     ):
         selected.add("create_new_order")
         selected.update({"check_inventory", "get_pricing_quote"})
+    if facts.get("basket_skus") and starts_basket_checkout(transcript or ""):
+        # An accepted basket with quantities and a delivery address starts a
+        # checkout even when payment is deferred to the next customer turn.
+        selected.update({"create_new_order", "check_inventory", "get_pricing_quote"})
     if exchange_signal:
         selected.update({"check_order_status", "check_inventory"})
     if update_confirmation:
@@ -343,6 +347,25 @@ def select_tools_for_turn(
     # request to spend a retrieval call now.
     if deferred_policy_topic(transcript):
         selected.discard("search_policy")
+
+    if facts.get("basket_skus") and is_basket_recap_request(transcript or ""):
+        # A saved-cart recap is not an order lookup, even when the NLU labels
+        # "confirm" as an order intent. Keep genuine order-ID/status requests.
+        current_order_reference = bool(
+            re.search(
+                r"\b(?:(?:od|ord)-?[a-z0-9]+|mã\s+đơn|đơn\s+(?:hàng\s+)?"
+                r"(?:của|(?:od|ord)[-_]?[a-z0-9]+)|"
+                r"đã\s+(?:đặt|mua|nhận)|trạng\s+thái\s+đơn|"
+                r"tình\s+trạng\s+đơn|giao\s+(?:đến|tới)\s+đâu)\b",
+                text,
+            )
+        )
+        if not current_order_reference:
+            selected.discard("check_order_status")
+            selected.discard("update_order")
+        selected.discard("search_catalog")
+        if not any(word in text for word in ("còn hàng", "tồn kho")):
+            selected.discard("check_inventory")
 
     return frozenset(selected)
 

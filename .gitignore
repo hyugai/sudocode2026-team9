@@ -3,6 +3,11 @@ __pycache__/
 *.py[codz]
 *$py.class
 
+
+BTC-*/
+dataset/chroma_db/
+outputs/benchmark/
+!outputs/benchmark/benchmark_v3/
 # C extensions
 *.so
 
@@ -219,3 +224,18 @@ __marimo__/
 
 # Downloaded local speech recognition weights
 /models/
+.langgraph_api/
+
+tests/
+
+# Runtime data required by the Render image. Customer memory is intentionally
+# reviewable before commit; do not place secrets outside these documented files.
+#data/*
+data/chroma_db/
+# !data/chroma_db/**
+# !data/memory-root/
+# data/memory-root/*
+# !data/memory-root/agents/
+# !data/memory-root/agents/**
+# !data/memory-root/users/
+# !data/memory-root/users/**

@@ -11,6 +11,7 @@ from telesale_agent.core.address import (
 )
 from telesale_agent.core.basket import mentioned_catalog_items
 from telesale_agent.core.models import TurnContext
+from telesale_agent.application.customer_text import literal_customer_text
 
 
 _APPAREL_VARIANT = re.compile(
@@ -68,6 +69,7 @@ def _basket_memory_candidates(
     if not catalog_items:
         return {}
     text = context.input.text or ""
+    literal_text = literal_customer_text(context.input)
     folded = text.casefold()
     memory = context.state.customer_memory or {}
     prior_facts = memory.get("facts", {}) if isinstance(memory, dict) else {}
@@ -77,10 +79,10 @@ def _basket_memory_candidates(
     if not isinstance(prior_names, dict):
         prior_names = {}
 
-    mentioned_skus = [
-        str(item["sku"])
-        for item in mentioned_catalog_items(text, catalog_items)
-    ]
+    mentioned_items = mentioned_catalog_items(literal_text, catalog_items)
+    if not mentioned_items and literal_text != text:
+        mentioned_items = mentioned_catalog_items(text, catalog_items)
+    mentioned_skus = [str(item["sku"]) for item in mentioned_items]
     if not mentioned_skus:
         return {}
 

@@ -227,6 +227,15 @@ Khi truyền `--rag`, `team_eval.py` tính:
 
 RAG metric không tự chạy trong benchmark telesale nếu chưa có RAG result và labeled QA tương ứng.
 
+Tool tra cứu chính sách của team là MCP `search_policy`, ghi trong trace dưới tên
+`policy.search`. Đây là tool mở rộng, không thay thế các tên bắt buộc của BTC:
+giá/khuyến mãi dùng `pricing.get_quote`; chính sách đổi trả, bảo hành, giao hàng
+dùng `policy.search`. Mỗi kết quả policy có `chunk_id` dạng `DT-03` để đối chiếu
+với `rag/qa_labeled.json`. Trace benchmark telesale không tự biến thành RAG
+result: muốn tính recall@k vẫn phải tạo artifact kết quả cho bộ QA và truyền
+`--rag`. Các scenario có `success_if.tool_called = null` vẫn cho TCA là N/A,
+không phải lỗi của tên `policy.search`.
+
 ## 5. Cách chạy khuyến nghị
 
 ### 5.1 Smoke test SC-001–003 bằng Gemini

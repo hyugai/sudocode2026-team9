@@ -163,6 +163,11 @@ def ground_basket_recap(
     skus = _basket_skus(context)
     names = _basket_product_names(context)
     if len(skus) < 2 or any(sku not in names for sku in skus):
+        if asks_basket_total(context.input.text or ""):
+            return (
+                "Dạ em chưa xác minh đủ giỏ hàng và giá hiện tại, "
+                "nên chưa thể báo tổng tiền chính xác ạ."
+            )
         return response_text
 
     total = 0
@@ -191,7 +196,15 @@ def ground_basket_recap(
                 if isinstance(quantity, int) and quantity > 0:
                     quotes[sku] = int(price) * quantity
         if any(sku not in quotes for sku in skus):
-            return response_text
+            item_names = "\n".join(
+                f"{index}. {names[sku]}" for index, sku in enumerate(skus, 1)
+            )
+            return (
+                "Dạ giỏ hàng cuối cùng của mình gồm:\n"
+                + item_names
+                + "\nEm chưa xác minh đủ giá hiện tại cho các món, "
+                "nên chưa thể báo tổng tiền chính xác ạ."
+            )
         total = sum(quotes[sku] for sku in skus)
 
     lines = [f"{index}. {names[sku]}" for index, sku in enumerate(skus, 1)]
