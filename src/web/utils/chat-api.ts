@@ -7,6 +7,7 @@ export interface DebugInfo {
 interface ChatResponse {
   response: string;
   transcript?: string;
+  normalized_message?: string;
   debug?: DebugInfo;
   retry_after_seconds?: number;
 }

@@ -106,7 +106,7 @@ export default function Chat() {
       });
       if (!data) return;
       setCooldownSeconds(chatClient.retryAfterSeconds);
-      const transcript = audioFile ? data.transcript : userMessage;
+      const transcript = audioFile ? data.transcript : (data.normalized_message ?? userMessage);
       if (typeof transcript !== "string" || !transcript.trim()) {
         throw new Error("Không nhận được văn bản từ ghi âm. Vui lòng thử lại.");
       }

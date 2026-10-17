@@ -153,11 +153,15 @@ async def run_chat_turn(turn_input: TurnInput):
     response = {"response": result.response_text}
     if turn_input.channel == Channel.VOICE:
         response["transcript"] = turn_input.text
+    else:
+        response["normalized_message"] = turn_input.text
     if provider_cooldown.remaining():
         response["retry_after_seconds"] = provider_cooldown.remaining()
     if os.environ.get("ENABLE_DEBUG_RESPONSE", "false").lower() == "true":
         response["debug"] = {
             "raw_asr_transcript": turn_input.metadata.get("raw_asr_transcript"),
+            "raw_user_text": turn_input.metadata.get("raw_user_text"),
+            "normalized_input": turn_input.text,
             "intent": result.perception.intent if result.perception else "unknown",
             "retrieved_knowledge": (
                 result.retrieved.knowledge if result.retrieved else []

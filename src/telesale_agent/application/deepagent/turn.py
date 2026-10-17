@@ -15,9 +15,11 @@ from telesale_agent.core.models import (
     ActionResult,
     ActionStatus,
     Observation,
+    Channel,
 )
 from telesale_agent.core.errors import ASRUnavailableError, AudioInputError
 from telesale_agent.application.asr_normalization import normalize_asr_transcript
+from telesale_agent.application.chat_normalization import normalize_chat_text
 from telesale_agent.adapters.llm.rate_limits import is_rate_limit_error
 from telesale_agent.adapters.llm.usage_tracking import (
     begin_usage_collection,
@@ -84,7 +86,7 @@ async def run_turn_impl(
     if state.retrieved_data:
         context.retrieved = state.retrieved_data
     
-    # 1. ASR
+    # 1. Normalize input before identity, perception, and the main agent.
     if context.input.audio is not None and not context.input.text:
         if harness.asr is None:
             raise ASRUnavailableError("Chưa cấu hình ASR cho input giọng nói.")
@@ -93,6 +95,9 @@ async def run_turn_impl(
             raise AudioInputError("Không nhận dạng được giọng nói trong ghi âm.")
         context.input.metadata["raw_asr_transcript"] = transcript.strip()
         context.input.text = normalize_asr_transcript(transcript)
+    elif context.input.text and context.input.channel == Channel.CHAT:
+        context.input.metadata.setdefault("raw_user_text", context.input.text)
+        context.input.text = normalize_chat_text(context.input.text)
 
     # 2. Pre-processing Nodes
     # 2a. Initialization phase (Only runs once per conversation)

@@ -32,7 +32,7 @@ API đọc các giới hạn từ cấu hình; bộ chọn file trên web áp d�
 
 ## Chuẩn hóa văn bản sau ASR
 
-Ngay sau ASR, pipeline chuẩn hóa text hoàn toàn local trước bước identity, che PII và perception. Văn bản đã chuẩn hóa được dùng cho LLM, lịch sử hội thoại và trường `transcript` trả về web/Gradio. Tin nhắn người dùng gõ trực tiếp giữ nguyên cách viết. CLI `scripts/transcribe_audio.py` cũng trả text đã chuẩn hóa.
+Ngay sau ASR, pipeline chuẩn hóa text hoàn toàn local trước bước identity, che PII và perception. Văn bản đã chuẩn hóa được dùng cho LLM, lịch sử hội thoại và trường `transcript` trả về web/Gradio. Tin nhắn gõ tay dùng [bộ chuẩn hóa riêng cho viết tắt, không dấu và Việt–Anh](../agent/text_input_normalization.md). CLI `scripts/transcribe_audio.py` cũng trả text đã chuẩn hóa.
 
 | ASR đầu ra | Text sau chuẩn hóa |
 | --- | --- |

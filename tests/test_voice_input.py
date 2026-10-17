@@ -136,6 +136,48 @@ class ZipformerTests(unittest.IsolatedAsyncioTestCase):
 
 
 class PipelineASRTests(unittest.IsolatedAsyncioTestCase):
+    async def test_typed_text_normalized_before_identity_perception_and_main_agent(self):
+        from telesale_agent.application.deepagent.turn import run_turn_impl
+        from telesale_agent.core.models import CustomerIdentity, Perception
+
+        raw = "sp nay co ship cod k a"
+        expected = "Sản phẩm này có ship cod không anh"
+        turn_input = context_for(text=raw).input
+        state = ConversationState(conversation_id="test")
+        stages = []
+
+        class ReachedMainAgent(Exception):
+            pass
+
+        async def resolve(context):
+            stages.append("identity")
+            self.assertEqual(context.input.text, expected)
+            self.assertEqual(context.input.metadata["raw_user_text"], raw)
+            return CustomerIdentity()
+
+        async def perceive(context):
+            stages.append("perception")
+            self.assertEqual(context.input.text, expected)
+            return Perception(transcript=context.input.text)
+
+        async def invoke(payload, **kwargs):
+            stages.append("main_agent")
+            self.assertIn(expected, payload["messages"][0]["content"])
+            self.assertNotIn(raw, payload["messages"][0]["content"])
+            raise ReachedMainAgent
+
+        harness = SimpleNamespace(
+            agent=SimpleNamespace(ainvoke=invoke), asr=None,
+            identity=SimpleNamespace(resolve_identity=resolve), customer_context=None,
+            perceive=SimpleNamespace(perceive=perceive), retrieve=None, call_brief=None,
+            _prefetch_read_tools=AsyncMock(return_value=([], frozenset())),
+            _execute_confirmed_mutation=AsyncMock(return_value=([], frozenset())),
+        )
+        with self.assertRaises(ReachedMainAgent):
+            await run_turn_impl(harness, turn_input, state)
+        self.assertEqual(stages, ["identity", "perception", "main_agent"])
+        self.assertEqual(state.messages[0].content, expected)
+
     async def test_rate_limit_does_not_accumulate_history_or_failed_checkpoints(self):
         from telesale_agent.application.deepagent.turn import run_turn_impl
         from telesale_agent.core.models import Perception
@@ -283,6 +325,44 @@ class AudioAPITests(unittest.TestCase):
         voice_input = self.harness.calls[1][0]
         self.assertEqual(voice_input.channel, Channel.VOICE)
         self.assertEqual(voice_input.customer_hint, "0901234567")
+
+    def test_typed_response_returns_normalized_text_and_optional_original_debug(self):
+        from telesale_agent.application.deepagent.turn import run_turn_impl
+        from telesale_agent.core.models import Perception
+        from langchain_core.messages import AIMessage
+
+        async def perceive(context):
+            return Perception(transcript=context.input.text)
+
+        pipeline = SimpleNamespace(
+            agent=SimpleNamespace(ainvoke=AsyncMock(return_value={
+                "messages": [AIMessage(content="Shop có ship cod ạ.")],
+            })),
+            asr=None, identity=None, customer_context=None, retrieve=None, call_brief=None,
+            perceive=SimpleNamespace(perceive=perceive), guardrail=None, persist=None,
+            _prefetch_read_tools=AsyncMock(return_value=([], frozenset())),
+            _execute_confirmed_mutation=AsyncMock(return_value=([], frozenset())),
+        )
+
+        async def run_pipeline(turn_input, state):
+            return await run_turn_impl(pipeline, turn_input, state)
+
+        self.harness.run_turn = run_pipeline
+        for debug in (False, True):
+            with self.subTest(debug=debug), patch.dict(os.environ, {"ENABLE_DEBUG_RESPONSE": str(debug).lower()}):
+                response = self.client.post("/api/chat", json={
+                    "conversation_id": f"typed-{debug}", "message": "sp nay co ship cod k a",
+                })
+                self.assertEqual(response.status_code, 200, response.text)
+                body = response.json()
+                self.assertEqual(body["normalized_message"], "Sản phẩm này có ship cod không anh")
+                self.assertEqual(body["response"], "Shop có ship cod ạ.")
+                self.assertNotIn("transcript", body)
+                if debug:
+                    self.assertEqual(body["debug"]["raw_user_text"], "sp nay co ship cod k a")
+                    self.assertEqual(body["debug"]["normalized_input"], body["normalized_message"])
+                else:
+                    self.assertNotIn("debug", body)
 
     def test_invalid_uploads_do_not_call_agent(self):
         self.assertEqual(self.upload(content=b"").status_code, 422)
