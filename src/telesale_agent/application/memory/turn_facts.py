@@ -5,6 +5,11 @@ from __future__ import annotations
 import re
 from typing import Any
 
+from telesale_agent.core.address import (
+    extract_explicit_delivery_address,
+    looks_like_delivery_address,
+)
+from telesale_agent.core.basket import mentioned_catalog_items
 from telesale_agent.core.models import TurnContext
 
 
@@ -49,19 +54,10 @@ def _explicit_delivery_address(context: TurnContext) -> str | None:
     )
     for key in ("delivery_address", "shipping_address", "address"):
         value = entities.get(key)
-        if isinstance(value, str) and len(value.strip()) >= 6:
+        if isinstance(value, str) and looks_like_delivery_address(value):
             return value.strip()
 
-    text = (context.input.text or "").strip()
-    match = re.search(
-        r"(?:địa\s*chỉ(?:\s+(?:giao|nhận)\s+hàng)?\s*(?:là|:)?|"
-        r"(?:giờ\s+)?giao(?:\s+(?:đến|về))?)\s+"
-        r"(?P<address>\d+[^.!?]{4,120}?)(?=\s*(?:,?\s*(?:thanh\s+toán|"
-        r"cod\b|chuyển\s+khoản|hôm\s+nay|nhé|nha)|[.!?]|$))",
-        text,
-        flags=re.IGNORECASE,
-    )
-    return match.group("address").strip(" ,") if match else None
+    return extract_explicit_delivery_address((context.input.text or "").strip())
 
 
 def _basket_memory_candidates(
@@ -77,16 +73,14 @@ def _basket_memory_candidates(
     prior_facts = memory.get("facts", {}) if isinstance(memory, dict) else {}
     prior = prior_facts.get("basket_skus", []) if isinstance(prior_facts, dict) else []
     prior = [str(sku) for sku in prior if isinstance(sku, str)]
+    prior_names = prior_facts.get("basket_product_names", {}) if isinstance(prior_facts, dict) else {}
+    if not isinstance(prior_names, dict):
+        prior_names = {}
 
-    mentioned = []
-    for item in catalog_items:
-        sku = item.get("sku")
-        name = item.get("name")
-        if not isinstance(sku, str):
-            continue
-        position = folded.find(str(name or "").casefold()) if name else -1
-        mentioned.append((position if position >= 0 else len(text), sku))
-    mentioned_skus = [sku for _, sku in sorted(mentioned)]
+    mentioned_skus = [
+        str(item["sku"])
+        for item in mentioned_catalog_items(text, catalog_items)
+    ]
     if not mentioned_skus:
         return {}
 
@@ -112,6 +106,18 @@ def _basket_memory_candidates(
         return {}
 
     result: dict[str, Any] = {"basket_skus": basket}
+    catalog_names = {
+        str(item["sku"]): str(item["name"])
+        for item in catalog_items
+        if isinstance(item, dict) and item.get("sku") and item.get("name")
+    }
+    names = {
+        sku: catalog_names.get(sku) or prior_names.get(sku)
+        for sku in basket
+        if catalog_names.get(sku) or prior_names.get(sku)
+    }
+    if names:
+        result["basket_product_names"] = names
     result.update(
         {f"basket_item_{index}": sku for index, sku in enumerate(basket, start=1)}
     )

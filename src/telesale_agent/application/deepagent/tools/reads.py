@@ -5,6 +5,10 @@ from __future__ import annotations
 import json
 from typing import Any
 
+from telesale_agent.core.basket import (
+    is_multi_product_request,
+    mentioned_catalog_items,
+)
 from telesale_agent.core.models import TurnContext
 from telesale_agent.application.deepagent.tools.protocol import (
     canonical_tool_args as _canonical_tool_args,
@@ -52,6 +56,7 @@ class ReadToolExecutor:
         call_date = context.input.metadata.get("call_date")
         order_workflow = "check_order_status" in remaining
         current_turn_sku: str | None = None
+        selected_multi_skus: list[str] = []
         read_cache = context.state.working_memory.setdefault("read_tool_cache", {})
 
         async def invoke(name: str, args: dict[str, Any]) -> dict[str, Any] | None:
@@ -145,7 +150,11 @@ class ReadToolExecutor:
         # replaces search->model->inventory->model with search->inventory->model.
         if {"search_catalog", "check_inventory"}.issubset(remaining):
             catalog_args: dict[str, Any] = {
-                "query": _catalog_query(context),
+                "query": (
+                    context.input.text
+                    if is_multi_product_request(context.input.text or "")
+                    else _catalog_query(context)
+                ),
             }
             if call_date:
                 catalog_args["on"] = call_date
@@ -157,7 +166,22 @@ class ReadToolExecutor:
                 # Let the model retry with a different query rather than making
                 # a prefetch miss terminal for this turn.
                 remaining.add("search_catalog")
-            current_turn_sku = _single_variant_sku(catalog_result)
+            selected_items = mentioned_catalog_items(
+                context.input.text or "",
+                catalog_result.get("items", [])
+                if isinstance(catalog_result, dict)
+                else [],
+            )
+            if 2 <= len(selected_items) <= 4:
+                selected_multi_skus = [str(item["sku"]) for item in selected_items]
+                for item in selected_items:
+                    inventory_args: dict[str, Any] = {"sku": item["sku"]}
+                    if call_date:
+                        inventory_args["on"] = call_date
+                    await invoke("check_inventory", inventory_args)
+            current_turn_sku = (
+                None if selected_multi_skus else _single_variant_sku(catalog_result)
+            )
             if current_turn_sku:
                 inventory_args: dict[str, Any] = {"sku": current_turn_sku}
                 if call_date:
@@ -208,6 +232,17 @@ class ReadToolExecutor:
         if "get_pricing_quote" in remaining and basket_skus:
             for basket_sku in basket_skus:
                 pricing_args = {"sku": basket_sku, "qty": _quantity(context)}
+                if call_date:
+                    pricing_args["on"] = call_date
+                if context.input.customer_hint:
+                    pricing_args["customer_phone"] = context.input.customer_hint
+                if context.identity and context.identity.customer_id:
+                    pricing_args["customer_id"] = context.identity.customer_id
+                await invoke("get_pricing_quote", pricing_args)
+
+        if "get_pricing_quote" in remaining and selected_multi_skus:
+            for sku in selected_multi_skus:
+                pricing_args = {"sku": sku, "qty": _quantity(context)}
                 if call_date:
                     pricing_args["on"] = call_date
                 if context.input.customer_hint:

@@ -38,6 +38,8 @@ from telesale_agent.application.deepagent.context.order import _delivery_address
 from telesale_agent.application.deepagent.response import (
     _safe_fallback_response,
     ground_current_stock_claims,
+    ground_basket_recap,
+    ground_multi_item_order_confirmation,
     ground_unverified_unit_question,
 )
 from telesale_agent.application.deepagent.context.prompt import (
@@ -259,6 +261,12 @@ async def run_turn_impl(
         context, tool_calls, response_text
     )
     response_text = ground_current_stock_claims(
+        context, tool_calls, response_text
+    )
+    response_text = ground_basket_recap(
+        context, [*orchestrated_calls, *tool_calls], response_text
+    )
+    response_text = ground_multi_item_order_confirmation(
         context, tool_calls, response_text
     )
 

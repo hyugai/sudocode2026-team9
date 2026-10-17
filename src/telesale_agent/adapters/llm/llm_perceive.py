@@ -67,6 +67,7 @@ _AUTHORITATIVE_ONLY_MEMORY_KEYS = {
     "promo_code",
     "order_id",
     "basket_skus",
+    "basket_product_names",
     "removed_sku",
 }
 _SENSITIVE_OR_TRANSACTIONAL_KEYS = {
@@ -96,6 +97,22 @@ def _number(value: Any) -> int | float | Any:
     return int(parsed) if parsed.is_integer() else parsed
 
 
+def _states_budget_amount(transcript: str) -> bool:
+    """A quoted cart total 'within budget' is not a new customer budget."""
+    text = transcript.casefold()
+    explicit_budget = re.search(
+        r"(?:ngân\s*sách|ngan\s*sach)"
+        r"(?:\s+(?:tổng|của|anh|chị|em|tôi|mình|là|khoảng|tầm|"
+        r"dưới|tối|đa|chỉ|có)){0,7}\s+\d",
+        text,
+    )
+    return bool(
+        explicit_budget
+        or re.search(r"\b(?:tầm|tam)\s+\d", text)
+        or re.search(r"\b\d[\d.,]*\s*(?:đồng|vnd|đ|triệu)\s+đổ\s+lại", text)
+    )
+
+
 def canonicalize_memory_deltas(
     deltas: dict[str, Any],
     transcript: str,
@@ -119,11 +136,7 @@ def canonicalize_memory_deltas(
             or key in _SENSITIVE_OR_TRANSACTIONAL_KEYS
         ):
             continue
-        if key == "budget_vnd" and not re.search(
-            r"ngân\s*sách|ngan\s*sach|tầm\s+\d|tam\s+\d|đổ\s*lại",
-            transcript_folded,
-            re.I,
-        ):
+        if key == "budget_vnd" and not _states_budget_amount(transcript_folded):
             continue
         value = raw_value
         if key in {"budget_vnd", "room_area_m2", "size", "quantity"}:

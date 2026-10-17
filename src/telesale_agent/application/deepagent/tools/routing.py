@@ -10,6 +10,7 @@ from typing import Any, TypedDict
 
 from langchain.agents.middleware import AgentMiddleware, ModelRequest, ModelResponse
 
+from telesale_agent.core.basket import asks_basket_total, is_multi_product_request
 from telesale_agent.core.models import Perception
 from telesale_agent.application.deepagent.understanding.policy_intent import deferred_policy_topic
 
@@ -177,6 +178,9 @@ def select_tools_for_turn(
 
     text = (transcript or "").casefold()
     facts = memory_facts if isinstance(memory_facts, dict) else {}
+    if facts.get("basket_skus") and asks_basket_total(transcript or ""):
+        # Current-call prices must be verified before repeating a cart total.
+        selected.add("get_pricing_quote")
     if is_knowledge_request(text):
         selected.add("search_policy")
     if any(
@@ -228,6 +232,10 @@ def select_tools_for_turn(
             text,
         )
     )
+    if is_multi_product_request(transcript or ""):
+        # Resolve both named products even if NLU labels the turn as generic
+        # conversation. A missing first-turn basket cannot be recovered later.
+        selected.update({"search_catalog", "check_inventory"})
     if any(word in text for word in ("còn hàng", "tồn kho", "size", "màu")):
         selected.add("check_inventory")
         if not exchange_signal:

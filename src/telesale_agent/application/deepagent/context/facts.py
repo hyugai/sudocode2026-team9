@@ -49,6 +49,7 @@ def _select_brief_facts(
         priorities.extend(
             [
                 "basket_skus",
+                "basket_product_names",
                 "variant_sku",
                 "product_advised",
                 "price_quoted_vnd",
@@ -100,6 +101,7 @@ def _select_brief_facts(
                 "previous_price_quoted_vnd",
                 "previous_promo_code",
                 "basket_skus",
+                "basket_product_names",
                 "budget_vnd",
                 "room_area_m2",
                 "has_children",
@@ -125,6 +127,7 @@ def _select_brief_facts(
             "order_id",
             "unresolved_question",
             "basket_skus",
+            "basket_product_names",
             "variant_sku",
             "product_advised",
             "delivery_address",

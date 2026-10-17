@@ -5,6 +5,10 @@ from __future__ import annotations
 import re
 from typing import Any
 
+from telesale_agent.core.address import (
+    extract_explicit_delivery_address,
+    looks_like_delivery_address,
+)
 from telesale_agent.core.models import TurnContext
 from telesale_agent.application.deepagent.context.facts import _current_fact, _known_fact
 
@@ -103,20 +107,15 @@ def _current_turn_has_delivery_address(
         else {}
     )
     if any(
-        isinstance(entities.get(key), str) and len(entities[key].strip()) >= 6
+        isinstance(entities.get(key), str)
+        and looks_like_delivery_address(entities[key])
         for key in ("delivery_address", "shipping_address", "address")
     ):
         return True
     text = (context.input.text or "").strip()
-    if re.search(
-        r"(?:địa\s*chỉ(?:\s+(?:giao|nhận)\s+hàng)?\s*(?:là|:)?|"
-        r"(?:giờ\s+)?giao(?:\s+(?:đến|về|qua|tới))?(?:\s+cho\s+(?:anh|chị|em|tôi))?)\s+"
-        r"(?:số\s+)?\d+",
-        text,
-        flags=re.IGNORECASE,
-    ):
+    if extract_explicit_delivery_address(text):
         return True
-    return bool(allow_bare_reply and len(text) >= 8 and re.search(r"\d", text))
+    return bool(allow_bare_reply and looks_like_delivery_address(text))
 
 def _quantity(context: TurnContext) -> int:
     value = _current_fact(context, "quantity", "qty", "quantity_each")
@@ -183,22 +182,13 @@ def _delivery_address(context: TurnContext) -> str | None:
     )
     pending = context.state.working_memory.get("pending_order") or {}
     text = (context.input.text or "").strip()
-    explicit_match = re.search(
-        r"(?:địa\s*chỉ(?:\s+(?:giao|nhận)\s+hàng)?\s*(?:là|:)?|"
-        r"(?:giờ\s+)?giao(?:\s+(?:đến|về|qua|tới))?(?:\s+cho\s+(?:anh|chị|em|tôi))?)\s+"
-        r"(?P<address>(?:số\s+)?\d+[^!?\r\n]+?)"
-        r"(?=\s*(?:,?\s*(?:thanh\s+toán|cod\b|chuyển\s+khoản|tiền\s+mặt|hôm\s+nay|nhé|nha)|[.!?]\s*$|[!?]|\.\s+(?!(?:hồ|chí|minh|hcm))\b|$))",
-        text,
-        flags=re.IGNORECASE,
-    )
-    explicit_address = (
-        explicit_match.group("address").strip(" .,") if explicit_match else None
-    )
+    explicit_address = extract_explicit_delivery_address(text)
+    if explicit_address:
+        return explicit_address
     if (
         isinstance(pending, dict)
         and pending
-        and len(text) >= 8
-        and re.search(r"\d", text)
+        and looks_like_delivery_address(text)
     ):
         # This is the direct answer to our preceding address question. Prefer
         # it over an occasionally truncated NLU entity (for example "1").
@@ -216,10 +206,12 @@ def _delivery_address(context: TurnContext) -> str | None:
         ).strip()
         return cleaned or text
     candidates = [
-        entities.get("delivery_address"),
-        entities.get("shipping_address"),
-        entities.get("address"),
-        explicit_address,
+        *(
+            entities.get(key)
+            for key in ("delivery_address", "shipping_address", "address")
+            if isinstance(entities.get(key), str)
+            and looks_like_delivery_address(entities[key])
+        ),
         pending.get("address") if isinstance(pending, dict) else None,
         _known_fact(context, "delivery_address"),
         profile.get("address") if isinstance(profile, dict) else None,
@@ -236,15 +228,6 @@ def _delivery_address(context: TurnContext) -> str | None:
     if address:
         return address
 
-    # If the previous turn explicitly asked for the missing order address, a
-    # street-like reply is the address even when the NLU omitted the entity.
-    if (
-        isinstance(pending, dict)
-        and pending
-        and len(text) >= 8
-        and re.search(r"\d", text)
-    ):
-        return text
     return None
 
 def _single_order(result: Any) -> dict[str, Any] | None:

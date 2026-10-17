@@ -5,8 +5,10 @@ from __future__ import annotations
 import re
 from typing import Any
 
+from telesale_agent.core.basket import asks_basket_total, is_basket_recap_request
 from telesale_agent.core.models import TurnContext
 from telesale_agent.application.deepagent.context.order import (
+    _basket_skus,
     _delivery_address,
     _known_variant_sku,
     _payment_method,
@@ -130,6 +132,126 @@ def _format_vnd(value: Any) -> str:
         return f"{int(value):,}".replace(",", ".") + " đồng"
     except (TypeError, ValueError):
         return ""
+
+
+def _basket_product_names(context: TurnContext) -> dict[str, str]:
+    preferences = (
+        context.call_brief.remembered_preferences
+        if context.call_brief
+        and isinstance(context.call_brief.remembered_preferences, dict)
+        else {}
+    )
+    facts = preferences.get("facts") or {}
+    names = facts.get("basket_product_names") if isinstance(facts, dict) else None
+    if not isinstance(names, dict):
+        return {}
+    return {
+        sku: name
+        for sku, name in names.items()
+        if isinstance(sku, str) and isinstance(name, str) and name.strip()
+    }
+
+
+def ground_basket_recap(
+    context: TurnContext,
+    tool_calls: list[dict[str, Any]],
+    response_text: str,
+) -> str:
+    """Repeat a saved cart using exact catalog names and current verified prices."""
+    if not is_basket_recap_request(context.input.text or ""):
+        return response_text
+    skus = _basket_skus(context)
+    names = _basket_product_names(context)
+    if len(skus) < 2 or any(sku not in names for sku in skus):
+        return response_text
+
+    total = 0
+    if asks_basket_total(context.input.text or ""):
+        quotes: dict[str, int] = {}
+        call_date = context.input.metadata.get("call_date")
+        for call in tool_calls:
+            if call.get("name") != "pricing.get_quote":
+                continue
+            args = call.get("args") or {}
+            result = call.get("result") or {}
+            if not isinstance(args, dict) or not isinstance(result, dict):
+                continue
+            if call_date and args.get("on") != call_date:
+                continue
+            price = result.get("final_price_vnd")
+            sku = args.get("sku")
+            if (
+                isinstance(sku, str)
+                and sku in skus
+                and isinstance(price, (int, float))
+                and not isinstance(price, bool)
+                and price >= 0
+            ):
+                quantity = args.get("qty", 1)
+                if isinstance(quantity, int) and quantity > 0:
+                    quotes[sku] = int(price) * quantity
+        if any(sku not in quotes for sku in skus):
+            return response_text
+        total = sum(quotes[sku] for sku in skus)
+
+    lines = [f"{index}. {names[sku]}" for index, sku in enumerate(skus, 1)]
+    recap = "Dạ giỏ hàng cuối cùng của mình gồm:\n" + "\n".join(lines)
+    if asks_basket_total(context.input.text or ""):
+        recap += f"\nTổng tiền theo giá đã kiểm tra hôm nay là {_format_vnd(total)} ạ."
+    else:
+        recap += f"\nEm đã ghi nhận đúng {len(skus)} món này ạ."
+    return recap
+
+
+def ground_multi_item_order_confirmation(
+    context: TurnContext,
+    tool_calls: list[dict[str, Any]],
+    response_text: str,
+) -> str:
+    """Pair every successful cart item with its own verified order ID."""
+    created = [
+        call for call in tool_calls
+        if call.get("name") == "order.create"
+        and isinstance(call.get("result"), dict)
+        and call["result"].get("order_id")
+    ]
+    skus = _basket_skus(context)
+    names = _basket_product_names(context)
+    if len(created) < 2 or len(created) != len(skus) or any(sku not in names for sku in skus):
+        return response_text
+    by_sku = {
+        (call.get("args") or {}).get("sku"): call
+        for call in created
+        if isinstance(call.get("args"), dict)
+    }
+    if any(sku not in by_sku for sku in skus):
+        return response_text
+    lines = [
+        f"{index}. {names[sku]} — mã đơn {by_sku[sku]['result']['order_id']}"
+        for index, sku in enumerate(skus, 1)
+    ]
+    first_args = by_sku[skus[0]]["args"]
+    address = first_args.get("address")
+    payment = first_args.get("payment") or first_args.get("payment_method")
+    details = []
+    if address and all(by_sku[sku]["args"].get("address") == address for sku in skus):
+        details.append(f"giao đến {address}")
+    if payment and all(
+        (by_sku[sku]["args"].get("payment") or by_sku[sku]["args"].get("payment_method")) == payment
+        for sku in skus
+    ):
+        details.append(f"thanh toán {payment}")
+    confirmation = "Dạ em đã tạo đơn cho đúng giỏ hàng cuối cùng:\n" + "\n".join(lines)
+    if details:
+        confirmation += "\nThông tin: " + ", ".join(details) + "."
+    delivery_dates = {
+        by_sku[sku]["result"].get("estimated_delivery") for sku in skus
+    }
+    if len(delivery_dates) == 1:
+        delivery_date = next(iter(delivery_dates))
+        if isinstance(delivery_date, str) and delivery_date:
+            confirmation += f"\nDự kiến giao: {delivery_date}."
+    return confirmation
 
 
 def _safe_fallback_response(

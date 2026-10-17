@@ -104,7 +104,7 @@ def build_base_user_message(
             facts = brief.remembered_preferences.get("facts") or {}
             if isinstance(facts, dict) and facts:
                 fact_items = [
-                    f"{key}: {clip_text(value, 120)}"
+                    f"{key}: {clip_text(value, 240 if key == 'basket_product_names' else 120)}"
                     for key, value in _select_brief_facts(context, facts)
                 ]
                 if fact_items:
@@ -163,6 +163,19 @@ def append_orchestration_context(
 ) -> str:
     """Add verified tool evidence and mutation-safety instructions."""
     message = enriched_user_message
+    remembered_facts = (
+        context.call_brief.remembered_preferences.get("facts") or {}
+        if context.call_brief
+        and isinstance(context.call_brief.remembered_preferences, dict)
+        else {}
+    )
+    if isinstance(remembered_facts, dict) and remembered_facts.get("basket_product_names"):
+        message += (
+            "\n\n[Basket product names in Customer Brief came from catalog.search. "
+            "Use those exact names for their SKUs; never guess a product "
+            "name from an SKU abbreviation. A cart total needs current-date "
+            "pricing.get_quote for every basket item.]"
+        )
     if deferred_policy_topic(context.input.text):
         message += (
             "\n\n[The customer plans to ask about policy on a later call. "
