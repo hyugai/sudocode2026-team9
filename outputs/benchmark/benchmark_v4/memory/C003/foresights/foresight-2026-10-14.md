@@ -1,8 +1,0 @@
-- Xác định diện tích phòng của khách hàng để tư vấn mẫu thay thế.
-- Tìm hiểu xem gia đình khách có trẻ nhỏ không để gợi ý tính năng phù hợp.
-- Kiểm tra tồn kho và báo giá chính xác của sản phẩm khách quan tâm.
-- Tư vấn thêm các lựa chọn khác trong tầm
-- Gọi lại cho khách hàng vào lúc 10 giờ ngày 20/10/2026 theo yêu cầu của khách.
-- Xác nhận thông tin giao hàng và phương thức thanh toán để hoàn tất đơn hàng.
-- Xác nhận chốt đơn và lấy thông tin giao hàng nếu khách hàng đồng ý mua ngay.
-- Liên hệ lại với khách hàng ngay khi mẫu Xiaomi Smart Air Purifier 4 Pro có hàng trở lại.

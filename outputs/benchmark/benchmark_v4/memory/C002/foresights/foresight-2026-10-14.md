@@ -1,6 +1,0 @@
-- Xác nhận diện tích phòng của khách hàng để tư vấn độ phù hợp của máy AirPure Y.
-- Xác nhận thông tin giao hàng để hoàn tất đơn hàng cho khách.
-- Gọi lại cho khách hàng vào lúc 10 giờ ngày 19/10/2026.
-- Xác nhận thông tin giao hàng và phương thức thanh toán.
-- Xác nhận địa chỉ và hoàn tất đơn hàng nếu khách hàng đồng ý.
-- Theo dõi và hỗ trợ khách hàng nhận hàng vào ngày dự kiến 22/10/2026.

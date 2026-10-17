@@ -1,6 +1,0 @@
-- Xác nhận diện tích và loại phòng định lắp đặt để tư vấn cụ thể.
-- Kiểm tra xem gia đình có trẻ nhỏ không để giới thiệu các tính năng an toàn hoặc lọc bụi mịn chuyên sâu.
-- Xác nhận khách hàng có trẻ nhỏ hay không để tư vấn nâng cấp lên dòng AirPure Y có tính năng Khóa an toàn.
-- Gọi lại cho khách hàng vào lúc 10 giờ ngày 17/10/2026.
-- Tiến hành các bước chốt đơn và hướng dẫn thanh toán.
-- Theo dõi trạng thái giao hàng vào ngày 20/10/2026.
