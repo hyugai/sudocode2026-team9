@@ -1,0 +1,4072 @@
+{
+  "evaluator": "team_eval_v1",
+  "reference_evaluator": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\dataset\\BTC-Data-Vong1-TEAMS\\eval\\reference_eval.py",
+  "n_scenarios": 120,
+  "system": {
+    "repeat_question_rate": {
+      "value": 31.5,
+      "redundant": 84,
+      "total_questions": 267,
+      "examples": [
+        {
+          "scenario": "SC-002",
+          "call": "call_2",
+          "turn": 2,
+          "slot": "product_advised",
+          "type": "open",
+          "text": "Hôm nay sản phẩm này đang có sẵn hàng trong kho rồi ạ. Anh cho em xin địa chỉ nhận hàng và hình thức thanh toán mong muốn (thanh toán khi nhận hàng hay chuyển khoản) để em hỗ trợ lên đơn cho mình luôn nhé?"
+        },
+        {
+          "scenario": "SC-003",
+          "call": "call_2",
+          "turn": 1,
+          "slot": "product_advised",
+          "type": "open",
+          "text": "Dạ vâng, em mừng là chị và gia đình đã thống nhất ạ! Để em chốt đơn sản phẩm (mã SKU-XM-4P) giá 5.490.000đ cho chị, chị cho em xin địa chỉ giao hàng và hình thức thanh toán chị muốn dùng nhé?"
+        },
+        {
+          "scenario": "SC-003",
+          "call": "call_2",
+          "turn": 2,
+          "slot": "product_advised",
+          "type": "open",
+          "text": "Hôm nay sản phẩm này đang **có sẵn hàng** trong kho ạ. Chị cho em xin địa chỉ nhận hàng và hình thức thanh toán chị muốn dùng để em hỗ trợ lên đơn cho mình luôn nhé?"
+        },
+        {
+          "scenario": "SC-004",
+          "call": "call_2",
+          "turn": 2,
+          "slot": "product_advised",
+          "type": "open",
+          "text": "Hôm nay sản phẩm này đang có sẵn hàng trong kho ạ. Anh Minh có muốn em lên đơn giao hàng về địa chỉ cho mình luôn không ạ?"
+        },
+        {
+          "scenario": "SC-009",
+          "call": "call_2",
+          "turn": 1,
+          "slot": "product_advised",
+          "type": "open",
+          "text": "Dạ em chào chị Ngọc, tuyệt vời quá ạ! Người nhà mình đã đồng ý rồi thì chị có muốn chốt đặt sản phẩm máy lọc nước này luôn không ạ?"
+        },
+        {
+          "scenario": "SC-011",
+          "call": "call_2",
+          "turn": 1,
+          "slot": "product_advised",
+          "type": "open",
+          "text": "Hôm nay sản phẩm có giá là 4.890.000đ, được tặng kèm 01 màng lọc thay thế và miễn phí giao hàng tận nơi. Chị có muốn chốt đặt máy theo chương trình mới này không ạ?"
+        },
+        {
+          "scenario": "SC-014",
+          "call": "call_2",
+          "turn": 1,
+          "slot": "product_advised",
+          "type": "open",
+          "text": "Hiện tại sản phẩm có giá là 4.890.000đ, được miễn phí giao hàng và tặng kèm 1 lõi lọc thay thế. Anh Long có muốn chốt đặt hàng theo chương trình mới này không ạ?"
+        },
+        {
+          "scenario": "SC-014",
+          "call": "call_2",
+          "turn": 2,
+          "slot": "promo_code",
+          "type": "open",
+          "text": "Anh Long có muốn em hỗ trợ đặt hàng theo chương trình ưu đãi mới này không anh?"
+        },
+        {
+          "scenario": "SC-015",
+          "call": "call_2",
+          "turn": 2,
+          "slot": "product_advised",
+          "type": "open",
+          "text": "Chị Ngọc xem qua giúp em, chị có muốn chốt lên đơn sản phẩm đợt này luôn không ạ?"
+        },
+        {
+          "scenario": "SC-016",
+          "call": "call_2",
+          "turn": 1,
+          "slot": "promo_code",
+          "type": "open",
+          "text": "Anh Đức có muốn em hỗ trợ chốt đơn theo chương trình ưu đãi mới này luôn không ạ?"
+        },
+        {
+          "scenario": "SC-019",
+          "call": "call_2",
+          "turn": 1,
+          "slot": "price_quoted_vnd",
+          "type": "open",
+          "text": "Giá hiện tại của máy là 4.890.000đ, được tặng kèm 1 màng lọc thay thế và miễn phí vận chuyển toàn quốc. Chị có muốn em hỗ trợ lên đơn theo chương trình ưu đãi mới này luôn không ạ?"
+        },
+        {
+          "scenario": "SC-019",
+          "call": "call_2",
+          "turn": 2,
+          "slot": "price_quoted_vnd",
+          "type": "open",
+          "text": "Hiện tại mã ưu đãi AP-SEP đợt đó đã hết hạn hệ thống nên giá máy quay về mức niêm yết 4.890.000đ. Tuy nhiên, chương trình hiện tại chị sẽ được tặng kèm 1 màng lọc thay thế và miễn phí giao hàng toàn quốc ạ. Chị có muốn em hỗ trợ lên đơn theo chương trình này không ạ?"
+        },
+        {
+          "scenario": "SC-020",
+          "call": "call_2",
+          "turn": 2,
+          "slot": "promo_code",
+          "type": "open",
+          "text": "Anh thấy ưu đãi này thế nào, em hỗ trợ mình lên đơn luôn nhé?"
+        },
+        {
+          "scenario": "SC-021",
+          "call": "call_2",
+          "turn": 1,
+          "slot": "size",
+          "type": "open",
+          "text": "Chị cho em hỏi hiện tại chị có muốn đổi sang size lớn hơn không ạ, để em hỗ trợ kiểm tra và làm thủ tục đổi trả cho mình ngay nhé?"
+        },
+        {
+          "scenario": "SC-025",
+          "call": "call_2",
+          "turn": 1,
+          "slot": "size",
+          "type": "open",
+          "text": "Em có thể hỗ trợ mình đổi sang size lớn hơn (như size 41) hoặc hỗ trợ chị quy trình đổi hàng nhé. Chị muốn đổi sang size lớn hơn hay cần em hỗ trợ theo hướng nào ạ?"
+        },
+        {
+          "scenario": "SC-027",
+          "call": "call_2",
+          "turn": 1,
+          "slot": "size",
+          "type": "open",
+          "text": "Dạ em chào chị Vy. Em rất tiếc vì áo size S chị nhận hôm qua bị hơi chật. Chị có muốn em hỗ trợ đổi sang size M cho thoải mái hơn không ạ?"
+        },
+        {
+          "scenario": "SC-027",
+          "call": "call_2",
+          "turn": 3,
+          "slot": "address",
+          "type": "confirm",
+          "text": "Em đã ghi nhận chị đồng ý làm thủ tục đổi sang size M và lấy/giao hàng tại địa chỉ 106 đường Kiểm Thử, TP. Hồ Chí Minh. Em sẽ tiến hành xử lý yêu cầu đổi hàng ngay cho chị nhé. Chị cần hỗ trợ thêm thông tin gì nữa không ạ?"
+        },
+        {
+          "scenario": "SC-028",
+          "call": "call_2",
+          "turn": 1,
+          "slot": "size",
+          "type": "open",
+          "text": "Em chào anh Phúc. Em đã ghi nhận thông tin áo size S của mình nhận hôm qua bị hơi chật ạ. Anh có muốn em hỗ trợ tư vấn đổi sang size lớn hơn (như size M) cho mình không ạ?"
+        },
+        {
+          "scenario": "SC-030",
+          "call": "call_2",
+          "turn": 1,
+          "slot": "size",
+          "type": "open",
+          "text": "Hiện tại anh Quân có muốn em hỗ trợ làm thủ tục đổi sang size lớn hơn cho mình không ạ?"
+        },
+        {
+          "scenario": "SC-032",
+          "call": "call_2",
+          "turn": 3,
+          "slot": "product_advised",
+          "type": "open",
+          "text": "Anh Huy có muốn em hỗ trợ lên đơn sản phẩm áo khoác này luôn không ạ?"
+        }
+      ]
+    },
+    "context_carryover_rate": {
+      "value": 67.7,
+      "used": 264,
+      "required": 390
+    },
+    "task_success_rate": {
+      "value": 98.3,
+      "passed": 118,
+      "total": 120,
+      "hard_cases": {
+        "value": 98.2,
+        "total": 112
+      },
+      "failures": [
+        {
+          "scenario": "SC-048",
+          "call": "call_3",
+          "hard_case": "goi_lan_ba_mat_kien_nhan",
+          "reasons": [
+            "không có tool call order.create khớp args_match"
+          ]
+        },
+        {
+          "scenario": "SC-086",
+          "call": "call_2",
+          "hard_case": "gia_da_kenh_thay_doi_theo_khuyen_mai",
+          "reasons": [
+            "thiếu must_say_any: hết hạn | kết thúc | không còn hiệu lực"
+          ]
+        }
+      ]
+    },
+    "hallucination_rate": {
+      "value": 0.0,
+      "wrong": 0,
+      "total_claims": 472,
+      "price_promo_only": {
+        "value": 0.0,
+        "wrong": 0,
+        "total": 361
+      },
+      "examples": []
+    },
+    "avg_turns_per_call": 3.08,
+    "calls_to_close": {
+      "value": 1.99,
+      "n_closed": 89,
+      "n_scenarios": 120,
+      "measurement_mode": "scripted_customer",
+      "note": "Current benchmark replays dataset customer_turns; it is not a dynamic customer-agent simulation."
+    },
+    "guardrail_violations": {
+      "total": 0,
+      "by_type": {
+        "pii_in_memory_or_text": 0,
+        "over_escalation": 0,
+        "claims_human": 0,
+        "forbidden_pattern": 0
+      },
+      "examples": []
+    },
+    "memory_checks": [
+      {
+        "scenario": "SC-091",
+        "call": "call_1",
+        "expected": {
+          "product_advised": "SKU-AP-X",
+          "customer_id": "C035",
+          "must_not_write_to": [
+            "C034"
+          ]
+        },
+        "found_in_memory_writes": {
+          "product_advised": true,
+          "customer_id": true
+        },
+        "has_memory_writes": true,
+        "verdict": "likely_ok"
+      },
+      {
+        "scenario": "SC-091",
+        "call": "call_2",
+        "expected": {
+          "customer_id": "C035",
+          "product_advised": "SKU-AP-X",
+          "must_not_write_to": [
+            "C034"
+          ]
+        },
+        "found_in_memory_writes": {
+          "customer_id": true,
+          "product_advised": true
+        },
+        "has_memory_writes": true,
+        "verdict": "likely_ok"
+      },
+      {
+        "scenario": "SC-092",
+        "call": "call_1",
+        "expected": {
+          "product_advised": "SKU-AP-Y",
+          "customer_id": "C035",
+          "must_not_write_to": [
+            "C034"
+          ]
+        },
+        "found_in_memory_writes": {
+          "product_advised": true,
+          "customer_id": true
+        },
+        "has_memory_writes": true,
+        "verdict": "likely_ok"
+      },
+      {
+        "scenario": "SC-092",
+        "call": "call_2",
+        "expected": {
+          "customer_id": "C035",
+          "product_advised": "SKU-AP-Y",
+          "must_not_write_to": [
+            "C034"
+          ]
+        },
+        "found_in_memory_writes": {
+          "customer_id": true,
+          "product_advised": false
+        },
+        "has_memory_writes": true,
+        "verdict": "review"
+      },
+      {
+        "scenario": "SC-093",
+        "call": "call_1",
+        "expected": {
+          "product_advised": "SKU-AP-MINI",
+          "customer_id": "C035",
+          "must_not_write_to": [
+            "C034"
+          ]
+        },
+        "found_in_memory_writes": {
+          "product_advised": true,
+          "customer_id": true
+        },
+        "has_memory_writes": true,
+        "verdict": "likely_ok"
+      },
+      {
+        "scenario": "SC-093",
+        "call": "call_2",
+        "expected": {
+          "customer_id": "C035",
+          "product_advised": "SKU-AP-MINI",
+          "must_not_write_to": [
+            "C034"
+          ]
+        },
+        "found_in_memory_writes": {
+          "customer_id": true,
+          "product_advised": false
+        },
+        "has_memory_writes": true,
+        "verdict": "review"
+      },
+      {
+        "scenario": "SC-094",
+        "call": "call_1",
+        "expected": {
+          "product_advised": "SKU-FAN-DC1",
+          "customer_id": "C035",
+          "must_not_write_to": [
+            "C034"
+          ]
+        },
+        "found_in_memory_writes": {
+          "product_advised": true,
+          "customer_id": true
+        },
+        "has_memory_writes": true,
+        "verdict": "likely_ok"
+      },
+      {
+        "scenario": "SC-094",
+        "call": "call_2",
+        "expected": {
+          "customer_id": "C035",
+          "product_advised": "SKU-FAN-DC1",
+          "must_not_write_to": [
+            "C034"
+          ]
+        },
+        "found_in_memory_writes": {
+          "customer_id": true,
+          "product_advised": false
+        },
+        "has_memory_writes": true,
+        "verdict": "review"
+      },
+      {
+        "scenario": "SC-095",
+        "call": "call_1",
+        "expected": {
+          "product_advised": "SKU-FAN-SEN",
+          "customer_id": "C035",
+          "must_not_write_to": [
+            "C034"
+          ]
+        },
+        "found_in_memory_writes": {
+          "product_advised": true,
+          "customer_id": true
+        },
+        "has_memory_writes": true,
+        "verdict": "likely_ok"
+      },
+      {
+        "scenario": "SC-095",
+        "call": "call_2",
+        "expected": {
+          "customer_id": "C035",
+          "product_advised": "SKU-FAN-SEN",
+          "must_not_write_to": [
+            "C034"
+          ]
+        },
+        "found_in_memory_writes": {
+          "customer_id": true,
+          "product_advised": false
+        },
+        "has_memory_writes": true,
+        "verdict": "review"
+      },
+      {
+        "scenario": "SC-096",
+        "call": "call_1",
+        "expected": {
+          "product_advised": "SKU-AF-4L",
+          "customer_id": "C035",
+          "must_not_write_to": [
+            "C034"
+          ]
+        },
+        "found_in_memory_writes": {
+          "product_advised": true,
+          "customer_id": true
+        },
+        "has_memory_writes": true,
+        "verdict": "likely_ok"
+      },
+      {
+        "scenario": "SC-096",
+        "call": "call_2",
+        "expected": {
+          "customer_id": "C035",
+          "product_advised": "SKU-AF-4L",
+          "must_not_write_to": [
+            "C034"
+          ]
+        },
+        "found_in_memory_writes": {
+          "customer_id": true,
+          "product_advised": true
+        },
+        "has_memory_writes": true,
+        "verdict": "likely_ok"
+      },
+      {
+        "scenario": "SC-097",
+        "call": "call_1",
+        "expected": {
+          "product_advised": "SKU-AF-6L",
+          "customer_id": "C035",
+          "must_not_write_to": [
+            "C034"
+          ]
+        },
+        "found_in_memory_writes": {
+          "product_advised": true,
+          "customer_id": true
+        },
+        "has_memory_writes": true,
+        "verdict": "likely_ok"
+      },
+      {
+        "scenario": "SC-097",
+        "call": "call_2",
+        "expected": {
+          "customer_id": "C035",
+          "product_advised": "SKU-AF-6L",
+          "must_not_write_to": [
+            "C034"
+          ]
+        },
+        "found_in_memory_writes": {
+          "customer_id": true,
+          "product_advised": false
+        },
+        "has_memory_writes": true,
+        "verdict": "review"
+      },
+      {
+        "scenario": "SC-098",
+        "call": "call_1",
+        "expected": {
+          "product_advised": "SKU-AF-XM",
+          "customer_id": "C035",
+          "must_not_write_to": [
+            "C034"
+          ]
+        },
+        "found_in_memory_writes": {
+          "product_advised": true,
+          "customer_id": true
+        },
+        "has_memory_writes": true,
+        "verdict": "likely_ok"
+      },
+      {
+        "scenario": "SC-098",
+        "call": "call_2",
+        "expected": {
+          "customer_id": "C035",
+          "product_advised": "SKU-AF-XM",
+          "must_not_write_to": [
+            "C034"
+          ]
+        },
+        "found_in_memory_writes": {
+          "customer_id": true,
+          "product_advised": true
+        },
+        "has_memory_writes": true,
+        "verdict": "likely_ok"
+      },
+      {
+        "scenario": "SC-099",
+        "call": "call_1",
+        "expected": {
+          "product_advised": "SKU-WF-UF",
+          "customer_id": "C035",
+          "must_not_write_to": [
+            "C034"
+          ]
+        },
+        "found_in_memory_writes": {
+          "product_advised": true,
+          "customer_id": true
+        },
+        "has_memory_writes": true,
+        "verdict": "likely_ok"
+      },
+      {
+        "scenario": "SC-099",
+        "call": "call_2",
+        "expected": {
+          "customer_id": "C035",
+          "product_advised": "SKU-WF-UF",
+          "must_not_write_to": [
+            "C034"
+          ]
+        },
+        "found_in_memory_writes": {
+          "customer_id": true,
+          "product_advised": true
+        },
+        "has_memory_writes": true,
+        "verdict": "likely_ok"
+      },
+      {
+        "scenario": "SC-100",
+        "call": "call_1",
+        "expected": {
+          "product_advised": "SKU-MB-STER",
+          "customer_id": "C035",
+          "must_not_write_to": [
+            "C034"
+          ]
+        },
+        "found_in_memory_writes": {
+          "product_advised": true,
+          "customer_id": true
+        },
+        "has_memory_writes": true,
+        "verdict": "likely_ok"
+      },
+      {
+        "scenario": "SC-100",
+        "call": "call_2",
+        "expected": {
+          "customer_id": "C035",
+          "product_advised": "SKU-MB-STER",
+          "must_not_write_to": [
+            "C034"
+          ]
+        },
+        "found_in_memory_writes": {
+          "customer_id": true,
+          "product_advised": false
+        },
+        "has_memory_writes": true,
+        "verdict": "review"
+      },
+      {
+        "scenario": "SC-101",
+        "call": "call_1",
+        "expected": {
+          "delivery_address": "100 đường Kiểm Thử, Hà Nội",
+          "superseded": {
+            "delivery_address": "12 ngõ 38 Hoàng Cầu, Đống Đa, Hà Nội"
+          },
+          "address_ttl_check": true
+        },
+        "found_in_memory_writes": {
+          "delivery_address": true
+        },
+        "has_memory_writes": true,
+        "verdict": "likely_ok"
+      },
+      {
+        "scenario": "SC-102",
+        "call": "call_1",
+        "expected": {
+          "delivery_address": "101 đường Kiểm Thử, Hà Nội",
+          "superseded": {
+            "delivery_address": "12 ngõ 38 Hoàng Cầu, Đống Đa, Hà Nội"
+          },
+          "address_ttl_check": true
+        },
+        "found_in_memory_writes": {
+          "delivery_address": true
+        },
+        "has_memory_writes": true,
+        "verdict": "likely_ok"
+      },
+      {
+        "scenario": "SC-103",
+        "call": "call_1",
+        "expected": {
+          "delivery_address": "102 đường Kiểm Thử, Hà Nội",
+          "superseded": {
+            "delivery_address": "12 ngõ 38 Hoàng Cầu, Đống Đa, Hà Nội"
+          },
+          "address_ttl_check": true
+        },
+        "found_in_memory_writes": {
+          "delivery_address": true
+        },
+        "has_memory_writes": true,
+        "verdict": "likely_ok"
+      },
+      {
+        "scenario": "SC-104",
+        "call": "call_1",
+        "expected": {
+          "delivery_address": "103 đường Kiểm Thử, Hà Nội",
+          "superseded": {
+            "delivery_address": "12 ngõ 38 Hoàng Cầu, Đống Đa, Hà Nội"
+          },
+          "address_ttl_check": true
+        },
+        "found_in_memory_writes": {
+          "delivery_address": true
+        },
+        "has_memory_writes": true,
+        "verdict": "likely_ok"
+      },
+      {
+        "scenario": "SC-105",
+        "call": "call_1",
+        "expected": {
+          "delivery_address": "104 đường Kiểm Thử, Hà Nội",
+          "superseded": {
+            "delivery_address": "12 ngõ 38 Hoàng Cầu, Đống Đa, Hà Nội"
+          },
+          "address_ttl_check": true
+        },
+        "found_in_memory_writes": {
+          "delivery_address": true
+        },
+        "has_memory_writes": true,
+        "verdict": "likely_ok"
+      },
+      {
+        "scenario": "SC-106",
+        "call": "call_1",
+        "expected": {
+          "delivery_address": "105 đường Kiểm Thử, Hà Nội",
+          "superseded": {
+            "delivery_address": "12 ngõ 38 Hoàng Cầu, Đống Đa, Hà Nội"
+          },
+          "address_ttl_check": true
+        },
+        "found_in_memory_writes": {
+          "delivery_address": true
+        },
+        "has_memory_writes": true,
+        "verdict": "likely_ok"
+      },
+      {
+        "scenario": "SC-107",
+        "call": "call_1",
+        "expected": {
+          "delivery_address": "106 đường Kiểm Thử, Hà Nội",
+          "superseded": {
+            "delivery_address": "12 ngõ 38 Hoàng Cầu, Đống Đa, Hà Nội"
+          },
+          "address_ttl_check": true
+        },
+        "found_in_memory_writes": {
+          "delivery_address": true
+        },
+        "has_memory_writes": true,
+        "verdict": "likely_ok"
+      },
+      {
+        "scenario": "SC-108",
+        "call": "call_1",
+        "expected": {
+          "delivery_address": "107 đường Kiểm Thử, Hà Nội",
+          "superseded": {
+            "delivery_address": "12 ngõ 38 Hoàng Cầu, Đống Đa, Hà Nội"
+          },
+          "address_ttl_check": true
+        },
+        "found_in_memory_writes": {
+          "delivery_address": true
+        },
+        "has_memory_writes": true,
+        "verdict": "likely_ok"
+      },
+      {
+        "scenario": "SC-109",
+        "call": "call_1",
+        "expected": {
+          "delivery_address": "108 đường Kiểm Thử, Hà Nội",
+          "superseded": {
+            "delivery_address": "12 ngõ 38 Hoàng Cầu, Đống Đa, Hà Nội"
+          },
+          "address_ttl_check": true
+        },
+        "found_in_memory_writes": {
+          "delivery_address": true
+        },
+        "has_memory_writes": true,
+        "verdict": "likely_ok"
+      },
+      {
+        "scenario": "SC-110",
+        "call": "call_1",
+        "expected": {
+          "delivery_address": "109 đường Kiểm Thử, Hà Nội",
+          "superseded": {
+            "delivery_address": "12 ngõ 38 Hoàng Cầu, Đống Đa, Hà Nội"
+          },
+          "address_ttl_check": true
+        },
+        "found_in_memory_writes": {
+          "delivery_address": true
+        },
+        "has_memory_writes": true,
+        "verdict": "likely_ok"
+      },
+      {
+        "scenario": "SC-111",
+        "call": "call_2",
+        "expected": {
+          "basket_item_1": "SKU-AF-6L",
+          "basket_item_2": "SKU-FAN-DC1",
+          "profile_state": {
+            "basket_skus": [
+              "SKU-AF-6L",
+              "SKU-FAN-DC1"
+            ]
+          },
+          "superseded": {
+            "basket_skus": [
+              "SKU-AF-6L",
+              "SKU-FAN-SEN"
+            ]
+          }
+        },
+        "found_in_memory_writes": {
+          "basket_item_1": false,
+          "basket_item_2": true
+        },
+        "has_memory_writes": true,
+        "verdict": "review"
+      },
+      {
+        "scenario": "SC-112",
+        "call": "call_2",
+        "expected": {
+          "basket_item_1": "SKU-MB-PUMP2",
+          "basket_item_2": "SKU-MB-CAR",
+          "profile_state": {
+            "basket_skus": [
+              "SKU-MB-PUMP2",
+              "SKU-MB-CAR"
+            ]
+          },
+          "superseded": {
+            "basket_skus": [
+              "SKU-MB-PUMP2",
+              "SKU-FAN-SEN"
+            ]
+          }
+        },
+        "found_in_memory_writes": {
+          "basket_item_1": false,
+          "basket_item_2": true
+        },
+        "has_memory_writes": true,
+        "verdict": "review"
+      },
+      {
+        "scenario": "SC-113",
+        "call": "call_2",
+        "expected": {
+          "basket_item_1": "SKU-AP-Y",
+          "basket_item_2": "SKU-AF-XM",
+          "profile_state": {
+            "basket_skus": [
+              "SKU-AP-Y",
+              "SKU-AF-XM"
+            ]
+          },
+          "superseded": {
+            "basket_skus": [
+              "SKU-AP-Y",
+              "SKU-FAN-SEN"
+            ]
+          }
+        },
+        "found_in_memory_writes": {
+          "basket_item_1": false,
+          "basket_item_2": true
+        },
+        "has_memory_writes": true,
+        "verdict": "review"
+      },
+      {
+        "scenario": "SC-114",
+        "call": "call_2",
+        "expected": {
+          "basket_item_1": "SKU-WF-RO9",
+          "basket_item_2": "SKU-FAN-SEN",
+          "profile_state": {
+            "basket_skus": [
+              "SKU-WF-RO9",
+              "SKU-FAN-SEN"
+            ]
+          },
+          "superseded": {
+            "basket_skus": [
+              "SKU-WF-RO9",
+              "SKU-AF-XM"
+            ]
+          }
+        },
+        "found_in_memory_writes": {
+          "basket_item_1": false,
+          "basket_item_2": true
+        },
+        "has_memory_writes": true,
+        "verdict": "review"
+      },
+      {
+        "scenario": "SC-115",
+        "call": "call_2",
+        "expected": {
+          "basket_item_1": "SKU-MB-STER",
+          "basket_item_2": "SKU-MB-MON",
+          "profile_state": {
+            "basket_skus": [
+              "SKU-MB-STER",
+              "SKU-MB-MON"
+            ]
+          },
+          "superseded": {
+            "basket_skus": [
+              "SKU-MB-STER",
+              "SKU-FAN-SEN"
+            ]
+          }
+        },
+        "found_in_memory_writes": {
+          "basket_item_1": false,
+          "basket_item_2": true
+        },
+        "has_memory_writes": true,
+        "verdict": "review"
+      },
+      {
+        "scenario": "SC-116",
+        "call": "call_2",
+        "expected": {
+          "basket_item_1": "SKU-AP-X",
+          "basket_item_2": "SKU-AP-FLT-X",
+          "profile_state": {
+            "basket_skus": [
+              "SKU-AP-X",
+              "SKU-AP-FLT-X"
+            ]
+          },
+          "superseded": {
+            "basket_skus": [
+              "SKU-AP-X",
+              "SKU-FAN-SEN"
+            ]
+          }
+        },
+        "found_in_memory_writes": {
+          "basket_item_1": false,
+          "basket_item_2": true
+        },
+        "has_memory_writes": true,
+        "verdict": "review"
+      },
+      {
+        "scenario": "SC-117",
+        "call": "call_2",
+        "expected": {
+          "basket_item_1": "SKU-AF-4L",
+          "basket_item_2": "SKU-MB-STER",
+          "profile_state": {
+            "basket_skus": [
+              "SKU-AF-4L",
+              "SKU-MB-STER"
+            ]
+          },
+          "superseded": {
+            "basket_skus": [
+              "SKU-AF-4L",
+              "SKU-FAN-SEN"
+            ]
+          }
+        },
+        "found_in_memory_writes": {
+          "basket_item_1": false,
+          "basket_item_2": true
+        },
+        "has_memory_writes": true,
+        "verdict": "review"
+      },
+      {
+        "scenario": "SC-118",
+        "call": "call_2",
+        "expected": {
+          "basket_item_1": "SKU-MB-PUMP1",
+          "basket_item_2": "SKU-MB-MON",
+          "profile_state": {
+            "basket_skus": [
+              "SKU-MB-PUMP1",
+              "SKU-MB-MON"
+            ]
+          },
+          "superseded": {
+            "basket_skus": [
+              "SKU-MB-PUMP1",
+              "SKU-FAN-SEN"
+            ]
+          }
+        },
+        "found_in_memory_writes": {
+          "basket_item_1": false,
+          "basket_item_2": true
+        },
+        "has_memory_writes": true,
+        "verdict": "review"
+      },
+      {
+        "scenario": "SC-119",
+        "call": "call_2",
+        "expected": {
+          "basket_item_1": "SKU-WF-UF",
+          "basket_item_2": "SKU-FAN-DC1",
+          "profile_state": {
+            "basket_skus": [
+              "SKU-WF-UF",
+              "SKU-FAN-DC1"
+            ]
+          },
+          "superseded": {
+            "basket_skus": [
+              "SKU-WF-UF",
+              "SKU-FAN-SEN"
+            ]
+          }
+        },
+        "found_in_memory_writes": {
+          "basket_item_1": false,
+          "basket_item_2": true
+        },
+        "has_memory_writes": true,
+        "verdict": "review"
+      },
+      {
+        "scenario": "SC-120",
+        "call": "call_2",
+        "expected": {
+          "basket_item_1": "SKU-SS-AX40",
+          "basket_item_2": "SKU-AF-6L",
+          "profile_state": {
+            "basket_skus": [
+              "SKU-SS-AX40",
+              "SKU-AF-6L"
+            ]
+          },
+          "superseded": {
+            "basket_skus": [
+              "SKU-SS-AX40",
+              "SKU-FAN-SEN"
+            ]
+          }
+        },
+        "found_in_memory_writes": {
+          "basket_item_1": false,
+          "basket_item_2": true
+        },
+        "has_memory_writes": true,
+        "verdict": "review"
+      }
+    ],
+    "latency": {
+      "n_turns": 769,
+      "warning": null,
+      "ttft": {
+        "n": 769,
+        "p50_ms": 2213,
+        "p95_ms": 3067
+      },
+      "total": {
+        "n": 770,
+        "p50_ms": 6642,
+        "p95_ms": 9211
+      },
+      "ttfa": {
+        "n": 565,
+        "p50_ms": 6850,
+        "p95_ms": 9881
+      },
+      "call_brief": {
+        "n": 129,
+        "p50_ms": 2338,
+        "p95_ms": 2957
+      }
+    },
+    "tool_call_accuracy": {
+      "value": 99.4,
+      "correct_calls": 169,
+      "total_evaluated_calls": 170,
+      "expected_call_recall": 99.4,
+      "tool_name_accuracy": 99.4,
+      "expected_calls": 170,
+      "missing_calls": 1,
+      "wrong_argument_calls": 0,
+      "forbidden_calls": 0,
+      "unexpected_mutation_calls": 0,
+      "examples": [
+        {
+          "scenario": "SC-048",
+          "call": "call_3",
+          "type": "missing_tool",
+          "expected_tool": "order.create",
+          "expected_args": {
+            "customer_phone": "0960454146",
+            "sku": "SKU-AF-XM",
+            "qty": 1,
+            "price_vnd": 1590000,
+            "payment": "COD",
+            "address": "107 đường Kiểm Thử, Đà Nẵng"
+          }
+        }
+      ],
+      "policy": "Exact expected tool+required args are correct; missing expected, forbidden and unexpected mutation calls count against accuracy."
+    },
+    "estimated_cost_per_call": {
+      "configured": false,
+      "usage_trace_coverage": 100.0,
+      "average_per_call_usd": null,
+      "total_usd": null,
+      "n_calls": 250,
+      "pricing": {
+        "input_per_million": null,
+        "output_per_million": null,
+        "tool_call": null,
+        "memory_write": null,
+        "storage_per_mb": null,
+        "fixed_call": null
+      },
+      "by_call": [
+        {
+          "scenario": "SC-001",
+          "call": "call_1",
+          "llm_requests": 10,
+          "failed_llm_requests": 0,
+          "input_tokens": 11027,
+          "output_tokens": 1718,
+          "tool_calls": 6,
+          "memory_writes": 9,
+          "memory_bytes_observed": 1544,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-001",
+          "call": "call_2",
+          "llm_requests": 11,
+          "failed_llm_requests": 0,
+          "input_tokens": 13432,
+          "output_tokens": 1751,
+          "tool_calls": 6,
+          "memory_writes": 5,
+          "memory_bytes_observed": 846,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-002",
+          "call": "call_1",
+          "llm_requests": 10,
+          "failed_llm_requests": 0,
+          "input_tokens": 10876,
+          "output_tokens": 1768,
+          "tool_calls": 6,
+          "memory_writes": 7,
+          "memory_bytes_observed": 1186,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-002",
+          "call": "call_2",
+          "llm_requests": 10,
+          "failed_llm_requests": 0,
+          "input_tokens": 10985,
+          "output_tokens": 1646,
+          "tool_calls": 5,
+          "memory_writes": 5,
+          "memory_bytes_observed": 848,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-003",
+          "call": "call_1",
+          "llm_requests": 10,
+          "failed_llm_requests": 0,
+          "input_tokens": 11045,
+          "output_tokens": 1676,
+          "tool_calls": 6,
+          "memory_writes": 9,
+          "memory_bytes_observed": 1536,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-003",
+          "call": "call_2",
+          "llm_requests": 10,
+          "failed_llm_requests": 0,
+          "input_tokens": 11330,
+          "output_tokens": 1509,
+          "tool_calls": 5,
+          "memory_writes": 5,
+          "memory_bytes_observed": 848,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-004",
+          "call": "call_1",
+          "llm_requests": 10,
+          "failed_llm_requests": 0,
+          "input_tokens": 10713,
+          "output_tokens": 1413,
+          "tool_calls": 6,
+          "memory_writes": 8,
+          "memory_bytes_observed": 1343,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-004",
+          "call": "call_2",
+          "llm_requests": 10,
+          "failed_llm_requests": 0,
+          "input_tokens": 10856,
+          "output_tokens": 1553,
+          "tool_calls": 5,
+          "memory_writes": 5,
+          "memory_bytes_observed": 846,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-005",
+          "call": "call_1",
+          "llm_requests": 10,
+          "failed_llm_requests": 0,
+          "input_tokens": 10591,
+          "output_tokens": 1508,
+          "tool_calls": 6,
+          "memory_writes": 8,
+          "memory_bytes_observed": 1341,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-005",
+          "call": "call_2",
+          "llm_requests": 10,
+          "failed_llm_requests": 0,
+          "input_tokens": 10734,
+          "output_tokens": 1324,
+          "tool_calls": 5,
+          "memory_writes": 5,
+          "memory_bytes_observed": 846,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-006",
+          "call": "call_1",
+          "llm_requests": 10,
+          "failed_llm_requests": 0,
+          "input_tokens": 10888,
+          "output_tokens": 1874,
+          "tool_calls": 6,
+          "memory_writes": 7,
+          "memory_bytes_observed": 1182,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-006",
+          "call": "call_2",
+          "llm_requests": 10,
+          "failed_llm_requests": 0,
+          "input_tokens": 11082,
+          "output_tokens": 2004,
+          "tool_calls": 5,
+          "memory_writes": 5,
+          "memory_bytes_observed": 849,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-007",
+          "call": "call_1",
+          "llm_requests": 11,
+          "failed_llm_requests": 0,
+          "input_tokens": 12736,
+          "output_tokens": 1669,
+          "tool_calls": 6,
+          "memory_writes": 7,
+          "memory_bytes_observed": 1187,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-007",
+          "call": "call_2",
+          "llm_requests": 10,
+          "failed_llm_requests": 0,
+          "input_tokens": 10808,
+          "output_tokens": 1695,
+          "tool_calls": 5,
+          "memory_writes": 5,
+          "memory_bytes_observed": 848,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-008",
+          "call": "call_1",
+          "llm_requests": 10,
+          "failed_llm_requests": 0,
+          "input_tokens": 10679,
+          "output_tokens": 1327,
+          "tool_calls": 6,
+          "memory_writes": 7,
+          "memory_bytes_observed": 1183,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-008",
+          "call": "call_2",
+          "llm_requests": 10,
+          "failed_llm_requests": 0,
+          "input_tokens": 10723,
+          "output_tokens": 1356,
+          "tool_calls": 5,
+          "memory_writes": 5,
+          "memory_bytes_observed": 848,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-009",
+          "call": "call_1",
+          "llm_requests": 10,
+          "failed_llm_requests": 0,
+          "input_tokens": 10645,
+          "output_tokens": 1442,
+          "tool_calls": 6,
+          "memory_writes": 8,
+          "memory_bytes_observed": 1346,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-009",
+          "call": "call_2",
+          "llm_requests": 10,
+          "failed_llm_requests": 0,
+          "input_tokens": 10785,
+          "output_tokens": 1893,
+          "tool_calls": 5,
+          "memory_writes": 5,
+          "memory_bytes_observed": 848,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-010",
+          "call": "call_1",
+          "llm_requests": 10,
+          "failed_llm_requests": 0,
+          "input_tokens": 10793,
+          "output_tokens": 1631,
+          "tool_calls": 6,
+          "memory_writes": 7,
+          "memory_bytes_observed": 1182,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-010",
+          "call": "call_2",
+          "llm_requests": 10,
+          "failed_llm_requests": 0,
+          "input_tokens": 10876,
+          "output_tokens": 1634,
+          "tool_calls": 5,
+          "memory_writes": 5,
+          "memory_bytes_observed": 848,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-011",
+          "call": "call_1",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 9078,
+          "output_tokens": 1424,
+          "tool_calls": 4,
+          "memory_writes": 6,
+          "memory_bytes_observed": 1009,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-011",
+          "call": "call_2",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 9286,
+          "output_tokens": 2147,
+          "tool_calls": 4,
+          "memory_writes": 9,
+          "memory_bytes_observed": 1567,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-012",
+          "call": "call_1",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 9052,
+          "output_tokens": 1721,
+          "tool_calls": 4,
+          "memory_writes": 6,
+          "memory_bytes_observed": 1009,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-012",
+          "call": "call_2",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 9082,
+          "output_tokens": 1816,
+          "tool_calls": 3,
+          "memory_writes": 9,
+          "memory_bytes_observed": 1560,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-013",
+          "call": "call_1",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 9058,
+          "output_tokens": 1770,
+          "tool_calls": 4,
+          "memory_writes": 6,
+          "memory_bytes_observed": 1009,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-013",
+          "call": "call_2",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 9085,
+          "output_tokens": 1650,
+          "tool_calls": 4,
+          "memory_writes": 9,
+          "memory_bytes_observed": 1569,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-014",
+          "call": "call_1",
+          "llm_requests": 11,
+          "failed_llm_requests": 0,
+          "input_tokens": 14103,
+          "output_tokens": 1894,
+          "tool_calls": 6,
+          "memory_writes": 6,
+          "memory_bytes_observed": 1009,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-014",
+          "call": "call_2",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 9439,
+          "output_tokens": 1906,
+          "tool_calls": 4,
+          "memory_writes": 9,
+          "memory_bytes_observed": 1569,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-015",
+          "call": "call_1",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 9136,
+          "output_tokens": 1541,
+          "tool_calls": 4,
+          "memory_writes": 6,
+          "memory_bytes_observed": 1009,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-015",
+          "call": "call_2",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 9465,
+          "output_tokens": 1720,
+          "tool_calls": 4,
+          "memory_writes": 9,
+          "memory_bytes_observed": 1562,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-016",
+          "call": "call_1",
+          "llm_requests": 11,
+          "failed_llm_requests": 0,
+          "input_tokens": 13589,
+          "output_tokens": 1832,
+          "tool_calls": 6,
+          "memory_writes": 6,
+          "memory_bytes_observed": 1009,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-016",
+          "call": "call_2",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 9396,
+          "output_tokens": 1792,
+          "tool_calls": 4,
+          "memory_writes": 9,
+          "memory_bytes_observed": 1569,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-017",
+          "call": "call_1",
+          "llm_requests": 10,
+          "failed_llm_requests": 0,
+          "input_tokens": 11140,
+          "output_tokens": 1583,
+          "tool_calls": 5,
+          "memory_writes": 6,
+          "memory_bytes_observed": 1009,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-017",
+          "call": "call_2",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 9318,
+          "output_tokens": 1760,
+          "tool_calls": 4,
+          "memory_writes": 9,
+          "memory_bytes_observed": 1569,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-018",
+          "call": "call_1",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 9076,
+          "output_tokens": 1696,
+          "tool_calls": 4,
+          "memory_writes": 6,
+          "memory_bytes_observed": 1009,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-018",
+          "call": "call_2",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 9261,
+          "output_tokens": 2006,
+          "tool_calls": 4,
+          "memory_writes": 9,
+          "memory_bytes_observed": 1560,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-019",
+          "call": "call_1",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 9129,
+          "output_tokens": 1626,
+          "tool_calls": 4,
+          "memory_writes": 5,
+          "memory_bytes_observed": 836,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-019",
+          "call": "call_2",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 9470,
+          "output_tokens": 1354,
+          "tool_calls": 4,
+          "memory_writes": 9,
+          "memory_bytes_observed": 1562,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-020",
+          "call": "call_1",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 9079,
+          "output_tokens": 1547,
+          "tool_calls": 4,
+          "memory_writes": 6,
+          "memory_bytes_observed": 1008,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-020",
+          "call": "call_2",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 9212,
+          "output_tokens": 2042,
+          "tool_calls": 4,
+          "memory_writes": 9,
+          "memory_bytes_observed": 1562,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-021",
+          "call": "call_1",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 9023,
+          "output_tokens": 1392,
+          "tool_calls": 4,
+          "memory_writes": 12,
+          "memory_bytes_observed": 2005,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-021",
+          "call": "call_2",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 9019,
+          "output_tokens": 1509,
+          "tool_calls": 7,
+          "memory_writes": 9,
+          "memory_bytes_observed": 1586,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-022",
+          "call": "call_1",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 9017,
+          "output_tokens": 1360,
+          "tool_calls": 4,
+          "memory_writes": 12,
+          "memory_bytes_observed": 2002,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-022",
+          "call": "call_2",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 8981,
+          "output_tokens": 1632,
+          "tool_calls": 7,
+          "memory_writes": 9,
+          "memory_bytes_observed": 1578,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-023",
+          "call": "call_1",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 9020,
+          "output_tokens": 1437,
+          "tool_calls": 4,
+          "memory_writes": 12,
+          "memory_bytes_observed": 2012,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-023",
+          "call": "call_2",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 9016,
+          "output_tokens": 1693,
+          "tool_calls": 7,
+          "memory_writes": 9,
+          "memory_bytes_observed": 1586,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-024",
+          "call": "call_1",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 8997,
+          "output_tokens": 1390,
+          "tool_calls": 4,
+          "memory_writes": 12,
+          "memory_bytes_observed": 1993,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-024",
+          "call": "call_2",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 9057,
+          "output_tokens": 1626,
+          "tool_calls": 7,
+          "memory_writes": 9,
+          "memory_bytes_observed": 1578,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-025",
+          "call": "call_1",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 9060,
+          "output_tokens": 1287,
+          "tool_calls": 4,
+          "memory_writes": 12,
+          "memory_bytes_observed": 2005,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-025",
+          "call": "call_2",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 9041,
+          "output_tokens": 1727,
+          "tool_calls": 7,
+          "memory_writes": 9,
+          "memory_bytes_observed": 1586,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-026",
+          "call": "call_1",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 9007,
+          "output_tokens": 1546,
+          "tool_calls": 4,
+          "memory_writes": 11,
+          "memory_bytes_observed": 1826,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-026",
+          "call": "call_2",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 8960,
+          "output_tokens": 1711,
+          "tool_calls": 7,
+          "memory_writes": 9,
+          "memory_bytes_observed": 1574,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-027",
+          "call": "call_1",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 9020,
+          "output_tokens": 1531,
+          "tool_calls": 4,
+          "memory_writes": 12,
+          "memory_bytes_observed": 2002,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-027",
+          "call": "call_2",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 9111,
+          "output_tokens": 1710,
+          "tool_calls": 7,
+          "memory_writes": 9,
+          "memory_bytes_observed": 1578,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-028",
+          "call": "call_1",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 9028,
+          "output_tokens": 1326,
+          "tool_calls": 4,
+          "memory_writes": 12,
+          "memory_bytes_observed": 2005,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-028",
+          "call": "call_2",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 9051,
+          "output_tokens": 1793,
+          "tool_calls": 7,
+          "memory_writes": 9,
+          "memory_bytes_observed": 1582,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-029",
+          "call": "call_1",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 9043,
+          "output_tokens": 1383,
+          "tool_calls": 4,
+          "memory_writes": 11,
+          "memory_bytes_observed": 1833,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-029",
+          "call": "call_2",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 9010,
+          "output_tokens": 1532,
+          "tool_calls": 7,
+          "memory_writes": 9,
+          "memory_bytes_observed": 1574,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-030",
+          "call": "call_1",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 9023,
+          "output_tokens": 1224,
+          "tool_calls": 4,
+          "memory_writes": 12,
+          "memory_bytes_observed": 2002,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-030",
+          "call": "call_2",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 8995,
+          "output_tokens": 1498,
+          "tool_calls": 7,
+          "memory_writes": 9,
+          "memory_bytes_observed": 1578,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-031",
+          "call": "call_1",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 8265,
+          "output_tokens": 1152,
+          "tool_calls": 3,
+          "memory_writes": 8,
+          "memory_bytes_observed": 1344,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-031",
+          "call": "call_2",
+          "llm_requests": 12,
+          "failed_llm_requests": 0,
+          "input_tokens": 11543,
+          "output_tokens": 2045,
+          "tool_calls": 2,
+          "memory_writes": 0,
+          "memory_bytes_observed": 8,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-032",
+          "call": "call_1",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 8361,
+          "output_tokens": 1288,
+          "tool_calls": 3,
+          "memory_writes": 8,
+          "memory_bytes_observed": 1350,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-032",
+          "call": "call_2",
+          "llm_requests": 12,
+          "failed_llm_requests": 0,
+          "input_tokens": 11744,
+          "output_tokens": 1720,
+          "tool_calls": 2,
+          "memory_writes": 0,
+          "memory_bytes_observed": 8,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-033",
+          "call": "call_1",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 8272,
+          "output_tokens": 932,
+          "tool_calls": 3,
+          "memory_writes": 8,
+          "memory_bytes_observed": 1344,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-033",
+          "call": "call_2",
+          "llm_requests": 12,
+          "failed_llm_requests": 0,
+          "input_tokens": 11556,
+          "output_tokens": 1743,
+          "tool_calls": 2,
+          "memory_writes": 1,
+          "memory_bytes_observed": 214,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-034",
+          "call": "call_1",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 8293,
+          "output_tokens": 1197,
+          "tool_calls": 3,
+          "memory_writes": 8,
+          "memory_bytes_observed": 1350,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-034",
+          "call": "call_2",
+          "llm_requests": 12,
+          "failed_llm_requests": 0,
+          "input_tokens": 11514,
+          "output_tokens": 1799,
+          "tool_calls": 2,
+          "memory_writes": 0,
+          "memory_bytes_observed": 8,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-035",
+          "call": "call_1",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 8360,
+          "output_tokens": 1293,
+          "tool_calls": 3,
+          "memory_writes": 8,
+          "memory_bytes_observed": 1344,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-035",
+          "call": "call_2",
+          "llm_requests": 12,
+          "failed_llm_requests": 0,
+          "input_tokens": 11720,
+          "output_tokens": 1697,
+          "tool_calls": 2,
+          "memory_writes": 1,
+          "memory_bytes_observed": 209,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-036",
+          "call": "call_1",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 8302,
+          "output_tokens": 1121,
+          "tool_calls": 3,
+          "memory_writes": 8,
+          "memory_bytes_observed": 1350,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-036",
+          "call": "call_2",
+          "llm_requests": 12,
+          "failed_llm_requests": 0,
+          "input_tokens": 11511,
+          "output_tokens": 1798,
+          "tool_calls": 2,
+          "memory_writes": 0,
+          "memory_bytes_observed": 8,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-037",
+          "call": "call_1",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 8354,
+          "output_tokens": 1196,
+          "tool_calls": 3,
+          "memory_writes": 8,
+          "memory_bytes_observed": 1344,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-037",
+          "call": "call_2",
+          "llm_requests": 12,
+          "failed_llm_requests": 0,
+          "input_tokens": 11689,
+          "output_tokens": 1859,
+          "tool_calls": 2,
+          "memory_writes": 0,
+          "memory_bytes_observed": 8,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-038",
+          "call": "call_1",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 8272,
+          "output_tokens": 1286,
+          "tool_calls": 3,
+          "memory_writes": 8,
+          "memory_bytes_observed": 1350,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-038",
+          "call": "call_2",
+          "llm_requests": 12,
+          "failed_llm_requests": 0,
+          "input_tokens": 11522,
+          "output_tokens": 1822,
+          "tool_calls": 2,
+          "memory_writes": 1,
+          "memory_bytes_observed": 217,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-039",
+          "call": "call_1",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 8288,
+          "output_tokens": 1142,
+          "tool_calls": 3,
+          "memory_writes": 8,
+          "memory_bytes_observed": 1344,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-039",
+          "call": "call_2",
+          "llm_requests": 12,
+          "failed_llm_requests": 0,
+          "input_tokens": 11523,
+          "output_tokens": 1617,
+          "tool_calls": 2,
+          "memory_writes": 1,
+          "memory_bytes_observed": 209,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-040",
+          "call": "call_1",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 8303,
+          "output_tokens": 1195,
+          "tool_calls": 3,
+          "memory_writes": 8,
+          "memory_bytes_observed": 1350,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-040",
+          "call": "call_2",
+          "llm_requests": 12,
+          "failed_llm_requests": 0,
+          "input_tokens": 11527,
+          "output_tokens": 1576,
+          "tool_calls": 2,
+          "memory_writes": 0,
+          "memory_bytes_observed": 8,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-041",
+          "call": "call_1",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 8602,
+          "output_tokens": 1305,
+          "tool_calls": 4,
+          "memory_writes": 8,
+          "memory_bytes_observed": 1401,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-041",
+          "call": "call_2",
+          "llm_requests": 6,
+          "failed_llm_requests": 0,
+          "input_tokens": 5838,
+          "output_tokens": 1211,
+          "tool_calls": 4,
+          "memory_writes": 1,
+          "memory_bytes_observed": 194,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-041",
+          "call": "call_3",
+          "llm_requests": 6,
+          "failed_llm_requests": 0,
+          "input_tokens": 6282,
+          "output_tokens": 1589,
+          "tool_calls": 4,
+          "memory_writes": 2,
+          "memory_bytes_observed": 324,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-042",
+          "call": "call_1",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 8484,
+          "output_tokens": 1184,
+          "tool_calls": 4,
+          "memory_writes": 7,
+          "memory_bytes_observed": 1211,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-042",
+          "call": "call_2",
+          "llm_requests": 6,
+          "failed_llm_requests": 0,
+          "input_tokens": 5737,
+          "output_tokens": 1013,
+          "tool_calls": 3,
+          "memory_writes": 1,
+          "memory_bytes_observed": 194,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-042",
+          "call": "call_3",
+          "llm_requests": 6,
+          "failed_llm_requests": 0,
+          "input_tokens": 6243,
+          "output_tokens": 1327,
+          "tool_calls": 4,
+          "memory_writes": 2,
+          "memory_bytes_observed": 324,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-043",
+          "call": "call_1",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 8395,
+          "output_tokens": 1229,
+          "tool_calls": 4,
+          "memory_writes": 7,
+          "memory_bytes_observed": 1203,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-043",
+          "call": "call_2",
+          "llm_requests": 6,
+          "failed_llm_requests": 0,
+          "input_tokens": 5747,
+          "output_tokens": 1259,
+          "tool_calls": 3,
+          "memory_writes": 1,
+          "memory_bytes_observed": 194,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-043",
+          "call": "call_3",
+          "llm_requests": 6,
+          "failed_llm_requests": 0,
+          "input_tokens": 6122,
+          "output_tokens": 1248,
+          "tool_calls": 4,
+          "memory_writes": 2,
+          "memory_bytes_observed": 324,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-044",
+          "call": "call_1",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 8365,
+          "output_tokens": 1153,
+          "tool_calls": 4,
+          "memory_writes": 7,
+          "memory_bytes_observed": 1201,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-044",
+          "call": "call_2",
+          "llm_requests": 6,
+          "failed_llm_requests": 0,
+          "input_tokens": 5704,
+          "output_tokens": 1052,
+          "tool_calls": 3,
+          "memory_writes": 1,
+          "memory_bytes_observed": 194,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-044",
+          "call": "call_3",
+          "llm_requests": 6,
+          "failed_llm_requests": 0,
+          "input_tokens": 6060,
+          "output_tokens": 1250,
+          "tool_calls": 4,
+          "memory_writes": 2,
+          "memory_bytes_observed": 324,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-045",
+          "call": "call_1",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 8596,
+          "output_tokens": 1244,
+          "tool_calls": 4,
+          "memory_writes": 7,
+          "memory_bytes_observed": 1201,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-045",
+          "call": "call_2",
+          "llm_requests": 6,
+          "failed_llm_requests": 0,
+          "input_tokens": 5749,
+          "output_tokens": 1229,
+          "tool_calls": 4,
+          "memory_writes": 1,
+          "memory_bytes_observed": 197,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-045",
+          "call": "call_3",
+          "llm_requests": 6,
+          "failed_llm_requests": 0,
+          "input_tokens": 6056,
+          "output_tokens": 1048,
+          "tool_calls": 4,
+          "memory_writes": 2,
+          "memory_bytes_observed": 324,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-046",
+          "call": "call_1",
+          "llm_requests": 10,
+          "failed_llm_requests": 0,
+          "input_tokens": 10618,
+          "output_tokens": 1079,
+          "tool_calls": 3,
+          "memory_writes": 8,
+          "memory_bytes_observed": 1398,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-046",
+          "call": "call_2",
+          "llm_requests": 6,
+          "failed_llm_requests": 0,
+          "input_tokens": 5415,
+          "output_tokens": 1050,
+          "tool_calls": 2,
+          "memory_writes": 1,
+          "memory_bytes_observed": 194,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-046",
+          "call": "call_3",
+          "llm_requests": 6,
+          "failed_llm_requests": 0,
+          "input_tokens": 6073,
+          "output_tokens": 1121,
+          "tool_calls": 4,
+          "memory_writes": 3,
+          "memory_bytes_observed": 502,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-047",
+          "call": "call_1",
+          "llm_requests": 10,
+          "failed_llm_requests": 0,
+          "input_tokens": 10849,
+          "output_tokens": 1238,
+          "tool_calls": 5,
+          "memory_writes": 8,
+          "memory_bytes_observed": 1372,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-047",
+          "call": "call_2",
+          "llm_requests": 6,
+          "failed_llm_requests": 0,
+          "input_tokens": 5466,
+          "output_tokens": 1255,
+          "tool_calls": 2,
+          "memory_writes": 1,
+          "memory_bytes_observed": 194,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-047",
+          "call": "call_3",
+          "llm_requests": 6,
+          "failed_llm_requests": 0,
+          "input_tokens": 6058,
+          "output_tokens": 1185,
+          "tool_calls": 4,
+          "memory_writes": 2,
+          "memory_bytes_observed": 324,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-048",
+          "call": "call_1",
+          "llm_requests": 10,
+          "failed_llm_requests": 0,
+          "input_tokens": 10570,
+          "output_tokens": 1525,
+          "tool_calls": 3,
+          "memory_writes": 7,
+          "memory_bytes_observed": 1201,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-048",
+          "call": "call_2",
+          "llm_requests": 6,
+          "failed_llm_requests": 0,
+          "input_tokens": 5833,
+          "output_tokens": 959,
+          "tool_calls": 4,
+          "memory_writes": 1,
+          "memory_bytes_observed": 203,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-048",
+          "call": "call_3",
+          "llm_requests": 3,
+          "failed_llm_requests": 0,
+          "input_tokens": 3748,
+          "output_tokens": 267,
+          "tool_calls": 0,
+          "memory_writes": 1,
+          "memory_bytes_observed": 154,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-049",
+          "call": "call_1",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 8355,
+          "output_tokens": 1331,
+          "tool_calls": 4,
+          "memory_writes": 7,
+          "memory_bytes_observed": 1202,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-049",
+          "call": "call_2",
+          "llm_requests": 6,
+          "failed_llm_requests": 0,
+          "input_tokens": 5751,
+          "output_tokens": 1108,
+          "tool_calls": 4,
+          "memory_writes": 1,
+          "memory_bytes_observed": 197,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-049",
+          "call": "call_3",
+          "llm_requests": 6,
+          "failed_llm_requests": 0,
+          "input_tokens": 6055,
+          "output_tokens": 1556,
+          "tool_calls": 4,
+          "memory_writes": 2,
+          "memory_bytes_observed": 324,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-050",
+          "call": "call_1",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 8423,
+          "output_tokens": 1214,
+          "tool_calls": 4,
+          "memory_writes": 7,
+          "memory_bytes_observed": 1210,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-050",
+          "call": "call_2",
+          "llm_requests": 6,
+          "failed_llm_requests": 0,
+          "input_tokens": 5659,
+          "output_tokens": 1138,
+          "tool_calls": 3,
+          "memory_writes": 1,
+          "memory_bytes_observed": 194,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-050",
+          "call": "call_3",
+          "llm_requests": 6,
+          "failed_llm_requests": 0,
+          "input_tokens": 6090,
+          "output_tokens": 1121,
+          "tool_calls": 4,
+          "memory_writes": 2,
+          "memory_bytes_observed": 324,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-051",
+          "call": "call_1",
+          "llm_requests": 10,
+          "failed_llm_requests": 0,
+          "input_tokens": 10103,
+          "output_tokens": 1640,
+          "tool_calls": 5,
+          "memory_writes": 5,
+          "memory_bytes_observed": 827,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-051",
+          "call": "call_2",
+          "llm_requests": 10,
+          "failed_llm_requests": 0,
+          "input_tokens": 10946,
+          "output_tokens": 1353,
+          "tool_calls": 6,
+          "memory_writes": 3,
+          "memory_bytes_observed": 527,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-052",
+          "call": "call_1",
+          "llm_requests": 10,
+          "failed_llm_requests": 0,
+          "input_tokens": 10183,
+          "output_tokens": 1389,
+          "tool_calls": 5,
+          "memory_writes": 5,
+          "memory_bytes_observed": 827,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-052",
+          "call": "call_2",
+          "llm_requests": 10,
+          "failed_llm_requests": 0,
+          "input_tokens": 11427,
+          "output_tokens": 1586,
+          "tool_calls": 6,
+          "memory_writes": 3,
+          "memory_bytes_observed": 527,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-053",
+          "call": "call_1",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 8256,
+          "output_tokens": 1279,
+          "tool_calls": 4,
+          "memory_writes": 5,
+          "memory_bytes_observed": 834,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-053",
+          "call": "call_2",
+          "llm_requests": 10,
+          "failed_llm_requests": 0,
+          "input_tokens": 10736,
+          "output_tokens": 1658,
+          "tool_calls": 5,
+          "memory_writes": 4,
+          "memory_bytes_observed": 705,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-054",
+          "call": "call_1",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 8256,
+          "output_tokens": 1419,
+          "tool_calls": 4,
+          "memory_writes": 5,
+          "memory_bytes_observed": 834,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-054",
+          "call": "call_2",
+          "llm_requests": 10,
+          "failed_llm_requests": 0,
+          "input_tokens": 11101,
+          "output_tokens": 1732,
+          "tool_calls": 6,
+          "memory_writes": 3,
+          "memory_bytes_observed": 536,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-055",
+          "call": "call_1",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 8133,
+          "output_tokens": 1091,
+          "tool_calls": 4,
+          "memory_writes": 6,
+          "memory_bytes_observed": 1001,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-055",
+          "call": "call_2",
+          "llm_requests": 10,
+          "failed_llm_requests": 0,
+          "input_tokens": 10533,
+          "output_tokens": 1401,
+          "tool_calls": 5,
+          "memory_writes": 3,
+          "memory_bytes_observed": 529,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-056",
+          "call": "call_1",
+          "llm_requests": 10,
+          "failed_llm_requests": 0,
+          "input_tokens": 10247,
+          "output_tokens": 1448,
+          "tool_calls": 5,
+          "memory_writes": 5,
+          "memory_bytes_observed": 828,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-056",
+          "call": "call_2",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 8786,
+          "output_tokens": 2065,
+          "tool_calls": 5,
+          "memory_writes": 3,
+          "memory_bytes_observed": 527,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-057",
+          "call": "call_1",
+          "llm_requests": 10,
+          "failed_llm_requests": 0,
+          "input_tokens": 10192,
+          "output_tokens": 1294,
+          "tool_calls": 5,
+          "memory_writes": 6,
+          "memory_bytes_observed": 1019,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-057",
+          "call": "call_2",
+          "llm_requests": 10,
+          "failed_llm_requests": 0,
+          "input_tokens": 11204,
+          "output_tokens": 1736,
+          "tool_calls": 6,
+          "memory_writes": 3,
+          "memory_bytes_observed": 529,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-058",
+          "call": "call_1",
+          "llm_requests": 10,
+          "failed_llm_requests": 0,
+          "input_tokens": 10269,
+          "output_tokens": 1251,
+          "tool_calls": 5,
+          "memory_writes": 5,
+          "memory_bytes_observed": 832,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-058",
+          "call": "call_2",
+          "llm_requests": 11,
+          "failed_llm_requests": 0,
+          "input_tokens": 12734,
+          "output_tokens": 1410,
+          "tool_calls": 7,
+          "memory_writes": 3,
+          "memory_bytes_observed": 536,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-059",
+          "call": "call_1",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 8194,
+          "output_tokens": 1418,
+          "tool_calls": 4,
+          "memory_writes": 5,
+          "memory_bytes_observed": 828,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-059",
+          "call": "call_2",
+          "llm_requests": 10,
+          "failed_llm_requests": 0,
+          "input_tokens": 10927,
+          "output_tokens": 1965,
+          "tool_calls": 5,
+          "memory_writes": 3,
+          "memory_bytes_observed": 527,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-060",
+          "call": "call_1",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 8249,
+          "output_tokens": 1440,
+          "tool_calls": 4,
+          "memory_writes": 6,
+          "memory_bytes_observed": 1010,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-060",
+          "call": "call_2",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 8761,
+          "output_tokens": 1760,
+          "tool_calls": 5,
+          "memory_writes": 3,
+          "memory_bytes_observed": 527,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-061",
+          "call": "call_1",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 8313,
+          "output_tokens": 1131,
+          "tool_calls": 4,
+          "memory_writes": 6,
+          "memory_bytes_observed": 1134,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-061",
+          "call": "call_2",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 8573,
+          "output_tokens": 1425,
+          "tool_calls": 3,
+          "memory_writes": 1,
+          "memory_bytes_observed": 377,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-062",
+          "call": "call_1",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 8328,
+          "output_tokens": 1080,
+          "tool_calls": 4,
+          "memory_writes": 6,
+          "memory_bytes_observed": 1109,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-062",
+          "call": "call_2",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 8571,
+          "output_tokens": 1483,
+          "tool_calls": 3,
+          "memory_writes": 1,
+          "memory_bytes_observed": 192,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-063",
+          "call": "call_1",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 8329,
+          "output_tokens": 1372,
+          "tool_calls": 4,
+          "memory_writes": 6,
+          "memory_bytes_observed": 1125,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-063",
+          "call": "call_2",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 8607,
+          "output_tokens": 1714,
+          "tool_calls": 3,
+          "memory_writes": 2,
+          "memory_bytes_observed": 588,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-064",
+          "call": "call_1",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 8338,
+          "output_tokens": 1387,
+          "tool_calls": 4,
+          "memory_writes": 6,
+          "memory_bytes_observed": 1146,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-064",
+          "call": "call_2",
+          "llm_requests": 10,
+          "failed_llm_requests": 0,
+          "input_tokens": 11048,
+          "output_tokens": 2222,
+          "tool_calls": 5,
+          "memory_writes": 1,
+          "memory_bytes_observed": 163,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-065",
+          "call": "call_1",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 8456,
+          "output_tokens": 1555,
+          "tool_calls": 4,
+          "memory_writes": 6,
+          "memory_bytes_observed": 1133,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-065",
+          "call": "call_2",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 8667,
+          "output_tokens": 1388,
+          "tool_calls": 4,
+          "memory_writes": 0,
+          "memory_bytes_observed": 6,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-066",
+          "call": "call_1",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 8327,
+          "output_tokens": 1076,
+          "tool_calls": 4,
+          "memory_writes": 6,
+          "memory_bytes_observed": 1147,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-066",
+          "call": "call_2",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 8559,
+          "output_tokens": 1944,
+          "tool_calls": 3,
+          "memory_writes": 1,
+          "memory_bytes_observed": 375,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-067",
+          "call": "call_1",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 8346,
+          "output_tokens": 1499,
+          "tool_calls": 4,
+          "memory_writes": 6,
+          "memory_bytes_observed": 1135,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-067",
+          "call": "call_2",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 8580,
+          "output_tokens": 1690,
+          "tool_calls": 3,
+          "memory_writes": 0,
+          "memory_bytes_observed": 6,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-068",
+          "call": "call_1",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 8315,
+          "output_tokens": 1358,
+          "tool_calls": 4,
+          "memory_writes": 6,
+          "memory_bytes_observed": 1154,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-068",
+          "call": "call_2",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 8575,
+          "output_tokens": 1740,
+          "tool_calls": 3,
+          "memory_writes": 1,
+          "memory_bytes_observed": 362,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-069",
+          "call": "call_1",
+          "llm_requests": 10,
+          "failed_llm_requests": 0,
+          "input_tokens": 10389,
+          "output_tokens": 1452,
+          "tool_calls": 5,
+          "memory_writes": 6,
+          "memory_bytes_observed": 1130,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-069",
+          "call": "call_2",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 8601,
+          "output_tokens": 2026,
+          "tool_calls": 3,
+          "memory_writes": 2,
+          "memory_bytes_observed": 373,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-070",
+          "call": "call_1",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 8348,
+          "output_tokens": 1341,
+          "tool_calls": 4,
+          "memory_writes": 6,
+          "memory_bytes_observed": 1134,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-070",
+          "call": "call_2",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 8570,
+          "output_tokens": 1439,
+          "tool_calls": 4,
+          "memory_writes": 0,
+          "memory_bytes_observed": 6,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-071",
+          "call": "call_1",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 7962,
+          "output_tokens": 1136,
+          "tool_calls": 3,
+          "memory_writes": 2,
+          "memory_bytes_observed": 403,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-071",
+          "call": "call_2",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 7857,
+          "output_tokens": 1368,
+          "tool_calls": 2,
+          "memory_writes": 0,
+          "memory_bytes_observed": 6,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-072",
+          "call": "call_1",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 8305,
+          "output_tokens": 1438,
+          "tool_calls": 4,
+          "memory_writes": 5,
+          "memory_bytes_observed": 919,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-072",
+          "call": "call_2",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 8124,
+          "output_tokens": 1287,
+          "tool_calls": 2,
+          "memory_writes": 0,
+          "memory_bytes_observed": 6,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-073",
+          "call": "call_1",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 7997,
+          "output_tokens": 1430,
+          "tool_calls": 4,
+          "memory_writes": 2,
+          "memory_bytes_observed": 419,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-073",
+          "call": "call_2",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 7898,
+          "output_tokens": 1309,
+          "tool_calls": 2,
+          "memory_writes": 0,
+          "memory_bytes_observed": 6,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-074",
+          "call": "call_1",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 8055,
+          "output_tokens": 1565,
+          "tool_calls": 4,
+          "memory_writes": 2,
+          "memory_bytes_observed": 427,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-074",
+          "call": "call_2",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 8291,
+          "output_tokens": 1994,
+          "tool_calls": 3,
+          "memory_writes": 0,
+          "memory_bytes_observed": 6,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-075",
+          "call": "call_1",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 7945,
+          "output_tokens": 1695,
+          "tool_calls": 3,
+          "memory_writes": 2,
+          "memory_bytes_observed": 422,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-075",
+          "call": "call_2",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 8028,
+          "output_tokens": 1700,
+          "tool_calls": 2,
+          "memory_writes": 0,
+          "memory_bytes_observed": 6,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-076",
+          "call": "call_1",
+          "llm_requests": 10,
+          "failed_llm_requests": 0,
+          "input_tokens": 10368,
+          "output_tokens": 1640,
+          "tool_calls": 4,
+          "memory_writes": 5,
+          "memory_bytes_observed": 934,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-076",
+          "call": "call_2",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 8079,
+          "output_tokens": 1523,
+          "tool_calls": 2,
+          "memory_writes": 0,
+          "memory_bytes_observed": 6,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-077",
+          "call": "call_1",
+          "llm_requests": 10,
+          "failed_llm_requests": 0,
+          "input_tokens": 9911,
+          "output_tokens": 1266,
+          "tool_calls": 3,
+          "memory_writes": 2,
+          "memory_bytes_observed": 414,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-077",
+          "call": "call_2",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 7814,
+          "output_tokens": 1555,
+          "tool_calls": 1,
+          "memory_writes": 0,
+          "memory_bytes_observed": 6,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-078",
+          "call": "call_1",
+          "llm_requests": 10,
+          "failed_llm_requests": 0,
+          "input_tokens": 9967,
+          "output_tokens": 1305,
+          "tool_calls": 4,
+          "memory_writes": 2,
+          "memory_bytes_observed": 424,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-078",
+          "call": "call_2",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 7869,
+          "output_tokens": 1418,
+          "tool_calls": 2,
+          "memory_writes": 0,
+          "memory_bytes_observed": 6,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-079",
+          "call": "call_1",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 8292,
+          "output_tokens": 1358,
+          "tool_calls": 4,
+          "memory_writes": 5,
+          "memory_bytes_observed": 938,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-079",
+          "call": "call_2",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 8285,
+          "output_tokens": 1596,
+          "tool_calls": 3,
+          "memory_writes": 0,
+          "memory_bytes_observed": 6,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-080",
+          "call": "call_1",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 8267,
+          "output_tokens": 1543,
+          "tool_calls": 5,
+          "memory_writes": 5,
+          "memory_bytes_observed": 931,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-080",
+          "call": "call_2",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 7956,
+          "output_tokens": 1432,
+          "tool_calls": 2,
+          "memory_writes": 0,
+          "memory_bytes_observed": 6,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-081",
+          "call": "call_1",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 8533,
+          "output_tokens": 1449,
+          "tool_calls": 4,
+          "memory_writes": 8,
+          "memory_bytes_observed": 1339,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-081",
+          "call": "call_2",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 9172,
+          "output_tokens": 1808,
+          "tool_calls": 5,
+          "memory_writes": 9,
+          "memory_bytes_observed": 1581,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-082",
+          "call": "call_1",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 8542,
+          "output_tokens": 1618,
+          "tool_calls": 4,
+          "memory_writes": 7,
+          "memory_bytes_observed": 1166,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-082",
+          "call": "call_2",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 9230,
+          "output_tokens": 1768,
+          "tool_calls": 5,
+          "memory_writes": 10,
+          "memory_bytes_observed": 1733,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-083",
+          "call": "call_1",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 8601,
+          "output_tokens": 1543,
+          "tool_calls": 4,
+          "memory_writes": 7,
+          "memory_bytes_observed": 1166,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-083",
+          "call": "call_2",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 9258,
+          "output_tokens": 1933,
+          "tool_calls": 5,
+          "memory_writes": 10,
+          "memory_bytes_observed": 1742,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-084",
+          "call": "call_1",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 8601,
+          "output_tokens": 1637,
+          "tool_calls": 4,
+          "memory_writes": 8,
+          "memory_bytes_observed": 1339,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-084",
+          "call": "call_2",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 9315,
+          "output_tokens": 1770,
+          "tool_calls": 5,
+          "memory_writes": 10,
+          "memory_bytes_observed": 1742,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-085",
+          "call": "call_1",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 8570,
+          "output_tokens": 1438,
+          "tool_calls": 4,
+          "memory_writes": 9,
+          "memory_bytes_observed": 1539,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-085",
+          "call": "call_2",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 9239,
+          "output_tokens": 1751,
+          "tool_calls": 5,
+          "memory_writes": 10,
+          "memory_bytes_observed": 1735,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-086",
+          "call": "call_1",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 8514,
+          "output_tokens": 1454,
+          "tool_calls": 4,
+          "memory_writes": 8,
+          "memory_bytes_observed": 1337,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-086",
+          "call": "call_2",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 9180,
+          "output_tokens": 1363,
+          "tool_calls": 5,
+          "memory_writes": 10,
+          "memory_bytes_observed": 1733,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-087",
+          "call": "call_1",
+          "llm_requests": 10,
+          "failed_llm_requests": 0,
+          "input_tokens": 10894,
+          "output_tokens": 1960,
+          "tool_calls": 5,
+          "memory_writes": 9,
+          "memory_bytes_observed": 1503,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-087",
+          "call": "call_2",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 9326,
+          "output_tokens": 1655,
+          "tool_calls": 5,
+          "memory_writes": 9,
+          "memory_bytes_observed": 1569,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-088",
+          "call": "call_1",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 8596,
+          "output_tokens": 1398,
+          "tool_calls": 4,
+          "memory_writes": 8,
+          "memory_bytes_observed": 1339,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-088",
+          "call": "call_2",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 9368,
+          "output_tokens": 2100,
+          "tool_calls": 6,
+          "memory_writes": 10,
+          "memory_bytes_observed": 1742,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-089",
+          "call": "call_1",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 8672,
+          "output_tokens": 1736,
+          "tool_calls": 4,
+          "memory_writes": 8,
+          "memory_bytes_observed": 1339,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-089",
+          "call": "call_2",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 9283,
+          "output_tokens": 1430,
+          "tool_calls": 5,
+          "memory_writes": 10,
+          "memory_bytes_observed": 1733,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-090",
+          "call": "call_1",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 8667,
+          "output_tokens": 1571,
+          "tool_calls": 4,
+          "memory_writes": 7,
+          "memory_bytes_observed": 1166,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-090",
+          "call": "call_2",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 9316,
+          "output_tokens": 1563,
+          "tool_calls": 5,
+          "memory_writes": 10,
+          "memory_bytes_observed": 1733,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-091",
+          "call": "call_1",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 8132,
+          "output_tokens": 1059,
+          "tool_calls": 3,
+          "memory_writes": 5,
+          "memory_bytes_observed": 845,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-091",
+          "call": "call_2",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 8558,
+          "output_tokens": 1557,
+          "tool_calls": 4,
+          "memory_writes": 5,
+          "memory_bytes_observed": 853,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-092",
+          "call": "call_1",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 8135,
+          "output_tokens": 1198,
+          "tool_calls": 3,
+          "memory_writes": 4,
+          "memory_bytes_observed": 681,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-092",
+          "call": "call_2",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 8718,
+          "output_tokens": 1461,
+          "tool_calls": 3,
+          "memory_writes": 5,
+          "memory_bytes_observed": 871,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-093",
+          "call": "call_1",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 8058,
+          "output_tokens": 1092,
+          "tool_calls": 3,
+          "memory_writes": 5,
+          "memory_bytes_observed": 848,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-093",
+          "call": "call_2",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 8338,
+          "output_tokens": 1380,
+          "tool_calls": 3,
+          "memory_writes": 4,
+          "memory_bytes_observed": 702,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-094",
+          "call": "call_1",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 8003,
+          "output_tokens": 850,
+          "tool_calls": 3,
+          "memory_writes": 5,
+          "memory_bytes_observed": 848,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-094",
+          "call": "call_2",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 8586,
+          "output_tokens": 1450,
+          "tool_calls": 3,
+          "memory_writes": 4,
+          "memory_bytes_observed": 688,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-095",
+          "call": "call_1",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 7978,
+          "output_tokens": 1113,
+          "tool_calls": 3,
+          "memory_writes": 5,
+          "memory_bytes_observed": 846,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-095",
+          "call": "call_2",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 8208,
+          "output_tokens": 1271,
+          "tool_calls": 3,
+          "memory_writes": 4,
+          "memory_bytes_observed": 688,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-096",
+          "call": "call_1",
+          "llm_requests": 10,
+          "failed_llm_requests": 0,
+          "input_tokens": 10242,
+          "output_tokens": 1183,
+          "tool_calls": 2,
+          "memory_writes": 5,
+          "memory_bytes_observed": 846,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-096",
+          "call": "call_2",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 8497,
+          "output_tokens": 1258,
+          "tool_calls": 4,
+          "memory_writes": 5,
+          "memory_bytes_observed": 854,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-097",
+          "call": "call_1",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 8038,
+          "output_tokens": 1082,
+          "tool_calls": 3,
+          "memory_writes": 4,
+          "memory_bytes_observed": 682,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-097",
+          "call": "call_2",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 8536,
+          "output_tokens": 1433,
+          "tool_calls": 3,
+          "memory_writes": 5,
+          "memory_bytes_observed": 876,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-098",
+          "call": "call_1",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 7997,
+          "output_tokens": 1182,
+          "tool_calls": 3,
+          "memory_writes": 4,
+          "memory_bytes_observed": 682,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-098",
+          "call": "call_2",
+          "llm_requests": 9,
+          "failed_llm_requests": 1,
+          "input_tokens": 7377,
+          "output_tokens": 1464,
+          "tool_calls": 4,
+          "memory_writes": 5,
+          "memory_bytes_observed": 854,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-099",
+          "call": "call_1",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 7973,
+          "output_tokens": 987,
+          "tool_calls": 3,
+          "memory_writes": 4,
+          "memory_bytes_observed": 682,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-099",
+          "call": "call_2",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 8403,
+          "output_tokens": 1342,
+          "tool_calls": 4,
+          "memory_writes": 6,
+          "memory_bytes_observed": 1057,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-100",
+          "call": "call_1",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 8004,
+          "output_tokens": 1076,
+          "tool_calls": 3,
+          "memory_writes": 4,
+          "memory_bytes_observed": 687,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-100",
+          "call": "call_2",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 8593,
+          "output_tokens": 1272,
+          "tool_calls": 3,
+          "memory_writes": 5,
+          "memory_bytes_observed": 872,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-101",
+          "call": "call_1",
+          "llm_requests": 12,
+          "failed_llm_requests": 0,
+          "input_tokens": 11956,
+          "output_tokens": 2422,
+          "tool_calls": 6,
+          "memory_writes": 12,
+          "memory_bytes_observed": 2070,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-101",
+          "call": "call_2",
+          "llm_requests": 10,
+          "failed_llm_requests": 0,
+          "input_tokens": 11465,
+          "output_tokens": 2164,
+          "tool_calls": 6,
+          "memory_writes": 8,
+          "memory_bytes_observed": 1421,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-102",
+          "call": "call_1",
+          "llm_requests": 12,
+          "failed_llm_requests": 0,
+          "input_tokens": 12020,
+          "output_tokens": 2511,
+          "tool_calls": 6,
+          "memory_writes": 13,
+          "memory_bytes_observed": 2268,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-102",
+          "call": "call_2",
+          "llm_requests": 10,
+          "failed_llm_requests": 0,
+          "input_tokens": 12302,
+          "output_tokens": 1932,
+          "tool_calls": 7,
+          "memory_writes": 8,
+          "memory_bytes_observed": 1414,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-103",
+          "call": "call_1",
+          "llm_requests": 12,
+          "failed_llm_requests": 0,
+          "input_tokens": 11920,
+          "output_tokens": 2188,
+          "tool_calls": 6,
+          "memory_writes": 12,
+          "memory_bytes_observed": 2076,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-103",
+          "call": "call_2",
+          "llm_requests": 10,
+          "failed_llm_requests": 0,
+          "input_tokens": 12333,
+          "output_tokens": 1938,
+          "tool_calls": 6,
+          "memory_writes": 3,
+          "memory_bytes_observed": 498,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-104",
+          "call": "call_1",
+          "llm_requests": 12,
+          "failed_llm_requests": 0,
+          "input_tokens": 11877,
+          "output_tokens": 2162,
+          "tool_calls": 6,
+          "memory_writes": 12,
+          "memory_bytes_observed": 2081,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-104",
+          "call": "call_2",
+          "llm_requests": 10,
+          "failed_llm_requests": 0,
+          "input_tokens": 12246,
+          "output_tokens": 2152,
+          "tool_calls": 7,
+          "memory_writes": 3,
+          "memory_bytes_observed": 498,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-105",
+          "call": "call_1",
+          "llm_requests": 12,
+          "failed_llm_requests": 0,
+          "input_tokens": 11862,
+          "output_tokens": 2321,
+          "tool_calls": 6,
+          "memory_writes": 12,
+          "memory_bytes_observed": 2074,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-105",
+          "call": "call_2",
+          "llm_requests": 9,
+          "failed_llm_requests": 0,
+          "input_tokens": 9326,
+          "output_tokens": 2362,
+          "tool_calls": 5,
+          "memory_writes": 3,
+          "memory_bytes_observed": 498,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-106",
+          "call": "call_1",
+          "llm_requests": 12,
+          "failed_llm_requests": 0,
+          "input_tokens": 11940,
+          "output_tokens": 1965,
+          "tool_calls": 6,
+          "memory_writes": 12,
+          "memory_bytes_observed": 2076,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-106",
+          "call": "call_2",
+          "llm_requests": 10,
+          "failed_llm_requests": 0,
+          "input_tokens": 12182,
+          "output_tokens": 2291,
+          "tool_calls": 7,
+          "memory_writes": 8,
+          "memory_bytes_observed": 1414,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-107",
+          "call": "call_1",
+          "llm_requests": 12,
+          "failed_llm_requests": 0,
+          "input_tokens": 12022,
+          "output_tokens": 2769,
+          "tool_calls": 6,
+          "memory_writes": 13,
+          "memory_bytes_observed": 2264,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-107",
+          "call": "call_2",
+          "llm_requests": 11,
+          "failed_llm_requests": 0,
+          "input_tokens": 15258,
+          "output_tokens": 2192,
+          "tool_calls": 8,
+          "memory_writes": 8,
+          "memory_bytes_observed": 1414,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-108",
+          "call": "call_1",
+          "llm_requests": 12,
+          "failed_llm_requests": 0,
+          "input_tokens": 11871,
+          "output_tokens": 2150,
+          "tool_calls": 6,
+          "memory_writes": 12,
+          "memory_bytes_observed": 2074,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-108",
+          "call": "call_2",
+          "llm_requests": 10,
+          "failed_llm_requests": 0,
+          "input_tokens": 12431,
+          "output_tokens": 2417,
+          "tool_calls": 7,
+          "memory_writes": 8,
+          "memory_bytes_observed": 1414,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-109",
+          "call": "call_1",
+          "llm_requests": 12,
+          "failed_llm_requests": 0,
+          "input_tokens": 11863,
+          "output_tokens": 2492,
+          "tool_calls": 6,
+          "memory_writes": 12,
+          "memory_bytes_observed": 2072,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-109",
+          "call": "call_2",
+          "llm_requests": 10,
+          "failed_llm_requests": 0,
+          "input_tokens": 11824,
+          "output_tokens": 2586,
+          "tool_calls": 6,
+          "memory_writes": 3,
+          "memory_bytes_observed": 505,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-110",
+          "call": "call_1",
+          "llm_requests": 12,
+          "failed_llm_requests": 0,
+          "input_tokens": 11871,
+          "output_tokens": 1811,
+          "tool_calls": 6,
+          "memory_writes": 12,
+          "memory_bytes_observed": 2074,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-110",
+          "call": "call_2",
+          "llm_requests": 10,
+          "failed_llm_requests": 0,
+          "input_tokens": 11304,
+          "output_tokens": 1744,
+          "tool_calls": 6,
+          "memory_writes": 8,
+          "memory_bytes_observed": 1414,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-111",
+          "call": "call_1",
+          "llm_requests": 13,
+          "failed_llm_requests": 0,
+          "input_tokens": 14969,
+          "output_tokens": 1952,
+          "tool_calls": 8,
+          "memory_writes": 14,
+          "memory_bytes_observed": 2755,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-111",
+          "call": "call_2",
+          "llm_requests": 12,
+          "failed_llm_requests": 0,
+          "input_tokens": 13035,
+          "output_tokens": 2817,
+          "tool_calls": 7,
+          "memory_writes": 7,
+          "memory_bytes_observed": 1261,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-112",
+          "call": "call_1",
+          "llm_requests": 13,
+          "failed_llm_requests": 0,
+          "input_tokens": 14972,
+          "output_tokens": 1982,
+          "tool_calls": 8,
+          "memory_writes": 14,
+          "memory_bytes_observed": 2789,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-112",
+          "call": "call_2",
+          "llm_requests": 12,
+          "failed_llm_requests": 0,
+          "input_tokens": 13508,
+          "output_tokens": 1744,
+          "tool_calls": 7,
+          "memory_writes": 9,
+          "memory_bytes_observed": 1636,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-113",
+          "call": "call_1",
+          "llm_requests": 12,
+          "failed_llm_requests": 0,
+          "input_tokens": 11942,
+          "output_tokens": 2296,
+          "tool_calls": 8,
+          "memory_writes": 11,
+          "memory_bytes_observed": 2217,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-113",
+          "call": "call_2",
+          "llm_requests": 12,
+          "failed_llm_requests": 0,
+          "input_tokens": 13589,
+          "output_tokens": 2088,
+          "tool_calls": 7,
+          "memory_writes": 8,
+          "memory_bytes_observed": 1380,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-114",
+          "call": "call_1",
+          "llm_requests": 13,
+          "failed_llm_requests": 0,
+          "input_tokens": 14783,
+          "output_tokens": 1648,
+          "tool_calls": 8,
+          "memory_writes": 14,
+          "memory_bytes_observed": 2746,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-114",
+          "call": "call_2",
+          "llm_requests": 13,
+          "failed_llm_requests": 0,
+          "input_tokens": 15606,
+          "output_tokens": 2497,
+          "tool_calls": 9,
+          "memory_writes": 8,
+          "memory_bytes_observed": 1442,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-115",
+          "call": "call_1",
+          "llm_requests": 12,
+          "failed_llm_requests": 0,
+          "input_tokens": 12141,
+          "output_tokens": 2158,
+          "tool_calls": 8,
+          "memory_writes": 12,
+          "memory_bytes_observed": 2446,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-115",
+          "call": "call_2",
+          "llm_requests": 12,
+          "failed_llm_requests": 0,
+          "input_tokens": 13559,
+          "output_tokens": 2155,
+          "tool_calls": 7,
+          "memory_writes": 5,
+          "memory_bytes_observed": 889,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-116",
+          "call": "call_1",
+          "llm_requests": 12,
+          "failed_llm_requests": 0,
+          "input_tokens": 11924,
+          "output_tokens": 2096,
+          "tool_calls": 8,
+          "memory_writes": 12,
+          "memory_bytes_observed": 2399,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-116",
+          "call": "call_2",
+          "llm_requests": 12,
+          "failed_llm_requests": 0,
+          "input_tokens": 12553,
+          "output_tokens": 2954,
+          "tool_calls": 6,
+          "memory_writes": 5,
+          "memory_bytes_observed": 887,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-117",
+          "call": "call_1",
+          "llm_requests": 12,
+          "failed_llm_requests": 0,
+          "input_tokens": 11923,
+          "output_tokens": 1971,
+          "tool_calls": 8,
+          "memory_writes": 11,
+          "memory_bytes_observed": 2250,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-117",
+          "call": "call_2",
+          "llm_requests": 12,
+          "failed_llm_requests": 0,
+          "input_tokens": 12433,
+          "output_tokens": 2571,
+          "tool_calls": 7,
+          "memory_writes": 5,
+          "memory_bytes_observed": 887,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-118",
+          "call": "call_1",
+          "llm_requests": 12,
+          "failed_llm_requests": 0,
+          "input_tokens": 12214,
+          "output_tokens": 2019,
+          "tool_calls": 9,
+          "memory_writes": 14,
+          "memory_bytes_observed": 2768,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-118",
+          "call": "call_2",
+          "llm_requests": 12,
+          "failed_llm_requests": 0,
+          "input_tokens": 12642,
+          "output_tokens": 2554,
+          "tool_calls": 8,
+          "memory_writes": 8,
+          "memory_bytes_observed": 1415,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-119",
+          "call": "call_1",
+          "llm_requests": 12,
+          "failed_llm_requests": 0,
+          "input_tokens": 11838,
+          "output_tokens": 1844,
+          "tool_calls": 8,
+          "memory_writes": 11,
+          "memory_bytes_observed": 2229,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-119",
+          "call": "call_2",
+          "llm_requests": 12,
+          "failed_llm_requests": 0,
+          "input_tokens": 13330,
+          "output_tokens": 1592,
+          "tool_calls": 7,
+          "memory_writes": 6,
+          "memory_bytes_observed": 1066,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-120",
+          "call": "call_1",
+          "llm_requests": 12,
+          "failed_llm_requests": 0,
+          "input_tokens": 11979,
+          "output_tokens": 2201,
+          "tool_calls": 8,
+          "memory_writes": 11,
+          "memory_bytes_observed": 2249,
+          "estimated_cost_usd": null
+        },
+        {
+          "scenario": "SC-120",
+          "call": "call_2",
+          "llm_requests": 12,
+          "failed_llm_requests": 0,
+          "input_tokens": 13590,
+          "output_tokens": 1869,
+          "tool_calls": 7,
+          "memory_writes": 7,
+          "memory_bytes_observed": 1280,
+          "estimated_cost_usd": null
+        }
+      ],
+      "note": "Storage covers serialized memory_writes present in the trace. Database, hosting and network costs need rates supplied by the team."
+    },
+    "memory_write_quality": {
+      "status": "not_run",
+      "reason": "Pass --memory-judge-report after running the optional LLM judge."
+    }
+  }
+}
