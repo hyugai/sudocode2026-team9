@@ -1,38 +1,66 @@
-"""Create a runnable harness by choosing one implementation for each stage."""
+"""Create the production Deep Agent harness."""
 
 import os
+from typing import Literal
+
 from dotenv import load_dotenv
 
-from telesale_agent.core.langgraph_pipeline import LangGraphAgentHarness
-from telesale_agent.core.builder import AgentHarnessBuilder
-
-from telesale_agent.adapters.mock.asr import MockASREngine
+from telesale_agent.adapters.asr import ZipformerASREngine
 from telesale_agent.adapters.llm.llm_perceive import LLMPerceiver
 from telesale_agent.adapters.mock.identity import HintIdentityResolver
 from telesale_agent.adapters.vector_db.retrieve import VectorDBRetriever
-from telesale_agent.adapters.llm.llm_call_brief import LLMCallBriefBuilder
-from telesale_agent.adapters.llm.llm_planner import LLMPlanner
-from telesale_agent.adapters.rules.pii_guardrail import PIIGuardrail
-from telesale_agent.adapters.crm import SupabaseCRMRetriever
-
-from telesale_agent.adapters.mock.act import LocalActor
-from telesale_agent.adapters.mock.observe import BasicObserver
+from telesale_agent.application.memory.call_brief import CallBriefProjector
+from telesale_agent.adapters.crm import PostgresCRMRetriever
+from telesale_agent.adapters.memory import (
+    FileCustomerMemoryRepository,
+    InMemoryCustomerMemoryRepository,
+    TurnMemoryPersister,
+)
 from telesale_agent.adapters.llm.llm_persist import LLMPersister
+from telesale_agent.adapters.rules.pii_guardrail import PIIGuardrail
 
-def build_default_harness() -> LangGraphAgentHarness:
-    """Build a dependency-free harness for local development and tests using Builder."""
+MemoryMode = Literal["durable", "evaluation", "disabled"]
+
+
+def build_deepagent_harness(memory_mode: MemoryMode = "durable"):
+    """Configure an unstarted Deep Agent harness for use with ``async with``."""
     load_dotenv()
-    
-    return (AgentHarnessBuilder()
-        .with_asr(MockASREngine())
-        .with_perceiver(LLMPerceiver())
-        .with_identity_resolver(HintIdentityResolver())
-        .with_crm(SupabaseCRMRetriever())
-        .with_retriever(VectorDBRetriever())
-        .with_call_brief_builder(LLMCallBriefBuilder())
-        .with_planner(LLMPlanner())
-        .with_guardrail(PIIGuardrail())
-        .with_actor(LocalActor())
-        .with_observer(BasicObserver())
-        .with_persister(LLMPersister())
-        .build())
+    from telesale_agent.application.deepagent.harness import DeepAgentHarness
+
+    durable_memory = FileCustomerMemoryRepository()
+    if memory_mode == "durable":
+        memory = durable_memory
+        persister_mode = os.environ.get(
+            "MEMORY_PERSISTER_MODE", "llm_learning"
+        ).strip().lower()
+        persist = (
+            LLMPersister(memory)
+            if persister_mode in {"llm_episode", "llm_learning"}
+            else TurnMemoryPersister(memory)
+        )
+    elif memory_mode == "evaluation":
+        memory = InMemoryCustomerMemoryRepository(seed=durable_memory)
+        persist = TurnMemoryPersister(memory)
+    elif memory_mode == "disabled":
+        memory = InMemoryCustomerMemoryRepository()
+        persist = None
+    else:
+        raise ValueError(f"Unsupported memory_mode: {memory_mode}")
+
+    return DeepAgentHarness(
+        asr=ZipformerASREngine(),
+        perceive=LLMPerceiver(),
+        identity=HintIdentityResolver(),
+        crm=PostgresCRMRetriever(),
+        memory=memory,
+        retrieve=VectorDBRetriever(),
+        call_brief=CallBriefProjector(),
+        guardrail=PIIGuardrail(),
+        persist=persist,
+    )
+
+async def build_deepagent_harness_async(memory_mode: MemoryMode = "durable"):
+    """Build and initialize a harness that uses MCP Clients."""
+    harness = build_deepagent_harness(memory_mode=memory_mode)
+    await harness.__aenter__()
+    return harness

@@ -1,33 +1,26 @@
 #!/usr/bin/env python3
-"""
-Team Runner — chạy AI Agent thật của nhóm qua từng scenario BTC và ghi trace.
+"""Run the real agent over scenario files and serialize one trace row per turn.
 
-Usage (từ thư mục gốc project):
-    python src/eval/generate_traces.py --config full --run-id my_run_v1
-
-    # Test nhanh 3 scenario đầu:
-    python src/eval/generate_traces.py --limit 3
-
-    # Test một scenario cụ thể:
-    python src/eval/generate_traces.py --scenario-id SC-G9-001
-
-Output mặc định: dataset/BTC-Data-Vong1-TEAMS/eval/runs/<run_id>.jsonl
-
-Yêu cầu:
-  - pip install -e .  (từ thư mục gốc project)
-  - File .env đã có API keys
-  - Thư mục scenarios/ đã được tạo (chạy prepare_scenarios.py trước)
+Prefer ``run_benchmark.py`` for normal use. It provides versioned output,
+isolated memory, scoring and reproducibility metadata around this generator.
 """
 
 import argparse
 import asyncio
-import glob
 import json
 import os
-os.environ["IS_EVAL"] = "true"  # Prevent persisting mock sessions to DB
+import re
 import sys
 import time
+from datetime import date, timedelta
 from pathlib import Path
+
+from dotenv import load_dotenv
+
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8")
+if hasattr(sys.stderr, "reconfigure"):
+    sys.stderr.reconfigure(encoding="utf-8")
 
 # ---------------------------------------------------------------------------
 # Path setup
@@ -35,29 +28,36 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent          # src/eval/
 REPO_ROOT = HERE.parent.parent                  # sudo_code_2026-group_9/
 sys.path.insert(0, str(REPO_ROOT / "src"))
+load_dotenv(REPO_ROOT / ".env")
 
-BTC_EVAL_DIR = REPO_ROOT / "dataset" / "BTC-Data-Vong1-TEAMS" / "eval"
-DEFAULT_SCENARIOS_DIR = REPO_ROOT / "dataset" / "iterative-refinement" / "scenarios_complete dataset"
-DEFAULT_OUT_DIR = BTC_EVAL_DIR / "runs"
-MOCK_TOOLS_PATH = BTC_EVAL_DIR / "mock_tools.py"
+DEFAULT_SCENARIOS_DIR = (
+    REPO_ROOT
+    / "dataset"
+    / "iterative-refinement"
+    / "scenarios_complete dataset"
+)
+DEFAULT_OUT_DIR = REPO_ROOT / "outputs" / "eval"
+TEAM_EVAL_PATH = HERE / "team_eval.py"
+
+
+def _env_flag(name: str, default: bool = False) -> bool:
+    value = os.environ.get(name)
+    if value is None:
+        return default
+    return value.strip().lower() in {"1", "true", "yes", "on"}
+
 
 # ---------------------------------------------------------------------------
 # Import agent (lazy để lỗi import hiện rõ)
 # ---------------------------------------------------------------------------
-from telesale_agent.bootstrap import build_default_harness  # noqa: E402
+from telesale_agent.bootstrap import build_deepagent_harness_async  # noqa: E402
+from telesale_agent.adapters.db.client import db_client  # noqa: E402
 from telesale_agent.core.models import Channel, ConversationState, TurnInput  # noqa: E402
-
-
-# ---------------------------------------------------------------------------
-# Reset tool runtime state giữa các scenario (nếu dùng in-memory)
-# ---------------------------------------------------------------------------
-def _reset_internal_tool_state():
-    """Xóa state in-memory của các tool bên trong agent để tránh rác giữa các scenario."""
-    try:
-        from telesale_agent.tools.order import _ORDERS
-        _ORDERS.clear()
-    except ImportError:
-        pass
+from eval.trace_extractors import (  # noqa: E402
+    extract_claims,
+    extract_facts_used,
+    extract_questions,
+)
 
 
 # ---------------------------------------------------------------------------
@@ -65,68 +65,131 @@ def _reset_internal_tool_state():
 # ---------------------------------------------------------------------------
 def _extract_tool_calls(result) -> list[dict]:
     """Trích xuất tool calls agent đã thực thi."""
-    calls = []
-    for step in (result.steps or []):
-        if step.plan and step.plan.tool_name:
-            calls.append({
-                "name": step.plan.tool_name,
-                "args": step.plan.arguments or {},
-                "result": step.action_result.output if step.action_result else {},
-            })
-    return calls
+    return [
+        {
+            "name": call.get("name"),
+            "args": call.get("args") or {},
+            "result": call.get("result"),
+        }
+        for call in (result.tool_calls or [])
+    ]
 
 
-def _extract_claims(result) -> list[dict]:
-    """Trích xuất các tuyên bố về giá/khuyến mãi từ kết quả pricing.get_quote."""
-    claims = []
-    for step in (result.steps or []):
-        if not (step.plan and step.plan.tool_name == "pricing.get_quote"):
-            continue
-        out = step.action_result.output if step.action_result else {}
-        if "final_price_vnd" in out:
-            claims.append({"field": "price_vnd", "value": out["final_price_vnd"]})
-        for promo in out.get("applied_promos", []):
-            claims.append({"field": f"promo_{promo['promo_code']}_active", "value": True})
-        for code in out.get("expired_promos", []):
-            claims.append({"field": f"promo_{code}_active", "value": False})
-    return claims
-
-
-def _extract_facts_used(result, call_key: str) -> list[str]:
-    """Trích xuất các fact/slot agent lấy từ memory của call trước."""
-    if call_key == "call_1":
-        return []
-    facts = []
-    if result.call_brief and result.call_brief.needs:
-        facts.extend(result.call_brief.needs)
-    return facts
-
-
-def _extract_questions(result) -> list[dict]:
-    """Trích xuất câu hỏi agent hỏi khách (best-effort, cần mở rộng sau)."""
-    # TODO: parse response_text hoặc thêm trường vào ActionPlan để phát hiện câu hỏi
-    return []
+def _replace_order_ids(value, order_id_map: dict[str, str]):
+    """Normalize opaque runtime IDs to scenario IDs in evaluation traces only."""
+    if isinstance(value, dict):
+        return {
+            key: _replace_order_ids(item, order_id_map)
+            for key, item in value.items()
+        }
+    if isinstance(value, list):
+        return [_replace_order_ids(item, order_id_map) for item in value]
+    if isinstance(value, str):
+        normalized = value
+        for runtime_id, scenario_id in order_id_map.items():
+            normalized = normalized.replace(runtime_id, scenario_id)
+        return normalized
+    return value
 
 
 # ---------------------------------------------------------------------------
 # Chạy một scenario đầy đủ (tất cả calls × turns)
 # ---------------------------------------------------------------------------
-async def run_scenario(scenario: dict, harness, config: str, run_id: str) -> list[dict]:
+async def run_scenario(
+    scenario: dict,
+    harness,
+    config: str,
+    run_id: str,
+    max_turns: int | None = None,
+    sleep_turn: float = 0.0,
+    max_retries: int = 1,
+    cleanup_orders: bool = True,
+) -> list[dict]:
     rows = []
     scenario_id = scenario["scenario_id"]
     customer_phone = scenario.get("customer_phone")
     calls_spec: dict = scenario.get("calls", {})
+    expected_order_id = next(
+        (
+            spec.get("facts_established", {}).get("order_id")
+            for spec in calls_spec.values()
+            if spec.get("facts_established", {}).get("order_id")
+        ),
+        None,
+    )
+    order_id_map: dict[str, str] = {}
+    created_order_ids: set[str] = set()
 
-    # Giữ state xuyên suốt các call trong cùng một scenario
-    conv_state: ConversationState | None = None
-    conversation_id = f"{run_id}__{scenario_id}"
+    def cleanup_created_orders() -> None:
+        if not cleanup_orders or not created_order_ids:
+            return
+        try:
+            deleted = db_client.delete_orders(created_order_ids)
+            print(f" [cleanup: {deleted} eval order(s)]", end="", flush=True)
+        except Exception as cleanup_exc:
+            print(
+                f"\n  [WARN] Could not clean eval orders {sorted(created_order_ids)}: "
+                f"{cleanup_exc}",
+                file=sys.stderr,
+                flush=True,
+            )
+
+    # Each scenario is an independent experiment. Durable file memory selects
+    # a scenario namespace while in-memory repositories reset their state.
+    # Calls inside this scenario continue sharing the selected repository.
+    select_namespace = getattr(harness.memory, "select_namespace", None)
+    if callable(select_namespace):
+        select_namespace(scenario_id)
+    else:
+        harness.reset_customer_memory()
+    if config == "full":
+        seed_history = [
+            episode
+            for call_spec in calls_spec.values()
+            for episode in call_spec.get("seed_history", [])
+        ]
+        if seed_history:
+            customer = db_client.get_customer(phone=customer_phone)
+            customer_id = customer.get("customer_id") if customer.get("found") else None
+            if customer_id:
+                for episode in seed_history:
+                    summary = (
+                        f"Channel: {episode.get('channel', 'unknown')}\n"
+                        f"Outcome: {episode.get('outcome', 'unknown')}\n"
+                        f"Summary: {episode.get('summary', '')}"
+                    )
+                    harness.memory.record_episode(
+                        customer_id,
+                        summary,
+                        occurred_on=episode.get("date"),
+                        source_id=episode.get("session_id"),
+                    )
+    previous_call_date = date(2026, 10, 15)
 
     for call_key in sorted(calls_spec.keys()):  # call_1, call_2, ...
         spec = calls_spec[call_key]
-        customer_turns: list[str] = spec.get("customer_turns", [])
-        call_date: str = spec.get("call_date", "2026-10-15")
+        input_mode = spec.get("input_mode", "clean")
+        customer_turns: list[str] = (
+            spec.get("customer_turns_asr")
+            if spec.get("customer_turns_asr")
+            else spec.get("customer_turns", [])
+        )
+        if spec.get("call_date"):
+            current_call_date = date.fromisoformat(spec["call_date"])
+        elif call_key == "call_1":
+            current_call_date = date(2026, 10, 15)
+        else:
+            current_call_date = previous_call_date + timedelta(
+                days=int(spec.get("days_later", 0))
+            )
+        previous_call_date = current_call_date
+        call_date = current_call_date.isoformat()
+        conversation_id = f"{run_id}__{scenario_id}__{call_key}"
+        conv_state = ConversationState(conversation_id=conversation_id)
 
         for turn_idx, customer_text in enumerate(customer_turns, start=1):
+            if sleep_turn > 0 and (turn_idx > 1 or call_key != "call_1"):
+                await asyncio.sleep(sleep_turn)
             t0 = time.perf_counter()
             try:
                 turn_input = TurnInput(
@@ -140,13 +203,88 @@ async def run_scenario(scenario: dict, harness, config: str, run_id: str) -> lis
                         "scenario_id": scenario_id,
                     },
                 )
-                result = await harness.run_turn(turn_input, conv_state)
+                result = None
+                for attempt in range(max_retries):
+                    try:
+                        result = await harness.run_turn(turn_input, conv_state)
+                        break
+                    except Exception as turn_exc:
+                        err_str = str(turn_exc)
+                        is_request_too_large = (
+                            "413" in err_str
+                            or "request too large" in err_str.lower()
+                            or "request_too_large" in err_str.lower()
+                        )
+                        is_rate_limit = (
+                            "rate_limit" in err_str.lower()
+                            or "429" in err_str
+                            or "tpm" in err_str.lower()
+                            or "tokens per minute" in err_str.lower()
+                            or "RateLimitError" in type(turn_exc).__name__
+                        )
+                        is_transient_provider_error = (
+                            "503" in err_str
+                            or "504" in err_str
+                            or "unavailable" in err_str.lower()
+                            or "deadline_exceeded" in err_str.lower()
+                            or "high demand" in err_str.lower()
+                        )
+                        if is_request_too_large:
+                            print(
+                                f"\n  [CONTEXT LIMIT] {scenario_id}/{call_key}/turn{turn_idx}: "
+                                f"{err_str}",
+                                file=sys.stderr,
+                                flush=True,
+                            )
+                            raise turn_exc
+                        if (is_rate_limit or is_transient_provider_error) and attempt < max_retries - 1:
+                            m = re.search(r"try again in ([\d\.]+)s", err_str, re.I)
+                            wait_sec = float(m.group(1)) + 1.0 if m else min(60.0, 10.0 * (2 ** attempt))
+                            reason = "RATE LIMIT" if is_rate_limit else "TRANSIENT PROVIDER"
+                            print(
+                                f"\n  [{reason}] {scenario_id}/{call_key}/turn{turn_idx}: "
+                                f"Tạm nghỉ {wait_sec:.1f}s trước khi thử lại "
+                                f"(lần {attempt + 1}/{max_retries})...",
+                                file=sys.stderr,
+                                flush=True,
+                            )
+                            await asyncio.sleep(wait_sec)
+                        else:
+                            raise turn_exc
+
                 conv_state = result.state
                 total_ms = int((time.perf_counter() - t0) * 1000)
                 ttft_ms = max(100, total_ms // 3)
 
                 tool_calls = _extract_tool_calls(result)
+                created_order_ids.update(
+                    str(call["result"]["order_id"])
+                    for call in tool_calls
+                    if call.get("name") == "order.create"
+                    and isinstance(call.get("result"), dict)
+                    and call["result"].get("order_id")
+                )
+                if expected_order_id and expected_order_id not in order_id_map.values():
+                    created_id = next(
+                        (
+                            call.get("result", {}).get("order_id")
+                            for call in tool_calls
+                            if call.get("name") == "order.create"
+                            and isinstance(call.get("result"), dict)
+                            and call["result"].get("order_id")
+                        ),
+                        None,
+                    )
+                    if created_id:
+                        order_id_map[str(created_id)] = str(expected_order_id)
+                tool_calls = _replace_order_ids(tool_calls, order_id_map)
                 is_baseline = config == "baseline_no_memory"
+                response_text = _replace_order_ids(
+                    result.response_text or "", order_id_map
+                )
+                trace_memory_writes = _replace_order_ids(
+                    result.memory_writes, order_id_map
+                )
                 row = {
                     "run_id": run_id,
                     "config": config,
@@ -154,12 +292,24 @@ async def run_scenario(scenario: dict, harness, config: str, run_id: str) -> lis
                     "call": call_key,
                     "turn": turn_idx,
                     "customer_text": customer_text,
-                    "agent_text": result.response_text or "",
-                    "questions": _extract_questions(result),
-                    # baseline không có memory → facts_used luôn rỗng
-                    "facts_used": [] if is_baseline else _extract_facts_used(result, call_key),
-                    "claims": _extract_claims(result),
+                    "agent_text": response_text,
+                    "questions": extract_questions(response_text),
+                    "facts_used": (
+                        []
+                        if is_baseline or call_key == "call_1"
+                        else extract_facts_used(
+                            response_text, tool_calls, result.call_brief
+                        )
+                    ),
+                    "claims": extract_claims(
+                        tool_calls,
+                        call_date=call_date,
+                        response_text=response_text,
+                    ),
                     "tool_calls": tool_calls,
+                    "memory_writes": [] if is_baseline else trace_memory_writes,
+                    "usage": result.usage,
+                    "customer_input_mode": input_mode,
                     "latency": {
                         "ttft_ms": ttft_ms,
                         "total_ms": total_ms,
@@ -185,10 +335,23 @@ async def run_scenario(scenario: dict, harness, config: str, run_id: str) -> lis
                     "facts_used": [],
                     "claims": [],
                     "tool_calls": [],
+                    "memory_writes": [],
+                    "usage": {
+                        "requests": 0,
+                        "failed_requests": 0,
+                        "input_tokens": 0,
+                        "output_tokens": 0,
+                        "total_tokens": 0,
+                    },
+                    "customer_input_mode": input_mode,
                     "latency": {"ttft_ms": None, "total_ms": total_ms, "ttfa_ms": None},
                     "_error": str(exc),
                 }
             rows.append(row)
+            if max_turns is not None and len(rows) >= max_turns:
+                cleanup_created_orders()
+                return rows
+    cleanup_created_orders()
     return rows
 
 
@@ -202,7 +365,7 @@ async def main():
     parser.add_argument(
         "--scenarios",
         default=str(DEFAULT_SCENARIOS_DIR),
-        help=f"Thư mục chứa các SC-G9-xxx.json (default: {DEFAULT_SCENARIOS_DIR})",
+        help=f"Thư mục chứa các scenario JSON (default: {DEFAULT_SCENARIOS_DIR})",
     )
     parser.add_argument(
         "--config",
@@ -213,66 +376,171 @@ async def main():
     parser.add_argument("--run-id", default="team_run", dest="run_id",
                         help="Tên định danh của run (default: team_run)")
     parser.add_argument("--out", default=None,
-                        help="Đường dẫn file .jsonl output (default: runs/<run_id>.jsonl)")
+                        help="Đường dẫn JSONL output (default: outputs/eval/<run_id>.jsonl)")
     parser.add_argument("--limit", type=int, default=None,
                         help="Chỉ chạy N scenario đầu (để test nhanh)")
     parser.add_argument("--scenario-id", default=None, dest="scenario_id",
-                        help="Chỉ chạy một scenario cụ thể, vd: SC-G9-001")
+                        help="Chỉ chạy một scenario cụ thể, vd: SC-001")
+    parser.add_argument(
+        "--scenario-ids",
+        nargs="+",
+        default=None,
+        dest="scenario_ids",
+        help="Chạy danh sách scenario cụ thể, vd: --scenario-ids SC-001 SC-002",
+    )
+    parser.add_argument(
+        "--max-turns",
+        type=int,
+        default=None,
+        help="Giới hạn tổng số turn mỗi scenario để smoke test nhanh",
+    )
+    parser.add_argument(
+        "--sleep",
+        type=float,
+        default=20.0,
+        help="Số giây nghỉ giữa mỗi turn để tránh chạm giới hạn TPM/RPM (default: 20.0)",
+    )
+    parser.add_argument(
+        "--max-retries",
+        type=int,
+        default=1,
+        help=(
+            "Số lần thử tối đa cho mỗi turn (default: 1 = không tự retry). "
+            "Tránh chạy lại cả NLU + agent khi provider báo 429."
+        ),
+    )
+    parser.add_argument(
+        "--sleep-scenario",
+        type=float,
+        default=3.0,
+        help="Số giây nghỉ giữa mỗi scenario (default: 3.0)",
+    )
+    parser.add_argument(
+        "--persist-memory",
+        action=argparse.BooleanOptionalAction,
+        default=_env_flag("EVAL_PERSIST_MEMORY", True),
+        help=(
+            "Write benchmark memory to CUSTOMER_MEMORY_ROOT (default: true). "
+            "Use --no-persist-memory for an in-memory smoke test."
+        ),
+    )
+    parser.add_argument(
+        "--cleanup-orders",
+        action=argparse.BooleanOptionalAction,
+        default=True,
+        help=(
+            "Delete PostgreSQL orders created by this evaluation scenario after "
+            "its calls finish (default: true)."
+        ),
+    )
     args = parser.parse_args()
+
+    if args.limit is not None and args.limit <= 0:
+        parser.error("--limit must be greater than zero")
+    if args.max_turns is not None and args.max_turns <= 0:
+        parser.error("--max-turns must be greater than zero")
+    if args.max_retries <= 0:
+        parser.error("--max-retries must be greater than zero")
+    if args.sleep < 0 or args.sleep_scenario < 0:
+        parser.error("--sleep and --sleep-scenario cannot be negative")
 
     scenarios_dir = Path(args.scenarios)
     DEFAULT_OUT_DIR.mkdir(parents=True, exist_ok=True)
     out_path = Path(args.out) if args.out else DEFAULT_OUT_DIR / f"{args.run_id}.jsonl"
+    out_path.parent.mkdir(parents=True, exist_ok=True)
 
     # Thu thập file
     all_files = sorted(
-        f for f in glob.glob(str(scenarios_dir / "*.json"))
-        if not os.path.basename(f).startswith("_")
+        path for path in scenarios_dir.glob("*.json") if not path.name.startswith("_")
     )
     if not all_files:
         print(f"[ERROR] Không tìm thấy file JSON trong: {scenarios_dir}", file=sys.stderr)
-        print("Hãy chạy `python src/eval/prepare_scenarios.py` trước.", file=sys.stderr)
         sys.exit(1)
 
-    if args.scenario_id:
-        all_files = [f for f in all_files if args.scenario_id in os.path.basename(f)]
+    if args.scenario_ids:
+        file_map = {path.stem: path for path in all_files}
+        missing = [sid for sid in args.scenario_ids if sid not in file_map]
+        if missing:
+            print(f"[ERROR] Không tìm thấy các scenario: {', '.join(missing)}", file=sys.stderr)
+            sys.exit(1)
+        all_files = [file_map[sid] for sid in args.scenario_ids]
+    elif args.scenario_id:
+        all_files = [path for path in all_files if path.stem == args.scenario_id]
         if not all_files:
             print(f"[ERROR] Không tìm thấy: {args.scenario_id}", file=sys.stderr)
             sys.exit(1)
 
-    if args.limit:
+    if args.limit is not None:
         all_files = all_files[:args.limit]
 
-    print(f"[Runner] Config     : {args.config}")
-    print(f"[Runner] Run ID     : {args.run_id}")
-    print(f"[Runner] Scenarios  : {len(all_files)} files")
-    print(f"[Runner] Output     : {out_path}")
+    print(f"[Runner] Config         : {args.config}")
+    print(f"[Runner] Run ID         : {args.run_id}")
+    print(f"[Runner] Scenarios      : {len(all_files)} files")
+    print(f"[Runner] Sleep turn     : {args.sleep}s | Sleep scenario: {args.sleep_scenario}s")
+    print(f"[Runner] Persist memory : {args.persist_memory}")
+    print(f"[Runner] Cleanup orders : {args.cleanup_orders}")
+    print(f"[Runner] Output         : {out_path}")
     print()
 
     print("[Runner] Khởi động Agent Harness...")
-    harness = build_default_harness()
+    memory_mode = (
+        ("durable" if args.persist_memory else "evaluation")
+        if args.config == "full"
+        else "disabled"
+    )
+    harness = await build_deepagent_harness_async(memory_mode=memory_mode)
     print("[Runner] Agent sẵn sàng.\n")
 
     total_rows = 0
-    with out_path.open("w", encoding="utf-8") as out_f:
-        for i, fpath in enumerate(all_files, start=1):
-            scenario = json.load(open(fpath, encoding="utf-8"))
-            sid = scenario.get("scenario_id", Path(fpath).stem)
-            print(f"[{i:3d}/{len(all_files)}] {sid} ...", end=" ", flush=True)
+    try:
+        with out_path.open("w", encoding="utf-8") as out_f:
+            for i, fpath in enumerate(all_files, start=1):
+                if i > 1 and args.sleep_scenario > 0:
+                    await asyncio.sleep(args.sleep_scenario)
+                with open(fpath, encoding="utf-8") as scenario_file:
+                    scenario = json.load(scenario_file)
+                sid = scenario.get("scenario_id", fpath.stem)
+                print(f"[{i:3d}/{len(all_files)}] {sid} starting...", flush=True)
 
-            t0 = time.perf_counter()
-            _reset_internal_tool_state()  # ⚠️ Bắt buộc reset giữa các scenario để tránh dính data ảo
-            rows = await run_scenario(scenario, harness, args.config, args.run_id)
-            elapsed = time.perf_counter() - t0
+                t0 = time.perf_counter()
+                try:
+                    rows = await run_scenario(
+                        scenario,
+                        harness,
+                        args.config,
+                        args.run_id,
+                        max_turns=args.max_turns,
+                        sleep_turn=args.sleep,
+                        max_retries=args.max_retries,
+                        cleanup_orders=args.cleanup_orders,
+                    )
+                    elapsed = time.perf_counter() - t0
+                    print(f"[{i:3d}/{len(all_files)}] {sid}: ✓ {len(rows)} turns, {elapsed:.1f}s", flush=True)
+                    for row in rows:
+                        out_f.write(json.dumps(row, ensure_ascii=False) + "\n")
+                        out_f.flush()
+                    total_rows += len(rows)
+                except Exception as scenario_exc:
+                    elapsed = time.perf_counter() - t0
+                    print(f"[{i:3d}/{len(all_files)}] {sid}: FAILED ({elapsed:.1f}s) - {scenario_exc}", flush=True)
+    finally:
+        await harness.__aexit__(None, None, None)
 
-            print(f"✓ {len(rows)} turns, {elapsed:.1f}s")
-            for row in rows:
-                out_f.write(json.dumps(row, ensure_ascii=False) + "\n")
-            total_rows += len(rows)
-
+    report_path = out_path.with_name(f"{out_path.stem}_report.json")
+    if args.scenario_ids:
+        selector = f" --limit {len(args.scenario_ids)}"
+    elif args.scenario_id:
+        selector = f" --scenario-id {args.scenario_id}"
+    elif args.limit is not None:
+        selector = f" --limit {args.limit}"
+    else:
+        selector = ""
     print(f"\n[Runner] Hoàn thành! {total_rows} rows → {out_path}")
-    print(f"\n[Runner] Để chấm điểm, chạy:")
-    print(f"  python {BTC_EVAL_DIR / 'reference_eval.py'} {out_path}")
+    print("\n[Runner] Để chấm điểm bằng team evaluator, chạy:")
+    print(
+        f'  python "{TEAM_EVAL_PATH}" --scenarios "{scenarios_dir}" '
+        f'--trace "{out_path}"{selector} --out "{report_path}"'
+    )
 
 
 if __name__ == "__main__":

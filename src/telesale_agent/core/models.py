@@ -58,6 +58,9 @@ class Perception:
 @dataclass(slots=True)
 class CustomerIdentity:
     customer_id: str | None = None
+    phone: str | None = None
+    zalo_id: str | None = None
+    fb_id: str | None = None
     confidence: float = 0.0
     profile: JsonObject = field(default_factory=dict)
 
@@ -80,6 +83,9 @@ class CallBrief:
     objections: list[str] = field(default_factory=list)
     unresolved_issues: list[str] = field(default_factory=list)
     active_promotions: list[JsonObject] = field(default_factory=list)
+    verified_customer_data: JsonObject = field(default_factory=dict)
+    remembered_preferences: JsonObject = field(default_factory=dict)
+    relevant_episodes: list[JsonObject] = field(default_factory=list)
 
 
 @dataclass(slots=True)
@@ -139,6 +145,7 @@ class ConversationState:
     turn_number: int = 0
     identity: CustomerIdentity | None = None
     customer_profile: JsonObject | None = None
+    customer_memory: JsonObject | None = None
     past_history: JsonObject | None = None
     retrieved_data: RetrievedContext | None = None
     call_brief: CallBrief | None = None
@@ -180,3 +187,6 @@ class TurnResult:
     observation: Observation
     steps: list[AgentStep]
     state: ConversationState
+    tool_calls: list[JsonObject] = field(default_factory=list)
+    memory_writes: list[JsonObject] = field(default_factory=list)
+    usage: JsonObject = field(default_factory=dict)

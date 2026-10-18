@@ -76,27 +76,22 @@ class Customer(Base):
     attributes = Column(JSONB, default=dict)
     
     orders = relationship("Order", back_populates="customer", cascade="all, delete-orphan")
-    sessions = relationship("CustomerSession", back_populates="customer", cascade="all, delete-orphan")
 
 class Order(Base):
     __tablename__ = 'orders'
     order_id = Column(String(50), primary_key=True)
     customer_id = Column(String(50), ForeignKey('customers.customer_id', ondelete="CASCADE"), nullable=False, index=True)
     sku = Column(String(50))
+    qty = Column(Integer, nullable=False, default=1)
     price_vnd = Column(Numeric(15, 2))
+    promo_code = Column(String(50))
+    payment = Column(String(50), nullable=False, default="COD")
+    address = Column(String)
     order_date = Column(Date)
     status = Column(String(50))
     tracking = Column(String(100))
+    exchange_count = Column(Integer, nullable=False, default=0)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     
     customer = relationship("Customer", back_populates="orders")
 
-class CustomerSession(Base):
-    __tablename__ = 'customer_sessions'
-    session_id = Column(String(50), primary_key=True)
-    customer_id = Column(String(50), ForeignKey('customers.customer_id', ondelete="CASCADE"), nullable=False, index=True)
-    session_date = Column(Date)
-    channel = Column(String(50))
-    summary = Column(String)
-    outcome = Column(String(50))
-    
-    customer = relationship("Customer", back_populates="sessions")

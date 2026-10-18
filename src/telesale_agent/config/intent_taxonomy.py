@@ -63,6 +63,18 @@ INTENT_TAXONOMY: list[IntentDef] = [
         skip_retrieval=True,
     ),
     IntentDef(
+        name="update_order",
+        description=(
+            "Customer wants to exchange size/product, return an item, change an "
+            "existing order, or reports that a received size is too tight/loose."
+        ),
+        examples=[
+            "Giày size 39 hơi chật",
+            "Đổi lên size 40 được không?",
+            "Em làm thủ tục đổi cho anh nhé",
+        ],
+    ),
+    IntentDef(
         name="complain",
         description="Customer is unhappy or reporting a problem with a product or service.",
         examples=["Máy bị lỗi rồi", "Chị đợi mãi không thấy hàng"],
@@ -77,6 +89,24 @@ INTENT_TAXONOMY: list[IntentDef] = [
         name="end_call",
         description="Customer signals they want to end the conversation or call back later.",
         examples=["Để chị hỏi lại rồi gọi lại em nhé", "Thôi em ơi chị nghĩ thêm đã"],
+        skip_retrieval=True,
+    ),
+    IntentDef(
+        name="greeting",
+        description="Customer greets the agent or initiates the call.",
+        examples=["Alo", "Chào em", "Ai đấy?"],
+        skip_retrieval=True,
+    ),
+    IntentDef(
+        name="acknowledge",
+        description="Customer acknowledges what the agent said without asking a new question.",
+        examples=["Ừ em", "Dạ", "Chị nghe đây", "Ok em"],
+        skip_retrieval=True,
+    ),
+    IntentDef(
+        name="out_of_domain",
+        description="Customer asks something completely unrelated to the shop, products, or services (e.g. general knowledge, chit-chat).",
+        examples=["Thời tiết hôm nay thế nào?", "Tổng thống Mỹ là ai?", "Em ăn cơm chưa?"],
         skip_retrieval=True,
     ),
     IntentDef(

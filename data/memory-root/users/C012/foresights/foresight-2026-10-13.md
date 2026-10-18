@@ -1,0 +1,3 @@
+- Offer more product details or proceed with purchase.
+- Ask the customer for order details to locate it in the system.
+- Ask the customer for an order ID or an alternative phone number used for the purchase.

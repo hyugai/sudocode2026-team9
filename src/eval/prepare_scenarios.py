@@ -7,7 +7,7 @@ Usage:
     python src/eval/prepare_scenarios.py --src dataset/iterative-refinement/02_scenarios_complete.jsonl
                                         --out dataset/iterative-refinement/scenarios
 
-Mỗi dòng trong JSONL → một file SC-G9-xxx.json trong thư mục output.
+Mỗi dòng trong JSONL → một file `<scenario_id>.json` trong thư mục output.
 """
 
 import argparse

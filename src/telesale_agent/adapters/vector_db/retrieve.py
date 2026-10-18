@@ -1,8 +1,6 @@
 import logging
+import os
 from pathlib import Path
-
-from langchain_chroma import Chroma
-from langchain_huggingface import HuggingFaceEmbeddings
 
 from telesale_agent.core.interfaces import Retriever
 from telesale_agent.core.models import RetrievedContext, TurnContext
@@ -16,14 +14,46 @@ class VectorDBRetriever(Retriever):
     """
     
     def __init__(self, db_dir: str | Path | None = None):
+        self.db_dir = ""
+        self.embeddings = None
+        self.vector_store = None
+        enabled = os.environ.get("ENABLE_VECTOR_RAG", "true").strip().lower()
+        if enabled not in {"1", "true", "yes", "on"}:
+            logger.info("VectorDB retrieval is disabled by ENABLE_VECTOR_RAG.")
+            return
+
+        retrieval_mode = os.environ.get(
+            "KNOWLEDGE_RETRIEVAL_MODE", "mcp"
+        ).strip().lower()
+        if retrieval_mode == "mcp":
+            logger.info(
+                "Policy retrieval is delegated to Knowledge MCP; "
+                "the application retriever will only query product data."
+            )
+            return
+        if retrieval_mode != "direct":
+            logger.warning(
+                "Unknown KNOWLEDGE_RETRIEVAL_MODE=%r; using MCP mode.",
+                retrieval_mode,
+            )
+            return
+
         if db_dir is None:
-            # Default to the dataset/chroma_db folder created by ingest script
             project_root = Path(__file__).resolve().parents[4]
-            db_dir = project_root / "dataset" / "chroma_db"
+            db_dir = os.environ.get("CHROMA_DB_DIR") or project_root / "data" / "chroma_db"
             
         self.db_dir = str(db_dir)
+
+        if not Path(self.db_dir).is_dir():
+            logger.warning("VectorDB directory does not exist: %s", self.db_dir)
+            self.embeddings = None
+            self.vector_store = None
+            return
         
         try:
+            from langchain_chroma import Chroma
+            from langchain_huggingface import HuggingFaceEmbeddings
+
             logger.info("Initializing VectorDB Retriever (loading Embeddings & Chroma)...")
             self.embeddings = HuggingFaceEmbeddings(model_name="keepitreal/vietnamese-sbert")
             self.vector_store = Chroma(
@@ -38,14 +68,14 @@ class VectorDBRetriever(Retriever):
     async def retrieve(self, context: TurnContext) -> RetrievedContext:
         knowledge = []
         
-        if not self.vector_store or not context.perception:
+        if not context.perception:
             return RetrievedContext(knowledge=knowledge)
             
         intents = context.perception.intents or [context.perception.intent]
         transcript = context.perception.transcript.lower()
         
         # 1. Perform semantic search for policy-related intents
-        if any(intent in intents for intent in ["ask_policy", "price_objection", "complain"]):
+        if self.vector_store and any(intent in intents for intent in ["ask_policy", "price_objection", "complain"]):
             
             results = self.vector_store.similarity_search(transcript, k=3)  
             for doc in results:
@@ -56,7 +86,7 @@ class VectorDBRetriever(Retriever):
                     "section": doc.metadata.get("Header 2", "") or doc.metadata.get("Header 1", "")
                 })
                 
-        # 2. Handle Product retrieval using Supabase Database (db_client)
+        # 2. Handle product retrieval using PostgreSQL (db_client)
         if "ask_product" in intents:
             from telesale_agent.adapters.db.client import db_client
             

@@ -8,10 +8,12 @@ from telesale_agent.adapters.db.client import db_client
 logger = logging.getLogger(__name__)
 
 
-class SupabaseCRMRetriever(CRMRetriever):
+class PostgresCRMRetriever(CRMRetriever):
     """
-    CRM Retriever that fetches customer profile from Supabase via SQLAlchemy.
-    Replaces FileCRMRetriever — no longer reads from local JSON seed file.
+    CRM retriever backed by PostgreSQL via SQLAlchemy.
+
+    CRM owns verified customer and transactional data. Learned preferences and
+    conversation episodes are loaded by CustomerMemoryRepository instead.
     """
 
     async def retrieve_profile(self, ctx: TurnContext) -> Dict[str, Any]:
@@ -20,40 +22,60 @@ class SupabaseCRMRetriever(CRMRetriever):
             logger.debug("No customer_id in context. Returning empty profile.")
             return {}
 
-        phone = str(ctx.identity.customer_id).strip()
-        result = db_client.get_customer(phone=phone)
+        customer_id = str(ctx.identity.customer_id).strip()
+        result = db_client.get_customer_by_id(customer_id)
 
         if not result.get("found"):
-            logger.info(f"No customer found in Supabase for phone={phone}. Treating as new customer.")
-            return {"phone": phone, "is_new_customer": True}
+            logger.info("No customer found in PostgreSQL for customer_id=%s", customer_id)
+            return {
+                "customer_id": customer_id,
+                "phone": ctx.identity.phone,
+                "is_new_customer": True,
+            }
 
         if result.get("ambiguous"):
-            logger.warning(f"Ambiguous phone={phone}: multiple customers share this number.")
+            logger.warning("Ambiguous CRM identity for customer_id=%s", customer_id)
             return {
-                "phone": phone,
+                "customer_id": customer_id,
+                "phone": ctx.identity.phone,
                 "is_ambiguous": True,
                 "candidates": result.get("candidates", [])
             }
 
-        # Combined attributes to a profile dictionary
-        profile = dict(result)
-        if "attributes" in result:
-            profile.update(result["attributes"])
-            
-        return profile
+        attributes = result.get("attributes") or {}
+        saved_address = (
+            attributes.get("address")
+            or attributes.get("delivery_address")
+            or attributes.get("shipping_address")
+        )
+
+        # Expose only verified operational fields. Conversation memory remains
+        # file-backed and is never flattened into the CRM profile.
+        return {
+            "found": True,
+            "customer_id": result.get("customer_id"),
+            "name": result.get("name"),
+            "honorific": result.get("honorific"),
+            "phone": result.get("phone"),
+            "region": result.get("region"),
+            "address": saved_address,
+        }
 
     async def precompute_brief(self, ctx: TurnContext) -> Dict[str, Any]:
-        """Fetch past orders and session history for the customer."""
+        """Fetch verified order history for the customer."""
         if not ctx.identity or not ctx.identity.customer_id:
-            return {"past_orders": [], "sessions": []}
+            return {"past_orders": []}
 
-        phone = str(ctx.identity.customer_id).strip()
-        result = db_client.get_customer(phone=phone)
+        customer_id = str(ctx.identity.customer_id).strip()
+        result = db_client.get_customer_by_id(customer_id)
 
         if not result.get("found") or result.get("ambiguous"):
-            return {"past_orders": [], "sessions": []}
+            return {"past_orders": []}
 
         return {
             "past_orders": result.get("orders", []),
-            "sessions": result.get("sessions", [])
         }
+
+
+# Compatibility alias. New code should use PostgresCRMRetriever.
+SupabaseCRMRetriever = PostgresCRMRetriever
