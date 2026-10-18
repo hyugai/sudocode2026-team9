@@ -4,6 +4,146 @@ Thư mục `src/eval/` chứa pipeline chạy scenario, ghi trace, chấm metric
 
 Chạy tất cả lệnh trong tài liệu này từ thư mục gốc repository bằng PowerShell.
 
+## Chạy bộ đánh giá 40 scenario đầu bằng một lệnh
+
+```powershell
+.\.venv\Scripts\python.exe -X utf8 src\eval\run_suite.py
+```
+
+Eval mặc định dùng **Gemini `gemini-3.6-flash`**, cùng model với hệ thống.
+Mọi entry point sinh trace/benchmark/judge dùng chung `eval/model_config.py`;
+NLU, main agent, memory persister và baseline nhận cùng provider/model.
+Không kế thừa giá trị Groq cũ từ `LLM_PROVIDER` trong `.env`. Thứ tự ưu tiên:
+CLI `--llm-provider/--llm-model` → `EVAL_LLM_PROVIDER/EVAL_LLM_MODEL` → Gemini 3.6.
+API key đọc từ `GOOGLE_API_KEY` hoặc `GEMINI_API_KEY` hiện có trong `.env`;
+không thay file `.env` hay mặc định toàn ứng dụng.
+
+Entry point này giữ các thành phần hiện có: `generate_traces.run_scenario` chạy
+agent, `trace_extractors` tạo evidence, `team_eval.evaluate_team` chấm bằng công
+thức BTC và metric team. Không gửi ground truth/scoring conditions vào agent.
+
+Mặc định chọn **SC-001 đến SC-040**, gồm **80 call, 250 turn và 250 WAV**.
+Chạy toàn bộ các lượt ở bốn nhóm, tuần tự trên cùng máy/API/model:
+
+1. `text/baseline_no_memory`: không đọc/ghi learned memory giữa các call.
+2. `text/full`: memory riêng theo scenario, giữ qua các call cùng scenario.
+3. `audio/baseline_no_memory`: WAV thật qua Zipformer local, không memory.
+4. `audio/full`: cùng WAV qua Zipformer và có memory.
+
+Text dùng `customer_turns_asr` khi scenario có noisy input. Audio dùng đúng WAV
+trong manifest; raw transcript và text đã chuẩn hóa được lưu riêng trong trace.
+Preflight đối chiếu manifest, source text, SHA-256 và nội dung WAV; thiếu audio
+hoặc audio không khớp sẽ dừng, không thay bằng ground-truth text.
+
+Điều kiện môi trường: `.venv` đã cài dependencies, PostgreSQL đang chạy và có
+CRM/catalog seed, Gemini API key trong `.env`, weights Zipformer
+đã có trong `ASR_MODEL_DIR`, FFmpeg khả dụng.
+Lệnh gọi LLM thật, tạo đơn test và cleanup đúng các `order_id` đã tạo sau scenario.
+Giữ hội thoại trong từng call ở cả hai cấu hình; baseline chỉ loại learned memory
+liên cuộc gọi, vẫn có cùng CRM và business tools.
+
+Các metric, latency và kết luận so sánh được in trực tiếp ra terminal. Output mới
+được tạo dưới `outputs/benchmark/benchmark_v<timestamp>/`:
+
+```text
+metadata.json                    # CPU/RAM, API/model/params, dataset hash, thời điểm
+report.json                      # 4 nhóm + so sánh + acceptance gates
+results.partial.json             # kết quả các nhóm đã hoàn tất
+text/{full,baseline_no_memory}/
+    trace.jsonl
+    report.json
+    memory/                      # chỉ full ghi learned memory
+audio/{full,baseline_no_memory}/
+    trace.jsonl
+    report.json                  # thêm WER/CER từ transcript ASR thật
+    asr/{ground_truth,hypotheses}.json
+    memory/
+```
+
+`comparison.text` và `comparison.audio` kiểm tra riêng:
+
+- RQR giảm tương đối `(baseline - full) / baseline * 100 >= 40%`.
+- TSR của full `>= 70%`.
+- HR **chỉ giá** của full `<= 5%`; giá/khuyến mãi tổng hợp vẫn được báo riêng.
+
+Baseline RQR bằng 0 hoặc không có claim giá kiểm chứng được trả `inconclusive`.
+Trace thiếu/trùng lượt, có `_error` hoặc failed LLM request trả `invalid`;
+không được dùng làm bằng chứng đạt ngưỡng. Có failed request đã phục hồi vẫn
+được đánh dấu cần review để không che lỗi NLU fallback.
+
+Exit code: `0` chạy đầy đủ và đạt cả ba ngưỡng ở mọi modality;
+`2` lỗi/incomplete trace; `3` chạy đầy đủ nhưng chưa đạt hoặc chưa đủ bằng chứng.
+Lỗi billing/auth/model access không tự hết khi chờ (401/402/403/404) làm suite
+dừng sớm với `status=blocked_provider`. Những nhóm chưa chạy được đánh dấu
+`skipped`, không được coi là pass. Ví dụ Google trả 402 “prepayment credits
+are depleted”: cần nạp credit cho project hoặc cập nhật đúng key của hệ thống
+vào `.env`, rồi chạy version mới. Không cần gửi API key vào chat.
+Script giữ các kết quả thực tế, không sửa metric để ép đạt mục tiêu. Không ghi đè
+output đã có. Dừng một nhóm sau 3 scenario liên tiếp mà toàn bộ lượt lỗi để tránh
+tiếp tục tiêu quota khi dịch vụ không khả dụng; các lượt còn thiếu ghi trong report.
+
+Gemini mặc định **0 giây/request, 0 giây/turn**; không dùng khoảng chờ 30 giây
+của benchmark Groq cũ. Gemini 3.6 dùng sampling do provider quy định, không gửi
+temperature tùy chỉnh không được hỗ trợ. Thinking level kế thừa môi trường
+của ứng dụng; có thể chỉ định `--thinking-level` khi cần và được ghi vào metadata.
+Có 2 retry ở cấp provider request, không retry cả turn.
+`--request-interval` và `--model-retries` cho phép cấu hình theo quota thực tế.
+Thời gian chờ trong request được tính vào latency backend, không bị trừ để làm
+đẹp SLA. Metadata ghi đúng model/params của lần chạy. Nếu chủ động chọn lại
+Groq GPT-OSS, mặc định riêng cho provider đó vẫn là 30 giây/request.
+
+Các lệnh kiểm tra nhanh:
+
+```powershell
+# Chỉ kiểm tra đủ scenario/audio và checksum, không gọi API
+.\.venv\Scripts\python.exe -X utf8 src\eval\run_suite.py --preflight-only
+
+# Đo riêng ASR đủ 250 WAV, không gọi LLM
+.\.venv\Scripts\python.exe -X utf8 src\eval\run_suite.py --asr-only
+
+# Pilot một scenario ở cả bốn nhóm
+.\.venv\Scripts\python.exe -X utf8 src\eval\run_suite.py --limit 1
+
+# Chạy đủ 40, chọn tên output và model rõ ràng
+.\.venv\Scripts\python.exe -X utf8 src\eval\run_suite.py `
+  --version benchmark_v12 --limit 40 --llm-provider gemini `
+  --llm-model gemini-3.6-flash --request-interval 0
+
+# Chạy thêm MWQ cho full (tốn thêm request; mặc định không chạy)
+.\.venv\Scripts\python.exe -X utf8 src\eval\run_suite.py --judge-memory
+
+# Regression test riêng cho eval
+.\.venv\Scripts\python.exe -X utf8 -m unittest discover -s src\eval -p test_*.py -v
+```
+
+### Latency theo hướng dẫn BTC
+
+- Đo tại `run_turn_impl`, dùng `perf_counter`; không đo UI/client network.
+- Hệ thống trả lời không streaming: **TTFT = Total** tại thời điểm response
+  sẵn sàng, trước khi persist memory; tổng wall-time gồm persistence lưu riêng.
+- WAV offline: ASR đo riêng; không cộng vào TTFT/Total. Báo ms/phút audio.
+- Call Brief: từ lúc bắt đầu nhận diện caller đến lúc brief hoàn tất, bao gồm
+  hydrate CRM/order/cross-channel history, NLU, retrieval và refresh memory.
+  Wrapper eval kiểm tra lại tồn kho/khuyến mãi theo `call_date` của SKU đã nhớ
+  trước khi brief ready. Facts/episodes đã persist được khai báo là precomputed.
+- Loại 3 turn warm-up đầu **mỗi nhóm**; tính p95 bằng chính `REFERENCE.p95`.
+  Cảnh báo nếu còn dưới 100 lượt đo được.
+- Báo p95 TTFT <= 3000 ms, p95 Total <= 8000 ms, Call Brief tối đa <= 5000 ms
+  cho M1 chat/offline upload.
+- **TTFA để null**: chưa có VAD/TTS/byte audio output; không lấy thời gian tool
+  làm TTFA. Chưa thể chứng nhận SLA voice M2 TTFA <= 2,5 giây.
+- Trace cũ có latency ước lượng không được coi là latency đo thật; phải chạy lại.
+
+### Điều chỉnh độ đúng của phép chấm
+
+File BTC `reference_eval.py` được giữ nguyên. `reference_task_success_rate` lưu
+điểm tham chiếu để tái lập; `task_success_rate` của team bổ sung yêu cầu có lượt
+quan sát và kết quả mutation thành công. Calls-to-Close chỉ tính order thành công.
+HR có thêm `price_only`; extractor lấy được giá nói sai/không có tool thay vì chỉ
+nhận giá trùng tool. RQR tách câu hỏi khỏi câu trần thuật đứng trước. RAG coi
+result thiếu là miss. HR/RQR/CCR vẫn dùng extractor heuristic, chưa thay thế
+việc review free text và provenance/value của memory.
+
 ## 1. Kiến trúc eval hiện tại
 
 ```text
@@ -164,7 +304,7 @@ Retrieval/read tools chỉ được chấm khi scenario yêu cầu rõ. Các mut
 Report latency cho:
 
 - `ttft`: time to first token;
-- `ttfa`: time to first action nếu runtime ghi nhận được;
+- `ttfa`: time từ VAD end-of-speech đến byte audio trả lời đầu tiên; hiện `null`;
 - `total`: tổng thời gian xử lý turn;
 - `call_brief`: thời gian build call brief.
 
@@ -245,13 +385,13 @@ không phải lỗi của tên `policy.search`.
   --version benchmark_v5 `
   --limit 3 `
   --llm-provider gemini `
-  --llm-model gemini-3-flash-preview `
+  --llm-model gemini-3.6-flash `
   --request-timeout 60 `
   --memory-persister-mode llm_learning `
   --persist-memory `
   --cleanup-orders `
-  --sleep 20 `
-  --sleep-scenario 3 `
+  --sleep 0 `
+  --sleep-scenario 0 `
   --max-retries 1
 ```
 
@@ -264,7 +404,7 @@ Các API key và `DATABASE_URL` được đọc từ `.env`; không được cop
   --version benchmark_v6 `
   --scenario-id SC-003 `
   --llm-provider gemini `
-  --llm-model gemini-3-flash-preview `
+  --llm-model gemini-3.6-flash `
   --memory-persister-mode llm_learning `
   --persist-memory `
   --cleanup-orders
@@ -277,12 +417,12 @@ Các API key và `DATABASE_URL` được đọc từ `.env`; không được cop
   --version benchmark_v7 `
   --scenarios "dataset\iterative-refinement\scenarios_complete dataset" `
   --llm-provider gemini `
-  --llm-model gemini-3-flash-preview `
+  --llm-model gemini-3.6-flash `
   --memory-persister-mode llm_learning `
   --persist-memory `
   --cleanup-orders `
-  --sleep 20 `
-  --sleep-scenario 3 `
+  --sleep 0 `
+  --sleep-scenario 0 `
   --max-retries 1
 ```
 
@@ -310,7 +450,7 @@ Phải truyền lại cùng `--scenario-id` hoặc `--limit` đã dùng khi gene
   --limit 3 `
   --trace "outputs\benchmark\benchmark_v5\trace.jsonl" `
   --provider gemini `
-  --model gemini-3-flash-preview `
+  --model gemini-3.6-flash `
   --out "outputs\benchmark\benchmark_v5\memory_judge.json"
 ```
 
@@ -354,9 +494,9 @@ Với `--persist-memory`, mỗi benchmark dùng memory root riêng trong thư m�
 
 ### P0 — Có thể làm metric tốt hơn thực tế
 
-1. **TSR chưa kiểm tra tool result.** Reference evaluator chỉ kiểm tra tool đã được gọi với args khớp. Trong `benchmark_v4`, SC-003 gọi đúng `order.create` nhưng result là `out_of_stock`; evaluator vẫn tính scenario pass. Cần thêm Tool Execution Success và dùng result khi quyết định task success.
+1. **TSR tham chiếu chưa kiểm tra tool result.** Team evaluator v2 đã bổ sung kiểm tra result của mutation và call có dữ liệu; điểm BTC nguyên bản được giữ riêng ở `reference_task_success_rate`.
 
-2. **Calls-to-Close cũng chỉ nhìn thấy `order.create`.** Một order call thất bại vẫn có thể bị tính là đã close.
+2. **Calls-to-Close tham chiếu chỉ nhìn tên tool.** Team evaluator v2 đã lọc result lỗi và yêu cầu `order_id` trước khi tính đã close.
 
 3. **Tool-Call Accuracy không phải Tool Execution Accuracy.** Metric hiện tại không phạt tool trả business error nếu tên và required args đúng.
 

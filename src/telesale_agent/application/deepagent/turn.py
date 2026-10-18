@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import os
 import logging
+import time
 
 from telesale_agent.core.models import (
     TurnContext,
@@ -58,8 +59,9 @@ async def run_turn(
     usage_token = begin_usage_collection()
     try:
         result = await harness._run_turn_impl(turn_input, state)
-    except BaseException:
-        finish_usage_collection(usage_token)
+    except BaseException as exc:
+        usage = finish_usage_collection(usage_token)
+        exc.telesale_usage = usage
         raise
     result.usage = finish_usage_collection(usage_token)
     return result
@@ -81,6 +83,9 @@ async def run_turn_impl(
         raise ValueError("state and input must belong to the same conversation")
 
     context = TurnContext(input=turn_input, state=state)
+    backend_started = time.perf_counter()
+    asr_ms = None
+    new_call = not context.state.identity
     # ConversationState is the canonical application history. Keep a copy
     # from before this turn so a fresh DeepAgent checkpoint can receive a
     # bounded amount of recent dialogue instead of its entire raw history.
@@ -92,7 +97,9 @@ async def run_turn_impl(
     if context.input.audio is not None and not context.input.text:
         if harness.asr is None:
             raise ASRUnavailableError("Chưa cấu hình ASR cho input giọng nói.")
+        asr_started = time.perf_counter()
         transcript = await harness.asr.transcribe(context)
+        asr_ms = (time.perf_counter() - asr_started) * 1000
         if not transcript or not transcript.strip():
             raise AudioInputError("Không nhận dạng được giọng nói trong ghi âm.")
         context.input.metadata["raw_asr_transcript"] = transcript.strip()
@@ -101,6 +108,10 @@ async def run_turn_impl(
         context.input.metadata.setdefault("raw_user_text", context.input.text)
         context.input.text = normalize_chat_text(context.input.text)
 
+    # Offline file ASR is excluded from M1 response latency (BTC guidance).
+    response_started = time.perf_counter()
+    identity_started = response_started if new_call else None
+    call_brief_ms = None
     # 2. Pre-processing Nodes
     # 2a. Initialization phase (Only runs once per conversation)
     if not context.state.identity:
@@ -148,6 +159,8 @@ async def run_turn_impl(
     if harness.call_brief:
         context.call_brief = await harness.call_brief.build_call_brief(context)
         context.state.call_brief = context.call_brief
+        if identity_started is not None:
+            call_brief_ms = (time.perf_counter() - identity_started) * 1000
 
     user_text, enriched_user_msg = build_base_user_message(
         context,
@@ -284,6 +297,21 @@ async def run_turn_impl(
         if context.policy.safe_plan is not None:
             response_text = context.policy.safe_plan.response_text or ""
 
+    response_ready = time.perf_counter()
+    # The backend returns a complete response, rather than streaming tokens.
+    # Persistence happens afterwards and is reported separately.
+    response_ms = (response_ready - response_started) * 1000
+    latency = {
+        "ttft_ms": round(response_ms, 3),
+        "total_ms": round(response_ms, 3),
+        "ttfa_ms": None,  # No VAD/TTS/audio playback path is implemented.
+        "asr_ms": round(asr_ms, 3) if asr_ms is not None else None,
+        "call_brief_ms": round(call_brief_ms, 3) if call_brief_ms is not None else None,
+        "backend_total_ms": round((response_ready - backend_started) * 1000, 3),
+        "measurement_mode": "non_streaming",
+        "precomputed_parts": ["persisted_"+key for key in ("facts","episodes","atomic_facts","foresights")
+                              if (context.state.customer_memory or {}).get(key)],
+    }
     print(f"   -> Agent Response: {response_text}")
     print("\nDEEP AGENT RUN COMPLETED!")
     print("="*50 + "\n")
@@ -316,5 +344,6 @@ async def run_turn_impl(
         state=state,
         tool_calls=tool_calls,
         memory_writes=memory_writes,
+        latency=latency,
     )
 

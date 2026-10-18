@@ -7,7 +7,7 @@ from difflib import SequenceMatcher
 
 from pydantic import BaseModel, Field
 
-from telesale_agent.adapters.llm.model_factory import create_chat_model
+from telesale_agent.adapters.llm.model_factory import create_chat_model, structured_output
 from telesale_agent.application.memory.persist import persist_turn_memory
 from telesale_agent.core.interfaces import CustomerMemoryRepository, Persister
 from telesale_agent.core.models import TurnContext
@@ -79,7 +79,7 @@ class LLMPersister(Persister):
 
     def __init__(self, memory: CustomerMemoryRepository):
         self.llm = create_chat_model(temperature=0)
-        self.structured_llm = self.llm.with_structured_output(EpisodeSummarySchema)
+        self.structured_llm = structured_output(self.llm,EpisodeSummarySchema)
         self.memory = memory
 
     @staticmethod

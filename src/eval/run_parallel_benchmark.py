@@ -36,6 +36,8 @@ if hasattr(sys.stderr, "reconfigure"):
     sys.stderr.reconfigure(encoding="utf-8", errors="replace")
 HERE = Path(__file__).resolve().parent
 REPO_ROOT = HERE.parent.parent
+sys.path.insert(0,str(REPO_ROOT / "src"))
+from eval.model_config import configure_eval_model
 DEFAULT_SCENARIOS = (
     REPO_ROOT / "dataset" / "iterative-refinement" / "scenarios_complete dataset"
 )
@@ -527,10 +529,7 @@ def main() -> int:
     readme_path = run_dir / "README.md"
     _write_partition_manifest(run_dir / "partitions.json", partitions)
 
-    if args.llm_provider:
-        os.environ["LLM_PROVIDER"] = args.llm_provider
-    if args.llm_model:
-        os.environ["LLM_MODEL"] = args.llm_model
+    configure_eval_model(args.llm_provider,args.llm_model)
     if args.request_timeout is not None:
         os.environ["LLM_REQUEST_TIMEOUT_SECONDS"] = str(args.request_timeout)
     if args.max_output_tokens is not None:

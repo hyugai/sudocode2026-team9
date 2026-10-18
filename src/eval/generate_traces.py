@@ -12,6 +12,7 @@ import os
 import re
 import sys
 import time
+import wave
 from datetime import date, timedelta
 from pathlib import Path
 
@@ -58,6 +59,8 @@ from eval.trace_extractors import (  # noqa: E402
     extract_facts_used,
     extract_questions,
 )
+from eval.benchmark_support import audio_path, FreshCallBrief, validate_inputs  # noqa: E402
+from eval.model_config import configure_eval_model, permanent_provider_error  # noqa: E402
 
 
 # ---------------------------------------------------------------------------
@@ -104,6 +107,8 @@ async def run_scenario(
     sleep_turn: float = 0.0,
     max_retries: int = 1,
     cleanup_orders: bool = True,
+    input_kind: str = "text",
+    audio_root: Path | None = None,
 ) -> list[dict]:
     rows = []
     scenario_id = scenario["scenario_id"]
@@ -127,6 +132,8 @@ async def run_scenario(
             deleted = db_client.delete_orders(created_order_ids)
             print(f" [cleanup: {deleted} eval order(s)]", end="", flush=True)
         except Exception as cleanup_exc:
+            if rows:
+                rows[-1]["_cleanup_error"] = str(cleanup_exc)
             print(
                 f"\n  [WARN] Could not clean eval orders {sorted(created_order_ids)}: "
                 f"{cleanup_exc}",
@@ -192,9 +199,18 @@ async def run_scenario(
                 await asyncio.sleep(sleep_turn)
             t0 = time.perf_counter()
             try:
+                audio_file = None
+                audio_info = None
+                if input_kind == "audio":
+                    if audio_root is None:
+                        raise ValueError("audio_root is required for audio evaluation")
+                    audio_file = audio_path(audio_root, scenario_id, call_key, turn_idx)
+                    with wave.open(str(audio_file), "rb") as wav:
+                        audio_info = {"path":str(audio_file), "duration_seconds":wav.getnframes()/wav.getframerate()}
                 turn_input = TurnInput(
                     conversation_id=conversation_id,
-                    text=customer_text,
+                    text=None if audio_file else customer_text,
+                    audio=audio_file.read_bytes() if audio_file else None,
                     channel=Channel.CHAT,
                     customer_hint=customer_phone,
                     metadata={
@@ -211,7 +227,7 @@ async def run_scenario(
                     except Exception as turn_exc:
                         err_str = str(turn_exc)
                         is_request_too_large = (
-                            "413" in err_str
+                            getattr(turn_exc,"status_code",None) == 413
                             or "request too large" in err_str.lower()
                             or "request_too_large" in err_str.lower()
                         )
@@ -254,7 +270,9 @@ async def run_scenario(
 
                 conv_state = result.state
                 total_ms = int((time.perf_counter() - t0) * 1000)
-                ttft_ms = max(100, total_ms // 3)
+                latency = dict(getattr(result, "latency", {}) or {})
+                if not latency:
+                    latency = {"ttft_ms":None,"total_ms":total_ms,"ttfa_ms":None,"measurement_mode":"unavailable"}
 
                 tool_calls = _extract_tool_calls(result)
                 created_order_ids.update(
@@ -291,7 +309,9 @@ async def run_scenario(
                     "scenario_id": scenario_id,
                     "call": call_key,
                     "turn": turn_idx,
-                    "customer_text": customer_text,
+                    "customer_text": turn_input.metadata.get("raw_asr_transcript", customer_text),
+                    "reference_customer_text": spec.get("customer_turns", customer_turns)[turn_idx - 1],
+                    "normalized_customer_text": turn_input.text,
                     "agent_text": response_text,
                     "questions": extract_questions(response_text),
                     "facts_used": (
@@ -310,15 +330,14 @@ async def run_scenario(
                     "memory_writes": [] if is_baseline else trace_memory_writes,
                     "usage": result.usage,
                     "customer_input_mode": input_mode,
-                    "latency": {
-                        "ttft_ms": ttft_ms,
-                        "total_ms": total_ms,
-                        "ttfa_ms": total_ms if tool_calls else None,
-                    },
+                    "input_kind": input_kind,
+                    "latency": latency,
+                    "runner_total_ms": total_ms,
                 }
-                if turn_idx == 1 and call_key != "call_1":
-                    # baseline không build call brief → null; full thì có latency thực
-                    row["call_brief_latency_ms"] = None if is_baseline else ttft_ms
+                if audio_info:
+                    row["audio"] = audio_info
+                if turn_idx == 1:
+                    row["call_brief_latency_ms"] = latency.get("call_brief_ms")
 
             except Exception as exc:
                 total_ms = int((time.perf_counter() - t0) * 1000)
@@ -336,7 +355,7 @@ async def run_scenario(
                     "claims": [],
                     "tool_calls": [],
                     "memory_writes": [],
-                    "usage": {
+                    "usage": getattr(exc,"telesale_usage",None) or {
                         "requests": 0,
                         "failed_requests": 0,
                         "input_tokens": 0,
@@ -344,10 +363,15 @@ async def run_scenario(
                         "total_tokens": 0,
                     },
                     "customer_input_mode": input_mode,
+                    "input_kind": input_kind,
                     "latency": {"ttft_ms": None, "total_ms": total_ms, "ttfa_ms": None},
                     "_error": str(exc),
+                    "_fatal_provider_error": permanent_provider_error(exc),
                 }
             rows.append(row)
+            if row.get("_fatal_provider_error"):
+                cleanup_created_orders()
+                return rows
             if max_turns is not None and len(rows) >= max_turns:
                 cleanup_created_orders()
                 return rows
@@ -381,6 +405,10 @@ async def main():
                         help="Chỉ chạy N scenario đầu (để test nhanh)")
     parser.add_argument("--scenario-id", default=None, dest="scenario_id",
                         help="Chỉ chạy một scenario cụ thể, vd: SC-001")
+    parser.add_argument("--input-kind", choices=["text","audio"], default="text")
+    parser.add_argument("--llm-provider",default=None)
+    parser.add_argument("--llm-model",default=None)
+    parser.add_argument("--audio-root", type=Path, default=REPO_ROOT / "dataset/iterative-refinement/audio")
     parser.add_argument(
         "--scenario-ids",
         nargs="+",
@@ -397,8 +425,8 @@ async def main():
     parser.add_argument(
         "--sleep",
         type=float,
-        default=20.0,
-        help="Số giây nghỉ giữa mỗi turn để tránh chạm giới hạn TPM/RPM (default: 20.0)",
+        default=0.0,
+        help="Số giây nghỉ giữa mỗi turn (default: 0.0)",
     )
     parser.add_argument(
         "--max-retries",
@@ -412,8 +440,8 @@ async def main():
     parser.add_argument(
         "--sleep-scenario",
         type=float,
-        default=3.0,
-        help="Số giây nghỉ giữa mỗi scenario (default: 3.0)",
+        default=0.0,
+        help="Số giây nghỉ giữa mỗi scenario (default: 0.0)",
     )
     parser.add_argument(
         "--persist-memory",
@@ -434,6 +462,7 @@ async def main():
         ),
     )
     args = parser.parse_args()
+    configure_eval_model(args.llm_provider,args.llm_model)
 
     if args.limit is not None and args.limit <= 0:
         parser.error("--limit must be greater than zero")
@@ -472,6 +501,8 @@ async def main():
 
     if args.limit is not None:
         all_files = all_files[:args.limit]
+    selected = {p.stem:json.loads(p.read_text(encoding="utf-8")) for p in all_files}
+    validate_inputs(selected, args.audio_root if args.input_kind == "audio" else None)
 
     print(f"[Runner] Config         : {args.config}")
     print(f"[Runner] Run ID         : {args.run_id}")
@@ -489,9 +520,11 @@ async def main():
         else "disabled"
     )
     harness = await build_deepagent_harness_async(memory_mode=memory_mode)
+    harness.call_brief = FreshCallBrief(harness.call_brief, db_client)
     print("[Runner] Agent sẵn sàng.\n")
 
     total_rows = 0
+    failures = 0
     try:
         with out_path.open("w", encoding="utf-8") as out_f:
             for i, fpath in enumerate(all_files, start=1):
@@ -513,14 +546,22 @@ async def main():
                         sleep_turn=args.sleep,
                         max_retries=args.max_retries,
                         cleanup_orders=args.cleanup_orders,
+                        input_kind=args.input_kind,
+                        audio_root=args.audio_root,
                     )
                     elapsed = time.perf_counter() - t0
                     print(f"[{i:3d}/{len(all_files)}] {sid}: ✓ {len(rows)} turns, {elapsed:.1f}s", flush=True)
                     for row in rows:
+                        row["latency_warmup"] = total_rows < 3
+                        total_rows += 1
+                        failures += int(bool(row.get("_error")))
                         out_f.write(json.dumps(row, ensure_ascii=False) + "\n")
                         out_f.flush()
-                    total_rows += len(rows)
+                    if any(row.get("_fatal_provider_error") for row in rows):
+                        print("[Runner] Stopping: provider billing/auth/model access needs attention.",flush=True)
+                        break
                 except Exception as scenario_exc:
+                    failures += 1
                     elapsed = time.perf_counter() - t0
                     print(f"[{i:3d}/{len(all_files)}] {sid}: FAILED ({elapsed:.1f}s) - {scenario_exc}", flush=True)
     finally:
@@ -528,7 +569,7 @@ async def main():
 
     report_path = out_path.with_name(f"{out_path.stem}_report.json")
     if args.scenario_ids:
-        selector = f" --limit {len(args.scenario_ids)}"
+        selector = f" --scenario-ids {','.join(args.scenario_ids)}"
     elif args.scenario_id:
         selector = f" --scenario-id {args.scenario_id}"
     elif args.limit is not None:
@@ -541,7 +582,8 @@ async def main():
         f'  python "{TEAM_EVAL_PATH}" --scenarios "{scenarios_dir}" '
         f'--trace "{out_path}"{selector} --out "{report_path}"'
     )
+    return 2 if failures else 0
 
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    raise SystemExit(asyncio.run(main()))

@@ -190,3 +190,4 @@ class TurnResult:
     tool_calls: list[JsonObject] = field(default_factory=list)
     memory_writes: list[JsonObject] = field(default_factory=list)
     usage: JsonObject = field(default_factory=dict)
+    latency: JsonObject = field(default_factory=dict)

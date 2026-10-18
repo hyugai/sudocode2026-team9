@@ -27,6 +27,18 @@ _DEFAULT_MODELS = {
 _GEMINI_FIXED_SAMPLING_MODELS = frozenset(
     {"gemini-3.5-flash-lite", "gemini-3.6-flash"}
 )
+_BENCHMARK_RATE_LIMITERS: dict[float, Any] = {}
+
+
+def _benchmark_rate_limiter():
+    interval = _positive_float(os.environ.get("EVAL_REQUEST_INTERVAL_SECONDS"), 0.0)
+    if not interval:
+        return None
+    from langchain_core.rate_limiters import InMemoryRateLimiter
+    if interval not in _BENCHMARK_RATE_LIMITERS:
+        _BENCHMARK_RATE_LIMITERS[interval] = InMemoryRateLimiter(
+            requests_per_second=1/interval,check_every_n_seconds=0.1,max_bucket_size=1)
+    return _BENCHMARK_RATE_LIMITERS[interval]
 
 
 def _first_env(*names: str) -> str | None:
@@ -162,6 +174,8 @@ def create_chat_model(
             timeout=config.timeout,
             max_retries=config.max_retries,
             callbacks=[usage_tracking_callback],
+            rate_limiter=_benchmark_rate_limiter(),
+            reasoning_effort=os.environ.get("GROQ_REASONING_EFFORT") or None,
         )
 
     try:
@@ -178,6 +192,7 @@ def create_chat_model(
         "timeout": config.timeout,
         "max_retries": config.max_retries,
         "callbacks": [usage_tracking_callback],
+        "rate_limiter": _benchmark_rate_limiter(),
     }
     if not _gemini_uses_fixed_sampling(config.model):
         gemini_options["temperature"] = temperature
@@ -204,3 +219,11 @@ def model_provider_key(model: Any, fallback: str) -> str:
         params = {}
     provider = params.get("ls_provider") if isinstance(params, dict) else None
     return provider if isinstance(provider, str) and provider else fallback
+
+
+def structured_output(model: Any, schema: Any) -> Any:
+    """GPT-OSS supports native JSON schemas; forced function calls can fail."""
+    if (type(model).__module__.startswith("langchain_groq")
+            and getattr(model,"model_name","") in {"openai/gpt-oss-20b","openai/gpt-oss-120b"}):
+        return model.with_structured_output(schema,method="json_schema",strict=False)
+    return model.with_structured_output(schema)
