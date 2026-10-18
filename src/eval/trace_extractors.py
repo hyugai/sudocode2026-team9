@@ -33,7 +33,9 @@ def extract_questions(response_text: str) -> list[dict[str, str]]:
     """Extract BTC question records from the final agent response."""
     questions = []
     for match in re.finditer(r"([^?？\n]{2,}[?？])", response_text or ""):
-        text = re.sub(r"^[\s>*#\-\d.)]+", "", match.group(1)).strip()
+        # A preceding statement is not part of the question's slot evidence.
+        text = re.split(r"(?<=[.!;])\s+", match.group(1))[-1]
+        text = re.sub(r"^[\s>*#\-\d.)]+", "", text).strip()
         slot = "other"
         for candidate, pattern in _SLOT_PATTERNS:
             if pattern.search(text):
@@ -55,9 +57,9 @@ def extract_claims(
     response_text: str,
     call_date: str | None = None,
 ) -> list[dict[str, Any]]:
-    """Build claims that were both spoken and backed by authoritative tools.
+    """Extract spoken claims; a price need not agree with a tool to be scored.
 
-    A silent tool result is not an agent claim and must not enter HR.
+    This remains a heuristic extractor. It does not evaluate all free text.
     """
     claims: list[dict[str, Any]] = []
     seen: set[tuple[str, str]] = set()
@@ -75,6 +77,20 @@ def extract_claims(
         if marker not in seen:
             seen.add(marker)
             claims.append({"field": field, "value": value})
+
+    price_pattern = re.compile(
+        r"\bgiá\s*(?:(?:bán|hiện\s*tại|hôm\s*nay|niêm\s*yết|là|chỉ|còn|vẫn|:|của\s+máy)\s*)*"
+        r"(?P<number>\d[\d.,]*(?:\s\d{3})*)(?:\s*(?P<unit>triệu|nghìn|ngàn|tr|k|đồng|vnd|₫|đ))?",
+        re.I,
+    )
+    for match in price_pattern.finditer(response_text):
+        number = re.sub(r"\s", "", match["number"]).rstrip(".,")
+        unit = (match["unit"] or "").casefold()
+        if unit in {"triệu","tr","nghìn","ngàn","k"}:
+            value = float(number.replace(",",".")) * (1_000_000 if unit in {"triệu","tr"} else 1000)
+        else:
+            value = float(re.sub(r"[.,]", "", number))
+        add("list_price_vnd" if "niêm" in match[0].casefold() else "price_vnd", int(value))
 
     for call in tool_calls:
         name = call.get("name")

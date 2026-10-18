@@ -50,6 +50,19 @@ class CustomerMemoryRepository(Protocol):
     ) -> dict[str, Any]: ...
 
 
+class SnapshotMemoryStore(Protocol):
+    """Remote memory: one current read, then a commit of changed Markdown files."""
+
+    def load(self, customer_id: str) -> dict[str, Any]: ...
+    def save_snapshot(
+        self,
+        customer_id: str,
+        snapshot: dict[str, Any],
+        *,
+        previous_snapshot: dict[str, Any] | None = None,
+    ) -> None: ...
+
+
 class Perceiver(Protocol):
     async def perceive(self, context: TurnContext) -> Perception: ...
 

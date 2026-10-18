@@ -1,5 +1,0 @@
-- Ask the customer to clarify which list of items they need (e.g., inventory, orders, etc.)
-- Ask the customer which iPhone model and storage capacity they prefer
-- Ask if they need any accessories or extended warranty for the iPhone
-- Confirm availability of the 5TB iPhone 19 Pro Max Ultra in inventory
-- Ask the customer about their preferred delivery date or shipping method

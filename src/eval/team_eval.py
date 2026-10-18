@@ -12,9 +12,14 @@ import importlib.util
 import json
 import statistics
 import sys
+from copy import deepcopy
 from pathlib import Path
 from types import ModuleType
 from typing import Any
+
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from eval.benchmark_support import measured_latency, trace_health, compare_metrics
 
 
 if hasattr(sys.stdout, "reconfigure"):
@@ -288,8 +293,9 @@ def rag_recall(qa_path: Path, results_path: Path) -> dict[str, Any]:
         for question in questions:
             relevant = set(question.get("relevant_chunk_ids", []))
             result = results.get(question["qid"])
-            if not relevant or result is None:
+            if not relevant:
                 continue
+            result = result or {}
             retrieved = {
                 chunk.split("#")[0]
                 for chunk in result.get("retrieved_chunk_ids", [])[:k]
@@ -365,8 +371,57 @@ def evaluate_team(
     *,
     pricing: dict[str, float | None],
     memory_judge_report: str | None = None,
+    warmup_turns: int = 3,
 ) -> dict[str, Any]:
     result = REFERENCE.evaluate(scenarios, trace)
+    result["trace_health"] = trace_health(scenarios, trace)
+    result["latency"] = measured_latency(trace, REFERENCE, warmup_turns)
+    # Preserve the official score for exact reproduction; enforce actual
+    # execution and nonempty calls in the team's task-success score.
+    result["reference_task_success_rate"] = deepcopy(result["task_success_rate"])
+    execution_trace = {}
+    for key, rows in trace.items():
+        execution_trace[key] = [{**row, "tool_calls":[tc for tc in row.get("tool_calls",[])
+                                    if tool_execution_succeeded(tc)]} for row in rows]
+    tsr = deepcopy(result["task_success_rate"])
+    passed = 0
+    failures = []
+    total = 0
+    hard_total = hard_passed = 0
+    for sid, scenario in scenarios.items():
+        checks = []
+        for call, spec in scenario["calls"].items():
+            if not spec.get("success_if"):
+                continue
+            rows = trace.get((sid,call),[])
+            ok, reasons = REFERENCE.check_call(spec, rows)
+            if not rows or any(r.get("_error") for r in rows):
+                ok = False
+                reasons.append("missing/failed customer turn")
+            tool = spec["success_if"].get("tool_called")
+            if ok and tool in MUTATION_TOOLS:
+                ok, extra = REFERENCE.check_call(spec, execution_trace.get((sid,call),[]))
+                reasons.extend(extra)
+            checks.append(bool(ok))
+            if not ok:
+                failures.append({"scenario":sid,"call":call,"reasons":reasons})
+        if checks:
+            total += 1
+            passed += int(all(checks))
+            if scenario.get("hard_case"):
+                hard_total += 1
+                hard_passed += int(all(checks))
+    tsr.update(value=_pct(passed,total),passed=passed,total=total,failures=failures[:40],
+               hard_cases={"value":_pct(hard_passed,hard_total),"total":hard_total} if hard_total else None,
+               policy="BTC success conditions plus nonempty calls and successful mutation results")
+    result["task_success_rate"] = tsr
+    result["calls_to_close"] = REFERENCE.calls_to_close(scenarios,execution_trace)
+    price_scenarios = deepcopy(scenarios)
+    for scenario in price_scenarios.values():
+        for spec in scenario["calls"].values():
+            spec["ground_truth_facts"] = {k:v for k,v in spec.get("ground_truth_facts",{}).items()
+                                           if k.startswith(("price", "list_price"))}
+    result["hallucination_rate"]["price_only"] = REFERENCE.hallucination_rate(price_scenarios,trace)
     result["tool_call_accuracy"] = tool_call_accuracy(scenarios, trace)
     result["estimated_cost_per_call"] = estimated_cost_per_call(trace, pricing)
     result["memory_write_quality"] = _memory_write_quality(memory_judge_report)
@@ -379,6 +434,17 @@ def evaluate_team(
         ),
     }
     return result
+
+
+def tool_execution_succeeded(call):
+    if call.get("name") not in MUTATION_TOOLS:
+        return True
+    output = call.get("result")
+    if not isinstance(output,dict) or not output or output.get("error") or output.get("isError"):
+        return False
+    if output.get("success") is False or output.get("status") in ("error","failed","rejected","out_of_stock"):
+        return False
+    return bool(output.get("order_id")) if call.get("name") == "order.create" else True
 
 
 def select_scenarios(
@@ -416,6 +482,7 @@ def main() -> int:
     parser.add_argument("--scenario-id")
     parser.add_argument("--scenario-ids", help="Comma-separated scenario IDs")
     parser.add_argument("--limit", type=int)
+    parser.add_argument("--warmup-turns", type=int, default=3)
     parser.add_argument("--asr")
     parser.add_argument("--rag", help="RAG results JSON")
     parser.add_argument("--rag-qa", default=str(DEFAULT_RAG_QA))
@@ -446,9 +513,10 @@ def main() -> int:
         REFERENCE.load_trace(args.trace),
         pricing=pricing,
         memory_judge_report=args.memory_judge_report,
+        warmup_turns=args.warmup_turns,
     )
     report: dict[str, Any] = {
-        "evaluator": "team_eval_v1",
+        "evaluator": "team_eval_v2",
         "reference_evaluator": str(REFERENCE_EVAL),
         "n_scenarios": len(scenarios),
         "system": system,
@@ -458,7 +526,9 @@ def main() -> int:
             scenarios,
             REFERENCE.load_trace(args.baseline),
             pricing=pricing,
+            warmup_turns=args.warmup_turns,
         )
+        report["comparison"] = compare_metrics(system,report["baseline"])
     if args.asr:
         report["asr"] = REFERENCE.wer_cer(args.asr)
     if args.rag:
@@ -474,10 +544,14 @@ def main() -> int:
     print(f"CCR: {system['context_carryover_rate']['value']}%")
     print(f"TSR: {system['task_success_rate']['value']}%")
     print(f"HR: {system['hallucination_rate']['value']}%")
+    print(f"HR (price only): {system['hallucination_rate']['price_only']['value']}%")
     print(f"Tool-Call Accuracy: {system['tool_call_accuracy']['value']}%")
     print(f"Latency: {json.dumps(system['latency'], ensure_ascii=False)}")
+    print(f"Trace health: {json.dumps(system['trace_health'], ensure_ascii=False)}")
+    if "comparison" in report:
+        print(f"Acceptance: {json.dumps(report['comparison'],ensure_ascii=False)}")
     print(f"Report: {output_path}")
-    return 0
+    return 0 if system["trace_health"]["valid"] and (not args.baseline or report["baseline"]["trace_health"]["valid"]) else 2
 
 
 if __name__ == "__main__":

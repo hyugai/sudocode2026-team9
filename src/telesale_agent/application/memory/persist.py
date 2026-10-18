@@ -35,6 +35,9 @@ def persist_turn_memory(
         "shipping_address",
         "phone",
         "customer_phone",
+        # Order IDs must come from successful tool results, never a model or
+        # customer-provided mapping that could overwrite verified orders.
+        "order_ids_by_sku",
     }
     customer_candidates = {
         key: value
@@ -45,6 +48,12 @@ def persist_turn_memory(
     if address:
         customer_candidates["delivery_address"] = address
     tool_candidates = _tool_memory_candidates(context)
+    if any(step.plan.tool_name == "schedule.callback" for step in context.steps):
+        # A requested time is not a confirmed appointment. The scheduler may
+        # move it (or fail), so only its successful result may set callback_at.
+        customer_candidates.pop("callback_at", None)
+        if "callback_requested_at" in tool_candidates:
+            customer_candidates.pop("callback_requested_at", None)
     candidates = {**tool_candidates, **customer_candidates}
     old_quote = memory.latest_fact(customer_id, "price_quoted_vnd")
     new_quote = candidates.get("price_quoted_vnd")

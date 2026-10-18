@@ -18,6 +18,8 @@ from dotenv import load_dotenv
 
 HERE = Path(__file__).resolve().parent
 REPO_ROOT = HERE.parent.parent
+sys.path.insert(0,str(REPO_ROOT / "src"))
+from eval.model_config import configure_eval_model
 DEFAULT_SCENARIOS = (
     REPO_ROOT / "dataset" / "iterative-refinement" / "scenarios_complete dataset"
 )
@@ -102,7 +104,7 @@ def _write_readme(
 - Sleep between scenarios: `{args.sleep_scenario}` seconds
 - Max retries per turn: `{args.max_retries}`
 - Max turns per scenario: `{args.max_turns}`
-- Team evaluator: `team_eval_v1`
+- Team evaluator: `team_eval_v2`
 - Memory Write Quality judge enabled: `{args.judge_memory}`
 - Judge provider/model: `{args.judge_provider or provider}` / `{args.judge_model or model}`
 - Input price / 1M tokens: `{args.input_usd_per_million}` USD
@@ -149,8 +151,8 @@ def main() -> int:
     parser.add_argument("--llm-provider", default=None)
     parser.add_argument("--llm-model", default=None)
     parser.add_argument("--request-timeout", type=float, default=None)
-    parser.add_argument("--sleep", type=float, default=20.0)
-    parser.add_argument("--sleep-scenario", type=float, default=3.0)
+    parser.add_argument("--sleep", type=float, default=0.0)
+    parser.add_argument("--sleep-scenario", type=float, default=0.0)
     parser.add_argument("--max-retries", type=int, default=1)
     parser.add_argument("--max-turns", type=int, default=None)
     parser.add_argument(
@@ -199,10 +201,7 @@ def main() -> int:
     )
     args = parser.parse_args()
 
-    if args.llm_provider:
-        os.environ["LLM_PROVIDER"] = args.llm_provider
-    if args.llm_model:
-        os.environ["LLM_MODEL"] = args.llm_model
+    configure_eval_model(args.llm_provider,args.llm_model)
     if args.request_timeout:
         os.environ["LLM_REQUEST_TIMEOUT_SECONDS"] = str(args.request_timeout)
     os.environ["MEMORY_PERSISTER_MODE"] = args.memory_persister_mode

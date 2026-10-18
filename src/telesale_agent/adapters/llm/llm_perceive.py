@@ -8,7 +8,7 @@ from telesale_agent.application.deepagent.understanding.policy_intent import def
 from telesale_agent.application.deepagent.understanding.unverified_question import unit_specific_question
 from telesale_agent.config.intent_taxonomy import INTENT_NAMES, build_intent_prompt_section
 from telesale_agent.adapters.rules.pii_utils import mask_pii
-from telesale_agent.adapters.llm.model_factory import create_chat_model
+from telesale_agent.adapters.llm.model_factory import create_chat_model, structured_output
 
 class IntentSchema(BaseModel):
     intents: list[str] = Field(
@@ -193,7 +193,7 @@ class LLMPerceiver(Perceiver):
     
     def __init__(self, model_name: str | None = None):
         self.llm = create_chat_model(temperature=0, model_name=model_name)
-        self.structured_llm = self.llm.with_structured_output(IntentSchema)
+        self.structured_llm = structured_output(self.llm,IntentSchema)
 
     async def perceive(self, context: TurnContext) -> Perception:
         if context.input.text is None:

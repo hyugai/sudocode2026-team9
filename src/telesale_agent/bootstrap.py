@@ -14,6 +14,7 @@ from telesale_agent.adapters.crm import PostgresCRMRetriever
 from telesale_agent.adapters.memory import (
     FileCustomerMemoryRepository,
     InMemoryCustomerMemoryRepository,
+    ObjectStorageCustomerMemoryRepository,
     TurnMemoryPersister,
 )
 from telesale_agent.adapters.llm.llm_persist import LLMPersister
@@ -27,9 +28,15 @@ def build_deepagent_harness(memory_mode: MemoryMode = "durable"):
     load_dotenv()
     from telesale_agent.application.deepagent.harness import DeepAgentHarness
 
-    durable_memory = FileCustomerMemoryRepository()
+    local_memory = FileCustomerMemoryRepository()
     if memory_mode == "durable":
-        memory = durable_memory
+        memory_backend = os.environ.get("CUSTOMER_MEMORY_BACKEND", "file").strip().lower()
+        if memory_backend == "file":
+            memory = local_memory
+        elif memory_backend in {"object_storage", "s3"}:
+            memory = ObjectStorageCustomerMemoryRepository()
+        else:
+            raise ValueError(f"Unsupported CUSTOMER_MEMORY_BACKEND: {memory_backend}")
         persister_mode = os.environ.get(
             "MEMORY_PERSISTER_MODE", "llm_learning"
         ).strip().lower()
@@ -39,7 +46,7 @@ def build_deepagent_harness(memory_mode: MemoryMode = "durable"):
             else TurnMemoryPersister(memory)
         )
     elif memory_mode == "evaluation":
-        memory = InMemoryCustomerMemoryRepository(seed=durable_memory)
+        memory = InMemoryCustomerMemoryRepository(seed=local_memory)
         persist = TurnMemoryPersister(memory)
     elif memory_mode == "disabled":
         memory = InMemoryCustomerMemoryRepository()

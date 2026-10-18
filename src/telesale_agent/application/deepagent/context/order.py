@@ -9,7 +9,9 @@ from telesale_agent.core.address import (
     extract_explicit_delivery_address,
     looks_like_delivery_address,
 )
+from telesale_agent.core.basket import mentioned_catalog_items
 from telesale_agent.core.models import TurnContext
+from telesale_agent.application.customer_text import literal_customer_text
 from telesale_agent.application.deepagent.context.facts import _current_fact, _known_fact
 
 
@@ -53,12 +55,46 @@ def _known_variant_sku(context: TurnContext) -> str | None:
     return None
 
 def _requested_order_id(context: TurnContext) -> str | None:
-    explicit = _current_fact(context, "order_id")
-    text = context.input.text or ""
+    text = literal_customer_text(context.input)
     match = re.search(r"\b(?:OD|ORD)-?[A-Z0-9]+\b", text, re.IGNORECASE)
     if match:
         return match.group(0).upper()
-    return explicit if isinstance(explicit, str) and explicit else None
+    if context.perception:
+        for source in (context.perception.entities, context.perception.memory_deltas):
+            if isinstance(source, dict):
+                explicit = source.get("order_id")
+                if isinstance(explicit, str) and explicit:
+                    return explicit
+
+    mapping = _known_fact(context, "order_ids_by_sku")
+    if isinstance(mapping, dict) and mapping:
+        valid = {
+            sku: order_id
+            for sku, order_id in mapping.items()
+            if isinstance(sku, str) and isinstance(order_id, str) and order_id
+        }
+        names = _known_fact(context, "basket_product_names")
+        names = names if isinstance(names, dict) else {}
+        catalog_items = [
+            {"sku": sku, "name": name}
+            for sku, name in names.items()
+            if sku in valid and isinstance(name, str)
+        ]
+        mentioned = {
+            item["sku"] for item in mentioned_catalog_items(text, catalog_items)
+        }
+        mentioned.update(sku for sku in valid if sku.casefold() in text.casefold())
+        matched_ids = {valid[sku] for sku in mentioned}
+        if len(matched_ids) == 1:
+            return next(iter(matched_ids))
+        if len(valid) == 1:
+            return next(iter(valid.values()))
+        # A generic remembered order_id is ambiguous for a multi-item cart.
+        # Let the caller look up all orders by verified phone instead.
+        return None
+
+    remembered = _known_fact(context, "order_id")
+    return remembered if isinstance(remembered, str) and remembered else None
 
 def _payment_method(context: TurnContext) -> str | None:
     """Normalize the current choice before falling back to remembered payment."""

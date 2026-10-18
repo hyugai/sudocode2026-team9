@@ -36,6 +36,8 @@ if hasattr(sys.stderr, "reconfigure"):
     sys.stderr.reconfigure(encoding="utf-8", errors="replace")
 HERE = Path(__file__).resolve().parent
 REPO_ROOT = HERE.parent.parent
+sys.path.insert(0,str(REPO_ROOT / "src"))
+from eval.model_config import configure_eval_model
 DEFAULT_SCENARIOS = (
     REPO_ROOT / "dataset" / "iterative-refinement" / "scenarios_complete dataset"
 )
@@ -358,6 +360,12 @@ def _write_readme(
         f"- Worker {part.index}: {len(part.scenarios)} scenarios, {part.turns} turns"
         for part in partitions
     )
+    memory_backend = os.environ.get("CUSTOMER_MEMORY_BACKEND", "file")
+    memory_location = (
+        f"object-storage prefix `{os.environ.get('CUSTOMER_MEMORY_PREFIX', 'users')}`"
+        if args.persist_memory and memory_backend == "object_storage"
+        else "`part_<N>/memory/<SCENARIO_ID>/`"
+    )
     text = f"""# {args.version} — parallel benchmark
 
 ## Run status
@@ -375,7 +383,7 @@ def _write_readme(
 
 Scenarios are grouped by `customer_phone`, then balanced by total customer
 turns. The same phone never runs in two workers. Every scenario uses an isolated
-memory directory at `part_<N>/memory/<SCENARIO_ID>/`.
+memory location at {memory_location}.
 
 {partition_lines}
 
@@ -390,6 +398,8 @@ See `partitions.json` for the scenario assignment and each
 - Max output tokens: `{os.environ.get('LLM_MAX_OUTPUT_TOKENS', '1024')}`
 - Thinking level: `{os.environ.get('LLM_THINKING_LEVEL') or 'provider default'}`
 - Memory persister: `{args.memory_persister_mode}`
+- Memory backend: `{memory_backend}`
+- Object-storage prefix: `{os.environ.get('CUSTOMER_MEMORY_PREFIX', 'users') if memory_backend == 'object_storage' else 'n/a'}`
 - Durable memory: `{args.persist_memory}`
 - Cleanup eval orders: `{args.cleanup_orders}`
 - Sleep between turns: `{args.sleep}` seconds
@@ -527,10 +537,7 @@ def main() -> int:
     readme_path = run_dir / "README.md"
     _write_partition_manifest(run_dir / "partitions.json", partitions)
 
-    if args.llm_provider:
-        os.environ["LLM_PROVIDER"] = args.llm_provider
-    if args.llm_model:
-        os.environ["LLM_MODEL"] = args.llm_model
+    configure_eval_model(args.llm_provider,args.llm_model)
     if args.request_timeout is not None:
         os.environ["LLM_REQUEST_TIMEOUT_SECONDS"] = str(args.request_timeout)
     if args.max_output_tokens is not None:

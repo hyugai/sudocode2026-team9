@@ -27,9 +27,10 @@ sys.path.insert(0, str(REPO_ROOT / "src"))
 load_dotenv(REPO_ROOT / ".env")
 
 from eval.team_eval import REFERENCE, select_scenarios  # noqa: E402
+from eval.model_config import configure_eval_model, permanent_provider_error  # noqa: E402
 from telesale_agent.adapters.llm.model_factory import (  # noqa: E402
     create_chat_model,
-    resolve_model_config,
+    structured_output,
 )
 
 
@@ -131,16 +132,17 @@ async def run(args: argparse.Namespace) -> dict[str, Any]:
         limit=args.limit,
     )
     trace = REFERENCE.load_trace(args.trace)
-    config = resolve_model_config(provider=args.provider, model_name=args.model)
-    llm = create_chat_model(
+    config = configure_eval_model(args.provider,args.model)
+    llm = structured_output(create_chat_model(
         temperature=0,
         provider=config.provider,
         model_name=config.model,
         max_output_tokens=args.max_output_tokens,
-    ).with_structured_output(MemoryJudgeResult)
+    ),MemoryJudgeResult)
 
     judgments: list[dict[str, Any]] = []
     failures: list[dict[str, str]] = []
+    blocked = False
     for index, (scenario_id, scenario) in enumerate(scenarios.items()):
         if index and args.sleep > 0:
             await asyncio.sleep(args.sleep)
@@ -156,6 +158,9 @@ async def run(args: argparse.Namespace) -> dict[str, Any]:
         except Exception as exc:  # keep the rest of a long benchmark judgeable
             failures.append({"scenario_id": scenario_id, "error": str(exc)})
             print(f"[MWQ ERROR] {scenario_id}: {exc}", file=sys.stderr)
+            if permanent_provider_error(exc):
+                blocked = True
+                break
 
     dimension_means = {
         key: round(statistics.mean(float(row[key]) for row in judgments), 2)
@@ -169,7 +174,7 @@ async def run(args: argparse.Namespace) -> dict[str, Any]:
         else None
     )
     return {
-        "status": "completed" if not failures else "completed_with_errors",
+        "status": "blocked_provider" if blocked else "completed" if not failures else "completed_with_errors",
         "rubric_version": "mwq_v1",
         "judge": {"provider": config.provider, "model": config.model},
         "aggregate": {
