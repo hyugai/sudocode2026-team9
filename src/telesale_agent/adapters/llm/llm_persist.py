@@ -9,7 +9,8 @@ from pydantic import BaseModel, Field
 
 from telesale_agent.adapters.llm.model_factory import create_chat_model, structured_output
 from telesale_agent.application.memory.persist import persist_turn_memory
-from telesale_agent.core.interfaces import CustomerMemoryRepository, Persister
+from telesale_agent.adapters.memory.write_session import TurnMemoryWriteSession
+from telesale_agent.core.interfaces import CustomerMemoryRepository, Persister, SnapshotMemoryStore
 from telesale_agent.core.models import TurnContext
 from telesale_agent.adapters.rules.pii_utils import mask_pii
 
@@ -77,7 +78,7 @@ class EpisodeSummarySchema(BaseModel):
 class LLMPersister(Persister):
     """Persist canonical facts plus learned episodic memory after each turn."""
 
-    def __init__(self, memory: CustomerMemoryRepository):
+    def __init__(self, memory: CustomerMemoryRepository | SnapshotMemoryStore):
         self.llm = create_chat_model(temperature=0)
         self.structured_llm = structured_output(self.llm,EpisodeSummarySchema)
         self.memory = memory
@@ -90,8 +91,11 @@ class LLMPersister(Persister):
         return f"{scenario_id}:{turn_id}" if scenario_id else turn_id
 
     async def persist(self, context: TurnContext) -> list[dict]:
-        # Bootstrap selects either isolated in-memory storage or durable files.
-        writes = persist_turn_memory(self.memory, context)
+        # Remote stores use a turn-local RAM copy; local/eval stores keep their
+        # existing behavior. Only the final snapshot is sent to remote storage.
+        session = TurnMemoryWriteSession(self.memory, context)
+        memory = session.repository
+        writes = persist_turn_memory(memory, context)
 
         customer_id = (
             context.identity.customer_id
@@ -101,18 +105,19 @@ class LLMPersister(Persister):
         if not customer_id:
             return writes
 
-        # Atomic facts are an append-only audit trail. facts.md remains the
-        # latest-value snapshot and is updated by persist_turn_memory above.
+        # Atomic facts are an append-only audit trail. Canonical facts were
+        # updated above; the remote adapter commits all layers together.
         for write in writes:
             value = json.dumps(write["value"], ensure_ascii=False)
-            self.memory.record_atomic_fact(
+            memory.record_atomic_fact(
                 customer_id,
                 f"{write['key']}: {value} | source: {write['source']}",
             )
 
         customer_text = (context.input.text or "").strip()
         if not customer_text:
-            context.state.customer_memory = self.memory.load(customer_id)
+            context.state.customer_memory = memory.load(customer_id)
+            await session.commit()
             return writes
 
         system_prompt = """You summarize one Vietnamese telesales turn for long-term memory.
@@ -128,7 +133,7 @@ where a serial/batch number will appear or promising a warehouse process;
 otherwise return an empty list."""
 
         safe_customer_text, _ = mask_pii(customer_text)
-        memory_snapshot = self.memory.load(customer_id)
+        memory_snapshot = memory.load(customer_id)
         existing_foresights = [
             str(item.get("content", ""))
             for item in memory_snapshot.get("foresights", [])
@@ -176,7 +181,7 @@ otherwise return an empty list."""
                 episode_parts.append(f"Blocker: {blocker}")
 
             if episode_parts:
-                self.memory.record_episode(
+                memory.record_episode(
                     customer_id,
                     " | ".join(episode_parts),
                     source_id=self._source_id(context),
@@ -187,10 +192,10 @@ otherwise return an empty list."""
                 if cleaned and not _is_duplicate_foresight(
                     cleaned, existing_foresights
                 ):
-                    self.memory.record_foresight(customer_id, cleaned)
+                    memory.record_foresight(customer_id, cleaned)
                     existing_foresights.append(cleaned)
 
-            context.state.customer_memory = self.memory.load(customer_id)
+            context.state.customer_memory = memory.load(customer_id)
         except Exception as exc:
             from telesale_agent.adapters.llm.rate_limits import is_rate_limit_error, provider_cooldown
 
@@ -199,4 +204,5 @@ otherwise return an empty list."""
             # Reliable facts remain saved even if LLM summarization fails.
             logger.warning("LLM memory summarization failed: %s", exc)
 
+        await session.commit()
         return writes

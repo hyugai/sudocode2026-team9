@@ -32,6 +32,7 @@ _BTC_TOOL_NAMES = {
     "update_order": "order.update",
     "search_policy": "policy.search",
     "search_knowledge_base": "knowledge.search",
+    "search_customer_memory_archive": "memory.archive_search",
     "mcp_schedule_callback": "schedule.callback",
     "mcp_escalate_to_human": "handoff.transfer",
 }

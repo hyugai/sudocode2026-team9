@@ -114,6 +114,7 @@ async def run_turn_impl(
     call_brief_ms = None
     # 2. Pre-processing Nodes
     # 2a. Initialization phase (Only runs once per conversation)
+    hydrated_this_turn = False
     if not context.state.identity:
         if harness.identity:
             context.identity = await harness.identity.resolve_identity(context)
@@ -121,10 +122,12 @@ async def run_turn_impl(
         
         if harness.customer_context:
             await harness.customer_context.hydrate(context)
+            hydrated_this_turn = True
     else:
         context.identity = context.state.identity
         if harness.customer_context and context.state.customer_memory is None:
             await harness.customer_context.hydrate(context)
+            hydrated_this_turn = True
         
     # 2b. Turn-based phase (Runs every turn)
     if harness.perceive:
@@ -151,10 +154,10 @@ async def run_turn_impl(
             context.retrieved = await harness.retrieve.retrieve(context)
             context.state.retrieved_data = context.retrieved
 
-    if harness.customer_context:
+    if harness.customer_context and not hydrated_this_turn:
         # The previous turn persists before returning. Reloading here makes
         # that canonical memory the input to this turn's new call brief.
-        harness.customer_context.refresh_memory(context)
+        await harness.customer_context.refresh_memory(context)
 
     if harness.call_brief:
         context.call_brief = await harness.call_brief.build_call_brief(context)
@@ -234,7 +237,10 @@ async def run_turn_impl(
             result = await harness.agent.ainvoke(
                 {"messages": [{"role": "user", "content": enriched_user_msg}]},
                 config=config,
-                context={"allowed_tools": sorted(allowed_tools)},
+                context={
+                    "allowed_tools": sorted(allowed_tools),
+                    "customer_id": context.identity.customer_id if context.identity else None,
+                },
             )
         except Exception as exc:
             if is_rate_limit_error(exc):

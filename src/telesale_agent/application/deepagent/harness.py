@@ -33,7 +33,7 @@ from telesale_agent.application.deepagent.context.prompt import (
     recent_conversation_context as _recent_conversation_context,
 )
 from telesale_agent.application.deepagent.response import _safe_fallback_response
-from telesale_agent.core.interfaces import ASREngine, CustomerMemoryRepository
+from telesale_agent.core.interfaces import ASREngine, CustomerMemoryRepository, SnapshotMemoryStore
 from telesale_agent.core.models import ConversationState, TurnContext, TurnInput, TurnResult
 
 
@@ -46,7 +46,7 @@ class DeepAgentHarness:
         perceive=None,
         identity=None,
         crm=None,
-        memory: CustomerMemoryRepository | None = None,
+        memory: CustomerMemoryRepository | SnapshotMemoryStore | None = None,
         retrieve=None,
         call_brief=None,
         guardrail=None,

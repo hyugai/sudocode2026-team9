@@ -29,6 +29,7 @@ from telesale_agent.application.deepagent.tools.routing import (
     IntentToolRoutingMiddleware,
     TelesaleAgentRuntimeContext,
 )
+from telesale_agent.application.deepagent.tools.memory_archive import build_memory_archive_tool
 from telesale_agent.application.deepagent.context.prompt import positive_int_env as _positive_int_env
 
 async def initialize_runtime(harness):
@@ -87,6 +88,9 @@ async def initialize_runtime(harness):
             await session.initialize()
             tools = await load_mcp_tools(session)
             all_mcp_tools.extend(tools)
+    archive_tool = build_memory_archive_tool(harness.memory)
+    if archive_tool is not None:
+        all_mcp_tools.append(archive_tool)
     harness.mcp_tools = {
         tool.name: tool
         for tool in all_mcp_tools

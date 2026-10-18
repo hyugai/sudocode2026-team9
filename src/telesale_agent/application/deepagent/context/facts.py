@@ -63,6 +63,8 @@ def _select_brief_facts(
     if "update_order" in intents:
         priorities.extend(
             [
+                "order_ids_by_sku",
+                "basket_product_names",
                 "order_id",
                 "variant_sku",
                 "pending_variant_sku",
@@ -120,10 +122,11 @@ def _select_brief_facts(
         )
     if "complain" in intents:
         priorities.extend(
-            ["order_id", "owned_sku", "variant_sku", "product_advised"]
+            ["order_ids_by_sku", "basket_product_names", "order_id", "owned_sku", "variant_sku", "product_advised"]
         )
     priorities.extend(
         [
+            "order_ids_by_sku",
             "order_id",
             "unresolved_question",
             "basket_skus",
