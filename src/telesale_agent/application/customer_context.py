@@ -1,16 +1,23 @@
 from __future__ import annotations
 
-from telesale_agent.core.interfaces import CRMRetriever, CustomerMemoryRepository
+import asyncio
+from typing import Any
+
+from telesale_agent.core.interfaces import (
+    CRMRetriever,
+    CustomerMemoryRepository,
+    SnapshotMemoryStore,
+)
 from telesale_agent.core.models import TurnContext
 
 
 class CustomerContextService:
-    """Compose verified CRM data and file-backed memory for one customer."""
+    """Compose verified CRM data and durable memory for one customer."""
 
     def __init__(
         self,
         crm: CRMRetriever,
-        memory: CustomerMemoryRepository,
+        memory: CustomerMemoryRepository | SnapshotMemoryStore,
     ) -> None:
         self.crm = crm
         self.memory = memory
@@ -25,7 +32,7 @@ class CustomerContextService:
         customer_id = context.identity.customer_id
         profile = await self.crm.retrieve_profile(context)
         business_history = await self.crm.precompute_brief(context)
-        memory = self.memory.load(customer_id)
+        memory = await self._load_memory(customer_id)
 
         # Preserve the source boundary in state. past_history is a compatibility
         # view consumed by existing planners; episodes still originate in memory.
@@ -36,13 +43,18 @@ class CustomerContextService:
             "sessions": memory.get("episodes", []),
         }
 
-    def refresh_memory(self, context: TurnContext) -> None:
+    async def _load_memory(self, customer_id: str) -> dict[str, Any]:
+        if callable(getattr(self.memory, "save_snapshot", None)):
+            return await asyncio.to_thread(self.memory.load, customer_id)
+        return self.memory.load(customer_id)
+
+    async def refresh_memory(self, context: TurnContext) -> None:
         """Reload the latest canonical memory without querying CRM again."""
         if context.identity is None or not context.identity.customer_id:
             context.state.customer_memory = None
             return
 
-        memory = self.memory.load(context.identity.customer_id)
+        memory = await self._load_memory(context.identity.customer_id)
         context.state.customer_memory = memory
         business_history = context.state.past_history or {}
         context.state.past_history = {

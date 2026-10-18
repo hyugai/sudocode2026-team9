@@ -6,7 +6,7 @@ from collections.abc import Awaitable, Callable
 import json
 import os
 import re
-from typing import Any, TypedDict
+from typing import Any, NotRequired, TypedDict
 
 from langchain.agents.middleware import AgentMiddleware, ModelRequest, ModelResponse
 
@@ -25,6 +25,7 @@ class TelesaleAgentRuntimeContext(TypedDict):
     """Per-invocation data consumed by tool-routing middleware."""
 
     allowed_tools: list[str]
+    customer_id: NotRequired[str | None]
 
 
 _INTENT_TOOLS: dict[str, frozenset[str]] = {
@@ -183,6 +184,12 @@ def select_tools_for_turn(
         selected.update(_INTENT_TOOLS.get(intent, ()))
 
     text = (transcript or "").casefold()
+    if any(phrase in text for phrase in (
+        "lần trước", "trước đây", "hồi trước", "bữa trước", "đợt trước",
+        "cuộc gọi trước", "hôm trước", "tuần trước", "tháng trước",
+        "đã từng", "lịch sử", "tôi đã nói", "tôi đã hỏi",
+    )):
+        selected.add("search_customer_memory_archive")
     facts = memory_facts if isinstance(memory_facts, dict) else {}
     if facts.get("basket_skus") and asks_basket_total(transcript or ""):
         # Current-call prices must be verified before repeating a cart total.
@@ -313,7 +320,7 @@ def select_tools_for_turn(
     # Asking how a policy works for a prospective purchase is not an order
     # lookup. This prevents SC-031--040 from querying order.status merely
     # because the words "đổi size" appear in an informational question.
-    explicit_order_reference = bool(facts.get("order_id")) or bool(
+    explicit_order_reference = bool(facts.get("order_id") or facts.get("order_ids_by_sku")) or bool(
         re.search(r"\b(?:OD|ORD)-?[A-Z0-9]+\b", transcript or "", re.IGNORECASE)
     ) or any(
         phrase in text
@@ -332,7 +339,7 @@ def select_tools_for_turn(
     # Durable facts are routing signals, not merely prompt text. A known order
     # lets follow-up complaint/exchange turns expose the order workflow even if
     # the NLU misses a terse confirmation such as "ừ, làm thủ tục đi em".
-    if facts.get("order_id") and intents.intersection({"update_order", "complain"}):
+    if (facts.get("order_id") or facts.get("order_ids_by_sku")) and intents.intersection({"update_order", "complain"}):
         selected.add("check_order_status")
         if update_confirmation:
             selected.add("update_order")
@@ -387,7 +394,11 @@ def _request_size_estimate(request: ModelRequest[Any], tools: list[Any]) -> dict
     )
     tool_chars = 0
     for tool in tools:
-        schema = getattr(tool, "args_schema", None)
+        # tool_call_schema excludes injected ToolRuntime/InjectedToolArg fields.
+        # args_schema may include non-JSON types (e.g. a stream_writer callable).
+        schema = getattr(tool, "tool_call_schema", None)
+        if schema is None:
+            schema = getattr(tool, "args_schema", None)
         if hasattr(schema, "model_json_schema"):
             schema = schema.model_json_schema()
         payload = {

@@ -158,6 +158,10 @@ def _should_adopt_product(context: TurnContext, sku: Any) -> bool:
 
 def _tool_memory_candidates(context: TurnContext) -> dict[str, Any]:
     candidates: dict[str, Any] = {}
+    memory = context.state.customer_memory or {}
+    facts = memory.get("facts", {}) if isinstance(memory, dict) else {}
+    existing_order_ids = facts.get("order_ids_by_sku", {}) if isinstance(facts, dict) else {}
+    order_ids_by_sku = dict(existing_order_ids) if isinstance(existing_order_ids, dict) else {}
     order_workflow = bool(
         context.perception
         and (
@@ -253,10 +257,22 @@ def _tool_memory_candidates(context: TurnContext) -> dict[str, Any]:
                 candidates["price_quoted_vnd"] = args["price_vnd"]
             if args.get("payment"):
                 candidates["payment"] = args["payment"]
-            if output.get("order_id"):
-                candidates["order_id"] = output["order_id"]
+            order_id = output.get("order_id")
+            if isinstance(order_id, str) and order_id:
+                candidates["order_id"] = order_id
+                sku = args.get("sku")
+                if isinstance(sku, str) and sku:
+                    order_ids_by_sku[sku] = order_id
+                    candidates["order_ids_by_sku"] = dict(order_ids_by_sku)
         elif name == "order.status":
             orders = output.get("orders") or []
+            for order in orders:
+                if not isinstance(order, dict):
+                    continue
+                sku, order_id = order.get("sku"), order.get("order_id")
+                if isinstance(sku, str) and sku and isinstance(order_id, str) and order_id:
+                    order_ids_by_sku[sku] = order_id
+                    candidates["order_ids_by_sku"] = dict(order_ids_by_sku)
             if len(orders) == 1 and isinstance(orders[0], dict):
                 order = orders[0]
                 if order.get("order_id"):
@@ -277,6 +293,16 @@ def _tool_memory_candidates(context: TurnContext) -> dict[str, Any]:
             elif len(orders) == 0:
                 # A successful empty lookup invalidates a remembered order ID.
                 candidates["order_id"] = None
+                missing_id = args.get("order_id")
+                if isinstance(missing_id, str) and missing_id:
+                    remaining = {
+                        sku: order_id
+                        for sku, order_id in order_ids_by_sku.items()
+                        if order_id != missing_id
+                    }
+                    if remaining != order_ids_by_sku:
+                        order_ids_by_sku = remaining
+                        candidates["order_ids_by_sku"] = remaining
         elif name == "order.update":
             if args.get("new_variant_sku"):
                 candidates.update(_variant_facts(args["new_variant_sku"]))
