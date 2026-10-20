@@ -227,6 +227,13 @@ __marimo__/
 .langgraph_api/
 
 tests/
+!/tests/
+/tests/*
+!/tests/test_streaming.py
+!/src/web/tests/
+
+# Generated recordings, screenshots and isolated local UI fixtures.
+/outputs/debug/streaming-ui/
 
 # Runtime data required by the Render image. Customer memory is intentionally
 # reviewable before commit; do not place secrets outside these documented files.

@@ -90,6 +90,7 @@ def _write_readme(
 ## Parameters
 
 - Config: `{args.config}`
+- Streaming: `{args.streaming}`
 - LLM provider: `{provider}`
 - LLM model: `{model}`
 - LLM request timeout: `{os.environ.get('LLM_REQUEST_TIMEOUT_SECONDS', '30')}` seconds
@@ -154,6 +155,7 @@ def main() -> int:
     parser.add_argument("--sleep", type=float, default=0.0)
     parser.add_argument("--sleep-scenario", type=float, default=0.0)
     parser.add_argument("--max-retries", type=int, default=1)
+    parser.add_argument("--streaming", action=argparse.BooleanOptionalAction, default=True)
     parser.add_argument("--max-turns", type=int, default=None)
     parser.add_argument(
         "--persist-memory", action=argparse.BooleanOptionalAction, default=True
@@ -240,6 +242,7 @@ def main() -> int:
         str(args.max_retries),
         "--persist-memory" if args.persist_memory else "--no-persist-memory",
         "--cleanup-orders" if args.cleanup_orders else "--no-cleanup-orders",
+        "--streaming" if args.streaming else "--no-streaming",
     ]
     if args.scenario_id:
         generate_cmd.extend(["--scenario-id", args.scenario_id])
@@ -270,6 +273,7 @@ def main() -> int:
         reproduce_cmd.extend(["--request-timeout", str(args.request_timeout)])
     reproduce_cmd.extend(["--memory-persister-mode", args.memory_persister_mode])
     reproduce_cmd.append("--persist-memory" if args.persist_memory else "--no-persist-memory")
+    reproduce_cmd.append("--streaming" if args.streaming else "--no-streaming")
     if args.judge_memory:
         reproduce_cmd.append("--judge-memory")
     if args.judge_provider:

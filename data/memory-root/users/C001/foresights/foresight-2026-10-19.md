@@ -1,0 +1,1 @@
+- During next call, confirm if the order has been placed and verify the callback time of 10:00 on 17/10/2026

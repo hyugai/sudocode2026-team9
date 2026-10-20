@@ -1,7 +1,9 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { flushSync } from "react-dom";
 import { ChatApiError, createChatClient, type DebugInfo } from "@/utils/chat-api";
+import { upsertChatTurn, type ChatMessage } from "@/utils/chat-messages";
 
 const apiBase = (process.env.NEXT_PUBLIC_API_BASE_URL || (
   process.env.NODE_ENV === "development"
@@ -16,13 +18,15 @@ interface LogEntry {
 
 export default function Chat() {
   const [activeTab, setActiveTab] = useState<"chat" | "logs">("chat");
-  const [messages, setMessages] = useState<{ role: "user" | "agent"; text: string }[]>([
+  const [messages, setMessages] = useState<ChatMessage[]>([
     { role: "agent", text: "Xin chào! Mình là Tư vấn viên Telesale. Mình có thể giúp gì cho bạn hôm nay?" }
   ]);
   const [debugLogs, setDebugLogs] = useState<LogEntry[]>([]);
   const [input, setInput] = useState("");
   const [customerPhone, setCustomerPhone] = useState("0984726714");
   const [isLoading, setIsLoading] = useState(false);
+  const [responseReady, setResponseReady] = useState(false);
+  const [activeAnswerId, setActiveAnswerId] = useState<string | null>(null);
   const [audioFile, setAudioFile] = useState<File | null>(null);
   const [audioPreviewUrl, setAudioPreviewUrl] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -98,23 +102,47 @@ export default function Chat() {
     const conversationId = sessionId || crypto.randomUUID();
     if (!sessionId) setSessionId(conversationId);
     setIsLoading(true);
+    setResponseReady(false);
     setErrorMessage("");
+
+    const answerId = crypto.randomUUID();
+    setActiveAnswerId(answerId);
+    let transcript = userMessage;
+    let answer = "";
+    const renderAnswer = () => {
+      const userText = transcript;
+      const answerText = answer;
+      setMessages((prev) => upsertChatTurn(prev, answerId, userText, answerText));
+    };
+    renderAnswer();
 
     try {
       const data = await chatClient.send({
         conversationId, message: userMessage, audioFile, customerPhone,
+      }, async (event) => {
+        if (event.type === "input") {
+          transcript = event.transcript ?? event.normalized_message ?? userMessage;
+          renderAnswer();
+        } else if (event.type === "delta" || event.type === "replace") {
+          answer = event.type === "replace" ? (event.text ?? "") : answer + (event.text ?? "");
+          // Commit before the next paint. Concurrent React updates otherwise
+          // may stay batched when a fast model delivers the whole stream in
+          // one network burst. Each update still comes from a real SSE event.
+          flushSync(renderAnswer);
+          await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+        } else if (event.type === "response_complete") {
+          setResponseReady(true);
+        }
       });
       if (!data) return;
       setCooldownSeconds(chatClient.retryAfterSeconds);
-      const transcript = audioFile ? data.transcript : (data.normalized_message ?? userMessage);
-      if (typeof transcript !== "string" || !transcript.trim()) {
+      const finalTranscript = audioFile ? data.transcript : (data.normalized_message ?? userMessage);
+      if (typeof finalTranscript !== "string" || !finalTranscript.trim()) {
         throw new Error("Không nhận được văn bản từ ghi âm. Vui lòng thử lại.");
       }
-      setMessages((prev) => [
-        ...prev,
-        { role: "user", text: transcript },
-        { role: "agent", text: data.response || "Chưa nhận được phản hồi từ tư vấn viên." },
-      ]);
+      transcript = finalTranscript;
+      answer = data.response || "Chưa nhận được phản hồi từ tư vấn viên.";
+      renderAnswer();
       if (audioFile) clearAudio();
       else setInput("");
       if (data.debug) {
@@ -122,6 +150,7 @@ export default function Chat() {
         setDebugLogs((prev) => [...prev, { userMessage: transcript, debug }]);
       }
     } catch (error) {
+      setMessages((prev) => prev.filter((message) => message.id !== answerId || message.text.trim()));
       if (error instanceof ChatApiError && error.connectionLost) setBackendReady(false);
       if (error instanceof ChatApiError) setCooldownSeconds(error.retryAfterSeconds);
       setErrorMessage(error instanceof ChatApiError && error.retryAfterSeconds > 0
@@ -129,6 +158,7 @@ export default function Chat() {
         : error instanceof Error ? error.message : "Lỗi kết nối. Vui lòng thử lại.");
     } finally {
       setIsLoading(false);
+      setActiveAnswerId(null);
     }
   };
 
@@ -206,7 +236,7 @@ export default function Chat() {
             <div className="flex-1 overflow-y-auto p-4 sm:p-6 scroll-smooth">
               <div className="max-w-3xl mx-auto space-y-6 pb-4">
                 {messages.map((msg, idx) => (
-                  <div key={idx} className={`flex items-start gap-3 ${msg.role === "user" ? "flex-row-reverse" : "flex-row"}`}>
+                  <div key={msg.id ?? idx} data-role={msg.role} className={`flex items-start gap-3 ${msg.role === "user" ? "flex-row-reverse" : "flex-row"}`}>
                     {/* Avatar */}
                     <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 mt-1 ${
                       msg.role === "user" ? "bg-[#111111] text-white" : "bg-white border border-black/10 text-black"
@@ -220,30 +250,23 @@ export default function Chat() {
 
                     {/* Message Bubble */}
                     <div
-                      className={`max-w-[85%] sm:max-w-[75%] rounded-2xl px-5 py-3.5 shadow-sm leading-relaxed ${
+                      className={`max-w-[85%] sm:max-w-[75%] rounded-2xl px-5 py-3.5 shadow-sm leading-relaxed whitespace-pre-wrap ${
                         msg.role === "user"
                           ? "bg-[#111111] text-[#F4F1EA] rounded-tr-sm"
                           : "bg-white border border-black/5 text-gray-800 rounded-tl-sm"
                       }`}
                     >
-                      {msg.text}
+                      {msg.text || (isLoading && msg.id === activeAnswerId ? (
+                        <span aria-label="Đang chờ phản hồi" className="flex items-center gap-2 py-1">
+                          <span className="w-2 h-2 bg-black/40 rounded-full animate-bounce" />
+                          <span className="w-2 h-2 bg-black/40 rounded-full animate-bounce" style={{ animationDelay: "0.15s" }} />
+                          <span className="w-2 h-2 bg-black/40 rounded-full animate-bounce" style={{ animationDelay: "0.3s" }} />
+                        </span>
+                      ) : "")}
                     </div>
                   </div>
                 ))}
                 
-                {isLoading && (
-                  <div className="flex items-start gap-3 flex-row">
-                    {/* Agent Avatar for Loading */}
-                    <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 mt-1 bg-white border border-black/10 text-black">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 8V4H8"></path><rect width="16" height="12" x="4" y="8" rx="2"></rect><path d="M2 14h2"></path><path d="M20 14h2"></path><path d="M15 13v2"></path><path d="M9 13v2"></path></svg>
-                    </div>
-                    <div className="bg-white border border-black/5 text-gray-500 rounded-2xl rounded-tl-sm px-5 py-4 shadow-sm flex items-center space-x-2">
-                      <div className="w-2 h-2 bg-black/40 rounded-full animate-bounce"></div>
-                      <div className="w-2 h-2 bg-black/40 rounded-full animate-bounce" style={{ animationDelay: "0.15s" }}></div>
-                      <div className="w-2 h-2 bg-black/40 rounded-full animate-bounce" style={{ animationDelay: "0.3s" }}></div>
-                    </div>
-                  </div>
-                )}
                 <div ref={messagesEndRef} />
               </div>
             </div>
@@ -287,7 +310,7 @@ export default function Chat() {
                 {errorMessage && <p role="alert" className="mb-3 text-sm text-red-700">{errorMessage}</p>}
                 {cooldownSeconds > 0 && <p role="status" className="mb-3 text-sm text-black/60">Dịch vụ hội thoại đang tạm giới hạn. Có thể gửi tiếp sau {cooldownSeconds} giây.</p>}
                 {!backendReady && !isLoading && <p role="status" className="mb-3 text-sm text-black/60">Đang chờ kết nối backend sẵn sàng. Hệ thống sẽ tự kiểm tra lại...</p>}
-                {isLoading && <p role="status" className="mb-3 text-sm text-black/60">{audioFile ? "Đang nhận dạng ghi âm và chờ phản hồi..." : "Đang chờ phản hồi..."}</p>}
+                {isLoading && <p role="status" className="mb-3 text-sm text-black/60">{responseReady ? "Đang hoàn tất lượt hội thoại..." : audioFile ? "Đang nhận dạng ghi âm và chờ phản hồi..." : "Đang chờ phản hồi..."}</p>}
                 <form onSubmit={sendMessage} className="flex gap-3">
                   <input
                     type="text"

@@ -1,0 +1,3 @@
+- Ask the customer about the room size and budget to recommend suitable models
+- Ask the customer about preferred brand or features to narrow down options
+- Ask the customer about their usage needs, such as number of people and storage capacity, to recommend suitable refrigerator models

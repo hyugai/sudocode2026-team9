@@ -5,6 +5,7 @@ from __future__ import annotations
 import os
 import logging
 import time
+from telesale_agent.application.deepagent.streaming import answer_can_stream, chunk_text, completed_prefix
 
 from telesale_agent.core.models import (
     TurnContext,
@@ -54,11 +55,15 @@ async def run_turn(
     harness,
     turn_input: TurnInput,
     state: ConversationState | None = None,
+    *, response_stream=None,
 ) -> TurnResult:
     """Run one turn and always close its provider-usage scope."""
     usage_token = begin_usage_collection()
     try:
-        result = await harness._run_turn_impl(turn_input, state)
+        if response_stream is None:
+            result = await harness._run_turn_impl(turn_input, state)
+        else:
+            result = await harness._run_turn_impl(turn_input, state, response_stream=response_stream)
     except BaseException as exc:
         usage = finish_usage_collection(usage_token)
         exc.telesale_usage = usage
@@ -70,6 +75,7 @@ async def run_turn_impl(
     harness,
     turn_input: TurnInput,
     state: ConversationState | None = None,
+    *, response_stream=None,
 ) -> TurnResult:
     """Execute the initialized Deep Agent pipeline for one turn."""
     if harness.agent is None:
@@ -78,12 +84,13 @@ async def run_turn_impl(
             "build_deepagent_harness_async() or 'async with build_deepagent_harness()'."
         )
 
+    backend_started = (response_stream.started_at if response_stream is not None
+                       else turn_input.metadata.get("_latency_started_at", time.perf_counter()))
     state = state or ConversationState(conversation_id=turn_input.conversation_id)
     if state.conversation_id != turn_input.conversation_id:
         raise ValueError("state and input must belong to the same conversation")
 
     context = TurnContext(input=turn_input, state=state)
-    backend_started = time.perf_counter()
     asr_ms = None
     new_call = not context.state.identity
     # ConversationState is the canonical application history. Keep a copy
@@ -109,7 +116,11 @@ async def run_turn_impl(
         context.input.text = normalize_chat_text(context.input.text)
 
     # Offline file ASR is excluded from M1 response latency (BTC guidance).
-    response_started = time.perf_counter()
+    if response_stream is not None:
+        response_stream.asr_ms = asr_ms or 0
+        await response_stream.send({"type": "input", "transcript": context.input.text,
+                                    "normalized_message": context.input.text})
+    response_started = backend_started + (asr_ms or 0) / 1000
     identity_started = response_started if new_call else None
     call_brief_ms = None
     # 2. Pre-processing Nodes
@@ -164,6 +175,9 @@ async def run_turn_impl(
         context.state.call_brief = context.call_brief
         if identity_started is not None:
             call_brief_ms = (time.perf_counter() - identity_started) * 1000
+
+    precomputed_parts = ["persisted_" + key for key in ("facts", "episodes", "atomic_facts", "foresights")
+                         if (context.state.customer_memory or {}).get(key)]
 
     user_text, enriched_user_msg = build_base_user_message(
         context,
@@ -234,14 +248,48 @@ async def run_turn_impl(
     
     with usage_stage("main_agent"):
         try:
-            result = await harness.agent.ainvoke(
-                {"messages": [{"role": "user", "content": enriched_user_msg}]},
-                config=config,
-                context={
-                    "allowed_tools": sorted(allowed_tools),
-                    "customer_id": context.identity.customer_id if context.identity else None,
-                },
-            )
+            payload = {"messages": [{"role": "user", "content": enriched_user_msg}]}
+            runtime_context = {"allowed_tools": sorted(allowed_tools),
+                               "customer_id": context.identity.customer_id if context.identity else None}
+            if response_stream is not None and callable(getattr(harness.agent, "astream", None)):
+                # Stream public model text even while read tools are available.
+                # Pending write tools keep their confirmations buffered.
+                registered_tools = getattr(harness, "mcp_tools", None)
+                effective_tools = allowed_tools if registered_tools is None else set(allowed_tools).intersection(registered_tools)
+                incremental = answer_can_stream(effective_tools)
+                response_stream.policy = "guarded_words" if incremental else "buffered_tool_turn"
+                raw_text = ""
+                checked_prefix = ""
+                stream_evidence = list(orchestrated_calls)
+                result = {}
+                async for mode, part in harness.agent.astream(
+                    payload, config=config, context=runtime_context,
+                    stream_mode=["messages", "values", "custom"], version="v1",
+                ):
+                    if mode == "values":
+                        result = part
+                        stream_evidence = [*orchestrated_calls, *extract_deepagent_tool_calls(part.get("messages", []))]
+                    elif mode == "custom" and isinstance(part, dict) and part.get("type") == "answer_stream_gate":
+                        incremental = bool(part.get("can_stream"))
+                        raw_text = ""
+                        checked_prefix = ""
+                        if incremental:
+                            response_stream.policy = "guarded_words"
+                    elif mode == "messages" and incremental:
+                        message, metadata = part
+                        if metadata.get("langgraph_node") == "model":
+                            raw_text += chunk_text(message)
+                            prefix = completed_prefix(raw_text)
+                            if prefix and prefix != checked_prefix:
+                                checked_prefix = prefix
+                                approved = await prepare_response(harness, context, stream_evidence, prefix)
+                                previous_chunks = response_stream.chunks
+                                await response_stream.answer(approved)
+                                response_stream.chunks_during_generation += response_stream.chunks - previous_chunks
+            else:
+                if response_stream is not None:
+                    response_stream.policy = "buffered_runtime"
+                result = await harness.agent.ainvoke(payload, config=config, context=runtime_context)
         except Exception as exc:
             if is_rate_limit_error(exc):
                 # Do not accumulate customer messages or append to a failed turn
@@ -276,6 +324,51 @@ async def run_turn_impl(
     if not response_text.strip():
         response_text = _safe_fallback_response(context, orchestrated_calls)
 
+    response_text = await prepare_response(harness, context, tool_calls, response_text,
+                                           basket_evidence=[*orchestrated_calls, *tool_calls])
+
+    response_ready = time.perf_counter()
+    if response_stream is not None:
+        await response_stream.answer(response_text)
+        await response_stream.send({"type": "response_complete", "latency": response_stream.latency()})
+
+    print(f"   -> Agent Response: {response_text}")
+    if response_text:
+        state.messages.append(Message("agent", response_text))
+    memory_writes = []
+    persist_started = time.perf_counter()
+    if harness.persist:
+        with usage_stage("memory_persister"):
+            memory_writes = await harness.persist.persist(context) or []
+    persist_finished = time.perf_counter()
+    state.turn_number += 1
+    completed_ms = (persist_finished - response_started) * 1000
+    latency = {
+        "ttft_ms": round(completed_ms, 3), "total_ms": round(completed_ms, 3),
+        "ttfa_ms": None, "measurement_mode": "non_streaming",
+        "asr_ms": round(asr_ms, 3) if asr_ms is not None else None,
+        "call_brief_ms": round(call_brief_ms, 3) if call_brief_ms is not None else None,
+        "response_ready_ms": round((response_ready - response_started) * 1000, 3),
+        "persistence_ms": round((persist_finished - persist_started) * 1000, 3),
+        "request_complete_ms": round(completed_ms, 3),
+        "backend_total_ms": round((persist_finished - backend_started) * 1000, 3),
+        "precomputed_parts": precomputed_parts,
+    }
+    if response_stream is not None:
+        latency.update(response_stream.latency())
+    print("\nDEEP AGENT RUN COMPLETED!\n" + "="*50 + "\n")
+    return TurnResult(
+        conversation_id=state.conversation_id, turn_number=state.turn_number,
+        response_text=response_text, perception=context.perception, identity=context.identity,
+        retrieved=context.retrieved, call_brief=context.call_brief,
+        action_result=ActionResult(status=ActionStatus.EXECUTED, output={"message": "Handled by Deep Agent"}),
+        observation=Observation(summary="Deep agent executed", events=[{"tool_calls": len(tool_calls)}]),
+        steps=steps, state=state, tool_calls=tool_calls, memory_writes=memory_writes, latency=latency,
+    )
+
+
+async def prepare_response(harness, context, tool_calls, response_text, *, basket_evidence=None):
+    """Apply identical grounding and guardrails to emitted and final answers."""
     response_text = ground_unverified_unit_question(
         context, tool_calls, response_text
     )
@@ -283,7 +376,7 @@ async def run_turn_impl(
         context, tool_calls, response_text
     )
     response_text = ground_basket_recap(
-        context, [*orchestrated_calls, *tool_calls], response_text
+        context, basket_evidence if basket_evidence is not None else tool_calls, response_text
     )
     response_text = ground_multi_item_order_confirmation(
         context, tool_calls, response_text
@@ -303,53 +396,5 @@ async def run_turn_impl(
         if context.policy.safe_plan is not None:
             response_text = context.policy.safe_plan.response_text or ""
 
-    response_ready = time.perf_counter()
-    # The backend returns a complete response, rather than streaming tokens.
-    # Persistence happens afterwards and is reported separately.
-    response_ms = (response_ready - response_started) * 1000
-    latency = {
-        "ttft_ms": round(response_ms, 3),
-        "total_ms": round(response_ms, 3),
-        "ttfa_ms": None,  # No VAD/TTS/audio playback path is implemented.
-        "asr_ms": round(asr_ms, 3) if asr_ms is not None else None,
-        "call_brief_ms": round(call_brief_ms, 3) if call_brief_ms is not None else None,
-        "backend_total_ms": round((response_ready - backend_started) * 1000, 3),
-        "measurement_mode": "non_streaming",
-        "precomputed_parts": ["persisted_"+key for key in ("facts","episodes","atomic_facts","foresights")
-                              if (context.state.customer_memory or {}).get(key)],
-    }
-    print(f"   -> Agent Response: {response_text}")
-    print("\nDEEP AGENT RUN COMPLETED!")
-    print("="*50 + "\n")
-    
-    # Save to state
-    if response_text:
-        state.messages.append(Message("agent", response_text))
-
-    memory_writes = []
-    if harness.persist:
-        with usage_stage("memory_persister"):
-            memory_writes = await harness.persist.persist(context) or []
-
-    state.turn_number += 1
-    
-    return TurnResult(
-        conversation_id=state.conversation_id,
-        turn_number=state.turn_number,
-        response_text=response_text,
-        perception=context.perception,
-        identity=context.identity,
-        retrieved=context.retrieved,
-        call_brief=context.call_brief,
-        action_result=ActionResult(status=ActionStatus.EXECUTED, output={"message": "Handled by Deep Agent"}),
-        observation=Observation(
-            summary="Deep agent executed",
-            events=[{"tool_calls": len(tool_calls)}],
-        ),
-        steps=steps,
-        state=state,
-        tool_calls=tool_calls,
-        memory_writes=memory_writes,
-        latency=latency,
-    )
+    return response_text
 

@@ -109,6 +109,7 @@ async def run_scenario(
     cleanup_orders: bool = True,
     input_kind: str = "text",
     audio_root: Path | None = None,
+    streaming: bool = False,
 ) -> list[dict]:
     rows = []
     scenario_id = scenario["scenario_id"]
@@ -222,7 +223,17 @@ async def run_scenario(
                 result = None
                 for attempt in range(max_retries):
                     try:
-                        result = await harness.run_turn(turn_input, conv_state)
+                        if streaming:
+                            result = None
+                            async for event in harness.stream_turn(turn_input, conv_state):
+                                if event["type"] == "complete":
+                                    result = event["result"]
+                                elif event["type"] == "error":
+                                    raise event["exception"]
+                            if result is None:
+                                raise RuntimeError("Answer stream ended without a completed turn")
+                        else:
+                            result = await harness.run_turn(turn_input, conv_state)
                         break
                     except Exception as turn_exc:
                         err_str = str(turn_exc)
@@ -341,7 +352,8 @@ async def run_scenario(
 
             except Exception as exc:
                 total_ms = int((time.perf_counter() - t0) * 1000)
-                print(f"\n  [ERROR] {scenario_id}/{call_key}/turn{turn_idx}: {exc}", file=sys.stderr)
+                error_text = str(exc) or type(exc).__name__
+                print(f"\n  [ERROR] {scenario_id}/{call_key}/turn{turn_idx}: {error_text}", file=sys.stderr)
                 row = {
                     "run_id": run_id,
                     "config": config,
@@ -365,7 +377,7 @@ async def run_scenario(
                     "customer_input_mode": input_mode,
                     "input_kind": input_kind,
                     "latency": {"ttft_ms": None, "total_ms": total_ms, "ttfa_ms": None},
-                    "_error": str(exc),
+                    "_error": error_text,
                     "_fatal_provider_error": permanent_provider_error(exc),
                 }
             rows.append(row)
@@ -406,6 +418,7 @@ async def main():
     parser.add_argument("--scenario-id", default=None, dest="scenario_id",
                         help="Chỉ chạy một scenario cụ thể, vd: SC-001")
     parser.add_argument("--input-kind", choices=["text","audio"], default="text")
+    parser.add_argument("--streaming", action=argparse.BooleanOptionalAction, default=True)
     parser.add_argument("--llm-provider",default=None)
     parser.add_argument("--llm-model",default=None)
     parser.add_argument("--audio-root", type=Path, default=REPO_ROOT / "dataset/iterative-refinement/audio")
@@ -548,13 +561,14 @@ async def main():
                         cleanup_orders=args.cleanup_orders,
                         input_kind=args.input_kind,
                         audio_root=args.audio_root,
+                        streaming=args.streaming,
                     )
                     elapsed = time.perf_counter() - t0
                     print(f"[{i:3d}/{len(all_files)}] {sid}: ✓ {len(rows)} turns, {elapsed:.1f}s", flush=True)
                     for row in rows:
                         row["latency_warmup"] = total_rows < 3
                         total_rows += 1
-                        failures += int(bool(row.get("_error")))
+                        failures += int("_error" in row)
                         out_f.write(json.dumps(row, ensure_ascii=False) + "\n")
                         out_f.flush()
                     if any(row.get("_fatal_provider_error") for row in rows):

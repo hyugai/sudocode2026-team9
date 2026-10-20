@@ -19,6 +19,7 @@ from telesale_agent.core.basket import (
 )
 from telesale_agent.core.models import Perception
 from telesale_agent.application.deepagent.understanding.policy_intent import deferred_policy_topic
+from telesale_agent.application.deepagent.streaming import answer_can_stream
 
 
 class TelesaleAgentRuntimeContext(TypedDict):
@@ -447,6 +448,12 @@ class IntentToolRoutingMiddleware(
             for tool in request.tools
             if _tool_name(tool) in allowed and _tool_name(tool) not in called_names
         ]
+        # Read tools may remain available even when the model simply answers.
+        # Do not buffer that entire answer. Only pending write tools require a
+        # confirmation gate; reasoning/arguments are never answer text.
+        writer = getattr(request.runtime, "stream_writer", None)
+        if callable(writer):
+            writer({"type": "answer_stream_gate", "can_stream": answer_can_stream(_tool_name(tool) for tool in visible_tools)})
         if os.environ.get("DEEPAGENT_LOG_TOKEN_ESTIMATE", "true").lower() in {
             "1",
             "true",
