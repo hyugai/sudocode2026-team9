@@ -380,6 +380,8 @@ async def run_scenario(
                     "_error": error_text,
                     "_fatal_provider_error": permanent_provider_error(exc),
                 }
+                if getattr(exc,"telesale_profile",None):
+                    row["latency"]["profile"] = exc.telesale_profile
             rows.append(row)
             if row.get("_fatal_provider_error"):
                 cleanup_created_orders()

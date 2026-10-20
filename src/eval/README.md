@@ -10,7 +10,7 @@ Chạy tất cả lệnh trong tài liệu này từ thư mục gốc repository
 .\.venv\Scripts\python.exe -X utf8 src\eval\run_suite.py
 ```
 
-Eval mặc định dùng **Gemini `gemini-3.6-flash`**, cùng model với hệ thống.
+Eval mặc định dùng **Gemini `gemini-3.6-flash`**, với cấu hình riêng cho process benchmark.
 Mọi entry point sinh trace/benchmark/judge dùng chung `eval/model_config.py`;
 NLU, main agent, memory persister và baseline nhận cùng provider/model.
 Không kế thừa giá trị Groq cũ từ `LLM_PROVIDER` trong `.env`. Thứ tự ưu tiên:
@@ -93,6 +93,22 @@ Thời gian chờ trong request được tính vào latency backend, không bị
 Groq GPT-OSS, mặc định riêng cho provider đó vẫn là 30 giây/request.
 
 Các lệnh kiểm tra nhanh:
+
+Để phân tích thời gian từng thành phần trên một scenario:
+
+```powershell
+.\.venv\Scripts\python.exe -u -B -X utf8 src/eval/run_suite.py --limit 1 --profile
+```
+
+`--profile` chỉ thêm bộ đo trong process eval, không gọi thêm LLM. Mỗi trace có
+`latency.profile.spans`: stage tổng, operation con, từng request LLM và tool,
+mốc chunk public đầu tiên và các answer emission. `profile` trong report mỗi
+nhóm tổng hợp thời gian stage và startup harness. Chỉ cộng các stage trực tiếp
+của turn; LLM/tool/guard con có thể chồng lên thời gian cha. Request timing là
+wall time phía client, gồm SDK retry nếu có; tool MCP gồm round-trip và server
+work, không tách riêng SQL bên trong subprocess. Phân tích diagnostic giữ cả
+warm-up; latency chính thức vẫn loại 3 lượt đầu. Không dùng một scenario để
+kết luận p95/SLA đạt ngưỡng.
 
 ```powershell
 # Chỉ kiểm tra đủ scenario/audio và checksum, không gọi API

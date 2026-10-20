@@ -89,9 +89,14 @@ async def run_arm(args,scenarios,kind,config,run_dir):
     arm_error = None
     fatal_error = False
     consecutive_failed = 0
+    harness_startup_ms = None
     try:
         async with build_deepagent_harness(memory_mode="durable" if config=="full" else "disabled") as harness:
+            harness_startup_ms = round((time.perf_counter()-started)*1000,3)
             harness.call_brief = FreshCallBrief(harness.call_brief,db_client)
+            if getattr(args,"profile",False):
+                from eval.latency_profiler import attach_profiler
+                attach_profiler(harness)
             with (arm_dir / "trace.jsonl").open("w",encoding="utf-8") as out:
                 for index,(sid,scenario) in enumerate(scenarios.items(),1):
                     print(f"[Suite] {kind}/{config} {index}/{len(scenarios)} {sid}",flush=True)
@@ -143,6 +148,10 @@ async def run_arm(args,scenarios,kind,config,run_dir):
     wrapped = {"evaluator":"team_eval_v2","n_scenarios":len(scenarios),"input_kind":kind,"config":config,
                "wall_seconds":round(time.perf_counter()-started,3),"error":arm_error,
                "fatal_provider_error":fatal_error,"judge_exit_code":judge,"system":report}
+    if getattr(args,"profile",False):
+        from eval.latency_profiler import summarize_profiles
+        wrapped["profile"] = {"harness_startup_ms":harness_startup_ms,**summarize_profiles(trace)}
+        print(f"[Profile {kind}/{config}] {json.dumps(wrapped['profile'],ensure_ascii=False)}",flush=True)
     write_json(arm_dir / "report.json",wrapped)
     print_metrics(f"{kind}/{config}",report)
     return wrapped
@@ -242,6 +251,7 @@ def main():
     parser.add_argument("--max-consecutive-failures",type=int,default=3)
     parser.add_argument("--preflight-only",action="store_true")
     parser.add_argument("--asr-only",action="store_true",help="Evaluate all selected WAVs locally without LLM calls")
+    parser.add_argument("--profile",action="store_true",help="Record detailed component/model/tool timing in latency.profile; no extra model calls")
     parser.add_argument("--streaming",action=argparse.BooleanOptionalAction,default=True,
                         help="Consume actual guarded answer events; --no-streaming measures complete non-streamed turns")
     parser.add_argument("--request-interval",type=float,default=None,help="Shared seconds between model requests; default 30 for Groq GPT-OSS, otherwise 0")
@@ -250,6 +260,8 @@ def main():
     parser.add_argument("--thinking-level",choices=["minimal","low","medium","high"],default=None,
                         help="Optional Gemini thinking level; default follows the application environment")
     args = parser.parse_args()
+    if args.profile and args.asr_only:
+        parser.error("--profile measures complete turns; use --asr-only without --profile")
     if args.limit<=0 or args.sleep<0 or args.request_timeout<=0 or args.max_consecutive_failures<1 or args.model_retries<0 or (args.request_interval is not None and args.request_interval<0):
         parser.error("limit/timeout/failure threshold must be positive; sleep must be nonnegative")
     if not args.version or Path(args.version).name!=args.version or args.version in (".",".."):
@@ -308,6 +320,7 @@ def main():
                 "memory_persister_mode":args.memory_persister_mode,"warmup_turns_per_arm":3,
                 "input_kinds":args.input_kinds,"command":subprocess.list2cmdline([sys.executable,*sys.argv]),
                 "streaming":args.streaming,
+                "profile":args.profile,"memory_backend":os.environ.get("CUSTOMER_MEMORY_BACKEND","file"),
                 "timing_boundary":"harness entry to first/last emitted answer; offline ASR subtracted; persistence reported separately",
                 "latency_guide":"dataset/BTC-Data-Vong1-TEAMS/eval/huong-dan-do-latency.md",
                 "precomputed_parts":[],"precomputed_parts_policy":"observed per turn before current-turn persistence",
@@ -321,6 +334,10 @@ def main():
     metadata["git_commit"] = subprocess.run(["git","rev-parse","HEAD"],cwd=ROOT,capture_output=True,text=True).stdout.strip()
     write_json(run_dir / "metadata.json",metadata)
     print(f"[Model] {model.provider}/{model.model}; request interval={interval:g}s; sleep/turn={args.sleep:g}s",flush=True)
+    if args.profile:
+        from eval.latency_profiler import profiling_hooks
+        with profiling_hooks():
+            return asyncio.run(run(args,scenarios,run_dir,metadata))
     return asyncio.run(run_asr_only(args,scenarios,run_dir,metadata) if args.asr_only else run(args,scenarios,run_dir,metadata))
 
 
