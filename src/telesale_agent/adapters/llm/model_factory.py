@@ -149,8 +149,9 @@ def create_chat_model(
     provider: str | None = None,
     model_name: str | None = None,
     max_output_tokens: int | None = None,
+    thinking_level: str | None = None,
 ) -> Any:
-    """Create the configured LangChain chat model without making an API call."""
+    """Create a model; per-instance Gemini thinking overrides the shared setting."""
     config = resolve_model_config(
         provider=provider,
         model_name=model_name,
@@ -197,14 +198,17 @@ def create_chat_model(
     if not _gemini_uses_fixed_sampling(config.model):
         gemini_options["temperature"] = temperature
     # Gemini 3+ thinks by default and bills thinking tokens as output tokens.
-    # LLM_THINKING_LEVEL (minimal|low|medium|high) caps that hidden cost.
-    thinking_level = os.environ.get("LLM_THINKING_LEVEL", "").strip().lower()
-    if thinking_level:
-        if thinking_level not in {"minimal", "low", "medium", "high"}:
+    # An explicit level applies only to this model, without changing the
+    # environment inherited by the main agent or memory persister.
+    selected_thinking_level = (
+        thinking_level or os.environ.get("LLM_THINKING_LEVEL", "")
+    ).strip().lower()
+    if selected_thinking_level:
+        if selected_thinking_level not in {"minimal", "low", "medium", "high"}:
             raise ValueError(
-                "LLM_THINKING_LEVEL must be one of: minimal, low, medium, high"
+                "Gemini thinking level must be one of: minimal, low, medium, high"
             )
-        gemini_options["thinking_level"] = thinking_level
+        gemini_options["thinking_level"] = selected_thinking_level
 
     return ChatGoogleGenerativeAI(
         **gemini_options,

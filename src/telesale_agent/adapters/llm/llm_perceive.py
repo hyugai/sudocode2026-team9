@@ -1,3 +1,4 @@
+import os
 import re
 from typing import Any
 from pydantic import BaseModel, Field
@@ -191,8 +192,13 @@ def canonicalize_memory_deltas(
 class LLMPerceiver(Perceiver):
     """Use the configured LLM to extract intents and entities."""
     
-    def __init__(self, model_name: str | None = None):
-        self.llm = create_chat_model(temperature=0, model_name=model_name)
+    def __init__(self, model_name: str | None = None, *, thinking_level: str | None = None):
+        nlu_thinking_level = (
+            thinking_level or os.environ.get("NLU_THINKING_LEVEL", "").strip() or None
+        )
+        self.llm = create_chat_model(
+            temperature=0, model_name=model_name, thinking_level=nlu_thinking_level
+        )
         self.structured_llm = structured_output(self.llm,IntentSchema)
 
     async def perceive(self, context: TurnContext) -> Perception:

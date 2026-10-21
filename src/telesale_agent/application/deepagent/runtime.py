@@ -32,6 +32,15 @@ from telesale_agent.application.deepagent.tools.routing import (
 from telesale_agent.application.deepagent.tools.memory_archive import build_memory_archive_tool
 from telesale_agent.application.deepagent.context.prompt import positive_int_env as _positive_int_env
 
+
+def create_deepagent_model():
+    """Configure main-agent thinking without changing NLU or memory learning."""
+    return create_chat_model(
+        temperature=0.3,
+        thinking_level=os.environ.get("DEEPAGENT_THINKING_LEVEL", "").strip() or None,
+    )
+
+
 async def initialize_runtime(harness):
     if harness.agent is not None:
         return harness
@@ -99,7 +108,7 @@ async def initialize_runtime(harness):
     await harness._prewarm_knowledge_mcp()
             
     model_config = resolve_model_config()
-    model = create_chat_model(temperature=0.3)
+    model = create_deepagent_model()
     provider_key = model_provider_key(model, model_config.provider)
 
     # DeepAgent ships general filesystem/execution/subagent tools. This

@@ -1,0 +1,1 @@
+- MCP diagnostic foresight

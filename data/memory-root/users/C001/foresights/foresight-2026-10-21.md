@@ -1,0 +1,3 @@
+- Lưu lại chi tiết sản phẩm đã trao đổi để không yêu cầu khách hàng nhắc lại trong cuộc gọi tiếp theo
+- Giải đáp cụ thể chính sách đổi hàng đối với sản phẩm chưa qua sử dụng và còn nguyên tem hộp trong cuộc gọi tiếp theo
+- Xác nhận giá bán hiện tại của áo khoác gió win break sivesbom màu xanh nive cho khách hàng
