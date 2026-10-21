@@ -1,0 +1,360 @@
+{
+  "started_at": "2026-10-21T08:01:33.877397+07:00",
+  "scope": "Actual backend MCP initialization and read-only/guard calls; order success paths use mocks; standalone memory uses an isolated output directory.",
+  "gemini_generation_requests": 0,
+  "checks": [
+    {
+      "name": "runtime.initialize_and_tool_discovery",
+      "passed": true,
+      "elapsed_seconds": 3.87753,
+      "evidence": {
+        "tool_count": 10,
+        "missing": []
+      }
+    },
+    {
+      "name": "db.crm_existing",
+      "passed": true,
+      "elapsed_seconds": 2.173325,
+      "evidence": {
+        "found": true,
+        "ambiguous": false,
+        "orders_count": 0
+      }
+    },
+    {
+      "name": "db.crm_not_found",
+      "passed": true,
+      "elapsed_seconds": 0.010742,
+      "evidence": {
+        "found": false,
+        "orders_count": 0
+      }
+    },
+    {
+      "name": "db.catalog_exact_sku",
+      "passed": true,
+      "elapsed_seconds": 0.018828,
+      "evidence": {
+        "items_count": 1,
+        "skus": [
+          "SKU-AP-X"
+        ]
+      }
+    },
+    {
+      "name": "db.catalog_text_search",
+      "passed": true,
+      "elapsed_seconds": 0.014722,
+      "evidence": {
+        "items_count": 2,
+        "skus": [
+          "SKU-AP-X",
+          "SKU-AP-FLT-X"
+        ]
+      }
+    },
+    {
+      "name": "db.catalog_not_found",
+      "passed": true,
+      "elapsed_seconds": 0.011301,
+      "evidence": {
+        "items_count": 0,
+        "skus": []
+      }
+    },
+    {
+      "name": "db.inventory_existing",
+      "passed": true,
+      "elapsed_seconds": 0.022639,
+      "evidence": {
+        "found": true,
+        "sku": "SKU-AP-X",
+        "in_stock": true,
+        "qty": 40
+      }
+    },
+    {
+      "name": "db.inventory_not_found",
+      "passed": true,
+      "elapsed_seconds": 0.014721,
+      "evidence": {
+        "found": false,
+        "sku": "MCP-CHECK-NONEXISTENT",
+        "in_stock": false,
+        "qty": 0
+      }
+    },
+    {
+      "name": "db.pricing_existing",
+      "passed": true,
+      "elapsed_seconds": 0.069223,
+      "evidence": {
+        "sku": "SKU-AP-X",
+        "list_price_vnd": 4890000,
+        "final_price_vnd": 4890000
+      }
+    },
+    {
+      "name": "db.pricing_not_found",
+      "passed": true,
+      "elapsed_seconds": 0.014542,
+      "evidence": {
+        "error": "product_not_found"
+      }
+    },
+    {
+      "name": "db.order_status_existing",
+      "passed": true,
+      "elapsed_seconds": 0.017055,
+      "evidence": {
+        "orders_count": 1
+      }
+    },
+    {
+      "name": "db.order_status_not_found",
+      "passed": true,
+      "elapsed_seconds": 0.011702,
+      "evidence": {
+        "orders_count": 0
+      }
+    },
+    {
+      "name": "db.order_create_guard_missing_address",
+      "passed": true,
+      "elapsed_seconds": 0.008406,
+      "evidence": {
+        "error": "missing_delivery_address"
+      }
+    },
+    {
+      "name": "db.order_create_guard_cod_limit",
+      "passed": true,
+      "elapsed_seconds": 0.009204,
+      "evidence": {
+        "error": "cod_limit_exceeded"
+      }
+    },
+    {
+      "name": "db.order_update_not_found",
+      "passed": true,
+      "elapsed_seconds": 0.01368,
+      "evidence": {
+        "error": "order_not_found"
+      }
+    },
+    {
+      "name": "knowledge.pinecone_returns",
+      "passed": false,
+      "elapsed_seconds": 0.133553,
+      "evidence": {
+        "error": "knowledge_search_failed: No module named 'pinecone'",
+        "chunks": []
+      }
+    },
+    {
+      "name": "knowledge.pinecone_shipping",
+      "passed": false,
+      "elapsed_seconds": 0.084394,
+      "evidence": {
+        "error": "knowledge_search_failed: No module named 'pinecone'",
+        "chunks": []
+      }
+    },
+    {
+      "name": "knowledge.pinecone_warranty",
+      "passed": false,
+      "elapsed_seconds": 0.082372,
+      "evidence": {
+        "error": "knowledge_search_failed: No module named 'pinecone'",
+        "chunks": []
+      }
+    },
+    {
+      "name": "knowledge.empty_query_guard",
+      "passed": true,
+      "elapsed_seconds": 0.011204,
+      "evidence": {
+        "error": "query_required",
+        "chunks": []
+      }
+    },
+    {
+      "name": "workflow.callback_weekday",
+      "passed": true,
+      "elapsed_seconds": 0.007016,
+      "evidence": {
+        "callback_at": "2026-10-21T14:00:00",
+        "moved_from": null,
+        "has_callback_id": true
+      }
+    },
+    {
+      "name": "workflow.callback_holiday_shift",
+      "passed": true,
+      "elapsed_seconds": 0.007544,
+      "evidence": {
+        "callback_at": "2026-10-21T14:00:00",
+        "moved_from": "2026-10-20T14:00:00",
+        "has_callback_id": true
+      }
+    },
+    {
+      "name": "workflow.handoff_contract",
+      "passed": true,
+      "elapsed_seconds": 0.009025,
+      "evidence": {
+        "status": "queued",
+        "has_ticket_id": true
+      }
+    },
+    {
+      "name": "db.counts_unchanged",
+      "passed": true,
+      "elapsed_seconds": 0,
+      "evidence": {
+        "products": 40,
+        "customers": 50,
+        "orders": 2
+      }
+    },
+    {
+      "name": "order.mock_create_success",
+      "passed": true,
+      "elapsed_seconds": 0.000406,
+      "evidence": {
+        "status": "created",
+        "database": "mock"
+      }
+    },
+    {
+      "name": "order.mock_idempotent_replay",
+      "passed": true,
+      "elapsed_seconds": 0.001594,
+      "evidence": {
+        "database": "mock"
+      }
+    },
+    {
+      "name": "order.mock_idempotency_conflict",
+      "passed": true,
+      "elapsed_seconds": 0.00272,
+      "evidence": {
+        "database": "mock"
+      }
+    },
+    {
+      "name": "order.mock_update_success",
+      "passed": true,
+      "elapsed_seconds": 0.003915,
+      "evidence": {
+        "database": "mock"
+      }
+    },
+    {
+      "name": "memory.standalone_discovery",
+      "passed": true,
+      "elapsed_seconds": 1.209579,
+      "evidence": {
+        "runtime_loaded": false,
+        "root": "isolated_memory"
+      }
+    },
+    {
+      "name": "memory.isolated_memory_update_user_profile",
+      "passed": true,
+      "elapsed_seconds": 0.021898,
+      "evidence": {
+        "type": "str",
+        "nonempty": true
+      }
+    },
+    {
+      "name": "memory.isolated_memory_update_behaviors",
+      "passed": true,
+      "elapsed_seconds": 0.011647,
+      "evidence": {
+        "type": "str",
+        "nonempty": true
+      }
+    },
+    {
+      "name": "memory.isolated_memory_record_atomic_fact",
+      "passed": true,
+      "elapsed_seconds": 0.010898,
+      "evidence": {
+        "type": "str",
+        "nonempty": true
+      }
+    },
+    {
+      "name": "memory.isolated_memory_record_foresight",
+      "passed": true,
+      "elapsed_seconds": 0.011336,
+      "evidence": {
+        "type": "str",
+        "nonempty": true
+      }
+    },
+    {
+      "name": "memory.isolated_memory_record_episode",
+      "passed": true,
+      "elapsed_seconds": 0.009732,
+      "evidence": {
+        "type": "str",
+        "nonempty": true
+      }
+    }
+  ],
+  "observations": [
+    "Runtime loads DB, Knowledge, Workflow. Standalone Memory MCP is not loaded by runtime.",
+    "Workflow callback/handoff generate identifiers but do not persist or dispatch work.",
+    "Successful production order creation/update is deliberately not exercised.",
+    "Pinecone is declared in requirements.txt and pyproject.toml but is absent from the project virtualenv.",
+    "LangSmith trace upload returned 403 Forbidden; business tool calls continued.",
+    "No application source, .env, customer memory or production order was modified by the diagnostic."
+  ],
+  "registered_tools": [
+    "check_inventory",
+    "check_order_status",
+    "create_new_order",
+    "get_pricing_quote",
+    "mcp_escalate_to_human",
+    "mcp_schedule_callback",
+    "retrieve_customer_profile",
+    "search_catalog",
+    "search_policy",
+    "update_order"
+  ],
+  "database_counts_before": {
+    "products": 40,
+    "customers": 50,
+    "orders": 2
+  },
+  "database_counts_after": {
+    "products": 40,
+    "customers": 50,
+    "orders": 2
+  },
+  "standalone_memory_tools": [
+    "memory_record_atomic_fact",
+    "memory_record_episode",
+    "memory_record_foresight",
+    "memory_update_behaviors",
+    "memory_update_user_profile"
+  ],
+  "completed_at": "2026-10-21T08:01:51.348445+07:00",
+  "summary": {
+    "passed": 30,
+    "failed": 3,
+    "total": 33
+  },
+  "diagnostic_correction": "Initial diagnostic expected optional archive tool. Corrected expectation to the 10 business tools: current file memory does not implement search_archive, and runtime deliberately omits that optional tool.",
+  "environment": {
+    "python": "D:\\sudo_code_2026-group_9\\.venv\\Scripts\\python.exe",
+    "knowledge_backend": "pinecone",
+    "knowledge_retrieval_mode": "mcp",
+    "pinecone_distribution_installed": false,
+    "file_memory_archive_search_available": false
+  }
+}

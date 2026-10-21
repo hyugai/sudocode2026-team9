@@ -305,5 +305,105 @@ class ModelCompatibilityTests(unittest.TestCase):
             self.assertIs(_benchmark_rate_limiter(),_benchmark_rate_limiter())
 
 
+class NLUThinkingTests(unittest.TestCase):
+    def gemini_constructor(self):
+        return Mock(side_effect=lambda **kwargs: SimpleNamespace(
+            options=kwargs, with_structured_output=Mock(return_value="structured")))
+
+    def test_nlu_override_does_not_change_agent_or_persister_thinking(self):
+        import os
+        from telesale_agent.adapters.llm.llm_perceive import LLMPerceiver
+        from telesale_agent.adapters.llm.model_factory import create_chat_model
+        constructor = self.gemini_constructor()
+        with patch.dict(os.environ, {"LLM_PROVIDER":"gemini", "LLM_MODEL":"gemini-3.6-flash",
+                "GOOGLE_API_KEY":"test-key", "LLM_THINKING_LEVEL":"high",
+                "NLU_THINKING_LEVEL":"minimal"}, clear=True), patch.dict(sys.modules,
+                {"langchain_google_genai":SimpleNamespace(ChatGoogleGenerativeAI=constructor)}):
+            nlu = LLMPerceiver()
+            agent = create_chat_model(temperature=0)
+            persister = create_chat_model(temperature=0)
+            self.assertEqual(nlu.llm.options["thinking_level"], "minimal")
+            self.assertEqual(agent.options["thinking_level"], "high")
+            self.assertEqual(persister.options["thinking_level"], "high")
+            self.assertEqual(os.environ["LLM_THINKING_LEVEL"], "high")
+
+    def test_unset_nlu_thinking_preserves_shared_or_provider_default(self):
+        import os
+        from telesale_agent.adapters.llm.llm_perceive import LLMPerceiver
+        constructor = self.gemini_constructor()
+        for shared in (None, "low"):
+            env = {"LLM_PROVIDER":"gemini", "LLM_MODEL":"gemini-3.6-flash", "GOOGLE_API_KEY":"test-key"}
+            if shared:
+                env["LLM_THINKING_LEVEL"] = shared
+            with self.subTest(shared=shared), patch.dict(os.environ, env, clear=True), patch.dict(
+                    sys.modules, {"langchain_google_genai":SimpleNamespace(ChatGoogleGenerativeAI=constructor)}):
+                self.assertEqual(LLMPerceiver().llm.options.get("thinking_level"), shared)
+
+    def test_explicit_nlu_level_overrides_nlu_environment(self):
+        import os
+        from telesale_agent.adapters.llm.llm_perceive import LLMPerceiver
+        constructor = self.gemini_constructor()
+        with patch.dict(os.environ, {"LLM_PROVIDER":"gemini", "LLM_MODEL":"gemini-3.6-flash",
+                "GOOGLE_API_KEY":"test-key", "NLU_THINKING_LEVEL":"minimal"}, clear=True), patch.dict(
+                sys.modules, {"langchain_google_genai":SimpleNamespace(ChatGoogleGenerativeAI=constructor)}):
+            self.assertEqual(LLMPerceiver(thinking_level=" LOW ").llm.options["thinking_level"], "low")
+
+    def test_invalid_nlu_level_fails_before_constructing_model(self):
+        import os
+        from telesale_agent.adapters.llm.llm_perceive import LLMPerceiver
+        constructor = self.gemini_constructor()
+        with patch.dict(os.environ, {"LLM_PROVIDER":"gemini", "LLM_MODEL":"gemini-3.6-flash",
+                "GOOGLE_API_KEY":"test-key", "NLU_THINKING_LEVEL":"minimall"}, clear=True), patch.dict(
+                sys.modules, {"langchain_google_genai":SimpleNamespace(ChatGoogleGenerativeAI=constructor)}):
+            with self.assertRaisesRegex(ValueError, "thinking level"):
+                LLMPerceiver()
+            constructor.assert_not_called()
+
+
+class DeepAgentThinkingTests(unittest.TestCase):
+    def gemini_constructor(self):
+        return Mock(side_effect=lambda **kwargs: SimpleNamespace(
+            options=kwargs, with_structured_output=Mock(return_value="structured")))
+
+    def test_agent_and_nlu_overrides_leave_actual_persister_on_shared_level(self):
+        import os
+        from telesale_agent.application.deepagent.runtime import create_deepagent_model
+        from telesale_agent.adapters.llm.llm_perceive import LLMPerceiver
+        from telesale_agent.adapters.llm.llm_persist import LLMPersister
+        constructor = self.gemini_constructor()
+        with patch.dict(os.environ, {"LLM_PROVIDER":"gemini", "LLM_MODEL":"gemini-3.6-flash",
+                "GOOGLE_API_KEY":"test-key", "LLM_THINKING_LEVEL":"high",
+                "NLU_THINKING_LEVEL":"minimal", "DEEPAGENT_THINKING_LEVEL":" MINIMAL "}, clear=True), patch.dict(
+                sys.modules, {"langchain_google_genai":SimpleNamespace(ChatGoogleGenerativeAI=constructor)}):
+            self.assertEqual(create_deepagent_model().options["thinking_level"], "minimal")
+            self.assertEqual(LLMPerceiver().llm.options["thinking_level"], "minimal")
+            self.assertEqual(LLMPersister(object()).llm.options["thinking_level"], "high")
+            self.assertEqual(os.environ["LLM_THINKING_LEVEL"], "high")
+
+    def test_unset_agent_level_inherits_shared_setting_not_nlu(self):
+        import os
+        from telesale_agent.application.deepagent.runtime import create_deepagent_model
+        constructor = self.gemini_constructor()
+        for shared in (None, "low"):
+            env = {"LLM_PROVIDER":"gemini", "LLM_MODEL":"gemini-3.6-flash",
+                   "GOOGLE_API_KEY":"test-key", "NLU_THINKING_LEVEL":"minimal"}
+            if shared:
+                env["LLM_THINKING_LEVEL"] = shared
+            with self.subTest(shared=shared), patch.dict(os.environ, env, clear=True), patch.dict(
+                    sys.modules, {"langchain_google_genai":SimpleNamespace(ChatGoogleGenerativeAI=constructor)}):
+                self.assertEqual(create_deepagent_model().options.get("thinking_level"), shared)
+
+    def test_invalid_agent_level_is_rejected_before_model_construction(self):
+        import os
+        from telesale_agent.application.deepagent.runtime import create_deepagent_model
+        constructor = self.gemini_constructor()
+        with patch.dict(os.environ, {"LLM_PROVIDER":"gemini", "LLM_MODEL":"gemini-3.6-flash",
+                "GOOGLE_API_KEY":"test-key", "DEEPAGENT_THINKING_LEVEL":"minimall"}, clear=True), patch.dict(
+                sys.modules, {"langchain_google_genai":SimpleNamespace(ChatGoogleGenerativeAI=constructor)}):
+            with self.assertRaisesRegex(ValueError, "thinking level"):
+                create_deepagent_model()
+            constructor.assert_not_called()
+
+
 if __name__ == "__main__":
     unittest.main()
