@@ -69,7 +69,7 @@ def trace_health(scenarios, trace):
     rows = [row for group in trace.values() for row in group]
     observed = Counter((r["scenario_id"], r["call"], r["turn"]) for r in rows)
     expected = turn_keys(scenarios)
-    errors = sum(bool(r.get("_error")) for r in rows)
+    errors = sum("_error" in r for r in rows)
     failed = sum(int((r.get("usage") or {}).get("failed_requests", 0)) for r in rows)
     cleanup_errors = sum(bool(r.get("_cleanup_error")) for r in rows)
     missing = sorted(expected - set(observed))
@@ -88,23 +88,33 @@ def measured_latency(trace, reference, warmup=3):
     marked = any("latency_warmup" in r for r in all_rows)
     measured = [r for i, r in enumerate(all_rows)
                 if not (r.get("latency_warmup") if marked else i < warmup)
-                and not r.get("_error")]
+                and "_error" not in r]
     def stats(values):
         return None if not values else {"n":len(values), "p50_ms":round(statistics.median(values),3),
-                                       "p95_ms":reference.p95(values)}
+                                       "p95_ms":reference.p95(values), "max_ms":round(max(values),3)}
     def values(key):
         return [r["latency"][key] for r in measured
-                if r.get("latency",{}).get("measurement_mode") == "non_streaming"
+                if r.get("latency",{}).get("measurement_mode") in {"non_streaming", "streaming"}
                 and r["latency"].get(key) is not None]
     totals = values("total_ms")
     brief = [r["call_brief_latency_ms"] for r in measured
              if r.get("call_brief_latency_ms") is not None
-             and r.get("latency",{}).get("measurement_mode") == "non_streaming"]
+             and r.get("latency",{}).get("measurement_mode") in {"non_streaming", "streaming"}]
+    streaming_rows = [r for r in measured if r.get("latency",{}).get("measurement_mode") == "streaming"]
     result = {"n_turns":len(totals), "warmup_turns":warmup,
               "warning":None if len(totals)>=100 else "Need at least 100 measured turns after warm-up",
               "ttft":stats(values("ttft_ms")), "total":stats(totals),
               "ttfa":stats(values("ttfa_ms")), "call_brief":stats(brief),
-              "measurement_mode":"non_streaming; TTFT=Total; ASR excluded; no output audio/TTFA"}
+              "request_complete":stats(values("request_complete_ms")),
+              "persistence":stats(values("persistence_ms")),
+              "precomputed_parts":sorted({part for row in measured for part in row.get("latency",{}).get("precomputed_parts",[])}),
+              "streaming":{"turns":len(streaming_rows),
+                           "answer_chunks":sum(r["latency"].get("answer_chunks",0) for r in streaming_rows),
+                           "multiple_chunk_turns":sum(r["latency"].get("answer_chunks",0)>1 for r in streaming_rows),
+                           "incremental_turns":sum(r["latency"].get("chunks_before_generation_complete",0)>0 for r in streaming_rows),
+                           "policies":dict(Counter(r["latency"].get("stream_policy") for r in streaming_rows))},
+              "measurement_mode":("streaming: first/last emitted answer; " if streaming_rows else "non_streaming; TTFT=Total; ")
+                                  +"ASR excluded; no output audio/TTFA"}
     asr = [(r.get("latency",{}).get("asr_ms"),r.get("audio",{}).get("duration_seconds")) for r in measured]
     asr = [(ms,sec) for ms,sec in asr if ms is not None and sec]
     result["asr"] = {"n":len(asr), "audio_seconds":round(sum(sec for _,sec in asr),3),
@@ -161,7 +171,9 @@ class FreshCallBrief:
             facts = (context.state.customer_memory or {}).get("facts",{})
             sku = facts.get("product_advised") or facts.get("variant_sku")
             on = date.fromisoformat(context.input.metadata["call_date"])
-            current = {"checked_on":on.isoformat(),"crm_and_cross_channel_history":"reloaded by customer_context.hydrate"}
+            current = {"checked_on":on.isoformat(),
+                       "crm_profile_and_order_history":"reloaded by customer_context.hydrate",
+                       "cross_channel_interactions":"not available in current CRM adapter"}
             if sku:
                 current["inventory"] = self.db.check_stock(sku,on)
                 profile = context.state.customer_profile or {}

@@ -2,10 +2,12 @@ import asyncio
 import logging
 import os
 import secrets
+import json
+import time
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi import Depends, FastAPI, File, Form, Header, HTTPException, UploadFile
+from fastapi import Depends, FastAPI, File, Form, Header, HTTPException, UploadFile, Request
 from pydantic import BaseModel, field_validator
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, StreamingResponse
 import sys
 
 # Add src to Python path so we can import the agent
@@ -17,6 +19,7 @@ from telesale_agent.adapters.llm.rate_limits import is_rate_limit_error, provide
 from telesale_agent.core.errors import ASRUnavailableError, AudioInputError, AudioTooLargeError
 from telesale_agent.core.models import Channel, TurnInput, ConversationState
 from contextlib import asynccontextmanager
+from telesale_agent.application.deepagent.streaming import stream_events
 
 # Global harness reference
 harness = None
@@ -33,6 +36,19 @@ async def lifespan(app: FastAPI):
         await harness.__aexit__(None, None, None)
 
 app = FastAPI(title="Telesale Agent API", lifespan=lifespan)
+
+
+class ArrivalTimingMiddleware:
+    def __init__(self, app):
+        self.app = app
+
+    async def __call__(self, scope, receive, send):
+        if scope["type"] == "http":
+            scope["telesale_received_at"] = time.perf_counter()
+        await self.app(scope, receive, send)
+
+
+app.add_middleware(ArrivalTimingMiddleware)
 
 cors_origins = [
     origin.strip()
@@ -65,6 +81,7 @@ class ChatRequest(BaseModel):
     conversation_id: str
     message: str
     customer_phone: str | None = None
+    stream: bool = False
 
     @field_validator("conversation_id", "message")
     @classmethod
@@ -74,19 +91,25 @@ class ChatRequest(BaseModel):
         return value.strip()
 
 @app.post("/api/chat", dependencies=[Depends(require_api_key)])
-async def chat_endpoint(req: ChatRequest):
-    return await run_chat_turn(TurnInput(
+async def chat_endpoint(req: ChatRequest, request: Request):
+    turn_input = TurnInput(
         conversation_id=req.conversation_id,
         text=req.message,
         customer_hint=req.customer_phone,
-    ))
+        metadata={"_latency_started_at": request.scope["telesale_received_at"]},
+    )
+    if req.stream:
+        return streaming_chat_turn(turn_input)
+    return await run_chat_turn(turn_input)
 
 
 @app.post("/api/chat/audio", dependencies=[Depends(require_api_key)])
 async def audio_chat_endpoint(
+    request: Request,
     conversation_id: str = Form(...),
     file: UploadFile = File(...),
     customer_phone: str | None = Form(default=None),
+    stream: bool = Form(default=False),
 ):
     try:
         if harness is None:
@@ -102,12 +125,16 @@ async def audio_chat_endpoint(
             raise HTTPException(status_code=413, detail="File ghi âm vượt quá dung lượng cho phép.")
         if not audio:
             raise HTTPException(status_code=422, detail="File ghi âm rỗng.")
-        return await run_chat_turn(TurnInput(
+        turn_input = TurnInput(
             conversation_id=conversation_id.strip(),
             audio=audio,
             channel=Channel.VOICE,
             customer_hint=customer_phone or None,
-        ))
+            metadata={"_latency_started_at": request.scope["telesale_received_at"], "offline_audio": True},
+        )
+        if stream:
+            return streaming_chat_turn(turn_input)
+        return await run_chat_turn(turn_input)
     finally:
         await file.close()
 
@@ -150,7 +177,11 @@ async def run_chat_turn(turn_input: TurnInput):
             ) from exc
         sessions[conversation_id] = result.state
 
-    response = {"response": result.response_text}
+    return turn_payload(turn_input, result)
+
+
+def turn_payload(turn_input, result):
+    response = {"response": result.response_text, "latency": getattr(result, "latency", {})}
     if turn_input.channel == Channel.VOICE:
         response["transcript"] = turn_input.text
     else:
@@ -174,6 +205,47 @@ async def run_chat_turn(turn_input: TurnInput):
             "usage": result.usage,
         }
     return response
+
+
+def streaming_chat_turn(turn_input):
+    if harness is None:
+        raise HTTPException(status_code=503, detail="Agent is not ready")
+    if provider_cooldown.remaining():
+        return rate_limit_response()
+
+    async def execute(output):
+        conversation_id = turn_input.conversation_id
+        lock = session_locks.setdefault(conversation_id, asyncio.Lock())
+        # The producer owns this lock even after a client disconnects.
+        async with lock:
+            if provider_cooldown.remaining():
+                raise HTTPException(status_code=429, detail="Dịch vụ đang giới hạn token.")
+            state = sessions.get(conversation_id) or ConversationState(conversation_id)
+            result = await harness.run_turn(turn_input, state, response_stream=output)
+            sessions[conversation_id] = result.state
+            return result
+
+    async def body():
+        async for event in stream_events(execute, started_at=turn_input.metadata["_latency_started_at"]):
+            if event["type"] == "complete":
+                payload = {"type": "complete", **turn_payload(turn_input, event["result"])}
+            elif event["type"] == "error":
+                exc = event["exception"]
+                if is_rate_limit_error(exc):
+                    provider_cooldown.record(exc)
+                logger.error("Streaming turn failed: %s", type(exc).__name__)
+                detail = "Không thể hoàn tất lượt hội thoại. Vui lòng kiểm tra kết nối trước khi gửi lại."
+                if isinstance(exc, (AudioInputError, ASRUnavailableError, AudioTooLargeError)):
+                    detail = str(exc)
+                payload = {"type": "error", "detail": detail,
+                           "retry_after_seconds": provider_cooldown.remaining()}
+            else:
+                payload = event
+            yield "data: " + json.dumps(payload, ensure_ascii=False) + "\n\n"
+
+    return StreamingResponse(body(), media_type="text/event-stream", headers={
+        "Cache-Control": "no-cache", "X-Accel-Buffering": "no",
+    })
 
 
 def rate_limit_response() -> JSONResponse:

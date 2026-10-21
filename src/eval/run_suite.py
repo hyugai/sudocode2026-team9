@@ -47,8 +47,9 @@ def print_metrics(label, report):
     cost = report["estimated_cost_per_call"]
     print(f"Estimated cost/call USD: {cost['average_per_call_usd']} (pricing configured: {cost['configured']})")
     print(f"HR price/promo: {report['hallucination_rate']['price_promo_only']['value']}%")
-    for key in ("ttft","total","ttfa","call_brief"):
+    for key in ("ttft","total","ttfa","call_brief","request_complete","persistence"):
         print(f"Latency {key}: {json.dumps(report['latency'][key])}")
+    print(f"Streaming: {json.dumps(report['latency']['streaming'])}")
     print(f"ASR: {json.dumps(report['latency']['asr'])}")
     if "asr" in report:
         print(f"ASR WER: {report['asr']['WER']}%; CER: {report['asr']['CER']}%; coverage: {json.dumps(report['asr']['coverage'])}")
@@ -64,7 +65,7 @@ def asr_report(scenarios,trace,out):
                 gt.append({"id":key,"full_text":text,"noisy":spec.get("input_mode")=="noisy"})
     for (sid,call),rows in trace.items():
         for row in rows:
-            if not row.get("_error"):
+            if "_error" not in row:
                 hy[f"{sid}/{call}/{row['turn']}"] = {"text":row.get("normalized_customer_text",row["customer_text"])}
     out.mkdir(exist_ok=True)
     write_json(out / "ground_truth.json",{"dialogues":gt})
@@ -88,16 +89,22 @@ async def run_arm(args,scenarios,kind,config,run_dir):
     arm_error = None
     fatal_error = False
     consecutive_failed = 0
+    harness_startup_ms = None
     try:
         async with build_deepagent_harness(memory_mode="durable" if config=="full" else "disabled") as harness:
+            harness_startup_ms = round((time.perf_counter()-started)*1000,3)
             harness.call_brief = FreshCallBrief(harness.call_brief,db_client)
+            if getattr(args,"profile",False):
+                from eval.latency_profiler import attach_profiler
+                attach_profiler(harness)
             with (arm_dir / "trace.jsonl").open("w",encoding="utf-8") as out:
                 for index,(sid,scenario) in enumerate(scenarios.items(),1):
                     print(f"[Suite] {kind}/{config} {index}/{len(scenarios)} {sid}",flush=True)
                     try:
                         rows = await run_scenario(scenario,harness,config,args.version,
                                                   sleep_turn=args.sleep,max_retries=1,cleanup_orders=True,
-                                                  input_kind=kind,audio_root=args.audio_root)
+                                                  input_kind=kind,audio_root=args.audio_root,
+                                                  streaming=args.streaming)
                     except Exception as exc:
                         rows = [{"scenario_id":sid,"call":call,"turn":turn,"agent_text":"","customer_text":"",
                                  "tool_calls":[],"claims":[],"facts_used":[],"questions":[],"memory_writes":[],
@@ -115,7 +122,7 @@ async def run_arm(args,scenarios,kind,config,run_dir):
                         arm_error = permanent_failure
                         print("[Suite ERROR] Permanent provider error; stopping this benchmark without further API calls.",flush=True)
                         break
-                    failed = bool(rows) and all(row.get("_error") for row in rows)
+                    failed = bool(rows) and all("_error" in row for row in rows)
                     consecutive_failed = consecutive_failed+1 if failed else 0
                     if consecutive_failed >= args.max_consecutive_failures:
                         arm_error = "Stopped after consecutive scenarios with all turns failing; remaining turns are missing."
@@ -141,6 +148,10 @@ async def run_arm(args,scenarios,kind,config,run_dir):
     wrapped = {"evaluator":"team_eval_v2","n_scenarios":len(scenarios),"input_kind":kind,"config":config,
                "wall_seconds":round(time.perf_counter()-started,3),"error":arm_error,
                "fatal_provider_error":fatal_error,"judge_exit_code":judge,"system":report}
+    if getattr(args,"profile",False):
+        from eval.latency_profiler import summarize_profiles
+        wrapped["profile"] = {"harness_startup_ms":harness_startup_ms,**summarize_profiles(trace)}
+        print(f"[Profile {kind}/{config}] {json.dumps(wrapped['profile'],ensure_ascii=False)}",flush=True)
     write_json(arm_dir / "report.json",wrapped)
     print_metrics(f"{kind}/{config}",report)
     return wrapped
@@ -165,6 +176,8 @@ async def run(args,scenarios,run_dir,metadata):
         comparisons[kind] = compare_metrics(reports[kind]["full"]["system"],reports[kind]["baseline_no_memory"]["system"])
         print(f"\n[Acceptance {kind}] {json.dumps(comparisons[kind],ensure_ascii=False)}",flush=True)
     finished = datetime.now().astimezone().isoformat()
+    metadata["precomputed_parts"] = sorted({part for modes in reports.values() for arm in modes.values()
+                                             for part in arm["system"]["latency"].get("precomputed_parts",[])})
     all_valid = all(arm["system"]["trace_health"]["valid"] and not arm["error"] for modes in reports.values() for arm in modes.values())
     result = {"metadata":{**metadata,"finished_at":finished},
               "status":"blocked_provider" if blocked_reason else "completed" if all_valid else "completed_with_errors",
@@ -238,12 +251,17 @@ def main():
     parser.add_argument("--max-consecutive-failures",type=int,default=3)
     parser.add_argument("--preflight-only",action="store_true")
     parser.add_argument("--asr-only",action="store_true",help="Evaluate all selected WAVs locally without LLM calls")
+    parser.add_argument("--profile",action="store_true",help="Record detailed component/model/tool timing in latency.profile; no extra model calls")
+    parser.add_argument("--streaming",action=argparse.BooleanOptionalAction,default=True,
+                        help="Consume actual guarded answer events; --no-streaming measures complete non-streamed turns")
     parser.add_argument("--request-interval",type=float,default=None,help="Shared seconds between model requests; default 30 for Groq GPT-OSS, otherwise 0")
     parser.add_argument("--model-retries",type=int,default=2,help="Provider-request retries; never replay a complete mutation turn")
     parser.add_argument("--reasoning-effort",choices=["low","medium","high"],default=None)
     parser.add_argument("--thinking-level",choices=["minimal","low","medium","high"],default=None,
                         help="Optional Gemini thinking level; default follows the application environment")
     args = parser.parse_args()
+    if args.profile and args.asr_only:
+        parser.error("--profile measures complete turns; use --asr-only without --profile")
     if args.limit<=0 or args.sleep<0 or args.request_timeout<=0 or args.max_consecutive_failures<1 or args.model_retries<0 or (args.request_interval is not None and args.request_interval<0):
         parser.error("limit/timeout/failure threshold must be positive; sleep must be nonnegative")
     if not args.version or Path(args.version).name!=args.version or args.version in (".",".."):
@@ -301,11 +319,25 @@ def main():
                 "reasoning_effort":reasoning,
                 "memory_persister_mode":args.memory_persister_mode,"warmup_turns_per_arm":3,
                 "input_kinds":args.input_kinds,"command":subprocess.list2cmdline([sys.executable,*sys.argv]),
+                "streaming":args.streaming,
+                "profile":args.profile,"memory_backend":os.environ.get("CUSTOMER_MEMORY_BACKEND","file"),
+                "timing_boundary":"harness entry to first/last emitted answer; offline ASR subtracted; persistence reported separately",
                 "latency_guide":"dataset/BTC-Data-Vong1-TEAMS/eval/huong-dan-do-latency.md",
-                "precomputed_parts":["persisted_customer_facts","persisted_episodes"],
-                "freshness":"CRM/order history reloaded at call entry; remembered SKU inventory/promotions rechecked before CallBrief ready"}
+                "precomputed_parts":[],"precomputed_parts_policy":"observed per turn before current-turn persistence",
+                "freshness":"CRM/profile/order history reloaded at call entry; remembered SKU inventory/promotions rechecked; cross-channel interaction source unavailable"}
+    source_paths = sorted((ROOT / "src/eval").glob("*.py")) + [
+        ROOT / "src/telesale_agent/application/deepagent" / name
+        for name in ("streaming.py", "turn.py", "harness.py")]
+    source_paths += [ROOT / "src/telesale_agent/entrypoints/api/chat.py",
+                     ROOT / "src/telesale_agent/application/deepagent/tools/routing.py"]
+    metadata["source_sha256"] = {str(path.relative_to(ROOT)):hashlib.sha256(path.read_bytes()).hexdigest() for path in source_paths}
+    metadata["git_commit"] = subprocess.run(["git","rev-parse","HEAD"],cwd=ROOT,capture_output=True,text=True).stdout.strip()
     write_json(run_dir / "metadata.json",metadata)
     print(f"[Model] {model.provider}/{model.model}; request interval={interval:g}s; sleep/turn={args.sleep:g}s",flush=True)
+    if args.profile:
+        from eval.latency_profiler import profiling_hooks
+        with profiling_hooks():
+            return asyncio.run(run(args,scenarios,run_dir,metadata))
     return asyncio.run(run_asr_only(args,scenarios,run_dir,metadata) if args.asr_only else run(args,scenarios,run_dir,metadata))
 
 

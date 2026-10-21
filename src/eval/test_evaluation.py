@@ -35,6 +35,13 @@ class CoverageTests(unittest.TestCase):
         scenarios,_ = fixture()
         self.assertFalse(trace_health(scenarios,{})["valid"])
 
+    def test_blank_error_marker_is_invalid_and_excluded_from_latency(self):
+        scenarios,trace = fixture()
+        trace[("SC-001","call_1")][0]["_error"] = ""
+        self.assertEqual(trace_health(scenarios,trace)["error_turns"],1)
+        self.assertFalse(trace_health(scenarios,trace)["valid"])
+        self.assertEqual(measured_latency(trace,REFERENCE,warmup=0)["n_turns"],0)
+
     def test_duplicates_and_internal_request_errors_are_invalid(self):
         scenarios,trace = fixture()
         row = trace[("SC-001","call_1")][0]
@@ -117,7 +124,7 @@ class MetricTests(unittest.TestCase):
 
 
 class LatencyTests(unittest.TestCase):
-    def test_harness_excludes_asr_and_persistence_from_response_time(self):
+    def test_nonstreamed_harness_excludes_asr_but_includes_awaited_persistence(self):
         from langchain_core.messages import AIMessage
         from telesale_agent.application.deepagent.turn import run_turn_impl
         from telesale_agent.core.models import TurnInput,CustomerIdentity,CallBrief
@@ -156,8 +163,10 @@ class LatencyTests(unittest.TestCase):
                 self.fail("Pure async fakes should complete without external IO")
         self.assertEqual(result.latency["asr_ms"],500)
         self.assertEqual(result.latency["call_brief_ms"],7)
-        self.assertEqual(result.latency["total_ms"],27)
-        self.assertEqual(result.latency["ttft_ms"],27)
+        self.assertEqual(result.latency["response_ready_ms"],27)
+        self.assertEqual(result.latency["persistence_ms"],1000)
+        self.assertEqual(result.latency["total_ms"],1027)
+        self.assertEqual(result.latency["ttft_ms"],1027)
         self.assertIsNone(result.latency["ttfa_ms"])
 
     def test_three_warmups_are_excluded_using_official_percentile(self):
@@ -176,6 +185,21 @@ class LatencyTests(unittest.TestCase):
 
 
 class ModelCompatibilityTests(unittest.TestCase):
+    def test_generator_records_timeout_without_message(self):
+        from eval.generate_traces import run_scenario
+        from unittest.mock import AsyncMock
+        scenarios,_ = fixture()
+        harness = SimpleNamespace(memory=SimpleNamespace(),reset_customer_memory=Mock(),
+                                  run_turn=AsyncMock(side_effect=TimeoutError()))
+        coroutine = run_scenario(scenarios["SC-001"],harness,"full","test",max_retries=1)
+        try:
+            coroutine.send(None)
+        except StopIteration as stopped:
+            rows = stopped.value
+        else:
+            self.fail("Pure async fakes should complete without external IO")
+        self.assertEqual(rows[0]["_error"],"TimeoutError")
+
     def test_provider_billing_error_is_permanent_but_429_is_not(self):
         from eval.model_config import permanent_provider_error
         self.assertTrue(permanent_provider_error(Exception("Your prepayment credits are depleted")))

@@ -176,6 +176,7 @@ def _build_worker_generate_command(
         str(args.max_retries),
         "--persist-memory" if args.persist_memory else "--no-persist-memory",
         "--cleanup-orders" if args.cleanup_orders else "--no-cleanup-orders",
+        "--streaming" if args.streaming else "--no-streaming",
     ]
     if args.max_turns is not None:
         command.extend(["--max-turns", str(args.max_turns)])
@@ -393,6 +394,7 @@ See `partitions.json` for the scenario assignment and each
 ## Parameters
 
 - Config: `{args.config}`
+- Streaming: `{args.streaming}`
 - Provider/model: `{os.environ.get('LLM_PROVIDER', 'groq')}` / `{os.environ.get('LLM_MODEL', 'provider default')}`
 - Request timeout: `{os.environ.get('LLM_REQUEST_TIMEOUT_SECONDS', '30')}` seconds
 - Max output tokens: `{os.environ.get('LLM_MAX_OUTPUT_TOKENS', '1024')}`
@@ -460,6 +462,7 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument("--sleep", type=float, default=0.0)
     parser.add_argument("--sleep-scenario", type=float, default=0.0)
     parser.add_argument("--max-retries", type=int, default=1)
+    parser.add_argument("--streaming", action=argparse.BooleanOptionalAction, default=True)
     parser.add_argument("--max-turns", type=int, default=None)
     parser.add_argument(
         "--persist-memory", action=argparse.BooleanOptionalAction, default=True

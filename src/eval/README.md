@@ -10,7 +10,7 @@ Chạy tất cả lệnh trong tài liệu này từ thư mục gốc repository
 .\.venv\Scripts\python.exe -X utf8 src\eval\run_suite.py
 ```
 
-Eval mặc định dùng **Gemini `gemini-3.6-flash`**, cùng model với hệ thống.
+Eval mặc định dùng **Gemini `gemini-3.6-flash`**, với cấu hình riêng cho process benchmark.
 Mọi entry point sinh trace/benchmark/judge dùng chung `eval/model_config.py`;
 NLU, main agent, memory persister và baseline nhận cùng provider/model.
 Không kế thừa giá trị Groq cũ từ `LLM_PROVIDER` trong `.env`. Thứ tự ưu tiên:
@@ -94,6 +94,22 @@ Groq GPT-OSS, mặc định riêng cho provider đó vẫn là 30 giây/request.
 
 Các lệnh kiểm tra nhanh:
 
+Để phân tích thời gian từng thành phần trên một scenario:
+
+```powershell
+.\.venv\Scripts\python.exe -u -B -X utf8 src/eval/run_suite.py --limit 1 --profile
+```
+
+`--profile` chỉ thêm bộ đo trong process eval, không gọi thêm LLM. Mỗi trace có
+`latency.profile.spans`: stage tổng, operation con, từng request LLM và tool,
+mốc chunk public đầu tiên và các answer emission. `profile` trong report mỗi
+nhóm tổng hợp thời gian stage và startup harness. Chỉ cộng các stage trực tiếp
+của turn; LLM/tool/guard con có thể chồng lên thời gian cha. Request timing là
+wall time phía client, gồm SDK retry nếu có; tool MCP gồm round-trip và server
+work, không tách riêng SQL bên trong subprocess. Phân tích diagnostic giữ cả
+warm-up; latency chính thức vẫn loại 3 lượt đầu. Không dùng một scenario để
+kết luận p95/SLA đạt ngưỡng.
+
 ```powershell
 # Chỉ kiểm tra đủ scenario/audio và checksum, không gọi API
 .\.venv\Scripts\python.exe -X utf8 src\eval\run_suite.py --preflight-only
@@ -118,14 +134,32 @@ Các lệnh kiểm tra nhanh:
 
 ### Latency theo hướng dẫn BTC
 
-- Đo tại `run_turn_impl`, dùng `perf_counter`; không đo UI/client network.
-- Hệ thống trả lời không streaming: **TTFT = Total** tại thời điểm response
-  sẵn sàng, trước khi persist memory; tổng wall-time gồm persistence lưu riêng.
+- Mặc định suite/generator tiêu thụ stream thật từ LangGraph. Dùng
+  `--no-streaming` để đo đường trả JSON hoàn chỉnh nhằm đối chứng.
+- Đo bằng `perf_counter` tại ranh giới harness phát nội dung. API streaming
+  lấy mốc nhận request từ ASGI middleware, gồm cả thời gian đợi session lock.
+  Không tính render UI hay mạng client. Eval gọi cùng harness trực tiếp.
+- **TTFT**: từ đầu request/harness đến khi phát đoạn trả lời không rỗng đầu tiên.
+  **Total**: đến khi phát đoạn trả lời cuối cùng. Không tính status, thought,
+  tool argument, transcript input hay metadata thành token câu trả lời.
+- Nội dung được kiểm tra grounding/PII theo cụm từ (`guarded_words`) trước khi
+  phát; giữ lại từ và chuỗi số chưa hoàn chỉnh. Tool đọc còn khả dụng không chặn
+  stream text trả lời; reasoning và tool arguments được lọc riêng. Gate cập nhật
+  theo từng model call, giữ xác nhận giao dịch khi còn tool ghi dữ liệu và dùng
+  evidence mới nhất để grounding.
+  Không chia giả câu trả lời đã sinh xong để báo TTFT sớm.
+- `response_complete` được gửi trước persistence; `complete` sau persistence.
+  `latency.persistence_ms` và `request_complete_ms` được báo riêng. Session
+  vẫn khóa đến khi ghi nhớ hoàn tất; mất kết nối không tự replay thao tác.
+- Đường không streaming: **TTFT = Total**, tính đến khi harness hoàn tất,
+  gồm cả persistence đang được await. `response_ready_ms` chỉ là mốc nội bộ.
 - WAV offline: ASR đo riêng; không cộng vào TTFT/Total. Báo ms/phút audio.
 - Call Brief: từ lúc bắt đầu nhận diện caller đến lúc brief hoàn tất, bao gồm
   hydrate CRM/order/cross-channel history, NLU, retrieval và refresh memory.
   Wrapper eval kiểm tra lại tồn kho/khuyến mãi theo `call_date` của SKU đã nhớ
-  trước khi brief ready. Facts/episodes đã persist được khai báo là precomputed.
+  trước khi brief ready. `precomputed_parts` chỉ khai báo dữ liệu đã có trước
+  persistence của lượt hiện tại. CRM hiện chưa có nguồn tương tác đa kênh riêng,
+  nên không chứng nhận yêu cầu freshness đa kênh đã đầy đủ.
 - Loại 3 turn warm-up đầu **mỗi nhóm**; tính p95 bằng chính `REFERENCE.p95`.
   Cảnh báo nếu còn dưới 100 lượt đo được.
 - Báo p95 TTFT <= 3000 ms, p95 Total <= 8000 ms, Call Brief tối đa <= 5000 ms
@@ -133,6 +167,19 @@ Các lệnh kiểm tra nhanh:
 - **TTFA để null**: chưa có VAD/TTS/byte audio output; không lấy thời gian tool
   làm TTFA. Chưa thể chứng nhận SLA voice M2 TTFA <= 2,5 giây.
 - Trace cũ có latency ước lượng không được coi là latency đo thật; phải chạy lại.
+
+### Streaming API
+
+- `POST /api/chat`: thêm `"stream": true` vào JSON; audio upload thêm form
+  field `stream=true` tại `POST /api/chat/audio`. Không truyền flag vẫn trả JSON
+  để tương thích client cũ. Giao diện web hiện dùng streaming mặc định.
+- SSE `input` chứa transcript; `delta` nối câu trả lời; `replace` thay nội dung
+  bằng bản đã qua guardrail; `response_complete` báo token cuối; `complete`
+  trả response/latency/transcript/debug sau khi ghi nhớ xong. `error` kết thúc
+  lượt lỗi, không được tính thành kết quả thành công.
+- Report ghi số `answer_chunks`, số lượt nhiều chunk và policy buffering.
+  Streaming theo các câu đã kiểm tra có thể vẫn chưa đạt TTFT p95 3 giây nếu
+  NLU/retrieval trước câu trả lời chậm; số đo không bị chia hoặc trừ các bước này.
 
 ### Điều chỉnh độ đúng của phép chấm
 
