@@ -12,6 +12,7 @@ const apiBase = (process.env.NEXT_PUBLIC_API_BASE_URL || (
 
 export interface Message { role: "user" | "agent"; text: string }
 export interface LogEntry { userMessage: string; debug: DebugInfo }
+export interface Consultation { sku: string; name: string; price: string; quantity: number }
 
 /** One owner for both presentations: switching visibility never starts a turn. */
 export function useConversation() {
@@ -28,6 +29,8 @@ export function useConversation() {
   const [backendReady, setBackendReady] = useState(false);
   const [cooldownSeconds, setCooldownSeconds] = useState(0);
   const [sessionId, setSessionId] = useState("");
+  const [voicePreview, setVoicePreview] = useState(false);
+  const [consultation, setConsultation] = useState<Consultation | null>(null);
   const conversationIdRef = useRef("");
   const [chatClient] = useState(() => createChatClient(apiBase));
 
@@ -80,7 +83,10 @@ export function useConversation() {
     setIsLoading(true);
     setErrorMessage("");
     try {
-      const data = await chatClient.send({ conversationId, message: userMessage, audioFile: selectedAudio, customerPhone });
+      const contextualMessage = consultation && !selectedAudio
+        ? `Ngữ cảnh tư vấn: ${consultation.name} (${consultation.sku}), giá tham chiếu ${consultation.price}, số lượng ${consultation.quantity}.\nCâu hỏi của khách: ${userMessage}`
+        : userMessage;
+      const data = await chatClient.send({ conversationId, message: contextualMessage, audioFile: selectedAudio, customerPhone });
       if (!data) return;
       setCooldownSeconds(chatClient.retryAfterSeconds);
       const transcript = selectedAudio ? data.transcript : (data.normalized_message ?? userMessage);
@@ -105,7 +111,7 @@ export function useConversation() {
 
   return { messages, debugLogs, input, setInput, customerPhone, setCustomerPhone, isLoading,
     audioFile, audioPreviewUrl, clearAudio, selectAudio, errorMessage, backendReady,
-    cooldownSeconds, sessionId, sendMessage };
+    cooldownSeconds, sessionId, sendMessage, voicePreview, setVoicePreview, consultation, setConsultation };
 }
 
 export type Conversation = ReturnType<typeof useConversation>;

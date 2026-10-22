@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import { ConversationProvider } from "./components/conversation-provider";
+import { PurchaseProvider } from "./components/purchase-provider";
 
 const inter = localFont({
   variable: "--font-inter",
@@ -24,7 +26,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="vi"
       className={`${inter.variable} h-full antialiased`}
     >
-      <body>{children}</body>
+      <body><ConversationProvider><PurchaseProvider>{children}</PurchaseProvider></ConversationProvider></body>
     </html>
   );
 }

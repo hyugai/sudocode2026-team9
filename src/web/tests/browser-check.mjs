@@ -38,10 +38,10 @@ try {
       return Response.json({response:window.__reply,...(audio?{transcript:'Tôi cần tai nghe pin lâu.'}:{normalized_message:data.message}),debug:{intent:'product_consultation',retrieved_knowledge:['Thông tin sản phẩm'],tool_calls:[{tool:'catalog.search'}]}});
     };` });
   await browser.send("Emulation.setDeviceMetricsOverride", { width: 1440, height: 900, deviceScaleFactor: 1, mobile: false });
-  await browser.send("Page.navigate", { url: process.env.BASE_URL || "http://127.0.0.1:3000" });
+  await browser.send("Page.navigate", { url: process.env.BASE_URL || "http://localhost:3000" });
   await wait("document.querySelector('#inline-message') && !document.body.innerText.includes('Đang chờ kết nối backend')");
   await evaluate("document.fonts.ready");
-  await wait("Array.from(document.images).every(i=>i.complete&&i.naturalWidth>0)");
+  await wait("Array.from(document.images).every(i=>i.loading==='lazy'||(i.complete&&i.naturalWidth>0))");
   const geometry = await evaluate(`(() => {const r=s=>{const b=document.querySelector(s).getBoundingClientRect();return{x:b.x,y:b.y,w:b.width,h:b.height}};return{chat:r('#inline-chat'),hero:r('.hero'),search:r('.product-search'),header:r('.site-header'),card:r('.product-card'),grid:getComputedStyle(document.querySelector('.product-grid')).gridTemplateColumns,images:[...document.images].map(i=>({src:i.getAttribute('src'),w:i.getBoundingClientRect().width,h:i.getBoundingClientRect().height}))}})()`);
   await writeFile(`${output}/desktop-geometry.json`, JSON.stringify(geometry, null, 2));
   await snapshot("after-desktop-A");
@@ -59,8 +59,7 @@ try {
   await evaluate("window.__hold=true");
   await evaluate("for(let i=0;i<20;i++)document.querySelector('.composer').dispatchEvent(new Event('submit',{bubbles:true,cancelable:true}))");
   await wait("!!document.querySelector('.typing')");
-  await click(".ask-product");
-  check("Catalog actions cannot overwrite an in-flight draft", await evaluate("document.querySelector('.ask-product').disabled&&document.querySelector('#inline-message').value==='Xin chào Synee'"));
+  check("Catalog has no AI action that can overwrite an in-flight draft", await evaluate("!document.querySelector('.ask-product')&&document.querySelector('#inline-message').value==='Xin chào Synee'"));
   await evaluate("window.__hold=false");
   await wait("document.querySelectorAll('.message').length===3");
   const first = await evaluate("window.__calls[0]");
@@ -101,7 +100,7 @@ try {
   await wait("!!document.querySelector('audio')");
   await wait("document.querySelector('audio').readyState>=1");
   check("Audio preview decodes a real one-second WAV", await evaluate("document.querySelector('audio').duration===1"));
-  check("Catalog Ask AI cannot replace a draft while audio is selected", await evaluate("[...document.querySelectorAll('.ask-product')].every(n=>n.disabled)"));
+  check("Catalog keeps audio selection without any AI card action", await evaluate("!document.querySelector('.ask-product')&&!!document.querySelector('audio')"));
   const preview = await evaluate("document.querySelector('audio').src");
   await evaluate("window.scrollTo({top:900,behavior:'instant'})");
   await wait("!!document.querySelector('.chat-launcher')");
@@ -161,22 +160,26 @@ try {
   await evaluate("(()=>{const dt=new DataTransfer();dt.items.add(new File([new Uint8Array(26*1024*1024)],'large.mp3',{type:'audio/mpeg'}));const n=document.querySelector('.composer input[type=file]');n.files=dt.files;n.dispatchEvent(new Event('change',{bubbles:true}));})()");
   await wait("!!document.querySelector('.error')");
   check("Oversized audio is rejected before any upload", await evaluate(`!document.querySelector('audio')&&window.__calls.length===${count + 1}`));
-  await type("#product-search", "MacBook");
+  await type("#product-search", "SKU-WF-RO9");
   await evaluate("document.querySelector('.product-search').requestSubmit()");
   await wait("document.querySelectorAll('.product-card').length===1");
-  check("Traditional search filters the demo catalog without a chat request", await evaluate(`document.querySelector('.product-card h3').textContent.includes('MacBook')&&window.__calls.length===${count + 1}`));
+  check("Traditional search filters the BTC catalog without a chat request", await evaluate(`document.querySelector('.product-card').dataset.sku==='SKU-WF-RO9'&&window.__calls.length===${count + 1}`));
   await click(".section-heading .quiet-button");
-  await evaluate("[...document.querySelectorAll('.category-nav button')].find(n=>n.textContent==='Nhà bếp').click()");
-  await wait("document.querySelectorAll('.product-card').length===1");
+  await evaluate("[...document.querySelectorAll('.category-nav button')].find(n=>n.textContent==='Điện gia dụng').click()");
+  await wait("!!document.querySelector('.subcategory-nav')");
+  await evaluate("[...document.querySelectorAll('.subcategory-nav button')].find(n=>n.textContent==='Nồi chiên').click()");
+  await wait("document.querySelectorAll('.product-card').length===3");
   await evaluate("window.scrollTo({top:1100,behavior:'instant'})");
   await wait("!!document.querySelector('.chat-launcher')");
-  await click(".ask-product");
+  await click(".product-card");
+  await wait("!!document.querySelector('.pdp-ask')");
+  await click(".pdp-ask");
   await wait("!!document.querySelector('#floating-message')");
-  check("Category Ask AI fills product context without silently sending", await evaluate(`document.querySelector('#floating-message').value.includes('Máy xay sinh tố')&&window.__calls.length===${count + 1}`));
+  check("PDP Ask AI selects visible product context without silently sending", await evaluate(`document.querySelector('.consultation-context').textContent.includes('SKU-AF-4L')&&window.__calls.length===${count + 1}`));
   await browser.send("Emulation.setDeviceMetricsOverride", { width: 320, height: 480, deviceScaleFactor: 1, mobile: false });
-  await evaluate("document.querySelector('.press-button').focus()");
-  check("Composer controls remain reachable in a short mobile viewport", await evaluate("document.querySelector('.press-button').getBoundingClientRect().bottom<=innerHeight&&document.documentElement.scrollWidth<=innerWidth"));
+  await evaluate("document.querySelector('.composer .press-button').focus()");
+  check("Composer controls remain reachable in a short mobile viewport", await evaluate("document.querySelector('.composer .press-button').getBoundingClientRect().bottom<=innerHeight&&document.documentElement.scrollWidth<=innerWidth"));
   await snapshot("after-mobile-short-viewport");
   await writeFile(`${output}/browser-results.json`, JSON.stringify({ checks, geometry }, null, 2));
   console.log(`${checks.length} browser checks passed. Artifacts: ${output}`);
-} finally { browser.close(); }
+} finally { await browser.close(); }

@@ -59,6 +59,7 @@ export function ChatPanel({ conversation: c, compact = false, voicePreview, onMo
       {compact && <button className="icon-button close-chat" aria-label="Đóng trò chuyện" onClick={onClose}><Asset name="close" /></button>}
     </div>
     <div className="chat-body">
+      {c.consultation && <div className="consultation-context" role="status"><p>Tư vấn: {c.consultation.name} · {c.consultation.sku} · {c.consultation.price} · SL {c.consultation.quantity}</p><p>{c.audioFile ? "Ngữ cảnh này không gửi kèm file ghi âm; dùng tin nhắn văn bản để hỏi theo sản phẩm." : "Thông tin sản phẩm sẽ đi kèm khi bạn gửi tin nhắn văn bản."}</p><button type="button" className="text-link" disabled={c.isLoading} onClick={() => c.setConsultation(null)}>Bỏ ngữ cảnh sản phẩm</button></div>}
       <div className="conversation-history" ref={historyRef} role="log" aria-label="Nội dung trò chuyện" aria-live="polite" aria-relevant="additions text" tabIndex={0}>
         {c.messages.map((message, index) => <div className={`message ${message.role}`} key={index}>
           {message.role === "agent" && <span className="synee-avatar" aria-label="Synee AI"><Asset name={compact ? "compactSparkle" : "sparkle"} /></span>}
