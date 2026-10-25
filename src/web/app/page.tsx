@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { flushSync } from "react-dom";
 import { ChatApiError, createChatClient, type DebugInfo } from "@/utils/chat-api";
 import { upsertChatTurn, type ChatMessage } from "@/utils/chat-messages";
+import VoicePanel from "@/components/voice-panel";
 
 const apiBase = (process.env.NEXT_PUBLIC_API_BASE_URL || (
   process.env.NODE_ENV === "development"
@@ -18,6 +19,8 @@ interface LogEntry {
 
 export default function Chat() {
   const [activeTab, setActiveTab] = useState<"chat" | "logs">("chat");
+  const [mode, setMode] = useState<"chat" | "voice">("chat");
+  const [voiceActive, setVoiceActive] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([
     { role: "agent", text: "Xin chào! Mình là Tư vấn viên Telesale. Mình có thể giúp gì cho bạn hôm nay?" }
   ]);
@@ -222,7 +225,7 @@ export default function Chat() {
               onChange={(e) => setCustomerPhone(e.target.value)}
               className="text-xs text-black/80 bg-white border border-black/10 px-3 py-1.5 rounded-full outline-none focus:border-black/30 placeholder-black/30 w-36"
               title="Nhập SĐT khách hàng (VD: 0984726714)"
-              disabled={isLoading}
+              disabled={isLoading || voiceActive}
             />
             <div className="text-xs text-black/60 bg-black/5 px-3 py-1.5 rounded-full font-semibold tracking-wide hidden sm:block">
               Session: {sessionId ? sessionId.slice(0, 8) : "Mới"}
@@ -230,7 +233,25 @@ export default function Chat() {
           </div>
         </header>
 
-        {activeTab === "chat" ? (
+        {activeTab === "chat" && (
+          <div className="flex gap-2 border-b border-black/10 px-4 sm:px-6 py-3" role="group" aria-label="Chế độ hội thoại">
+            <button type="button" disabled={isLoading} aria-pressed={mode === "chat"}
+              onClick={() => setMode("chat")}
+              className={"rounded-full px-4 py-2 text-sm font-medium border disabled:opacity-40 " +
+                (mode === "chat" ? "bg-black text-white border-black" : "bg-white text-black/60 border-black/15")}>
+              Chat / ghi âm
+            </button>
+            <button type="button" disabled={isLoading} aria-pressed={mode === "voice"}
+              onClick={() => setMode("voice")}
+              className={"rounded-full px-4 py-2 text-sm font-medium border disabled:opacity-40 " +
+                (mode === "voice" ? "bg-black text-white border-black" : "bg-white text-black/60 border-black/15")}>
+              Realtime voice
+            </button>
+          </div>
+        )}
+        {activeTab === "chat" && mode === "voice" ? (
+          <VoicePanel apiBase={apiBase} customerPhone={customerPhone} onActiveChange={setVoiceActive} />
+        ) : activeTab === "chat" ? (
           <>
             {/* Chat Scroll Area */}
             <div className="flex-1 overflow-y-auto p-4 sm:p-6 scroll-smooth">

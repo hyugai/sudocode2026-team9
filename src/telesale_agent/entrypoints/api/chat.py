@@ -30,12 +30,21 @@ async def lifespan(app: FastAPI):
     global harness
     print("🚀 Khởi tạo kết nối MCP Servers cho API Backend...")
     harness = await build_deepagent_harness_async()
-    yield
-    print("🛑 Đóng kết nối MCP Servers...")
-    if harness:
-        await harness.__aexit__(None, None, None)
+    try:
+        yield
+    finally:
+        try:
+            await shutdown_voice()
+        finally:
+            print("🛑 Đóng kết nối MCP Servers...")
+            if harness:
+                await harness.__aexit__(None, None, None)
 
 app = FastAPI(title="Telesale Agent API", lifespan=lifespan)
+
+from telesale_agent.entrypoints.api.voice import create_voice_router
+voice_router, shutdown_voice = create_voice_router(lambda: harness)
+app.include_router(voice_router)
 
 
 class ArrivalTimingMiddleware:

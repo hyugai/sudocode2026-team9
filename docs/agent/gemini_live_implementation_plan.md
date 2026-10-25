@@ -1,8 +1,8 @@
 # Kế hoạch triển khai nhánh realtime voice bằng Gemini Live
 
 - Ngày lập: 23/10/2026.
-- Trạng thái: thiết kế và kế hoạch; chưa triển khai.
-- Phạm vi thay đổi của tài liệu này: chỉ thêm file Markdown, không sửa code, dependency, cấu hình hoặc database.
+- Trạng thái: đã triển khai nhánh realtime tư vấn/tra cứu ngày 25/10/2026; xem mục 14.
+- Phạm vi bản kế hoạch ban đầu ngày 23/10/2026: chỉ tài liệu. Việc triển khai được yêu cầu ở lượt tiếp theo.
 - Mục tiêu: thêm nhánh native audio Gemini Live, dùng chung nghiệp vụ và canonical customer memory với nhánh text/upload hiện tại.
 
 ## 1. Phạm vi và các quyết định kiến trúc
@@ -358,3 +358,16 @@ Rollback: ngừng nhận phiên voice mới, giữ đường text, drain/đối 
 - [Google Gen AI SDK: LiveServerContent](https://googleapis.github.io/js-genai/release_docs/interfaces/types.LiveServerContent.html).
 
 Các ràng buộc provider cần được đối chiếu lại ở P0 cho model/SDK được chọn. Sơ đồ module, operation journal và memory coordination là thiết kế đề xuất cho repository này, không phải tính năng có sẵn của Gemini Live.
+
+## 14. Đối chiếu bản triển khai ngày 25/10/2026
+
+- Đã thêm nút chuyển chế độ trên page.tsx và VoicePanel; audio capture/playback bằng worklet.
+- Đã tách context preparation, tool policy, business executors/protocol và MCP connection runtime; giữ façade import của DeepAgent.
+- ConversationServices lấy các dependency đã được composition root hiện tại khởi tạo; MCP vẫn có một lifecycle owner là harness trong lifespan.
+- Voice controller, Gemini adapter, router, session tickets, read-only tool dispatcher và memory adapter/coordinator đã có code cùng kiểm thử giả lập.
+- Memory jobs dùng PostgreSQL voice_turn_journal, nguồn voice ổn định và prepared write batches. Script migration được cung cấp nhưng không tự chạy lên database người dùng.
+- Một số module trong đề xuất được gộp: turn/session event handling, interruption và finalize nằm ở controller.py; response policy cho text vẫn ở đường hiện tại.
+- Pha P6 cho tool ghi chưa bật: chưa có operation ledger/reconciliation đã nghiệm thu cho mọi domain mutation. Server từ chối read_write; dùng chat cho tạo/sửa đơn.
+- Provider reconnect/resume có xử lý; browser transport mất kết nối thì kết thúc phiên và cho người dùng chủ động mở lại. Chưa triển khai reconnect browser tự động hoặc nhiều worker.
+- Các tiêu chí rollout, audio QA trên Gemini thật và benchmark tiếng Việt phải được đo trên tài khoản/môi trường triển khai; tests tự động không phải chứng nhận SLA.
+- Hướng dẫn cấu hình và phạm vi thực tế: [Gemini Live deployment](../deployment/gemini_live.md).

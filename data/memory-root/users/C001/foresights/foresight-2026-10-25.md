@@ -1,0 +1,1 @@
+- Giới thiệu danh mục các dòng sản phẩm hiện có cho khách hàng trong cuộc gọi tiếp theo [voice-source:voice:live-164b05a6239d42eb886a76c3fd489d4a:8dedc139c9d643e2a8e63910075a94a3:1]
