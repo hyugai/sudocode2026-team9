@@ -53,6 +53,10 @@ try {
   await click(".commerce-actions button:last-child");
   await wait("document.querySelector('dialog[open] #customer-phone')");
   await type("#customer-phone", "0901234567");
+    await evaluate("document.querySelector('.confirm-profile-reset')?.click()");
+    await wait("!document.querySelector('.save-profile').disabled");
+    await click(".save-profile");
+    await wait("JSON.parse(sessionStorage.getItem('synee.guest.conversation.v1'))?.customerPhone==='0901234567'");
   await click(".dialog-header button");
   await type("#inline-message", "Xin chào Synee");
   await wait("document.querySelector('#inline-message').value==='Xin chào Synee'");
@@ -139,10 +143,14 @@ try {
   await submit();
   await wait("document.querySelectorAll('.message').length===9");
   check("Replies render as escaped text", await evaluate("!document.querySelector('.message-bubble img')&&document.querySelector('.message:last-child').textContent.includes('<img src=x')"));
-  await click(".menu-button");
-  await evaluate("[...document.querySelectorAll('.menu-links button')].find(n=>n.textContent==='Nhật ký hội thoại').click()");
+  await click(".account-trigger");
+  await click('.account-navigation a[href="/account/conversations"]');
+  await wait("document.querySelector('.debug-logs')");
   check("Legacy debug logs retain intent, RAG and full tool details", await evaluate("document.querySelector('.debug-logs').textContent.includes('product_consultation')&&document.querySelector('.debug-logs').textContent.includes('Thông tin sản phẩm')&&document.querySelector('.debug-logs').textContent.includes('catalog.search')"));
-  await click(".dialog-header button");
+  await click(".account-history > a");
+  await wait("document.querySelector('#inline-message')");
+  await evaluate("window.scrollTo({top:900,behavior:'instant'})");
+  await wait("document.querySelector('.chat-launcher')");await click(".chat-launcher");
   await browser.send("Emulation.setDeviceMetricsOverride", { width: 320, height: 760, deviceScaleFactor: 1, mobile: false });
   check("320px floating chat and long messages do not overflow", await evaluate("document.documentElement.scrollWidth<=innerWidth&&document.querySelector('#floating-chat').getBoundingClientRect().right<=innerWidth&&document.querySelector('.composer').getBoundingClientRect().bottom<innerHeight"));
   await snapshot("after-mobile-C");
@@ -178,6 +186,7 @@ try {
   check("PDP Ask AI selects visible product context without silently sending", await evaluate(`document.querySelector('.consultation-context').textContent.includes('SKU-AF-4L')&&window.__calls.length===${count + 1}`));
   await browser.send("Emulation.setDeviceMetricsOverride", { width: 320, height: 480, deviceScaleFactor: 1, mobile: false });
   await evaluate("document.querySelector('.composer .press-button').focus()");
+  await wait("document.querySelector('.composer .press-button').getBoundingClientRect().bottom<=innerHeight");
   check("Composer controls remain reachable in a short mobile viewport", await evaluate("document.querySelector('.composer .press-button').getBoundingClientRect().bottom<=innerHeight&&document.documentElement.scrollWidth<=innerWidth"));
   await snapshot("after-mobile-short-viewport");
   await writeFile(`${output}/browser-results.json`, JSON.stringify({ checks, geometry }, null, 2));

@@ -19,4 +19,6 @@ npm run build
 
 See [MIGRATION.md](MIGRATION.md) for the feature map, shared A/B/C behavior, browser regression instructions, screenshot locations, deployment limitations, and sandbox build fallback.
 
-Cart, login, live voice, order tracking and inventory services are not connected. Product data is the approved Figma demonstration catalog. Real text chat and audio uploads use the existing backend; messages are kept in memory for the current page session.
+Product identity, list prices and variants come from the BTC catalog. Cart, checkout, receipts and tracking use an explicitly labeled local demo adapter; live inventory, orders and payments are not connected. Login, registration and customer authentication have no backend endpoints. The account sidebar and `/account` pages are guest consultation views.
+
+Text chat and audio uploads retain the existing backend contracts. Conversation identity, messages, drafts and Chat/Voice restore within the same browser tab; selected audio stays in memory during navigation. Ending a conversation uses the existing session DELETE endpoint after confirmation. See [FEEDBACK-UI-AUDIT.md](FEEDBACK-UI-AUDIT.md) for the feedback checklist, API audit, validation and remaining service gaps, and [PURCHASE-JOURNEY-AUDIT.md](PURCHASE-JOURNEY-AUDIT.md) for commerce behavior.

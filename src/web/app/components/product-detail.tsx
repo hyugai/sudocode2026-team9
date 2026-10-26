@@ -64,7 +64,7 @@ export function ProductDetail({ product, onAsk, askDisabled }: {
         <div className="pdp-purchase-actions"><button type="button" className="commerce-secondary" disabled={!purchase.ready || !validQuantity || purchase.submitting} aria-describedby="purchase-availability" onClick={() => buy(false)}>Thêm vào giỏ</button><PurchaseAction disabled={!purchase.ready || !validQuantity || purchase.submitting} onClick={() => buy(true)}>Mua ngay</PurchaseAction></div>
         {feedback && <p role="status">{feedback} <Link href="/cart" className="text-link">Xem giỏ hàng</Link></p>}
         {error && <p role="alert" className="error">{error}</p>}
-        <button className="pdp-ask press-button" onClick={() => onAsk({ sku: sku ?? product.sku, name: product.name, price, quantity })} disabled={askDisabled} aria-describedby="pdp-ask-note"><span className="button-rear" aria-hidden="true" /><span className="button-face">Hỏi Synee AI</span></button>
+        <button className="pdp-ask commerce-secondary" onClick={() => onAsk({ sku: sku ?? product.sku, name: product.name, price, quantity })} disabled={askDisabled} aria-controls="floating-chat" aria-describedby="pdp-ask-note">Hỏi Synee AI</button>
         <p id="pdp-ask-note" className="muted-note">{askDisabled ? "Chờ phản hồi hoặc bỏ ghi âm để hỏi về sản phẩm." : "Mở trò chuyện với thông tin sản phẩm; bạn xem lại trước khi gửi."}</p>
         <p className="muted-note">Mua ngay chỉ mở bước thanh toán demo; đơn chỉ tạo sau khi bạn xác nhận.</p>
       </div>

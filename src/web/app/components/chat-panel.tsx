@@ -23,13 +23,14 @@ export function Asset({ name, className = "" }: { name: keyof typeof paths; clas
 interface Props {
   conversation: Conversation;
   compact?: boolean;
+  expanded?: boolean;
   voicePreview: boolean;
   onModeChange: (voice: boolean) => void;
   onClose?: () => void;
   onAccount: () => void;
 }
 
-export function ChatPanel({ conversation: c, compact = false, voicePreview, onModeChange, onClose, onAccount }: Props) {
+export function ChatPanel({ conversation: c, compact = false, expanded = false, voicePreview, onModeChange, onClose, onAccount }: Props) {
   const historyRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const fileRef = useRef<HTMLInputElement>(null);
@@ -49,7 +50,7 @@ export function ChatPanel({ conversation: c, compact = false, voicePreview, onMo
     ? [{ label: "So sánh nhanh", text: "Hãy giúp mình so sánh các sản phẩm phù hợp." }, { label: "Xem gợi ý", text: "Gợi ý sản phẩm phù hợp với nhu cầu của mình." }]
     : [{ label: "Tai nghe dưới 3 triệu", text: "Mình muốn tìm tai nghe không dây dưới 3 triệu." }, { label: "Quà tặng dưới 500k", text: "Mình muốn tìm quà tặng dưới 500 nghìn." }, { label: "So sánh sản phẩm", text: "Hãy giúp mình so sánh các sản phẩm phù hợp." }];
 
-  return <section id={compact ? "floating-chat" : "inline-chat"} aria-label={`Synee AI — ${compact ? "trò chuyện thu gọn" : "trợ lý mua sắm"}`} className={`chat-panel ${compact ? "compact" : ""} ${c.audioFile ? "has-audio" : ""}`}>
+  return <section id={compact ? "floating-chat" : "inline-chat"} aria-label={`Synee AI — ${expanded ? "tư vấn sản phẩm" : compact ? "trò chuyện thu gọn" : "trợ lý mua sắm"}`} className={`chat-panel ${compact ? "compact" : ""} ${expanded ? "expanded" : ""} ${c.audioFile ? "has-audio" : ""}`}>
     <div className="chat-header">
       <div className="mode-toggle" role="group" aria-label="Chế độ trò chuyện">
         <button type="button" aria-pressed={!voicePreview} className={!voicePreview ? "selected" : ""} onClick={() => onModeChange(false)}>Chat</button>
@@ -94,7 +95,7 @@ export function ChatPanel({ conversation: c, compact = false, voicePreview, onMo
           </button>
         </div>
       </form>
-      <p className="resume-prompt">Đã từng trò chuyện? <button onClick={onAccount} className="text-link">Đăng nhập</button> để tiếp tục cuộc hội thoại.</p>
+      <p className="resume-prompt">{c.sessionNotice || "Hội thoại được giữ trong tab này."} <button onClick={onAccount} className="text-link">Thông tin tư vấn</button></p>
     </div>
   </section>;
 }

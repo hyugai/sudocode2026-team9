@@ -58,6 +58,7 @@ try{
   await click('.chat-launcher');await b.wait("document.querySelector('#floating-message')");await type('#floating-message','Bản nháp mua hàng');await click('.mode-toggle button:last-child');await click('.close-chat');
   await click('.order-summary .purchase-action');await view('checkout');
   await b.evaluate("document.querySelector('.checkout-form').requestSubmit()");
+  await b.wait("document.activeElement.id==='delivery-name'&&document.querySelector('#delivery-name').getAttribute('aria-invalid')==='true'");
   check('Checkout rejects missing address with actionable field errors',await b.evaluate("document.querySelector('#delivery-name').getAttribute('aria-invalid')==='true'&&document.activeElement.id==='delivery-name'"));
   await address();await click("input[name=shipping-region][value=province]");await click("input[name=payment][value=COD]");
   await b.send('Emulation.setDeviceMetricsOverride',{width:320,height:760,deviceScaleFactor:1,mobile:false});
@@ -78,7 +79,7 @@ try{
   check('Explicit confirmation is operable with the keyboard',await b.evaluate("document.querySelector('.confirmation input').checked&&!document.querySelector('.order-summary .purchase-action').disabled"));
   await click('.order-summary .purchase-action');await b.wait("document.querySelector('.commerce-error')?.textContent.includes('tạo đơn thất bại')");
   check('Order failure preserves checkout and never invents a receipt',await b.evaluate("JSON.parse(sessionStorage.getItem('synee.demo.purchase.v1')).orders.length===0&&document.querySelector('.order-line').textContent.includes('SKU-SN-RUN2-41-DEN')&&!document.querySelector('.order-summary .purchase-action').disabled"));
-  await click('.order-summary a.quiet-button');await view('checkout');
+  await click('.review-back');await view('checkout');
   await b.evaluate("document.querySelector('#demo-scenario').value='success';document.querySelector('#demo-scenario').dispatchEvent(new Event('change',{bubbles:true}));");
   await b.evaluate("document.querySelector('.checkout-form').requestSubmit()");await view('review');await click('.confirmation input');
   await b.evaluate("for(let i=0;i<12;i++)document.querySelector('.order-summary .purchase-action').click()");

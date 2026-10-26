@@ -1,5 +1,8 @@
 # Purchase journey audit
 
+Subsequent account, guest-session restoration, PDP chat and purchase-clarity
+changes are documented in [FEEDBACK-UI-AUDIT.md](FEEDBACK-UI-AUDIT.md).
+
 ## Baseline before implementation
 
 Figma is read-only for this task. Inspected through MCP: PDP 143:334/143:419;

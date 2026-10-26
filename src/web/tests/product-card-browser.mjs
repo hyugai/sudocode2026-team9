@@ -45,6 +45,10 @@ try {
     await browser.wait("document.querySelector('#inline-message')");
     await browser.evaluate("document.querySelector('.commerce-actions button:last-child').click()");
     await type("#customer-phone", "0901234567");
+    await browser.evaluate("document.querySelector('.confirm-profile-reset')?.click()");
+    await browser.wait("!document.querySelector('.save-profile').disabled");
+    await browser.evaluate("document.querySelector('.save-profile').click()");
+    await browser.wait("JSON.parse(sessionStorage.getItem('synee.guest.conversation.v1'))?.customerPhone==='0901234567'");
     await browser.evaluate("document.querySelector('.dialog-header button').click()");
     await type("#inline-message", "Giữ bản nháp khi mở sản phẩm");
     await browser.evaluate("document.querySelector('.composer').requestSubmit()");
