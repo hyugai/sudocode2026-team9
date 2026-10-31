@@ -1,0 +1,16 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: telesale-agent-local:free
+    ports:
+      - "8000:10000"
+    environment:
+      CUSTOMER_MEMORY_BACKEND: file
+      KNOWLEDGE_MCP_PREWARM: "false"
+    volumes:
+      - type: bind
+        source: ./.env
+        target: /app/.env
+        read_only: true
