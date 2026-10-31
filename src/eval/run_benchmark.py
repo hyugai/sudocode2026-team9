@@ -20,6 +20,8 @@ HERE = Path(__file__).resolve().parent
 REPO_ROOT = HERE.parent.parent
 sys.path.insert(0,str(REPO_ROOT / "src"))
 from eval.model_config import configure_eval_model
+from eval.benchmark_support import machine_metadata
+from telesale_agent.adapters.llm.model_factory import resolve_model_config
 DEFAULT_SCENARIOS = (
     REPO_ROOT / "dataset" / "iterative-refinement" / "scenarios_complete dataset"
 )
@@ -64,8 +66,9 @@ def _write_readme(
     command: list[str],
     error_turns: int,
 ) -> None:
-    provider = os.environ.get("LLM_PROVIDER", "groq")
-    model = os.environ.get("LLM_MODEL", "provider default")
+    model_config = resolve_model_config()
+    provider = model_config.provider
+    model = model_config.model
     memory_mode = "durable files" if args.persist_memory else "evaluation (in memory)"
     git_commit = _git_value("rev-parse", "--short", "HEAD")
     git_dirty = bool(_git_value("status", "--porcelain").strip())
@@ -90,12 +93,12 @@ def _write_readme(
 ## Parameters
 
 - Config: `{args.config}`
-- Streaming: `{args.streaming}`
+- Response mode: `non_streaming` (TTFT = Total at complete guarded answer; persistence excluded)
 - LLM provider: `{provider}`
 - LLM model: `{model}`
-- LLM request timeout: `{os.environ.get('LLM_REQUEST_TIMEOUT_SECONDS', '30')}` seconds
-- LLM provider-internal retries: `{os.environ.get('LLM_MAX_RETRIES', '0')}`
-- LLM max output tokens: `{os.environ.get('LLM_MAX_OUTPUT_TOKENS', '768')}`
+- LLM request timeout: `{model_config.timeout}` seconds
+- LLM provider-internal retries: `{model_config.max_retries}`
+- LLM max output tokens: `{model_config.max_output_tokens}`
 - Memory mode: `{memory_mode}`
 - Durable memory writes: `{args.persist_memory}`
 - Memory persister: `{args.memory_persister_mode}`
@@ -115,6 +118,8 @@ def _write_readme(
 - Memory storage price / MB: `{args.memory_storage_usd_per_mb}` USD
 - Fixed infrastructure price / call: `{args.fixed_call_usd}` USD
 - Python: `{platform.python_version()}`
+- Hardware (CPU/GPU/RAM): `{json.dumps(machine_metadata(), ensure_ascii=False)}`
+- Thinking levels (shared / NLU / main agent): `{os.environ.get('LLM_THINKING_LEVEL')}` / `{os.environ.get('NLU_THINKING_LEVEL')}` / `{os.environ.get('DEEPAGENT_THINKING_LEVEL')}`
 - Git commit: `{git_commit}`
 - Dirty worktree at run time: `{git_dirty}`
 
@@ -155,7 +160,6 @@ def main() -> int:
     parser.add_argument("--sleep", type=float, default=0.0)
     parser.add_argument("--sleep-scenario", type=float, default=0.0)
     parser.add_argument("--max-retries", type=int, default=1)
-    parser.add_argument("--streaming", action=argparse.BooleanOptionalAction, default=True)
     parser.add_argument("--max-turns", type=int, default=None)
     parser.add_argument(
         "--persist-memory", action=argparse.BooleanOptionalAction, default=True
@@ -207,6 +211,7 @@ def main() -> int:
     if args.request_timeout:
         os.environ["LLM_REQUEST_TIMEOUT_SECONDS"] = str(args.request_timeout)
     os.environ["MEMORY_PERSISTER_MODE"] = args.memory_persister_mode
+    model_config = resolve_model_config()
 
     if not VERSION_RE.fullmatch(args.version):
         parser.error("--version phải có dạng benchmark_v1, benchmark_v2, ...")
@@ -242,7 +247,6 @@ def main() -> int:
         str(args.max_retries),
         "--persist-memory" if args.persist_memory else "--no-persist-memory",
         "--cleanup-orders" if args.cleanup_orders else "--no-cleanup-orders",
-        "--streaming" if args.streaming else "--no-streaming",
     ]
     if args.scenario_id:
         generate_cmd.extend(["--scenario-id", args.scenario_id])
@@ -273,7 +277,6 @@ def main() -> int:
         reproduce_cmd.extend(["--request-timeout", str(args.request_timeout)])
     reproduce_cmd.extend(["--memory-persister-mode", args.memory_persister_mode])
     reproduce_cmd.append("--persist-memory" if args.persist_memory else "--no-persist-memory")
-    reproduce_cmd.append("--streaming" if args.streaming else "--no-streaming")
     if args.judge_memory:
         reproduce_cmd.append("--judge-memory")
     if args.judge_provider:
@@ -306,6 +309,22 @@ def main() -> int:
     env["PYTHONIOENCODING"] = "utf-8"
     env["CUSTOMER_MEMORY_ROOT"] = str(memory_root)
     started_at = datetime.now().astimezone().isoformat(timespec="seconds")
+    metadata = {
+        "started_at": started_at, "hardware": machine_metadata(),
+        "provider": model_config.provider, "model": model_config.model,
+        "max_output_tokens": model_config.max_output_tokens,
+        "request_timeout_seconds": model_config.timeout,
+        "model_max_retries": model_config.max_retries,
+        "temperature": "provider default" if model_config.provider == "gemini" and model_config.model == "gemini-3.6-flash" else 0.3,
+        "thinking_levels": {key: os.environ.get(key) for key in (
+            "LLM_THINKING_LEVEL", "NLU_THINKING_LEVEL", "DEEPAGENT_THINKING_LEVEL")},
+        "measurement_mode": "non_streaming", "warmup_turns": 3,
+        "timing_boundary": "harness arrival to complete guarded answer before persistence; TTFT=Total; offline ASR excluded; request completion reported separately",
+        "latency_guide": "dataset/BTC-Data-Vong1-TEAMS/eval/huong-dan-do-latency.md",
+        "command": _command_text(reproduce_cmd), "git_commit": _git_value("rev-parse", "HEAD"),
+    }
+    metadata_path = run_dir / "metadata.json"
+    metadata_path.write_text(json.dumps(metadata, ensure_ascii=False, indent=2), encoding="utf-8")
     status = "running"
     _write_readme(
         readme_path,
@@ -408,6 +427,8 @@ def main() -> int:
         error_turns=error_turns,
     )
     print(f"[Benchmark] {status}: {run_dir}")
+    metadata.update(status=status, finished_at=datetime.now().astimezone().isoformat(timespec="seconds"), error_turns=error_turns)
+    metadata_path.write_text(json.dumps(metadata, ensure_ascii=False, indent=2), encoding="utf-8")
     return return_code
 
 

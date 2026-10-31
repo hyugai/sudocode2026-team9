@@ -1,6 +1,6 @@
 # Kiến trúc Telesale Deep Agent
 
-Đối chiếu mã nguồn ngày 20/10/2026, tại commit `d85a428` (`feat: Add streaming`).
+Cập nhật ngày 31/10/2026: pipeline text và voice offline trả JSON hoàn chỉnh.
 Các giá trị mặc định dưới đây lấy từ code; environment và CLI có thể thay đổi
 cấu hình từng process. Tài liệu mô tả phần đã triển khai, không bao gồm các đề
 xuất tối ưu latency chưa được áp dụng.
@@ -11,8 +11,8 @@ Hệ thống dùng kiến trúc hybrid:
   read prefetch, mutation đã được khách xác nhận và persistence.
 - `create_deep_agent()` chạy model/tool loop với tập tool giới hạn theo lượt,
   rồi sinh câu trả lời.
-- Backend hỗ trợ JSON hoàn chỉnh và streaming SSE; frontend hiện yêu cầu
-  streaming cho text lẫn file audio.
+- Backend trả JSON hoàn chỉnh sau khi lượt kết thúc cho text và file audio;
+  frontend hiển thị toàn bộ câu trả lời sau khi nhận response.
 - CRM, memory học được và knowledge base có nguồn sự thật riêng. DeepAgent
   không tự sửa instruction hoặc ghi customer memory qua tool.
 
@@ -45,7 +45,6 @@ flowchart TD
     MCP -->|Có| Tools["MCP: CRM, catalog, inventory, pricing<br/>order, policy, callback, handoff"]
     Tools --> DeepAgent
     MCP -->|Không hoặc đã đủ dữ liệu| Response[10. Lấy response và tool results của lượt]
-    DeepAgent -.->|Public text qua grounding và PII guard| Stream[Streaming SSE: delta / replace tới UI]
 
     Response --> Extract[11. Chuẩn hóa tool trace, AgentStep và guard final response]
     Extract --> Persist[12. Persist memory của turn nếu có persister]
@@ -58,10 +57,9 @@ Các bước 8a và 8b là phần application thực hiện trước DeepAgent. 
 tục gọi các tool còn được phép nếu chưa đủ dữ liệu. CallBrief ở bước 7 được
 dựng cục bộ, không gọi LLM.
 
-Nhánh streaming phát public text đã guard trong lúc bước 9 đang chạy; khi còn
-write tool cần xác minh, phần trả lời có thể được giữ lại. Sau bước 11, harness
-phát final response và `response_complete`; sau bước 12–13 mới có `complete`.
-Luồng JSON đợi toàn bộ lượt hoàn tất. Các bước trước model vẫn chạy tuần tự.
+Câu trả lời được grounding và kiểm tra PII sau khi model/tool loop hoàn tất.
+Harness chờ persistence rồi trả TurnResult; API phát một JSON hoàn chỉnh.
+Các bước trước model vẫn chạy tuần tự.
 
 Memory repository phụ thuộc `memory_mode`: bootstrap `evaluation` dùng RAM;
 nhánh `full` của `run_suite.py` dùng `durable` với vùng memory đánh giá riêng
@@ -163,7 +161,7 @@ Adapter có `search_archive()` còn được gắn tool đọc memory archive, r
 
 Harness profile ẩn filesystem/shell tool không dùng và tắt general-purpose
 subagent. `IntentToolRoutingMiddleware` lọc tool theo allowlist, loại tên tool
-đã được model gọi ở vòng trước và phát internal streaming gate. Đây là giới
+đã được model gọi ở vòng trước. Đây là giới
 hạn trong graph, không phải bảo đảm idempotency của giao dịch ở database.
 
 Mặc định code:
@@ -303,62 +301,18 @@ tồn kho, recap giỏ hàng, xác nhận nhiều đơn, callback adjustment và
 Cùng cơ chế được dùng cho streamed prefix và final response. Khi model không
 có text phù hợp, harness có fallback response.
 
-## 5. Streaming từ model đến giao diện
+## 5. Trả response hoàn chỉnh từ model đến giao diện
 
-API có hai entrypoint:
-
-| Endpoint | Input | Chế độ trả lời |
+| Endpoint | Input | Response |
 |---|---|---|
-| `POST /api/chat` | JSON text, phone hint, conversation ID | `stream=true`: SSE; mặc định `false`: JSON sau khi lượt hoàn tất |
-| `POST /api/chat/audio` | Multipart file audio và các field tương ứng | Cùng lựa chọn `stream`; trả transcript sau ASR |
+| `POST /api/chat` | JSON text, phone hint, conversation ID | JSON sau khi lượt hoàn tất |
+| `POST /api/chat/audio` | Multipart file audio và các field tương ứng | JSON cùng transcript sau ASR |
 
-API còn có `GET /health` và `DELETE /api/sessions/{conversation_id}`; thao tác
-clear chỉ xóa active session trong RAM, không xóa customer memory. Nếu đặt
-`API_KEY`, các endpoint chat/session kiểm tra header `X-API-Key`.
-`ENABLE_DEBUG_RESPONSE=true` bổ sung CRM/memory/tool/usage vào payload debug;
-mặc định không bật.
-
-Trong chế độ streaming, harness dùng `agent.astream()` với
-`stream_mode=["messages", "values", "custom"]`, `version="v1"`:
-
-- `messages`: public text từ model node; loại reasoning/content block riêng tư
-  và message chứa tool arguments;
-- `values`: cập nhật graph result và bằng chứng tool;
-- `custom`: internal `answer_stream_gate` cho từng model invocation, không gửi
-  control event này ra frontend.
-
-Read tool còn khả dụng không chặn public text. Khi còn write tool liên quan
-order/callback/handoff, phần trả lời được giữ để kiểm tra kết quả. Prefix chỉ
-phát ở biên từ hoàn chỉnh; phần đuôi số dang dở được giữ lại để guard kiểm tra.
-Final response vẫn được kiểm tra sau khi graph kết thúc. Runtime không có
-`astream` thì fallback `ainvoke` và phát câu trả lời hoàn chỉnh.
-
-`AnswerStream` có queue một phần tử và acknowledgement để kiểm soát backpressure.
-Timestamp answer được ghi ngay trước khi yield `delta`/`replace` cho consumer.
-API đóng gói SSE dạng `data: <JSON>`, có header `Cache-Control: no-cache` và
-`X-Accel-Buffering: no`.
-
-| Event SSE | Ý nghĩa |
-|---|---|
-| `input` | Text/transcript chuẩn hóa; không phải token trả lời |
-| `delta` | Append public answer text |
-| `replace` | Thay public answer khi grounding/final khác prefix đã phát |
-| `response_complete` | Đã phát xong câu trả lời; persistence còn có thể đang chạy |
-| `complete` | Persistence và cập nhật state xong; mang final response, latency và payload API |
-| `error` | Lượt không hoàn tất; API gửi lỗi đã chuẩn hóa |
-
-Frontend `createChatClient()` dùng `fetch`/`ReadableStream`, ghép frame SSE và
-UTF-8 bị chia qua network chunks, rồi chờ callback render giữa các event.
-`page.tsx` dùng một agent bubble theo turn ID, `flushSync` và animation frame
-để commit text mới; `upsertChatTurn()` cập nhật cùng message thay vì tạo hai
-response bubble. UI giữ trạng thái bận đến `complete`, kể cả sau
-`response_complete`. Client có fallback cho backend trả JSON.
-
-API giữ `sessions` và `session_locks` trong RAM theo conversation. Producer
-stream giữ lock đến khi cập nhật state/persist xong. Khi client ngắt kết nối,
-consumer detach nhưng producer tiếp tục hoàn tất lượt khi process còn sống;
-frontend không tự replay POST có thể đã thực hiện mutation. Cơ chế này không
-phải durable background job hoặc bảo đảm exactly-once qua restart.
+Harness dùng `agent.ainvoke()`, kiểm tra grounding/PII trên toàn bộ câu trả lời,
+chờ ghi memory rồi trả kết quả. Frontend chờ JSON và hiển thị câu trả lời một lần.
+Field `stream` từ client cũ bị bỏ qua. Realtime voice dùng WebSocket riêng.
+`GET /health`, `DELETE /api/sessions/{conversation_id}`, `X-API-Key` và
+`ENABLE_DEBUG_RESPONSE` tiếp tục dùng cho health, session, xác thực và debug.
 
 ## 6. Customer memory và persistence
 
@@ -432,16 +386,15 @@ lock hoặc compare-and-swap để giải quyết hai writer đồng thời.
 
 API middleware ghi `perf_counter` lúc request đến backend, trước xử lý body
 và chờ session lock. Khi gọi trực tiếp harness trong eval, mốc bắt đầu là lúc
-tạo answer stream/nhận lượt tại harness. Không dùng thời gian render UI làm
+nhận lượt tại harness. Không dùng thời gian render UI làm
 latency backend.
 
 | Field | Mốc đo hiện tại |
 |---|---|
-| `latency.ttft_ms` khi streaming | Từ mốc bắt đầu đến public answer `delta`/`replace` không rỗng đầu tiên được emit |
-| `latency.total_ms` khi streaming | Từ cùng mốc đến answer emission cuối, gồm final replacement nếu có |
-| TTFT/Total khi non-streaming | Hai giá trị bằng nhau; implementation hiện đợi cả persistence trước khi trả kết quả |
-| `call_brief_latency_ms` trong trace / `latency.call_brief_ms` | Lượt đầu: từ mốc bắt đầu đã trừ ASR đến khi brief sẵn sàng; gồm identity, hydrate, NLU, retrieval và các bước trước brief |
-| `response_ready_ms` | Mốc final response đã chuẩn bị/guard; số chẩn đoán, không thay cho first answer emission |
+| TTFT/Total khi non-streaming | Hai giá trị bằng nhau, từ mốc nhận request/harness đến câu trả lời hoàn chỉnh đã qua grounding/guardrail, trước persistence; loại ASR offline |
+| `call_brief_latency_ms` trong trace / `latency.call_brief_ms` | Lượt đầu: từ khi biết SĐT đến khi brief sẵn sàng (không trừ ASR); gồm identity, hydrate, NLU, retrieval và các bước trước brief |
+| `response_ready_ms` | Cùng mốc kết thúc và cùng giá trị với TTFT/Total, trước persistence |
+| `timing_boundary` | `response_ready_before_persistence` đánh dấu cách đo mới; trace cũ không bị sửa lại |
 | `persistence_ms` | Thời gian chờ persister sau câu trả lời |
 | `request_complete_ms` | Toàn bộ lượt đến persist xong, loại thời gian ASR offline |
 | `backend_total_ms` | Toàn bộ lượt tại backend/harness, gồm ASR |
@@ -487,12 +440,12 @@ text/baseline_no_memory -> text/full
 - Order tạo trong scenario được theo dõi và cleanup khi kết thúc bình thường;
   benchmark vẫn gọi CRM/business tools thật, không phải toàn bộ là mock.
 
-`FreshCallBrief` là wrapper riêng của suite: đầu call bổ sung kiểm tra tồn
+`FreshCallBrief` được dùng chung bởi runtime và eval: đầu call bổ sung kiểm tra tồn
 kho/khuyến mãi theo SKU đã nhớ và ngày gọi. CRM/order history được hydrate
 lại khi bắt đầu call. Nguồn tương tác đa kênh chưa có trong CRM adapter và được
 ghi rõ trong metadata; không mặc định coi freshness đã đầy đủ.
 
-Suite bật streaming mặc định, gọi harness trực tiếp và ghi JSONL trace. Mỗi
+Suite gọi harness trả response hoàn chỉnh và ghi JSONL trace. Mỗi
 nhóm có report riêng; report tổng có baseline/full comparison, coverage,
 trace health, latency, hardware/model/parameters, dataset và source fingerprints.
 
@@ -533,14 +486,14 @@ suite defaults ở trên. Chi tiết metric/CLI ở [README eval](../../src/eval
    cùng customer. File lock chỉ trong process; snapshot remote chưa có CAS.
 3. Disconnect không tự replay lượt, nhưng producer vẫn phụ thuộc process đang
    sống. Chưa có bảo đảm exactly-once qua nhiều worker/restart/repost thủ công.
-4. Streaming phát theo public text đã guard, có thể buffer/replacement;
-   không bảo đảm mỗi lượt đều thấy từng token. Proxy/deployment vẫn phải chuyển
-   tiếp SSE không buffer. Client JSON cũ nhận một câu trả lời hoàn chỉnh.
+4. Pipeline text/voice offline chờ toàn bộ model/tool loop, guardrail và
+   persistence trước khi phát JSON. TTFT/Total dừng trước persistence;
+   `request_complete_ms` và `backend_total_ms` ghi thời gian hoàn tất thực tế.
 5. NLU, retrieval, read prefetch và chuẩn bị context còn tuần tự. CallBrief là
    local projector; LLM summarization bổ sung nằm ở memory persister.
 6. Output cap có thể cắt JSON hoặc câu trả lời (`MAX_TOKENS`); thiếu tool action,
-   ASR sai entity và tool-call limit vẫn có thể làm TSR/HR không đạt. Có
-   streaming không đồng nghĩa đạt TTFT/Total SLA hay chất lượng tác vụ.
+   ASR sai entity và tool-call limit vẫn có thể làm TSR/HR không đạt.
+   Các số đo cần được kiểm chứng trên đủ mẫu để kết luận SLA và chất lượng.
 7. Freshness đa kênh chưa đầy đủ. Giảm thinking, thêm xử lý song song hoặc
    chuyển học memory sang nền chỉ là tùy chọn/đề xuất cho đến khi code hoặc
    cấu hình runtime thực sự được thay đổi và đo lại.
@@ -550,10 +503,9 @@ suite defaults ở trên. Chi tiết metric/CLI ở [README eval](../../src/eval
 | File / module | Vai trò |
 |---|---|
 | `src/telesale_agent/bootstrap.py` | Wiring, memory mode/backend/persister |
-| `src/telesale_agent/application/deepagent/harness.py` | Public facade, lifecycle và run/stream turn |
+| `src/telesale_agent/application/deepagent/harness.py` | Public facade, lifecycle và run_turn |
 | `src/telesale_agent/application/deepagent/runtime.py` | Instruction, MCP clients, DeepAgent graph/middleware |
 | `src/telesale_agent/application/deepagent/turn.py` | Orchestration chính, grounding, persistence và latency |
-| `src/telesale_agent/application/deepagent/streaming.py` | Answer events, backpressure, gate và emission timing |
 | `src/telesale_agent/application/deepagent/tools/` | Routing, read prefetch, confirmed mutation, archive tool, canonical trace |
 | `src/telesale_agent/application/deepagent/context/` | Projection prompt, fact, order và callback helpers |
 | `src/telesale_agent/application/customer_context.py` | Hydrate/refresh CRM và customer memory |
@@ -563,8 +515,8 @@ suite defaults ở trên. Chi tiết metric/CLI ở [README eval](../../src/eval
 | `src/telesale_agent/adapters/llm/llm_persist.py` | Canonical facts, atomic audit, học episode/foresight |
 | `src/telesale_agent/adapters/memory/` | File, in-memory, object storage, turn-local write session |
 | `src/telesale_agent/adapters/asr/` | ASR file audio offline trên CPU |
-| `src/telesale_agent/entrypoints/api/chat.py` | API text/audio, sessions, SSE, arrival timestamp |
-| `src/web/utils/chat-api.ts`, `src/web/utils/chat-messages.ts`, `src/web/app/page.tsx` | Client SSE và render một bubble cho mỗi lượt |
+| `src/telesale_agent/entrypoints/api/chat.py` | API text/audio, sessions, JSON response, arrival/emission timestamp |
+| `src/web/utils/chat-api.ts`, `src/web/utils/chat-messages.ts`, `src/web/app/page.tsx` | Client JSON và render một bubble cho mỗi lượt |
 | `src/eval/run_suite.py`, `src/eval/generate_traces.py`, `src/eval/benchmark_support.py`, `src/eval/team_eval.py` | Scenario, trace, latency, quality comparison |
 
 `core/deepagent_pipeline.py` và `adapters/llm/llm_call_brief.py` giữ compatibility

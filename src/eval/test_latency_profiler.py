@@ -1,4 +1,4 @@
-"""Profiling must preserve stream behavior and never double count children."""
+"""Profiling complete responses must never replay calls or double count children."""
 import asyncio
 from pathlib import Path
 import sys
@@ -8,7 +8,7 @@ from unittest.mock import patch
 
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
 from eval.latency_profiler import Timeline,attach_profiler,profiling_hooks,summarize_profiles
-from telesale_agent.application.deepagent import turn, streaming
+from telesale_agent.application.deepagent import turn
 from telesale_agent.adapters.llm.usage_tracking import usage_stage
 from telesale_agent.core.models import TurnInput
 from langchain_core.language_models.fake_chat_models import FakeListChatModel
@@ -40,25 +40,22 @@ class ProfileIntegrationTests(unittest.IsolatedAsyncioTestCase):
     async def test_real_graph_model_tool_loop_is_profiled_without_changing_answer(self):
         from langchain.agents import create_agent
         from langchain_core.language_models.chat_models import BaseChatModel
-        from langchain_core.messages import AIMessageChunk,ToolMessage
-        from langchain_core.outputs import ChatGenerationChunk
+        from langchain_core.messages import AIMessage,ToolMessage
+        from langchain_core.outputs import ChatGeneration,ChatResult
         from telesale_agent.application.deepagent.tools.routing import IntentToolRoutingMiddleware,TelesaleAgentRuntimeContext
         from telesale_agent.core.models import CustomerIdentity,CallBrief
         class ToolModel(BaseChatModel):
             @property
             def _llm_type(self):
                 return 'profile-test'
-            def _generate(self,*args,**kwargs):
-                raise AssertionError('Must stream')
+            def _generate(self,messages,stop=None,run_manager=None,**kwargs):
+                if isinstance(messages[-1],ToolMessage):
+                    answer = AIMessage(content='Chính sách đã kiểm tra.')
+                else:
+                    answer = AIMessage(content='',tool_calls=[{'name':'search_policy','args':{},'id':'read'}])
+                return ChatResult(generations=[ChatGeneration(message=answer)])
             def bind_tools(self,tools,**kwargs):
                 return self
-            async def _astream(self,messages,**kwargs):
-                if isinstance(messages[-1],ToolMessage):
-                    for text in ('Chính sách ','đã kiểm tra. '):
-                        yield ChatGenerationChunk(message=AIMessageChunk(content=text))
-                else:
-                    yield ChatGenerationChunk(message=AIMessageChunk(content='',tool_call_chunks=[
-                        {'name':'search_policy','args':'{}','id':'read','index':0}]))
         @tool
         async def search_policy() -> str:
             """Read a local policy fixture."""
@@ -80,17 +77,16 @@ class ProfileIntegrationTests(unittest.IsolatedAsyncioTestCase):
                 customer_context=None,guardrail=None,persist=None,_prefetch_read_tools=reads,
                 _execute_confirmed_mutation=mutations,run_turn=run)
             attach_profiler(harness)
-            events = [e async for e in streaming.stream_events(lambda out:harness.run_turn(
-                TurnInput('graph-profile',text='chính sách'),response_stream=out))]
-        result = events[-1]['result']
+            result = await harness.run_turn(TurnInput('graph-profile',text='chính sách'))
         spans = result.latency['profile']['spans']
         self.assertEqual(result.response_text.strip(),'Chính sách đã kiểm tra.')
         self.assertEqual(len([s for s in spans if s['kind']=='llm']),2)
         self.assertEqual(len([s for s in spans if s['kind']=='tool']),1)
-        self.assertGreater(result.latency['chunks_before_generation_complete'],0)
+        self.assertEqual(result.latency['measurement_mode'],'non_streaming')
+        self.assertEqual(result.latency['ttft_ms'],result.latency['total_ms'])
         self.assertLessEqual(result.latency['profile']['stage_total_ms'],result.latency['profile']['backend_ms']+.1)
 
-    async def test_callbacks_capture_model_tool_and_emission_without_replay(self):
+    async def test_callbacks_capture_model_and_tool_without_replay(self):
         calls = []
         @tool
         async def lookup() -> dict:
@@ -103,28 +99,22 @@ class ProfileIntegrationTests(unittest.IsolatedAsyncioTestCase):
                 await model.ainvoke('NLU')
         async def reads(*args):
             await lookup.ainvoke({})
-        async def agent_stream(*args,**kwargs):
-            async for chunk in model.astream('response'):
-                yield chunk
-        async def run(turn_input,state=None,*,response_stream):
+        async def invoke(*args,**kwargs):
+            return await model.ainvoke('response')
+        async def run(turn_input,state=None):
             context = SimpleNamespace()
             await harness.perceive.perceive(context)
             await harness._prefetch_read_tools(context)
-            text = ''
             with usage_stage('main_agent'):
-                async for chunk in harness.agent.astream({}):
-                    text += chunk.content
-                    await response_stream.answer(text)
-            return SimpleNamespace(latency=response_stream.latency(),response_text=text)
+                answer = await harness.agent.ainvoke({})
+            return SimpleNamespace(latency={},response_text=answer.content)
         harness = SimpleNamespace(perceive=SimpleNamespace(perceive=perceive),
-            _prefetch_read_tools=reads,agent=SimpleNamespace(astream=agent_stream),run_turn=run)
+            _prefetch_read_tools=reads,agent=SimpleNamespace(ainvoke=invoke),run_turn=run)
         original_guard = turn.prepare_response
         with patch.dict('os.environ',{'LANGSMITH_TRACING':'false','LANGCHAIN_TRACING_V2':'false'}), profiling_hooks():
             attach_profiler(harness)
-            events = [event async for event in streaming.stream_events(
-                lambda output:harness.run_turn(TurnInput('profile',text='xin chào'),response_stream=output))]
+            result = await harness.run_turn(TurnInput('profile',text='xin chào'))
         self.assertIs(turn.prepare_response,original_guard)
-        result = events[-1]['result']
         profile = result.latency['profile']
         spans = profile['spans']
         requests = [s for s in spans if s['kind']=='llm']
@@ -132,10 +122,7 @@ class ProfileIntegrationTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(len(requests),2)
         self.assertEqual({s['stage'] for s in requests},{'perception','main_agent'})
         self.assertEqual(len([s for s in spans if s['kind']=='tool']),1)
-        public = next(s for s in requests if s['stage']=='main_agent')
-        self.assertIsNotNone(public.get('first_public_text_at_ms'))
-        self.assertEqual(len(profile['marks']),result.latency['answer_chunks'])
-        self.assertEqual(''.join(e.get('text','') for e in events if e['type']=='delta'),result.response_text)
+        self.assertEqual(result.response_text,'Xin chào chị.')
         self.assertLessEqual(profile['stage_total_ms'],profile['backend_ms']+.1)
         self.assertTrue(all(s['status']=='completed' for s in spans))
 

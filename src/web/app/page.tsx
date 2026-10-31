@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { flushSync } from "react-dom";
 import { ChatApiError, createChatClient, type DebugInfo } from "@/utils/chat-api";
 import { upsertChatTurn, type ChatMessage } from "@/utils/chat-messages";
 import VoicePanel from "@/components/voice-panel";
@@ -28,7 +27,6 @@ export default function Chat() {
   const [input, setInput] = useState("");
   const [customerPhone, setCustomerPhone] = useState("0984726714");
   const [isLoading, setIsLoading] = useState(false);
-  const [responseReady, setResponseReady] = useState(false);
   const [activeAnswerId, setActiveAnswerId] = useState<string | null>(null);
   const [audioFile, setAudioFile] = useState<File | null>(null);
   const [audioPreviewUrl, setAudioPreviewUrl] = useState("");
@@ -105,7 +103,6 @@ export default function Chat() {
     const conversationId = sessionId || crypto.randomUUID();
     if (!sessionId) setSessionId(conversationId);
     setIsLoading(true);
-    setResponseReady(false);
     setErrorMessage("");
 
     const answerId = crypto.randomUUID();
@@ -122,20 +119,6 @@ export default function Chat() {
     try {
       const data = await chatClient.send({
         conversationId, message: userMessage, audioFile, customerPhone,
-      }, async (event) => {
-        if (event.type === "input") {
-          transcript = event.transcript ?? event.normalized_message ?? userMessage;
-          renderAnswer();
-        } else if (event.type === "delta" || event.type === "replace") {
-          answer = event.type === "replace" ? (event.text ?? "") : answer + (event.text ?? "");
-          // Commit before the next paint. Concurrent React updates otherwise
-          // may stay batched when a fast model delivers the whole stream in
-          // one network burst. Each update still comes from a real SSE event.
-          flushSync(renderAnswer);
-          await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
-        } else if (event.type === "response_complete") {
-          setResponseReady(true);
-        }
       });
       if (!data) return;
       setCooldownSeconds(chatClient.retryAfterSeconds);
@@ -331,7 +314,7 @@ export default function Chat() {
                 {errorMessage && <p role="alert" className="mb-3 text-sm text-red-700">{errorMessage}</p>}
                 {cooldownSeconds > 0 && <p role="status" className="mb-3 text-sm text-black/60">Dịch vụ hội thoại đang tạm giới hạn. Có thể gửi tiếp sau {cooldownSeconds} giây.</p>}
                 {!backendReady && !isLoading && <p role="status" className="mb-3 text-sm text-black/60">Đang chờ kết nối backend sẵn sàng. Hệ thống sẽ tự kiểm tra lại...</p>}
-                {isLoading && <p role="status" className="mb-3 text-sm text-black/60">{responseReady ? "Đang hoàn tất lượt hội thoại..." : audioFile ? "Đang nhận dạng ghi âm và chờ phản hồi..." : "Đang chờ phản hồi..."}</p>}
+                {isLoading && <p role="status" className="mb-3 text-sm text-black/60">{audioFile ? "Đang nhận dạng ghi âm và chờ phản hồi..." : "Đang chờ phản hồi..."}</p>}
                 <form onSubmit={sendMessage} className="flex gap-3">
                   <input
                     type="text"

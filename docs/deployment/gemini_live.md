@@ -88,7 +88,7 @@ một chế độ output khác, chưa nằm trong nhánh native audio này.
 
 ~~~powershell
 .\.venv\Scripts\python.exe -X utf8 -m unittest discover -s tests -p test_realtime.py -v
-.\.venv\Scripts\python.exe -X utf8 -m unittest discover -s tests -p test_streaming.py -v
+.\.venv\Scripts\python.exe -X utf8 -m unittest discover -s tests -p test_chat_latency.py -v
 ~~~
 
 Trong src/web: npm test, npm run lint và npm run build.

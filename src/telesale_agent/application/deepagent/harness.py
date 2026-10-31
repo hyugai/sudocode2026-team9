@@ -14,7 +14,6 @@ from telesale_agent.application.deepagent.runtime import (
     prewarm_knowledge_mcp,
 )
 from telesale_agent.application.deepagent.turn import run_turn, run_turn_impl
-from telesale_agent.application.deepagent.streaming import stream_events
 from telesale_agent.application.deepagent.tools.reads import ReadToolExecutor
 from telesale_agent.application.deepagent.tools.mutations import MutationToolExecutor
 from telesale_agent.application.deepagent.tools.protocol import (
@@ -106,17 +105,12 @@ class DeepAgentHarness:
         self,
         turn_input: TurnInput,
         state: ConversationState | None = None,
-        *, response_stream=None,
     ) -> TurnResult:
-        return await run_turn(self, turn_input, state, response_stream=response_stream)
-
-    def stream_turn(self, turn_input: TurnInput, state: ConversationState | None = None):
-        return stream_events(lambda output: self.run_turn(turn_input, state, response_stream=output))
+        return await run_turn(self, turn_input, state)
 
     async def _run_turn_impl(
         self,
         turn_input: TurnInput,
         state: ConversationState | None = None,
-        *, response_stream=None,
     ) -> TurnResult:
-        return await run_turn_impl(self, turn_input, state, response_stream=response_stream)
+        return await run_turn_impl(self, turn_input, state)

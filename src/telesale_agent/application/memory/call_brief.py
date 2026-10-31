@@ -1,3 +1,5 @@
+from datetime import date
+
 from telesale_agent.core.interfaces import CallBriefBuilder
 from telesale_agent.core.models import CallBrief, TurnContext
 
@@ -109,3 +111,28 @@ class CallBriefProjector(CallBriefBuilder):
             unresolved_issues=unresolved_issues,
             relevant_episodes=past_sessions,
         )
+
+
+class FreshCallBrief:
+    """Refresh volatile evidence before finishing the measured call brief."""
+    def __init__(self, builder, db):
+        self.builder, self.db = builder, db
+
+    async def build_call_brief(self, context):
+        brief = await self.builder.build_call_brief(context)
+        if context.state.turn_number == 0:
+            facts = (context.state.customer_memory or {}).get("facts",{})
+            sku = facts.get("product_advised") or facts.get("variant_sku")
+            on = date.fromisoformat(context.input.metadata.get("call_date") or date.today().isoformat())
+            current = {"checked_on":on.isoformat(),
+                       "crm_profile_and_order_history":"reloaded by customer_context.hydrate",
+                       "cross_channel_interactions":"not available in current CRM adapter"}
+            if sku:
+                current["inventory"] = self.db.check_stock(sku,on)
+                profile = context.state.customer_profile or {}
+                products = self.db.search_products(sku=sku).get("items",[])
+                current["active_promotions"] = self.db.get_active_promotions(
+                    [sku], [p.get("category","") for p in products], profile.get("region"), on)
+                brief.active_promotions = current["active_promotions"]
+            brief.verified_customer_data = {**brief.verified_customer_data,"freshness_check":current}
+        return brief

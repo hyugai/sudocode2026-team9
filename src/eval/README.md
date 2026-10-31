@@ -134,52 +134,52 @@ kết luận p95/SLA đạt ngưỡng.
 
 ### Latency theo hướng dẫn BTC
 
-- Mặc định suite/generator tiêu thụ stream thật từ LangGraph. Dùng
-  `--no-streaming` để đo đường trả JSON hoàn chỉnh nhằm đối chứng.
-- Đo bằng `perf_counter` tại ranh giới harness phát nội dung. API streaming
-  lấy mốc nhận request từ ASGI middleware, gồm cả thời gian đợi session lock.
-  Không tính render UI hay mạng client. Eval gọi cùng harness trực tiếp.
-- **TTFT**: từ đầu request/harness đến khi phát đoạn trả lời không rỗng đầu tiên.
-  **Total**: đến khi phát đoạn trả lời cuối cùng. Không tính status, thought,
-  tool argument, transcript input hay metadata thành token câu trả lời.
-- Nội dung được kiểm tra grounding/PII theo cụm từ (`guarded_words`) trước khi
-  phát; giữ lại từ và chuỗi số chưa hoàn chỉnh. Tool đọc còn khả dụng không chặn
-  stream text trả lời; reasoning và tool arguments được lọc riêng. Gate cập nhật
-  theo từng model call, giữ xác nhận giao dịch khi còn tool ghi dữ liệu và dùng
-  evidence mới nhất để grounding.
-  Không chia giả câu trả lời đã sinh xong để báo TTFT sớm.
-- `response_complete` được gửi trước persistence; `complete` sau persistence.
-  `latency.persistence_ms` và `request_complete_ms` được báo riêng. Session
-  vẫn khóa đến khi ghi nhớ hoàn tất; mất kết nối không tự replay thao tác.
-- Đường không streaming: **TTFT = Total**, tính đến khi harness hoàn tất,
-  gồm cả persistence đang được await. `response_ready_ms` chỉ là mốc nội bộ.
-- WAV offline: ASR đo riêng; không cộng vào TTFT/Total. Báo ms/phút audio.
-- Call Brief: từ lúc bắt đầu nhận diện caller đến lúc brief hoàn tất, bao gồm
-  hydrate CRM/order/cross-channel history, NLU, retrieval và refresh memory.
-  Wrapper eval kiểm tra lại tồn kho/khuyến mãi theo `call_date` của SKU đã nhớ
-  trước khi brief ready. `precomputed_parts` chỉ khai báo dữ liệu đã có trước
-  persistence của lượt hiện tại. CRM hiện chưa có nguồn tương tác đa kênh riêng,
-  nên không chứng nhận yêu cầu freshness đa kênh đã đầy đủ.
-- Loại 3 turn warm-up đầu **mỗi nhóm**; tính p95 bằng chính `REFERENCE.p95`.
-  Cảnh báo nếu còn dưới 100 lượt đo được.
-- Báo p95 TTFT <= 3000 ms, p95 Total <= 8000 ms, Call Brief tối đa <= 5000 ms
-  cho M1 chat/offline upload.
-- **TTFA để null**: chưa có VAD/TTS/byte audio output; không lấy thời gian tool
-  làm TTFA. Chưa thể chứng nhận SLA voice M2 TTFA <= 2,5 giây.
-- Trace cũ có latency ước lượng không được coi là latency đo thật; phải chạy lại.
+- Pipeline text và voice upload offline chỉ trả JSON hoàn chỉnh. Harness dùng
+  `agent.ainvoke()`; các cờ CLI `--streaming` / `--no-streaming` đã được bỏ.
+- Đo bằng `perf_counter` tại ranh giới backend/harness. Middleware ghi mốc nhận
+  request trước xử lý body và chờ session lock. Harness chốt TTFT/Total khi
+  câu trả lời hoàn chỉnh đã qua grounding/guardrail, trước persistence. Eval
+  dùng cùng mốc tại harness. Không tính UI hoặc mạng client.
+- **TTFT = Total = response_ready_ms** vì không streaming. Tính cả NLU,
+  retrieval, tool và guardrail; không tính persistence. Trace mới ghi
+  `latency.timing_boundary=response_ready_before_persistence` để phân biệt
+  với các lượt cũ từng tính cả persistence.
+- `persistence_ms` đo riêng bước ghi memory. `request_complete_ms` tính đến
+  khi request/harness hoàn tất, gồm persistence và loại ASR offline;
+  `backend_total_ms` là toàn bộ thời gian backend, gồm cả ASR. Middleware
+  chỉ cập nhật hai trường hoàn tất request, giữ nguyên TTFT/Total của harness.
+- WAV offline: đo ASR riêng bằng `asr_ms`; trừ đúng thời gian transcribe khỏi
+  TTFT/Total, báo thêm ms/phút audio. `backend_total_ms` vẫn gồm ASR.
+- Ghi trace `latency.ttft_ms`, `latency.total_ms`, `latency.ttfa_ms` và
+  `call_brief_latency_ms`. API trả cùng các trường này trong JSON.
+- Call Brief: từ lúc biết SĐT đến lúc brief sẵn sàng. Nếu request có phone hint,
+  mốc là khi request đến backend/harness; ASR không bị trừ khỏi Call Brief.
+  Thời gian bao gồm hydrate CRM/order history, NLU, retrieval và kiểm tra lại
+  tồn kho/khuyến mãi của SKU đã nhớ. Wrapper `FreshCallBrief` dùng chung cho
+  runtime và eval; eval kiểm tra theo `call_date`, runtime theo ngày hiện tại.
+  `precomputed_parts` chỉ khai báo memory đã có trước persistence lượt này.
+  CRM chưa có nguồn tương tác đa kênh riêng nên chưa chứng nhận freshness đa kênh đầy đủ.
+- Loại 3 lượt warm-up đầu mỗi nhóm; tính p95 bằng `REFERENCE.p95` từ
+  `reference_eval.py`. Chạy toàn bộ bộ test, tối thiểu 100 lượt; runner hiện
+  yêu cầu ít nhất 100 mẫu còn lại sau warm-up để đánh dấu đủ mẫu.
+- Ngưỡng M1 chat/offline: TTFT p95 <= 3000 ms, Total p95 <= 8000 ms,
+  Call Brief tối đa <= 5000 ms. Metadata ghi CPU/GPU/RAM, provider/model,
+  tham số và thời điểm chạy. Baseline/full phải dùng cùng môi trường.
+- **TTFA để null** cho text/voice offline vì không có VAD/TTS/audio output.
+  Các ngưỡng M2 không được áp dụng cho upload file offline.
+- Một testcase chỉ dùng kiểm tra phép đo; không kết luận p95/SLA từ ít mẫu.
+  Trace streaming cũ vẫn đọc được khi phân tích lịch sử, cần đo lại để so sánh.
 
-### Streaming API
+### Chat API trả response hoàn chỉnh
 
-- `POST /api/chat`: thêm `"stream": true` vào JSON; audio upload thêm form
-  field `stream=true` tại `POST /api/chat/audio`. Không truyền flag vẫn trả JSON
-  để tương thích client cũ. Giao diện web hiện dùng streaming mặc định.
-- SSE `input` chứa transcript; `delta` nối câu trả lời; `replace` thay nội dung
-  bằng bản đã qua guardrail; `response_complete` báo token cuối; `complete`
-  trả response/latency/transcript/debug sau khi ghi nhớ xong. `error` kết thúc
-  lượt lỗi, không được tính thành kết quả thành công.
-- Report ghi số `answer_chunks`, số lượt nhiều chunk và policy buffering.
-  Streaming theo các câu đã kiểm tra có thể vẫn chưa đạt TTFT p95 3 giây nếu
-  NLU/retrieval trước câu trả lời chậm; số đo không bị chia hoặc trừ các bước này.
+`POST /api/chat` nhận JSON; `POST /api/chat/audio` nhận multipart file.
+Cả hai trả một JSON sau khi guardrail và ghi memory hoàn tất, chứa `response`,
+`latency`, `call_brief_latency_ms`, cùng `normalized_message` hoặc `transcript`.
+Frontend chờ JSON rồi hiển thị toàn bộ câu trả lời. Field `stream` từ client cũ
+bị bỏ qua; API luôn trả JSON. Lỗi giữ HTTP status, cooldown và không tự gửi lại POST.
+TTFT/Total đo đến lúc nội dung sẵn sàng trước persistence; thời gian chờ nhận
+JSON được phản ánh trong `request_complete_ms` và có thể dài hơn TTFT/Total.
+Realtime voice qua WebSocket là pipeline riêng.
 
 ### Điều chỉnh độ đúng của phép chấm
 
