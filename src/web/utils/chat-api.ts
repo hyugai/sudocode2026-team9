@@ -52,6 +52,24 @@ export function createChatClient(apiBase: string, fetcher: typeof fetch = fetch,
       }
     },
 
+    async clearSession(conversationId: string): Promise<void> {
+      if (sending) throw new ChatApiError("Chờ Synee trả lời trước khi kết thúc hội thoại.");
+      if (!conversationId) return;
+      try {
+        const response = await fetcher(`${apiBase}/api/sessions/${encodeURIComponent(conversationId)}`, {
+          method: "DELETE", signal: AbortSignal.timeout(10000),
+        });
+        if (!response.ok) throw new ChatApiError(response.status === 401 || response.status === 403
+          ? "Dịch vụ chưa cấp quyền kết thúc hội thoại. Dữ liệu trên thiết bị vẫn được giữ."
+          : "Chưa kết thúc được hội thoại. Hãy thử lại; dữ liệu vẫn được giữ.");
+        const data = await response.json();
+        if (data?.status !== "cleared" || data.conversation_id !== conversationId) throw new ChatApiError("Dịch vụ chưa xác nhận kết thúc đúng hội thoại. Dữ liệu vẫn được giữ.");
+      } catch (e) {
+        if (e instanceof ChatApiError) throw e;
+        throw new ChatApiError("Không kết nối được dịch vụ để kết thúc hội thoại. Dữ liệu vẫn được giữ.", true);
+      }
+    },
+
     async send(turn: ChatTurn): Promise<ChatResponse | null> {
       // Set synchronously, before the first await, to reject rapid duplicate submits.
       if (sending) return null;
@@ -93,6 +111,9 @@ export function createChatClient(apiBase: string, fetcher: typeof fetch = fetch,
           throw new ChatApiError(`Backend trả về phản hồi không hợp lệ (HTTP ${response.status}). Vui lòng thử lại sau.`);
         }
         if (!response.ok) {
+          if (response.status === 401 || response.status === 403) {
+            throw new ChatApiError("Dịch vụ chưa cấp quyền tư vấn. Nội dung vẫn được giữ; hãy liên hệ hỗ trợ trước khi thử lại.");
+          }
           if (response.status === 429) {
             const seconds = Number(data?.retry_after_seconds ?? response.headers.get("Retry-After"));
             defer(Number.isFinite(seconds) && seconds > 0 ? seconds : 30);
