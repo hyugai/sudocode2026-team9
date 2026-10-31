@@ -1,4 +1,4 @@
-"use client";
+import Storefront from "./components/storefront";
 
 import { useState, useRef, useEffect } from "react";
 import { flushSync } from "react-dom";

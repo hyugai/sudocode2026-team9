@@ -1,36 +1,24 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SUDO CODE · Synee AI storefront
 
-## Getting Started
+Next.js 16 / React 19 frontend migrated from Telesale Hub to the approved Synee AI Figma design. Existing text/audio API contracts are retained.
 
-First, run the development server:
-
-```bash
+```sh
+npm ci
+# Optional: copy .env.example to .env.local and set your public backend URL.
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The default backend is `http://localhost:8000` in development and the legacy Render URL in production. `NEXT_PUBLIC_API_BASE_URL` overrides it. Never put API keys in public environment variables. The backend must allow the frontend origin through CORS.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```sh
+npm test
+npm run lint
+npx tsc --noEmit
+npm run build
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+See [MIGRATION.md](MIGRATION.md) for the feature map, shared A/B/C behavior, browser regression instructions, screenshot locations, deployment limitations, and sandbox build fallback.
 
-## Learn More
+Product identity, list prices and variants come from the BTC catalog. Cart, checkout, receipts and tracking use an explicitly labeled local demo adapter; live inventory, orders and payments are not connected. Login, registration and customer authentication have no backend endpoints. The account sidebar and `/account` pages are guest consultation views.
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Text chat and audio uploads retain the existing backend contracts. Conversation identity, messages, drafts and Chat/Voice restore within the same browser tab; selected audio stays in memory during navigation. Ending a conversation uses the existing session DELETE endpoint after confirmation. See [FEEDBACK-UI-AUDIT.md](FEEDBACK-UI-AUDIT.md) for the feedback checklist, API audit, validation and remaining service gaps, and [PURCHASE-JOURNEY-AUDIT.md](PURCHASE-JOURNEY-AUDIT.md) for commerce behavior.
