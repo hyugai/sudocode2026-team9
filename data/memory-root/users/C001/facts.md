@@ -7,7 +7,7 @@
 - product_advised: "SKU-JK-WND"
 - variant_sku: "SKU-JK-WND-S-NAVY"
 - size: "S"
-- color: "xanh nive"
+- color: "navy"
 - price_vnd: 690000
 - price_quoted_vnd: 690000
 - promo_code: "COD-0"

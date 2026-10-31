@@ -85,6 +85,8 @@ class LLMPersister(Persister):
 
     @staticmethod
     def _source_id(context: TurnContext) -> str:
+        if context.input.metadata.get("memory_source_id"):
+            return context.input.metadata["memory_source_id"]
         scenario_id = context.input.metadata.get("scenario_id")
         call_key = context.input.metadata.get("call_key", "call")
         turn_id = f"{call_key}#turn{context.state.turn_number + 1}"

@@ -101,6 +101,7 @@ def persist_turn_memory(
     )
     scenario_id = context.input.metadata.get("scenario_id")
     source = f"{scenario_id}:{turn_source}" if scenario_id else turn_source
+    source = context.input.metadata.get("memory_source_id") or source
     writes = []
     for key, value in candidates.items():
         previous = memory.latest_fact(customer_id, key)

@@ -230,6 +230,7 @@ tests/
 !/tests/
 /tests/*
 !/tests/test_streaming.py
+!/tests/test_realtime.py
 !/src/web/tests/
 
 # Generated recordings, screenshots and isolated local UI fixtures.

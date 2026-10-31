@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import asyncio
 import os
-import sys
 import time
 from pathlib import Path
 
@@ -16,9 +15,6 @@ from deepagents import (
 )
 from deepagents.middleware.filesystem import FilesystemMiddleware
 from langchain.agents.middleware import ModelCallLimitMiddleware, ToolCallLimitMiddleware
-from mcp import ClientSession, StdioServerParameters
-from mcp.client.stdio import stdio_client
-from langchain_mcp_adapters.tools import load_mcp_tools
 
 from telesale_agent.adapters.llm.model_factory import (
     create_chat_model,
@@ -29,7 +25,6 @@ from telesale_agent.application.deepagent.tools.routing import (
     IntentToolRoutingMiddleware,
     TelesaleAgentRuntimeContext,
 )
-from telesale_agent.application.deepagent.tools.memory_archive import build_memory_archive_tool
 from telesale_agent.application.deepagent.context.prompt import positive_int_env as _positive_int_env
 
 
@@ -74,37 +69,8 @@ async def initialize_runtime(harness):
         system_prompt="",
     )
 
-    server_paths = [
-        project_root / "src" / "mcp_servers" / "mcp_db.py",
-        project_root / "src" / "mcp_servers" / "mcp_knowledge.py",
-        project_root / "src" / "mcp_servers" / "mcp_workflow.py",
-    ]
-
-    all_mcp_tools = []
-    for srv_path in server_paths:
-        if srv_path.exists():
-            # Keep the parent's import path for subprocesses. This matters
-            # for Windows evaluation runs where the venv launcher may fall
-            # back to the base interpreter while packages remain in the
-            # venv site-packages directory.
-            params = StdioServerParameters(
-                command=sys.executable,
-                args=[str(srv_path)],
-                env=os.environ.copy(),
-            )
-            read, write = await harness.exit_stack.enter_async_context(stdio_client(params))
-            session = await harness.exit_stack.enter_async_context(ClientSession(read, write))
-            await session.initialize()
-            tools = await load_mcp_tools(session)
-            all_mcp_tools.extend(tools)
-    archive_tool = build_memory_archive_tool(harness.memory)
-    if archive_tool is not None:
-        all_mcp_tools.append(archive_tool)
-    harness.mcp_tools = {
-        tool.name: tool
-        for tool in all_mcp_tools
-        if isinstance(getattr(tool, "name", None), str)
-    }
+    from telesale_agent.adapters.mcp.runtime import connect_tools
+    harness.mcp_tools = await connect_tools(harness.exit_stack, harness.memory)
     await harness._prewarm_knowledge_mcp()
             
     model_config = resolve_model_config()
@@ -140,7 +106,7 @@ async def initialize_runtime(harness):
 
     harness.agent = create_deep_agent(
         model=model,
-        tools=all_mcp_tools,
+        tools=list(harness.mcp_tools.values()),
         system_prompt=instruction_prompt,
         middleware=[
             IntentToolRoutingMiddleware(),
