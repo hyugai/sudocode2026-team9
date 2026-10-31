@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createPurchaseStore, quote, resolveItem, selection, stockFor, validateDelivery, parseCart, CART_KEY, SESSION_KEY } from '../utils/commerce.ts';
-import { getProductDetails } from '../utils/catalog.ts';
+import { getProductDetails } from '../utils/demo-catalog.ts';
 
 const memory = () => { const data = new Map(); return { getItem: key => data.get(key) ?? null, setItem: (key,value) => data.set(key,value), removeItem: key => data.delete(key) }; };
 const item = (productSku, quantity = 1, sku = productSku) => ({ productSku, sku, quantity });

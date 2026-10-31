@@ -1,6 +1,6 @@
-import { catalogReferenceDate, getProductDetails, type ProductDetails } from "./catalog.ts";
-import inventory from "../../../dataset/BTC-Data-Vong1-TEAMS/catalog/inventory_timeline.json" with { type: "json" };
-import promotions from "../../../dataset/BTC-Data-Vong1-TEAMS/catalog/promotions.json" with { type: "json" };
+import { catalogReferenceDate, getProductDetails, type ProductDetails } from "./demo-catalog.ts";
+import inventory from "../data/inventory_timeline.json" with { type: "json" };
+import promotions from "../data/promotions.json" with { type: "json" };
 
 export type CartItem = { productSku: string; sku: string; quantity: number };
 export type Payment = "COD" | "bank" | "momo" | "zalopay";

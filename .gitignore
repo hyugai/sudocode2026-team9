@@ -225,6 +225,9 @@ __marimo__/
 # Downloaded local speech recognition weights
 /models/
 .langgraph_api/
+.codegraph/
+.next/
+.serena/
 
 tests/
 !/tests/

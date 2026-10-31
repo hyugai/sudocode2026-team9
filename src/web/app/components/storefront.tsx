@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { applianceSubcategories, catalogReferenceDate, categories, filterProducts, productHref, type ProductDetails } from "@/utils/catalog";
+import { applianceSubcategories, categories, filterProducts, productHref, type LiveProductDetails, type ProductCard } from "@/utils/catalog";
 import { Asset, ChatPanel } from "./chat-panel";
 import { InfoDialog } from "./info-dialog";
 import { useSharedConversation } from "./conversation-provider";
@@ -16,7 +16,7 @@ import { AccountNavigation, AccountPage, GuestProfile, type AccountView } from "
 
 type Dialog = "menu" | "account" | "support" | null;
 
-export default function Storefront({ product, initialSearch = "", initialCategory = "Tất cả", view, orderId, accountView }: { product?: ProductDetails; initialSearch?: string; initialCategory?: string; view?: PurchaseView; orderId?: string; accountView?: AccountView }) {
+export default function Storefront({ product, catalogProducts = [], catalogError = false, initialSearch = "", initialCategory = "Tất cả", view, orderId, accountView }: { product?: LiveProductDetails; catalogProducts?: ProductCard[]; catalogError?: boolean; initialSearch?: string; initialCategory?: string; view?: PurchaseView; orderId?: string; accountView?: AccountView }) {
   const router = useRouter();
   const conversation = useSharedConversation();
   const isCatalog = !product && !view && !accountView;
@@ -75,7 +75,7 @@ export default function Storefront({ product, initialSearch = "", initialCategor
     setFloatingOpen(true);
   };
   const selectCategory = (name: string) => { setCategory(name); setSubcategory(""); };
-  const visibleProducts = filterProducts(category, subcategory, search);
+  const visibleProducts = filterProducts(category, subcategory, search, catalogProducts);
   const closeDialog = () => {
     setDialog(null);
     if (dialog === "account") requestAnimationFrame(() => document.querySelector<HTMLButtonElement>(".account-trigger")?.focus({ preventScroll: true }));
@@ -113,13 +113,14 @@ export default function Storefront({ product, initialSearch = "", initialCategor
             {category === "Điện gia dụng" && <nav id="appliance-subcategories" className="subcategory-nav" aria-label="Danh mục con điện gia dụng">{[{ name: "Tất cả điện gia dụng", value: "" }, ...applianceSubcategories.map(c => ({ name: c.name, value: c.name }))].map(c => <button key={c.value} className={subcategory === c.value ? "active" : ""} aria-pressed={subcategory === c.value} onClick={() => setSubcategory(c.value)}>{c.name}</button>)}</nav>}
           </div>
           <div className="catalog-heading"><div><h2 id="catalog-heading">Gợi ý hôm nay</h2><p>Những món đáng khám phá, theo cách của bạn.</p></div><div className="catalog-tabs" role="group" aria-label="Sắp xếp sản phẩm" title="Danh mục chưa có dữ liệu lượt bán và ngày ra mắt để sắp xếp.">{["Dành cho bạn", "Bán chạy", "Mới nhất"].map((s, i) => <button key={s} aria-pressed={i === 0} className={i === 0 ? "active" : ""} disabled={i !== 0}>{s}</button>)}</div></div>
-          <p className="catalog-source">Danh mục BTC · Dữ liệu tham chiếu {catalogReferenceDate}. Giá chưa áp dụng khuyến mãi; chưa có ảnh, đánh giá và dữ liệu sắp xếp.</p>
+          <p className="catalog-source">Danh mục từ cơ sở dữ liệu · Giá chưa áp dụng khuyến mãi; chưa có ảnh, đánh giá và dữ liệu sắp xếp.</p>
+          {catalogError && <p className="empty-catalog" role="alert">Chưa tải được sản phẩm từ backend. Vui lòng thử tải lại trang sau.</p>}
           <p className="filter-status" role="status">{visibleProducts.length} sản phẩm{search ? ` cho “${search}”` : ""}{subcategory ? ` · ${subcategory}` : category !== "Tất cả" ? ` · ${category}` : ""}{(search || category !== "Tất cả") && <> · <button className="text-link" onClick={() => { setSearch(""); setQuery(""); selectCategory("Tất cả"); }}>Xóa bộ lọc</button></>}</p>
           <div className="product-grid">{visibleProducts.map(p => <Link className="product-card" key={p.id} href={productHref(p.id)} aria-label={`${p.name} · ${p.id} · ${p.price}`} data-sku={p.id} data-subcategory={p.subcategory}>
             <div className="product-photo missing-photo"><div><p>Chưa có ảnh BTC</p><p>{p.id}</p></div></div>
             <div className="product-info"><h3>{p.name}</h3><p className="price">{p.price}</p><p className="rating">Chưa có đánh giá / lượt bán</p></div>
           </Link>)}</div>
-          {!visibleProducts.length && <p className="empty-catalog">Không tìm thấy sản phẩm. Hãy thử từ khóa khác hoặc hỏi Synee AI.</p>}
+          {!catalogError && !visibleProducts.length && <p className="empty-catalog">Không tìm thấy sản phẩm. Hãy thử từ khóa khác hoặc hỏi Synee AI.</p>}
           <div className="continue-browsing"><Link className="quiet-button" href="/#catalog-heading" onClick={() => { selectCategory("Tất cả"); setSearch(""); setQuery(""); }}><Asset name="more" />Xem tất cả sản phẩm</Link></div>
         </div>
       </section>
