@@ -1,0 +1,26 @@
+.git
+.github
+.venv
+__pycache__
+*.py[cod]
+*.egg-info
+**/*.egg-info
+*.log
+.env
+.env.*
+.pytest_cache
+.ruff_cache
+tests
+docs
+notebooks
+src/web
+dataset
+
+# Only runtime data is sent to the Docker build context.
+data/*
+!data/memory-root/
+data/memory-root/*
+!data/memory-root/agents/
+!data/memory-root/agents/**
+!data/memory-root/users/
+!data/memory-root/users/**

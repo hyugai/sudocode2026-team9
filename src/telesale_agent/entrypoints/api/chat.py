@@ -41,7 +41,9 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(title="Telesale Agent API", lifespan=lifespan)
 
+from telesale_agent.entrypoints.api.catalog import router as catalog_router
 from telesale_agent.entrypoints.api.voice import create_voice_router
+app.include_router(catalog_router)
 voice_router, shutdown_voice = create_voice_router(lambda: harness)
 app.include_router(voice_router)
 

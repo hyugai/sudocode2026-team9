@@ -1,9 +1,19 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import { readFile } from "node:fs/promises";
-import { applianceSubcategories, categoryFor, filterProducts, getProductDetails, productHref, products } from "../utils/catalog.ts";
+import { applianceSubcategories, categoryFor, filterProducts as filterCatalog, productHref } from "../utils/catalog.ts";
+import { getProductDetails, products } from "../utils/demo-catalog.ts";
 
 const source = JSON.parse(await readFile(new URL("../../../dataset/BTC-Data-Vong1-TEAMS/catalog/products.json", import.meta.url)));
+const filterProducts = (category, subcategory, search) => filterCatalog(category, subcategory, search, products);
+
+test("Deployable catalog snapshots match the source dataset", async () => {
+  for (const name of ["products.json", "inventory_timeline.json", "promotions.json"]) {
+    const original = await readFile(new URL(`../../../dataset/BTC-Data-Vong1-TEAMS/catalog/${name}`, import.meta.url));
+    const deployable = await readFile(new URL(`../data/${name}`, import.meta.url));
+    assert.deepEqual(deployable, original, `${name} is out of sync`);
+  }
+});
 
 test("Every card URL resolves to the exact unmodified BTC SKU record", () => {
   for (const product of source.products) {

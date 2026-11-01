@@ -1,0 +1,84 @@
+services:
+  - type: web
+    name: telesale-agent-api
+    runtime: docker
+    region: singapore
+    plan: free
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /health
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: GOOGLE_API_KEY
+        sync: false
+      - key: LLM_PROVIDER
+        value: gemini
+      - key: LLM_MODEL
+        value: gemini-3.6-flash
+      - key: API_KEY
+        sync: false
+      - key: CORS_ORIGINS
+        value: https://agentweb-alpha.vercel.app,https://agentweb-nganbees-projects.vercel.app
+      - key: REALTIME_VOICE_ENABLED
+        value: "true"
+      - key: REALTIME_ALLOWED_ORIGINS
+        value: https://agentweb-alpha.vercel.app,https://agentweb-nganbees-projects.vercel.app
+      - key: GEMINI_LIVE_MODEL
+        value: gemini-3.8-live
+      - key: GEMINI_LIVE_API_VERSION
+        value: v1beta
+      - key: REALTIME_TOOLS_MODE
+        value: read_only
+      - key: NLU_THINKING_LEVEL
+        value: minimal
+      - key: DEEPAGENT_THINKING_LEVEL
+        value: minimal
+      - key: DEEPAGENT_CHECKPOINT_SCOPE
+        value: turn
+      - key: DEEPAGENT_RECENT_MESSAGE_COUNT
+        value: "4"
+      - key: DEEPAGENT_RECENT_MESSAGE_CHARS
+        value: "450"
+      - key: DEEPAGENT_RECENT_CONTEXT_CHARS
+        value: "1600"
+      - key: DEEPAGENT_MAX_MODEL_CALLS
+        value: "4"
+      - key: DEEPAGENT_MAX_TOOL_CALLS
+        value: "3"
+      - key: DEEPAGENT_RECURSION_LIMIT
+        value: "30"
+      - key: DEEPAGENT_PREFETCH_CONTEXT_CHARS
+        value: "2400"
+      - key: DEEPAGENT_LOG_TOKEN_ESTIMATE
+        value: "true"
+      - key: MEMORY_PERSISTER_MODE
+        value: llm_learning
+      - key: CUSTOMER_MEMORY_BACKEND
+        value: file
+      - key: CUSTOMER_MEMORY_ROOT
+        value: /app/data/memory-root/users
+      - key: AGENT_INSTRUCTIONS_ROOT
+        value: /app/data/memory-root/agents/telesales_agent
+      - key: KNOWLEDGE_RETRIEVAL_MODE
+        value: mcp
+      - key: KNOWLEDGE_BACKEND
+        value: pinecone
+      - key: PINECONE_API_KEY
+        sync: false
+      - key: PINECONE_INDEX_NAME
+        value: policy-telesale
+      - key: PINECONE_NAMESPACE
+        value: policy-prod
+      - key: KNOWLEDGE_CANDIDATE_K
+        value: "20"
+      - key: KNOWLEDGE_MCP_PREWARM
+        value: "false"
+      - key: ENABLE_VECTOR_RAG
+        value: "true"
+      - key: ENABLE_DEBUG_RESPONSE
+        value: "false"
+      - key: ENVIRONMENT
+        value: production
+      - key: LANGCHAIN_TRACING_V2
+        value: "false"

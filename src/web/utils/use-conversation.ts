@@ -8,7 +8,7 @@ import { conversationStorageKey, readGuestSession, writeGuestSession } from "./c
 export const apiBase = (process.env.NEXT_PUBLIC_API_BASE_URL || (
   process.env.NODE_ENV === "development"
     ? "http://localhost:8000"
-    : "https://sudo-code-2026-group-9.onrender.com"
+    : "https://telesale-agent-api.onrender.com"
 )).replace(/\/$/, "");
 
 export interface Message { role: "user" | "agent"; text: string }

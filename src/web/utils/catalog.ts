@@ -1,5 +1,3 @@
-import btcCatalog from "../../../dataset/BTC-Data-Vong1-TEAMS/catalog/products.json" with { type: "json" };
-
 export const categories = [
   { name: "Tất cả", icon: "category-bag.svg" },
   { name: "Điện gia dụng", icon: "category-appliance.svg" },
@@ -22,32 +20,46 @@ export function categoryFor(sourceCategory: string): string | undefined {
   if (sourceCategory === "me-be") return "Mẹ & bé";
 }
 
-export const catalogReferenceDate = btcCatalog.reference_date;
-
-export function getProductDetails(sku: string) {
-  return btcCatalog.products.find(product => product.sku === sku);
+export interface LiveProductDetails {
+  sku: string;
+  name: string;
+  category: string;
+  brand: string;
+  list_price_vnd: number;
+  attributes: Record<string, unknown>;
+  stock: number;
+  variants: { variant_sku: string; size: string; color: string; price_delta_vnd: number; stock: number }[];
 }
 
-export type ProductDetails = NonNullable<ReturnType<typeof getProductDetails>>;
+export interface ProductCard {
+  id: string;
+  name: string;
+  price: string;
+  category: string | undefined;
+  sourceCategory: string;
+  subcategory: string | undefined;
+}
 
 export function productHref(sku: string) {
   return `/products/${encodeURIComponent(sku)}`;
 }
 
-// BTC supplies no product photos, sales counts, ratings or publication dates.
-// Do not reuse unrelated demonstration images or fabricate those fields.
-export const products = btcCatalog.products.map(product => ({
+export const formatMoney = (value: number) => `${new Intl.NumberFormat("vi-VN").format(value)}₫`;
+
+export function productCards(source: readonly Pick<LiveProductDetails, "sku" | "name" | "category" | "list_price_vnd">[]): ProductCard[] {
+  return source.map(product => ({
   id: product.sku,
   name: product.name,
-  price: `${new Intl.NumberFormat("vi-VN").format(product.list_price_vnd)}₫`,
+  price: formatMoney(product.list_price_vnd),
   category: categoryFor(product.category),
   sourceCategory: product.category,
   subcategory: applianceSubcategories.find(c => c.sourceCategory === product.category)?.name,
-}));
+  }));
+}
 
-export function filterProducts(category: string, subcategory: string, search: string) {
+export function filterProducts(category: string, subcategory: string, search: string, catalog: readonly ProductCard[]) {
   const query = search.trim().toLocaleLowerCase("vi");
-  return products.filter(product =>
+  return catalog.filter(product =>
     (category === "Tất cả" || product.category === category) &&
     (category !== "Điện gia dụng" || !subcategory || product.subcategory === subcategory) &&
     `${product.name} ${product.id}`.toLocaleLowerCase("vi").includes(query)
