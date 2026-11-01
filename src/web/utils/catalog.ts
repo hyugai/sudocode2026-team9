@@ -1,0 +1,67 @@
+export const categories = [
+  { name: "Tất cả", icon: "category-bag.svg" },
+  { name: "Điện gia dụng", icon: "category-appliance.svg" },
+  { name: "Thời trang", icon: "category-shirt.svg" },
+  { name: "Mẹ & bé", icon: "category-bag.svg" },
+  { name: "Phụ kiện", icon: "category-bag.svg" },
+] as const;
+
+export const applianceSubcategories = [
+  { name: "Máy lọc không khí", sourceCategory: "gia-dung/may-loc-khong-khi" },
+  { name: "Máy lọc nước", sourceCategory: "gia-dung/may-loc-nuoc" },
+  { name: "Nồi chiên", sourceCategory: "gia-dung/noi-chien" },
+] as const;
+
+/** Display-only hierarchy: original BTC records and category paths stay intact. */
+export function categoryFor(sourceCategory: string): string | undefined {
+  if (sourceCategory.endsWith("/phu-kien")) return "Phụ kiện";
+  if (sourceCategory.startsWith("gia-dung/")) return "Điện gia dụng";
+  if (sourceCategory.startsWith("thoi-trang/")) return "Thời trang";
+  if (sourceCategory === "me-be") return "Mẹ & bé";
+}
+
+export interface LiveProductDetails {
+  sku: string;
+  name: string;
+  category: string;
+  brand: string;
+  list_price_vnd: number;
+  attributes: Record<string, unknown>;
+  stock: number;
+  variants: { variant_sku: string; size: string; color: string; price_delta_vnd: number; stock: number }[];
+}
+
+export interface ProductCard {
+  id: string;
+  name: string;
+  price: string;
+  category: string | undefined;
+  sourceCategory: string;
+  subcategory: string | undefined;
+}
+
+export function productHref(sku: string) {
+  return `/products/${encodeURIComponent(sku)}`;
+}
+
+export const formatMoney = (value: number) => `${new Intl.NumberFormat("vi-VN").format(value)}₫`;
+
+export function productCards(source: readonly Pick<LiveProductDetails, "sku" | "name" | "category" | "list_price_vnd">[]): ProductCard[] {
+  return source.map(product => ({
+  id: product.sku,
+  name: product.name,
+  price: formatMoney(product.list_price_vnd),
+  category: categoryFor(product.category),
+  sourceCategory: product.category,
+  subcategory: applianceSubcategories.find(c => c.sourceCategory === product.category)?.name,
+  }));
+}
+
+export function filterProducts(category: string, subcategory: string, search: string, catalog: readonly ProductCard[]) {
+  const query = search.trim().toLocaleLowerCase("vi");
+  return catalog.filter(product =>
+    (category === "Tất cả" || product.category === category) &&
+    (category !== "Điện gia dụng" || !subcategory || product.subcategory === subcategory) &&
+    `${product.name} ${product.id}`.toLocaleLowerCase("vi").includes(query)
+  );
+}

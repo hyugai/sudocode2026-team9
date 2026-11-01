@@ -36,6 +36,13 @@ yarn-error.log*
 # vercel
 .vercel
 
+# Keep migration regressions and the public URL example reviewable despite
+# repository-wide test/env ignore rules.
+!tests/
+!tests/*.mjs
+!.env.example
+!MIGRATION.md
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

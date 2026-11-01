@@ -1,0 +1,126 @@
+import assert from 'node:assert/strict';
+import { mkdir, writeFile } from 'node:fs/promises';
+import { connect } from './browser-support.mjs';
+
+const b=await connect(), base=process.env.BASE_URL||'http://localhost:3000', output=process.env.BROWSER_ARTIFACT_DIR||'/tmp/synee-purchase';
+await mkdir(output,{recursive:true});
+const runId=String(Date.now());
+const checks=[]; const check=(name,value)=>{assert.ok(value,name);checks.push(name);console.log('PASS',name);};
+const click=selector=>b.evaluate(`document.querySelector(${JSON.stringify(selector)}).click()`);
+const type=(selector,value)=>b.evaluate(`(()=>{const n=document.querySelector(${JSON.stringify(selector)});Object.getOwnPropertyDescriptor(n.tagName==='TEXTAREA'?HTMLTextAreaElement.prototype:HTMLInputElement.prototype,'value').set.call(n,${JSON.stringify(value)});n.dispatchEvent(new Event('input',{bubbles:true}));})()`);
+const route=async path=>{await b.send('Page.navigate',{url:base+path});await b.wait("document.querySelector('.site-header')&&document.querySelector('.cart-link')&&Object.keys(document.querySelector('.cart-link')).some(k=>k.startsWith('__reactProps'))&&!document.body.textContent.includes('Đang tải dữ liệu mua sắm…')");await b.evaluate('document.fonts.ready');};
+const view=async name=>b.wait(`document.querySelector('.purchase-page')?.dataset.view==='${name}'`);
+const choose=async(selector,text)=>b.evaluate(`[...document.querySelectorAll(${JSON.stringify(selector)})].find(n=>n.textContent===${JSON.stringify(text)}).click()`);
+const snapshot=async name=>{
+  await b.evaluate("window.scrollTo({top:0,behavior:'instant'})");
+  const metrics=await b.send('Page.getLayoutMetrics');
+  const size=metrics.cssContentSize||metrics.contentSize;
+  const shot=await b.send('Page.captureScreenshot',{format:'png',captureBeyondViewport:true,clip:{x:0,y:0,width:size.width,height:size.height,scale:1}});
+  await writeFile(`${output}/${name}.png`,Buffer.from(shot.data,'base64'));
+};
+async function address(){await type('#delivery-name','Người nhận Demo');await type('#delivery-phone','0901234567');await type('#delivery-address','12 Đường Mẫu, phường Mẫu, quận Mẫu, Hà Nội');}
+try{
+  await b.send('Page.enable');
+  await b.send('Emulation.setScrollbarsHidden',{hidden:true});
+  await b.send('Page.addScriptToEvaluateOnNewDocument',{source:`
+    window.__calls=[];const original=window.fetch.bind(window);
+    window.fetch=async(input,options={})=>{const url=String(input);if(url.endsWith('/health'))return Response.json({status:'ok'});if(!/\\/api\\/chat(?:\\/audio)?$/.test(url))return original(input,options);window.__calls.push({url,body:options.body});return Response.json({response:'Đã ghi nhận.',normalized_message:JSON.parse(options.body).message});};
+    if(sessionStorage.getItem('synee.e2e.run')!==${JSON.stringify(runId)}){localStorage.removeItem('synee.demo.cart.v1');sessionStorage.removeItem('synee.demo.purchase.v1');sessionStorage.setItem('synee.e2e.run',${JSON.stringify(runId)});}
+  `});
+  await b.send('Emulation.setDeviceMetricsOverride',{width:1440,height:1000,deviceScaleFactor:1,mobile:false});
+  await route('/');await b.wait("document.querySelector('#inline-message')&&!document.body.innerText.includes('Đang chờ kết nối backend')");
+  await type('#inline-message','Giữ hội thoại xuyên suốt mua hàng');await b.evaluate("document.querySelector('.composer').requestSubmit()");await b.wait("document.querySelectorAll('.message').length===3");
+  const sent=await b.evaluate('JSON.parse(window.__calls[0].body)');
+  await type('#inline-message','Không ghi đè bản nháp của tôi');await click('.mode-toggle button:last-child');
+  await click("[data-sku='SKU-SN-RUN2']");await b.wait("document.querySelector('.product-detail')?.dataset.sku==='SKU-SN-RUN2'");
+  check('Variant PDP requires exact selection before purchase',await b.evaluate("document.querySelector('.pdp-purchase-actions button').disabled&&document.querySelector('.selected-sku').textContent.includes('Chưa chọn')"));
+  await choose('.variant-options button','Đen');await choose('.variant-options button','41');
+  check('Variant SKU and dated timeline stock are exact',await b.evaluate("document.querySelector('.selected-sku').textContent.includes('SKU-SN-RUN2-41-DEN')&&document.querySelector('.pdp-info').textContent.includes('Tồn 3')"));
+  await click('.pdp-ask');await b.wait("document.querySelector('#floating-message')");
+  check('PDP consultation preserves draft and Voice toggle with explicit SKU context',await b.evaluate("document.querySelector('#floating-message').value==='Không ghi đè bản nháp của tôi'&&document.querySelector('.consultation-context').textContent.includes('SKU-SN-RUN2-41-DEN')&&document.querySelector('.mode-toggle button:last-child').getAttribute('aria-pressed')==='true'&&window.__calls.length===1"));
+  await click('.commerce-actions button');
+  check('Conversation ID and phone state remain isolated from checkout',await b.evaluate(`document.querySelector('.session-id').textContent.includes(${JSON.stringify(sent.conversation_id)})&&document.querySelector('#customer-phone').value===''`));
+  await click('.dialog-header button');
+  await b.evaluate("document.querySelector('.composer').requestSubmit()");
+  await b.wait("document.querySelectorAll('.message').length===5");
+  check('Explicit text send carries exact variant context and preserves the conversation ID',await b.evaluate(`(()=>{const call=JSON.parse(window.__calls.at(-1).body);return call.message.includes('SKU-SN-RUN2-41-DEN')&&call.message.includes('Không ghi đè bản nháp của tôi')&&call.conversation_id===${JSON.stringify(sent.conversation_id)};})()`));
+  await click('.close-chat');
+  await click('.pdp-purchase-actions .commerce-secondary');await b.wait("document.querySelector('.pdp-info').textContent.includes('Đã thêm')");
+  check('Header count reflects added variant',await b.evaluate("document.querySelector('.cart-count').textContent==='1'"));
+  await click('.cart-link');await view('cart');
+  check('Cart retains exact variant and recomputed list price',await b.evaluate("document.querySelector('.order-line').dataset.sku==='SKU-SN-RUN2-41-DEN'&&document.querySelector('.order-line').textContent.includes('1.690.000₫')"));
+  await click('.quantity-control button:last-child');
+  check('Cart update recalculates subtotal and count',await b.evaluate("document.querySelector('.cart-count').textContent==='2'&&document.querySelector('[data-testid=order-total]').textContent==='3.380.000₫'"));
+  await snapshot('cart-desktop');
+  await b.send('Page.reload');await view('cart');await b.wait("document.querySelector('.order-line')");
+  check('Cart persists through reload',await b.evaluate("document.querySelector('.quantity-control input').value==='2'&&document.querySelector('.cart-count').textContent==='2'"));
+  // Start the continuity run again after the deliberately tested reload.
+  await click('.chat-launcher');await b.wait("document.querySelector('#floating-message')");await type('#floating-message','Bản nháp mua hàng');await click('.mode-toggle button:last-child');await click('.close-chat');
+  await click('.order-summary .purchase-action');await view('checkout');
+  await b.evaluate("document.querySelector('.checkout-form').requestSubmit()");
+  await b.wait("document.activeElement.id==='delivery-name'&&document.querySelector('#delivery-name').getAttribute('aria-invalid')==='true'");
+  check('Checkout rejects missing address with actionable field errors',await b.evaluate("document.querySelector('#delivery-name').getAttribute('aria-invalid')==='true'&&document.activeElement.id==='delivery-name'"));
+  await address();await click("input[name=shipping-region][value=province]");await click("input[name=payment][value=COD]");
+  await b.send('Emulation.setDeviceMetricsOverride',{width:320,height:760,deviceScaleFactor:1,mobile:false});
+  check('Populated 320px checkout fits address fields, methods and totals',await b.evaluate("document.documentElement.scrollWidth<=320&&[...document.querySelectorAll('.checkout-form input,.checkout-form textarea')].every(n=>n.getBoundingClientRect().right<=320)&&document.querySelector('[data-testid=order-total]').textContent==='3.380.000₫'"));
+  await snapshot('checkout-mobile-form');
+  await b.evaluate("document.querySelector('#delivery-name').focus()");
+  await b.send('Input.dispatchKeyEvent',{type:'keyDown',key:'Tab',code:'Tab',windowsVirtualKeyCode:9});
+  await b.send('Input.dispatchKeyEvent',{type:'keyUp',key:'Tab',code:'Tab',windowsVirtualKeyCode:9});
+  check('Checkout keyboard focus follows recipient to phone',await b.evaluate("document.activeElement.id==='delivery-phone'"));
+  await b.send('Emulation.setDeviceMetricsOverride',{width:1440,height:1000,deviceScaleFactor:1,mobile:false});
+  await b.evaluate("document.querySelector('.demo-scenarios').open=true;const n=document.querySelector('#demo-scenario');n.value='order-failure';n.dispatchEvent(new Event('change',{bubbles:true}));");
+  await snapshot('checkout-desktop');
+  await b.evaluate("document.querySelector('.checkout-form').requestSubmit()");await view('review');
+  check('Review requires separate explicit confirmation',await b.evaluate("document.querySelector('.order-summary .purchase-action').disabled&&document.querySelector('.order-summary').textContent.includes('Chỉ khi bấm xác nhận')"));
+  await b.evaluate("document.querySelector('.confirmation input').focus()");
+  await b.send('Input.dispatchKeyEvent',{type:'keyDown',key:' ',code:'Space',windowsVirtualKeyCode:32});
+  await b.send('Input.dispatchKeyEvent',{type:'keyUp',key:' ',code:'Space',windowsVirtualKeyCode:32});
+  check('Explicit confirmation is operable with the keyboard',await b.evaluate("document.querySelector('.confirmation input').checked&&!document.querySelector('.order-summary .purchase-action').disabled"));
+  await click('.order-summary .purchase-action');await b.wait("document.querySelector('.commerce-error')?.textContent.includes('tạo đơn thất bại')");
+  check('Order failure preserves checkout and never invents a receipt',await b.evaluate("JSON.parse(sessionStorage.getItem('synee.demo.purchase.v1')).orders.length===0&&document.querySelector('.order-line').textContent.includes('SKU-SN-RUN2-41-DEN')&&!document.querySelector('.order-summary .purchase-action').disabled"));
+  await click('.review-back');await view('checkout');
+  await b.evaluate("document.querySelector('#demo-scenario').value='success';document.querySelector('#demo-scenario').dispatchEvent(new Event('change',{bubbles:true}));");
+  await b.evaluate("document.querySelector('.checkout-form').requestSubmit()");await view('review');await click('.confirmation input');
+  await b.evaluate("for(let i=0;i<12;i++)document.querySelector('.order-summary .purchase-action').click()");
+  await view('success');
+  const orderId=await b.evaluate("JSON.parse(sessionStorage.getItem('synee.demo.purchase.v1')).orders[0].id");
+  check('Repeated confirmations produce one DEMO order with no paid status',await b.evaluate("(()=>{const s=JSON.parse(sessionStorage.getItem('synee.demo.purchase.v1'));return s.orders.length===1&&s.orders[0].mode==='demo'&&s.orders[0].paymentStatus==='unpaid'&&s.orders[0].quote.total===3380000&&document.querySelector('.cart-count').textContent==='0';})()"));
+  await snapshot('success-desktop');await click('.chat-launcher');await b.wait("document.querySelector('#floating-message')");
+  check('Draft and Chat/Voice mode survive cart, checkout, failure, review and success',await b.evaluate("document.querySelector('#floating-message').value==='Bản nháp mua hàng'&&document.querySelector('.mode-toggle button:last-child').getAttribute('aria-pressed')==='true'&&window.__calls.length===0"));
+  await click('.close-chat');await click('.order-summary .purchase-action');await view('order');
+  check('Order details display the saved exact receipt',await b.evaluate(`document.body.textContent.includes(${JSON.stringify(orderId)})&&document.querySelector('.order-line').dataset.sku==='SKU-SN-RUN2-41-DEN'&&document.body.textContent.includes('Người nhận Demo')`));
+  await click('.order-summary .purchase-action');await view('tracking');
+  check('Tracking labels later carrier stages as not occurred',await b.evaluate("document.querySelectorAll('.tracking-stages li').length===4&&document.querySelector('[aria-current=step]').textContent.includes('mẫu hiện tại')&&document.querySelector('.tracking-stages').textContent.includes('chưa diễn ra')"));
+  await snapshot('tracking-desktop');
+  for(const path of ['/cart','/checkout',`/orders/${orderId}`,`/orders/${orderId}/tracking`]){
+    await route(path);await b.send('Emulation.setDeviceMetricsOverride',{width:320,height:760,deviceScaleFactor:1,mobile:false});
+    check(`320px ${path.split('/')[1]} has no page overflow`,await b.evaluate('document.documentElement.scrollWidth<=320'));
+    await snapshot(`mobile-${path.split('/').at(-1)}`);
+  }
+  await b.send('Emulation.setDeviceMetricsOverride',{width:1440,height:1000,deviceScaleFactor:1,mobile:false});
+  await route('/products/SKU-AF-4L');await b.wait("document.querySelector('.pdp-purchase-actions button')&&!document.querySelector('.pdp-purchase-actions button').disabled");
+  await click('.pdp-purchase-actions .commerce-secondary');await b.wait("document.querySelector('.cart-count').textContent==='1'");
+  await route('/products/SKU-WF-RO9');await b.wait("document.querySelector('.pdp-purchase-actions .purchase-action')&&!document.querySelector('.pdp-purchase-actions .purchase-action').disabled");await click('.pdp-purchase-actions .purchase-action');await view('checkout');
+  check('Buy now checks out one SKU without replacing the existing cart',await b.evaluate("document.querySelector('.order-line').dataset.sku==='SKU-WF-RO9'&&document.querySelector('.cart-count').textContent==='1'&&JSON.parse(localStorage.getItem('synee.demo.cart.v1'))[0].sku==='SKU-AF-4L'"));
+  await click("input[name=shipping-region][value=remote]");
+  check('Bulky goods cannot ship to unsupported remote destinations',await b.evaluate("document.querySelector('.checkout-form').textContent.includes('không hỗ trợ')||document.querySelector('.checkout-form').textContent.includes('chưa hỗ trợ')"));
+  await click("input[name=shipping-region][value=province]");
+  check('Bulky surcharge is included exactly once after free base shipping',await b.evaluate("document.querySelector('[data-testid=order-total]').textContent==='6.020.000₫'&&document.querySelector('.order-summary').textContent.includes('30.000₫')"));
+  await route('/products/SKU-XM-4P');check('Zero dated stock blocks purchase',await b.evaluate("document.querySelector('.pdp-purchase-actions .purchase-action').disabled&&document.querySelector('.pdp-info').textContent.includes('Tồn 0')"));
+  await route('/products/SKU-AP-X');await b.wait("!document.querySelector('.pdp-purchase-actions .purchase-action').disabled");await type('.quantity-control input','3');await click('.pdp-purchase-actions .purchase-action');await view('checkout');await address();await click("input[name=payment][value=COD]");await b.evaluate("document.querySelector('.checkout-form').requestSubmit()");
+  check('COD at or above ten million is rejected',await b.evaluate("document.querySelector('#error-payment').textContent.includes('10.000.000')"));
+  await click("input[name=payment][value=bank]");await b.evaluate("document.querySelector('#demo-scenario').value='payment-failure';document.querySelector('#demo-scenario').dispatchEvent(new Event('change',{bubbles:true}));document.querySelector('.checkout-form').requestSubmit();");await view('review');await click('.confirmation input');await click('.order-summary .purchase-action');await b.wait("document.querySelector('.commerce-error')?.textContent.includes('thanh toán thất bại')");
+  check('Online demo payment failure creates no order and charges nothing',await b.evaluate("JSON.parse(sessionStorage.getItem('synee.demo.purchase.v1')).orders.length===1"));
+  await route('/cart');await b.wait("document.querySelector('.remove-line')");await click('.remove-line');
+  check('Remove last line shows empty cart and no checkout action',await b.evaluate("document.querySelector('.empty-cart')&&!document.querySelector('.order-summary')&&document.querySelector('.cart-count').textContent==='0'"));
+  for(const sku of ['SKU-AP-X','SKU-AF-4L']){await route(`/products/${sku}`);await b.wait("!document.querySelector('.pdp-purchase-actions .commerce-secondary').disabled");await click('.pdp-purchase-actions .commerce-secondary');}
+  await click('.cart-link');await view('cart');
+  check('Multi-line cart sums exact BTC prices without merging different SKUs',await b.evaluate("document.querySelectorAll('.order-line').length===2&&document.querySelector('[data-testid=order-total]').textContent==='6.780.000₫'&&document.querySelector('.cart-count').textContent==='2'"));
+  await click('.order-summary .purchase-action');await view('checkout');await click("input[name=payment][value=bank]");
+  await b.evaluate("document.querySelector('#demo-scenario').value='success';document.querySelector('#demo-scenario').dispatchEvent(new Event('change',{bubbles:true}));");
+  await b.evaluate("document.querySelector('.checkout-form').requestSubmit()");await view('review');await click('.confirmation input');await click('.order-summary .purchase-action');await view('success');
+  check('Multi-SKU online demo order preserves both lines and remains unpaid',await b.evaluate("(()=>{const o=JSON.parse(sessionStorage.getItem('synee.demo.purchase.v1')).orders[0];return o.quote.lines.length===2&&o.quote.total===6780000&&o.delivery.payment==='bank'&&o.paymentStatus==='unpaid'&&document.querySelector('.cart-count').textContent==='0';})()"));
+  await route('/orders/DEMO-UNKNOWN');check('Unknown demo order has an honest unavailable state',await b.evaluate("document.querySelector('.purchase-page').textContent.includes('Không tìm thấy đơn demo')"));
+  await writeFile(`${output}/results.json`,JSON.stringify({checks,orderId},null,2));console.log(`${checks.length} purchase browser checks passed. Artifacts: ${output}`);
+}catch(error){console.error(await b.evaluate("({url:location.href,text:document.body.innerText.slice(0,1800)})"));await snapshot('failure');throw error;}finally{await b.close();}
