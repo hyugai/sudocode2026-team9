@@ -8,7 +8,11 @@ npm ci
 npm run dev
 ```
 
-The default backend is `http://localhost:8000` in development and the legacy Render URL in production. `NEXT_PUBLIC_API_BASE_URL` overrides it. Never put API keys in public environment variables. The backend must allow the frontend origin through CORS.
+The default backend is `http://localhost:8000` in development and `https://telesale-agent-api.onrender.com` in production. `NEXT_PUBLIC_API_BASE_URL` overrides it. Never put API keys in public environment variables. The backend must allow the frontend origin through CORS.
+
+The storefront list and product detail pages now request `/api/catalog/products` and `/api/catalog/products/{sku}` from the backend. Those endpoints read products, variants and effective stock from PostgreSQL via `DATABASE_URL`. The web does not need a database credential. If the catalog API is unavailable, the list shows an error instead of substituting snapshot data.
+
+The `data/*.json` files are retained only for the separate demo cart and checkout flow. After changing the source BTC catalog used by that demo, copy the three JSON files from `dataset/BTC-Data-Vong1-TEAMS/catalog/` into `src/web/data/` and run `node --experimental-strip-types --test tests/catalog.test.mjs` to check they match.
 
 ```sh
 npm test
@@ -19,7 +23,7 @@ npm run build
 
 If Turbopack cannot start its CSS worker on Windows or in a restricted environment, use `npm run build -- --webpack` (or `npm run dev -- --webpack`).
 
-UI source: `origin/ui/ux-test` at `c5e2597`, integrated into `Optimize-realtime-voice`, with the LiveKit Wave realtime voice UI. The merge from `deployment` retains Render/Docker configuration and the read-only catalog API. Node 24 is recommended for the TypeScript test runner.
+The product list and detail pages use the PostgreSQL catalog, including variant prices and effective stock. Product detail purchase buttons are hidden until cart pricing is connected to the same catalog. Cart, checkout, receipts and tracking remain a separate local demo adapter; orders and payments are not connected. Login, registration and customer authentication have no backend endpoints. The account sidebar and `/account` pages are guest consultation views.
 
 The storefront and product detail pages load product identity, prices, variants and stock from the backend's `/api/catalog/products` endpoints backed by PostgreSQL/Neon. If the catalog is unavailable, the UI shows an error instead of silently substituting demo products. The default production API is `https://telesale-agent-api.onrender.com`; set `NEXT_PUBLIC_API_BASE_URL` to override it for both catalog and chat/voice.
 
