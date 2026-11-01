@@ -13,7 +13,7 @@ export function ConversationProvider({ children }: { children: ReactNode }) {
   return <ConversationContext.Provider value={conversation}>
     {children}
     {/* One voice surface survives inline/floating chat changes and route navigation. */}
-    {conversation.voicePreview && <InfoDialog title="Trò chuyện trực tiếp cùng Synee" onClose={() => conversation.setVoicePreview(false)}>
+    {conversation.voicePreview && <InfoDialog title="Trò chuyện trực tiếp cùng Synee" className="voice-dialog" onClose={() => conversation.setVoicePreview(false)}>
       <VoicePanel apiBase={apiBase} customerPhone={conversation.customerPhone} onActiveChange={conversation.setVoiceActive} />
     </InfoDialog>}
   </ConversationContext.Provider>;

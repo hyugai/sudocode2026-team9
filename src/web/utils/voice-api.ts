@@ -8,6 +8,10 @@ export interface VoiceEvent {
   generation?: number;
   detail?: string;
   status?: string;
+  state?: "listening" | "thinking";
+  volume?: number;
+  playing?: boolean;
+  finished?: boolean;
 }
 
 export interface VoiceSession {
@@ -64,9 +68,18 @@ export class VoiceClient {
         if (this.ready && !this.muted) {
           this.audio.flush();
           this.control({ type: "input_started" });
+          this.onEvent({ type: "agent_state", state: "listening" });
         }
       }, (data) => this.control({ ...data, type: "playback_progress" }),
-      (detail) => { this.onEvent({ type: "error", detail }); void this.close(); });
+      (detail) => { this.onEvent({ type: "error", detail }); void this.close(); },
+      (activity) => {
+        if (this.disposed) return;
+        if (activity.type === "playback") {
+          if (activity.generation >= this.generation) this.onEvent(activity);
+        } else if (this.ready && !this.muted) {
+          this.onEvent({ type: "agent_state", state: "thinking" });
+        }
+      });
       if (this.disposed) return;
       const headers: Record<string, string> = { "Content-Type": "application/json" };
       if (accessCode) headers["X-API-Key"] = accessCode;

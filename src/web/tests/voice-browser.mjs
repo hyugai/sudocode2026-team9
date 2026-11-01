@@ -80,12 +80,26 @@ try {
   await type(".voice-code-input", "test-code");
   await click(".voice-start");
   await b.wait("document.querySelector('.voice-status')?.textContent === 'Đang lắng nghe'");
+  await b.wait("document.querySelector('.voice-wave canvas') || document.querySelector('[data-wave-fallback]')");
+  await check("LiveKit Wave renders with the connected listening state", "document.querySelector('.voice-wave').dataset.lkState === 'listening'");
   await check("Voice starts once with access code and socket authentication", `__voice.mic === 1 && __voice.sockets.length === 1 && __voice.requests[0].headers['X-API-Key'] === 'test-code' && JSON.parse(__voice.sockets[0].sent[0]).type === 'authenticate'`);
   await b.evaluate(`__voice.sockets[0].emit({ type: 'transcript_update', turn_id: 'one', role: 'user', text: 'Tôi cần máy lọc' });
     __voice.sockets[0].emit({ type: 'transcript_update', turn_id: 'one', role: 'agent', text: 'Em hỗ trợ' });
     __voice.sockets[0].emit({ type: 'transcript_update', turn_id: 'one', role: 'agent', text: 'Em hỗ trợ chọn máy lọc.' });`);
   await b.wait("document.querySelectorAll('.voice-line').length === 2");
   await check("Transcript updates reuse each turn bubble", "document.querySelector('.voice-line.agent').textContent.includes('Em hỗ trợ chọn máy lọc.')");
+  await click(".voice-transcript summary");
+  await check("Transcript expands on request without replacing the voice controls", "document.querySelector('.voice-transcript').open && !!document.querySelector('.voice-stop')");
+  await click(".voice-transcript summary");
+  await b.evaluate("__voice.nodes.find(n => n.name === 'telesale-capture').port.onmessage({ data: { type: 'speech_end' } })");
+  await b.wait("document.querySelector('.voice-wave').dataset.lkState === 'thinking'");
+  await check("Microphone speech end changes Wave to thinking", "document.querySelector('.voice-status').textContent.includes('suy nghĩ')");
+  await b.evaluate("__voice.nodes.find(n => n.name === 'telesale-playback').port.onmessage({ data: { type: 'visualizer', playing: true, volume: .6, generation: 1 } })");
+  await b.wait("document.querySelector('.voice-wave').dataset.lkState === 'speaking'");
+  await check("Rendered playback changes Wave to speaking", "document.querySelector('.voice-status').textContent === 'Synee đang trả lời'");
+  await b.screenshot(`${output}/voice-speaking.png`);
+  await b.evaluate("__voice.nodes.find(n => n.name === 'telesale-playback').port.onmessage({ data: { type: 'visualizer', playing: false, volume: 0, generation: 1 } })");
+  await b.wait("document.querySelector('.voice-wave').dataset.lkState === 'listening'");
   await click(".voice-actions button[aria-pressed]");
   await check("Muting sends input_audio_end", "__voice.sockets[0].sent.some(value => typeof value === 'string' && JSON.parse(value).type === 'input_audio_end')");
   await click(".voice-actions button[aria-pressed]");
@@ -96,12 +110,21 @@ try {
   await b.evaluate("window.scrollTo({ top: 1100, behavior: 'instant' })");
   await b.wait("!document.querySelector('#inline-chat')");
   await check("Switching away from inline chat keeps one live voice connection", "document.querySelectorAll('.realtime-voice').length === 1 && __voice.sockets.length === 1 && __voice.stopped === 0");
+  // Native modal dialogs make background links inert. Temporarily release only
+  // native modality to test a client navigation while the React voice stays mounted.
+  await b.evaluate("document.querySelector('.voice-dialog').close()");
   await click(".product-card");
   await b.wait("document.querySelector('.product-detail')");
+  await b.evaluate("document.querySelector('.voice-dialog').showModal()");
   await check("Client navigation preserves the voice dialog and microphone", "!!document.querySelector('dialog[open] .voice-stop') && __voice.stopped === 0 && __voice.sockets.length === 1");
   await b.send("Emulation.setDeviceMetricsOverride", { width: 320, height: 760, deviceScaleFactor: 1, mobile: false });
   await check("Voice dialog fits a 320px viewport", "document.documentElement.scrollWidth <= 320 && document.querySelector('dialog').scrollWidth <= document.querySelector('dialog').clientWidth");
+  await check("Mobile keeps microphone and end-call controls inside the viewport", "[...document.querySelectorAll('.voice-actions button')].every(button => { const r = button.getBoundingClientRect(); return r.top >= 0 && r.bottom <= innerHeight; })");
   await b.screenshot(`${output}/voice-mobile.png`);
+  await b.send("Emulation.setEmulatedMedia", { features: [{ name: "prefers-reduced-motion", value: "reduce" }] });
+  await b.wait("document.querySelector('[data-wave-fallback]') && !document.querySelector('.voice-wave canvas')");
+  await check("Reduced motion keeps a static Wave without a running WebGL canvas", "!!document.querySelector('.voice-wave[data-lk-state=listening]')");
+  await b.send("Emulation.setEmulatedMedia", { features: [{ name: "prefers-reduced-motion", value: "no-preference" }] });
   await b.send("Input.dispatchKeyEvent", { type: "keyDown", key: "Escape", code: "Escape", windowsVirtualKeyCode: 27 });
   await b.send("Input.dispatchKeyEvent", { type: "keyUp", key: "Escape", code: "Escape", windowsVirtualKeyCode: 27 });
   await b.wait("!document.querySelector('dialog[open]') && __voice.stopped === 1 && __voice.requests.some(r => r.method === 'DELETE')");
@@ -122,6 +145,18 @@ try {
   await click(".mode-toggle button:last-child");
   await b.wait("document.querySelector('.voice-status')?.textContent === 'Voice chưa sẵn sàng'");
   await check("Unavailable voice leaves chat and audio upload usable", "document.querySelector('.voice-start').disabled && !!document.querySelector('.upload-button')");
+  await click("dialog[open] .dialog-header button");
+  await b.evaluate(`__voice.enabled = true; __voice.beforeFallbackMic = __voice.mic;
+    const originalContext = HTMLCanvasElement.prototype.getContext;
+    HTMLCanvasElement.prototype.getContext = function(type, ...args) {
+      return type === 'webgl' || type === 'experimental-webgl' ? null : originalContext.call(this, type, ...args);
+    };`);
+  await click(".mode-toggle button:last-child");
+  await b.wait("document.querySelector('[data-wave-fallback]') && document.querySelector('.voice-code-input')");
+  await check("Unavailable WebGL falls back without starting the microphone or losing call controls", "__voice.mic === __voice.beforeFallbackMic && !!document.querySelector('.voice-start')");
+} catch (error) {
+  console.error(await b.evaluate("({ url: location.href, dialog: !!document.querySelector('dialog[open]'), text: document.body.innerText.slice(0, 1800) })"));
+  throw error;
 } finally {
   await b.close();
 }

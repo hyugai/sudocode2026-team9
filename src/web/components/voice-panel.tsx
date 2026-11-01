@@ -2,6 +2,8 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { VoiceClient, type VoiceEvent } from "@/utils/voice-api";
+import { AgentAudioVisualizerWave } from "@/components/agents-ui/agent-audio-visualizer-wave";
+import { idleVisualizer, updateVoiceVisualizer } from "@/utils/voice-visualizer";
 
 type Line = { key: string; role: "user" | "agent"; text: string };
 type Status = "idle" | "connecting" | "connected" | "reconnecting";
@@ -11,6 +13,7 @@ export default function VoicePanel({ apiBase, customerPhone, onActiveChange }: {
 }) {
   const client = useRef<VoiceClient | null>(null);
   const [status, setStatus] = useState<Status>("idle");
+  const [visualizer, setVisualizer] = useState(idleVisualizer);
   const [muted, setMuted] = useState(false);
   const [lines, setLines] = useState<Line[]>([]);
   const [interim, setInterim] = useState("");
@@ -52,6 +55,7 @@ export default function VoicePanel({ apiBase, customerPhone, onActiveChange }: {
 
   const handle = useCallback((event: VoiceEvent) => {
     if (!mounted.current) return;
+    setVisualizer(previous => updateVoiceVisualizer(previous, event));
     if (event.type === "session_ready") setStatus("connected");
     if (event.type === "connection") setStatus(event.status === "reconnecting" ? "reconnecting" : "connected");
     if (event.type === "transcript_interim") setInterim(event.text || "");
@@ -83,6 +87,7 @@ export default function VoicePanel({ apiBase, customerPhone, onActiveChange }: {
     setInterim("");
     setMuted(false);
     setStatus("connecting");
+    setVisualizer({ state: "connecting", volume: 0 });
     onActiveChange(true);
     const next = new VoiceClient(apiBase, handle);
     client.current = next;
@@ -93,6 +98,7 @@ export default function VoicePanel({ apiBase, customerPhone, onActiveChange }: {
     const current = client.current;
     client.current = null;
     setStatus("idle");
+    setVisualizer(idleVisualizer);
     setInterim("");
     onActiveChange(false);
     await current?.close();
@@ -101,31 +107,49 @@ export default function VoicePanel({ apiBase, customerPhone, onActiveChange }: {
 
   const labels: Record<Status, string> = {
     idle: "Sẵn sàng trò chuyện", connecting: "Đang mở kết nối…",
-    connected: muted ? "Microphone đang tắt" : "Đang lắng nghe",
+    connected: visualizer.state === "speaking" ? "Synee đang trả lời" : visualizer.state === "thinking" ? "Synee đang suy nghĩ…" : muted ? "Microphone đang tắt" : "Đang lắng nghe",
     reconnecting: "Đang kết nối lại…",
   };
+  const waveState = status === "connecting" || status === "reconnecting" ? "connecting"
+    : status === "idle" ? "disconnected" : visualizer.state;
 
   return (
     <section aria-label="Realtime voice" className="realtime-voice">
       <div className="voice-intro">
-        <p>
-          Bắt đầu để nói chuyện bằng microphone. Bạn có thể nói chen để đổi ý.
-          Chế độ này hỗ trợ tư vấn và tra cứu; đặt hoặc sửa đơn ở chế độ chat.
-        </p>
-        <p role="status" className="voice-status">{available === null ? "Đang kiểm tra kết nối voice…" : available === false ? "Voice chưa sẵn sàng" : labels[status]}</p>
-        {available === false && <p className="muted-note">
-          Realtime voice chưa sẵn sàng trên backend. Chat và tải ghi âm vẫn sử dụng được.
-        </p>}
+        <p>Trò chuyện tự nhiên cùng Synee. Bạn có thể nói chen để đổi ý.</p>
       </div>
-      <div ref={historyRef} className="voice-history" role="log" aria-label="Nội dung voice" aria-live="polite" tabIndex={0}>
-        {lines.map((line) => (
-          <div key={line.key} className={`voice-line ${line.role}`}>
-            <span>{line.role === "user" ? "Bạn" : "Synee AI"}</span>
-            {line.text}
-          </div>
-        ))}
-        {interim && <p className="muted-note">{interim}</p>}
+      <div className="voice-stage">
+        <div className="voice-stage-heading"><span>SYNEE / VOICE</span><span className={`voice-live-badge${status === "connected" ? " connected" : ""}`}><i />{status === "connected" ? "Trực tiếp" : "Voice AI"}</span></div>
+        <AgentAudioVisualizerWave
+          size="xl"
+          color="#00ff26"
+          colorShift={2}
+          lineWidth={6}
+          state={waveState}
+          volume={visualizer.volume}
+          className="voice-wave mx-auto aspect-square size-auto h-full"
+          aria-hidden="true"
+        />
+        <div className="voice-stage-caption">
+          <p role="status" className="voice-status">{available === null ? "Đang kiểm tra kết nối voice…" : available === false ? "Voice chưa sẵn sàng" : labels[status]}</p>
+          <p className="voice-state-hint">{status === "idle" ? "Bấm bắt đầu khi bạn sẵn sàng." : status !== "connected" ? "Synee sẽ sẵn sàng trong giây lát." : visualizer.state === "speaking" ? "Bạn có thể nói chen, Synee sẽ lắng nghe." : muted ? "Bật microphone khi bạn muốn nói tiếp." : "Cứ nói điều bạn đang tìm kiếm."}</p>
+        </div>
       </div>
+      {available === false && <p className="muted-note">
+        Realtime voice chưa sẵn sàng trên backend. Chat và tải ghi âm vẫn sử dụng được.
+      </p>}
+      {(lines.length > 0 || interim) && <details className="voice-transcript">
+        <summary>Bản chép hội thoại <span>{lines.length} tin nhắn</span></summary>
+        <div ref={historyRef} className="voice-history" role="log" aria-label="Nội dung voice" aria-live="polite" tabIndex={0}>
+          {lines.map((line) => (
+            <div key={line.key} className={`voice-line ${line.role}`}>
+              <span>{line.role === "user" ? "Bạn" : "Synee AI"}</span>
+              {line.text}
+            </div>
+          ))}
+          {interim && <p className="muted-note">{interim}</p>}
+        </div>
+      </details>}
       <div className="voice-controls">
         {error && <p role="alert" className="error">{error}</p>}
         {memoryNote && <p role="status" className="muted-note">{memoryNote}</p>}
@@ -139,6 +163,7 @@ export default function VoicePanel({ apiBase, customerPhone, onActiveChange }: {
           {status === "idle" ? (
             <button onClick={() => void start()} disabled={available !== true || (requiresCode && !accessCode)}
               className="commerce-secondary voice-start">
+              <VoiceIcon name="mic" />
               Bắt đầu trò chuyện
             </button>
           ) : (
@@ -147,19 +172,33 @@ export default function VoicePanel({ apiBase, customerPhone, onActiveChange }: {
                 client.current?.setMuted(!muted);
                 setMuted(!muted);
               }} disabled={status !== "connected"}
-                className="commerce-secondary"
+                className="commerce-secondary voice-mute"
+                aria-label={muted ? "Bật microphone" : "Tắt microphone"}
                 aria-pressed={muted}>
-                {muted ? "Bật microphone" : "Tắt microphone"}
+                <VoiceIcon name={muted ? "muted" : "mic"} />
+                <span className="voice-mute-label">{muted ? "Bật microphone" : "Tắt microphone"}</span>
               </button>
               <button onClick={() => void stop()}
                 className="commerce-secondary voice-stop">
+                <VoiceIcon name="end" />
                 Kết thúc
               </button>
             </>
           )}
-          <span className="muted-note">Microphone chỉ hoạt động trong phiên đang kết nối. Đóng cửa sổ sẽ kết thúc phiên voice.</span>
         </div>
+        <p className="voice-privacy-note">Microphone chỉ hoạt động trong phiên đang kết nối. Đóng cửa sổ sẽ kết thúc phiên voice.</p>
+        <p className="voice-scope-note">Hỗ trợ tư vấn và tra cứu. Đặt hoặc sửa đơn ở chế độ Chat.</p>
       </div>
     </section>
   );
+}
+
+function VoiceIcon({ name }: { name: "mic" | "muted" | "end" }) {
+  return <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    {name === "end" ? <path d="M4 14c4-4 12-4 16 0l1-3c-5-5-13-5-18 0l1 3Z M7 12v4 M17 12v4" /> : <>
+      <rect x="9" y="2" width="6" height="12" rx="3" />
+      <path d="M5 10v2a7 7 0 0 0 14 0v-2 M12 19v3 M8 22h8" />
+      {name === "muted" && <path d="m3 3 18 18" />}
+    </>}
+  </svg>;
 }

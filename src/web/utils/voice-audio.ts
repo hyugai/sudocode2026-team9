@@ -1,3 +1,7 @@
+export type VoiceActivity = { type: "speech_end" } | {
+  type: "playback"; volume: number; playing: boolean; generation: number;
+};
+
 /** Browser audio resources are owned by one connection and always released together. */
 export class VoiceAudio {
   private context: AudioContext | null = null;
@@ -40,7 +44,8 @@ export class VoiceAudio {
   }
 
   async start(onAudio: (buffer: ArrayBuffer) => void, onSpeech: () => void,
-    onProgress: (data: Record<string, unknown>) => void, onError: (message: string) => void) {
+    onProgress: (data: Record<string, unknown>) => void, onError: (message: string) => void,
+    onActivity?: (activity: VoiceActivity) => void) {
     if (!navigator.mediaDevices?.getUserMedia || !window.AudioContext) {
       throw new Error("Trình duyệt cần HTTPS hoặc localhost để sử dụng microphone.");
     }
@@ -71,10 +76,12 @@ export class VoiceAudio {
       if (this.closed || this.failed) return;
       if (data.type === "pcm") onAudio(data.buffer);
       if (data.type === "speech_start") onSpeech();
+      if (data.type === "speech_end") onActivity?.({ type: "speech_end" });
     };
     this.playback.port.onmessage = ({ data }) => {
       if (this.closed || this.failed) return;
       if (data.type === "progress") onProgress(data);
+      if (data.type === "visualizer") onActivity?.({ ...data, type: "playback" });
       if (data.type === "overflow") {
         console.warn("Voice playback capacity exceeded", { contextState: this.context?.state,
           deviceSampleRate: this.context?.sampleRate, queuedSeconds: data.queued_seconds,
