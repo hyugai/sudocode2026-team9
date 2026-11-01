@@ -116,8 +116,9 @@ try {
   check("Removing audio restores the preserved text draft", await evaluate("document.querySelector('#floating-message').value==='Giữ bản nháp này'&&!document.querySelector('#floating-message').disabled"));
   await upload();
   await click(".mode-toggle button:last-child");
-  check("Voice preview starts no recording or request", await evaluate("document.querySelector('.voice-preview').textContent.includes('Bản xem trước')&&window.__calls.length===1"));
-  await click(".mode-toggle button:first-child");
+  await wait("!!document.querySelector('dialog[open] .realtime-voice')");
+  check("Voice dialog opens without sending chat or starting a call", await evaluate("!!document.querySelector('.voice-start')&&window.__calls.length===1"));
+  await click("dialog[open] .dialog-header button");
   await submit();
   await wait("document.querySelectorAll('.message').length===5");
   const audio = await evaluate("window.__calls[1]");

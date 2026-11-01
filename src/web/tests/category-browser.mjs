@@ -3,7 +3,7 @@ import { mkdir, writeFile } from "node:fs/promises";
 import { connect } from "./browser-support.mjs";
 
 const browser = await connect();
-const output = "/tmp/synee-categories";
+const output = process.env.BROWSER_ARTIFACT_DIR || "/tmp/synee-categories";
 await mkdir(output, { recursive: true });
 const checks = [];
 const check = (name, result) => { assert.ok(result, name); checks.push(name); console.log("PASS", name); };

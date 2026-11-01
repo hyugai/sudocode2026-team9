@@ -11,6 +11,8 @@ class TelesalePlayback extends AudioWorkletProcessor {
     this.samples = 0;
     this.reported = 0;
     this.overflowed = false;
+    this.visualizerSamples = 0;
+    this.playing = false;
     this.port.onmessage = ({ data }) => {
       if (data.type === "flush") {
         this.read = this.write;
@@ -18,6 +20,8 @@ class TelesalePlayback extends AudioWorkletProcessor {
         if (Number.isFinite(data.generation)) {
           this.generation = Math.max(this.generation, data.generation);
         }
+        this.playing = false;
+        this.port.postMessage({ type: "visualizer", playing: false, volume: 0, generation: this.generation });
         return;
       }
       if (data.type !== "audio" || data.generation < this.generation) return;
@@ -53,6 +57,8 @@ class TelesalePlayback extends AudioWorkletProcessor {
   process(_inputs, outputs) {
     const output = outputs[0][0];
     const step = 24000 / sampleRate;
+    let energy = 0;
+    let played = false;
     for (let i = 0; i < output.length; i++) {
       if (this.read >= this.write) { output[i] = 0; continue; }
       const index = Math.floor(this.read);
@@ -60,6 +66,8 @@ class TelesalePlayback extends AudioWorkletProcessor {
       const a = this.ring[index % this.ring.length];
       const b = index + 1 < this.write ? this.ring[(index + 1) % this.ring.length] : a;
       output[i] = a + (b - a) * fraction;
+      energy += output[i] * output[i];
+      played = true;
       const consumed = Math.min(step, this.write - this.read);
       this.read += consumed;
       this.samples += consumed;
@@ -69,6 +77,16 @@ class TelesalePlayback extends AudioWorkletProcessor {
       this.port.postMessage({ type: "progress", generation: this.generation,
         turn_id: this.turnId, samples: Math.floor(this.samples) });
     }
+    // UI telemetry comes from rendered samples, not audio arriving over the network.
+    // Report at 20 Hz while playing, plus immediate start/end transitions.
+    this.visualizerSamples += output.length;
+    const playing = played && this.read < this.write;
+    if (playing !== this.playing || (played && this.visualizerSamples >= sampleRate / 20)) {
+      this.port.postMessage({ type: "visualizer", playing, generation: this.generation,
+        volume: playing ? Math.min(1, Math.sqrt(energy / output.length) * 2) : 0 });
+      this.visualizerSamples = 0;
+    }
+    this.playing = playing;
     return true;
   }
 }

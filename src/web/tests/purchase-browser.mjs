@@ -32,12 +32,13 @@ try{
   await type('#inline-message','Giữ hội thoại xuyên suốt mua hàng');await b.evaluate("document.querySelector('.composer').requestSubmit()");await b.wait("document.querySelectorAll('.message').length===3");
   const sent=await b.evaluate('JSON.parse(window.__calls[0].body)');
   await type('#inline-message','Không ghi đè bản nháp của tôi');await click('.mode-toggle button:last-child');
+  await b.wait("document.querySelector('dialog[open] .realtime-voice')");await click('dialog[open] .dialog-header button');
   await click("[data-sku='SKU-SN-RUN2']");await b.wait("document.querySelector('.product-detail')?.dataset.sku==='SKU-SN-RUN2'");
   check('Variant PDP requires exact selection before purchase',await b.evaluate("document.querySelector('.pdp-purchase-actions button').disabled&&document.querySelector('.selected-sku').textContent.includes('Chưa chọn')"));
   await choose('.variant-options button','Đen');await choose('.variant-options button','41');
   check('Variant SKU and dated timeline stock are exact',await b.evaluate("document.querySelector('.selected-sku').textContent.includes('SKU-SN-RUN2-41-DEN')&&document.querySelector('.pdp-info').textContent.includes('Tồn 3')"));
   await click('.pdp-ask');await b.wait("document.querySelector('#floating-message')");
-  check('PDP consultation preserves draft and Voice toggle with explicit SKU context',await b.evaluate("document.querySelector('#floating-message').value==='Không ghi đè bản nháp của tôi'&&document.querySelector('.consultation-context').textContent.includes('SKU-SN-RUN2-41-DEN')&&document.querySelector('.mode-toggle button:last-child').getAttribute('aria-pressed')==='true'&&window.__calls.length===1"));
+  check('PDP consultation preserves draft and Chat mode after Voice closes with explicit SKU context',await b.evaluate("document.querySelector('#floating-message').value==='Không ghi đè bản nháp của tôi'&&document.querySelector('.consultation-context').textContent.includes('SKU-SN-RUN2-41-DEN')&&document.querySelector('.mode-toggle button:first-child').getAttribute('aria-pressed')==='true'&&window.__calls.length===1"));
   await click('.commerce-actions button');
   check('Conversation ID and phone state remain isolated from checkout',await b.evaluate(`document.querySelector('.session-id').textContent.includes(${JSON.stringify(sent.conversation_id)})&&document.querySelector('#customer-phone').value===''`));
   await click('.dialog-header button');
@@ -55,7 +56,8 @@ try{
   await b.send('Page.reload');await view('cart');await b.wait("document.querySelector('.order-line')");
   check('Cart persists through reload',await b.evaluate("document.querySelector('.quantity-control input').value==='2'&&document.querySelector('.cart-count').textContent==='2'"));
   // Start the continuity run again after the deliberately tested reload.
-  await click('.chat-launcher');await b.wait("document.querySelector('#floating-message')");await type('#floating-message','Bản nháp mua hàng');await click('.mode-toggle button:last-child');await click('.close-chat');
+  await click('.chat-launcher');await b.wait("document.querySelector('#floating-message')");await type('#floating-message','Bản nháp mua hàng');await click('.mode-toggle button:last-child');
+  await b.wait("document.querySelector('dialog[open] .realtime-voice')");await click('dialog[open] .dialog-header button');await click('.close-chat');
   await click('.order-summary .purchase-action');await view('checkout');
   await b.evaluate("document.querySelector('.checkout-form').requestSubmit()");
   await b.wait("document.activeElement.id==='delivery-name'&&document.querySelector('#delivery-name').getAttribute('aria-invalid')==='true'");
@@ -87,7 +89,7 @@ try{
   const orderId=await b.evaluate("JSON.parse(sessionStorage.getItem('synee.demo.purchase.v1')).orders[0].id");
   check('Repeated confirmations produce one DEMO order with no paid status',await b.evaluate("(()=>{const s=JSON.parse(sessionStorage.getItem('synee.demo.purchase.v1'));return s.orders.length===1&&s.orders[0].mode==='demo'&&s.orders[0].paymentStatus==='unpaid'&&s.orders[0].quote.total===3380000&&document.querySelector('.cart-count').textContent==='0';})()"));
   await snapshot('success-desktop');await click('.chat-launcher');await b.wait("document.querySelector('#floating-message')");
-  check('Draft and Chat/Voice mode survive cart, checkout, failure, review and success',await b.evaluate("document.querySelector('#floating-message').value==='Bản nháp mua hàng'&&document.querySelector('.mode-toggle button:last-child').getAttribute('aria-pressed')==='true'&&window.__calls.length===0"));
+  check('Draft and Chat mode survive cart, checkout, failure, review and success',await b.evaluate("document.querySelector('#floating-message').value==='Bản nháp mua hàng'&&document.querySelector('.mode-toggle button:first-child').getAttribute('aria-pressed')==='true'&&window.__calls.length===0"));
   await click('.close-chat');await click('.order-summary .purchase-action');await view('order');
   check('Order details display the saved exact receipt',await b.evaluate(`document.body.textContent.includes(${JSON.stringify(orderId)})&&document.querySelector('.order-line').dataset.sku==='SKU-SN-RUN2-41-DEN'&&document.body.textContent.includes('Người nhận Demo')`));
   await click('.order-summary .purchase-action');await view('tracking');

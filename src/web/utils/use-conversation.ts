@@ -5,7 +5,7 @@ import { ChatApiError, createChatClient, type DebugInfo } from "./chat-api";
 import { conversationStorageKey, readGuestSession, writeGuestSession } from "./conversation-session";
 
 // Keep the legacy deployment contract. This public URL must never contain a key.
-const apiBase = (process.env.NEXT_PUBLIC_API_BASE_URL || (
+export const apiBase = (process.env.NEXT_PUBLIC_API_BASE_URL || (
   process.env.NODE_ENV === "development"
     ? "http://localhost:8000"
     : "https://telesale-agent-api.onrender.com"
@@ -30,6 +30,7 @@ export function useConversation() {
   const [cooldownSeconds, setCooldownSeconds] = useState(0);
   const [sessionId, setSessionId] = useState("");
   const [voicePreview, setVoicePreview] = useState(false);
+  const [voiceActive, setVoiceActive] = useState(false);
   const [consultation, setConsultation] = useState<Consultation | null>(null);
   const conversationIdRef = useRef("");
   const [chatClient] = useState(() => createChatClient(apiBase));
@@ -65,12 +66,12 @@ export function useConversation() {
     setSessionId(""); conversationIdRef.current = ""; setConsultation(null); setErrorMessage(""); setSessionNotice("");
   };
   const setCustomerPhone = (phone: string) => {
-    if (isLoading || isClearing) return;
+    if (isLoading || isClearing || voiceActive) return;
     const next = phone.trim();
     if (next !== customerPhone) { resetConversation(); updateCustomerPhone(next); }
   };
   const endConversation = async () => {
-    if (isLoading || isClearing) return;
+    if (isLoading || isClearing || voiceActive) return;
     setIsClearing(true);
     try { await chatClient.clearSession(conversationIdRef.current); resetConversation(); }
     finally { setIsClearing(false); }
@@ -116,7 +117,7 @@ export function useConversation() {
   };
 
   const sendMessage = async () => {
-    if (!sessionReady || isClearing || (!input.trim() && !audioFile) || chatClient.isSending || !backendReady || chatClient.retryAfterSeconds) return;
+    if (!sessionReady || isClearing || voiceActive || (!input.trim() && !audioFile) || chatClient.isSending || !backendReady || chatClient.retryAfterSeconds) return;
     const userMessage = input.trim();
     const selectedAudio = audioFile;
     const conversationId = conversationIdRef.current || crypto.randomUUID();
@@ -151,10 +152,10 @@ export function useConversation() {
     } finally { setIsLoading(false); }
   };
 
-  return { messages, debugLogs, input, setInput, customerPhone, setCustomerPhone, isLoading: isLoading || isClearing,
+  return { messages, debugLogs, input, setInput, customerPhone, setCustomerPhone, isLoading: isLoading || isClearing || voiceActive,
     audioFile, audioPreviewUrl, clearAudio, selectAudio, errorMessage, backendReady,
     cooldownSeconds, sessionId, sendMessage, voicePreview, setVoicePreview, consultation, setConsultation,
-    sessionReady, sessionNotice, endConversation };
+    sessionReady, sessionNotice, endConversation, voiceActive, setVoiceActive };
 }
 
 export type Conversation = ReturnType<typeof useConversation>;

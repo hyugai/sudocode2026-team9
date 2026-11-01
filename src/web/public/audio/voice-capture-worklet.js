@@ -47,7 +47,10 @@ class TelesaleCapture extends AudioWorkletProcessor {
     } else {
       this.quietSamples += channel.length;
       this.speechSamples = 0;
-      if (this.quietSamples > sampleRate * .4) this.speaking = false;
+      if (this.speaking && this.quietSamples > sampleRate * .4) {
+        this.speaking = false;
+        this.port.postMessage({ type: "speech_end" });
+      }
     }
     return true;
   }

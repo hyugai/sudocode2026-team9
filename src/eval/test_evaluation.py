@@ -124,7 +124,7 @@ class MetricTests(unittest.TestCase):
 
 
 class LatencyTests(unittest.TestCase):
-    def test_nonstreamed_harness_excludes_asr_but_includes_awaited_persistence(self):
+    def test_nonstreamed_answer_latency_excludes_asr_and_persistence(self):
         from langchain_core.messages import AIMessage
         from telesale_agent.application.deepagent.turn import run_turn_impl
         from telesale_agent.core.models import TurnInput,CustomerIdentity,CallBrief
@@ -153,21 +153,30 @@ class LatencyTests(unittest.TestCase):
                                   perceive=None,retrieve=None,call_brief=SimpleNamespace(build_call_brief=brief),
                                   persist=SimpleNamespace(persist=persist),guardrail=None,
                                   _prefetch_read_tools=reads,_execute_confirmed_mutation=mutations)
-        with patch("telesale_agent.application.deepagent.turn.time",SimpleNamespace(perf_counter=lambda:clock[0])):
-            coroutine = run_turn_impl(harness,TurnInput(conversation_id="test",audio=b"fake-audio"))
-            try:
-                coroutine.send(None)
-            except StopIteration as stopped:
-                result = stopped.value
-            else:
-                self.fail("Pure async fakes should complete without external IO")
+        with patch("telesale_agent.application.deepagent.turn.time",SimpleNamespace(perf_counter=lambda:clock[0])), patch("telesale_agent.application.conversation.prepare.time",SimpleNamespace(perf_counter=lambda:clock[0])):
+            coroutine = run_turn_impl(harness,TurnInput(conversation_id="test",audio=b"fake-audio",customer_hint="0901234567"))
+            import asyncio
+            result = asyncio.run(coroutine)
         self.assertEqual(result.latency["asr_ms"],500)
-        self.assertEqual(result.latency["call_brief_ms"],7)
+        self.assertEqual(result.latency["call_brief_ms"],507)
         self.assertEqual(result.latency["response_ready_ms"],27)
         self.assertEqual(result.latency["persistence_ms"],1000)
-        self.assertEqual(result.latency["total_ms"],1027)
-        self.assertEqual(result.latency["ttft_ms"],1027)
+        self.assertEqual(result.latency["total_ms"],27)
+        self.assertEqual(result.latency["ttft_ms"],27)
+        self.assertEqual(result.latency["request_complete_ms"],1027)
+        self.assertEqual(result.latency["backend_total_ms"],1527)
         self.assertIsNone(result.latency["ttfa_ms"])
+
+    def test_report_keeps_answer_persistence_and_request_completion_separate(self):
+        _, trace = fixture()
+        trace[("SC-001", "call_1")][0]["latency"].update(
+            ttft_ms=27, total_ms=27, response_ready_ms=27,
+            persistence_ms=1000, request_complete_ms=1027)
+        result = measured_latency(trace, REFERENCE, warmup=0)
+        self.assertEqual(result["ttft"]["p95_ms"], 27)
+        self.assertEqual(result["total"]["p95_ms"], 27)
+        self.assertEqual(result["persistence"]["p95_ms"], 1000)
+        self.assertEqual(result["request_complete"]["p95_ms"], 1027)
 
     def test_three_warmups_are_excluded_using_official_percentile(self):
         rows = [{"latency":{"ttft_ms":i,"total_ms":i,"ttfa_ms":None,"measurement_mode":"non_streaming"}} for i in range(1,104)]

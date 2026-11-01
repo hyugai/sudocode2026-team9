@@ -10,6 +10,7 @@ interface ChatResponse {
   normalized_message?: string;
   debug?: DebugInfo;
   retry_after_seconds?: number;
+  latency?: Record<string, unknown>;
 }
 
 interface ChatTurn {

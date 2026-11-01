@@ -9,7 +9,8 @@ from telesale_agent.adapters.asr import ZipformerASREngine
 from telesale_agent.adapters.llm.llm_perceive import LLMPerceiver
 from telesale_agent.adapters.mock.identity import HintIdentityResolver
 from telesale_agent.adapters.vector_db.retrieve import VectorDBRetriever
-from telesale_agent.application.memory.call_brief import CallBriefProjector
+from telesale_agent.application.memory.call_brief import CallBriefProjector, FreshCallBrief
+from telesale_agent.adapters.db.client import db_client
 from telesale_agent.adapters.crm import PostgresCRMRetriever
 from telesale_agent.adapters.memory import (
     FileCustomerMemoryRepository,
@@ -61,7 +62,7 @@ def build_deepagent_harness(memory_mode: MemoryMode = "durable"):
         crm=PostgresCRMRetriever(),
         memory=memory,
         retrieve=VectorDBRetriever(),
-        call_brief=CallBriefProjector(),
+        call_brief=FreshCallBrief(CallBriefProjector(), db_client),
         guardrail=PIIGuardrail(),
         persist=persist,
     )

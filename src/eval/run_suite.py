@@ -22,7 +22,7 @@ for stream in (sys.stdout,sys.stderr):
 os.environ["PYTHONIOENCODING"] = "utf-8"
 from dotenv import load_dotenv
 from eval.benchmark_support import (validate_inputs, turn_keys, trace_health,
-                                    FreshCallBrief, compare_metrics, machine_metadata)
+                                    compare_metrics, machine_metadata)
 from eval.team_eval import REFERENCE, evaluate_team, select_scenarios
 from eval.model_config import configure_eval_model, permanent_provider_error
 
@@ -49,7 +49,7 @@ def print_metrics(label, report):
     print(f"HR price/promo: {report['hallucination_rate']['price_promo_only']['value']}%")
     for key in ("ttft","total","ttfa","call_brief","request_complete","persistence"):
         print(f"Latency {key}: {json.dumps(report['latency'][key])}")
-    print(f"Streaming: {json.dumps(report['latency']['streaming'])}")
+    print(f"Latency mode: {report['latency']['measurement_mode']}")
     print(f"ASR: {json.dumps(report['latency']['asr'])}")
     if "asr" in report:
         print(f"ASR WER: {report['asr']['WER']}%; CER: {report['asr']['CER']}%; coverage: {json.dumps(report['asr']['coverage'])}")
@@ -93,7 +93,6 @@ async def run_arm(args,scenarios,kind,config,run_dir):
     try:
         async with build_deepagent_harness(memory_mode="durable" if config=="full" else "disabled") as harness:
             harness_startup_ms = round((time.perf_counter()-started)*1000,3)
-            harness.call_brief = FreshCallBrief(harness.call_brief,db_client)
             if getattr(args,"profile",False):
                 from eval.latency_profiler import attach_profiler
                 attach_profiler(harness)
@@ -103,8 +102,7 @@ async def run_arm(args,scenarios,kind,config,run_dir):
                     try:
                         rows = await run_scenario(scenario,harness,config,args.version,
                                                   sleep_turn=args.sleep,max_retries=1,cleanup_orders=True,
-                                                  input_kind=kind,audio_root=args.audio_root,
-                                                  streaming=args.streaming)
+                                                  input_kind=kind,audio_root=args.audio_root)
                     except Exception as exc:
                         rows = [{"scenario_id":sid,"call":call,"turn":turn,"agent_text":"","customer_text":"",
                                  "tool_calls":[],"claims":[],"facts_used":[],"questions":[],"memory_writes":[],
@@ -252,8 +250,6 @@ def main():
     parser.add_argument("--preflight-only",action="store_true")
     parser.add_argument("--asr-only",action="store_true",help="Evaluate all selected WAVs locally without LLM calls")
     parser.add_argument("--profile",action="store_true",help="Record detailed component/model/tool timing in latency.profile; no extra model calls")
-    parser.add_argument("--streaming",action=argparse.BooleanOptionalAction,default=True,
-                        help="Consume actual guarded answer events; --no-streaming measures complete non-streamed turns")
     parser.add_argument("--request-interval",type=float,default=None,help="Shared seconds between model requests; default 30 for Groq GPT-OSS, otherwise 0")
     parser.add_argument("--model-retries",type=int,default=2,help="Provider-request retries; never replay a complete mutation turn")
     parser.add_argument("--reasoning-effort",choices=["low","medium","high"],default=None)
@@ -319,17 +315,19 @@ def main():
                 "reasoning_effort":reasoning,
                 "memory_persister_mode":args.memory_persister_mode,"warmup_turns_per_arm":3,
                 "input_kinds":args.input_kinds,"command":subprocess.list2cmdline([sys.executable,*sys.argv]),
-                "streaming":args.streaming,
+                "measurement_mode":"non_streaming",
                 "profile":args.profile,"memory_backend":os.environ.get("CUSTOMER_MEMORY_BACKEND","file"),
-                "timing_boundary":"harness entry to first/last emitted answer; offline ASR subtracted; persistence reported separately",
+                "timing_boundary":"harness entry to complete guarded answer before persistence; TTFT=Total; offline ASR subtracted; request completion reported separately",
                 "latency_guide":"dataset/BTC-Data-Vong1-TEAMS/eval/huong-dan-do-latency.md",
                 "precomputed_parts":[],"precomputed_parts_policy":"observed per turn before current-turn persistence",
                 "freshness":"CRM/profile/order history reloaded at call entry; remembered SKU inventory/promotions rechecked; cross-channel interaction source unavailable"}
     source_paths = sorted((ROOT / "src/eval").glob("*.py")) + [
         ROOT / "src/telesale_agent/application/deepagent" / name
-        for name in ("streaming.py", "turn.py", "harness.py")]
+        for name in ("turn.py", "harness.py")]
     source_paths += [ROOT / "src/telesale_agent/entrypoints/api/chat.py",
-                     ROOT / "src/telesale_agent/application/deepagent/tools/routing.py"]
+                     ROOT / "src/telesale_agent/application/deepagent/tools/routing.py",
+                     ROOT / "src/telesale_agent/application/memory/call_brief.py",
+                     ROOT / "src/telesale_agent/bootstrap.py"]
     metadata["source_sha256"] = {str(path.relative_to(ROOT)):hashlib.sha256(path.read_bytes()).hexdigest() for path in source_paths}
     metadata["git_commit"] = subprocess.run(["git","rev-parse","HEAD"],cwd=ROOT,capture_output=True,text=True).stdout.strip()
     write_json(run_dir / "metadata.json",metadata)

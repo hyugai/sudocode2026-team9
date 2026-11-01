@@ -53,10 +53,10 @@ export function ChatPanel({ conversation: c, compact = false, expanded = false, 
   return <section id={compact ? "floating-chat" : "inline-chat"} aria-label={`Synee AI — ${expanded ? "tư vấn sản phẩm" : compact ? "trò chuyện thu gọn" : "trợ lý mua sắm"}`} className={`chat-panel ${compact ? "compact" : ""} ${expanded ? "expanded" : ""} ${c.audioFile ? "has-audio" : ""}`}>
     <div className="chat-header">
       <div className="mode-toggle" role="group" aria-label="Chế độ trò chuyện">
-        <button type="button" aria-pressed={!voicePreview} className={!voicePreview ? "selected" : ""} onClick={() => onModeChange(false)}>Chat</button>
-        <button type="button" aria-pressed={voicePreview} className={voicePreview ? "selected" : ""} onClick={() => onModeChange(true)}>Voice</button>
+        <button type="button" disabled={c.isLoading} aria-pressed={!voicePreview} className={!voicePreview ? "selected" : ""} onClick={() => onModeChange(false)}>Chat</button>
+        <button type="button" disabled={c.isLoading || !c.sessionReady} aria-pressed={voicePreview} className={voicePreview ? "selected" : ""} onClick={() => onModeChange(true)}>Voice</button>
       </div>
-      {voicePreview && <span className="voice-preview" role="status">Voice · Bản xem trước</span>}
+      {voicePreview && <span className="voice-preview" role="status">Voice trực tiếp</span>}
       {compact && <button className="icon-button close-chat" aria-label="Đóng trò chuyện" onClick={onClose}><Asset name="close" /></button>}
     </div>
     <div className="chat-body">
