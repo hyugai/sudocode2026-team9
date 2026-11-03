@@ -17,6 +17,6 @@ export default async function AiChatPage({ searchParams }: {
   searchParams: Promise<{ mode?: string | string[] }>;
 }) {
   const { mode } = await searchParams;
-  const initialMode: AiChatMode = mode === "offline" || mode === "realtime" ? mode : "text";
+  const initialMode: AiChatMode = mode === "realtime" ? "realtime" : "text";
   return <AiChatExperience mode={initialMode} />;
 }

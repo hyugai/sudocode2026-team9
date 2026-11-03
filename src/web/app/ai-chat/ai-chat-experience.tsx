@@ -10,11 +10,10 @@ import { GuestProfile } from "../components/account-content";
 import { InfoDialog } from "../components/info-dialog";
 import { Icon } from "./icons";
 
-export type AiChatMode = "text" | "offline" | "realtime";
+export type AiChatMode = "text" | "realtime";
 type Dialog = "history" | "details" | "profile" | "new" | null;
 const modes = [
   ["text", "message", "Chat"],
-  ["offline", "wave", "Voice offline"],
   ["realtime", "mic", "Realtime voice"],
 ] as const;
 const suggestions = [
@@ -47,7 +46,8 @@ export function AiChatExperience({ mode }: { mode: AiChatMode }) {
     : c.voiceActive ? "Kết thúc phiên voice trước khi gửi tin nhắn hoặc ghi âm."
     : c.isLoading ? (c.audioFile ? "Đang nhận dạng ghi âm và chờ phản hồi…" : "Đang chờ phản hồi…")
     : !c.backendReady ? "Backend chưa sẵn sàng. Hệ thống đang kiểm tra lại; nội dung vẫn được giữ."
-    : !c.input.trim() && !c.audioFile ? "Nhập tin nhắn hoặc chọn ghi âm để gửi." : "");
+    : c.audioFile ? "Gửi ghi âm để chuyển thành văn bản và nhận phản hồi. Tối đa 25 MB / 120 giây."
+    : !c.input.trim() ? "Nhập tin nhắn hoặc chọn ghi âm để gửi." : "");
 
   useEffect(() => {
     const history = historyRef.current;
@@ -170,7 +170,6 @@ export function AiChatExperience({ mode }: { mode: AiChatMode }) {
               {c.messages.length === 1 && mode === "text" && !query && <div className="ai-suggestion-grid">{suggestions.map(item =>
                 <button key={item.title} disabled={busy || !!c.audioFile} onClick={() => { c.setInput(item.text); inputRef.current?.focus(); }}><span><Icon name={item.icon} /></span><strong>{item.title}</strong><small>{item.detail}</small><Icon name="arrowUpRight" /></button>
               )}</div>}
-              {mode === "offline" && <div className="ai-offline-card"><span className="ai-offline-icon"><Icon name="wave" /></span><div><strong>{c.audioFile?.name || "Tải lên bản ghi âm"}</strong><p>WAV, MP3, M4A, FLAC, OGG, WebM · tối đa 25 MB / 120 giây</p></div><button disabled={busy} onClick={() => fileRef.current?.click()}>{c.audioFile ? "Đổi ghi âm" : "Chọn ghi âm"}</button></div>}
             </div>
             <div className="ai-composer-wrap">
               {c.consultation && <div className="ai-context" role="status">Tư vấn: {c.consultation.name}. {c.audioFile ? "Ngữ cảnh sản phẩm chỉ gửi kèm tin nhắn văn bản." : "Ngữ cảnh sẽ gửi kèm tin nhắn."}</div>}
@@ -184,7 +183,7 @@ export function AiChatExperience({ mode }: { mode: AiChatMode }) {
                 {c.audioFile && <div className="audio-preview"><div><span>{c.audioFile.name}</span><button type="button" disabled={busy} onClick={c.clearAudio}>Bỏ ghi âm</button></div>{c.audioPreviewUrl && <audio controls preload="metadata" src={c.audioPreviewUrl} aria-label="Nghe lại ghi âm" />}</div>}
                 <input ref={fileRef} className="sr-only" tabIndex={-1} type="file" accept=".wav,.mp3,.m4a,.flac,.ogg,.webm,audio/*" aria-label="Chọn file ghi âm" disabled={busy} onChange={event => {
                   const file = event.target.files?.[0];
-                  if (file && c.selectAudio(file)) switchMode("offline");
+                  if (file && c.selectAudio(file) && mode !== "text") switchMode("text");
                   event.target.value = "";
                 }} />
                 <div className="ai-composer-actions"><div><button type="button" aria-label="Tải file ghi âm" title="Tối đa 25 MB / 120 giây" disabled={busy} onClick={() => fileRef.current?.click()}><Icon name="paperclip" /></button></div>

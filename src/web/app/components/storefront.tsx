@@ -75,7 +75,7 @@ export default function Storefront({ product, catalogProducts = [], catalogError
     setFloatingOpen(true);
   };
   const selectCategory = (name: string) => { setCategory(name); setSubcategory(""); };
-  const openFullChat = (mode: "text" | "offline" | "realtime") => {
+  const openFullChat = (mode: "text" | "realtime") => {
     setVoicePreview(false);
     router.push(`/ai-chat?mode=${mode}`);
   };

@@ -26,7 +26,7 @@ interface Props {
   expanded?: boolean;
   voicePreview: boolean;
   onModeChange: (voice: boolean) => void;
-  onOpenFullChat?: (mode: "text" | "offline" | "realtime") => void;
+  onOpenFullChat?: (mode: "text" | "realtime") => void;
   onClose?: () => void;
   onAccount: () => void;
 }
@@ -52,7 +52,7 @@ export function ChatPanel({ conversation: c, compact = false, expanded = false, 
     // The root provider owns the request across navigation. URL flags must
     // never replay a POST on refresh, Back, or after a failed response.
     void c.sendMessage();
-    onOpenFullChat?.(c.audioFile ? "offline" : "text");
+    onOpenFullChat?.("text");
   };
   const prompts = compact
     ? [{ label: "So sánh nhanh", text: "Hãy giúp mình so sánh các sản phẩm phù hợp." }, { label: "Xem gợi ý", text: "Gợi ý sản phẩm phù hợp với nhu cầu của mình." }]
@@ -62,8 +62,7 @@ export function ChatPanel({ conversation: c, compact = false, expanded = false, 
     <div className="chat-header">
       <div className="mode-toggle" role="group" aria-label="Chế độ trò chuyện">
         <button type="button" disabled={c.isLoading} aria-pressed={!voicePreview} className={!voicePreview ? "selected" : ""} onClick={() => onModeChange(false)}>Chat</button>
-        {onOpenFullChat && <button type="button" disabled={c.isLoading || !c.sessionReady} onClick={() => onOpenFullChat("offline")}>Voice offline</button>}
-        <button type="button" disabled={c.isLoading || !c.sessionReady} aria-pressed={voicePreview} className={voicePreview ? "selected" : ""} onClick={() => onOpenFullChat ? onOpenFullChat("realtime") : onModeChange(true)}>{onOpenFullChat ? "Realtime voice" : "Voice"}</button>
+        <button type="button" disabled={c.isLoading || !c.sessionReady} aria-pressed={voicePreview} className={voicePreview ? "selected" : ""} onClick={() => onOpenFullChat ? onOpenFullChat("realtime") : onModeChange(true)}>Realtime voice</button>
       </div>
       {voicePreview && <span className="voice-preview" role="status">Voice trực tiếp</span>}
       {compact && <button className="icon-button close-chat" aria-label="Đóng trò chuyện" onClick={onClose}><Asset name="close" /></button>}
@@ -98,7 +97,7 @@ export function ChatPanel({ conversation: c, compact = false, expanded = false, 
         <div className="composer-actions">
           <input ref={fileRef} className="sr-only" tabIndex={-1} type="file" accept=".wav,.mp3,.m4a,.flac,.ogg,.webm,audio/*" aria-label="Chọn file ghi âm" disabled={c.isLoading} onChange={e => {
             const file = e.target.files?.[0];
-            if (file && c.selectAudio(file)) onOpenFullChat?.("offline");
+            if (file && c.selectAudio(file)) onOpenFullChat?.("text");
             e.target.value = "";
           }} />
           <button className="icon-button upload-button" type="button" aria-label="Tải file ghi âm MP3 hoặc âm thanh" title="WAV, MP3, M4A, FLAC, OGG, WebM · tối đa 25 MB / 120 giây" disabled={c.isLoading} onClick={() => fileRef.current?.click()}><Asset name={compact ? "compactAttach" : "attach"} /></button>
