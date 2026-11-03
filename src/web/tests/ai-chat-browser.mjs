@@ -95,14 +95,14 @@ try {
   ` });
   await b.send("Page.navigate", { url: base });
   await b.wait("document.querySelector('#inline-message') && !document.querySelector('.mode-toggle button:last-child').disabled");
-  await check("Dashboard exposes only Chat and Realtime voice", "JSON.stringify([...document.querySelectorAll('.mode-toggle button')].map(button => button.textContent)) === JSON.stringify(['Chat', 'Realtime voice'])");
+  await check("Dashboard exposes only Chat and Voice", "JSON.stringify([...document.querySelectorAll('.mode-toggle button')].map(button => button.textContent)) === JSON.stringify(['Chat', 'Voice'])");
   await b.screenshot(`${output}/dashboard-entry-desktop.png`);
   await type("#inline-message", "Tìm tai nghe dưới 3 triệu");
   await b.evaluate("document.querySelector('.composer').requestSubmit(); document.querySelector('.composer')?.requestSubmit()");
   await b.wait("location.pathname === '/ai-chat' && document.querySelectorAll('.ai-message').length === 3");
   await check("Dashboard send opens the new workspace and sends exactly one real API request", "__test.calls.length === 1 && !document.querySelector('.site-header') && !document.querySelector('.product-grid')");
   await check("Customer identity is preserved across navigation", "__test.calls[0].phone === '0901234567'");
-  await check("Workspace exposes only Chat and Realtime voice", "JSON.stringify([...document.querySelectorAll('.ai-mode-bar button')].map(button => button.textContent)) === JSON.stringify(['Chat', 'Realtime voice'])");
+  await check("Workspace exposes only Chat and Voice", "JSON.stringify([...document.querySelectorAll('.ai-mode-bar button')].map(button => button.textContent)) === JSON.stringify(['Chat', 'Voice'])");
   await b.evaluate("window.__conversationId = __test.calls[0].conversationId");
   await type("#ai-message", "Giữ bản nháp khi chuyển chế độ");
   await upload();

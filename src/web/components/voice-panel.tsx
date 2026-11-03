@@ -114,7 +114,7 @@ export default function VoicePanel({ apiBase, customerPhone, onActiveChange }: {
     : status === "idle" ? "disconnected" : visualizer.state;
 
   return (
-    <section aria-label="Realtime voice" className="realtime-voice">
+    <section aria-label="Voice" className="realtime-voice">
       <div className="voice-intro">
         <p>Trò chuyện tự nhiên cùng Synee. Bạn có thể nói chen để đổi ý.</p>
       </div>
@@ -136,7 +136,7 @@ export default function VoicePanel({ apiBase, customerPhone, onActiveChange }: {
         </div>
       </div>
       {available === false && <p className="muted-note">
-        Realtime voice chưa sẵn sàng trên backend. Chat và tải ghi âm vẫn sử dụng được.
+        Voice chưa sẵn sàng trên backend. Chat và tải ghi âm vẫn sử dụng được.
       </p>}
       {(lines.length > 0 || interim) && <details className="voice-transcript">
         <summary>Bản chép hội thoại <span>{lines.length} tin nhắn</span></summary>

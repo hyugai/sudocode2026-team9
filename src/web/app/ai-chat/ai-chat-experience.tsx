@@ -14,7 +14,7 @@ export type AiChatMode = "text" | "realtime";
 type Dialog = "history" | "details" | "profile" | "new" | null;
 const modes = [
   ["text", "message", "Chat"],
-  ["realtime", "mic", "Realtime voice"],
+  ["realtime", "mic", "Voice"],
 ] as const;
 const suggestions = [
   { icon: "compare", title: "So sánh lựa chọn", detail: "Phân tích ưu, nhược điểm rõ ràng", text: "Hãy giúp mình so sánh các sản phẩm phù hợp." },
@@ -119,7 +119,7 @@ export function AiChatExperience({ mode }: { mode: AiChatMode }) {
       <ul className="ai-capabilities">{[
         ["Hiểu ngữ cảnh", "Tiếp nối hội thoại chat và ghi âm"],
         ["Tìm kiếm sản phẩm", "Tư vấn theo nhu cầu và ngân sách"],
-        ["Realtime voice", "Trò chuyện trực tiếp khi dịch vụ sẵn sàng"],
+        ["Voice", "Trò chuyện trực tiếp khi dịch vụ sẵn sàng"],
       ].map(([label, description]) => <li key={label}><Icon name="check" /><span><strong>{label}</strong><small>{description}</small></span></li>)}</ul>
     </section>
     <section><h2><Icon name="document" />Phiên tư vấn</h2><p className="ai-session-id">Hội thoại: {c.sessionId || "Chưa bắt đầu"}</p>
@@ -186,8 +186,8 @@ export function AiChatExperience({ mode }: { mode: AiChatMode }) {
                   if (file && c.selectAudio(file) && mode !== "text") switchMode("text");
                   event.target.value = "";
                 }} />
-                <div className="ai-composer-actions"><div><button type="button" aria-label="Tải file ghi âm" title="Tối đa 25 MB / 120 giây" disabled={busy} onClick={() => fileRef.current?.click()}><Icon name="paperclip" /></button></div>
-                  <div><button type="button" className="ai-composer-mic" aria-label="Chuyển sang realtime voice" disabled={busy} onClick={() => switchMode("realtime")}><Icon name="mic" /></button><button type="submit" className="ai-send" disabled={!canSend} aria-describedby="ai-send-status" aria-label={c.audioFile ? "Gửi ghi âm" : c.errorMessage ? "Thử lại tin nhắn" : "Gửi tin nhắn"}><Icon name="arrowUp" /></button></div>
+                <div className="ai-composer-actions"><div><button type="button" aria-label="Tải file audio" title="Tải file audio · Tối đa 25 MB / 120 giây" disabled={busy} onClick={() => fileRef.current?.click()}><Icon name="mic" /></button></div>
+                  <div><button type="button" className="ai-composer-mic" aria-label="Chuyển sang Voice trực tiếp" title="Chuyển sang Voice trực tiếp" disabled={busy} onClick={() => switchMode("realtime")}><Icon name="mic" /></button><button type="submit" className="ai-send" disabled={!canSend} aria-describedby="ai-send-status" aria-label={c.audioFile ? "Gửi ghi âm" : c.errorMessage ? "Thử lại tin nhắn" : "Gửi tin nhắn"}><Icon name="arrowUp" /></button></div>
                 </div>
               </form>
               <p className="ai-disclaimer">Kiểm tra lại thông tin quan trọng trước khi đặt hàng.</p>

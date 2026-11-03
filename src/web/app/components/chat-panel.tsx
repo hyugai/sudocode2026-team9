@@ -7,10 +7,10 @@ import type { Conversation } from "@/utils/use-conversation";
 const paths = {
   search: "a-imgFrame.svg", searchPurple: "a-imgFrame1.svg",
   cart: "a-imgFrame2.svg", account: "a-imgVectorUser.svg", sparkle: "a-imgFrame3.svg",
-  attach: "a-imgVectorAttach.svg", send: "a-imgVectorSend.svg", down: "a-imgFrame4.svg",
+  microphone: "audio-microphone.svg", send: "a-imgVectorSend.svg", down: "a-imgFrame4.svg",
   star: "a-imgFrame11.svg", more: "a-imgFrame12.svg", shield: "a-imgVectorShield.svg",
   truck: "a-imgFrame13.svg", companion: "a-imgFrame14.svg", close: "c-imgVectorClose.svg",
-  compactAttach: "c-imgVectorAttach.svg", compactSend: "c-imgVectorSend.svg", compactSparkle: "c-imgFrame.svg",
+  compactSend: "c-imgVectorSend.svg", compactSparkle: "c-imgFrame.svg",
   launcher: "launcher-imgVectorChat.svg",
 } as const;
 
@@ -62,7 +62,7 @@ export function ChatPanel({ conversation: c, compact = false, expanded = false, 
     <div className="chat-header">
       <div className="mode-toggle" role="group" aria-label="Chế độ trò chuyện">
         <button type="button" disabled={c.isLoading} aria-pressed={!voicePreview} className={!voicePreview ? "selected" : ""} onClick={() => onModeChange(false)}>Chat</button>
-        <button type="button" disabled={c.isLoading || !c.sessionReady} aria-pressed={voicePreview} className={voicePreview ? "selected" : ""} onClick={() => onOpenFullChat ? onOpenFullChat("realtime") : onModeChange(true)}>Realtime voice</button>
+        <button type="button" disabled={c.isLoading || !c.sessionReady} aria-pressed={voicePreview} className={voicePreview ? "selected" : ""} onClick={() => onOpenFullChat ? onOpenFullChat("realtime") : onModeChange(true)}>Voice</button>
       </div>
       {voicePreview && <span className="voice-preview" role="status">Voice trực tiếp</span>}
       {compact && <button className="icon-button close-chat" aria-label="Đóng trò chuyện" onClick={onClose}><Asset name="close" /></button>}
@@ -100,7 +100,7 @@ export function ChatPanel({ conversation: c, compact = false, expanded = false, 
             if (file && c.selectAudio(file)) onOpenFullChat?.("text");
             e.target.value = "";
           }} />
-          <button className="icon-button upload-button" type="button" aria-label="Tải file ghi âm MP3 hoặc âm thanh" title="WAV, MP3, M4A, FLAC, OGG, WebM · tối đa 25 MB / 120 giây" disabled={c.isLoading} onClick={() => fileRef.current?.click()}><Asset name={compact ? "compactAttach" : "attach"} /></button>
+          <button className="icon-button upload-button" type="button" aria-label="Tải file audio" title="Tải file audio · WAV, MP3, M4A, FLAC, OGG, WebM · tối đa 25 MB / 120 giây" disabled={c.isLoading} onClick={() => fileRef.current?.click()}><Asset name="microphone" /></button>
           {c.audioFile && <span className="upload-limit">Tối đa 25 MB / 120 giây</span>}
           <button className={`press-button ${c.isLoading ? "is-loading" : ""} ${c.audioFile ? "has-upload" : ""} ${c.errorMessage ? "is-error" : ""}`} type="submit" disabled={disabled} aria-describedby={statusId}>
             <span className="button-rear" /><span className="button-face"><Asset name={compact ? "compactSend" : "send"} />{c.isLoading ? "Đang tìm…" : c.errorMessage ? "Thử lại" : c.audioFile ? "Gửi ghi âm" : "Gửi"}</span>
