@@ -14,7 +14,7 @@ import { usePurchase } from "./purchase-provider";
 import type { Consultation } from "@/utils/use-conversation";
 import { AccountQuickLinks, AccountPage, type AccountView } from "./account-content";
 
-type Dialog = "menu" | "account" | "support" | null;
+type Dialog = "account" | "support" | null;
 
 export default function Storefront({ product, catalogProducts = [], catalogError = false, initialSearch = "", initialCategory = "Tất cả", view, orderId, accountView }: { product?: LiveProductDetails; catalogProducts?: ProductCard[]; catalogError?: boolean; initialSearch?: string; initialCategory?: string; view?: PurchaseView; orderId?: string; accountView?: AccountView }) {
   const router = useRouter();
@@ -115,7 +115,7 @@ export default function Storefront({ product, catalogProducts = [], catalogError
     <a className="skip-link" href="#main-content">Đến nội dung chính</a>
     <header className="site-header">
       <div className="header-inner container">
-        <div className="header-left"><button className="menu-button" aria-label="Mở menu" onClick={() => setDialog("menu")}><Asset name="menu" /></button><Link href={isCatalog ? "#main-content" : "/"} aria-label="SUDO CODE — Trang chủ"><Image src="/figma/a-imgSudoCodeOfficialVectorWordmark.svg" alt="SUDO CODE" width={112} height={15.8192} unoptimized /></Link></div>
+        <div className="header-left"><Link href={isCatalog ? "#main-content" : "/"} aria-label="SUDO CODE — Trang chủ"><Image src="/figma/a-imgSudoCodeOfficialVectorWordmark.svg" alt="SUDO CODE" width={112} height={15.8192} unoptimized /></Link></div>
         <form className="product-search" role="search" onSubmit={e => { e.preventDefault(); if (!isCatalog) { router.push(`/?q=${encodeURIComponent(query.trim())}#catalog`); return; } setSearch(query.trim()); document.getElementById("catalog")?.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth" }); }}>
           <Asset name="search" /><label htmlFor="product-search" className="sr-only">Tìm sản phẩm, thương hiệu</label><input id="product-search" value={query} onChange={e => setQuery(e.target.value)} placeholder="Tìm sản phẩm, thương hiệu…" /><button type="submit"><Asset name="searchPurple" /><span>Tìm</span></button>
         </form>
@@ -175,9 +175,8 @@ export default function Storefront({ product, catalogProducts = [], catalogError
       {floatingOpen ? <div className="floating-panel"><ChatPanel compact conversation={conversation} voicePreview={voicePreview} onModeChange={setVoicePreview} onClose={closeFloating} onAccount={openAccount} /></div>
         : <button ref={launcherRef} className="chat-launcher" aria-label="Trò chuyện với Synee AI" aria-expanded={false} aria-controls="floating-chat" title="Trò chuyện với Synee AI" onClick={() => setFloatingOpen(true)}><Asset name="launcher" /></button>}
     </>}
-    {dialog && dialog !== "account" && <InfoDialog title={dialog === "menu" ? "Danh mục sản phẩm" : "Hỗ trợ"} onClose={closeDialog}>
-      {dialog === "menu" && <nav className="menu-links" aria-label="Danh mục">{categories.map(c => <Link key={c.name} href={`/?category=${encodeURIComponent(c.name)}#catalog-heading`} onClick={() => { selectCategory(c.name); setDialog(null); }}>{c.name === "Tất cả" ? "Tất cả sản phẩm" : c.name}</Link>)}</nav>}
-      {dialog === "support" && <div><p>Bạn có thể gửi tin nhắn hoặc tải file ghi âm cho Synee AI.</p><p>WAV, MP3, M4A, FLAC, OGG, WebM · tối đa 25 MB / 120 giây. Giới hạn thời lượng do backend kiểm tra.</p><p className="muted-note">Mua sắm dùng dữ liệu BTC tham chiếu; giỏ và đơn là demo trên trình duyệt, không giữ hàng hoặc thu tiền. Chưa kết nối thanh toán, đơn hàng thật và tài khoản khách hàng.</p></div>}
+    {dialog === "support" && <InfoDialog title="Hỗ trợ" onClose={closeDialog}>
+      <div><p>Bạn có thể gửi tin nhắn hoặc tải file ghi âm cho Synee AI.</p><p>WAV, MP3, M4A, FLAC, OGG, WebM · tối đa 25 MB / 120 giây. Giới hạn thời lượng do backend kiểm tra.</p><p className="muted-note">Mua sắm dùng dữ liệu BTC tham chiếu; giỏ và đơn là demo trên trình duyệt, không giữ hàng hoặc thu tiền. Chưa kết nối thanh toán, đơn hàng thật và tài khoản khách hàng.</p></div>
     </InfoDialog>}
   </>;
 }

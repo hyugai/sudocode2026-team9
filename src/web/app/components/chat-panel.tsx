@@ -5,7 +5,7 @@ import { useEffect, useLayoutEffect, useRef } from "react";
 import type { Conversation } from "@/utils/use-conversation";
 
 const paths = {
-  search: "a-imgFrame.svg", searchPurple: "a-imgFrame1.svg", menu: "a-imgMenuOfficialThreeLineGlyph.svg",
+  search: "a-imgFrame.svg", searchPurple: "a-imgFrame1.svg",
   cart: "a-imgFrame2.svg", account: "a-imgVectorUser.svg", sparkle: "a-imgFrame3.svg",
   attach: "a-imgVectorAttach.svg", send: "a-imgVectorSend.svg", down: "a-imgFrame4.svg",
   star: "a-imgFrame11.svg", more: "a-imgFrame12.svg", shield: "a-imgVectorShield.svg",
@@ -16,8 +16,8 @@ const paths = {
 
 /** Preserve exported SVG geometry within the design's icon slots. */
 export function Asset({ name, className = "" }: { name: keyof typeof paths; className?: string }) {
-  const width = name === "launcher" ? 24 : name === "menu" ? 21 : name === "compactSend" ? 16 : 20;
-  return <Image className={`asset ${className}`} src={`/figma/${paths[name]}`} width={width} height={name === "menu" ? 15 : width} alt="" aria-hidden="true" unoptimized />;
+  const width = name === "launcher" ? 24 : name === "compactSend" ? 16 : 20;
+  return <Image className={`asset ${className}`} src={`/figma/${paths[name]}`} width={width} height={width} alt="" aria-hidden="true" unoptimized />;
 }
 
 interface Props {

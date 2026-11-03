@@ -31,9 +31,7 @@ try{
   await type('#inline-message','Giữ bản nháp này');await click('.mode-toggle button:last-child');
   await b.wait("document.querySelector('dialog[open] .realtime-voice')");
   await click('dialog[open] .dialog-header button');
-  await click('.menu-button');
-  check('Category menu excludes duplicate account/cart/chat navigation',await b.evaluate("document.querySelectorAll('.menu-links > a').length===5&&!/Trò chuyện|Giỏ hàng|Đơn hàng|khách hàng|Analytics/.test(document.querySelector('.menu-links').textContent)"));
-  await click('.dialog-header button');
+  check('Header omits the removed category menu',await b.evaluate("!document.querySelector('.menu-button')&&!document.querySelector('.menu-links')"));
   await b.send('Page.reload');await b.wait("document.querySelector('#inline-message')?.value==='Giữ bản nháp này'");
   check('Reload restores messages, draft and Chat mode without an automatic send',await b.evaluate("document.querySelectorAll('.message').length===3&&document.querySelector('.mode-toggle button:first-child').getAttribute('aria-pressed')==='true'&&window.__calls.length===0"));
   await click('.account-trigger');check('Reload restores the exact ID and unverified phone hint',await b.evaluate(`document.querySelector('.session-id').textContent.includes(${JSON.stringify(id)})&&document.querySelector('#customer-phone').value==='0901234567'`));

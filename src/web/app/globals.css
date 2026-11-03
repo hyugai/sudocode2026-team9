@@ -49,9 +49,7 @@ h1, h2, h3, h4, p { margin: 0; }
 .skip-link:focus { top: 12px; }
 .site-header { position: fixed; inset: 0 0 auto; height: 104px; z-index: 30; background: var(--brand); color: white; }
 .header-inner { display: grid; grid-template-columns: 224px minmax(0, 1fr) 224px; gap: 32px; height: 104px; align-items: end; padding-block: 12px 14px; }
-.header-left { display: flex; align-items: center; gap: 8px; height: 48px; }
-.menu-button { width: 48px; height: 48px; display: grid; place-items: center; border: 1px solid white; background: transparent; border-radius: 50%; color: white; }
-.menu-button:hover { background: #ffffff18; }
+.header-left { display: flex; align-items: center; height: 48px; }
 .header-left a { display: flex; align-items: center; }
 .product-search { display: flex; align-items: center; gap: 12px; height: 48px; padding: 4px 16px; border-radius: 8px; background: white; color: var(--muted); min-width: 0; }
 .product-search input { border: 0; background: transparent; flex: 1; width: 0; min-width: 0; height: 40px; color: var(--foreground); }
@@ -277,8 +275,6 @@ main:has(.product-detail) { background: var(--brand-soft); }
 .dialog-header { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 20px; }
 .dialog-header h2 { font-size: 22px; line-height: 30px; font-weight: 600; }
 .dialog-content p + p { margin-top: 12px; }
-.menu-links { display: flex; flex-direction: column; gap: 8px; }
-.menu-links button, .menu-links a { padding: 12px; text-align: left; border-radius: 12px; background: var(--brand-soft); color: var(--brand-strong); }
 .account-form { display: flex; flex-direction: column; gap: 12px; }
 .account-form input[type=tel] { width: 100%; border: 1px solid var(--border); border-radius: 12px; padding: 12px; }
 .session-id { overflow-wrap: anywhere; }
@@ -337,8 +333,6 @@ main:has(.product-detail) { background: var(--brand-soft); }
   .compact .upload-limit { display: none; }
 }
 @media (max-width: 380px) {
-  .header-left { gap: 6px; }
-  .menu-button { width: 40px; height: 40px; }
   .commerce-actions { gap: 4px; }
   .composer-actions { gap: 8px; }
   .compact .suggestion { font-size: 12px; }
