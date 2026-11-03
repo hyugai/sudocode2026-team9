@@ -1,31 +1,48 @@
-/** Demo artwork only. Catalog identity, prices and stock still come from the API. */
-const illustrationGroups: Record<string, readonly string[]> = {
-  "air-purifier": ["SKU-AP-X", "SKU-AP-Y", "SKU-AP-MINI", "SKU-AP-PRO", "SKU-XM-4L", "SKU-XM-4P", "SKU-SS-AX40", "SKU-AP-X-2024"],
-  "water-purifier": ["SKU-WF-RO9", "SKU-WF-RO10", "SKU-WF-UF"],
-  "standing-fan": ["SKU-FAN-DC1", "SKU-FAN-SEN"],
-  "tower-fan": ["SKU-FAN-TWR"],
-  "air-fryer": ["SKU-AF-4L", "SKU-AF-6L", "SKU-AF-XM"],
-  "running-shoes": ["SKU-SN-RUN1", "SKU-SN-RUN2", "SKU-SN-CAS", "SKU-SN-RUN1-OLD"],
-  "hiking-shoes": ["SKU-SN-TRK"],
-  "windbreaker": ["SKU-JK-WND"],
-  "puffer-jacket": ["SKU-JK-DWN"],
-  "breast-pump": ["SKU-MB-PUMP1", "SKU-MB-PUMP2"],
-  "stroller": ["SKU-MB-STR1", "SKU-MB-STR2"],
-  "bottle-warmer": ["SKU-MB-MON"],
-  "sterilizer": ["SKU-MB-STER"],
-  "baby-bottle": ["SKU-MB-BOT"],
-  "car-seat": ["SKU-MB-CAR"],
-  "air-purifier-bundle": ["SKU-BDL-AIR"],
-  "breastfeeding-bundle": ["SKU-BDL-MOM"],
-  "air-filter": ["SKU-AP-FLT-X", "SKU-AP-FLT-P", "SKU-XM-FLT"],
-  "water-filters": ["SKU-WF-CORE"],
-  "sports-socks": ["SKU-SN-SOCK"],
-  "milk-storage-bags": ["SKU-MB-BAG"],
-};
-
-const illustrations = new Map(Object.entries(illustrationGroups)
-  .flatMap(([image, skus]) => skus.map(sku => [sku, `/products/illustrations/${image}.webp`] as const)));
+/** One distinct demo illustration per catalog product; API identity, prices and stock stay intact. */
+const illustrations = new Map<string, string>([
+  ["SKU-AP-X", "air-purifier"],
+  ["SKU-AP-Y", "airpure-y"],
+  ["SKU-AP-MINI", "airpure-mini"],
+  ["SKU-AP-PRO", "airpure-pro"],
+  ["SKU-XM-4L", "xiaomi-4-lite"],
+  ["SKU-XM-4P", "xiaomi-4-pro"],
+  ["SKU-SS-AX40", "samsung-ax40"],
+  ["SKU-AP-X-2024", "airpure-x-2024"],
+  ["SKU-WF-RO9", "water-purifier"],
+  ["SKU-WF-RO10", "water-ro10"],
+  ["SKU-WF-UF", "water-uf"],
+  ["SKU-FAN-DC1", "standing-fan"],
+  ["SKU-FAN-SEN", "fan-senko"],
+  ["SKU-FAN-TWR", "tower-fan"],
+  ["SKU-AF-4L", "air-fryer"],
+  ["SKU-AF-6L", "air-fryer-6l"],
+  ["SKU-AF-XM", "air-fryer-white"],
+  ["SKU-SN-RUN1", "running-shoes"],
+  ["SKU-SN-RUN2", "running-shoes-pro"],
+  ["SKU-SN-CAS", "urban-sneakers"],
+  ["SKU-SN-RUN1-OLD", "running-shoes-2025"],
+  ["SKU-SN-TRK", "hiking-shoes"],
+  ["SKU-JK-WND", "windbreaker"],
+  ["SKU-JK-DWN", "puffer-jacket"],
+  ["SKU-MB-PUMP1", "breast-pump"],
+  ["SKU-MB-PUMP2", "breast-pump-yellow"],
+  ["SKU-MB-STR1", "stroller"],
+  ["SKU-MB-STR2", "reversible-stroller"],
+  ["SKU-MB-MON", "bottle-warmer"],
+  ["SKU-MB-STER", "sterilizer"],
+  ["SKU-MB-BOT", "baby-bottle"],
+  ["SKU-MB-CAR", "car-seat"],
+  ["SKU-BDL-AIR", "airpure-y-bundle"],
+  ["SKU-BDL-MOM", "breastfeeding-bundle"],
+  ["SKU-AP-FLT-X", "air-filter"],
+  ["SKU-AP-FLT-P", "air-filter-pro"],
+  ["SKU-XM-FLT", "air-filter-xiaomi"],
+  ["SKU-WF-CORE", "water-filters"],
+  ["SKU-SN-SOCK", "sports-socks"],
+  ["SKU-MB-BAG", "milk-storage-bags"],
+]);
 
 export function productIllustrationFor(sku: string): string | undefined {
-  return illustrations.get(sku);
+  const image = illustrations.get(sku);
+  return image ? `/products/illustrations/${image}.webp` : undefined;
 }
