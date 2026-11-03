@@ -75,6 +75,10 @@ export default function Storefront({ product, catalogProducts = [], catalogError
     setFloatingOpen(true);
   };
   const selectCategory = (name: string) => { setCategory(name); setSubcategory(""); };
+  const openFullChat = (mode: "text" | "offline" | "realtime") => {
+    setVoicePreview(false);
+    router.push(`/ai-chat?mode=${mode}`);
+  };
   const visibleProducts = filterProducts(category, subcategory, search, catalogProducts);
   const closeDialog = () => {
     setDialog(null);
@@ -101,7 +105,7 @@ export default function Storefront({ product, catalogProducts = [], catalogError
         <div className="hero-grid" aria-hidden="true" />
         <div className="hero-copy"><h1 id="hero-heading">Synee nhớ điều bạn cần, đồng hành đến khi nhận.</h1><p>Tư vấn tận tâm, giao hàng tận tay.</p></div>
         <div ref={inlineRef} className={`inline-chat-mount ${conversation.audioFile ? "has-audio" : ""}`}>
-          {inlineVisible !== false && <ChatPanel conversation={conversation} voicePreview={voicePreview} onModeChange={setVoicePreview} onAccount={() => setDialog("account")} />}
+          {inlineVisible !== false && <ChatPanel conversation={conversation} voicePreview={voicePreview} onModeChange={setVoicePreview} onOpenFullChat={openFullChat} onAccount={() => setDialog("account")} />}
         </div>
         <a className="browse-action" href="#catalog"><Asset name="down" />Khám phá sản phẩm</a>
       </section>

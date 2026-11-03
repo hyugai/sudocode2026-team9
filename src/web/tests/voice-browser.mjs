@@ -74,6 +74,12 @@ try {
   await b.send("Page.navigate", { url: base });
   await b.wait("document.querySelector('#inline-message') && !document.querySelector('.mode-toggle button:last-child').disabled");
   await type("#inline-message", "Giữ bản nháp khi dùng voice");
+  // The dashboard now opens the dedicated AI workspace. This suite keeps
+  // exercising the shared dialog used by floating commerce chat.
+  await b.evaluate("window.scrollTo({ top: 1100, behavior: 'instant' })");
+  await b.wait("!!document.querySelector('.chat-launcher')");
+  await click(".chat-launcher");
+  await b.wait("!!document.querySelector('#floating-message')");
   await click(".mode-toggle button:last-child");
   await b.wait("document.querySelector('.voice-code-input')");
   await check("Opening Voice checks capabilities without capturing audio or creating a session", "__voice.mic === 0 && __voice.requests.length === 0 && document.querySelector('.voice-start').disabled");

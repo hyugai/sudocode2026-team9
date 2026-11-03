@@ -109,11 +109,12 @@ export function useConversation() {
     if (!file.size || file.size > 25 * 1024 * 1024) {
       setErrorMessage("Hãy chọn file ghi âm có dung lượng từ 1 byte đến 25 MB.");
       clearAudio();
-      return;
+      return false;
     }
     setAudioFile(file);
     // The URL belongs to the shared file, not either mounted chat surface.
     setAudioPreviewUrl(URL.createObjectURL(file));
+    return true;
   };
 
   const sendMessage = async () => {

@@ -61,7 +61,7 @@ function ConversationHistory() {
     <p>Đây là bản lưu của phiên khách, không phải lịch sử tài khoản. Chưa thể tra cứu hội thoại từ thiết bị khác.</p>
     {!c.sessionReady ? <p role="status">Đang khôi phục hội thoại…</p> : <>
       <div className="account-transcript" role="log" aria-label="Hội thoại đã lưu">{c.messages.map((m, i) => <article key={i}><strong>{m.role === "agent" ? "Synee AI" : "Bạn"}</strong><p>{m.text}</p></article>)}</div>
-      <Link href="/#inline-chat" className="commerce-secondary">Tiếp tục trò chuyện</Link>
+      <Link href="/ai-chat" className="commerce-secondary">Tiếp tục trò chuyện</Link>
       {c.sessionId && <div className="end-conversation"><h3>Kết thúc hội thoại hiện tại</h3><p>Synee sẽ bắt đầu một hội thoại mới. Thao tác này không xóa hồ sơ hoặc bộ nhớ đã lưu tại dịch vụ.</p>
         <label className="confirmation"><input type="checkbox" checked={confirm} onChange={e => setConfirm(e.target.checked)} disabled={c.isLoading} />Tôi đồng ý kết thúc và xóa bản hội thoại hiện tại khỏi tab này.</label>
         <button className="commerce-secondary end-session" disabled={!confirm || c.isLoading} onClick={async () => {
