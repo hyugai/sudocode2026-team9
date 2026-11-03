@@ -7,17 +7,55 @@ import { usePurchase } from "./purchase-provider";
 
 export type AccountView = "profile" | "history";
 
-export function AccountNavigation({ onNavigate }: { onNavigate?: () => void }) {
+export function AccountQuickLinks({ activeView, onNavigate }: { activeView?: AccountView | "orders"; onNavigate: () => void }) {
   const authStatusId = useId();
+  return <nav className="account-quick-links" aria-label="Menu tài khoản">
+    <Link href="/account" aria-current={activeView === "profile" ? "page" : undefined} onClick={onNavigate}><AccountIcon name="user" /><span>Hồ sơ cá nhân</span></Link>
+    <Link href="/orders" aria-current={activeView === "orders" ? "page" : undefined} onClick={onNavigate}><AccountIcon name="orders" /><span>Đơn hàng</span></Link>
+    <Link href="/account/conversations" aria-current={activeView === "history" ? "page" : undefined} onClick={onNavigate}><AccountIcon name="history" /><span>Lịch sử hội thoại</span></Link>
+    <button type="button" disabled aria-describedby={authStatusId}><AccountIcon name="logout" /><span>Đăng xuất</span></button>
+    <p id={authStatusId}>Phiên khách · Chưa đăng nhập.</p>
+  </nav>;
+}
+
+export function AccountIdentity() {
+  const c = useSharedConversation();
+  return <div className="account-identity">
+    <span className="account-avatar" aria-hidden="true"><AccountIcon name="user" /></span>
+    <div><strong>Khách tư vấn</strong><span>{c.customerPhone || "Chưa cập nhật số điện thoại"}</span><small>Phiên khách</small></div>
+  </div>;
+}
+
+export function AccountNavigation({ onNavigate, activeView }: { onNavigate?: () => void; activeView?: AccountView | "orders" }) {
+  const authStatusId = useId();
+  const groupId = useId();
+  const [expanded, setExpanded] = useState(true);
   return <nav className="account-navigation" aria-label="Tài khoản khách">
-    <Link href="/account" onClick={onNavigate}>Hồ sơ tư vấn</Link>
-    <Link href="/orders" onClick={onNavigate}>Đơn hàng demo</Link>
-    <Link href="/account/conversations" onClick={onNavigate}>Lịch sử hội thoại</Link>
-    <div className="auth-unavailable"><p>Bạn đang dùng phiên khách. Đăng nhập, đăng ký và đăng xuất chưa được dịch vụ hỗ trợ.</p>
-      <div><button type="button" disabled aria-describedby={authStatusId}>Đăng nhập</button><button type="button" disabled aria-describedby={authStatusId}>Đăng ký</button><button type="button" disabled aria-describedby={authStatusId}>Đăng xuất</button></div>
-      <p id={authStatusId}>Chưa có tài khoản được xác thực. Số điện thoại tư vấn không phải thông tin đăng nhập.</p>
+    <div className="account-nav-group">
+      <button type="button" className="account-nav-toggle" aria-expanded={expanded} aria-controls={groupId} onClick={() => setExpanded(value => !value)}>
+        <AccountIcon name="user" /><span>Tài khoản của tôi</span><AccountIcon name="chevron" />
+      </button>
+      <div id={groupId} className="account-subnav" hidden={!expanded}>
+        <Link href="/account" aria-current={activeView === "profile" ? "page" : undefined} onClick={onNavigate}>Hồ sơ cá nhân</Link>
+        <Link href="/account/conversations" aria-current={activeView === "history" ? "page" : undefined} onClick={onNavigate}>Lịch sử hội thoại</Link>
+      </div>
+    </div>
+    <Link href="/orders" className="account-orders-link" aria-current={activeView === "orders" ? "page" : undefined} onClick={onNavigate}><AccountIcon name="orders" /><span>Đơn hàng</span><small>Demo</small></Link>
+    <div className="account-signout">
+      <button type="button" className="account-logout" disabled aria-describedby={authStatusId}><AccountIcon name="logout" /><span>Đăng xuất</span></button>
+      <p id={authStatusId}>Bạn đang dùng phiên khách, chưa có tài khoản đăng nhập để đăng xuất.</p>
     </div>
   </nav>;
+}
+
+function AccountIcon({ name }: { name: "user" | "orders" | "history" | "logout" | "chevron" }) {
+  return <svg className={`account-icon account-icon-${name}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    {name === "user" ? <><circle cx="12" cy="8" r="4" /><path d="M4 21v-2a8 8 0 0 1 16 0v2" /></>
+      : name === "orders" ? <><rect x="5" y="4" width="14" height="17" rx="2" /><path d="M9 4V2h6v2M9 10h6M9 15h6" /></>
+      : name === "history" ? <><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></>
+      : name === "logout" ? <><path d="M9 4H4v16h5M14 8l4 4-4 4M9 12h12" /></>
+      : <path d="m6 9 6 6 6-6" />}
+  </svg>;
 }
 
 export function GuestProfile({ idPrefix = "customer" }: { idPrefix?: string }) {
@@ -31,6 +69,7 @@ export function GuestProfile({ idPrefix = "customer" }: { idPrefix?: string }) {
   const needsReset = changing && (!!c.sessionId || purchase.cart.length > 0 || purchase.orders.length > 0 || !!purchase.delivery.name || !!purchase.buyNow.length);
   return <form className="account-form" noValidate onSubmit={e => {
     e.preventDefault(); setSaved(false);
+    if (c.isLoading || !c.sessionReady || !purchase.ready) return;
     if (phone.trim() && !/^(?:0\d{9}|\+84\d{9})$/.test(phone.trim())) { setError("Nhập số điện thoại Việt Nam gồm 10 số hoặc +84."); return; }
     if (needsReset && !allowReset) { setError("Xác nhận bắt đầu phiên khách mới trước khi đổi số."); return; }
     try {
@@ -38,15 +77,26 @@ export function GuestProfile({ idPrefix = "customer" }: { idPrefix?: string }) {
       c.setCustomerPhone(phone); setError(""); setSaved(true); setAllowReset(false);
     } catch { setError("Chưa xóa được dữ liệu mua sắm cũ. Hãy thử lại trước khi đổi số."); }
   }}>
-    <h2>Hồ sơ tư vấn · khách</h2><p>Chỉ dùng số điện thoại bạn cung cấp để hỗ trợ tư vấn. Đây không phải tài khoản hay hồ sơ khách hàng đã xác thực.</p>
-    <label htmlFor={`${idPrefix}-phone`}>Số điện thoại tư vấn (không bắt buộc)</label><input id={`${idPrefix}-phone`} type="tel" autoComplete="tel" maxLength={30} placeholder="VD: 0901234567" value={phone} onChange={e => { setPhone(e.target.value); setSaved(false); }} disabled={c.isLoading || !c.sessionReady} aria-invalid={!!error} aria-describedby={`${idPrefix}-note`} />
-    <p id={`${idPrefix}-note`} className="muted-note">Đổi số sẽ bắt đầu hội thoại mới để tránh lẫn nội dung của hai người. Dữ liệu đơn demo không được xác minh theo số điện thoại.</p>
-    {needsReset && <label className="confirmation"><input className="confirm-profile-reset" type="checkbox" checked={allowReset} onChange={e => setAllowReset(e.target.checked)} disabled={c.isLoading} />Tôi đồng ý xóa hội thoại, bản nháp, giỏ và đơn demo trên thiết bị trước khi đổi số tư vấn.</label>}
-    {error && <p className="error" role="alert">{error}</p>}
-    <button className="commerce-secondary save-profile" disabled={c.isLoading || !c.sessionReady || !purchase.ready} type="submit">Lưu thông tin tư vấn</button>
-    {saved && <p role="status">Đã lưu cho phiên khách trong tab này.</p>}
-    <p className="session-id muted-note">Hội thoại: {c.sessionId || "Chưa bắt đầu"}</p>
-    <p className="muted-note">Hội thoại và bản nháp lưu trong tab này để khôi phục khi tải lại. File ghi âm chỉ được giữ khi tab đang mở. Tránh dùng chung thiết bị cho nội dung riêng tư.</p>
+    <header className="profile-heading"><h2>Hồ sơ cá nhân</h2><p>Quản lý thông tin để Synee tư vấn phù hợp với bạn.</p></header>
+    <div className="profile-layout">
+      <div className="profile-fields">
+        <div className="profile-field profile-readonly"><span>Loại hồ sơ</span><div><strong>Khách tư vấn</strong><small>Đây là thông tin tư vấn trong tab này, không phải tài khoản đăng nhập.</small></div></div>
+        <div className="profile-field">
+          <label htmlFor={`${idPrefix}-phone`}>Số điện thoại <span>(không bắt buộc)</span></label>
+          <div><input id={`${idPrefix}-phone`} type="tel" autoComplete="tel" maxLength={30} placeholder="VD: 0901234567" value={phone} onChange={e => { setPhone(e.target.value); setSaved(false); }} disabled={c.isLoading || !c.sessionReady} aria-invalid={!!error} aria-describedby={`${idPrefix}-note`} />
+            <p id={`${idPrefix}-note`} className="muted-note">Số điện thoại chỉ dùng cho tư vấn. Đổi số sẽ bắt đầu hội thoại mới để tránh lẫn nội dung của hai người.</p></div>
+        </div>
+        {needsReset && <label className="confirmation"><input className="confirm-profile-reset" type="checkbox" checked={allowReset} onChange={e => setAllowReset(e.target.checked)} disabled={c.isLoading} />Tôi đồng ý xóa hội thoại, bản nháp, giỏ và đơn demo trên thiết bị trước khi đổi số tư vấn.</label>}
+        {error && <p className="error" role="alert">{error}</p>}
+        <div className="profile-save"><button className="commerce-secondary save-profile" disabled={c.isLoading || !c.sessionReady || !purchase.ready} type="submit">Lưu thay đổi</button>
+          {saved && <p role="status">Đã lưu thông tin tư vấn trong tab này.</p>}</div>
+      </div>
+      <aside className="profile-avatar-panel" aria-label="Hồ sơ khách"><span className="account-avatar" aria-hidden="true"><AccountIcon name="user" /></span><strong>Khách tư vấn</strong><span className="profile-guest-badge">Phiên khách</span></aside>
+    </div>
+    <details className="profile-session-details"><summary>Thông tin phiên tư vấn</summary>
+      <p className="session-id muted-note">Hội thoại: {c.sessionId || "Chưa bắt đầu"}</p>
+      <p className="muted-note">Hội thoại và bản nháp lưu trong tab này để khôi phục khi tải lại. File ghi âm chỉ được giữ khi tab đang mở. Dữ liệu đơn demo không được xác minh theo số điện thoại.</p>
+    </details>
     {c.sessionNotice && <p role="status">{c.sessionNotice}</p>}
   </form>;
 }
@@ -79,5 +129,5 @@ function ConversationHistory() {
 
 export function AccountPage({ view }: { view: AccountView }) {
   const c = useSharedConversation();
-  return <section className="account-page container" aria-labelledby="account-heading"><h1 id="account-heading">{view === "profile" ? "Thông tin tư vấn" : "Lịch sử hội thoại"}</h1><div className="account-columns"><aside className="commerce-panel"><AccountNavigation /></aside><div className="commerce-panel">{!c.sessionReady ? <p role="status">Đang khôi phục thông tin tư vấn…</p> : view === "profile" ? <GuestProfile key={c.customerPhone} idPrefix="profile" /> : <ConversationHistory />}</div></div></section>;
+  return <section className="account-page container" aria-labelledby="account-heading"><h1 id="account-heading">{view === "profile" ? "Tài khoản của tôi" : "Lịch sử hội thoại"}</h1><div className="account-columns"><aside className="commerce-panel account-page-sidebar"><AccountIdentity /><AccountNavigation activeView={view} /></aside><div className="commerce-panel">{!c.sessionReady ? <p role="status">Đang khôi phục thông tin tư vấn…</p> : view === "profile" ? <GuestProfile idPrefix="profile" /> : <ConversationHistory />}</div></div></section>;
 }

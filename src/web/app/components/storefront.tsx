@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { applianceSubcategories, categories, filterProducts, productHref, type LiveProductDetails, type ProductCard } from "@/utils/catalog";
 import { Asset, ChatPanel } from "./chat-panel";
 import { InfoDialog } from "./info-dialog";
@@ -12,7 +12,7 @@ import { ProductDetail } from "./product-detail";
 import { PurchaseJourney, type PurchaseView } from "./purchase-journey";
 import { usePurchase } from "./purchase-provider";
 import type { Consultation } from "@/utils/use-conversation";
-import { AccountNavigation, AccountPage, GuestProfile, type AccountView } from "./account-content";
+import { AccountQuickLinks, AccountPage, type AccountView } from "./account-content";
 
 type Dialog = "menu" | "account" | "support" | null;
 
@@ -32,6 +32,9 @@ export default function Storefront({ product, catalogProducts = [], catalogError
   const inlineRef = useRef<HTMLDivElement>(null);
   const launcherRef = useRef<HTMLButtonElement>(null);
   const askRef = useRef<HTMLDivElement>(null);
+  const accountRef = useRef<HTMLDivElement>(null);
+  const accountTriggerRef = useRef<HTMLButtonElement>(null);
+  const accountMenuId = useId();
   const floatingEligible = inlineVisible === false;
 
   useEffect(() => {
@@ -52,14 +55,34 @@ export default function Storefront({ product, catalogProducts = [], catalogError
   useEffect(() => {
     if (!floatingOpen) return;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && !document.querySelector("dialog[open]")) {
+      if (e.key === "Escape" && dialog !== "account" && !document.querySelector("dialog[open]")) {
         setFloatingOpen(false);
         requestAnimationFrame(() => (product ? askRef.current?.querySelector<HTMLButtonElement>(".pdp-ask") : launcherRef.current)?.focus({ preventScroll: true }));
       }
     };
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
-  }, [floatingOpen, product]);
+  }, [floatingOpen, product, dialog]);
+
+  useEffect(() => {
+    if (dialog !== "account") return;
+    const closeOutside = (event: Event) => {
+      if (event.target instanceof Node && !accountRef.current?.contains(event.target)) setDialog(null);
+    };
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key !== "Escape") return;
+      setDialog(null);
+      accountTriggerRef.current?.focus({ preventScroll: true });
+    };
+    document.addEventListener("pointerdown", closeOutside);
+    document.addEventListener("focusin", closeOutside);
+    document.addEventListener("keydown", closeOnEscape);
+    return () => {
+      document.removeEventListener("pointerdown", closeOutside);
+      document.removeEventListener("focusin", closeOutside);
+      document.removeEventListener("keydown", closeOnEscape);
+    };
+  }, [dialog]);
 
   useEffect(() => {
     if (product && floatingOpen && matchMedia("(max-width: 900px)").matches) {
@@ -82,7 +105,10 @@ export default function Storefront({ product, catalogProducts = [], catalogError
   const visibleProducts = filterProducts(category, subcategory, search, catalogProducts);
   const closeDialog = () => {
     setDialog(null);
-    if (dialog === "account") requestAnimationFrame(() => document.querySelector<HTMLButtonElement>(".account-trigger")?.focus({ preventScroll: true }));
+  };
+  const openAccount = () => {
+    setDialog("account");
+    requestAnimationFrame(() => accountTriggerRef.current?.focus({ preventScroll: true }));
   };
 
   return <>
@@ -95,17 +121,27 @@ export default function Storefront({ product, catalogProducts = [], catalogError
         </form>
         <div className="header-right">
           <nav className="utility-nav" aria-label="Hỗ trợ mua sắm"><button onClick={() => setDialog("support")}>Hỗ trợ</button></nav>
-          <div className="commerce-actions"><Link href="/cart" className="cart-link" aria-label={`Giỏ hàng demo, ${purchase.cart.reduce((n, l) => n + l.quantity, 0)} sản phẩm`}><Asset name="cart" /><span>Giỏ hàng <span className="cart-count" aria-live="polite">{purchase.cart.reduce((n, l) => n + l.quantity, 0)}</span></span></Link><button className="account-trigger" aria-label="Mở tài khoản" aria-haspopup="dialog" aria-expanded={dialog === "account"} onClick={() => setDialog("account")}><Asset name="account" /><span>Tài khoản</span></button></div>
+          <div className="commerce-actions"><Link href="/cart" className="cart-link" aria-label={`Giỏ hàng demo, ${purchase.cart.reduce((n, l) => n + l.quantity, 0)} sản phẩm`}><Asset name="cart" /><span>Giỏ hàng <span className="cart-count" aria-live="polite">{purchase.cart.reduce((n, l) => n + l.quantity, 0)}</span></span></Link>
+            <div className="account-menu" ref={accountRef}>
+              <button ref={accountTriggerRef} className="account-trigger" aria-label="Mở menu tài khoản" aria-controls={accountMenuId} aria-expanded={dialog === "account"} onClick={() => setDialog(value => value === "account" ? null : "account")} onKeyDown={event => {
+                if (event.key !== "ArrowDown") return;
+                event.preventDefault();
+                setDialog("account");
+                requestAnimationFrame(() => accountRef.current?.querySelector<HTMLAnchorElement>(".account-quick-links a")?.focus());
+              }}><Asset name="account" /><span>Tài khoản</span></button>
+              {dialog === "account" && <div id={accountMenuId} className="account-popover"><AccountQuickLinks activeView={accountView ?? (view === "orders" ? "orders" : undefined)} onNavigate={() => setDialog(null)} /></div>}
+            </div>
+          </div>
         </div>
       </div>
     </header>
     <main id="main-content">
-      {accountView ? <AccountPage view={accountView} /> : view ? <PurchaseJourney key={`${view}-${orderId ?? ""}`} view={view} orderId={orderId} /> : product ? <div ref={askRef} className={`pdp-layout container${floatingOpen ? " with-consultation" : ""}`}><ProductDetail key={product.sku} product={product} onAsk={askAboutProduct} askDisabled={conversation.isLoading || !!conversation.audioFile} />{floatingOpen && <aside className="pdp-chat" aria-label="Tư vấn sản phẩm cùng Synee"><ChatPanel compact expanded conversation={conversation} voicePreview={voicePreview} onModeChange={setVoicePreview} onClose={closeFloating} onAccount={() => setDialog("account")} /></aside>}</div> : <>
+      {accountView ? <AccountPage view={accountView} /> : view ? <PurchaseJourney key={`${view}-${orderId ?? ""}`} view={view} orderId={orderId} /> : product ? <div ref={askRef} className={`pdp-layout container${floatingOpen ? " with-consultation" : ""}`}><ProductDetail key={product.sku} product={product} onAsk={askAboutProduct} askDisabled={conversation.isLoading || !!conversation.audioFile} />{floatingOpen && <aside className="pdp-chat" aria-label="Tư vấn sản phẩm cùng Synee"><ChatPanel compact expanded conversation={conversation} voicePreview={voicePreview} onModeChange={setVoicePreview} onClose={closeFloating} onAccount={openAccount} /></aside>}</div> : <>
       <section className="hero" aria-labelledby="hero-heading">
         <div className="hero-grid" aria-hidden="true" />
         <div className="hero-copy"><h1 id="hero-heading">Synee nhớ điều bạn cần, đồng hành đến khi nhận.</h1><p>Tư vấn tận tâm, giao hàng tận tay.</p></div>
         <div ref={inlineRef} className={`inline-chat-mount ${conversation.audioFile ? "has-audio" : ""}`}>
-          {inlineVisible !== false && <ChatPanel conversation={conversation} voicePreview={voicePreview} onModeChange={setVoicePreview} onOpenFullChat={openFullChat} onAccount={() => setDialog("account")} />}
+          {inlineVisible !== false && <ChatPanel conversation={conversation} voicePreview={voicePreview} onModeChange={setVoicePreview} onOpenFullChat={openFullChat} onAccount={openAccount} />}
         </div>
         <a className="browse-action" href="#catalog"><Asset name="down" />Khám phá sản phẩm</a>
       </section>
@@ -136,12 +172,11 @@ export default function Storefront({ product, catalogProducts = [], catalogError
     </div></footer>
     {floatingEligible && (!product || !floatingOpen) && <>
       {isCatalog && <button className="back-to-ai" onClick={returnToChat}>→ Trở lại trợ lý AI</button>}
-      {floatingOpen ? <div className="floating-panel"><ChatPanel compact conversation={conversation} voicePreview={voicePreview} onModeChange={setVoicePreview} onClose={closeFloating} onAccount={() => setDialog("account")} /></div>
+      {floatingOpen ? <div className="floating-panel"><ChatPanel compact conversation={conversation} voicePreview={voicePreview} onModeChange={setVoicePreview} onClose={closeFloating} onAccount={openAccount} /></div>
         : <button ref={launcherRef} className="chat-launcher" aria-label="Trò chuyện với Synee AI" aria-expanded={false} aria-controls="floating-chat" title="Trò chuyện với Synee AI" onClick={() => setFloatingOpen(true)}><Asset name="launcher" /></button>}
     </>}
-    {dialog && <InfoDialog drawer={dialog === "account"} title={dialog === "menu" ? "Danh mục sản phẩm" : dialog === "account" ? "Tài khoản" : "Hỗ trợ"} onClose={closeDialog}>
+    {dialog && dialog !== "account" && <InfoDialog title={dialog === "menu" ? "Danh mục sản phẩm" : "Hỗ trợ"} onClose={closeDialog}>
       {dialog === "menu" && <nav className="menu-links" aria-label="Danh mục">{categories.map(c => <Link key={c.name} href={`/?category=${encodeURIComponent(c.name)}#catalog-heading`} onClick={() => { selectCategory(c.name); setDialog(null); }}>{c.name === "Tất cả" ? "Tất cả sản phẩm" : c.name}</Link>)}</nav>}
-      {dialog === "account" && <><AccountNavigation onNavigate={() => setDialog(null)} />{conversation.sessionReady ? <GuestProfile /> : <p role="status">Đang khôi phục thông tin tư vấn…</p>}</>}
       {dialog === "support" && <div><p>Bạn có thể gửi tin nhắn hoặc tải file ghi âm cho Synee AI.</p><p>WAV, MP3, M4A, FLAC, OGG, WebM · tối đa 25 MB / 120 giây. Giới hạn thời lượng do backend kiểm tra.</p><p className="muted-note">Mua sắm dùng dữ liệu BTC tham chiếu; giỏ và đơn là demo trên trình duyệt, không giữ hàng hoặc thu tiền. Chưa kết nối thanh toán, đơn hàng thật và tài khoản khách hàng.</p></div>}
     </InfoDialog>}
   </>;
