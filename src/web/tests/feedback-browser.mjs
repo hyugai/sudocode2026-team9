@@ -68,9 +68,8 @@ try{
   await click('.account-trigger');
   check('Profile page and account drawer have unique accessible IDs',await b.evaluate("(()=>{const ids=[...document.querySelectorAll('[id]')].map(n=>n.id);return new Set(ids).size===ids.length&&!!document.querySelector('#profile-phone')&&!!document.querySelector('dialog #customer-phone');})()"));await click('.dialog-header button');
   await route('/?category='+encodeURIComponent('Điện gia dụng')+'#catalog-heading');await b.wait("document.querySelectorAll('.product-card').length===18");
-  await click('.section-heading .quiet-button');await b.wait("document.querySelectorAll('.product-card').length===40");
-  await b.wait("location.search===''");
-  check('View all opens the full BTC catalog and navigates to product results',await b.evaluate("location.hash==='#catalog-heading'&&document.querySelectorAll('.product-card').length===40"));
+  await click('.filter-status button');await b.wait("document.querySelectorAll('.product-card').length===40");
+  check('Clearing filters restores the full BTC catalog without a View all button',await b.evaluate("document.querySelector('.category-nav button').getAttribute('aria-pressed')==='true'&&![...document.querySelectorAll('#catalog a')].some(link=>link.textContent.includes('Xem tất cả'))"));
   await b.send('Emulation.setDeviceMetricsOverride',{width:320,height:760,deviceScaleFactor:1,mobile:false});await b.evaluate("document.querySelector('.account-trigger').focus()");await click('.account-trigger');
   check('320px account drawer remains within the viewport',await b.evaluate("document.documentElement.scrollWidth<=320&&document.querySelector('.account-drawer').getBoundingClientRect().right<=320"));await snapshot('after-account-mobile');
   await b.send('Input.dispatchKeyEvent',{type:'keyDown',key:'Escape',code:'Escape',windowsVirtualKeyCode:27});await b.send('Input.dispatchKeyEvent',{type:'keyUp',key:'Escape',code:'Escape',windowsVirtualKeyCode:27});await b.wait("!document.querySelector('dialog[open]')");

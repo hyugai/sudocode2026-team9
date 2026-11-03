@@ -173,7 +173,7 @@ try {
   await evaluate("document.querySelector('.product-search').requestSubmit()");
   await wait("document.querySelectorAll('.product-card').length===1");
   check("Traditional search filters the BTC catalog without a chat request", await evaluate(`document.querySelector('.product-card').dataset.sku==='SKU-WF-RO9'&&window.__calls.length===${count + 1}`));
-  await click(".section-heading .quiet-button");
+  await click(".filter-status button");
   await evaluate("[...document.querySelectorAll('.category-nav button')].find(n=>n.textContent==='Điện gia dụng').click()");
   await wait("!!document.querySelector('.subcategory-nav')");
   await evaluate("[...document.querySelectorAll('.subcategory-nav button')].find(n=>n.textContent==='Nồi chiên').click()");

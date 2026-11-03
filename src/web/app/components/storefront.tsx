@@ -147,12 +147,12 @@ export default function Storefront({ product, catalogProducts = [], catalogError
       </section>
       <section className="catalog-section" id="catalog" aria-labelledby="catalog-heading">
         <div className="container">
-          <div className="section-heading"><h2>Khám phá theo danh mục</h2><Link className="quiet-button" href="/#catalog-heading" onClick={() => { selectCategory("Tất cả"); setSearch(""); setQuery(""); }}>Xem tất cả →</Link></div>
+          <div className="section-heading"><h2>Khám phá theo danh mục</h2></div>
           <div className="category-navigation">
             <nav className="category-nav" aria-label="Danh mục sản phẩm">{categories.map(c => <button key={c.name} className={category === c.name ? "active" : ""} aria-pressed={category === c.name} aria-expanded={c.name === "Điện gia dụng" ? category === c.name : undefined} aria-controls={c.name === "Điện gia dụng" ? "appliance-subcategories" : undefined} onClick={() => selectCategory(c.name)}><span><Image src={`/figma/${c.icon}`} width={20} height={20} alt="" unoptimized /></span>{c.name}</button>)}</nav>
             {category === "Điện gia dụng" && <nav id="appliance-subcategories" className="subcategory-nav" aria-label="Danh mục con điện gia dụng">{[{ name: "Tất cả điện gia dụng", value: "" }, ...applianceSubcategories.map(c => ({ name: c.name, value: c.name }))].map(c => <button key={c.value} className={subcategory === c.value ? "active" : ""} aria-pressed={subcategory === c.value} onClick={() => setSubcategory(c.value)}>{c.name}</button>)}</nav>}
           </div>
-          <div className="catalog-heading"><div><h2 id="catalog-heading">Gợi ý hôm nay</h2><p>Những món đáng khám phá, theo cách của bạn.</p></div><div className="catalog-tabs" role="group" aria-label="Sắp xếp sản phẩm" title="Danh mục chưa có dữ liệu lượt bán và ngày ra mắt để sắp xếp.">{["Dành cho bạn", "Bán chạy", "Mới nhất"].map((s, i) => <button key={s} aria-pressed={i === 0} className={i === 0 ? "active" : ""} disabled={i !== 0}>{s}</button>)}</div></div>
+          <div className="catalog-heading"><div><h2 id="catalog-heading">Gợi ý hôm nay</h2><p>Những món đáng khám phá, theo cách của bạn.</p></div><div className="catalog-sort"><div className="catalog-tabs" role="group" aria-label="Sắp xếp sản phẩm" aria-describedby="catalog-sort-note">{["Dành cho bạn", "Bán chạy", "Mới nhất"].map((s, i) => <button key={s} aria-pressed={i === 0} className={i === 0 ? "active" : ""} disabled={i !== 0} title={i === 0 ? undefined : "Chưa hỗ trợ: chưa có dữ liệu để sắp xếp."}>{i !== 0 && <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true"><rect x="4" y="8" width="12" height="9" rx="2" /><path d="M7 8V5a3 3 0 0 1 6 0v3" /></svg>}<span>{s}</span></button>)}</div><p id="catalog-sort-note" className="catalog-sort-note">Bán chạy và Mới nhất: chưa có dữ liệu để sắp xếp.</p></div></div>
           <p className="catalog-source">Danh mục từ cơ sở dữ liệu · Giá chưa áp dụng khuyến mãi; chưa có ảnh, đánh giá và dữ liệu sắp xếp.</p>
           {catalogError && <p className="empty-catalog" role="alert">Chưa tải được sản phẩm từ backend. Vui lòng thử tải lại trang sau.</p>}
           <p className="filter-status" role="status">{visibleProducts.length} sản phẩm{search ? ` cho “${search}”` : ""}{subcategory ? ` · ${subcategory}` : category !== "Tất cả" ? ` · ${category}` : ""}{(search || category !== "Tất cả") && <> · <button className="text-link" onClick={() => { setSearch(""); setQuery(""); selectCategory("Tất cả"); }}>Xóa bộ lọc</button></>}</p>
@@ -161,7 +161,6 @@ export default function Storefront({ product, catalogProducts = [], catalogError
             <div className="product-info"><h3>{p.name}</h3><p className="price">{p.price}</p><p className="rating">Chưa có đánh giá / lượt bán</p></div>
           </Link>)}</div>
           {!catalogError && !visibleProducts.length && <p className="empty-catalog">Không tìm thấy sản phẩm. Hãy thử từ khóa khác hoặc hỏi Synee AI.</p>}
-          <div className="continue-browsing"><Link className="quiet-button" href="/#catalog-heading" onClick={() => { selectCategory("Tất cả"); setSearch(""); setQuery(""); }}><Asset name="more" />Xem tất cả sản phẩm</Link></div>
         </div>
       </section>
       </>}
