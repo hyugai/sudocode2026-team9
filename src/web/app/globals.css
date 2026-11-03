@@ -15,6 +15,16 @@
   --action-front: rgba(3, 188, 162, .6);
   --chat-shadow: 0 12px 32px rgba(0, 0, 0, .1);
   --small-shadow: 0 1px 3px rgba(0, 0, 0, .1), 0 1px 2px -1px rgba(0, 0, 0, .1);
+  --surface-muted: #f7f7f8;
+  --border-strong: #d7d7e2;
+  --nav-surface: #111827;
+  --nav-muted: #b8bfd0;
+  --nav-border: #ffffff24;
+  --font-body: var(--font-inter), Arial, sans-serif;
+  --text-caption: 12px;
+  --text-body: 14px;
+  --text-input: 16px;
+  --text-heading: 20px;
 }
 @theme inline {
   --color-background: var(--background);
@@ -23,7 +33,7 @@
 }
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; scroll-padding-top: 120px; }
-body { margin: 0; background: var(--surface); color: var(--foreground); font-family: var(--font-inter), Arial, sans-serif; font-size: 14px; line-height: 22px; }
+body { margin: 0; background: var(--surface); color: var(--foreground); font-family: var(--font-body); font-size: var(--text-body); line-height: 22px; }
 button, input, textarea { font: inherit; }
 button, a { -webkit-tap-highlight-color: transparent; }
 button { cursor: pointer; }

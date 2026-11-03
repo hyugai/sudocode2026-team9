@@ -17,6 +17,14 @@ const type = (selector, value) => b.evaluate(`(() => {
 })()`);
 const check = async (name, expression) => { assert.ok(await b.evaluate(expression), name); console.log("PASS", name); };
 const mode = name => click(`.ai-mode-bar button:nth-child(${name === "text" ? 1 : 2})`);
+const openDashboard = async () => {
+  await click(".ai-exit-link");
+  await b.wait("location.pathname === '/' && !!document.querySelector('.hero')");
+  // The dashboard's inline widget mounts only while its hero is visible.
+  // Normalize restored scroll before waiting for the widget's input.
+  await b.evaluate("window.scrollTo({ top: 0, behavior: 'instant' })");
+  await b.wait("!!document.querySelector('#inline-message')");
+};
 const upload = (size = 8) => b.evaluate(`(() => {
   const file = new File([new Uint8Array(${size})], 'ghi-am-nhu-cau-rat-dai.wav', { type: 'audio/wav' });
   const transfer = new DataTransfer(); transfer.items.add(file);
@@ -141,6 +149,7 @@ try {
   await b.send("Emulation.setDeviceMetricsOverride", { width: 320, height: 760, deviceScaleFactor: 1, mobile: false });
   await b.screenshot(`${output}/realtime-mobile.png`);
   await check("Realtime layout fits 320px", "document.documentElement.scrollWidth <= innerWidth");
+  await check("Mobile voice controls stay above the composer", "[...document.querySelectorAll('.voice-actions button')].every(button => { const control = button.getBoundingClientRect(), area = document.querySelector('.ai-message-scroll').getBoundingClientRect(); return control.top >= area.top && control.bottom <= area.bottom; })");
   await mode("text");
   await b.wait("!document.querySelector('.realtime-voice') && !document.querySelector('#ai-message').disabled");
   await check("Changing mode ends the microphone and preserves the draft", "__test.stopped === 1 && document.querySelector('#ai-message').value === 'Giữ nháp với realtime'");
@@ -175,8 +184,7 @@ try {
   await b.send("Page.navigate", { url: base + "/ai-chat?mode=offline" });
   await b.wait("document.querySelector('#ai-message')?.value === 'Giữ nháp với realtime'");
   await check("Legacy offline links resolve to the unified Chat without sending", "__test.calls.length === 0 && document.querySelectorAll('.ai-mode-bar button').length === 2 && document.querySelector('.ai-mode-bar button:first-child').getAttribute('aria-pressed') === 'true' && !document.querySelector('.realtime-voice')");
-  await click(".ai-exit-link");
-  await b.wait("!!document.querySelector('#inline-message')");
+  await openDashboard();
   await b.evaluate("window.scrollTo({ top: 0, behavior: 'instant' })");
   await b.wait("!!document.querySelector('#inline-chat input[type=file]')");
   await check("Dashboard mode labels fit 320px", "document.documentElement.scrollWidth <= innerWidth && [...document.querySelectorAll('.mode-toggle button')].every(button => button.scrollWidth <= button.clientWidth)");
@@ -190,8 +198,7 @@ try {
   await click(".audio-preview button");
   await b.wait("!document.querySelector('audio')");
   await check("Removing audio restores the original text draft", "document.querySelector('#ai-message').value === 'Giữ nháp với realtime'");
-  await click(".ai-exit-link");
-  await b.wait("!!document.querySelector('#inline-message')");
+  await openDashboard();
   await click(".mode-toggle button:last-child");
   await b.wait("location.pathname === '/ai-chat' && !!document.querySelector('.voice-start')");
   await check("Dashboard realtime mode opens the full workspace and keeps one voice UI", "document.querySelectorAll('.realtime-voice').length === 1 && !document.querySelector('.voice-dialog') && __test.mic === 0");

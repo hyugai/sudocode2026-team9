@@ -94,7 +94,7 @@ export function AiChatExperience({ mode }: { mode: AiChatMode }) {
   const sidebar = <>
     <div className="ai-brand">
       <Link href="/" aria-label="Trở lại dashboard" className="ai-brand-mark"><Icon name="spark" /></Link>
-      <div><strong>Synee</strong><span>AI Workspace</span></div>
+      <div><strong>Synee AI</strong><span>Trợ lý mua sắm</span></div>
     </div>
     <button className="ai-new-chat" disabled={busy} onClick={() => { setResetError(""); setDialog("new"); }}><Icon name="plus" />Cuộc trò chuyện mới</button>
     <label className="ai-search"><span className="sr-only">Tìm trong hội thoại</span><Icon name="search" />
