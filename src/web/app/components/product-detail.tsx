@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { QuantityControl } from "./purchase-controls";
+import { ProductImage } from "./product-image";
 import type { Consultation } from "@/utils/use-conversation";
 import { applianceSubcategories, categoryFor, formatMoney, type LiveProductDetails } from "@/utils/catalog";
 
@@ -35,7 +36,7 @@ export function ProductDetail({ product, onAsk, askDisabled }: {
   return <section className="product-detail container" data-sku={product.sku} aria-labelledby="product-title">
     <nav className="pdp-breadcrumb" aria-label="Đường dẫn sản phẩm"><Link className="pdp-back" href="/#catalog">Trang chủ</Link><span> / {category}{subcategory ? ` / ${subcategory}` : ""} / {product.sku}</span></nav>
     <div className="pdp-overview">
-      <div className="pdp-gallery"><div className="missing-photo pdp-photo"><div><p>Ảnh sản phẩm</p><p>Chưa có ảnh từ BTC</p></div></div><div className="gallery-note"><span className="gallery-placeholder" aria-hidden="true" /><p>Chưa có ảnh từ catalog BTC; không có ảnh khác để chuyển.</p></div></div>
+      <div className="pdp-gallery"><ProductImage sku={product.sku} name={product.name} detail /><p className="gallery-note">Ảnh minh họa cho bản demo; kiểu dáng thực tế có thể khác.</p></div>
       <div className="pdp-info">
         <p className="pdp-sku">{product.sku} · Catalog Neon</p>
         <h1 id="product-title">{product.name}</h1>

@@ -12,6 +12,8 @@ The default backend is `http://localhost:8000` in development and `https://teles
 
 The storefront list and product detail pages now request `/api/catalog/products` and `/api/catalog/products/{sku}` from the backend. Those endpoints read products, variants and effective stock from PostgreSQL via `DATABASE_URL`. The web does not need a database credential. If the catalog API is unavailable, the list shows an error instead of substituting snapshot data.
 
+All 40 current catalog SKUs have demo product illustrations. The 21 local WebP assets in `public/products/illustrations/` are mapped by SKU in `utils/product-illustrations.ts` and shared by cards and product details. Images are labelled **Ảnh minh họa** and do not represent official model photographs or exact variant colors. Unknown SKUs and failed image loads retain a text fallback. These display assets never replace API product data. Generation prompts and provenance are recorded in [`docs/design/product-illustrations.json`](../../docs/design/product-illustrations.json).
+
 The `data/*.json` files are retained only for the separate demo cart and checkout flow. After changing the source BTC catalog used by that demo, copy the three JSON files from `dataset/BTC-Data-Vong1-TEAMS/catalog/` into `src/web/data/` and run `node --experimental-strip-types --test tests/catalog.test.mjs` to check they match.
 
 ```sh

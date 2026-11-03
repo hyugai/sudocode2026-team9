@@ -9,6 +9,7 @@ import { Asset, ChatPanel } from "./chat-panel";
 import { InfoDialog } from "./info-dialog";
 import { useSharedConversation } from "./conversation-provider";
 import { ProductDetail } from "./product-detail";
+import { ProductImage } from "./product-image";
 import { PurchaseJourney, type PurchaseView } from "./purchase-journey";
 import { usePurchase } from "./purchase-provider";
 import type { Consultation } from "@/utils/use-conversation";
@@ -153,11 +154,11 @@ export default function Storefront({ product, catalogProducts = [], catalogError
             {category === "Điện gia dụng" && <nav id="appliance-subcategories" className="subcategory-nav" aria-label="Danh mục con điện gia dụng">{[{ name: "Tất cả điện gia dụng", value: "" }, ...applianceSubcategories.map(c => ({ name: c.name, value: c.name }))].map(c => <button key={c.value} className={subcategory === c.value ? "active" : ""} aria-pressed={subcategory === c.value} onClick={() => setSubcategory(c.value)}>{c.name}</button>)}</nav>}
           </div>
           <div className="catalog-heading"><div><h2 id="catalog-heading">Gợi ý hôm nay</h2><p>Những món đáng khám phá, theo cách của bạn.</p></div><div className="catalog-sort"><div className="catalog-tabs" role="group" aria-label="Sắp xếp sản phẩm" aria-describedby="catalog-sort-note">{["Dành cho bạn", "Bán chạy", "Mới nhất"].map((s, i) => <button key={s} aria-pressed={i === 0} className={i === 0 ? "active" : ""} disabled={i !== 0} title={i === 0 ? undefined : "Chưa hỗ trợ: chưa có dữ liệu để sắp xếp."}>{i !== 0 && <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true"><rect x="4" y="8" width="12" height="9" rx="2" /><path d="M7 8V5a3 3 0 0 1 6 0v3" /></svg>}<span>{s}</span></button>)}</div><p id="catalog-sort-note" className="catalog-sort-note">Bán chạy và Mới nhất: chưa có dữ liệu để sắp xếp.</p></div></div>
-          <p className="catalog-source">Danh mục từ cơ sở dữ liệu · Giá chưa áp dụng khuyến mãi; chưa có ảnh, đánh giá và dữ liệu sắp xếp.</p>
+          <p className="catalog-source">Ảnh minh họa cho bản demo · Giá chưa áp dụng khuyến mãi; chưa có đánh giá và dữ liệu sắp xếp.</p>
           {catalogError && <p className="empty-catalog" role="alert">Chưa tải được sản phẩm từ backend. Vui lòng thử tải lại trang sau.</p>}
           <p className="filter-status" role="status">{visibleProducts.length} sản phẩm{search ? ` cho “${search}”` : ""}{subcategory ? ` · ${subcategory}` : category !== "Tất cả" ? ` · ${category}` : ""}{(search || category !== "Tất cả") && <> · <button className="text-link" onClick={() => { setSearch(""); setQuery(""); selectCategory("Tất cả"); }}>Xóa bộ lọc</button></>}</p>
           <div className="product-grid">{visibleProducts.map(p => <Link className="product-card" key={p.id} href={productHref(p.id)} aria-label={`${p.name} · ${p.id} · ${p.price}`} data-sku={p.id} data-subcategory={p.subcategory}>
-            <div className="product-photo missing-photo"><div><p>Chưa có ảnh BTC</p><p>{p.id}</p></div></div>
+            <ProductImage sku={p.id} name={p.name} />
             <div className="product-info"><h3>{p.name}</h3><p className="price">{p.price}</p><p className="rating">Chưa có đánh giá / lượt bán</p></div>
           </Link>)}</div>
           {!catalogError && !visibleProducts.length && <p className="empty-catalog">Không tìm thấy sản phẩm. Hãy thử từ khóa khác hoặc hỏi Synee AI.</p>}

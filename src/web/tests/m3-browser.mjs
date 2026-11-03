@@ -38,7 +38,7 @@ try {
   await b.wait("document.querySelector('.purchase-page')?.textContent.includes('Không tìm thấy đơn demo')");
   check('Unmocked unknown order never displays a fabricated real receipt', await b.evaluate("!document.querySelector('.success-banner')"));
   await route('/products/SKU-AP-X');
-  check('Unmocked PDP uses the exact BTC SKU and honest image/snapshot state', await b.evaluate("document.querySelector('.product-detail').dataset.sku==='SKU-AP-X'&&document.querySelector('.pdp-info .price').textContent==='4.890.000₫'&&document.querySelector('.pdp-gallery').textContent.includes('Chưa có ảnh')&&document.querySelector('.demo-notice').textContent.includes('Không tạo đơn thật')"));
+  check('Unmocked PDP uses the exact BTC SKU and honest image/snapshot state', await b.evaluate("document.querySelector('.product-detail').dataset.sku==='SKU-AP-X'&&document.querySelector('.pdp-info .price').textContent==='4.890.000₫'&&document.querySelector('.pdp-gallery').textContent.includes('Ảnh minh họa')&&document.querySelector('.demo-notice').textContent.includes('Không tạo đơn thật')"));
   check('Unmocked probe made health GETs only, with no service mutations', requests.length > 0 && requests.every(r => r.method === 'GET' && r.url.endsWith('/health')));
   await writeFile(`${output}/results.json`, JSON.stringify({ checks, requests, backend:'unavailable; no live processing verified' }, null, 2));
   console.log(`${checks.length} unmocked availability/UI checks passed.`);
