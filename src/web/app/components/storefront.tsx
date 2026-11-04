@@ -128,9 +128,15 @@ export default function Storefront({ product, catalogProducts = [], catalogError
     <a className="skip-link" href="#main-content">Đến nội dung chính</a>
     <header className="site-header">
       <div className="header-inner container">
-        <div className="header-left"><Link href={isCatalog ? "#main-content" : "/"} aria-label="SUDO CODE — Trang chủ"><Image src="/figma/a-imgSudoCodeOfficialVectorWordmark.svg" alt="SUDO CODE" width={112} height={15.8192} unoptimized /></Link></div>
+        <div className="header-left">
+          <Link className="header-brand-link" href={isCatalog ? "#main-content" : "/"} aria-label="SUDO CODE — Trang chủ"><Image src="/figma/a-imgSudoCodeOfficialVectorWordmark.svg" alt="SUDO CODE" width={112} height={15.8192} unoptimized /></Link>
+          <Link className="header-chat-link" href="/ai-chat?mode=text" aria-label="Mở chatbot Synee AI" onNavigate={() => setVoicePreview(false)}>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4Z" /><path d="M8 9h8M8 13h5" /></svg>
+            <span>Chatbot</span>
+          </Link>
+        </div>
         <form className="product-search" role="search" onSubmit={e => { e.preventDefault(); if (!isCatalog) { router.push(`/?q=${encodeURIComponent(query.trim())}#catalog`); return; } setSearch(query.trim()); document.getElementById("catalog")?.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth" }); }}>
-          <Asset name="search" /><label htmlFor="product-search" className="sr-only">Tìm sản phẩm, thương hiệu</label><input id="product-search" value={query} onChange={e => setQuery(e.target.value)} placeholder="Tìm sản phẩm, thương hiệu…" /><button type="submit"><Asset name="searchPurple" /><span>Tìm</span></button>
+          <Asset name="search" /><label htmlFor="product-search" className="sr-only">Tìm sản phẩm, thương hiệu</label><input id="product-search" value={query} onChange={e => setQuery(e.target.value)} placeholder="Tìm sản phẩm, thương hiệu…" /><button type="submit" aria-label="Tìm sản phẩm"><Asset name="searchPurple" /><span>Tìm</span></button>
         </form>
         <div className="header-right">
           <div className="commerce-actions"><Link href="/cart" className="cart-link" aria-label={`Giỏ hàng demo, ${purchase.cart.reduce((n, l) => n + l.quantity, 0)} sản phẩm`}><Asset name="cart" /><span>Giỏ hàng <span className="cart-count" aria-live="polite">{purchase.cart.reduce((n, l) => n + l.quantity, 0)}</span></span></Link>

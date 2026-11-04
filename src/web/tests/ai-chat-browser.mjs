@@ -127,7 +127,19 @@ try {
   await b.send("Page.navigate", { url: base });
   await b.wait("document.querySelector('#inline-message') && !document.querySelector('.mode-toggle button:last-child').disabled");
   await check("Dashboard exposes only Chat and Voice", "JSON.stringify([...document.querySelectorAll('.mode-toggle button')].map(button => button.textContent)) === JSON.stringify(['Chat', 'Voice'])");
+  await b.evaluate("document.fonts.ready");
+  for (const width of [1920, 1280, 1240, 761, 760, 320]) {
+    await b.send("Emulation.setDeviceMetricsOverride", { width, height: 900, deviceScaleFactor: 1, mobile: false });
+    await check(`Storefront header stays balanced and fits at ${width}px`, "(() => { const h=document.querySelector('.site-header').getBoundingClientRect(); const r=[...document.querySelectorAll('.header-brand-link, .header-chat-link, .product-search, .header-right')].map(e=>e.getBoundingClientRect()); return document.documentElement.scrollWidth <= innerWidth && r.every(a=>a.left >= h.left && a.right <= h.right && a.top >= h.top && a.bottom <= h.bottom) && r.every((a,i)=>r.slice(i+1).every(b=>a.right <= b.left || b.right <= a.left || a.bottom <= b.top || b.bottom <= a.top)) && document.querySelector('.header-chat-link').getBoundingClientRect().height >= 44 && document.querySelector('.header-chat-link span').getBoundingClientRect().width > 0; })()");
+    if (width === 1920 || width === 320) await b.screenshot(`${output}/storefront-header-${width}.png`);
+  }
+  await b.send("Emulation.setDeviceMetricsOverride", { width: 1440, height: 900, deviceScaleFactor: 1, mobile: false });
   await b.screenshot(`${output}/dashboard-entry-desktop.png`);
+  await type("#inline-message", "Bản nháp mở từ nút Chatbot");
+  await click(".header-chat-link");
+  await b.wait("location.pathname === '/ai-chat' && document.querySelector('#ai-message')?.value === 'Bản nháp mở từ nút Chatbot'");
+  await check("Header Chatbot link opens the dedicated workspace with the draft and no automatic send or microphone", "location.search === '?mode=text' && __test.calls.length === 0 && __test.mic === 0 && document.querySelectorAll('.ai-message').length === 1 && document.querySelector('.ai-sidebar-footer strong').textContent === '0901234567'");
+  await openDashboard();
   await type("#inline-message", "Tìm tai nghe dưới 3 triệu");
   await b.evaluate("document.querySelector('.composer').requestSubmit(); document.querySelector('.composer')?.requestSubmit()");
   await b.wait("location.pathname === '/ai-chat' && document.querySelectorAll('.ai-message').length === 3");

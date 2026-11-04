@@ -50,10 +50,14 @@ h1, h2, h3, h4, p { margin: 0; }
 .skip-link { position: fixed; left: 16px; top: -80px; padding: 12px; z-index: 100; background: white; color: black; border-radius: 8px; }
 .skip-link:focus { top: 12px; }
 .site-header { position: fixed; inset: 0 0 auto; height: var(--site-header-height); z-index: 30; background: var(--brand); color: white; box-shadow: 0 1px 0 #ffffff14; }
-.header-inner { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 544px) minmax(0, 1fr); gap: 24px; height: var(--site-header-height); align-items: center; padding-block: 16px; }
-.header-left { display: flex; align-items: center; height: 48px; }
+.header-inner { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 500px) minmax(0, 1fr); gap: 24px; height: var(--site-header-height); align-items: center; padding-block: 16px; }
+.header-left { display: flex; align-items: center; gap: 16px; height: 48px; }
 .header-left a { display: flex; align-items: center; min-height: 44px; }
 .header-left img { width: 136px; height: auto; }
+.header-chat-link { justify-content: center; gap: 8px; min-width: 112px; height: 48px; padding: 0 12px; border: 1px solid #56c0ee66; border-radius: 12px; color: #b4eaff; background: #56c0ee14; font-weight: 600; white-space: nowrap; transition: background-color .18s ease, border-color .18s ease; }
+.header-chat-link svg { flex: none; width: 18px; height: 18px; }
+.header-chat-link:hover { border-color: var(--cyan); background: #56c0ee26; }
+.header-chat-link:focus-visible { outline-color: var(--cyan); }
 .product-search { display: flex; align-items: center; gap: 12px; height: 48px; padding: 4px 16px; border-radius: 8px; background: white; color: var(--muted); min-width: 0; }
 .product-search input { border: 0; background: transparent; flex: 1; width: 0; min-width: 0; height: 40px; color: var(--foreground); }
 .product-search input:focus { outline: 0; }
@@ -300,23 +304,29 @@ main:has(.product-detail) { background: var(--brand-soft); }
 .debug-logs h4 { margin-top: 12px; }
 .debug-logs pre { max-height: 200px; overflow: auto; background: var(--brand-soft); padding: 12px; font-size: 12px; white-space: pre-wrap; overflow-wrap: anywhere; }
 .debug-logs details { margin-top: 12px; }
+@media (max-width: 1240px) {
+  :root { --site-header-height: 136px; }
+  .header-inner { grid-template-columns: minmax(0, 1fr) auto 112px; grid-template-rows: 48px 48px; gap: 12px; padding-block: 12px 16px; }
+  .header-left { display: contents; }
+  .header-brand-link { grid-column: 1; grid-row: 1; justify-self: start; }
+  .header-chat-link { grid-column: 3; grid-row: 2; }
+  .header-right { grid-column: 2 / -1; grid-row: 1; }
+  .product-search { grid-column: 1 / 3; grid-row: 2; }
+}
 @media (max-width: 1100px) {
-  .header-inner { grid-template-columns: 136px minmax(0, 1fr) auto; gap: 20px; }
   .commerce-actions { gap: 16px; }
   .product-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
 @media (max-width: 760px) {
-  :root { --site-header-height: 136px; }
   .container { width: calc(100% - 32px); }
-  .header-inner { grid-template-columns: 1fr auto; grid-template-rows: 48px 48px; gap: 12px; padding-block: 12px 16px; }
-  .header-left { grid-column: 1; grid-row: 1; }
   .header-left img { width: 120px; }
-  .header-right { grid-column: 2; grid-row: 1; }
   .utility-nav { display: none; }
   .commerce-actions { gap: 12px; }
-  .commerce-actions > button, .commerce-actions .account-trigger { min-width: 36px; min-height: 44px; justify-content: center; }
+  .commerce-actions > a, .commerce-actions > button, .commerce-actions .account-trigger { min-width: 44px; min-height: 44px; justify-content: center; }
   .commerce-actions > a > span, .commerce-actions .account-trigger > span { display: none; }
-  .product-search { grid-row: 2; grid-column: 1 / -1; }
+  .product-search { gap: 8px; padding-inline: 8px; }
+  .product-search > .asset, .product-search button > span { display: none; }
+  .product-search button { width: 40px; padding: 0; }
   html { scroll-padding-top: 148px; }
   .hero { padding: 24px 16px max(16px, env(safe-area-inset-bottom)); }
   .browse-action { margin-top: 24px; }
