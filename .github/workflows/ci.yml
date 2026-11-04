@@ -13,9 +13,12 @@ jobs:
   backend:
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    env:
+      # Imports create a SQLAlchemy engine; unit tests mock database access.
+      DATABASE_URL: postgresql://ci:ci@127.0.0.1:5432/ci
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
           cache: pip
@@ -32,11 +35,11 @@ jobs:
       run:
         working-directory: src/web
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "24"
           cache: npm
@@ -47,6 +50,8 @@ jobs:
         run: npm test
       - name: Lint
         run: npm run lint
+      - name: Generate Next.js route types
+        run: npx next typegen
       - name: Type check
         run: npx tsc --noEmit
       - name: Build
@@ -82,8 +87,8 @@ jobs:
       VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
       NEXT_PUBLIC_API_BASE_URL: https://telesale-agent-api-3no2.onrender.com
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
         with:
           node-version: "24"
       - name: Check Vercel credentials
