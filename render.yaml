@@ -4,6 +4,7 @@ services:
     runtime: docker
     region: singapore
     plan: free
+    autoDeployTrigger: checksPass
     dockerfilePath: ./Dockerfile
     dockerContext: .
     healthCheckPath: /health
