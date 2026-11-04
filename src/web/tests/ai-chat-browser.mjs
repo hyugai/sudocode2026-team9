@@ -23,6 +23,29 @@ const settleMode = () => b.evaluate(`(async () => {
     .filter(animation => animation.effect?.getTiming().iterations !== Infinity)
     .map(animation => animation.finished.catch(() => {})));
 })()`);
+const watchHeader = () => b.evaluate(`(() => {
+  const selectors = ['.ai-header-brand', '.ai-header-brand h1', '.ai-brand-mark', '.ai-mode-bar', '.ai-mode-bar button:first-child', '.ai-mode-bar button:last-child', '.ai-exit-link'];
+  const rects = () => selectors.map(selector => {
+    const r = document.querySelector(selector).getBoundingClientRect();
+    return [r.x, r.y, r.width, r.height];
+  });
+  const before = rects();
+  window.__headerMaxShift = 0;
+  window.__headerMaxOffCenter = 0;
+  window.__watchHeader = true;
+  window.__headerWatchFinished = new Promise(resolve => {
+    const sample = () => {
+      const now = rects();
+      for (let i=0; i<now.length; i++) for (let j=0; j<4; j++) {
+        __headerMaxShift = Math.max(__headerMaxShift, Math.abs(now[i][j] - before[i][j]));
+      }
+      __headerMaxOffCenter = Math.max(__headerMaxOffCenter, Math.abs(now[3][0] + now[3][2]/2 - innerWidth/2));
+      if (__watchHeader) requestAnimationFrame(sample); else resolve();
+    };
+    requestAnimationFrame(sample);
+  });
+})()`);
+const stopHeaderWatch = () => b.evaluate("(async () => { __watchHeader = false; await __headerWatchFinished; })()");
 const openDashboard = async () => {
   await click(".ai-exit-link");
   await b.wait("location.pathname === '/' && !!document.querySelector('.hero')");
@@ -111,7 +134,7 @@ try {
   await check("Dashboard send opens the new workspace and sends exactly one real API request", "__test.calls.length === 1 && !document.querySelector('.site-header') && !document.querySelector('.product-grid')");
   await check("Customer identity is preserved across navigation", "__test.calls[0].phone === '0901234567'");
   await check("Workspace exposes only Chat and Voice", "JSON.stringify([...document.querySelectorAll('.ai-mode-bar button')].map(button => button.textContent)) === JSON.stringify(['Chat', 'Voice'])");
-  await check("Chat and Voice are centered inside the header with no second mode row", "!!document.querySelector('.ai-topbar > .ai-mode-bar') && !document.querySelector('.ai-chat-stage .ai-mode-bar') && (() => { const h=document.querySelector('.ai-topbar').getBoundingClientRect(); const m=document.querySelector('.ai-mode-bar').getBoundingClientRect(); return Math.abs(h.left+h.width/2-m.left-m.width/2) < 1; })()");
+  await check("Chat and Voice are centered across the entire viewport", "!!document.querySelector('.ai-workspace > .ai-topbar > .ai-mode-bar') && !document.querySelector('.ai-chat-stage .ai-mode-bar') && (() => { const m=document.querySelector('.ai-mode-bar').getBoundingClientRect(); return Math.abs(m.left+m.width/2-innerWidth/2) < 1; })()");
   await check("The workspace omits the session note, ready heading and empty-input instruction", "!document.querySelector('.ai-session-note') && !document.querySelector('.ai-topbar [role=status]') && !document.body.innerText.includes('Synee đã sẵn sàng') && !document.body.innerText.includes('Cuộc trò chuyện cùng Synee') && document.querySelector('#ai-send-status').textContent === '' && getComputedStyle(document.querySelector('#ai-send-status')).display === 'none'");
   await b.evaluate("window.__conversationId = __test.calls[0].conversationId");
   await type("#ai-message", "Giữ bản nháp khi chuyển chế độ");
@@ -150,9 +173,12 @@ try {
   await b.wait("!!document.querySelector('audio')");
   await b.evaluate("window.__audioBeforeVoice = document.querySelector('audio').getAttribute('src')");
   await b.evaluate("window.__modeControlBeforeVoice = document.querySelector('.ai-mode-bar'); window.__modeHeaderBeforeVoice = document.querySelector('.ai-topbar'); window.__indicatorBeforeVoice = getComputedStyle(__modeControlBeforeVoice, '::before').transform");
+  await watchHeader();
   await mode("realtime");
   await b.wait("!!document.querySelector('.voice-start') && !document.querySelector('.voice-start').disabled");
   await settleMode();
+  await stopHeaderWatch();
+  await check("Logo, mode buttons and Dashboard stay fixed throughout the Chat-to-Voice animation", "__headerMaxShift < 1 && __headerMaxOffCenter < 1");
   await check("Switching modes preserves the header, selector and keyboard focus while sliding the active pill", "__modeControlBeforeVoice === document.querySelector('.ai-mode-bar') && __modeHeaderBeforeVoice === document.querySelector('.ai-topbar') && document.activeElement === document.querySelector('.ai-mode-bar button:last-child') && getComputedStyle(__modeControlBeforeVoice, '::before').transform !== __indicatorBeforeVoice");
   await check("Realtime mode embeds one LiveKit surface without capturing the microphone on entry", "document.querySelectorAll('.realtime-voice').length === 1 && __test.mic === 0 && __test.voiceRequests.length === 0");
   await check("Voice owns a full dark viewport without chat input, chat history or sidebars", "document.querySelector('.ai-voice-workspace').getBoundingClientRect().height === innerHeight && !document.querySelector('.ai-composer') && !document.querySelector('.ai-message-list') && !document.querySelector('.ai-sidebar') && !document.querySelector('.ai-desktop-details') && !document.querySelector('input[type=file]') && getComputedStyle(document.body).backgroundColor === 'rgb(5, 8, 17)'");
@@ -171,9 +197,12 @@ try {
   await b.screenshot(`${output}/realtime-mobile.png`);
   await check("Realtime layout fits 320px", "document.documentElement.scrollWidth <= innerWidth");
   await check("Mobile voice controls fit within the viewport and both mode buttons remain reachable", "[...document.querySelectorAll('.voice-actions button, .ai-mode-bar button')].every(button => { const r=button.getBoundingClientRect(); return r.top >= 0 && r.bottom <= innerHeight && r.left >= 0 && r.right <= innerWidth; }) && !document.querySelector('.ai-composer')");
+  await watchHeader();
   await mode("text");
   await b.wait("!document.querySelector('.realtime-voice') && !!document.querySelector('#ai-message') && !document.querySelector('.ai-send').disabled");
   await settleMode();
+  await stopHeaderWatch();
+  await check("Mobile header controls stay fixed throughout the Voice-to-Chat animation", "__headerMaxShift < 1 && __headerMaxOffCenter < 1");
   await check("Changing mode ends the microphone and preserves the draft", "__test.stopped === 1 && document.querySelector('#ai-message').value === 'Giữ nháp với realtime'");
   await check("Returning to Chat restores the same audio File preview and history", "document.querySelector('audio').getAttribute('src') === __audioBeforeVoice && document.querySelector('.audio-preview').textContent.includes('ghi-am') && document.querySelectorAll('.ai-message').length === 7 && getComputedStyle(document.body).backgroundColor === 'rgb(255, 255, 255)'");
   await check("The same mode selector returns to the Chat position", "__modeControlBeforeVoice === document.querySelector('.ai-mode-bar') && getComputedStyle(__modeControlBeforeVoice, '::before').transform === __indicatorBeforeVoice");
@@ -268,14 +297,16 @@ try {
   await check("Confirmed new conversation resets transcript and draft but keeps customer identity", "document.querySelector('#ai-message').value === '' && document.querySelector('.ai-sidebar-footer strong').textContent === '0901234567'");
   await check("An empty conversation keeps only its sidebar navigation label and no redundant instruction", "document.querySelector('.ai-conversation-list strong').textContent === 'Cuộc trò chuyện mới' && document.querySelector('#ai-send-status').textContent === '' && !document.body.innerText.includes('Nhập tin nhắn hoặc chọn ghi âm để gửi.')");
   await b.screenshot(`${output}/chat-clean-desktop.png`);
-  for (const width of [821, 601, 320]) {
+  for (const width of [1920, 821, 601, 320]) {
     await b.send("Emulation.setDeviceMetricsOverride", { width, height: 760, deviceScaleFactor: 1, mobile: false });
     for (const name of ["realtime", "text"]) {
+      await watchHeader();
       await mode(name);
       await b.wait(name === "realtime" ? "!!document.querySelector('.ai-voice-session')" : "!!document.querySelector('.ai-composer')");
       await settleMode();
-      await check(`Header controls fit without overlap at ${width}px in ${name}`, "(() => { const h=document.querySelector('.ai-topbar').getBoundingClientRect(); const r=[...document.querySelector('.ai-topbar').children].map(e=>e.getBoundingClientRect()); return document.documentElement.scrollWidth <= innerWidth && r.every(a=>a.left >= h.left && a.right <= h.right && a.top >= h.top && a.bottom <= h.bottom) && r.every((a,i)=>r.slice(i+1).every(b=>a.right <= b.left || b.right <= a.left || a.bottom <= b.top || b.bottom <= a.top)); })()");
-      if (width === 320 || width === 821) await b.screenshot(`${output}/header-${name}-${width}.png`);
+      await stopHeaderWatch();
+      await check(`Header controls stay fixed and fit without overlap at ${width}px in ${name}`, "__headerMaxShift < 1 && __headerMaxOffCenter < 1 && (() => { const h=document.querySelector('.ai-topbar').getBoundingClientRect(); const r=[...document.querySelectorAll('.ai-header-brand, .ai-mode-bar, .ai-menu-trigger, .ai-topbar-actions > *')].map(e=>e.getBoundingClientRect()).filter(r=>r.width && r.height); return document.documentElement.scrollWidth <= innerWidth && r.every(a=>a.left >= h.left && a.right <= h.right && a.top >= h.top && a.bottom <= h.bottom) && r.every((a,i)=>r.slice(i+1).every(b=>a.right <= b.left || b.right <= a.left || a.bottom <= b.top || b.bottom <= a.top)); })()");
+      if ([1920, 821, 320].includes(width)) await b.screenshot(`${output}/header-${name}-${width}.png`);
     }
   }
   await b.send("Emulation.setDeviceMetricsOverride", { width: 1440, height: 900, deviceScaleFactor: 1, mobile: false });
