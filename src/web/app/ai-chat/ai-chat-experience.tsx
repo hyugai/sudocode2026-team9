@@ -36,7 +36,7 @@ export function AiChatExperience({ mode }: { mode: AiChatMode }) {
   const historyRef = useRef<HTMLDivElement>(null);
   const busy = c.isLoading || !c.sessionReady;
   const canSend = !busy && c.backendReady && c.cooldownSeconds === 0 && (!!c.input.trim() || !!c.audioFile);
-  const title = c.messages.find(message => message.role === "user")?.text || "Cuộc trò chuyện cùng Synee";
+  const title = c.messages.find(message => message.role === "user")?.text || "Cuộc trò chuyện mới";
   const query = search.trim().toLocaleLowerCase("vi");
   const visibleMessages = c.messages.map((message, index) => ({ ...message, index }))
     .filter(message => !query || message.text.toLocaleLowerCase("vi").includes(query));
@@ -47,7 +47,7 @@ export function AiChatExperience({ mode }: { mode: AiChatMode }) {
     : c.isLoading ? (c.audioFile ? "Đang nhận dạng ghi âm và chờ phản hồi…" : "Đang chờ phản hồi…")
     : !c.backendReady ? "Backend chưa sẵn sàng. Hệ thống đang kiểm tra lại; nội dung vẫn được giữ."
     : c.audioFile ? "Gửi ghi âm để chuyển thành văn bản và nhận phản hồi. Tối đa 25 MB / 120 giây."
-    : !c.input.trim() ? "Nhập tin nhắn hoặc chọn ghi âm để gửi." : "");
+    : "");
 
   useEffect(() => {
     const history = historyRef.current;
@@ -107,7 +107,6 @@ export function AiChatExperience({ mode }: { mode: AiChatMode }) {
         <span className="ai-conversation-icon"><Icon name="chat" /></span>
         <span><strong>{title}</strong><small>{c.messages.length} tin nhắn · phiên hiện tại</small></span>
       </button>
-      <p className="ai-session-note">Hội thoại và bản nháp được giữ trong tab này. File ghi âm được giữ đến khi tải lại trang.</p>
       {search && <button className="ai-search-results" onClick={() => { setDialog(null); historyRef.current?.focus(); }}>{visibleMessages.length} tin nhắn phù hợp · Xem kết quả</button>}
     </nav>
     <div className="ai-sidebar-footer"><button onClick={() => setDialog("profile")} disabled={busy}>
@@ -160,7 +159,7 @@ export function AiChatExperience({ mode }: { mode: AiChatMode }) {
       <section className="ai-main-shell">
         <header className="ai-topbar">
           <div className="ai-topbar-title"><button className="ai-icon-button ai-menu-trigger" aria-label="Mở lịch sử" onClick={() => setDialog("history")}><Icon name="menu" /></button>
-            <div><h1 title={title}>{title}</h1><p role="status"><span className={`ai-status-dot${c.backendReady ? "" : " is-offline"}`} />{!c.sessionReady ? "Đang khôi phục…" : c.voiceActive ? "Đang trò chuyện voice" : c.backendReady ? "Synee đã sẵn sàng" : "Đang kết nối backend…"}</p></div>
+            <h1 className="sr-only">Trò chuyện với Synee AI</h1>
           </div>
           <div className="ai-topbar-actions">
             <button className="ai-icon-button" aria-label="Xuất hội thoại" onClick={exportConversation}><Icon name="share" /></button>
@@ -189,7 +188,7 @@ export function AiChatExperience({ mode }: { mode: AiChatMode }) {
             </div>
             <div className="ai-composer-wrap">
               {c.consultation && <div className="ai-context" role="status">Tư vấn: {c.consultation.name}. {c.audioFile ? "Ngữ cảnh sản phẩm chỉ gửi kèm tin nhắn văn bản." : "Ngữ cảnh sẽ gửi kèm tin nhắn."}</div>}
-              <div id="ai-send-status" className="ai-feedback" aria-live="polite"><p className={c.errorMessage ? "error" : ""} role={c.errorMessage ? "alert" : "status"}>{hint}</p></div>
+              <div id="ai-send-status" className="ai-feedback" aria-live="polite">{hint && <p className={c.errorMessage ? "error" : ""} role={c.errorMessage ? "alert" : "status"}>{hint}</p>}</div>
               {(notice || c.sessionNotice) && <p className="ai-feedback" role="status">{notice || c.sessionNotice}</p>}
               <form className="ai-composer" onSubmit={event => { event.preventDefault(); if (canSend) void c.sendMessage(); }}>
                 <label className="sr-only" htmlFor="ai-message">Tin nhắn cho Synee AI</label>

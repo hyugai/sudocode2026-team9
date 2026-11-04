@@ -105,6 +105,7 @@ try {
   await check("Dashboard send opens the new workspace and sends exactly one real API request", "__test.calls.length === 1 && !document.querySelector('.site-header') && !document.querySelector('.product-grid')");
   await check("Customer identity is preserved across navigation", "__test.calls[0].phone === '0901234567'");
   await check("Workspace exposes only Chat and Voice", "JSON.stringify([...document.querySelectorAll('.ai-mode-bar button')].map(button => button.textContent)) === JSON.stringify(['Chat', 'Voice'])");
+  await check("The workspace omits the session note, ready heading and empty-input instruction", "!document.querySelector('.ai-session-note') && !document.querySelector('.ai-topbar [role=status]') && !document.body.innerText.includes('Synee đã sẵn sàng') && !document.body.innerText.includes('Cuộc trò chuyện cùng Synee') && document.querySelector('#ai-send-status').textContent === '' && getComputedStyle(document.querySelector('#ai-send-status')).display === 'none'");
   await b.evaluate("window.__conversationId = __test.calls[0].conversationId");
   await type("#ai-message", "Giữ bản nháp khi chuyển chế độ");
   await upload();
@@ -251,6 +252,8 @@ try {
   await click(".ai-reset-actions button:last-child");
   await b.wait("!document.querySelector('dialog[open]') && document.querySelectorAll('.ai-message').length === 1");
   await check("Confirmed new conversation resets transcript and draft but keeps customer identity", "document.querySelector('#ai-message').value === '' && document.querySelector('.ai-sidebar-footer strong').textContent === '0901234567'");
+  await check("An empty conversation keeps only its sidebar navigation label and no redundant instruction", "document.querySelector('.ai-conversation-list strong').textContent === 'Cuộc trò chuyện mới' && document.querySelector('#ai-send-status').textContent === '' && !document.body.innerText.includes('Nhập tin nhắn hoặc chọn ghi âm để gửi.')");
+  await b.screenshot(`${output}/chat-clean-desktop.png`);
   await b.evaluate("__test.denyMic = true");
   await mode("realtime");
   await b.wait("!!document.querySelector('.voice-start') && !document.querySelector('.voice-start').disabled");
