@@ -20,8 +20,7 @@ const mode = name => click(`.ai-mode-bar button:nth-child(${name === "text" ? 1 
 const openDashboard = async () => {
   await click(".ai-exit-link");
   await b.wait("location.pathname === '/' && !!document.querySelector('.hero')");
-  // The dashboard's inline widget mounts only while its hero is visible.
-  // Normalize restored scroll before waiting for the widget's input.
+  // Normalize restored scroll before interacting with the dashboard launcher.
   await b.evaluate("window.scrollTo({ top: 0, behavior: 'instant' })");
   await b.wait("!!document.querySelector('#inline-message')");
 };
@@ -36,6 +35,7 @@ const escape = () => b.send("Input.dispatchKeyEvent", { type: "keyDown", key: "E
 
 try {
   await b.send("Page.enable");
+  await b.send("Page.bringToFront");
   await b.send("Emulation.setDeviceMetricsOverride", { width: 1440, height: 900, deviceScaleFactor: 1, mobile: false });
   await b.send("Page.addScriptToEvaluateOnNewDocument", { source: `
     if (!sessionStorage.getItem('ai-chat-test-seeded')) {
@@ -68,7 +68,9 @@ try {
       return originalFetch(input, options);
     };
     Object.defineProperty(navigator.mediaDevices, 'getUserMedia', { configurable: true, value: async () => {
-      state.mic++; return { getTracks: () => [{ stop() { state.stopped++; } }] };
+      state.mic++;
+      if (state.denyMic) throw new Error('Microphone bị từ chối trong kiểm thử.');
+      return { getTracks: () => [{ stop() { state.stopped++; } }] };
     } });
     const node = () => ({ connect() { return this; }, disconnect() {} });
     window.AudioContext = class {
@@ -136,23 +138,48 @@ try {
   await type(".ai-search input", "");
   await b.wait("document.querySelectorAll('.ai-message').length === 7");
   await type("#ai-message", "Giữ nháp với realtime");
+  await upload();
+  await b.wait("!!document.querySelector('audio')");
+  await b.evaluate("window.__audioBeforeVoice = document.querySelector('audio').getAttribute('src')");
   await mode("realtime");
   await b.wait("!!document.querySelector('.voice-start') && !document.querySelector('.voice-start').disabled");
   await check("Realtime mode embeds one LiveKit surface without capturing the microphone on entry", "document.querySelectorAll('.realtime-voice').length === 1 && __test.mic === 0 && __test.voiceRequests.length === 0");
+  await check("Voice owns a full dark viewport without chat input, chat history or sidebars", "document.querySelector('.ai-voice-workspace').getBoundingClientRect().height === innerHeight && !document.querySelector('.ai-composer') && !document.querySelector('.ai-message-list') && !document.querySelector('.ai-sidebar') && !document.querySelector('.ai-desktop-details') && !document.querySelector('input[type=file]') && getComputedStyle(document.body).backgroundColor === 'rgb(5, 8, 17)'");
+  await check("The LiveKit panel is centered across the whole viewport", "(() => { const r=document.querySelector('.realtime-voice').getBoundingClientRect(); return Math.abs(r.left + r.width/2 - innerWidth/2) < 1; })()");
+  await b.screenshot(`${output}/realtime-idle-desktop.png`);
   await click(".voice-start");
   await b.wait("document.querySelector('.voice-wave')?.dataset.lkState === 'listening'");
-  await check("LiveKit uses the working voice client and disables text during the call", "__test.mic === 1 && __test.sockets.length === 1 && document.querySelector('#ai-message').disabled");
+  await check("LiveKit uses the working voice client without rendering a text composer", "__test.mic === 1 && __test.sockets.length === 1 && !document.querySelector('#ai-message')");
   await b.evaluate("__test.sockets[0].emit({ type: 'transcript_update', turn_id: 'one', role: 'user', text: 'Mình cần tai nghe.' }); __test.sockets[0].emit({ type: 'transcript_update', turn_id: 'one', role: 'agent', text: 'Mình hỗ trợ bạn.' })");
   await b.wait("document.querySelectorAll('.voice-line').length === 2");
+  await b.screenshot(`${output}/realtime-connected-desktop.png`);
   await click(".voice-mute");
   await check("Mute sends voice control to the existing socket", "__test.sockets[0].sent.some(value => typeof value === 'string' && JSON.parse(value).type === 'input_audio_end')");
   await b.send("Emulation.setDeviceMetricsOverride", { width: 320, height: 760, deviceScaleFactor: 1, mobile: false });
   await b.screenshot(`${output}/realtime-mobile.png`);
   await check("Realtime layout fits 320px", "document.documentElement.scrollWidth <= innerWidth");
-  await check("Mobile voice controls stay above the composer", "[...document.querySelectorAll('.voice-actions button')].every(button => { const control = button.getBoundingClientRect(), area = document.querySelector('.ai-message-scroll').getBoundingClientRect(); return control.top >= area.top && control.bottom <= area.bottom; })");
+  await check("Mobile voice controls fit within the viewport and both mode buttons remain reachable", "[...document.querySelectorAll('.voice-actions button, .ai-mode-bar button')].every(button => { const r=button.getBoundingClientRect(); return r.top >= 0 && r.bottom <= innerHeight && r.left >= 0 && r.right <= innerWidth; }) && !document.querySelector('.ai-composer')");
   await mode("text");
-  await b.wait("!document.querySelector('.realtime-voice') && !document.querySelector('#ai-message').disabled");
+  await b.wait("!document.querySelector('.realtime-voice') && !!document.querySelector('#ai-message') && !document.querySelector('.ai-send').disabled");
   await check("Changing mode ends the microphone and preserves the draft", "__test.stopped === 1 && document.querySelector('#ai-message').value === 'Giữ nháp với realtime'");
+  await check("Returning to Chat restores the same audio File preview and history", "document.querySelector('audio').getAttribute('src') === __audioBeforeVoice && document.querySelector('.audio-preview').textContent.includes('ghi-am') && document.querySelectorAll('.ai-message').length === 7 && getComputedStyle(document.body).backgroundColor === 'rgb(255, 255, 255)'");
+  await click(".audio-preview button");
+  const longDraft = "Nhu cầu mua sắm cần được giữ khi chuyển chế độ. ".repeat(30);
+  await type("#ai-message", longDraft);
+  await mode("realtime");
+  await b.wait("!!document.querySelector('.ai-voice-workspace')");
+  await mode("text");
+  await b.wait(`document.querySelector('#ai-message')?.value === ${JSON.stringify(longDraft)}`);
+  await check("A long draft recovers its expanded composer after leaving Voice", "document.querySelector('#ai-message').getBoundingClientRect().height === 120 && __test.mic === 1");
+  await type("#ai-message", "Giữ nháp với realtime");
+  await b.evaluate("__test.voiceEnabled = false");
+  await mode("realtime");
+  await b.wait("document.querySelector('.voice-status')?.textContent === 'Voice chưa sẵn sàng'");
+  await check("Unavailable Voice remains dark and allows a return to Chat", "document.querySelector('.voice-start').disabled && !document.querySelector('.ai-mode-bar button:first-child').disabled && !document.querySelector('.ai-composer') && __test.mic === 1");
+  await b.screenshot(`${output}/realtime-unavailable-mobile.png`);
+  await mode("text");
+  await b.wait("!!document.querySelector('#ai-message')");
+  await b.evaluate("__test.voiceEnabled = true");
   await b.evaluate("document.querySelector('.ai-message-scroll').scrollTop = 0");
   await b.screenshot(`${output}/chat-mobile.png`);
   await check("Long conversations and identifiers wrap at 320px", "document.documentElement.scrollWidth <= innerWidth && document.querySelector('#ai-message').getBoundingClientRect().bottom <= innerHeight");
@@ -208,9 +235,12 @@ try {
   await b.send("Emulation.setEmulatedMedia", { features: [{ name: "prefers-reduced-motion", value: "reduce" }] });
   await b.wait("!!document.querySelector('[data-wave-fallback]')");
   await check("Reduced motion uses the LiveKit static fallback", "!document.querySelector('.voice-wave canvas')");
+  await check("Voice has no offline audio picker; upload stays in Chat", "!document.querySelector('input[type=file]') && !document.querySelector('#ai-message')");
+  await mode("text");
+  await b.wait("!!document.querySelector('#ai-message')");
   await upload();
   await b.wait("!document.querySelector('.realtime-voice') && !!document.querySelector('audio')");
-  await check("Attaching audio from idle realtime returns to Chat without starting a call", "__test.mic === 0 && document.querySelector('.ai-mode-bar button:first-child').getAttribute('aria-pressed') === 'true' && document.querySelectorAll('.ai-mode-bar button').length === 2");
+  await check("Chat still accepts offline audio after leaving Voice without starting a call", "__test.mic === 0 && document.querySelector('.ai-mode-bar button:first-child').getAttribute('aria-pressed') === 'true' && document.querySelectorAll('.ai-mode-bar button').length === 2");
   await click(".audio-preview button");
   await upload(0);
   await b.wait("document.querySelector('[role=alert]')?.textContent.includes('25 MB')");
@@ -221,5 +251,18 @@ try {
   await click(".ai-reset-actions button:last-child");
   await b.wait("!document.querySelector('dialog[open]') && document.querySelectorAll('.ai-message').length === 1");
   await check("Confirmed new conversation resets transcript and draft but keeps customer identity", "document.querySelector('#ai-message').value === '' && document.querySelector('.ai-sidebar-footer strong').textContent === '0901234567'");
+  await b.evaluate("__test.denyMic = true");
+  await mode("realtime");
+  await b.wait("!!document.querySelector('.voice-start') && !document.querySelector('.voice-start').disabled");
+  await click(".voice-start");
+  await b.wait("document.querySelector('.realtime-voice [role=alert]')?.textContent.includes('Microphone bị từ chối')");
+  await check("Microphone errors stay readable in the dark Voice surface and permit retry", "!document.querySelector('.voice-start').disabled && getComputedStyle(document.querySelector('.realtime-voice [role=alert]')).color === 'rgb(255, 198, 205)' && __test.voiceRequests.length === 0");
+  await b.screenshot(`${output}/realtime-error-desktop.png`);
+  await b.evaluate("__test.denyMic = false");
+  await click(".voice-start");
+  await b.wait("document.querySelector('.voice-wave')?.dataset.lkState === 'listening'");
+  await openDashboard();
+  await b.wait("__test.stopped === 1");
+  await check("Leaving Voice for the dashboard closes the microphone and socket", "__test.sockets[0].readyState === 3 && __test.voiceRequests.some(request => request.method === 'DELETE') && !document.querySelector('.ai-voice-workspace')");
   console.log("AI chat browser regression complete");
 } finally { await b.close(); }

@@ -51,7 +51,7 @@ export function AiChatExperience({ mode }: { mode: AiChatMode }) {
 
   useEffect(() => {
     const history = historyRef.current;
-    if (history && !query) history.scrollTop = mode === "realtime" ? 0 : history.scrollHeight;
+    if (history && !query) history.scrollTop = history.scrollHeight;
   }, [c.messages, c.isLoading, query, mode]);
 
   useLayoutEffect(() => {
@@ -60,10 +60,11 @@ export function AiChatExperience({ mode }: { mode: AiChatMode }) {
       input.style.height = "27px";
       input.style.height = `${Math.min(input.scrollHeight, 120)}px`;
     }
-  }, [c.input]);
+  }, [c.input, mode]);
 
   const switchMode = (next: AiChatMode) => {
     if (c.isLoading && !c.voiceActive) return;
+    setDialog(null);
     router.replace(`/ai-chat?mode=${next}`, { scroll: false });
   };
   const copy = async (text: string) => {
@@ -134,6 +135,24 @@ export function AiChatExperience({ mode }: { mode: AiChatMode }) {
     <Link href="/account/conversations" className="ai-add-source">Lịch sử & nhật ký chẩn đoán</Link>
   </div>;
 
+  const modeControls = <div className="ai-mode-bar" role="group" aria-label="Chế độ hội thoại">{modes.map(([value, icon, label]) =>
+    <button key={value} aria-pressed={mode === value} className={mode === value ? "active" : ""} disabled={c.isLoading && !c.voiceActive} onClick={() => switchMode(value)}><Icon name={icon} />{label}</button>
+  )}</div>;
+
+  if (mode === "realtime") return <>
+    <a className="skip-link" href="#ai-voice-session">Đến cuộc trò chuyện voice</a>
+    <main className="ai-workspace ai-voice-workspace" aria-labelledby="ai-voice-title">
+      <header className="ai-voice-header">
+        <div className="ai-voice-brand"><span className="ai-brand-mark"><Icon name="spark" /></span><h1 id="ai-voice-title">Synee AI</h1></div>
+        {modeControls}
+        <Link href="/" className="ai-exit-link" aria-label="Trở lại dashboard"><Icon name="arrowLeft" /><span>Dashboard</span></Link>
+      </header>
+      <section id="ai-voice-session" className="ai-voice-session" aria-label="Trò chuyện voice cùng Synee AI" tabIndex={-1}>
+        <VoicePanel apiBase={apiBase} customerPhone={c.customerPhone} onActiveChange={c.setVoiceActive} />
+      </section>
+    </main>
+  </>;
+
   return <>
     <a className="skip-link" href="#ai-message">Đến ô nhập tin nhắn</a>
     <main className="ai-workspace">
@@ -151,12 +170,9 @@ export function AiChatExperience({ mode }: { mode: AiChatMode }) {
         </header>
         <div className="ai-content-row">
           <section className="ai-chat-stage" aria-label="Trò chuyện cùng Synee AI">
-            <div className="ai-mode-bar" role="group" aria-label="Chế độ hội thoại">{modes.map(([value, icon, label]) =>
-              <button key={value} aria-pressed={mode === value} className={mode === value ? "active" : ""} disabled={c.isLoading && !c.voiceActive} onClick={() => switchMode(value)}><Icon name={icon} />{label}</button>
-            )}</div>
+            {modeControls}
             <div className="ai-message-scroll" ref={historyRef} tabIndex={0} aria-label="Nội dung trò chuyện">
-              {mode === "realtime" && <VoicePanel apiBase={apiBase} customerPhone={c.customerPhone} onActiveChange={c.setVoiceActive} />}
-              {mode !== "realtime" && c.messages.length === 1 && !query && <div className="ai-thread-intro"><span className="ai-thread-icon"><Icon name="spark" /></span><h2>Bắt đầu cùng Synee AI</h2><p>Không gian riêng để bạn trò chuyện, tìm hiểu và lựa chọn.</p></div>}
+              {c.messages.length === 1 && !query && <div className="ai-thread-intro"><span className="ai-thread-icon"><Icon name="spark" /></span><h2>Bắt đầu cùng Synee AI</h2><p>Không gian riêng để bạn trò chuyện, tìm hiểu và lựa chọn.</p></div>}
               <div className="ai-message-list" role="log" aria-live="polite" aria-relevant="additions text" aria-label="Tin nhắn cùng Synee">
                 {visibleMessages.map(message => <article key={message.index} className={`ai-message ${message.role === "agent" ? "assistant" : "user"}`}>
                   {message.role === "agent" && <span className="ai-avatar"><Icon name="spark" /></span>}
@@ -183,7 +199,7 @@ export function AiChatExperience({ mode }: { mode: AiChatMode }) {
                 {c.audioFile && <div className="audio-preview"><div><span>{c.audioFile.name}</span><button type="button" disabled={busy} onClick={c.clearAudio}>Bỏ ghi âm</button></div>{c.audioPreviewUrl && <audio controls preload="metadata" src={c.audioPreviewUrl} aria-label="Nghe lại ghi âm" />}</div>}
                 <input ref={fileRef} className="sr-only" tabIndex={-1} type="file" accept=".wav,.mp3,.m4a,.flac,.ogg,.webm,audio/*" aria-label="Chọn file ghi âm" disabled={busy} onChange={event => {
                   const file = event.target.files?.[0];
-                  if (file && c.selectAudio(file) && mode !== "text") switchMode("text");
+                  if (file) c.selectAudio(file);
                   event.target.value = "";
                 }} />
                 <div className="ai-composer-actions"><div><button type="button" aria-label="Tải file audio" title="Tải file audio · Tối đa 25 MB / 120 giây" disabled={busy} onClick={() => fileRef.current?.click()}><Icon name="mic" /></button></div>
