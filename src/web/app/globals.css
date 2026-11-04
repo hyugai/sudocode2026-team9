@@ -99,14 +99,9 @@ main { padding-top: var(--site-header-height); }
 .info-dialog.voice-dialog { width: min(780px, calc(100vw - 32px)); }
 .voice-dialog .dialog-header h2 { font-size: 20px; line-height: 28px; }
 .realtime-voice { display: flex; flex-direction: column; gap: 16px; min-width: 0; margin-top: 12px; }
-.voice-intro, .voice-controls { display: flex; flex-direction: column; gap: 12px; }
-.voice-intro { color: var(--muted); font-size: 13px; }
+.voice-controls { display: flex; flex-direction: column; gap: 12px; }
 .voice-stage { position: relative; overflow: hidden; padding: 18px 20px 22px; border: 1px solid #24322c; border-radius: 20px; color: white; background: radial-gradient(ellipse at 50% 54%, #142c1d 0%, #0a1111 48%, #060a0e 85%); }
-.voice-stage-heading { display: flex; align-items: center; justify-content: space-between; gap: 8px; color: #b8c6bc; font-size: 10px; line-height: 16px; letter-spacing: 1.7px; }
-.voice-live-badge { display: inline-flex; align-items: center; gap: 6px; border: 1px solid #ffffff24; border-radius: 20px; padding: 3px 8px; color: #c5ccc8; letter-spacing: 0; font-size: 11px; white-space: nowrap; }
-.voice-live-badge i { width: 5px; height: 5px; border-radius: 50%; background: #95a39a; }
-.voice-live-badge.connected { color: #aff2bb; border-color: #00ff2633; background: #00ff260a; }
-.voice-live-badge.connected i { background: #00ff26; box-shadow: 0 0 8px #00ff2666; }
+.voice-stage-heading { display: flex; align-items: center; justify-content: center; text-align: center; color: #b8c6bc; font-size: 10px; line-height: 16px; letter-spacing: 1.7px; }
 .voice-wave { width: 100%; height: clamp(140px, 24dvh, 220px); aspect-ratio: auto; pointer-events: none; }
 .voice-stage-caption { text-align: center; }
 .voice-status { color: #f4fff6; font-size: 17px; line-height: 24px; font-weight: 600; }
@@ -123,9 +118,7 @@ main { padding-top: var(--site-header-height); }
 .voice-controls { border-top: 1px solid var(--border); padding-top: 16px; }
 .voice-actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 10px; }
 .voice-actions > button { display: inline-flex; gap: 8px; min-height: 48px; }
-.voice-privacy-note, .voice-scope-note { text-align: center; color: var(--muted); font-size: 11px; line-height: 16px; }
 .voice-dialog .voice-controls p + p { margin-top: 0; }
-.voice-scope-note { color: #737373; }
 .voice-access-code { display: flex; flex-direction: column; gap: 4px; width: 100%; }
 .voice-code-input { width: 100%; min-width: 0; padding: 10px 14px; border: 1px solid var(--border); border-radius: 16px; }
 .voice-actions .voice-start { background: var(--action); color: var(--foreground); }
@@ -136,7 +129,6 @@ main { padding-top: var(--site-header-height); }
   .voice-stage { padding: 14px 12px 18px; }
   .voice-wave { height: 150px; }
   .voice-stage-heading { font-size: 9px; letter-spacing: 1px; }
-  .voice-live-badge { font-size: 10px; }
   .voice-status { font-size: 16px; }
   .voice-line { padding: 8px 12px; }
   .voice-actions > button { padding-inline: 14px; }

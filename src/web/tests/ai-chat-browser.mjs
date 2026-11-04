@@ -183,6 +183,8 @@ try {
   await check("Realtime mode embeds one LiveKit surface without capturing the microphone on entry", "document.querySelectorAll('.realtime-voice').length === 1 && __test.mic === 0 && __test.voiceRequests.length === 0");
   await check("Voice owns a full dark viewport without chat input, chat history or sidebars", "document.querySelector('.ai-voice-workspace').getBoundingClientRect().height === innerHeight && !document.querySelector('.ai-composer') && !document.querySelector('.ai-message-list') && !document.querySelector('.ai-sidebar') && !document.querySelector('.ai-desktop-details') && !document.querySelector('input[type=file]') && getComputedStyle(document.body).backgroundColor === 'rgb(5, 8, 17)'");
   await check("The LiveKit panel is centered across the whole viewport", "(() => { const r=document.querySelector('.realtime-voice').getBoundingClientRect(); return Math.abs(r.left + r.width/2 - innerWidth/2) < 1; })()");
+  await check("Voice omits the introductory copy, footer notes and badge", "!document.querySelector('.voice-intro, .voice-privacy-note, .voice-scope-note, .voice-live-badge') && !document.querySelector('.realtime-voice').innerText.includes('Voice AI')");
+  await check("SYNEE / VOICE is centered at the top of its panel", "(() => { const s=document.querySelector('.voice-stage').getBoundingClientRect(); const t=document.querySelector('.voice-stage-heading span').getBoundingClientRect(); return Math.abs(t.left+t.width/2-s.left-s.width/2)<1; })()");
   await b.screenshot(`${output}/realtime-idle-desktop.png`);
   await click(".voice-start");
   await b.wait("document.querySelector('.voice-wave')?.dataset.lkState === 'listening'");
@@ -196,6 +198,7 @@ try {
   await settleMode();
   await b.screenshot(`${output}/realtime-mobile.png`);
   await check("Realtime layout fits 320px", "document.documentElement.scrollWidth <= innerWidth");
+  await check("The Voice title stays centered at 320px", "(() => { const s=document.querySelector('.voice-stage').getBoundingClientRect(); const t=document.querySelector('.voice-stage-heading span').getBoundingClientRect(); return Math.abs(t.left+t.width/2-s.left-s.width/2)<1; })()");
   await check("Mobile voice controls fit within the viewport and both mode buttons remain reachable", "[...document.querySelectorAll('.voice-actions button, .ai-mode-bar button')].every(button => { const r=button.getBoundingClientRect(); return r.top >= 0 && r.bottom <= innerHeight && r.left >= 0 && r.right <= innerWidth; }) && !document.querySelector('.ai-composer')");
   await watchHeader();
   await mode("text");

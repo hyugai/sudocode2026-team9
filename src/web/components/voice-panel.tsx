@@ -115,11 +115,8 @@ export default function VoicePanel({ apiBase, customerPhone, onActiveChange }: {
 
   return (
     <section aria-label="Voice" className="realtime-voice">
-      <div className="voice-intro">
-        <p>Trò chuyện tự nhiên cùng Synee. Bạn có thể nói chen để đổi ý.</p>
-      </div>
       <div className="voice-stage">
-        <div className="voice-stage-heading"><span>SYNEE / VOICE</span><span className={`voice-live-badge${status === "connected" ? " connected" : ""}`}><i />{status === "connected" ? "Trực tiếp" : "Voice AI"}</span></div>
+        <div className="voice-stage-heading"><span>SYNEE / VOICE</span></div>
         <AgentAudioVisualizerWave
           size="xl"
           color="#00ff26"
@@ -186,8 +183,6 @@ export default function VoicePanel({ apiBase, customerPhone, onActiveChange }: {
             </>
           )}
         </div>
-        <p className="voice-privacy-note">Microphone chỉ hoạt động trong phiên đang kết nối. Đóng cửa sổ sẽ kết thúc phiên voice.</p>
-        <p className="voice-scope-note">Hỗ trợ tư vấn và tra cứu. Đặt hoặc sửa đơn ở chế độ Chat.</p>
       </div>
     </section>
   );
