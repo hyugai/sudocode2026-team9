@@ -23,6 +23,7 @@ const suggestions = [
 ] as const;
 
 export function AiChatExperience({ mode }: { mode: AiChatMode }) {
+  const voiceMode = mode === "realtime";
   const c = useSharedConversation();
   const router = useRouter();
   const [dialog, setDialog] = useState<Dialog>(null);
@@ -63,7 +64,7 @@ export function AiChatExperience({ mode }: { mode: AiChatMode }) {
   }, [c.input, mode]);
 
   const switchMode = (next: AiChatMode) => {
-    if (c.isLoading && !c.voiceActive) return;
+    if (next === mode || (c.isLoading && !c.voiceActive)) return;
     setDialog(null);
     router.replace(`/ai-chat?mode=${next}`, { scroll: false });
   };
@@ -134,42 +135,31 @@ export function AiChatExperience({ mode }: { mode: AiChatMode }) {
     <Link href="/account/conversations" className="ai-add-source">Lịch sử & nhật ký chẩn đoán</Link>
   </div>;
 
-  const modeControls = <div className="ai-mode-bar" role="group" aria-label="Chế độ hội thoại">{modes.map(([value, icon, label]) =>
+  const modeControls = <div className="ai-mode-bar" data-mode={mode} role="group" aria-label="Chế độ hội thoại">{modes.map(([value, icon, label]) =>
     <button key={value} aria-pressed={mode === value} className={mode === value ? "active" : ""} disabled={c.isLoading && !c.voiceActive} onClick={() => switchMode(value)}><Icon name={icon} />{label}</button>
   )}</div>;
 
-  if (mode === "realtime") return <>
-    <a className="skip-link" href="#ai-voice-session">Đến cuộc trò chuyện voice</a>
-    <main className="ai-workspace ai-voice-workspace" aria-labelledby="ai-voice-title">
-      <header className="ai-voice-header">
-        <div className="ai-voice-brand"><span className="ai-brand-mark"><Icon name="spark" /></span><h1 id="ai-voice-title">Synee AI</h1></div>
-        {modeControls}
-        <Link href="/" className="ai-exit-link" aria-label="Trở lại dashboard"><Icon name="arrowLeft" /><span>Dashboard</span></Link>
-      </header>
-      <section id="ai-voice-session" className="ai-voice-session" aria-label="Trò chuyện voice cùng Synee AI" tabIndex={-1}>
-        <VoicePanel apiBase={apiBase} customerPhone={c.customerPhone} onActiveChange={c.setVoiceActive} />
-      </section>
-    </main>
-  </>;
-
   return <>
-    <a className="skip-link" href="#ai-message">Đến ô nhập tin nhắn</a>
-    <main className="ai-workspace">
-      <aside className="ai-sidebar" aria-label="Lịch sử hội thoại">{sidebar}</aside>
+    <a className="skip-link" href={voiceMode ? "#ai-voice-session" : "#ai-message"}>{voiceMode ? "Đến cuộc trò chuyện voice" : "Đến ô nhập tin nhắn"}</a>
+    <main className={`ai-workspace${voiceMode ? " ai-voice-workspace" : ""}`} aria-labelledby="ai-workspace-title">
+      {!voiceMode && <aside className="ai-sidebar" aria-label="Lịch sử hội thoại">{sidebar}</aside>}
       <section className="ai-main-shell">
-        <header className="ai-topbar">
-          <div className="ai-topbar-title"><button className="ai-icon-button ai-menu-trigger" aria-label="Mở lịch sử" onClick={() => setDialog("history")}><Icon name="menu" /></button>
-            <h1 className="sr-only">Trò chuyện với Synee AI</h1>
+        <header className={`ai-topbar${voiceMode ? " ai-voice-header" : ""}`}>
+          <div className={voiceMode ? "ai-voice-brand" : "ai-topbar-title"}>
+            {voiceMode ? <span className="ai-brand-mark"><Icon name="spark" /></span> : <button className="ai-icon-button ai-menu-trigger" aria-label="Mở lịch sử" onClick={() => setDialog("history")}><Icon name="menu" /></button>}
+            <h1 id="ai-workspace-title" className={voiceMode ? undefined : "sr-only"}>{voiceMode ? "Synee AI" : "Trò chuyện với Synee AI"}</h1>
           </div>
+          {modeControls}
           <div className="ai-topbar-actions">
-            <button className="ai-icon-button" aria-label="Xuất hội thoại" onClick={exportConversation}><Icon name="share" /></button>
-            <button className="ai-detail-button" aria-label="Thông tin phiên tư vấn" onClick={() => setDialog("details")}><Icon name="panel" /><span>Thông tin</span></button>
+            {!voiceMode && <button className="ai-icon-button" aria-label="Xuất hội thoại" onClick={exportConversation}><Icon name="share" /></button>}
+            {!voiceMode && <button className="ai-detail-button" aria-label="Thông tin phiên tư vấn" onClick={() => setDialog("details")}><Icon name="panel" /><span>Thông tin</span></button>}
             <Link href="/" className="ai-exit-link" aria-label="Trở lại dashboard"><Icon name="arrowLeft" /><span>Dashboard</span></Link>
           </div>
         </header>
-        <div className="ai-content-row">
+        {voiceMode ? <section id="ai-voice-session" className="ai-voice-session" aria-label="Trò chuyện voice cùng Synee AI" tabIndex={-1}>
+          <VoicePanel apiBase={apiBase} customerPhone={c.customerPhone} onActiveChange={c.setVoiceActive} />
+        </section> : <div className="ai-content-row">
           <section className="ai-chat-stage" aria-label="Trò chuyện cùng Synee AI">
-            {modeControls}
             <div className="ai-message-scroll" ref={historyRef} tabIndex={0} aria-label="Nội dung trò chuyện">
               {c.messages.length === 1 && !query && <div className="ai-thread-intro"><span className="ai-thread-icon"><Icon name="spark" /></span><h2>Bắt đầu cùng Synee AI</h2><p>Không gian riêng để bạn trò chuyện, tìm hiểu và lựa chọn.</p></div>}
               <div className="ai-message-list" role="log" aria-live="polite" aria-relevant="additions text" aria-label="Tin nhắn cùng Synee">
@@ -209,9 +199,10 @@ export function AiChatExperience({ mode }: { mode: AiChatMode }) {
             </div>
           </section>
           <aside className="ai-desktop-details" aria-label="Thông tin phiên tư vấn">{details}</aside>
-        </div>
+        </div>}
       </section>
     </main>
+    {!voiceMode && <>
     {dialog === "history" && <InfoDialog title="Hội thoại trong tab này" className="ai-history-dialog" onClose={() => setDialog(null)}><div className="ai-sidebar">{sidebar}</div></InfoDialog>}
     {dialog === "details" && <InfoDialog title="Thông tin & ngữ cảnh" drawer className="ai-details-dialog" onClose={() => setDialog(null)}>{details}</InfoDialog>}
     {dialog === "profile" && <InfoDialog title="Thông tin tư vấn" drawer onClose={() => setDialog(null)}><GuestProfile idPrefix="ai-customer" /></InfoDialog>}
@@ -221,5 +212,6 @@ export function AiChatExperience({ mode }: { mode: AiChatMode }) {
       <div className="ai-reset-actions"><button className="commerce-secondary" disabled={busy} onClick={exportConversation}>Xuất hội thoại</button><button className="commerce-secondary" disabled={busy} onClick={() => void startNew()}>{c.isLoading ? "Đang kết thúc…" : "Bắt đầu mới"}</button></div>
       {resetError && <p className="error" role="alert">{resetError}</p>}
     </InfoDialog>}
+    </>}
   </>;
 }

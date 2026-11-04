@@ -17,6 +17,12 @@ const type = (selector, value) => b.evaluate(`(() => {
 })()`);
 const check = async (name, expression) => { assert.ok(await b.evaluate(expression), name); console.log("PASS", name); };
 const mode = name => click(`.ai-mode-bar button:nth-child(${name === "text" ? 1 : 2})`);
+const settleMode = () => b.evaluate(`(async () => {
+  await new Promise(requestAnimationFrame);
+  await Promise.all(document.querySelector('.ai-workspace').getAnimations({ subtree: true })
+    .filter(animation => animation.effect?.getTiming().iterations !== Infinity)
+    .map(animation => animation.finished.catch(() => {})));
+})()`);
 const openDashboard = async () => {
   await click(".ai-exit-link");
   await b.wait("location.pathname === '/' && !!document.querySelector('.hero')");
@@ -105,6 +111,7 @@ try {
   await check("Dashboard send opens the new workspace and sends exactly one real API request", "__test.calls.length === 1 && !document.querySelector('.site-header') && !document.querySelector('.product-grid')");
   await check("Customer identity is preserved across navigation", "__test.calls[0].phone === '0901234567'");
   await check("Workspace exposes only Chat and Voice", "JSON.stringify([...document.querySelectorAll('.ai-mode-bar button')].map(button => button.textContent)) === JSON.stringify(['Chat', 'Voice'])");
+  await check("Chat and Voice are centered inside the header with no second mode row", "!!document.querySelector('.ai-topbar > .ai-mode-bar') && !document.querySelector('.ai-chat-stage .ai-mode-bar') && (() => { const h=document.querySelector('.ai-topbar').getBoundingClientRect(); const m=document.querySelector('.ai-mode-bar').getBoundingClientRect(); return Math.abs(h.left+h.width/2-m.left-m.width/2) < 1; })()");
   await check("The workspace omits the session note, ready heading and empty-input instruction", "!document.querySelector('.ai-session-note') && !document.querySelector('.ai-topbar [role=status]') && !document.body.innerText.includes('Synee đã sẵn sàng') && !document.body.innerText.includes('Cuộc trò chuyện cùng Synee') && document.querySelector('#ai-send-status').textContent === '' && getComputedStyle(document.querySelector('#ai-send-status')).display === 'none'");
   await b.evaluate("window.__conversationId = __test.calls[0].conversationId");
   await type("#ai-message", "Giữ bản nháp khi chuyển chế độ");
@@ -142,8 +149,11 @@ try {
   await upload();
   await b.wait("!!document.querySelector('audio')");
   await b.evaluate("window.__audioBeforeVoice = document.querySelector('audio').getAttribute('src')");
+  await b.evaluate("window.__modeControlBeforeVoice = document.querySelector('.ai-mode-bar'); window.__modeHeaderBeforeVoice = document.querySelector('.ai-topbar'); window.__indicatorBeforeVoice = getComputedStyle(__modeControlBeforeVoice, '::before').transform");
   await mode("realtime");
   await b.wait("!!document.querySelector('.voice-start') && !document.querySelector('.voice-start').disabled");
+  await settleMode();
+  await check("Switching modes preserves the header, selector and keyboard focus while sliding the active pill", "__modeControlBeforeVoice === document.querySelector('.ai-mode-bar') && __modeHeaderBeforeVoice === document.querySelector('.ai-topbar') && document.activeElement === document.querySelector('.ai-mode-bar button:last-child') && getComputedStyle(__modeControlBeforeVoice, '::before').transform !== __indicatorBeforeVoice");
   await check("Realtime mode embeds one LiveKit surface without capturing the microphone on entry", "document.querySelectorAll('.realtime-voice').length === 1 && __test.mic === 0 && __test.voiceRequests.length === 0");
   await check("Voice owns a full dark viewport without chat input, chat history or sidebars", "document.querySelector('.ai-voice-workspace').getBoundingClientRect().height === innerHeight && !document.querySelector('.ai-composer') && !document.querySelector('.ai-message-list') && !document.querySelector('.ai-sidebar') && !document.querySelector('.ai-desktop-details') && !document.querySelector('input[type=file]') && getComputedStyle(document.body).backgroundColor === 'rgb(5, 8, 17)'");
   await check("The LiveKit panel is centered across the whole viewport", "(() => { const r=document.querySelector('.realtime-voice').getBoundingClientRect(); return Math.abs(r.left + r.width/2 - innerWidth/2) < 1; })()");
@@ -157,13 +167,16 @@ try {
   await click(".voice-mute");
   await check("Mute sends voice control to the existing socket", "__test.sockets[0].sent.some(value => typeof value === 'string' && JSON.parse(value).type === 'input_audio_end')");
   await b.send("Emulation.setDeviceMetricsOverride", { width: 320, height: 760, deviceScaleFactor: 1, mobile: false });
+  await settleMode();
   await b.screenshot(`${output}/realtime-mobile.png`);
   await check("Realtime layout fits 320px", "document.documentElement.scrollWidth <= innerWidth");
   await check("Mobile voice controls fit within the viewport and both mode buttons remain reachable", "[...document.querySelectorAll('.voice-actions button, .ai-mode-bar button')].every(button => { const r=button.getBoundingClientRect(); return r.top >= 0 && r.bottom <= innerHeight && r.left >= 0 && r.right <= innerWidth; }) && !document.querySelector('.ai-composer')");
   await mode("text");
   await b.wait("!document.querySelector('.realtime-voice') && !!document.querySelector('#ai-message') && !document.querySelector('.ai-send').disabled");
+  await settleMode();
   await check("Changing mode ends the microphone and preserves the draft", "__test.stopped === 1 && document.querySelector('#ai-message').value === 'Giữ nháp với realtime'");
   await check("Returning to Chat restores the same audio File preview and history", "document.querySelector('audio').getAttribute('src') === __audioBeforeVoice && document.querySelector('.audio-preview').textContent.includes('ghi-am') && document.querySelectorAll('.ai-message').length === 7 && getComputedStyle(document.body).backgroundColor === 'rgb(255, 255, 255)'");
+  await check("The same mode selector returns to the Chat position", "__modeControlBeforeVoice === document.querySelector('.ai-mode-bar') && getComputedStyle(__modeControlBeforeVoice, '::before').transform === __indicatorBeforeVoice");
   await click(".audio-preview button");
   const longDraft = "Nhu cầu mua sắm cần được giữ khi chuyển chế độ. ".repeat(30);
   await type("#ai-message", longDraft);
@@ -236,6 +249,7 @@ try {
   await b.send("Emulation.setEmulatedMedia", { features: [{ name: "prefers-reduced-motion", value: "reduce" }] });
   await b.wait("!!document.querySelector('[data-wave-fallback]')");
   await check("Reduced motion uses the LiveKit static fallback", "!document.querySelector('.voice-wave canvas')");
+  await check("Reduced motion also disables layout, panel and selector animations", "getComputedStyle(document.querySelector('.ai-workspace')).transitionDuration === '0s' && getComputedStyle(document.querySelector('.ai-voice-session')).animationName === 'none' && getComputedStyle(document.querySelector('.ai-mode-bar'), '::before').transitionDuration === '0s'");
   await check("Voice has no offline audio picker; upload stays in Chat", "!document.querySelector('input[type=file]') && !document.querySelector('#ai-message')");
   await mode("text");
   await b.wait("!!document.querySelector('#ai-message')");
@@ -254,6 +268,17 @@ try {
   await check("Confirmed new conversation resets transcript and draft but keeps customer identity", "document.querySelector('#ai-message').value === '' && document.querySelector('.ai-sidebar-footer strong').textContent === '0901234567'");
   await check("An empty conversation keeps only its sidebar navigation label and no redundant instruction", "document.querySelector('.ai-conversation-list strong').textContent === 'Cuộc trò chuyện mới' && document.querySelector('#ai-send-status').textContent === '' && !document.body.innerText.includes('Nhập tin nhắn hoặc chọn ghi âm để gửi.')");
   await b.screenshot(`${output}/chat-clean-desktop.png`);
+  for (const width of [821, 601, 320]) {
+    await b.send("Emulation.setDeviceMetricsOverride", { width, height: 760, deviceScaleFactor: 1, mobile: false });
+    for (const name of ["realtime", "text"]) {
+      await mode(name);
+      await b.wait(name === "realtime" ? "!!document.querySelector('.ai-voice-session')" : "!!document.querySelector('.ai-composer')");
+      await settleMode();
+      await check(`Header controls fit without overlap at ${width}px in ${name}`, "(() => { const h=document.querySelector('.ai-topbar').getBoundingClientRect(); const r=[...document.querySelector('.ai-topbar').children].map(e=>e.getBoundingClientRect()); return document.documentElement.scrollWidth <= innerWidth && r.every(a=>a.left >= h.left && a.right <= h.right && a.top >= h.top && a.bottom <= h.bottom) && r.every((a,i)=>r.slice(i+1).every(b=>a.right <= b.left || b.right <= a.left || a.bottom <= b.top || b.bottom <= a.top)); })()");
+      if (width === 320 || width === 821) await b.screenshot(`${output}/header-${name}-${width}.png`);
+    }
+  }
+  await b.send("Emulation.setDeviceMetricsOverride", { width: 1440, height: 900, deviceScaleFactor: 1, mobile: false });
   await b.evaluate("__test.denyMic = true");
   await mode("realtime");
   await b.wait("!!document.querySelector('.voice-start') && !document.querySelector('.voice-start').disabled");
