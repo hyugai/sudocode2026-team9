@@ -26,7 +26,7 @@
   --text-body: 14px;
   --text-input: 16px;
   --text-heading: 20px;
-  --site-header-height: 104px;
+  --site-header-height: 88px;
 }
 @theme inline {
   --color-background: var(--background);
@@ -34,7 +34,7 @@
   --font-sans: var(--font-inter);
 }
 * { box-sizing: border-box; }
-html { scroll-behavior: smooth; scroll-padding-top: 120px; }
+html { scroll-behavior: smooth; scroll-padding-top: calc(var(--site-header-height) + 16px); }
 body { margin: 0; background: var(--surface); color: var(--foreground); font-family: var(--font-body); font-size: var(--text-body); line-height: 22px; }
 button, input, textarea { font: inherit; }
 button, a { -webkit-tap-highlight-color: transparent; }
@@ -49,20 +49,22 @@ h1, h2, h3, h4, p { margin: 0; }
 .container { width: min(1200px, calc(100% - 48px)); margin-inline: auto; }
 .skip-link { position: fixed; left: 16px; top: -80px; padding: 12px; z-index: 100; background: white; color: black; border-radius: 8px; }
 .skip-link:focus { top: 12px; }
-.site-header { position: fixed; inset: 0 0 auto; height: var(--site-header-height); z-index: 30; background: var(--brand); color: white; }
-.header-inner { display: grid; grid-template-columns: 224px minmax(0, 1fr) 224px; gap: 32px; height: var(--site-header-height); align-items: end; padding-block: 12px 14px; }
+.site-header { position: fixed; inset: 0 0 auto; height: var(--site-header-height); z-index: 30; background: var(--brand); color: white; box-shadow: 0 1px 0 #ffffff14; }
+.header-inner { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 544px) minmax(0, 1fr); gap: 24px; height: var(--site-header-height); align-items: center; padding-block: 16px; }
 .header-left { display: flex; align-items: center; height: 48px; }
-.header-left a { display: flex; align-items: center; }
+.header-left a { display: flex; align-items: center; min-height: 44px; }
+.header-left img { width: 136px; height: auto; }
 .product-search { display: flex; align-items: center; gap: 12px; height: 48px; padding: 4px 16px; border-radius: 8px; background: white; color: var(--muted); min-width: 0; }
 .product-search input { border: 0; background: transparent; flex: 1; width: 0; min-width: 0; height: 40px; color: var(--foreground); }
 .product-search input:focus { outline: 0; }
 .product-search:focus-within { outline: 2px solid var(--cyan); outline-offset: 3px; }
 .product-search button { display: flex; align-items: center; justify-content: center; gap: 8px; flex: none; height: 40px; border-radius: 30px; padding: 0 12px; background: var(--brand-soft); color: var(--brand-strong); font-weight: 600; }
-.header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
-.utility-nav { display: flex; gap: 4px; border: 1px solid white; border-radius: 999px; padding: 0 2px; height: 22px; }
-.utility-nav button { background: transparent; color: white; padding: 0 8px; font-size: 12px; line-height: 18px; white-space: nowrap; }
+.header-right { display: flex; align-items: center; justify-content: flex-end; gap: 16px; }
+.utility-nav { display: flex; flex: none; border: 1px solid #ffffff30; border-radius: 12px; min-height: 44px; }
+.utility-nav button { background: transparent; color: white; padding: 0 12px; min-height: 42px; font-size: var(--text-body); line-height: 20px; white-space: nowrap; border-radius: 11px; }
 .utility-nav button:hover { color: var(--cyan); }
-.commerce-actions { display: flex; align-items: center; justify-content: flex-end; gap: 32px; height: 48px; }
+.commerce-actions { display: flex; align-items: center; justify-content: flex-end; gap: 20px; height: 48px; }
+.commerce-actions > a { min-height: 44px; }
 .commerce-actions > button, .commerce-actions .account-trigger { display: flex; align-items: center; gap: 8px; min-height: 44px; padding: 0; background: transparent; color: white; font-weight: 600; white-space: nowrap; }
 .commerce-actions > button:hover, .commerce-actions .account-trigger:hover { color: var(--cyan); }
 .account-menu { position: relative; flex: none; }
@@ -75,14 +77,20 @@ h1, h2, h3, h4, p { margin: 0; }
 .account-quick-links > button:disabled { color: var(--muted); opacity: 1; }
 .account-quick-links > p { padding: 0 12px 4px; color: var(--muted); font-size: var(--text-caption); line-height: 18px; }
 main { padding-top: var(--site-header-height); }
-.hero { isolation: isolate; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: calc(100vh - var(--site-header-height)); min-height: calc(100dvh - var(--site-header-height)); gap: 24px; padding: 32px 24px; background: linear-gradient(170.67deg, #050811 10.99%, #080f22 53.901%, #091528 89.01%); }
-.hero-grid { position: absolute; inset: 0; z-index: -1; opacity: .4; background: url('/figma/a-imgOfficialGridBgPngCoverCenterBottom40.png') center bottom / cover no-repeat; pointer-events: none; }
+.hero { isolation: isolate; position: relative; display: flex; flex-direction: column; align-items: center; min-height: calc(100vh - var(--site-header-height)); min-height: calc(100dvh - var(--site-header-height)); padding: 32px 24px max(20px, env(safe-area-inset-bottom)); background: linear-gradient(170.67deg, #050811 10.99%, #080f22 53.901%, #091528 89.01%); }
+.hero-content { display: flex; flex: 1; flex-direction: column; align-items: center; justify-content: center; gap: 24px; width: 100%; }
+.hero-backdrop { position: absolute; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+.hero-backdrop::before { content: ""; position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 40%, #5b57a614, transparent 65%); }
+.hero-grid { position: absolute; inset: -16px; opacity: .35; background: url('/figma/a-imgOfficialGridBgPngCoverCenterBottom40.png') center bottom / cover no-repeat; pointer-events: none; }
+.hero-cursor-glow { position: absolute; top: 0; left: 0; width: 760px; height: 760px; border-radius: 50%; background: radial-gradient(circle, #56c0ee26 0%, #5b57a622 30%, transparent 68%); opacity: 0; transition: opacity .35s ease; will-change: transform; }
+.hero-backdrop[data-pointer-active=true] .hero-cursor-glow { opacity: 1; }
+.hero-backdrop:not([data-pointer-active=true]) .hero-grid { transition: transform .5s ease; }
 .hero-copy { display: flex; flex-direction: column; gap: 12px; text-align: center; color: white; width: min(880px, 100%); }
 .hero h1 { font-size: 36px; font-weight: 600; line-height: 44px; text-shadow: 0 2px 10px rgba(140, 225, 245, .55); }
 .hero-copy > p { font-size: 18px; line-height: 26px; }
 .inline-chat-mount { width: min(880px, 100%); min-height: 420px; }
 .inline-chat-mount.has-audio { min-height: 520px; }
-.browse-action { height: 36px; display: flex; align-items: center; justify-content: center; gap: 8px; color: white; font-weight: 600; }
+.browse-action { flex: none; min-height: 44px; margin-top: 32px; display: flex; align-items: center; justify-content: center; gap: 8px; color: white; font-weight: 600; }
 .browse-action:hover { color: var(--cyan); }
 .chat-panel { width: 100%; height: 420px; display: flex; flex-direction: column; border: 0; outline: 1px solid var(--border); outline-offset: -1px; border-radius: 24px; background: white; color: var(--foreground); box-shadow: var(--chat-shadow); overflow: hidden; }
 .chat-header { position: relative; flex: 0 0 64px; display: flex; align-items: center; justify-content: center; padding: 12px 24px; background: white; }
@@ -293,9 +301,8 @@ main:has(.product-detail) { background: var(--brand-soft); }
 .debug-logs pre { max-height: 200px; overflow: auto; background: var(--brand-soft); padding: 12px; font-size: 12px; white-space: pre-wrap; overflow-wrap: anywhere; }
 .debug-logs details { margin-top: 12px; }
 @media (max-width: 1100px) {
-  .header-inner { grid-template-columns: 184px minmax(0, 1fr) 184px; gap: 20px; }
+  .header-inner { grid-template-columns: 136px minmax(0, 1fr) auto; gap: 20px; }
   .commerce-actions { gap: 16px; }
-  .utility-nav button { padding-inline: 4px; }
   .product-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
 @media (max-width: 760px) {
@@ -303,6 +310,7 @@ main:has(.product-detail) { background: var(--brand-soft); }
   .container { width: calc(100% - 32px); }
   .header-inner { grid-template-columns: 1fr auto; grid-template-rows: 48px 48px; gap: 12px; padding-block: 12px 16px; }
   .header-left { grid-column: 1; grid-row: 1; }
+  .header-left img { width: 120px; }
   .header-right { grid-column: 2; grid-row: 1; }
   .utility-nav { display: none; }
   .commerce-actions { gap: 12px; }
@@ -310,7 +318,8 @@ main:has(.product-detail) { background: var(--brand-soft); }
   .commerce-actions > a > span, .commerce-actions .account-trigger > span { display: none; }
   .product-search { grid-row: 2; grid-column: 1 / -1; }
   html { scroll-padding-top: 148px; }
-  .hero { padding: 28px 16px; }
+  .hero { padding: 24px 16px max(16px, env(safe-area-inset-bottom)); }
+  .browse-action { margin-top: 24px; }
   .hero h1 { font-size: 28px; line-height: 36px; }
   .hero-copy > p { font-size: 16px; line-height: 24px; }
   .chat-body { padding: 16px; }
@@ -350,6 +359,10 @@ main:has(.product-detail) { background: var(--brand-soft); }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}
+@media (prefers-reduced-motion: reduce), (hover: none), (pointer: coarse) {
+  .hero-cursor-glow { display: none; }
+  .hero-grid { transform: none !important; }
 }
 
 /* Purchase screens reuse the approved commerce tokens and SUDO CODE controls. */
@@ -507,7 +520,7 @@ main:has(.account-page) { background: var(--brand-soft); }
 @media (min-width: 901px) and (max-width: 1279px) {
   .pdp-layout.with-consultation .pdp-overview { grid-template-columns: minmax(0, 1fr); }
 }
-.pdp-chat { position: sticky; top: 120px; margin-block: 32px; min-width: 0; scroll-margin-top: 120px; }
+.pdp-chat { position: sticky; top: calc(var(--site-header-height) + 16px); margin-block: 32px; min-width: 0; scroll-margin-top: calc(var(--site-header-height) + 16px); }
 .pdp-chat .chat-panel.expanded { height: min(760px, calc(100dvh - 144px)); min-height: 500px; box-shadow: var(--chat-shadow); }
 .pdp-chat .compact .chat-body { min-height: 0; }
 .pdp-chat .compact .conversation-history { max-height: none; flex: 1; }

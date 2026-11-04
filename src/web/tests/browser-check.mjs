@@ -45,7 +45,7 @@ try {
   const geometry = await evaluate(`(() => {const r=s=>{const b=document.querySelector(s).getBoundingClientRect();return{x:b.x,y:b.y,w:b.width,h:b.height}};return{chat:r('#inline-chat'),hero:r('.hero'),search:r('.product-search'),header:r('.site-header'),card:r('.product-card'),grid:getComputedStyle(document.querySelector('.product-grid')).gridTemplateColumns,images:[...document.images].map(i=>({src:i.getAttribute('src'),w:i.getBoundingClientRect().width,h:i.getBoundingClientRect().height}))}})()`);
   await writeFile(`${output}/desktop-geometry.json`, JSON.stringify(geometry, null, 2));
   await snapshot("after-desktop-A");
-  check("Desktop inline 880 × 420 and dark hero fills the first viewport below the 104px header", geometry.chat.w === 880 && geometry.chat.h === 420 && geometry.hero.h >= 900 - geometry.header.h && geometry.header.h === 104);
+  check("Desktop inline 880 × 420 and dark hero fills the first viewport below the 88px header", geometry.chat.w === 880 && geometry.chat.h === 420 && geometry.hero.h >= 900 - geometry.header.h && geometry.header.h === 88);
   check("Search is centered in the viewport", Math.abs(geometry.search.x + geometry.search.w / 2 - 720) < 1);
   check("Five 224px product columns", geometry.grid.split(" ").length === 5 && geometry.card.w === 224);
   check("Every visible asset loads from local files", geometry.images.every(i => i.src.startsWith("/figma/") && i.w > 0 && i.h > 0));
