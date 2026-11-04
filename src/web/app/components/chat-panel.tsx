@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useEffect, useLayoutEffect, useRef } from "react";
 import type { Conversation } from "@/utils/use-conversation";
+import { ChatRecommendations } from "./chat-recommendations";
 
 const paths = {
   search: "a-imgFrame.svg", searchPurple: "a-imgFrame1.svg",
@@ -37,6 +38,7 @@ export function ChatPanel({ conversation: c, compact = false, expanded = false, 
   const fileRef = useRef<HTMLInputElement>(null);
   const prefix = compact ? "floating" : "inline";
   const statusId = `${prefix}-status`;
+  const dashboard = !compact && !!onOpenFullChat;
   useEffect(() => {
     const history = historyRef.current;
     if (history) history.scrollTop = history.scrollHeight;
@@ -54,11 +56,9 @@ export function ChatPanel({ conversation: c, compact = false, expanded = false, 
     void c.sendMessage();
     onOpenFullChat?.("text");
   };
-  const prompts = compact
-    ? [{ label: "So sánh nhanh", text: "Hãy giúp mình so sánh các sản phẩm phù hợp." }, { label: "Xem gợi ý", text: "Gợi ý sản phẩm phù hợp với nhu cầu của mình." }]
-    : [{ label: "Tai nghe dưới 3 triệu", text: "Mình muốn tìm tai nghe không dây dưới 3 triệu." }, { label: "Quà tặng dưới 500k", text: "Mình muốn tìm quà tặng dưới 500 nghìn." }, { label: "So sánh sản phẩm", text: "Hãy giúp mình so sánh các sản phẩm phù hợp." }];
+  const prompts = [{ label: "So sánh nhanh", text: "Hãy giúp mình so sánh các sản phẩm phù hợp." }, { label: "Xem gợi ý", text: "Gợi ý sản phẩm phù hợp với nhu cầu của mình." }];
 
-  return <section id={compact ? "floating-chat" : "inline-chat"} aria-label={`Synee AI — ${expanded ? "tư vấn sản phẩm" : compact ? "trò chuyện thu gọn" : "trợ lý mua sắm"}`} className={`chat-panel ${compact ? "compact" : ""} ${expanded ? "expanded" : ""} ${c.audioFile ? "has-audio" : ""}`}>
+  return <section id={compact ? "floating-chat" : "inline-chat"} aria-label={`Synee AI — ${expanded ? "tư vấn sản phẩm" : compact ? "trò chuyện thu gọn" : "trợ lý mua sắm"}`} className={`chat-panel ${dashboard ? "dashboard-chat" : ""} ${compact ? "compact" : ""} ${expanded ? "expanded" : ""} ${c.audioFile ? "has-audio" : ""}`}>
     <div className="chat-header">
       <div className="mode-toggle" role="group" aria-label="Chế độ trò chuyện">
         <button type="button" disabled={c.isLoading} aria-pressed={!voicePreview} className={!voicePreview ? "selected" : ""} onClick={() => onModeChange(false)}>Chat</button>
@@ -69,23 +69,28 @@ export function ChatPanel({ conversation: c, compact = false, expanded = false, 
     </div>
     <div className="chat-body">
       {c.consultation && <div className="consultation-context" role="status"><p>Tư vấn: {c.consultation.name} · {c.consultation.sku} · {c.consultation.price} · SL {c.consultation.quantity}</p><p>{c.audioFile ? "Ngữ cảnh này không gửi kèm file ghi âm; dùng tin nhắn văn bản để hỏi theo sản phẩm." : "Thông tin sản phẩm sẽ đi kèm khi bạn gửi tin nhắn văn bản."}</p><button type="button" className="text-link" disabled={c.isLoading} onClick={() => c.setConsultation(null)}>Bỏ ngữ cảnh sản phẩm</button></div>}
-      <div className="conversation-history" ref={historyRef} role="log" aria-label="Nội dung trò chuyện" aria-live="polite" aria-relevant="additions text" tabIndex={0}>
+      {!dashboard && <div className="conversation-history" ref={historyRef} role="log" aria-label="Nội dung trò chuyện" aria-live="polite" aria-relevant="additions text" tabIndex={0}>
         {c.messages.map((message, index) => <div className={`message ${message.role}`} key={index}>
           {message.role === "agent" && <span className="synee-avatar" aria-label="Synee AI"><Asset name={compact ? "compactSparkle" : "sparkle"} /></span>}
           <p className="message-bubble">{message.text}</p>
         </div>)}
         {c.isLoading && <div className="message agent"><span className="synee-avatar"><Asset name={compact ? "compactSparkle" : "sparkle"} /></span><span className="typing" aria-label="Synee AI đang xử lý"><i /><i /><i /></span></div>}
-      </div>
+      </div>}
       <div id={statusId} className="chat-status" aria-live="polite">
+        {dashboard && c.sessionNotice && <p role="status">{c.sessionNotice}</p>}
         {c.errorMessage ? <p role="alert" className="error">{c.errorMessage}</p>
           : c.cooldownSeconds > 0 ? <p role="status">Dịch vụ hội thoại đang tạm giới hạn. Có thể gửi tiếp sau {c.cooldownSeconds} giây.</p>
           : c.isLoading ? <p role="status">{c.audioFile ? "Đang nhận dạng ghi âm và chờ phản hồi…" : "Đang chờ phản hồi…"}</p>
           : !c.backendReady ? <p role="status">Đang chờ kết nối backend sẵn sàng. Hệ thống sẽ tự kiểm tra lại…</p>
           : null}
       </div>
-      <div className="suggestions" aria-label="Gợi ý trò chuyện">
+      {dashboard ? <ChatRecommendations disabled={c.isLoading || !c.sessionReady || !!c.audioFile} onSelect={text => {
+        if (c.isLoading || !c.sessionReady || c.audioFile) return;
+        c.setInput(text);
+        onOpenFullChat?.("text");
+      }} /> : <div className="suggestions" aria-label="Gợi ý trò chuyện">
         {prompts.map(p => <button key={p.label} className="suggestion" disabled={c.isLoading || !!c.audioFile} onClick={() => { c.setInput(p.text); inputRef.current?.focus(); }}>{p.label}</button>)}
-      </div>
+      </div>}
       <form className="composer" onSubmit={e => { e.preventDefault(); submit(); }}>
         <label className="sr-only" htmlFor={`${prefix}-message`}>Tin nhắn cho Synee AI</label>
         <textarea id={`${prefix}-message`} ref={inputRef} rows={1} value={c.input} onChange={e => c.setInput(e.target.value)} disabled={c.isLoading || !!c.audioFile} placeholder={c.audioFile ? "Đã chọn ghi âm cho lượt thoại này" : "Bạn đang tìm gì hôm nay?"} aria-describedby={statusId}
@@ -107,7 +112,7 @@ export function ChatPanel({ conversation: c, compact = false, expanded = false, 
           </button>
         </div>
       </form>
-      <p className="resume-prompt">{c.sessionNotice || "Hội thoại được giữ trong tab này."} <button onClick={onAccount} className="text-link">Thông tin tư vấn</button></p>
+      {!dashboard && <p className="resume-prompt">{c.sessionNotice || "Hội thoại được giữ trong tab này."} <button onClick={onAccount} className="text-link">Thông tin tư vấn</button></p>}
     </div>
   </section>;
 }

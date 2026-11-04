@@ -42,12 +42,23 @@ export default function Storefront({ product, catalogProducts = [], catalogError
   useEffect(() => {
     const target = inlineRef.current;
     if (!target) return;
-    const observer = new IntersectionObserver(([entry]) => {
-      setInlineVisible(entry.isIntersecting);
-      if (entry.isIntersecting) setFloatingOpen(false);
-    }, { root: null, threshold: 0, rootMargin: "0px" });
-    observer.observe(target);
-    return () => observer.disconnect();
+    const header = document.querySelector(".site-header");
+    let observer: IntersectionObserver;
+    const observe = () => {
+      observer?.disconnect();
+      // Content behind the sticky header is no longer visible to the user.
+      const headerHeight = header?.getBoundingClientRect().height ?? 0;
+      observer = new IntersectionObserver(([entry]) => {
+        const visible = entry.isIntersecting && entry.intersectionRect.height > 0;
+        setInlineVisible(visible);
+        if (visible) setFloatingOpen(false);
+      }, { root: null, threshold: 0, rootMargin: `-${headerHeight}px 0px 0px` });
+      observer.observe(target);
+    };
+    const headerObserver = new ResizeObserver(observe);
+    if (header) headerObserver.observe(header);
+    observe();
+    return () => { observer.disconnect(); headerObserver.disconnect(); };
   }, []);
 
   const closeFloating = () => {
@@ -143,8 +154,8 @@ export default function Storefront({ product, catalogProducts = [], catalogError
         <HeroBackdrop />
         <div className="hero-content">
           <div className="hero-copy"><h1 id="hero-heading">Synee nhớ điều bạn cần, đồng hành đến khi nhận.</h1><p>Tư vấn tận tâm, giao hàng tận tay.</p></div>
-          <div ref={inlineRef} className={`inline-chat-mount ${conversation.audioFile ? "has-audio" : ""}`}>
-            {inlineVisible !== false && <ChatPanel conversation={conversation} voicePreview={voicePreview} onModeChange={setVoicePreview} onOpenFullChat={openFullChat} onAccount={openAccount} />}
+          <div ref={inlineRef} className="inline-chat-mount">
+            <ChatPanel conversation={conversation} voicePreview={voicePreview} onModeChange={setVoicePreview} onOpenFullChat={openFullChat} onAccount={openAccount} />
           </div>
         </div>
         <a className="browse-action" href="#catalog"><Asset name="down" />Khám phá sản phẩm</a>
