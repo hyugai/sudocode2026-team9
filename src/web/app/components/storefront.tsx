@@ -6,7 +6,6 @@ import { useRouter } from "next/navigation";
 import { useEffect, useId, useRef, useState } from "react";
 import { applianceSubcategories, categories, filterProducts, productHref, type LiveProductDetails, type ProductCard } from "@/utils/catalog";
 import { Asset, ChatPanel } from "./chat-panel";
-import { InfoDialog } from "./info-dialog";
 import { useSharedConversation } from "./conversation-provider";
 import { ProductDetail } from "./product-detail";
 import { ProductImage } from "./product-image";
@@ -15,13 +14,15 @@ import { PurchaseJourney, type PurchaseView } from "./purchase-journey";
 import { usePurchase } from "./purchase-provider";
 import type { Consultation } from "@/utils/use-conversation";
 import { AccountQuickLinks, AccountPage, type AccountView } from "./account-content";
+import { InformationPage } from "./information-content";
+import { informationPages, type InformationPageId } from "@/utils/information-pages";
 
-type Dialog = "account" | "support" | null;
+type Dialog = "account" | null;
 
-export default function Storefront({ product, catalogProducts = [], catalogError = false, initialSearch = "", initialCategory = "Tất cả", view, orderId, accountView }: { product?: LiveProductDetails; catalogProducts?: ProductCard[]; catalogError?: boolean; initialSearch?: string; initialCategory?: string; view?: PurchaseView; orderId?: string; accountView?: AccountView }) {
+export default function Storefront({ product, catalogProducts = [], catalogError = false, initialSearch = "", initialCategory = "Tất cả", view, orderId, accountView, informationPage }: { product?: LiveProductDetails; catalogProducts?: ProductCard[]; catalogError?: boolean; initialSearch?: string; initialCategory?: string; view?: PurchaseView; orderId?: string; accountView?: AccountView; informationPage?: InformationPageId }) {
   const router = useRouter();
   const conversation = useSharedConversation();
-  const isCatalog = !product && !view && !accountView;
+  const isCatalog = !product && !view && !accountView && !informationPage;
   const [inlineVisible, setInlineVisible] = useState<boolean | null>(isCatalog ? null : false);
   const [floatingOpen, setFloatingOpen] = useState(false);
   const { voicePreview, setVoicePreview } = conversation;
@@ -116,9 +117,6 @@ export default function Storefront({ product, catalogProducts = [], catalogError
     router.push(`/ai-chat?mode=${mode}`);
   };
   const visibleProducts = filterProducts(category, subcategory, search, catalogProducts);
-  const closeDialog = () => {
-    setDialog(null);
-  };
   const openAccount = () => {
     setDialog("account");
     requestAnimationFrame(() => accountTriggerRef.current?.focus({ preventScroll: true }));
@@ -150,12 +148,12 @@ export default function Storefront({ product, catalogProducts = [], catalogError
               {dialog === "account" && <div id={accountMenuId} className="account-popover"><AccountQuickLinks activeView={accountView ?? (view === "orders" ? "orders" : undefined)} onNavigate={() => setDialog(null)} /></div>}
             </div>
           </div>
-          <nav className="utility-nav" aria-label="Hỗ trợ mua sắm"><button onClick={() => setDialog("support")}>Hỗ trợ</button></nav>
+          <nav className="utility-nav" aria-label="Hỗ trợ mua sắm"><Link href="/support" aria-current={informationPage === "support" ? "page" : undefined}>Hỗ trợ</Link></nav>
         </div>
       </div>
     </header>
     <main id="main-content">
-      {accountView ? <AccountPage view={accountView} /> : view ? <PurchaseJourney key={`${view}-${orderId ?? ""}`} view={view} orderId={orderId} /> : product ? <div ref={askRef} className={`pdp-layout container${floatingOpen ? " with-consultation" : ""}`}><ProductDetail key={product.sku} product={product} onAsk={askAboutProduct} askDisabled={conversation.isLoading || !!conversation.audioFile} />{floatingOpen && <aside className="pdp-chat" aria-label="Tư vấn sản phẩm cùng Synee"><ChatPanel compact expanded conversation={conversation} voicePreview={voicePreview} onModeChange={setVoicePreview} onClose={closeFloating} onAccount={openAccount} /></aside>}</div> : <>
+      {informationPage ? <InformationPage page={informationPage} /> : accountView ? <AccountPage view={accountView} /> : view ? <PurchaseJourney key={`${view}-${orderId ?? ""}`} view={view} orderId={orderId} /> : product ? <div ref={askRef} className={`pdp-layout container${floatingOpen ? " with-consultation" : ""}`}><ProductDetail key={product.sku} product={product} onAsk={askAboutProduct} askDisabled={conversation.isLoading || !!conversation.audioFile} />{floatingOpen && <aside className="pdp-chat" aria-label="Tư vấn sản phẩm cùng Synee"><ChatPanel compact expanded conversation={conversation} voicePreview={voicePreview} onModeChange={setVoicePreview} onClose={closeFloating} onAccount={openAccount} /></aside>}</div> : <>
       <section className="hero" aria-labelledby="hero-heading">
         <HeroBackdrop />
         <div className="hero-content">
@@ -188,15 +186,12 @@ export default function Storefront({ product, catalogProducts = [], catalogError
     </main>
     <footer className="site-footer"><div className="container">
       <div className="confidence-row">{[{ icon: "shield" as const, title: "An tâm mua sắm", text: "Thông tin rõ ràng, lựa chọn dễ dàng" }, { icon: "truck" as const, title: "Giao hàng tiện lợi", text: "Theo dõi đơn hàng mọi lúc" }, { icon: "companion" as const, title: "AI luôn đồng hành", text: "Tư vấn ngay khi bạn cần" }].map(item => <div key={item.title}><Asset name={item.icon} /><div><strong>{item.title}</strong><p>{item.text}</p></div></div>)}</div>
-      <div className="legal-row"><p>© SUDO market · Mua sắm theo cách của bạn</p><div>{["Chính sách bảo mật", "Điều khoản", "Liên hệ"].map(label => <button key={label} onClick={() => setDialog("support")}>{label}</button>)}</div></div>
+      <div className="legal-row"><p>© SUDO market · Mua sắm theo cách của bạn</p><nav aria-label="Thông tin và chính sách">{informationPages.map(item => <Link key={item.id} href={item.href} aria-current={informationPage === item.id ? "page" : undefined}>{item.title}</Link>)}</nav></div>
     </div></footer>
     {floatingEligible && (!product || !floatingOpen) && <>
       {isCatalog && <button className="back-to-ai" onClick={returnToChat}>→ Trở lại trợ lý AI</button>}
       {floatingOpen ? <div className="floating-panel"><ChatPanel compact conversation={conversation} voicePreview={voicePreview} onModeChange={setVoicePreview} onClose={closeFloating} onAccount={openAccount} /></div>
         : <button ref={launcherRef} className="chat-launcher" aria-label="Trò chuyện với Synee AI" aria-expanded={false} aria-controls="floating-chat" title="Trò chuyện với Synee AI" onClick={() => setFloatingOpen(true)}><Asset name="launcher" /></button>}
     </>}
-    {dialog === "support" && <InfoDialog title="Hỗ trợ" onClose={closeDialog}>
-      <div><p>Bạn có thể gửi tin nhắn hoặc tải file ghi âm cho Synee AI.</p><p>WAV, MP3, M4A, FLAC, OGG, WebM · tối đa 25 MB / 120 giây. Giới hạn thời lượng do backend kiểm tra.</p><p className="muted-note">Mua sắm dùng dữ liệu BTC tham chiếu; giỏ và đơn là demo trên trình duyệt, không giữ hàng hoặc thu tiền. Chưa kết nối thanh toán, đơn hàng thật và tài khoản khách hàng.</p></div>
-    </InfoDialog>}
   </>;
 }
