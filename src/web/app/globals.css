@@ -50,13 +50,14 @@ h1, h2, h3, h4, p { margin: 0; }
 .skip-link { position: fixed; left: 16px; top: -80px; padding: 12px; z-index: 100; background: white; color: black; border-radius: 8px; }
 .skip-link:focus { top: 12px; }
 .site-header { position: fixed; inset: 0 0 auto; height: var(--site-header-height); z-index: 30; background: var(--brand); color: white; box-shadow: 0 1px 0 #ffffff14; }
-.header-inner { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 500px) minmax(0, 1fr); gap: 24px; height: var(--site-header-height); align-items: center; padding-block: 16px; }
-.header-left { display: flex; align-items: center; gap: 16px; height: 48px; }
+.header-inner { --header-gap: 24px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 500px) minmax(0, 1fr); gap: var(--header-gap); height: var(--site-header-height); align-items: center; padding-block: 16px; }
+.header-left { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; width: calc(100% + var(--header-gap)); height: 48px; }
 .header-left a { display: flex; align-items: center; min-height: 44px; }
 .header-left img { width: 136px; height: auto; }
-.header-chat-link { justify-content: center; gap: 8px; min-width: 112px; height: 48px; padding: 0 12px; border: 1px solid #56c0ee66; border-radius: 12px; color: #b4eaff; background: #56c0ee14; font-weight: 600; white-space: nowrap; transition: background-color .18s ease, border-color .18s ease; }
-.header-chat-link svg { flex: none; width: 18px; height: 18px; }
-.header-chat-link:hover { border-color: var(--cyan); background: #56c0ee26; }
+.header-chat-link { justify-self: center; justify-content: center; gap: 8px; min-width: 112px; height: 48px; padding: 0 12px; border: 1px solid #577087; border-radius: 12px; color: #e6f1ff; background: linear-gradient(145deg, #19283c, #0b1220); box-shadow: 0 4px 12px #00000032, inset 0 1px 0 #ffffff0c; font-weight: 600; white-space: nowrap; transition: filter .18s ease, border-color .18s ease, box-shadow .18s ease; }
+.header-chat-link svg { flex: none; width: 18px; height: 18px; color: #91d9ed; }
+.header-chat-link:hover { border-color: #86cce5; filter: brightness(1.06); box-shadow: 0 6px 18px #00000040, 0 0 12px #56c0ee12, inset 0 1px 0 #ffffff12; }
+.header-chat-link:active { filter: brightness(.96); }
 .header-chat-link:focus-visible { outline-color: var(--cyan); }
 .product-search { display: flex; align-items: center; gap: 12px; height: 48px; padding: 4px 16px; border-radius: 8px; background: white; color: var(--muted); min-width: 0; }
 .product-search input { border: 0; background: transparent; flex: 1; width: 0; min-width: 0; height: 40px; color: var(--foreground); }
@@ -306,7 +307,7 @@ main:has(.product-detail) { background: var(--brand-soft); }
 .debug-logs details { margin-top: 12px; }
 @media (max-width: 1240px) {
   :root { --site-header-height: 136px; }
-  .header-inner { grid-template-columns: minmax(0, 1fr) auto 112px; grid-template-rows: 48px 48px; gap: 12px; padding-block: 12px 16px; }
+  .header-inner { --header-gap: 12px; grid-template-columns: minmax(0, 1fr) auto 112px; grid-template-rows: 48px 48px; padding-block: 12px 16px; }
   .header-left { display: contents; }
   .header-brand-link { grid-column: 1; grid-row: 1; justify-self: start; }
   .header-chat-link { grid-column: 3; grid-row: 2; }
