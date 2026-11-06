@@ -9,6 +9,7 @@ import { useSharedConversation } from "../components/conversation-provider";
 import { GuestProfile } from "../components/account-content";
 import { InfoDialog } from "../components/info-dialog";
 import { Icon } from "./icons";
+import { ReplyFeedback, ReplyFeedbackProvider } from "./reply-feedback";
 
 export type AiChatMode = "text" | "realtime";
 type Dialog = "history" | "details" | "profile" | "new" | null;
@@ -30,6 +31,7 @@ export function AiChatExperience({ mode }: { mode: AiChatMode }) {
   const [search, setSearch] = useState("");
   const [notice, setNotice] = useState("");
   const [resetError, setResetError] = useState("");
+  const [feedbackRevision, setFeedbackRevision] = useState(0);
   const resetLock = useRef(false);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const searchRef = useRef<HTMLInputElement>(null);
@@ -86,6 +88,7 @@ export function AiChatExperience({ mode }: { mode: AiChatMode }) {
     setResetError("");
     try {
       await c.endConversation();
+      setFeedbackRevision(previous => previous + 1);
       setSearch(""); setNotice(""); setDialog(null);
       inputRef.current?.focus();
     } catch (error) {
@@ -159,15 +162,15 @@ export function AiChatExperience({ mode }: { mode: AiChatMode }) {
           <section className="ai-chat-stage" aria-label="Trò chuyện cùng Synee AI">
             <div className="ai-message-scroll" ref={historyRef} tabIndex={0} aria-label="Nội dung trò chuyện">
               {c.messages.length === 1 && !query && <div className="ai-thread-intro"><span className="ai-thread-icon"><Icon name="spark" /></span><h2>Bắt đầu cùng Synee AI</h2><p>Không gian riêng để bạn trò chuyện, tìm hiểu và lựa chọn.</p></div>}
-              <div className="ai-message-list" role="log" aria-live="polite" aria-relevant="additions text" aria-label="Tin nhắn cùng Synee">
+              <ReplyFeedbackProvider key={`${c.customerPhone}:${feedbackRevision}`}><div className="ai-message-list" role="log" aria-live="polite" aria-relevant="additions text" aria-label="Tin nhắn cùng Synee">
                 {visibleMessages.map(message => <article key={message.index} className={`ai-message ${message.role === "agent" ? "assistant" : "user"}`}>
                   {message.role === "agent" && <span className="ai-avatar"><Icon name="spark" /></span>}
                   <div><div className="ai-message-meta"><strong>{message.role === "agent" ? "Synee AI" : "Bạn"}</strong></div><div className="ai-bubble">{message.text}</div>
-                    <div className="ai-message-tools"><button aria-label={`Sao chép tin nhắn ${message.index + 1}`} onClick={() => void copy(message.text)}><Icon name="copy" /></button></div>
+                    {message.role === "agent" ? <ReplyFeedback message={c.messages[message.index]} messageNumber={message.index + 1} onCopy={() => void copy(message.text)} disabled={!c.sessionReady} /> : <div className="ai-message-tools"><button type="button" aria-label={`Sao chép tin nhắn ${message.index + 1}`} onClick={() => void copy(message.text)}><Icon name="copy" /></button></div>}
                   </div>
                 </article>)}
                 {c.isLoading && !c.voiceActive && <article className="ai-message assistant"><span className="ai-avatar"><Icon name="spark" /></span><div className="ai-thinking" role="status" aria-label="Synee đang xử lý"><i /><i /><i /></div></article>}
-              </div>
+              </div></ReplyFeedbackProvider>
               {query && <p className="ai-search-summary" role="status">{visibleMessages.length} tin nhắn phù hợp. <button className="text-link" onClick={() => setSearch("")}>Xóa tìm kiếm</button></p>}
               {c.messages.length === 1 && mode === "text" && !query && <div className="ai-suggestion-grid">{suggestions.map(item =>
                 <button key={item.title} disabled={busy || !!c.audioFile} onClick={() => { c.setInput(item.text); inputRef.current?.focus(); }}><span><Icon name={item.icon} /></span><strong>{item.title}</strong><small>{item.detail}</small><Icon name="arrowUpRight" /></button>
