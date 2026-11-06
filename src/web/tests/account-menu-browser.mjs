@@ -29,6 +29,7 @@ const saved = "JSON.parse(sessionStorage.getItem('synee.guest.conversation.v1'))
 
 try {
   await b.send("Page.enable");
+  await b.send("Page.bringToFront");
   await b.send("Emulation.setDeviceMetricsOverride", { width: 1440, height: 900, deviceScaleFactor: 1, mobile: false });
   await b.send("Page.addScriptToEvaluateOnNewDocument", { source: `
     if (!sessionStorage.getItem('account-menu.seeded')) {
@@ -54,7 +55,7 @@ try {
   await b.evaluate("document.fonts.ready");
   await open();
   await check("Account opens a compact menu immediately below its trigger", "(() => { const panel = document.querySelector('.account-popover').getBoundingClientRect(), trigger = document.querySelector('.account-trigger').getBoundingClientRect(); return panel.width === 248 && panel.height < 320 && Math.abs(panel.right - trigger.right) < 1 && panel.top >= trigger.bottom && panel.top - trigger.bottom <= 10 && !document.querySelector('dialog[open]'); })()");
-  await check("Menu contains profile, orders, history and guest logout", "document.querySelectorAll('.account-popover a').length === 3 && !!document.querySelector('.account-popover a[href=\"/account\"]') && !!document.querySelector('.account-popover a[href=\"/orders\"]') && !!document.querySelector('.account-popover a[href=\"/account/conversations\"]') && document.querySelector('.account-popover button').textContent.includes('Đăng xuất')");
+  await check("Menu contains guest navigation, demo login/register and disabled logout", "document.querySelectorAll('.account-popover a').length === 5 && !!document.querySelector('.account-popover a[href=\"/account\"]') && !!document.querySelector('.account-popover a[href=\"/orders\"]') && !!document.querySelector('.account-popover a[href=\"/account/conversations\"]') && !!document.querySelector('.account-popover a[href=\"/login\"]') && !!document.querySelector('.account-popover a[href=\"/register\"]') && document.querySelector('.account-popover button').textContent.includes('Đăng xuất')");
   await check("Guest logout is disabled with an associated explanation", "(() => { const button = document.querySelector('.account-popover button'); return button.disabled && document.getElementById(button.getAttribute('aria-describedby')).textContent.includes('Phiên khách'); })()");
   await b.screenshot(`${output}/after-desktop.png`);
   await click(".account-trigger");
@@ -106,7 +107,7 @@ try {
   await open();
   await check("Mobile menu stays below the account button within 320px", "(() => { const panel = document.querySelector('.account-popover'), rect = panel.getBoundingClientRect(), trigger = document.querySelector('.account-trigger').getBoundingClientRect(); return rect.left >= 0 && rect.right <= innerWidth && rect.top >= trigger.bottom && rect.bottom <= innerHeight && rect.height < 320 && document.documentElement.scrollWidth <= innerWidth && [...panel.querySelectorAll('span')].every(label => label.getBoundingClientRect().width > 0); })()");
   await b.screenshot(`${output}/after-mobile.png`);
-  await b.evaluate("document.querySelector('.account-popover a:last-of-type').focus()");
+  await b.evaluate("[...document.querySelectorAll('.account-popover a')].at(-1).focus()");
   await key("Tab", "Tab", 9);
   await b.wait("!document.querySelector('.account-popover')");
   await check("Tab leaves the nonmodal menu and dismisses it", "document.querySelector('.account-trigger').getAttribute('aria-expanded') === 'false' && !document.querySelector('dialog[open]')");

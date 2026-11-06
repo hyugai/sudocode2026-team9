@@ -7,12 +7,17 @@ import { usePurchase } from "./purchase-provider";
 
 export type AccountView = "profile" | "history";
 
+function AccountAuthLinks({ onNavigate }: { onNavigate?: () => void }) {
+  return <div className="account-auth-links" role="group" aria-label="Giao diện tài khoản demo"><Link href="/login" onClick={onNavigate}>Đăng nhập</Link><Link href="/register" onClick={onNavigate}>Đăng ký</Link></div>;
+}
+
 export function AccountQuickLinks({ activeView, onNavigate }: { activeView?: AccountView | "orders"; onNavigate: () => void }) {
   const authStatusId = useId();
   return <nav className="account-quick-links" aria-label="Menu tài khoản">
     <Link href="/account" aria-current={activeView === "profile" ? "page" : undefined} onClick={onNavigate}><AccountIcon name="user" /><span>Hồ sơ cá nhân</span></Link>
     <Link href="/orders" aria-current={activeView === "orders" ? "page" : undefined} onClick={onNavigate}><AccountIcon name="orders" /><span>Đơn hàng</span></Link>
     <Link href="/account/conversations" aria-current={activeView === "history" ? "page" : undefined} onClick={onNavigate}><AccountIcon name="history" /><span>Lịch sử hội thoại</span></Link>
+    <AccountAuthLinks onNavigate={onNavigate} />
     <button type="button" disabled aria-describedby={authStatusId}><AccountIcon name="logout" /><span>Đăng xuất</span></button>
     <p id={authStatusId}>Phiên khách · Chưa đăng nhập.</p>
   </nav>;
@@ -41,6 +46,7 @@ export function AccountNavigation({ onNavigate, activeView }: { onNavigate?: () 
       </div>
     </div>
     <Link href="/orders" className="account-orders-link" aria-current={activeView === "orders" ? "page" : undefined} onClick={onNavigate}><AccountIcon name="orders" /><span>Đơn hàng</span><small>Demo</small></Link>
+    <AccountAuthLinks onNavigate={onNavigate} />
     <div className="account-signout">
       <button type="button" className="account-logout" disabled aria-describedby={authStatusId}><AccountIcon name="logout" /><span>Đăng xuất</span></button>
       <p id={authStatusId}>Bạn đang dùng phiên khách, chưa có tài khoản đăng nhập để đăng xuất.</p>
