@@ -36,7 +36,7 @@ async def probe():
         harness=NS(run_turn=run_turn), sessions={sid:state}, session_locks={},
         provider_cooldown=NS(remaining=lambda:0), Channel=NS(VOICE='voice'),
         AudioTooLargeError=InputError, AudioInputError=InputError, ASRUnavailableError=InputError)
-    load(source, {'require_api_key','run_chat_turn','turn_payload','clear_session'}, namespace)
+    load(source, {'require_api_key','run_chat_turn','_call_brief_preview','turn_payload','clear_session'}, namespace)
     with patch.dict(os.environ, {'API_KEY':'', 'ENABLE_DEBUG_RESPONSE':'false'}, clear=True):
         namespace['require_api_key']()
         anonymous_allowed = True

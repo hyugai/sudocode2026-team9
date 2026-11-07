@@ -20,6 +20,7 @@ from telesale_agent.core.models import (
 )
 from telesale_agent.application.conversation.prepare import prepare_context
 from telesale_agent.application.memory.coordinator import persist_shared
+from telesale_agent.application.memory.call_brief import CallBriefProjector
 from telesale_agent.core.errors import ASRUnavailableError, AudioInputError
 from telesale_agent.application.asr_normalization import normalize_asr_transcript
 from telesale_agent.application.chat_normalization import normalize_chat_text
@@ -243,6 +244,11 @@ async def run_turn_impl(
     if harness.persist:
         with usage_stage("memory_persister"):
             memory_writes = await persist_shared(harness, context)
+    if context.identity is not None and context.call_brief is not None:
+        # Refresh only the local projection after canonical facts are committed.
+        # Do not repeat NLU, retrieval, external freshness checks or agent calls.
+        context.call_brief = await CallBriefProjector().build_call_brief(context)
+        state.call_brief = context.call_brief
     persist_finished = time.perf_counter()
     state.turn_number += 1
     completed_ms = (persist_finished - response_started) * 1000

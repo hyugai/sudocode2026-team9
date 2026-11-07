@@ -1,11 +1,15 @@
+import { readCallBrief, type CallBrief } from "./call-brief.ts";
+
 export interface DebugInfo {
   intent: string;
   retrieved_knowledge: unknown[];
   steps?: { action: string; rationale: string; tool: string | null; tool_args: unknown }[];
+  call_brief?: unknown;
 }
 
 interface ChatResponse {
   response: string;
+  callBrief: CallBrief | null;
   transcript?: string;
   normalized_message?: string;
   debug?: DebugInfo;
@@ -124,7 +128,7 @@ export function createChatClient(apiBase: string, fetcher: typeof fetch = fetch,
           throw new ChatApiError("Backend chưa trả về phản hồi hội thoại hợp lệ. Vui lòng thử lại sau.");
         }
         defer(Number(data.retry_after_seconds));
-        return data as ChatResponse;
+        return { ...data, callBrief: readCallBrief(data.call_brief) ?? readCallBrief(data.debug?.call_brief) } as ChatResponse;
       } finally {
         sending = false;
       }

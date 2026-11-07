@@ -13,11 +13,11 @@ from fastapi.testclient import TestClient
 from langchain_core.messages import AIMessage
 from telesale_agent.application.deepagent.turn import run_turn_impl, prepare_response
 from telesale_agent.adapters.rules.pii_guardrail import PIIGuardrail
-from telesale_agent.core.models import TurnInput, TurnContext, CustomerIdentity, CallBrief, ConversationState
+from telesale_agent.core.models import TurnInput, TurnContext, CustomerIdentity, CallBrief, ConversationState, Perception, Channel
 
 
 class CompleteTurnTests(unittest.IsolatedAsyncioTestCase):
-    async def exercise(self, *, audio=False, answer="Xin chào chị.", guardrail=None, arrival=0, persist_seconds=1):
+    async def exercise(self, *, audio=False, answer="Xin chào chị.", guardrail=None, arrival=0, persist_seconds=1, persisted_facts=None):
         clock = [0.1]  # Includes 100 ms of backend work/queueing before harness entry.
         async def asr(context):
             clock[0] += .5
@@ -33,6 +33,8 @@ class CompleteTurnTests(unittest.IsolatedAsyncioTestCase):
             return {"messages": [AIMessage(content=answer)]}
         async def persist(context):
             self.assertEqual(context.state.messages[-1].role, "agent")
+            if persisted_facts is not None:
+                context.state.customer_memory = {"facts": persisted_facts}
             clock[0] += persist_seconds
             return []
         agent = SimpleNamespace(ainvoke=AsyncMock(side_effect=invoke), astream=AsyncMock(side_effect=AssertionError("Must invoke once")))
@@ -83,6 +85,59 @@ class CompleteTurnTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(fast.latency["total_ms"], slow.latency["total_ms"])
         self.assertEqual(slow.latency["persistence_ms"], 4000)
         self.assertEqual(slow.latency["request_complete_ms"], fast.latency["request_complete_ms"] + 3000)
+
+    async def test_completed_turn_returns_brief_after_current_facts_are_committed(self):
+        result = await self.exercise(persisted_facts={"budget_vnd": 4_000_000, "room_area_m2": 25})
+        self.assertIn("budget_vnd: 4000000", result.call_brief.needs)
+        self.assertIn("4000000", result.call_brief.summary)
+        self.assertIs(result.state.call_brief, result.call_brief)
+
+    async def test_anonymous_brief_retains_facts_across_text_and_audio_without_durable_writes(self):
+        from telesale_agent.application.customer_context import CustomerContextService
+        from telesale_agent.application.memory.call_brief import CallBriefProjector
+        from telesale_agent.adapters.memory.in_memory import InMemoryCustomerMemoryRepository
+        from telesale_agent.adapters.memory.turn_persist import TurnMemoryPersister
+
+        memory = InMemoryCustomerMemoryRepository()
+        crm = SimpleNamespace(retrieve_profile=AsyncMock(), precompute_brief=AsyncMock())
+        facts = iter([
+            {"budget_vnd": 3_000_000, "room_area_m2": 25},
+            {"budget_vnd": 4_000_000},
+            {"budget_vnd": 5_000_000},
+            {},
+        ])
+
+        async def perceive(context):
+            return Perception(transcript=context.input.text, intent="provide_info", memory_deltas=next(facts))
+
+        harness = SimpleNamespace(
+            agent=SimpleNamespace(ainvoke=AsyncMock(return_value={"messages": [AIMessage(content="Đã ghi nhận.")]})),
+            asr=SimpleNamespace(transcribe=AsyncMock(return_value="Ngân sách 5 triệu")),
+            identity=SimpleNamespace(resolve_identity=AsyncMock(return_value=CustomerIdentity())),
+            customer_context=CustomerContextService(crm, memory),
+            perceive=SimpleNamespace(perceive=perceive), retrieve=None,
+            call_brief=CallBriefProjector(), guardrail=None, persist=TurnMemoryPersister(memory),
+            _prefetch_read_tools=AsyncMock(return_value=([], frozenset())),
+            _execute_confirmed_mutation=AsyncMock(return_value=([], frozenset())),
+        )
+        state = ConversationState("anonymous")
+        for amount, item in (
+            (3_000_000, TurnInput("anonymous", text="Ngân sách 3 triệu, phòng 25 m2")),
+            (4_000_000, TurnInput("anonymous", text="Ngân sách lên 4 triệu")),
+            (5_000_000, TurnInput("anonymous", audio=b"speech", channel=Channel.VOICE)),
+        ):
+            result = await run_turn_impl(harness, item, state)
+            self.assertIn(f"budget_vnd: {amount}", result.call_brief.needs)
+            self.assertIn("room_area_m2: 25", result.call_brief.needs)
+            self.assertEqual(result.memory_writes, [])
+            self.assertEqual(state.memory_deltas, {})
+            self.assertIsNone(state.customer_memory)
+
+        # A fresh conversation cannot inherit another anonymous guest's brief.
+        other = await run_turn_impl(harness, TurnInput("other", text="Xin chào"))
+        self.assertNotIn("budget_vnd", str(other.call_brief.needs))
+        crm.retrieve_profile.assert_not_awaited()
+        crm.precompute_brief.assert_not_awaited()
 
     async def test_full_answer_is_guarded_before_it_is_returned(self):
         result = await self.exercise(answer="Số điện thoại 0901234567. Em đã ghi nhận.", guardrail=PIIGuardrail())

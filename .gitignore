@@ -233,6 +233,7 @@ tests/
 !/tests/
 /tests/*
 !/tests/test_chat_latency.py
+!/tests/test_call_brief_preview.py
 !/tests/test_realtime.py
 !/src/web/tests/
 

@@ -51,4 +51,14 @@ Run `node tests/ai-chat-browser.mjs` for dashboard-to-workspace navigation, dupl
 
 Run `node tests/account-menu-browser.mjs` for the anchored account menu, outside-click and keyboard dismissal, profile validation/save, confirmed identity changes, orders/history links, and desktop/mobile screenshots in `outputs/debug/streaming-ui/account-menu/`. This suite uses synthetic guest data and mocked health checks.
 
+### Call brief sidebar
+
+The dedicated Chat workspace displays the pipeline's compact call brief: summary, needs, objections and unresolved issues. The same panel opens as a drawer on mobile. Profile and selected-product controls remain under the collapsed **Thông tin phiên** section. Voice keeps its existing full-screen layout.
+
+Both `POST /api/chat` and `POST /api/chat/audio` return a top-level `call_brief` containing the four compact display fields, independently of `ENABLE_DEBUG_RESPONSE`. The response masks supported PII patterns and does not serialize customer identifiers or raw CRM/memory objects into this field. Full diagnostic data stays behind the existing debug setting. The frontend still accepts `debug.call_brief` from older backends for compatibility.
+
+The pipeline refreshes the brief locally after current-turn facts are persisted, without another LLM, ASR, retrieval or database freshness call. Current-turn facts take priority in the compact display, so budget/room corrections are visible in the same response. See the [Vietnamese Call Brief demo guide](../../docs/deployment/call_brief_demo.md) for startup commands, text/audio scenarios and Network verification with debug disabled.
+
+Without brief data the panel shows an empty state. A successful reply updates the brief (including clearing a previous brief if the new response omits it); a failed request keeps the last brief and labels it as the prior version. Briefs remain in the shared provider's memory across client navigation, and are cleared on conversation/identity reset or page reload. They are intentionally excluded from guest sessionStorage, audio files and transcript exports. A browser reload requires a new successful response before the brief is available again; it does not trigger a new chat request automatically.
+
 For catalog integration checks without a database, start `node tests/catalog-fixture.mjs` (localhost port 8100), point the frontend's `NEXT_PUBLIC_API_BASE_URL` to `http://127.0.0.1:8100`, then run `node tests/live-catalog-browser.mjs`. This verifies API-backed prices, product consultation, catalog outages and the LiveKit dialog. The legacy purchase browser suites target the original demo product pages; live product pages deliberately do not expose demo purchase actions. Unit contract probes also require Python 3.11+; set `PYTHON` to a virtual environment's executable when needed.

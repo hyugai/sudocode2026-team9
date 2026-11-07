@@ -104,7 +104,7 @@ def _states_budget_amount(transcript: str) -> bool:
     explicit_budget = re.search(
         r"(?:ngân\s*sách|ngan\s*sach)"
         r"(?:\s+(?:tổng|của|anh|chị|em|tôi|mình|là|khoảng|tầm|"
-        r"dưới|tối|đa|chỉ|có)){0,7}\s+\d",
+        r"dưới|tối|đa|chỉ|có|lên|thành|nâng|tăng|giảm|xuống|còn|đổi|sang)){0,7}\s+\d",
         text,
     )
     return bool(

@@ -1,6 +1,7 @@
 import asyncio
 import logging
 import os
+import re
 import secrets
 import json
 import time
@@ -17,7 +18,8 @@ from telesale_agent.bootstrap import build_deepagent_harness_async
 from telesale_agent.adapters.asr.config import ASRConfig
 from telesale_agent.adapters.llm.rate_limits import is_rate_limit_error, provider_cooldown
 from telesale_agent.core.errors import ASRUnavailableError, AudioInputError, AudioTooLargeError
-from telesale_agent.core.models import Channel, TurnInput, ConversationState
+from telesale_agent.core.models import CallBrief, Channel, TurnInput, ConversationState
+from telesale_agent.adapters.rules.pii_utils import mask_pii
 from contextlib import asynccontextmanager
 
 # Global harness reference
@@ -212,8 +214,31 @@ async def run_chat_turn(turn_input: TurnInput):
     return turn_payload(turn_input, result)
 
 
+def _call_brief_preview(brief: CallBrief | None) -> dict[str, str | list[str]] | None:
+    """Customer-facing compact view; exclude identifiers and raw CRM/memory."""
+    if brief is None:
+        return None
+    def display_text(value: str, limit: int) -> str:
+        # Currency facts are numbers, not identity documents. Keep their exact
+        # values while applying the existing PII rules to surrounding prose.
+        parts = re.split(
+            r"(\b(?:budget_vnd|price_vnd|price_quoted_vnd|previous_price_quoted_vnd):\s*\d+(?:\.\d+)?)",
+            value,
+        )
+        return "".join(part if index % 2 else mask_pii(part)[0]
+                       for index, part in enumerate(parts))[:limit]
+
+    return {
+        "summary": display_text(brief.summary, 4000),
+        "needs": [display_text(item, 1000) for item in brief.needs[:12]],
+        "objections": [display_text(item, 1000) for item in brief.objections[:12]],
+        "unresolved_issues": [display_text(item, 1000) for item in brief.unresolved_issues[:12]],
+    }
+
+
 def turn_payload(turn_input, result):
     response = {"response": result.response_text, "latency": getattr(result, "latency", {})}
+    response["call_brief"] = _call_brief_preview(getattr(result, "call_brief", None))
     response["call_brief_latency_ms"] = response["latency"].get("call_brief_ms")
     if turn_input.channel == Channel.VOICE:
         response["transcript"] = turn_input.text
@@ -223,6 +248,7 @@ def turn_payload(turn_input, result):
         response["retry_after_seconds"] = provider_cooldown.remaining()
     if os.environ.get("ENABLE_DEBUG_RESPONSE", "false").lower() == "true":
         response["debug"] = {
+            "call_brief": response["call_brief"],
             "raw_asr_transcript": turn_input.metadata.get("raw_asr_transcript"),
             "raw_user_text": turn_input.metadata.get("raw_user_text"),
             "normalized_input": turn_input.text,

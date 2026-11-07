@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { ChatApiError, createChatClient, type DebugInfo } from "./chat-api";
 import { conversationStorageKey, readGuestSession, writeGuestSession } from "./conversation-session";
+import type { CallBrief } from "./call-brief";
 
 // Keep the legacy deployment contract. This public URL must never contain a key.
 export const apiBase = (process.env.NEXT_PUBLIC_API_BASE_URL || (
@@ -20,6 +21,8 @@ const welcome: Message[] = [{ role: "agent", text: "Mình là Synee AI. Mình c�
 export function useConversation() {
   const [messages, setMessages] = useState<Message[]>(welcome);
   const [debugLogs, setDebugLogs] = useState<LogEntry[]>([]);
+  const [callBrief, setCallBrief] = useState<CallBrief | null>(null);
+  const [callBriefStale, setCallBriefStale] = useState(false);
   const [input, setInput] = useState("");
   const [customerPhone, updateCustomerPhone] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -62,7 +65,7 @@ export function useConversation() {
   }, [sessionReady, messages, sessionId, input, customerPhone, voicePreview, consultation]);
 
   const resetConversation = () => {
-    setMessages(welcome); setDebugLogs([]); setInput(""); setAudioFile(null); setAudioPreviewUrl("");
+    setMessages(welcome); setDebugLogs([]); setCallBrief(null); setCallBriefStale(false); setInput(""); setAudioFile(null); setAudioPreviewUrl("");
     setSessionId(""); conversationIdRef.current = ""; setConsultation(null); setErrorMessage(""); setSessionNotice("");
   };
   const setCustomerPhone = (phone: string) => {
@@ -141,10 +144,13 @@ export function useConversation() {
         { role: "user", text: transcript },
         { role: "agent", text: data.response || "Chưa nhận được phản hồi từ tư vấn viên." },
       ]);
+      setCallBrief(data.callBrief);
+      setCallBriefStale(false);
       if (selectedAudio) clearAudio();
       else setInput("");
       if (data.debug) setDebugLogs(prev => [...prev, { userMessage: transcript, debug: data.debug! }]);
     } catch (error) {
+      setCallBriefStale(true);
       if (error instanceof ChatApiError && error.connectionLost) setBackendReady(false);
       if (error instanceof ChatApiError) setCooldownSeconds(error.retryAfterSeconds);
       setErrorMessage(error instanceof ChatApiError && error.retryAfterSeconds > 0
@@ -153,7 +159,7 @@ export function useConversation() {
     } finally { setIsLoading(false); }
   };
 
-  return { messages, debugLogs, input, setInput, customerPhone, setCustomerPhone, isLoading: isLoading || isClearing || voiceActive,
+  return { messages, debugLogs, callBrief, callBriefStale, input, setInput, customerPhone, setCustomerPhone, isLoading: isLoading || isClearing || voiceActive,
     audioFile, audioPreviewUrl, clearAudio, selectAudio, errorMessage, backendReady,
     cooldownSeconds, sessionId, sendMessage, voicePreview, setVoicePreview, consultation, setConsultation,
     sessionReady, sessionNotice, endConversation, voiceActive, setVoiceActive };

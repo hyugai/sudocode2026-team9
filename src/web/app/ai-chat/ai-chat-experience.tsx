@@ -10,6 +10,7 @@ import { GuestProfile } from "../components/account-content";
 import { InfoDialog } from "../components/info-dialog";
 import { Icon } from "./icons";
 import { ReplyFeedback, ReplyFeedbackProvider } from "./reply-feedback";
+import { CallBriefPanel } from "./call-brief-panel";
 
 export type AiChatMode = "text" | "realtime";
 type Dialog = "history" | "details" | "profile" | "new" | null;
@@ -113,26 +114,16 @@ export function AiChatExperience({ mode }: { mode: AiChatMode }) {
       <span className="ai-user-avatar">KH</span><span><strong>{c.customerPhone || "Khách tư vấn"}</strong><small>Thông tin tư vấn</small></span><Icon name="chevron" />
     </button></div>
   </>;
-  const details = <div className="ai-details">
-    <div className="ai-details-heading"><div><span>Phiên làm việc</span><strong>Thông tin & ngữ cảnh</strong></div></div>
-    <section><h2><Icon name="brain" />Trợ lý của bạn</h2>
-      <ul className="ai-capabilities">{[
-        ["Hiểu ngữ cảnh", "Tiếp nối hội thoại chat và ghi âm"],
-        ["Tìm kiếm sản phẩm", "Tư vấn theo nhu cầu và ngân sách"],
-        ["Voice", "Trò chuyện trực tiếp khi dịch vụ sẵn sàng"],
-      ].map(([label, description]) => <li key={label}><Icon name="check" /><span><strong>{label}</strong><small>{description}</small></span></li>)}</ul>
-    </section>
-    <section><h2><Icon name="document" />Phiên tư vấn</h2><p className="ai-session-id">Hội thoại: {c.sessionId || "Chưa bắt đầu"}</p>
+  const details = <CallBriefPanel brief={c.callBrief} loading={c.isLoading && !c.voiceActive} error={c.callBriefStale} hasConversation={c.messages.length > 1}>
+    <p className="ai-session-id">Hội thoại: {c.sessionId || "Chưa bắt đầu"}</p>
       <p>{c.customerPhone || "Chưa cung cấp số điện thoại"}</p>
       <button className="ai-add-source" disabled={busy} onClick={() => setDialog("profile")}>Cập nhật thông tin tư vấn</button>
-    </section>
-    <section><h2><Icon name="note" />Ngữ cảnh sản phẩm</h2><div className="ai-note">
+    <div className="ai-note">
       <p>{c.consultation ? `${c.consultation.name} · ${c.consultation.sku} · ${c.consultation.price} · SL ${c.consultation.quantity}` : "Bạn có thể chọn sản phẩm trên dashboard để được tư vấn cụ thể."}</p>
       {c.consultation && <button disabled={busy} onClick={() => c.setConsultation(null)}>Bỏ ngữ cảnh sản phẩm</button>}
-    </div><Link href="/#catalog" className="ai-add-source">Xem danh mục sản phẩm<Icon name="arrowUpRight" /></Link></section>
-    <div className="ai-privacy"><Icon name="shield" /><p><strong>Phiên khách trong tab này</strong><span>Số điện thoại chỉ dùng để tư vấn, không phải tài khoản đăng nhập.</span></p></div>
+    </div><Link href="/#catalog" className="ai-add-source">Xem danh mục sản phẩm<Icon name="arrowUpRight" /></Link>
     <Link href="/account/conversations" className="ai-add-source">Lịch sử & nhật ký chẩn đoán</Link>
-  </div>;
+  </CallBriefPanel>;
 
   const modeControls = <div className="ai-mode-bar" data-mode={mode} role="group" aria-label="Chế độ hội thoại">{modes.map(([value, icon, label]) =>
     <button key={value} aria-pressed={mode === value} className={mode === value ? "active" : ""} disabled={c.isLoading && !c.voiceActive} onClick={() => switchMode(value)}><Icon name={icon} />{label}</button>
@@ -150,7 +141,7 @@ export function AiChatExperience({ mode }: { mode: AiChatMode }) {
         {!voiceMode && <button className="ai-icon-button ai-menu-trigger" aria-label="Mở lịch sử" onClick={() => setDialog("history")}><Icon name="menu" /></button>}
         <div className="ai-topbar-actions">
           {!voiceMode && <button className="ai-icon-button" aria-label="Xuất hội thoại" onClick={exportConversation}><Icon name="share" /></button>}
-          {!voiceMode && <button className="ai-detail-button" aria-label="Thông tin phiên tư vấn" onClick={() => setDialog("details")}><Icon name="panel" /><span>Thông tin</span></button>}
+          {!voiceMode && <button className="ai-detail-button" aria-label="Mở call brief" onClick={() => setDialog("details")}><Icon name="panel" /><span>Call brief</span></button>}
           <Link href="/" className="ai-exit-link" aria-label="Trở lại dashboard"><Icon name="arrowLeft" /><span>Dashboard</span></Link>
         </div>
       </header>
@@ -198,13 +189,13 @@ export function AiChatExperience({ mode }: { mode: AiChatMode }) {
               <p className="ai-disclaimer">Kiểm tra lại thông tin quan trọng trước khi đặt hàng.</p>
             </div>
           </section>
-          <aside className="ai-desktop-details" aria-label="Thông tin phiên tư vấn">{details}</aside>
+          <aside className="ai-desktop-details" aria-label="Call brief của cuộc tư vấn">{details}</aside>
         </div>}
       </section>
     </main>
     {!voiceMode && <>
     {dialog === "history" && <InfoDialog title="Hội thoại trong tab này" className="ai-history-dialog" onClose={() => setDialog(null)}><div className="ai-sidebar">{sidebar}</div></InfoDialog>}
-    {dialog === "details" && <InfoDialog title="Thông tin & ngữ cảnh" drawer className="ai-details-dialog" onClose={() => setDialog(null)}>{details}</InfoDialog>}
+    {dialog === "details" && <InfoDialog title="Call brief" drawer className="ai-details-dialog" onClose={() => setDialog(null)}>{details}</InfoDialog>}
     {dialog === "profile" && <InfoDialog title="Thông tin tư vấn" drawer onClose={() => setDialog(null)}><GuestProfile idPrefix="ai-customer" /></InfoDialog>}
     {dialog === "new" && <InfoDialog title="Bắt đầu hội thoại mới" onClose={() => { if (!busy) setDialog(null); }}>
       <p>Hội thoại, bản nháp và ghi âm hiện tại sẽ được xóa khỏi tab này. Thông tin tư vấn vẫn được giữ.</p>
