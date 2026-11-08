@@ -39,7 +39,7 @@ export function AiChatExperience({ mode }: { mode: AiChatMode }) {
   const fileRef = useRef<HTMLInputElement>(null);
   const historyRef = useRef<HTMLDivElement>(null);
   const busy = c.isLoading || !c.sessionReady;
-  const canSend = !busy && c.backendReady && c.cooldownSeconds === 0 && (!!c.input.trim() || !!c.audioFile);
+  const canSend = !busy && !c.conversationEnded && c.backendReady && c.cooldownSeconds === 0 && (!!c.input.trim() || !!c.audioFile);
   const title = c.messages.find(message => message.role === "user")?.text || "Cuộc trò chuyện mới";
   const query = search.trim().toLocaleLowerCase("vi");
   const visibleMessages = c.messages.map((message, index) => ({ ...message, index }))
@@ -47,6 +47,7 @@ export function AiChatExperience({ mode }: { mode: AiChatMode }) {
   const hint = c.errorMessage || (c.cooldownSeconds > 0
     ? `Có thể gửi tiếp sau ${c.cooldownSeconds} giây.`
     : !c.sessionReady ? "Đang khôi phục hội thoại…"
+    : c.conversationEnded ? "Hội thoại đã kết thúc. Chọn Cuộc trò chuyện mới để tiếp tục."
     : c.voiceActive ? "Kết thúc phiên voice trước khi gửi tin nhắn hoặc ghi âm."
     : c.isLoading ? (c.audioFile ? "Đang nhận dạng ghi âm và chờ phản hồi…" : "Đang chờ phản hồi…")
     : !c.backendReady ? "Backend chưa sẵn sàng. Hệ thống đang kiểm tra lại; nội dung vẫn được giữ."
@@ -153,7 +154,7 @@ export function AiChatExperience({ mode }: { mode: AiChatMode }) {
           <section className="ai-chat-stage" aria-label="Trò chuyện cùng Synee AI">
             <div className="ai-message-scroll" ref={historyRef} tabIndex={0} aria-label="Nội dung trò chuyện">
               {c.messages.length === 1 && !query && <div className="ai-thread-intro"><span className="ai-thread-icon"><Icon name="spark" /></span><h2>Bắt đầu cùng Synee AI</h2><p>Không gian riêng để bạn trò chuyện, tìm hiểu và lựa chọn.</p></div>}
-              <ReplyFeedbackProvider key={`${c.customerPhone}:${feedbackRevision}`}><div className="ai-message-list" role="log" aria-live="polite" aria-relevant="additions text" aria-label="Tin nhắn cùng Synee">
+              <ReplyFeedbackProvider key={`${c.sessionId}:${c.customerPhone}:${feedbackRevision}`}><div className="ai-message-list" role="log" aria-live="polite" aria-relevant="additions text" aria-label="Tin nhắn cùng Synee">
                 {visibleMessages.map(message => <article key={message.index} className={`ai-message ${message.role === "agent" ? "assistant" : "user"}`}>
                   {message.role === "agent" && <span className="ai-avatar"><Icon name="spark" /></span>}
                   <div><div className="ai-message-meta"><strong>{message.role === "agent" ? "Synee AI" : "Bạn"}</strong></div><div className="ai-bubble">{message.text}</div>
@@ -198,7 +199,7 @@ export function AiChatExperience({ mode }: { mode: AiChatMode }) {
     {dialog === "details" && <InfoDialog title="Call brief" drawer className="ai-details-dialog" onClose={() => setDialog(null)}>{details}</InfoDialog>}
     {dialog === "profile" && <InfoDialog title="Thông tin tư vấn" drawer onClose={() => setDialog(null)}><GuestProfile idPrefix="ai-customer" /></InfoDialog>}
     {dialog === "new" && <InfoDialog title="Bắt đầu hội thoại mới" onClose={() => { if (!busy) setDialog(null); }}>
-      <p>Hội thoại, bản nháp và ghi âm hiện tại sẽ được xóa khỏi tab này. Thông tin tư vấn vẫn được giữ.</p>
+      <p>{c.accountMode ? "Hội thoại sẽ được kết thúc và giữ trong lịch sử tài khoản. Bản nháp và ghi âm hiện tại sẽ được xóa khỏi tab này." : "Hội thoại, bản nháp và ghi âm hiện tại sẽ được xóa khỏi tab này."} Thông tin tư vấn vẫn được giữ.</p>
       <p>Bạn có thể xuất hội thoại trước khi tiếp tục.</p>
       <div className="ai-reset-actions"><button className="commerce-secondary" disabled={busy} onClick={exportConversation}>Xuất hội thoại</button><button className="commerce-secondary" disabled={busy} onClick={() => void startNew()}>{c.isLoading ? "Đang kết thúc…" : "Bắt đầu mới"}</button></div>
       {resetError && <p className="error" role="alert">{resetError}</p>}

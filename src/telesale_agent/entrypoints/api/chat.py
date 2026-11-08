@@ -5,10 +5,13 @@ import re
 import secrets
 import json
 import time
+from uuid import UUID
+from sqlalchemy.exc import SQLAlchemyError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi import Depends, FastAPI, File, Form, Header, HTTPException, UploadFile, Request
-from pydantic import BaseModel, field_validator
+from pydantic import BaseModel, Field, field_validator
 from fastapi.responses import JSONResponse
+from fastapi.encoders import jsonable_encoder
 import sys
 
 # Add src to Python path so we can import the agent
@@ -21,6 +24,9 @@ from telesale_agent.core.errors import ASRUnavailableError, AudioInputError, Aud
 from telesale_agent.core.models import CallBrief, Channel, TurnInput, ConversationState
 from telesale_agent.adapters.rules.pii_utils import mask_pii
 from contextlib import asynccontextmanager
+from telesale_agent.adapters.db.app_repository import AppDataNotFound, AppDataRepository, ConversationConflict
+from telesale_agent.adapters.db.checkpoint import CheckpointError
+from telesale_agent.entrypoints.api.auth import COOKIE_NAME, auth_error, get_auth_repository, require_origin, require_user
 
 # Global harness reference
 harness = None
@@ -45,9 +51,11 @@ app = FastAPI(title="Telesale Agent API", lifespan=lifespan)
 
 from telesale_agent.entrypoints.api.catalog import router as catalog_router
 from telesale_agent.entrypoints.api.auth import router as auth_router
+from telesale_agent.entrypoints.api.conversations import router as conversations_router
 from telesale_agent.entrypoints.api.voice import create_voice_router
 app.include_router(catalog_router)
 app.include_router(auth_router)
+app.include_router(conversations_router)
 voice_router, shutdown_voice = create_voice_router(lambda: harness)
 app.include_router(voice_router)
 
@@ -119,9 +127,18 @@ def require_api_key(x_api_key: str | None = Header(default=None)) -> None:
     ):
         raise HTTPException(status_code=401, detail="Invalid or missing API key")
 
+async def require_chat_access(request: Request, x_api_key: str | None = Header(default=None),
+                              repository: AppDataRepository = Depends(get_auth_repository)) -> None:
+    if request.cookies.get(COOKIE_NAME) or request.headers.get("X-Conversation-Mode") == "account":
+        require_origin(request)
+        await require_user(request, repository)
+    else:
+        require_api_key(x_api_key)
+
+
 class ChatRequest(BaseModel):
     conversation_id: str
-    message: str
+    message: str = Field(max_length=10000)
     customer_phone: str | None = None
 
     @field_validator("conversation_id", "message")
@@ -131,23 +148,25 @@ class ChatRequest(BaseModel):
             raise ValueError("must not be empty")
         return value.strip()
 
-@app.post("/api/chat", dependencies=[Depends(require_api_key)])
-async def chat_endpoint(req: ChatRequest, request: Request):
+@app.post("/api/chat", dependencies=[Depends(require_chat_access)])
+async def chat_endpoint(req: ChatRequest, request: Request, repository: AppDataRepository = Depends(get_auth_repository)):
     turn_input = TurnInput(
         conversation_id=req.conversation_id,
         text=req.message,
         customer_hint=req.customer_phone,
         metadata={"_latency_started_at": request.scope["telesale_received_at"]},
     )
-    return await run_chat_turn(turn_input)
+    repository, user_id = await conversation_owner(request, req.conversation_id, repository)
+    return await run_chat_turn(turn_input, repository=repository, user_id=user_id)
 
 
-@app.post("/api/chat/audio", dependencies=[Depends(require_api_key)])
+@app.post("/api/chat/audio", dependencies=[Depends(require_chat_access)])
 async def audio_chat_endpoint(
     request: Request,
     conversation_id: str = Form(...),
     file: UploadFile = File(...),
     customer_phone: str | None = Form(default=None),
+    repository: AppDataRepository = Depends(get_auth_repository),
 ):
     try:
         if harness is None:
@@ -170,12 +189,35 @@ async def audio_chat_endpoint(
             customer_hint=customer_phone or None,
             metadata={"_latency_started_at": request.scope["telesale_received_at"], "offline_audio": True},
         )
-        return await run_chat_turn(turn_input)
+        repository, user_id = await conversation_owner(request, conversation_id.strip(), repository)
+        return await run_chat_turn(turn_input, repository=repository, user_id=user_id)
     finally:
         await file.close()
 
 
-async def run_chat_turn(turn_input: TurnInput):
+async def conversation_owner(request: Request, conversation_id: str, repository: AppDataRepository) -> tuple[AppDataRepository | None, str | None]:
+    account = bool(request.cookies.get(COOKIE_NAME)) or request.headers.get("X-Conversation-Mode") == "account"
+    if account:
+        require_origin(request)
+        user = await require_user(request, repository)
+        return repository, user["id"]
+    await guard_guest_id(conversation_id, repository)
+    return None, None
+
+
+async def guard_guest_id(conversation_id: str, repository: AppDataRepository) -> None:
+    try:
+        UUID(conversation_id)
+    except ValueError:
+        return  # Legacy guest IDs are allowed and cannot be account UUIDs.
+    try:
+        if await repository.conversation_exists(conversation_id):
+            raise auth_error(404, "Không tìm thấy hội thoại.")
+    except SQLAlchemyError as exc:
+        raise auth_error(503, "Chưa kiểm tra được hội thoại. Hãy thử lại.") from exc
+
+
+async def run_chat_turn(turn_input: TurnInput, *, repository: AppDataRepository | None = None, user_id: str | None = None):
     """Keep text and voice turns in the same ordered conversation."""
     if harness is None:
         raise HTTPException(status_code=503, detail="Agent is not ready")
@@ -186,9 +228,17 @@ async def run_chat_turn(turn_input: TurnInput):
     async with lock:
         if provider_cooldown.remaining():
             return rate_limit_response()
-        state = sessions.get(conversation_id) or ConversationState(
-            conversation_id=conversation_id
-        )
+        if repository is not None:
+            try:
+                state = await repository.load_state(user_id, conversation_id, active_only=True)
+            except AppDataNotFound as exc:
+                raise auth_error(404, "Không tìm thấy hội thoại.") from exc
+            except (CheckpointError, ConversationConflict) as exc:
+                raise auth_error(409, str(exc)) from exc
+            except SQLAlchemyError as exc:
+                raise auth_error(503, "Chưa đọc được hội thoại. Hãy thử lại.") from exc
+        else:
+            state = sessions.get(conversation_id) or ConversationState(conversation_id=conversation_id)
         try:
             result = await harness.run_turn(turn_input, state)
         except AudioTooLargeError as exc:
@@ -211,9 +261,21 @@ async def run_chat_turn(turn_input: TurnInput):
                 status_code=502,
                 detail="Không thể xử lý lượt hội thoại lúc này. Vui lòng thử lại sau.",
             ) from exc
+        payload = turn_payload(turn_input, result)
+        if repository is not None:
+            try:
+                payload.update(await repository.save_turn(user_id, result.state, turn_input.text,
+                                                         result.response_text, payload["call_brief"]))
+            except Exception:
+                logger.exception("Could not persist account conversation %s", conversation_id)
+                sessions.pop(conversation_id, None)
+                return JSONResponse(status_code=502, headers={"Cache-Control": "no-store"}, content={
+                    "detail": "Chưa xác nhận lưu được kết quả. Hãy kiểm tra lịch sử trước khi gửi lại.",
+                    "code": "turn_outcome_unknown",
+                })
         sessions[conversation_id] = result.state
 
-    return turn_payload(turn_input, result)
+    return JSONResponse(content=jsonable_encoder(payload), headers={"Cache-Control": "no-store"}) if repository else payload
 
 
 def _call_brief_preview(brief: CallBrief | None) -> dict[str, str | list[str]] | None:
@@ -284,7 +346,8 @@ def rate_limit_response() -> JSONResponse:
     "/api/sessions/{conversation_id}",
     dependencies=[Depends(require_api_key)],
 )
-async def clear_session(conversation_id: str):
+async def clear_session(conversation_id: str, repository: AppDataRepository = Depends(get_auth_repository)):
+    await guard_guest_id(conversation_id, repository)
     sessions.pop(conversation_id, None)
     session_locks.pop(conversation_id, None)
     return {"status": "cleared", "conversation_id": conversation_id}
@@ -296,6 +359,7 @@ def read_root():
 
 
 @app.get("/health")
+@app.get("/api/health")
 def health():
     if harness is None:
         raise HTTPException(status_code=503, detail="Agent is starting")

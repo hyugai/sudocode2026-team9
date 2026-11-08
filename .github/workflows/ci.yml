@@ -31,6 +31,8 @@ jobs:
   frontend:
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    env:
+      API_BACKEND_URL: https://telesale-agent-api-3no2.onrender.com
     defaults:
       run:
         working-directory: src/web
@@ -86,6 +88,7 @@ jobs:
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
       VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
       NEXT_PUBLIC_API_BASE_URL: https://telesale-agent-api-3no2.onrender.com
+      API_BACKEND_URL: https://telesale-agent-api-3no2.onrender.com
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-node@v5
@@ -107,4 +110,6 @@ jobs:
         run: |
           vercel deploy --prod --token="$VERCEL_TOKEN" \
             --build-env "NEXT_PUBLIC_API_BASE_URL=$NEXT_PUBLIC_API_BASE_URL" \
-            --env "NEXT_PUBLIC_API_BASE_URL=$NEXT_PUBLIC_API_BASE_URL"
+            --env "NEXT_PUBLIC_API_BASE_URL=$NEXT_PUBLIC_API_BASE_URL" \
+            --build-env "API_BACKEND_URL=$API_BACKEND_URL" \
+            --env "API_BACKEND_URL=$API_BACKEND_URL"

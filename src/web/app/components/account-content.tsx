@@ -2,10 +2,11 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useId, useRef, useState } from "react";
+import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { useSharedConversation } from "./conversation-provider";
 import { usePurchase } from "./purchase-provider";
 import { useAuth } from "./auth-provider";
+import { conversationApi, type ConversationSummary } from "@/utils/conversation-api";
 
 export type AccountView = "profile" | "history";
 
@@ -95,7 +96,7 @@ export function GuestProfile({ idPrefix = "customer" }: { idPrefix?: string }) {
     e.preventDefault(); setSaved(false);
     if (c.isLoading || !c.sessionReady || !purchase.ready) return;
     if (phone.trim() && !/^(?:0\d{9}|\+84\d{9})$/.test(phone.trim())) { setError("Nhập số điện thoại Việt Nam gồm 10 số hoặc +84."); return; }
-    if (needsReset && !allowReset) { setError("Xác nhận bắt đầu phiên khách mới trước khi đổi số."); return; }
+    if (needsReset && !allowReset) { setError("Xác nhận bắt đầu hội thoại mới trước khi đổi số."); return; }
     try {
       if (changing) purchase.store.reset();
       c.setCustomerPhone(phone); setError(""); setSaved(true); setAllowReset(false);
@@ -110,7 +111,7 @@ export function GuestProfile({ idPrefix = "customer" }: { idPrefix?: string }) {
           <div><input id={`${idPrefix}-phone`} type="tel" autoComplete="tel" maxLength={30} placeholder="VD: 0901234567" value={phone} onChange={e => { setPhone(e.target.value); setSaved(false); }} disabled={c.isLoading || !c.sessionReady} aria-invalid={!!error} aria-describedby={`${idPrefix}-note`} />
             <p id={`${idPrefix}-note`} className="muted-note">Số điện thoại chỉ dùng cho tư vấn. Đổi số sẽ bắt đầu hội thoại mới để tránh lẫn nội dung của hai người.</p></div>
         </div>
-        {needsReset && <label className="confirmation"><input className="confirm-profile-reset" type="checkbox" checked={allowReset} onChange={e => setAllowReset(e.target.checked)} disabled={c.isLoading} />Tôi đồng ý xóa hội thoại, bản nháp, giỏ và đơn demo trên thiết bị trước khi đổi số tư vấn.</label>}
+        {needsReset && <label className="confirmation"><input className="confirm-profile-reset" type="checkbox" checked={allowReset} onChange={e => setAllowReset(e.target.checked)} disabled={c.isLoading} />{user ? "Tôi đồng ý bắt đầu hội thoại mới và xóa bản nháp, giỏ và đơn demo trên thiết bị. Hội thoại cũ vẫn được giữ trong lịch sử." : "Tôi đồng ý xóa hội thoại, bản nháp, giỏ và đơn demo trên thiết bị trước khi đổi số tư vấn."}</label>}
         {error && <p className="error" role="alert">{error}</p>}
         <div className="profile-save"><button className="commerce-secondary save-profile" disabled={c.isLoading || !c.sessionReady || !purchase.ready} type="submit">Lưu thay đổi</button>
           {saved && <p role="status">Đã lưu thông tin tư vấn trong tab này.</p>}</div>
@@ -119,10 +120,53 @@ export function GuestProfile({ idPrefix = "customer" }: { idPrefix?: string }) {
     </div>
     <details className="profile-session-details"><summary>Thông tin phiên tư vấn</summary>
       <p className="session-id muted-note">Hội thoại: {c.sessionId || "Chưa bắt đầu"}</p>
-      <p className="muted-note">{user ? "Hội thoại và bản nháp hiện chỉ giữ khi tab đang mở." : "Hội thoại và bản nháp lưu trong tab này để khôi phục khi tải lại."} File ghi âm chỉ được giữ khi tab đang mở. Dữ liệu đơn demo không được xác minh theo số điện thoại.</p>
+      <p className="muted-note">{user ? "Hội thoại đã gửi được lưu trong tài khoản. Bản nháp chưa gửi chỉ giữ khi tab đang mở." : "Hội thoại và bản nháp lưu trong tab này để khôi phục khi tải lại."} File ghi âm chỉ được giữ khi tab đang mở. Dữ liệu đơn demo không được xác minh theo số điện thoại.</p>
     </details>
     {c.sessionNotice && <p role="status">{c.sessionNotice}</p>}
   </form>;
+}
+
+function SavedConversationHistory() {
+  const c = useSharedConversation();
+  const router = useRouter();
+  const [items, setItems] = useState<ConversationSummary[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [opening, setOpening] = useState("");
+  const [error, setError] = useState("");
+  const [hasMore, setHasMore] = useState(false);
+  const load = useCallback((offset = 0) => conversationApi.list(offset)
+    .then(page => {
+      setItems(previous => offset ? [...previous, ...page.items] : page.items);
+      setHasMore(page.has_more); setError("");
+    })
+    .catch(error => { setError(error instanceof Error ? error.message : "Chưa tải được lịch sử."); })
+    .finally(() => setLoading(false)), []);
+  useEffect(() => { void load(); }, [load]);
+  const open = async (id: string) => {
+    setOpening(id); setError("");
+    try { await c.openConversation(id); router.push("/ai-chat?mode=text"); }
+    catch (error) { setError(error instanceof Error ? error.message : "Chưa mở được hội thoại."); }
+    finally { setOpening(""); }
+  };
+  return <div className="account-history"><h2>Lịch sử hội thoại</h2>
+    <p>Hội thoại và call brief được lưu trong tài khoản của bạn.</p>
+    <button type="button" className="commerce-secondary" disabled={c.isLoading || !!opening} onClick={async () => {
+      try { await c.endConversation(); router.push("/ai-chat?mode=text"); }
+      catch (error) { setError(error instanceof Error ? error.message : "Chưa bắt đầu được hội thoại mới."); }
+    }}>Cuộc trò chuyện mới</button>
+    {loading && <p role="status">Đang tải lịch sử…</p>}
+    {!loading && !items.length && !error && <p>Bạn chưa có hội thoại đã lưu.</p>}
+    <div className="account-transcript">{items.map(item => <article key={item.id}>
+      <strong>{item.customer_phone ? `Tư vấn ${item.customer_phone}` : "Cuộc trò chuyện với Synee"}</strong>
+      <p>{new Date(item.updated_at).toLocaleString("vi-VN")} · {item.turn_number} lượt · {item.status === "ended" ? "Đã kết thúc" : "Có thể tiếp tục"}</p>
+      <button type="button" className="commerce-secondary" disabled={c.isLoading || !!opening} onClick={() => void open(item.id)}>
+        {opening === item.id ? "Đang mở…" : item.status === "ended" ? "Xem lại" : "Tiếp tục trò chuyện"}
+      </button>
+    </article>)}</div>
+    {hasMore && <button type="button" className="commerce-secondary" disabled={loading} onClick={() => { setLoading(true); void load(items.length); }}>Tải thêm</button>}
+    {error && <p className="error" role="alert">{error} <button type="button" className="text-link" onClick={() => { setLoading(true); void load(); }}>Thử lại</button></p>}
+    {c.debugLogs.length > 0 && <details className="debug-logs"><summary>Thông tin chẩn đoán hội thoại</summary>{c.debugLogs.map((log, i) => <article key={i}><p>{log.userMessage}</p><pre>{JSON.stringify(log.debug, null, 2)}</pre></article>)}</details>}
+  </div>;
 }
 
 function ConversationHistory() {
@@ -132,8 +176,9 @@ function ConversationHistory() {
   const [error, setError] = useState("");
   const [complete, setComplete] = useState(false);
   const lock = useRef(false);
+  if (user) return <SavedConversationHistory />;
   return <div className="account-history"><h2>Hội thoại trong tab này</h2>
-    <p>{user ? "Hội thoại hiện chỉ giữ khi tab đang mở. Chưa thể tra cứu từ thiết bị khác." : "Đây là bản lưu của phiên khách, không phải lịch sử tài khoản. Chưa thể tra cứu hội thoại từ thiết bị khác."}</p>
+    <p>Đây là bản lưu của phiên khách, không phải lịch sử tài khoản. Chưa thể tra cứu hội thoại từ thiết bị khác.</p>
     {!c.sessionReady ? <p role="status">Đang khôi phục hội thoại…</p> : <>
       <div className="account-transcript" role="log" aria-label="Hội thoại đã lưu">{c.messages.map((m, i) => <article key={i}><strong>{m.role === "agent" ? "Synee AI" : "Bạn"}</strong><p>{m.text}</p></article>)}</div>
       <Link href="/ai-chat" className="commerce-secondary">Tiếp tục trò chuyện</Link>

@@ -1,6 +1,7 @@
 services:
   - type: web
     name: telesale-agent-api
+    branch: deployment
     runtime: docker
     region: singapore
     plan: free
@@ -21,6 +22,12 @@ services:
         sync: false
       - key: CORS_ORIGINS
         value: https://agentweb-alpha.vercel.app,https://agentweb-nganbees-projects.vercel.app
+      - key: WEB_ORIGIN
+        value: https://agentweb-alpha.vercel.app
+      - key: SESSION_TTL_DAYS
+        value: "7"
+      - key: SESSION_COOKIE_SECURE
+        value: "true"
       - key: REALTIME_VOICE_ENABLED
         value: "true"
       - key: REALTIME_ALLOWED_ORIGINS

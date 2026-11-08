@@ -8,6 +8,8 @@ export interface DebugInfo {
 }
 
 interface ChatResponse {
+  user_message_id?: string;
+  message_id?: string;
   response: string;
   callBrief: CallBrief | null;
   transcript?: string;
@@ -35,7 +37,7 @@ export class ChatApiError extends Error {
   }
 }
 
-export function createChatClient(apiBase: string, fetcher: typeof fetch = fetch, now = Date.now) {
+export function createChatClient(apiBase: string, fetcher: typeof fetch = fetch, now = Date.now, accountMode = false) {
   let sending = false;
   let retryAt = 0;
   const remaining = () => Math.max(0, Math.ceil((retryAt - now()) / 1000));
@@ -49,7 +51,7 @@ export function createChatClient(apiBase: string, fetcher: typeof fetch = fetch,
 
     async isReady(signal: AbortSignal): Promise<boolean> {
       try {
-        const response = await fetcher(`${apiBase}/health`, { signal, cache: "no-store" });
+        const response = await fetcher(accountMode ? "/api/health" : `${apiBase}/health`, { signal, cache: "no-store" });
         return response.ok;
       } catch {
         return false;
@@ -60,14 +62,14 @@ export function createChatClient(apiBase: string, fetcher: typeof fetch = fetch,
       if (sending) throw new ChatApiError("Chờ Synee trả lời trước khi kết thúc hội thoại.");
       if (!conversationId) return;
       try {
-        const response = await fetcher(`${apiBase}/api/sessions/${encodeURIComponent(conversationId)}`, {
-          method: "DELETE", signal: AbortSignal.timeout(10000),
+        const response = await fetcher(accountMode ? `/api/conversations/${encodeURIComponent(conversationId)}/end` : `${apiBase}/api/sessions/${encodeURIComponent(conversationId)}`, {
+          method: accountMode ? "POST" : "DELETE", credentials: "same-origin", signal: AbortSignal.timeout(10000),
         });
         if (!response.ok) throw new ChatApiError(response.status === 401 || response.status === 403
           ? "Dịch vụ chưa cấp quyền kết thúc hội thoại. Dữ liệu trên thiết bị vẫn được giữ."
           : "Chưa kết thúc được hội thoại. Hãy thử lại; dữ liệu vẫn được giữ.");
         const data = await response.json();
-        if (data?.status !== "cleared" || data.conversation_id !== conversationId) throw new ChatApiError("Dịch vụ chưa xác nhận kết thúc đúng hội thoại. Dữ liệu vẫn được giữ.");
+        if (accountMode ? data?.status !== "ended" : data?.status !== "cleared" || data.conversation_id !== conversationId) throw new ChatApiError("Dịch vụ chưa xác nhận kết thúc đúng hội thoại. Dữ liệu vẫn được giữ.");
       } catch (e) {
         if (e instanceof ChatApiError) throw e;
         throw new ChatApiError("Không kết nối được dịch vụ để kết thúc hội thoại. Dữ liệu vẫn được giữ.", true);
@@ -81,7 +83,7 @@ export function createChatClient(apiBase: string, fetcher: typeof fetch = fetch,
       sending = true;
       try {
         let body: BodyInit;
-        let headers: HeadersInit | undefined;
+        const headers: Record<string, string> = accountMode ? { "X-Conversation-Mode": "account" } : {};
         if (turn.audioFile) {
           const form = new FormData();
           form.append("conversation_id", turn.conversationId);
@@ -89,7 +91,7 @@ export function createChatClient(apiBase: string, fetcher: typeof fetch = fetch,
           if (turn.customerPhone) form.append("customer_phone", turn.customerPhone);
           body = form;
         } else {
-          headers = { "Content-Type": "application/json" };
+          headers["Content-Type"] = "application/json";
           body = JSON.stringify({
             conversation_id: turn.conversationId,
             message: turn.message,
@@ -99,8 +101,8 @@ export function createChatClient(apiBase: string, fetcher: typeof fetch = fetch,
 
         let response: Response;
         try {
-          response = await fetcher(`${apiBase}/api/chat${turn.audioFile ? "/audio" : ""}`, {
-            method: "POST", headers, body,
+          response = await fetcher(`${accountMode ? "" : apiBase}/api/chat${turn.audioFile ? "/audio" : ""}`, {
+            method: "POST", headers: Object.keys(headers).length ? headers : undefined, body, credentials: "same-origin",
           });
         } catch {
           // A lost response does not prove that the backend skipped the turn.
@@ -116,7 +118,7 @@ export function createChatClient(apiBase: string, fetcher: typeof fetch = fetch,
         }
         if (!response.ok) {
           if (response.status === 401 || response.status === 403) {
-            throw new ChatApiError("Dịch vụ chưa cấp quyền tư vấn. Nội dung vẫn được giữ; hãy liên hệ hỗ trợ trước khi thử lại.");
+            throw new ChatApiError(accountMode ? "Phiên đăng nhập đã hết hạn. Nội dung vẫn được giữ; hãy đăng nhập lại." : "Dịch vụ chưa cấp quyền tư vấn. Nội dung vẫn được giữ; hãy liên hệ hỗ trợ trước khi thử lại.");
           }
           if (response.status === 429) {
             const seconds = Number(data?.retry_after_seconds ?? response.headers.get("Retry-After"));

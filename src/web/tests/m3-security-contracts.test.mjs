@@ -9,6 +9,7 @@ import { createPurchaseStore } from '../utils/commerce.ts';
 
 const python = String.raw`
 import ast, asyncio, copy, json, os, re, secrets, sys, unicodedata
+from uuid import UUID
 from types import SimpleNamespace as NS
 from unittest.mock import patch
 
@@ -17,6 +18,8 @@ identity_source = ast.parse(open(sys.argv[2], encoding='utf-8').read())
 class HTTPError(Exception):
     def __init__(self, status_code, detail): self.status_code = status_code
 class InputError(Exception): pass
+class GuestRepository:
+    async def conversation_exists(self, key): return False
 
 def load(tree, names, namespace):
     selected = [copy.deepcopy(n) for n in tree.body if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)) and n.name in names]
@@ -32,11 +35,14 @@ async def probe():
     async def run_turn(turn, existing):
         calls.append((turn.customer_hint, existing.owner))
         return NS(state=existing, response_text='synthetic response', perception=None, retrieved=None, tool_calls=[], memory_writes=[], usage={})
-    namespace = dict(os=os, secrets=secrets, asyncio=asyncio, Header=lambda **kw:None, HTTPException=HTTPError,
+    # This diagnostic seeds guest RAM only, not an authenticated database conversation.
+    namespace = dict(os=os, secrets=secrets, asyncio=asyncio, UUID=UUID,
+        Depends=lambda factory:factory(), get_auth_repository=lambda:GuestRepository(),
+        Header=lambda **kw:None, HTTPException=HTTPError,
         harness=NS(run_turn=run_turn), sessions={sid:state}, session_locks={},
         provider_cooldown=NS(remaining=lambda:0), Channel=NS(VOICE='voice'),
         AudioTooLargeError=InputError, AudioInputError=InputError, ASRUnavailableError=InputError)
-    load(source, {'require_api_key','run_chat_turn','_call_brief_preview','turn_payload','clear_session'}, namespace)
+    load(source, {'require_api_key','run_chat_turn','_call_brief_preview','turn_payload','guard_guest_id','clear_session'}, namespace)
     with patch.dict(os.environ, {'API_KEY':'', 'ENABLE_DEBUG_RESPONSE':'false'}, clear=True):
         namespace['require_api_key']()
         anonymous_allowed = True
@@ -77,7 +83,7 @@ assert.equal(processResult.status, 0, processResult.stderr || processResult.erro
 const findings = JSON.parse(processResult.stdout);
 
 test('M3 selected chat module handlers retain text/audio/session/health routes', () => {
-  assert.deepEqual(findings.routes, [['POST','/api/chat'],['POST','/api/chat/audio'],['DELETE','/api/sessions/{conversation_id}'],['GET','/'],['GET','/health']]);
+  assert.deepEqual(findings.routes, [['POST','/api/chat'],['POST','/api/chat/audio'],['DELETE','/api/sessions/{conversation_id}'],['GET','/'],['GET','/health'],['GET','/api/health']]);
 });
 test('M3 finding: service key rejects missing keys when configured but permits anonymous calls by default', () => {
   assert.equal(findings.configured_guard_rejects_missing, true);

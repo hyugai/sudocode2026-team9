@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { ChatApiError, createChatClient, type DebugInfo } from "./chat-api";
 import { conversationStorageKey, readGuestSession, writeGuestSession } from "./conversation-session";
-import type { CallBrief } from "./call-brief";
+import { readCallBrief, type CallBrief } from "./call-brief";
+import { accountConversationKey, conversationApi, type SavedConversation, type StoredFeedback } from "./conversation-api";
 
 // Keep the legacy deployment contract. This public URL must never contain a key.
 export const apiBase = (process.env.NEXT_PUBLIC_API_BASE_URL || (
@@ -12,13 +13,14 @@ export const apiBase = (process.env.NEXT_PUBLIC_API_BASE_URL || (
     : "https://telesale-agent-api-3no2.onrender.com"
 )).replace(/\/$/, "");
 
-export interface Message { role: "user" | "agent"; text: string }
+export interface Message { id?: string; role: "user" | "agent"; text: string; feedback?: StoredFeedback | null }
 export interface LogEntry { userMessage: string; debug: DebugInfo }
 export interface Consultation { sku: string; name: string; price: string; quantity: number }
 const welcome: Message[] = [{ role: "agent", text: "Mình là Synee AI. Mình có thể giúp bạn tìm sản phẩm phù hợp với nhu cầu và ngân sách." }];
 
 /** One owner for both presentations: switching visibility never starts a turn. */
 export function useConversation(persistGuest = true, enabled = true) {
+  const accountMode = !persistGuest && enabled;
   const [messages, setMessages] = useState<Message[]>(welcome);
   const [debugLogs, setDebugLogs] = useState<LogEntry[]>([]);
   const [callBrief, setCallBrief] = useState<CallBrief | null>(null);
@@ -36,25 +38,48 @@ export function useConversation(persistGuest = true, enabled = true) {
   const [voiceActive, setVoiceActive] = useState(false);
   const [consultation, setConsultation] = useState<Consultation | null>(null);
   const conversationIdRef = useRef("");
-  const [chatClient] = useState(() => createChatClient(apiBase));
+  const [chatClient] = useState(() => createChatClient(apiBase, fetch, Date.now, accountMode));
   const [sessionReady, setSessionReady] = useState(false);
   const [sessionNotice, setSessionNotice] = useState("");
   const [isClearing, setIsClearing] = useState(false);
+  const [conversationEnded, setConversationEnded] = useState(false);
+  const submissionLock = useRef(false);
+  const applySaved = useCallback((saved: SavedConversation) => {
+    setMessages(saved.messages.length ? saved.messages.map(message => ({
+      id: message.id, role: message.role, text: message.content, feedback: message.feedback,
+    })) : welcome);
+    setSessionId(saved.id); conversationIdRef.current = saved.id;
+    setCallBrief(readCallBrief(saved.call_brief)); setCallBriefStale(false);
+    updateCustomerPhone(saved.customer_phone ?? "");
+    setConversationEnded(saved.status === "ended");
+  }, []);
 
   useEffect(() => {
     if (!enabled) return;
-    try {
-      const saved = persistGuest ? readGuestSession(sessionStorage.getItem(conversationStorageKey)) : null;
-      if (saved) {
-        // Browser-only state must hydrate after the server's initial render.
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        setMessages(saved.messages.length ? saved.messages : welcome);
-        setInput(saved.input); updateCustomerPhone(saved.customerPhone); setVoicePreview(saved.voicePreview);
-        setConsultation(saved.consultation); setSessionId(saved.sessionId); conversationIdRef.current = saved.sessionId;
-      }
-    } catch { setSessionNotice("Không khôi phục được hội thoại đã lưu. Bạn đang dùng phiên khách mới."); }
-    setSessionReady(true);
-  }, [persistGuest, enabled]);
+    let active = true;
+    const restore = async () => {
+      try {
+        if (accountMode) {
+          const id = sessionStorage.getItem(accountConversationKey);
+          if (id) {
+            const saved = await conversationApi.load(id);
+            if (active) applySaved(saved);
+          }
+          return;
+        }
+        const saved = persistGuest ? readGuestSession(sessionStorage.getItem(conversationStorageKey)) : null;
+        if (saved) {
+          // Browser-only state must hydrate after the server's initial render.
+          setMessages(saved.messages.length ? saved.messages : welcome);
+          setInput(saved.input); updateCustomerPhone(saved.customerPhone); setVoicePreview(saved.voicePreview);
+          setConsultation(saved.consultation); setSessionId(saved.sessionId); conversationIdRef.current = saved.sessionId;
+        }
+      } catch { if (active) setSessionNotice("Chưa khôi phục được hội thoại. Bạn có thể thử mở lại từ lịch sử."); }
+      finally { if (active) setSessionReady(true); }
+    };
+    void restore();
+    return () => { active = false; };
+  }, [persistGuest, enabled, accountMode, applySaved]);
 
   useEffect(() => {
     if (!sessionReady || !persistGuest) return;
@@ -68,6 +93,23 @@ export function useConversation(persistGuest = true, enabled = true) {
   const resetConversation = () => {
     setMessages(welcome); setDebugLogs([]); setCallBrief(null); setCallBriefStale(false); setInput(""); setAudioFile(null); setAudioPreviewUrl("");
     setSessionId(""); conversationIdRef.current = ""; setConsultation(null); setErrorMessage(""); setSessionNotice("");
+    setConversationEnded(false);
+    if (accountMode) {
+      try { sessionStorage.removeItem(accountConversationKey); }
+      catch { setSessionNotice("Trình duyệt chưa xóa được dấu hội thoại cũ."); }
+    }
+  };
+  const rememberConversation = (id: string) => {
+    try { sessionStorage.setItem(accountConversationKey, id); }
+    catch { setSessionNotice("Hội thoại vẫn lưu trong tài khoản; trình duyệt chưa ghi nhớ lần mở gần nhất."); }
+  };
+  const openConversation = async (id: string) => {
+    if (!accountMode || submissionLock.current || isLoading || isClearing || voiceActive) throw new Error("Chờ xử lý hoàn tất trước khi mở hội thoại.");
+    submissionLock.current = true; setIsClearing(true);
+    try {
+      const saved = await conversationApi.load(id);
+      resetConversation(); applySaved(saved); rememberConversation(id);
+    } finally { submissionLock.current = false; setIsClearing(false); }
   };
   const setCustomerPhone = (phone: string) => {
     if (isLoading || isClearing || voiceActive) return;
@@ -122,15 +164,16 @@ export function useConversation(persistGuest = true, enabled = true) {
   };
 
   const sendMessage = async () => {
-    if (!sessionReady || isClearing || voiceActive || (!input.trim() && !audioFile) || chatClient.isSending || !backendReady || chatClient.retryAfterSeconds) return;
+    if (!sessionReady || conversationEnded || submissionLock.current || isClearing || voiceActive || (!input.trim() && !audioFile) || chatClient.isSending || !backendReady || chatClient.retryAfterSeconds) return;
     const userMessage = input.trim();
     const selectedAudio = audioFile;
-    const conversationId = conversationIdRef.current || crypto.randomUUID();
-    conversationIdRef.current = conversationId;
-    setSessionId(conversationId);
+    submissionLock.current = true;
     setIsLoading(true);
     setErrorMessage("");
     try {
+      const conversationId = conversationIdRef.current || (accountMode ? (await conversationApi.create(customerPhone)).id : crypto.randomUUID());
+      conversationIdRef.current = conversationId; setSessionId(conversationId);
+      if (accountMode) rememberConversation(conversationId);
       const contextualMessage = consultation && !selectedAudio
         ? `Ngữ cảnh tư vấn: ${consultation.name} (${consultation.sku}), giá tham chiếu ${consultation.price}, số lượng ${consultation.quantity}.\nCâu hỏi của khách: ${userMessage}`
         : userMessage;
@@ -142,8 +185,8 @@ export function useConversation(persistGuest = true, enabled = true) {
         throw new Error("Không nhận được văn bản từ ghi âm. Vui lòng thử lại.");
       }
       setMessages(prev => [...prev,
-        { role: "user", text: transcript },
-        { role: "agent", text: data.response || "Chưa nhận được phản hồi từ tư vấn viên." },
+        { id: data.user_message_id, role: "user", text: transcript },
+        { id: data.message_id, role: "agent", text: data.response || "Chưa nhận được phản hồi từ tư vấn viên.", feedback: null },
       ]);
       setCallBrief(data.callBrief);
       setCallBriefStale(false);
@@ -157,13 +200,18 @@ export function useConversation(persistGuest = true, enabled = true) {
       setErrorMessage(error instanceof ChatApiError && error.retryAfterSeconds > 0
         ? ""
         : error instanceof Error ? error.message : "Lỗi kết nối. Vui lòng thử lại.");
-    } finally { setIsLoading(false); }
+    } finally { submissionLock.current = false; setIsLoading(false); }
+  };
+
+  const setMessageFeedback = (id: string, feedback: StoredFeedback | null) => {
+    setMessages(previous => previous.map(message => message.id === id ? { ...message, feedback } : message));
   };
 
   return { messages, debugLogs, callBrief, callBriefStale, input, setInput, customerPhone, setCustomerPhone, isLoading: isLoading || isClearing || voiceActive,
     audioFile, audioPreviewUrl, clearAudio, selectAudio, errorMessage, backendReady,
     cooldownSeconds, sessionId, sendMessage, voicePreview, setVoicePreview, consultation, setConsultation,
-    sessionReady, sessionNotice, endConversation, voiceActive, setVoiceActive };
+    sessionReady, sessionNotice, endConversation, voiceActive, setVoiceActive,
+    accountMode, conversationEnded, openConversation, setMessageFeedback };
 }
 
 export type Conversation = ReturnType<typeof useConversation>;

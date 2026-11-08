@@ -1,5 +1,6 @@
 import { CART_KEY, SESSION_KEY, type StoragePort } from "./commerce.ts";
 import { conversationStorageKey } from "./conversation-session.ts";
+import { accountConversationKey } from "./conversation-api.ts";
 
 const ownerKey = "synee.auth.owner.v1";
 
@@ -9,6 +10,7 @@ export function syncAuthOwner(userId: string | null, session: StoragePort, local
   const previous = session.getItem(ownerKey);
   if (reset || (previous !== owner && (previous !== null || userId !== null))) {
     session.removeItem(conversationStorageKey);
+    session.removeItem(accountConversationKey);
     session.removeItem(SESSION_KEY);
     local.removeItem(CART_KEY);
   }

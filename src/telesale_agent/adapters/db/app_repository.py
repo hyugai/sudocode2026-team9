@@ -47,7 +47,11 @@ def _user(row: User) -> dict[str, Any]:
 
 
 def _conversation(row: Conversation) -> dict[str, Any]:
+    snapshot = row.checkpoint if isinstance(row.checkpoint, dict) else {}
+    state = snapshot.get("state") or {}
+    identity = state.get("identity") if isinstance(state, dict) else None
     return {"id": row.id, "status": row.status, "turn_number": row.turn_number,
+            "customer_phone": identity.get("phone") if isinstance(identity, dict) else None,
             "created_at": row.created_at, "updated_at": row.updated_at, "ended_at": row.ended_at}
 
 
@@ -168,10 +172,12 @@ class AppDataRepository:
                         "has_more": len(messages) > limit}
         return await asyncio.to_thread(read)
 
-    async def load_state(self, user_id: str, conversation_id: str) -> ConversationState:
+    async def load_state(self, user_id: str, conversation_id: str, *, active_only: bool = False) -> ConversationState:
         def read():
             with self.sessions() as session:
                 row = _owned(session, user_id, conversation_id)
+                if active_only and row.status != "active":
+                    raise ConversationConflict("Hội thoại đã kết thúc. Hãy bắt đầu hội thoại mới.")
                 state = deserialize_checkpoint(row.checkpoint)
                 if state.conversation_id != row.id or state.turn_number != row.turn_number:
                     raise CheckpointError("Checkpoint không khớp hội thoại đã lưu.")

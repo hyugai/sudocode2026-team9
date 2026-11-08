@@ -48,7 +48,7 @@ export function ChatPanel({ conversation: c, compact = false, expanded = false, 
     const input = inputRef.current;
     if (input) { input.style.height = "22px"; input.style.height = `${Math.min(input.scrollHeight, 66)}px`; }
   }, [c.input]);
-  const disabled = c.isLoading || !c.sessionReady || !c.backendReady || c.cooldownSeconds > 0 || (!c.input.trim() && !c.audioFile);
+  const disabled = c.isLoading || c.conversationEnded || !c.sessionReady || !c.backendReady || c.cooldownSeconds > 0 || (!c.input.trim() && !c.audioFile);
   const submit = () => {
     if (disabled) return;
     // The root provider owns the request across navigation. URL flags must
@@ -79,6 +79,7 @@ export function ChatPanel({ conversation: c, compact = false, expanded = false, 
       <div id={statusId} className="chat-status" aria-live="polite">
         {dashboard && c.sessionNotice && <p role="status">{c.sessionNotice}</p>}
         {c.errorMessage ? <p role="alert" className="error">{c.errorMessage}</p>
+          : c.conversationEnded ? <p role="status">Hội thoại đã kết thúc. Mở Chat để bắt đầu cuộc trò chuyện mới.</p>
           : c.cooldownSeconds > 0 ? <p role="status">Dịch vụ hội thoại đang tạm giới hạn. Có thể gửi tiếp sau {c.cooldownSeconds} giây.</p>
           : c.isLoading ? <p role="status">{c.audioFile ? "Đang nhận dạng ghi âm và chờ phản hồi…" : "Đang chờ phản hồi…"}</p>
           : !c.backendReady ? <p role="status">Đang chờ kết nối backend sẵn sàng. Hệ thống sẽ tự kiểm tra lại…</p>

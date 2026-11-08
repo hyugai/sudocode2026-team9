@@ -18,6 +18,7 @@ RUN python -m pip install --upgrade pip \
 COPY pyproject.toml ./pyproject.toml
 COPY src ./src
 COPY scripts/migrate_voice.py ./scripts/migrate_voice.py
+COPY scripts/migrate_app_data.py ./scripts/migrate_app_data.py
 COPY data/memory-root ./data/memory-root
 
 EXPOSE 10000
@@ -25,4 +26,4 @@ EXPOSE 10000
 HEALTHCHECK --interval=30s --timeout=5s --start-period=180s --retries=3 \
     CMD curl --fail http://127.0.0.1:${PORT:-10000}/health || exit 1
 
-CMD ["sh", "-c", "if [ \"${REALTIME_VOICE_ENABLED:-false}\" = \"true\" ]; then python scripts/migrate_voice.py; fi; exec python -m uvicorn telesale_agent.entrypoints.api.chat:app --host 0.0.0.0 --port ${PORT:-10000}"]
+CMD ["sh", "-c", "set -e; python scripts/migrate_app_data.py; if [ \"${REALTIME_VOICE_ENABLED:-false}\" = \"true\" ]; then python scripts/migrate_voice.py; fi; exec python -m uvicorn telesale_agent.entrypoints.api.chat:app --host 0.0.0.0 --port ${PORT:-10000}"]
