@@ -1,7 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState, type FormEvent } from "react";
+import { useAuth } from "../components/auth-provider";
 
 type AuthMode = "login" | "register";
 type Field = "name" | "email" | "password" | "confirm" | "terms";
@@ -21,15 +23,20 @@ function AuthIcon({ name }: { name: "spark" | "chat" | "search" | "shield" | "ey
 
 export function AuthScreen({ mode }: { mode: AuthMode }) {
   const register = mode === "register";
+  const auth = useAuth();
+  const router = useRouter();
   const [interactive, setInteractive] = useState(false);
   const [errors, setErrors] = useState<Errors>({});
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [pending, setPending] = useState(false);
+  const [serverError, setServerError] = useState("");
+  const submitLock = useRef(false);
   const resultRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Keep the demo form disabled until its submit-prevention handler is hydrated.
+    // Keep credentials out of native form navigation before hydration.
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setInteractive(true);
   }, []);
@@ -37,29 +44,40 @@ export function AuthScreen({ mode }: { mode: AuthMode }) {
   const clearFeedback = (field: Field) => {
     setErrors(previous => ({ ...previous, [field]: undefined }));
     setSubmitted(false);
+    setServerError("");
   };
-  const submit = (event: FormEvent<HTMLFormElement>) => {
+  const submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (submitLock.current || auth.busy || !auth.ready) return;
     const form = event.currentTarget;
     const field = (name: Field) => form.querySelector<HTMLInputElement>(`#auth-${name}`)!;
     const next: Errors = {};
     if (register && field("name").value.trim().length < 2) next.name = "Nhập họ và tên có ít nhất 2 ký tự.";
     if (!field("email").value.trim() || !field("email").validity.valid) next.email = "Nhập địa chỉ email hợp lệ.";
-    if (!field("password").value) next.password = "Nhập mật khẩu để thử biểu mẫu.";
-    else if (register && [...field("password").value].length < 15) next.password = "Dùng mật khẩu mẫu có ít nhất 15 ký tự.";
+    if (!field("password").value) next.password = "Nhập mật khẩu để tiếp tục.";
+    else if (register && [...field("password").value].length < 15) next.password = "Dùng mật khẩu có ít nhất 15 ký tự.";
     if (register && (!field("confirm").value || field("confirm").value !== field("password").value)) next.confirm = "Mật khẩu nhập lại chưa khớp.";
-    if (register && !field("terms").checked) next.terms = "Vui lòng xác nhận điều khoản để tiếp tục bản demo.";
+    if (register && !field("terms").checked) next.terms = "Vui lòng xác nhận điều khoản để tiếp tục.";
     setErrors(next);
     setSubmitted(false);
     const firstError = Object.keys(next)[0] as Field | undefined;
     if (firstError) { field(firstError).focus(); return; }
 
-    // UI demo only: no fetch, credentials storage, auth cookie or guest-state change.
-    form.querySelectorAll<HTMLInputElement>("[data-password]").forEach(input => { input.value = ""; });
-    setShowPassword(false);
-    setShowConfirm(false);
-    setSubmitted(true);
-    requestAnimationFrame(() => resultRef.current?.focus({ preventScroll: true }));
+    submitLock.current = true; setPending(true); setServerError("");
+    try {
+      const email = field("email").value.trim();
+      const password = field("password").value;
+      if (register) await auth.register(field("name").value.trim(), email, password);
+      else await auth.login(email, password);
+      form.querySelectorAll<HTMLInputElement>("[data-password]").forEach(input => { input.value = ""; });
+      setShowPassword(false); setShowConfirm(false);
+      if (register) {
+        setSubmitted(true);
+        requestAnimationFrame(() => resultRef.current?.focus({ preventScroll: true }));
+      } else router.replace("/account");
+    } catch (error) {
+      setServerError(error instanceof Error ? error.message : "Chưa xử lý được tài khoản. Hãy thử lại.");
+    } finally { submitLock.current = false; setPending(false); }
   };
   const describedBy = (field: Field, hint?: string) => [hint, errors[field] ? `auth-${field}-error` : undefined].filter(Boolean).join(" ") || undefined;
 
@@ -77,24 +95,26 @@ export function AuthScreen({ mode }: { mode: AuthMode }) {
     </section>
     <section className="auth-card" aria-labelledby="auth-heading">
       <nav className="auth-mode-nav" aria-label="Đăng nhập và đăng ký"><Link href="/login" aria-current={!register ? "page" : undefined}>Đăng nhập</Link><Link href="/register" aria-current={register ? "page" : undefined}>Đăng ký</Link></nav>
-      <div className="auth-card-heading"><span className="auth-demo-badge">Giao diện demo</span><h1 id="auth-heading">{register ? "Tạo tài khoản Synee" : "Chào mừng bạn trở lại"}</h1><p>{register ? "Một bước nhỏ để bắt đầu hành trình cùng Synee." : "Tiếp tục hành trình mua sắm cùng Synee."}</p></div>
-      <p className="auth-demo-note" id="auth-demo-note">Dùng thông tin mẫu để thử giao diện. Chưa tạo tài khoản hoặc đăng nhập thật.</p>
-      <form className="auth-form" noValidate onSubmit={submit} aria-describedby="auth-demo-note">
-        <fieldset disabled={!interactive}>
-          {register && <div className="auth-field"><label htmlFor="auth-name">Họ và tên</label><input id="auth-name" autoComplete="name" placeholder="Nguyễn Minh Anh" required maxLength={80} aria-invalid={!!errors.name} aria-describedby={describedBy("name")} onChange={() => clearFeedback("name")} />{errors.name && <p className="auth-field-error" id="auth-name-error">{errors.name}</p>}</div>}
+      <div className="auth-card-heading"><h1 id="auth-heading">{register ? "Tạo tài khoản Synee" : "Chào mừng bạn trở lại"}</h1><p>{register ? "Một bước nhỏ để bắt đầu hành trình cùng Synee." : "Tiếp tục hành trình mua sắm cùng Synee."}</p></div>
+      <p className="auth-demo-note" id="auth-demo-note">{auth.ready ? "Sử dụng email và mật khẩu của bạn. Không chia sẻ mật khẩu với người khác." : "Đang kiểm tra phiên đăng nhập…"}</p>
+      <form className="auth-form" noValidate onSubmit={submit} aria-describedby="auth-demo-note" aria-busy={pending}>
+        <fieldset disabled={!interactive || !auth.ready || pending || auth.busy}>
+          {register && <div className="auth-field"><label htmlFor="auth-name">Họ và tên</label><input id="auth-name" autoComplete="name" placeholder="Nguyễn Minh Anh" required maxLength={100} aria-invalid={!!errors.name} aria-describedby={describedBy("name")} onChange={() => clearFeedback("name")} />{errors.name && <p className="auth-field-error" id="auth-name-error">{errors.name}</p>}</div>}
           <div className="auth-field"><label htmlFor="auth-email">Email</label><input id="auth-email" type="email" autoComplete={register ? "email" : "username"} inputMode="email" autoCapitalize="none" spellCheck={false} placeholder="ban@example.com" required maxLength={254} aria-invalid={!!errors.email} aria-describedby={describedBy("email")} onChange={() => clearFeedback("email")} />{errors.email && <p className="auth-field-error" id="auth-email-error">{errors.email}</p>}</div>
-          <div className="auth-field"><label htmlFor="auth-password">Mật khẩu</label><div className="auth-password-field"><input id="auth-password" data-password type={showPassword ? "text" : "password"} autoComplete={register ? "new-password" : "current-password"} placeholder={register ? "Tạo mật khẩu mẫu" : "Nhập mật khẩu mẫu"} required maxLength={128} aria-invalid={!!errors.password} aria-describedby={describedBy("password", register ? "auth-password-hint" : undefined)} onChange={() => clearFeedback("password")} /><button type="button" aria-label={showPassword ? "Ẩn mật khẩu" : "Hiện mật khẩu"} aria-pressed={showPassword} aria-controls="auth-password" onClick={() => setShowPassword(value => !value)}><AuthIcon name={showPassword ? "eyeOff" : "eye"} /></button></div>{register && <p className="auth-field-hint" id="auth-password-hint">Ít nhất 15 ký tự. Có thể dùng một cụm từ dễ nhớ.</p>}{errors.password && <p className="auth-field-error" id="auth-password-error">{errors.password}</p>}</div>
+          <div className="auth-field"><label htmlFor="auth-password">Mật khẩu</label><div className="auth-password-field"><input id="auth-password" data-password type={showPassword ? "text" : "password"} autoComplete={register ? "new-password" : "current-password"} placeholder={register ? "Tạo mật khẩu" : "Nhập mật khẩu"} required maxLength={128} aria-invalid={!!errors.password} aria-describedby={describedBy("password", register ? "auth-password-hint" : undefined)} onChange={() => clearFeedback("password")} /><button type="button" aria-label={showPassword ? "Ẩn mật khẩu" : "Hiện mật khẩu"} aria-pressed={showPassword} aria-controls="auth-password" onClick={() => setShowPassword(value => !value)}><AuthIcon name={showPassword ? "eyeOff" : "eye"} /></button></div>{register && <p className="auth-field-hint" id="auth-password-hint">Ít nhất 15 ký tự. Có thể dùng một cụm từ dễ nhớ.</p>}{errors.password && <p className="auth-field-error" id="auth-password-error">{errors.password}</p>}</div>
           {register && <>
-            <div className="auth-field"><label htmlFor="auth-confirm">Nhập lại mật khẩu</label><div className="auth-password-field"><input id="auth-confirm" data-password type={showConfirm ? "text" : "password"} autoComplete="new-password" placeholder="Nhập lại mật khẩu mẫu" required maxLength={128} aria-invalid={!!errors.confirm} aria-describedby={describedBy("confirm")} onChange={() => clearFeedback("confirm")} /><button type="button" aria-label={showConfirm ? "Ẩn mật khẩu nhập lại" : "Hiện mật khẩu nhập lại"} aria-pressed={showConfirm} aria-controls="auth-confirm" onClick={() => setShowConfirm(value => !value)}><AuthIcon name={showConfirm ? "eyeOff" : "eye"} /></button></div>{errors.confirm && <p className="auth-field-error" id="auth-confirm-error">{errors.confirm}</p>}</div>
+            <div className="auth-field"><label htmlFor="auth-confirm">Nhập lại mật khẩu</label><div className="auth-password-field"><input id="auth-confirm" data-password type={showConfirm ? "text" : "password"} autoComplete="new-password" placeholder="Nhập lại mật khẩu" required maxLength={128} aria-invalid={!!errors.confirm} aria-describedby={describedBy("confirm")} onChange={() => clearFeedback("confirm")} /><button type="button" aria-label={showConfirm ? "Ẩn mật khẩu nhập lại" : "Hiện mật khẩu nhập lại"} aria-pressed={showConfirm} aria-controls="auth-confirm" onClick={() => setShowConfirm(value => !value)}><AuthIcon name={showConfirm ? "eyeOff" : "eye"} /></button></div>{errors.confirm && <p className="auth-field-error" id="auth-confirm-error">{errors.confirm}</p>}</div>
             <div className="auth-consent"><div><input id="auth-terms" type="checkbox" required aria-invalid={!!errors.terms} aria-describedby={describedBy("terms")} onChange={() => clearFeedback("terms")} /><label htmlFor="auth-terms">Tôi đồng ý với <Link href="/terms" target="_blank" rel="noopener noreferrer">Điều khoản</Link> và <Link href="/privacy" target="_blank" rel="noopener noreferrer">Chính sách bảo mật</Link>.</label></div>{errors.terms && <p className="auth-field-error" id="auth-terms-error">{errors.terms}</p>}</div>
           </>}
           {Object.values(errors).some(Boolean) && <p className="auth-error-summary" role="alert">Vui lòng kiểm tra các mục được đánh dấu.</p>}
-          <button type="submit" className="auth-submit">{register ? "Đăng ký demo" : "Đăng nhập demo"}<AuthIcon name="arrow" /></button>
+          <button type="submit" className="auth-submit">{pending ? "Đang xử lý…" : register ? "Đăng ký" : "Đăng nhập"}<AuthIcon name="arrow" /></button>
         </fieldset>
       </form>
-      {submitted && <div className="auth-result" ref={resultRef} tabIndex={-1} role="status"><span><AuthIcon name="check" /></span><div><strong>Biểu mẫu hợp lệ</strong><p>{register ? "Demo hoàn tất. Chưa tạo tài khoản thật." : "Demo hoàn tất. Chưa xác thực đăng nhập."} Bạn vẫn đang dùng phiên khách.</p><Link href="/">Tiếp tục khám phá <span aria-hidden="true">→</span></Link></div></div>}
-      <div className="auth-card-bottom"><p>{register ? "Bạn đã có tài khoản?" : "Bạn chưa có tài khoản?"} <Link href={register ? "/login" : "/register"}>{register ? "Đăng nhập" : "Đăng ký ngay"}</Link></p><Link href="/" className="auth-guest-link">Tiếp tục với phiên khách <span aria-hidden="true">→</span></Link></div>
-      <noscript><p className="auth-field-error">Bật JavaScript để thử biểu mẫu demo. Bạn vẫn có thể quay về trang chủ.</p></noscript>
+      {pending && <p role="status">Đang xử lý tài khoản…</p>}
+      {serverError && <p className="auth-field-error" role="alert">{serverError}</p>}
+      {submitted && <div className="auth-result" ref={resultRef} tabIndex={-1} role="status"><span><AuthIcon name="check" /></span><div><strong>Đã tạo tài khoản</strong><p>Đăng nhập bằng email vừa đăng ký để tiếp tục.</p><Link href="/login">Đăng nhập <span aria-hidden="true">→</span></Link></div></div>}
+      <div className="auth-card-bottom"><p>{register ? "Bạn đã có tài khoản?" : "Bạn chưa có tài khoản?"} <Link href={register ? "/login" : "/register"}>{register ? "Đăng nhập" : "Đăng ký ngay"}</Link></p><Link href="/" className="auth-guest-link">{auth.user ? "Về trang chủ" : "Tiếp tục với phiên khách"} <span aria-hidden="true">→</span></Link></div>
+      <noscript><p className="auth-field-error">Bật JavaScript để sử dụng biểu mẫu tài khoản. Bạn vẫn có thể quay về trang chủ.</p></noscript>
     </section>
   </div>;
 }

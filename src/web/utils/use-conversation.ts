@@ -9,7 +9,7 @@ import type { CallBrief } from "./call-brief";
 export const apiBase = (process.env.NEXT_PUBLIC_API_BASE_URL || (
   process.env.NODE_ENV === "development"
     ? "http://localhost:8000"
-    : "https://telesale-agent-api.onrender.com"
+    : "https://telesale-agent-api-3no2.onrender.com"
 )).replace(/\/$/, "");
 
 export interface Message { role: "user" | "agent"; text: string }
@@ -18,7 +18,7 @@ export interface Consultation { sku: string; name: string; price: string; quanti
 const welcome: Message[] = [{ role: "agent", text: "Mình là Synee AI. Mình có thể giúp bạn tìm sản phẩm phù hợp với nhu cầu và ngân sách." }];
 
 /** One owner for both presentations: switching visibility never starts a turn. */
-export function useConversation() {
+export function useConversation(persistGuest = true, enabled = true) {
   const [messages, setMessages] = useState<Message[]>(welcome);
   const [debugLogs, setDebugLogs] = useState<LogEntry[]>([]);
   const [callBrief, setCallBrief] = useState<CallBrief | null>(null);
@@ -42,8 +42,9 @@ export function useConversation() {
   const [isClearing, setIsClearing] = useState(false);
 
   useEffect(() => {
+    if (!enabled) return;
     try {
-      const saved = readGuestSession(sessionStorage.getItem(conversationStorageKey));
+      const saved = persistGuest ? readGuestSession(sessionStorage.getItem(conversationStorageKey)) : null;
       if (saved) {
         // Browser-only state must hydrate after the server's initial render.
         // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -53,16 +54,16 @@ export function useConversation() {
       }
     } catch { setSessionNotice("Không khôi phục được hội thoại đã lưu. Bạn đang dùng phiên khách mới."); }
     setSessionReady(true);
-  }, []);
+  }, [persistGuest, enabled]);
 
   useEffect(() => {
-    if (!sessionReady) return;
+    if (!sessionReady || !persistGuest) return;
     try { sessionStorage.setItem(conversationStorageKey, writeGuestSession({ messages, sessionId, input, customerPhone, voicePreview, consultation })); }
     catch {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setSessionNotice("Trình duyệt chưa lưu được hội thoại. Hãy giữ tab mở để tiếp tục tư vấn.");
     }
-  }, [sessionReady, messages, sessionId, input, customerPhone, voicePreview, consultation]);
+  }, [persistGuest, sessionReady, messages, sessionId, input, customerPhone, voicePreview, consultation]);
 
   const resetConversation = () => {
     setMessages(welcome); setDebugLogs([]); setCallBrief(null); setCallBriefStale(false); setInput(""); setAudioFile(null); setAudioPreviewUrl("");

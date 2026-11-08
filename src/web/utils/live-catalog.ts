@@ -5,7 +5,7 @@ import type { LiveProductDetails } from "./catalog";
 const apiBase = (process.env.NEXT_PUBLIC_API_BASE_URL || (
   process.env.NODE_ENV === "development"
     ? "http://localhost:8000"
-    : "https://telesale-agent-api.onrender.com"
+    : "https://telesale-agent-api-3no2.onrender.com"
 )).replace(/\/$/, "");
 
 async function catalogResponse(path: string) {

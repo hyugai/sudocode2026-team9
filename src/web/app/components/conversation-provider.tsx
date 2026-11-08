@@ -9,8 +9,8 @@ import { InfoDialog } from "./info-dialog";
 const ConversationContext = createContext<Conversation | null>(null);
 
 /** Keep the existing conversation alive across catalog/PDP client navigation. */
-export function ConversationProvider({ children }: { children: ReactNode }) {
-  const conversation = useConversation();
+export function ConversationProvider({ children, persistGuest = true, enabled = true }: { children: ReactNode; persistGuest?: boolean; enabled?: boolean }) {
+  const conversation = useConversation(persistGuest, enabled);
   const pathname = usePathname();
   return <ConversationContext.Provider value={conversation}>
     {children}

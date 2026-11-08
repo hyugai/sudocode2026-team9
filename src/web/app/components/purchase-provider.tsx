@@ -5,9 +5,9 @@ import { createPurchaseStore } from "@/utils/commerce";
 
 type Store = ReturnType<typeof createPurchaseStore>;
 const PurchaseContext = createContext<Store | null>(null);
-export function PurchaseProvider({ children }: { children: ReactNode }) {
+export function PurchaseProvider({ children, enabled = true }: { children: ReactNode; enabled?: boolean }) {
   const [store] = useState(() => createPurchaseStore(() => window.localStorage, () => window.sessionStorage));
-  useEffect(() => { store.hydrate(); }, [store]);
+  useEffect(() => { if (enabled) store.hydrate(); }, [store, enabled]);
   return <PurchaseContext.Provider value={store}>{children}</PurchaseContext.Provider>;
 }
 export function usePurchase() {
