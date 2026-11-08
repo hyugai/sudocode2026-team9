@@ -12,8 +12,8 @@ import ast, asyncio, copy, json, os, re, secrets, sys, unicodedata
 from types import SimpleNamespace as NS
 from unittest.mock import patch
 
-source = ast.parse(open(sys.argv[1]).read())
-identity_source = ast.parse(open(sys.argv[2]).read())
+source = ast.parse(open(sys.argv[1], encoding='utf-8').read())
+identity_source = ast.parse(open(sys.argv[2], encoding='utf-8').read())
 class HTTPError(Exception):
     def __init__(self, status_code, detail): self.status_code = status_code
 class InputError(Exception): pass
@@ -36,7 +36,7 @@ async def probe():
         harness=NS(run_turn=run_turn), sessions={sid:state}, session_locks={},
         provider_cooldown=NS(remaining=lambda:0), Channel=NS(VOICE='voice'),
         AudioTooLargeError=InputError, AudioInputError=InputError, ASRUnavailableError=InputError)
-    load(source, {'require_api_key','run_chat_turn','clear_session'}, namespace)
+    load(source, {'require_api_key','run_chat_turn','_call_brief_preview','turn_payload','clear_session'}, namespace)
     with patch.dict(os.environ, {'API_KEY':'', 'ENABLE_DEBUG_RESPONSE':'false'}, clear=True):
         namespace['require_api_key']()
         anonymous_allowed = True
@@ -69,13 +69,14 @@ async def probe():
         debug_exposes_profile=debug_exposes_profile,hint_trusted_without_proof=resolved.customer_id=='synthetic-user-b' and resolved.confidence==1.0)
 print(json.dumps(asyncio.run(probe())))
 `;
-const processResult = spawnSync('python3', ['-I', '-B', '-c', python,
+const pythonCommand = process.env.PYTHON || (process.platform === 'win32' ? 'python' : 'python3');
+const processResult = spawnSync(pythonCommand, ['-I', '-B', '-c', python,
   fileURLToPath(new URL('../../telesale_agent/entrypoints/api/chat.py', import.meta.url)),
   fileURLToPath(new URL('../../telesale_agent/adapters/mock/identity.py', import.meta.url))], { encoding:'utf8' });
-assert.equal(processResult.status, 0, processResult.stderr);
+assert.equal(processResult.status, 0, processResult.stderr || processResult.error?.message);
 const findings = JSON.parse(processResult.stdout);
 
-test('M3 contract inventory has chat/health/delete only, with no auth or commerce HTTP routes', () => {
+test('M3 selected chat module handlers retain text/audio/session/health routes', () => {
   assert.deepEqual(findings.routes, [['POST','/api/chat'],['POST','/api/chat/audio'],['DELETE','/api/sessions/{conversation_id}'],['GET','/'],['GET','/health']]);
 });
 test('M3 finding: service key rejects missing keys when configured but permits anonymous calls by default', () => {

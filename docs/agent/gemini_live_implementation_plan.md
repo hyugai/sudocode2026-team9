@@ -284,7 +284,7 @@ Các file test dưới đây sẽ tạo khi triển khai; lượt hiện tại k
 | src/web/tests/voice-api.test.mjs | Protocol/epoch, reconnect, listener cleanup, giả lập progress/flush, lỗi mic; không cần model thật. |
 | Browser audio QA | Resampling thực tế, speaker/mic, echo, mute/unmute, audio cũ sau interrupt, chuyển tab và network change. |
 
-Giữ tests/test_streaming.py và các test eval/frontend hiện có làm regression. Thêm fixture để chứng minh hành vi nghiệp vụ được giữ nguyên, tránh snapshot theo câu chữ LLM không ổn định.
+Giữ tests/test_chat_latency.py và các test eval/frontend hiện có làm regression. Thêm fixture để chứng minh hành vi nghiệp vụ được giữ nguyên, tránh snapshot theo câu chữ LLM không ổn định.
 
 Lệnh dự kiến khi triển khai, điều chỉnh nếu repository bổ sung cấu hình test:
 

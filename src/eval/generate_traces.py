@@ -59,7 +59,7 @@ from eval.trace_extractors import (  # noqa: E402
     extract_facts_used,
     extract_questions,
 )
-from eval.benchmark_support import audio_path, FreshCallBrief, validate_inputs  # noqa: E402
+from eval.benchmark_support import audio_path, validate_inputs  # noqa: E402
 from eval.model_config import configure_eval_model, permanent_provider_error  # noqa: E402
 
 
@@ -109,7 +109,6 @@ async def run_scenario(
     cleanup_orders: bool = True,
     input_kind: str = "text",
     audio_root: Path | None = None,
-    streaming: bool = False,
 ) -> list[dict]:
     rows = []
     scenario_id = scenario["scenario_id"]
@@ -223,17 +222,10 @@ async def run_scenario(
                 result = None
                 for attempt in range(max_retries):
                     try:
-                        if streaming:
-                            result = None
-                            async for event in harness.stream_turn(turn_input, conv_state):
-                                if event["type"] == "complete":
-                                    result = event["result"]
-                                elif event["type"] == "error":
-                                    raise event["exception"]
-                            if result is None:
-                                raise RuntimeError("Answer stream ended without a completed turn")
-                        else:
-                            result = await harness.run_turn(turn_input, conv_state)
+                        # Harness arrival is the evaluation boundary; dataset
+                        # file loading and client/UI time are outside it.
+                        turn_input.metadata["_latency_started_at"] = time.perf_counter()
+                        result = await harness.run_turn(turn_input, conv_state)
                         break
                     except Exception as turn_exc:
                         err_str = str(turn_exc)
@@ -420,7 +412,6 @@ async def main():
     parser.add_argument("--scenario-id", default=None, dest="scenario_id",
                         help="Chỉ chạy một scenario cụ thể, vd: SC-001")
     parser.add_argument("--input-kind", choices=["text","audio"], default="text")
-    parser.add_argument("--streaming", action=argparse.BooleanOptionalAction, default=True)
     parser.add_argument("--llm-provider",default=None)
     parser.add_argument("--llm-model",default=None)
     parser.add_argument("--audio-root", type=Path, default=REPO_ROOT / "dataset/iterative-refinement/audio")
@@ -535,7 +526,6 @@ async def main():
         else "disabled"
     )
     harness = await build_deepagent_harness_async(memory_mode=memory_mode)
-    harness.call_brief = FreshCallBrief(harness.call_brief, db_client)
     print("[Runner] Agent sẵn sàng.\n")
 
     total_rows = 0
@@ -563,7 +553,6 @@ async def main():
                         cleanup_orders=args.cleanup_orders,
                         input_kind=args.input_kind,
                         audio_root=args.audio_root,
-                        streaming=args.streaming,
                     )
                     elapsed = time.perf_counter() - t0
                     print(f"[{i:3d}/{len(all_files)}] {sid}: ✓ {len(rows)} turns, {elapsed:.1f}s", flush=True)

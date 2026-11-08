@@ -10,9 +10,15 @@
     "test": "node --experimental-strip-types --test tests/*.test.mjs"
   },
   "dependencies": {
+    "@livekit/components-react": "^2.9.24",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "livekit-client": "^2.23.0",
+    "motion": "^14.9.0",
     "next": "16.4.2",
     "react": "19.2.8",
-    "react-dom": "19.2.8"
+    "react-dom": "19.2.8",
+    "tailwind-merge": "^3.7.0"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

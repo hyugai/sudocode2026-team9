@@ -12,7 +12,7 @@ Nhánh realtime dùng model `gemini-3.8-live` để nhận và sinh audio trực
 | Nhận dạng giọng nói | Zipformer local khi upload file | Gemini Live xử lý audio; backend nhận transcript kèm theo |
 | Điều phối hội thoại | DeepAgent model/tool loop | VoiceSessionController và Gemini Live session |
 | Chuẩn bị nghiệp vụ | Trước khi gọi DeepAgent | Khi cần context cho function call và khi finalize lượt |
-| Phản hồi | JSON hoặc text streaming SSE | Audio và JSON events qua WebSocket |
+| Phản hồi | JSON hoàn chỉnh | Audio và JSON events qua WebSocket |
 | Tool nghiệp vụ | Read prefetch, mutation đã xác nhận và tool loop hiện tại | Function calling với tool chỉ đọc, kiểm tra lại ở backend |
 | Memory | Persister hiện có qua persist_shared | Cùng persister, thêm voice journal và prepared write batch |
 | State hội thoại | ConversationState của chat | ConversationState riêng của phiên voice |

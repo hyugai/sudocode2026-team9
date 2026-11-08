@@ -47,8 +47,9 @@ This is a reference catalog, not live availability or pricing.
 Search matches name or SKU and intersects the chosen parent/subcategory.
 Changing the parent resets the subcategory; clearing filters restores all SKUs.
 The card markup and Ask AI action are reused. BTC contains no photos, ratings,
-sales counts or publication dates, so the cards use an explicit missing-photo
-state and SKU text. Existing Bán chạy/Mới nhất controls remain visible and
+sales counts or publication dates. Cards and product details now use local,
+SKU-mapped demo illustrations labelled “Ảnh minh họa”, with a text fallback
+for unknown SKUs or image failures. Existing Bán chạy/Mới nhất controls remain visible and
 explain why they are unavailable rather than inventing rankings.
 
 Turbopack's root is the repository root so it can read the catalog outside web/.

@@ -43,6 +43,10 @@ yarn-error.log*
 !.env.example
 !MIGRATION.md
 
+# Frontend helpers are source code; the repository's Python rules ignore lib/.
+!/lib/
+!/lib/utils.ts
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

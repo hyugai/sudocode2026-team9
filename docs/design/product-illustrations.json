@@ -1,0 +1,213 @@
+{
+  "purpose": "One distinct brandless demo illustration per catalog product; not official product photographs.",
+  "method": "Built-in image_gen tool (imagegen skill), including a reference edit for the AirPure Y bundle; WebP export at 768px.",
+  "assetDirectory": "src/web/public/products/illustrations/",
+  "mapping": "src/web/utils/product-illustrations.ts",
+  "uniqueness": "40 catalog SKUs, 40 distinct image paths and SHA-256 hashes; checked by catalog.test.mjs.",
+  "assets": [
+    {
+      "sku": "SKU-AP-X",
+      "file": "air-purifier.webp",
+      "prompt": "Use case: product-mockup. Asset type: square ecommerce demo product illustration, photorealistic studio render. One product centered and fully visible, three-quarter view, filling about 75% of the square. Seamless white background, soft realistic grounding shadow, clean premium catalog lighting. Brandless generic illustrative design; no logos, no lettering, no labels, no watermark, no border, no collage. Subject: A modern white rectangular home air purifier with rounded corners, fine perforated lower intake grille and a small dark control panel on top."
+    },
+    {
+      "sku": "SKU-AP-Y",
+      "file": "airpure-y.webp",
+      "prompt": "Use case: product-mockup. Asset type: individual square ecommerce demo illustration, photorealistic studio product render. Seamless pure white background, subtle soft grounding shadow, premium neutral studio lighting. Entire product fully visible with generous safety margin, three-quarter angle, about 75% of square. Distinct physical product design as specified, not a recolored duplicate of another design. Brandless illustrative concept, no logos, no printed words, no labels, no watermark, no frame, no collage, no people. Subject: A slim OVAL-CYLINDRICAL white home air purifier for a medium room, a smooth oval upper shell, black rounded top exhaust, a small circular black control screen on its upper FRONT, continuous narrow vertical intake slots wrapping the base. The body has a softly oval footprint, not a rectangular box."
+    },
+    {
+      "sku": "SKU-AP-MINI",
+      "file": "airpure-mini.webp",
+      "prompt": "Use case: product-mockup. Asset type: individual square ecommerce demo illustration, photorealistic studio product render. Seamless pure white background, subtle soft grounding shadow, premium neutral studio lighting. Entire product fully visible with generous safety margin, three-quarter angle, about 75% of square. Distinct physical product design as specified, not a recolored duplicate of another design. Brandless illustrative concept, no logos, no printed words, no labels, no watermark, no frame, no collage, no people. Subject: A very compact DESKTOP air purifier for a small room, a short squat white cylinder with a pale grey top grille and one small power button, fine intake perforations around the lower half. Clearly low and small in proportions, height only slightly greater than its diameter. No accessories."
+    },
+    {
+      "sku": "SKU-AP-PRO",
+      "file": "airpure-pro.webp",
+      "prompt": "Use case: product-mockup. Asset type: individual square ecommerce demo illustration, photorealistic studio product render. Seamless pure white background, subtle soft grounding shadow, premium neutral studio lighting. Entire product fully visible with generous safety margin, three-quarter angle, about 75% of square. Distinct physical product design as specified, not a recolored duplicate of another design. Brandless illustrative concept, no logos, no printed words, no labels, no watermark, no frame, no collage, no people. Subject: A large premium dark GRAPHITE rectangular air purifier tower for a larger room, angular tall cabinet with broad removable FLAT front intake panel, vertical pleated grille pattern and a narrow blue status light near the top, recessed black touch panel on the sloping top. Substantial and architectural, not cylindrical."
+    },
+    {
+      "sku": "SKU-XM-4L",
+      "file": "xiaomi-4-lite.webp",
+      "prompt": "Use case: product-mockup. Asset type: individual square ecommerce demo illustration, photorealistic studio product render. Seamless pure white background, subtle soft grounding shadow, premium neutral studio lighting. Entire product fully visible with generous safety margin, three-quarter angle, about 75% of square. Distinct physical product design as specified, not a recolored duplicate of another design. Brandless illustrative concept, no logos, no printed words, no labels, no watermark, no frame, no collage, no people. Subject: A minimalist white air purifier with a slim SQUARE COLUMN form, flat clean sides, softly rounded corners, very fine perforated lower two-thirds and a plain upper front with one small circular dark display near its top edge. Flat white exhaust grille on top. Lightweight compact proportions."
+    },
+    {
+      "sku": "SKU-XM-4P",
+      "file": "xiaomi-4-pro.webp",
+      "prompt": "Use case: product-mockup. Asset type: individual square ecommerce demo illustration, photorealistic studio product render. Seamless pure white background, subtle soft grounding shadow, premium neutral studio lighting. Entire product fully visible with generous safety margin, three-quarter angle, about 75% of square. Distinct physical product design as specified, not a recolored duplicate of another design. Brandless illustrative concept, no logos, no printed words, no labels, no watermark, no frame, no collage, no people. Subject: A large white smart air purifier with a TALL BROAD square column body, wider than a compact model, densely perforated front and sides, a prominent black circular OLED-like screen centered high on the front, open dark square top exhaust grille with a recessed black center. Tall premium proportions and thick base."
+    },
+    {
+      "sku": "SKU-SS-AX40",
+      "file": "samsung-ax40.webp",
+      "prompt": "Use case: product-mockup. Asset type: individual square ecommerce demo illustration, photorealistic studio product render. Seamless pure white background, subtle soft grounding shadow, premium neutral studio lighting. Entire product fully visible with generous safety margin, three-quarter angle, about 75% of square. Distinct physical product design as specified, not a recolored duplicate of another design. Brandless illustrative concept, no logos, no printed words, no labels, no watermark, no frame, no collage, no people. Subject: A broad rounded-RECTANGULAR white air purifier, wide front face with a distinctive dark blue-grey front grille panel of large diagonal geometric openings, white outer frame, curved white shoulders, horizontal black top outlet and a slim control strip across the upper front. Wider and shorter than a column purifier."
+    },
+    {
+      "sku": "SKU-AP-X-2024",
+      "file": "airpure-x-2024.webp",
+      "prompt": "Use case: product-mockup. Asset type: individual square ecommerce demo illustration, photorealistic studio product render. Seamless pure white background, subtle soft grounding shadow, premium neutral studio lighting. Entire product fully visible with generous safety margin, three-quarter angle, about 75% of square. Distinct physical product design as specified, not a recolored duplicate of another design. Brandless illustrative concept, no logos, no printed words, no labels, no watermark, no frame, no collage, no people. Subject: An earlier-generation off-white home air purifier, a squat rounded rectangular cabinet with three broad HORIZONTAL front louvers, a grey recessed control strip with two physical round buttons on top, softly curved edges and a short base. Vintage 2020s appliance design, visibly different from sleek modern tall purifier towers."
+    },
+    {
+      "sku": "SKU-WF-RO9",
+      "file": "water-purifier.webp",
+      "prompt": "Use case: product-mockup. Asset type: square ecommerce demo product illustration, photorealistic studio render. One product centered and fully visible, three-quarter view, filling about 75% of the square. Seamless white background, soft realistic grounding shadow, clean premium catalog lighting. Brandless generic illustrative design; no logos, no lettering, no labels, no watermark, no border, no collage. Subject: A freestanding household reverse-osmosis water purifier cabinet, white and charcoal front, a small stainless water dispensing tap above a recessed drip tray, slim rectangular body."
+    },
+    {
+      "sku": "SKU-WF-RO10",
+      "file": "water-ro10.webp",
+      "prompt": "Use case: product-mockup. Asset type: individual square ecommerce demo illustration, photorealistic studio product render. Seamless pure white background, subtle soft grounding shadow, premium neutral studio lighting. Entire product fully visible with generous safety margin, three-quarter angle, about 75% of square. Distinct physical product design as specified, not a recolored duplicate of another design. Brandless illustrative concept, no logos, no printed words, no labels, no watermark, no frame, no collage, no people. Subject: A household reverse-osmosis water purifier in a tall slim GLOSSY BLACK glass-front cabinet with brushed steel vertical trim, a single chrome gooseneck dispensing faucet on the top surface, small recessed drip tray, four discreet feet. Sleek dark rectangular cabinet distinct from a white front-dispensing appliance."
+    },
+    {
+      "sku": "SKU-WF-UF",
+      "file": "water-uf.webp",
+      "prompt": "Use case: product-mockup. Asset type: individual square ecommerce demo illustration, photorealistic studio product render. Seamless pure white background, subtle soft grounding shadow, premium neutral studio lighting. Entire product fully visible with generous safety margin, three-quarter angle, about 75% of square. Distinct physical product design as specified, not a recolored duplicate of another design. Brandless illustrative concept, no logos, no printed words, no labels, no watermark, no frame, no collage, no people. Subject: A compact five-stage UNDER-SINK ultrafiltration water purifier system: three transparent vertical filter housings on a small white support frame with two small horizontal white inline cartridges across the top, neat tubing and one separate polished chrome gooseneck faucet placed beside the frame. Not a freestanding cabinet."
+    },
+    {
+      "sku": "SKU-FAN-DC1",
+      "file": "standing-fan.webp",
+      "prompt": "Use case: product-mockup. Asset type: square ecommerce demo product illustration, photorealistic studio render. One product centered and fully visible, three-quarter view, filling about 75% of the square. Seamless white background, soft realistic grounding shadow, clean premium catalog lighting. Brandless generic illustrative design; no logos, no lettering, no labels, no watermark, no border, no collage. Subject: A modern white and light grey pedestal standing electric fan with circular safety grille, three blades, adjustable slim pole and round weighted base."
+    },
+    {
+      "sku": "SKU-FAN-SEN",
+      "file": "fan-senko.webp",
+      "prompt": "Use case: product-mockup. Asset type: individual square ecommerce demo illustration, photorealistic studio product render. Seamless pure white background, subtle soft grounding shadow, premium neutral studio lighting. Entire product fully visible with generous safety margin, three-quarter angle, about 75% of square. Distinct physical product design as specified, not a recolored duplicate of another design. Brandless illustrative concept, no logos, no printed words, no labels, no watermark, no frame, no collage, no people. Subject: A budget pedestal standing electric fan with three translucent BLUE blades in a round silver wire cage, light grey motor housing, a chunky cream adjustable pole, three physical push buttons on its lower housing and a wide rounded grey base. Traditional practical proportions, distinct from an all-white minimalist fan."
+    },
+    {
+      "sku": "SKU-FAN-TWR",
+      "file": "tower-fan.webp",
+      "prompt": "Use case: product-mockup. Asset type: square ecommerce demo product illustration, photorealistic studio render. One product centered and fully visible, three-quarter view, filling about 75% of the square. Seamless white background, soft realistic grounding shadow, clean premium catalog lighting. Brandless generic illustrative design; no logos, no lettering, no labels, no watermark, no border, no collage. Subject: A slim white tower electric fan, tall rounded vertical column with a dark narrow front grille and circular base."
+    },
+    {
+      "sku": "SKU-AF-4L",
+      "file": "air-fryer.webp",
+      "prompt": "Use case: product-mockup. Asset type: square ecommerce demo product illustration, photorealistic studio render. One product centered and fully visible, three-quarter view, filling about 75% of the square. Seamless white background, soft realistic grounding shadow, clean premium catalog lighting. Brandless generic illustrative design; no logos, no lettering, no labels, no watermark, no border, no collage. Subject: A sleek charcoal-black countertop basket air fryer, rounded compact body with a brushed silver pull handle and a small dark digital panel, basket fully closed."
+    },
+    {
+      "sku": "SKU-AF-6L",
+      "file": "air-fryer-6l.webp",
+      "prompt": "Use case: product-mockup. Asset type: individual square ecommerce demo illustration, photorealistic studio product render. Seamless pure white background, subtle soft grounding shadow, premium neutral studio lighting. Entire product fully visible with generous safety margin, three-quarter angle, about 75% of square. Distinct physical product design as specified, not a recolored duplicate of another design. Brandless illustrative concept, no logos, no printed words, no labels, no watermark, no frame, no collage, no people. Subject: A large 6.2-litre black basket air fryer, a WIDE tall gently tapered rectangular body with rounded shoulders, broad glossy black front touchscreen angled upward, large deep basket with a thick brushed-metal horizontal handle and copper-toned trim around the basket lip. Closed basket. Wide family-size silhouette, not a small round air fryer."
+    },
+    {
+      "sku": "SKU-AF-XM",
+      "file": "air-fryer-white.webp",
+      "prompt": "Use case: product-mockup. Asset type: individual square ecommerce demo illustration, photorealistic studio product render. Seamless pure white background, subtle soft grounding shadow, premium neutral studio lighting. Entire product fully visible with generous safety margin, three-quarter angle, about 75% of square. Distinct physical product design as specified, not a recolored duplicate of another design. Brandless illustrative concept, no logos, no printed words, no labels, no watermark, no frame, no collage, no people. Subject: A compact 4.5-litre WHITE air fryer with a rounded CUBE body, a single prominent circular silver-white control dial at the upper front, smooth matte white exterior and a broad white vertical basket handle on the lower front. Closed basket, quiet minimalist design, no black touchscreen panel."
+    },
+    {
+      "sku": "SKU-SN-RUN1",
+      "file": "running-shoes.webp",
+      "prompt": "Use case: product-mockup. Asset type: square ecommerce demo product illustration, photorealistic studio render. One product centered and fully visible, three-quarter view, filling about 75% of the square. Seamless white background, soft realistic grounding shadow, clean premium catalog lighting. Brandless generic illustrative design; no logos, no lettering, no labels, no watermark, no border, no collage. Subject: A pair of clean modern athletic running sneakers in white mesh with navy and muted teal details, cushioned soles, arranged three-quarter view, no person."
+    },
+    {
+      "sku": "SKU-SN-RUN2",
+      "file": "running-shoes-pro.webp",
+      "prompt": "Use case: product-mockup. Asset type: individual square ecommerce demo illustration, photorealistic studio product render. Seamless pure white background, subtle soft grounding shadow, premium neutral studio lighting. Entire product fully visible with generous safety margin, three-quarter angle, about 75% of square. Distinct physical product design as specified, not a recolored duplicate of another design. Brandless illustrative concept, no logos, no printed words, no labels, no watermark, no frame, no collage, no people. Subject: A pair of BLACK engineered-mesh performance running shoes with grey welded overlays, a thick sculpted WHITE EVA midsole with a pronounced rocker shape, angular heel stabilizer and black rubber tread. Laces visible, no brand marks. Sporty performance shape, not a white casual sneaker."
+    },
+    {
+      "sku": "SKU-SN-CAS",
+      "file": "urban-sneakers.webp",
+      "prompt": "Use case: product-mockup. Asset type: individual square ecommerce demo illustration, photorealistic studio product render. Seamless pure white background, subtle soft grounding shadow, premium neutral studio lighting. Entire product fully visible with generous safety margin, three-quarter angle, about 75% of square. Distinct physical product design as specified, not a recolored duplicate of another design. Brandless illustrative concept, no logos, no printed words, no labels, no watermark, no frame, no collage, no people. Subject: A pair of light GREY minimalist casual low-top mesh sneakers, clean subtle panel lines, slim white EVA sole with a flat low-profile shape, simple light grey laces and rounded toe. No logos. Relaxed urban everyday style, not a thick athletic running shoe."
+    },
+    {
+      "sku": "SKU-SN-RUN1-OLD",
+      "file": "running-shoes-2025.webp",
+      "prompt": "Use case: product-mockup. Asset type: individual square ecommerce demo illustration, photorealistic studio product render. Seamless pure white background, subtle soft grounding shadow, premium neutral studio lighting. Entire product fully visible with generous safety margin, three-quarter angle, about 75% of square. Distinct physical product design as specified, not a recolored duplicate of another design. Brandless illustrative concept, no logos, no printed words, no labels, no watermark, no frame, no collage, no people. Subject: A pair of earlier-generation running shoes in WHITE and mid GREY breathable mesh, narrow traditional athletic shape, thin curved light-grey EVA midsole, small black heel cap and classic stitched panel overlays. Fine grey laces. No logos. Slim older construction, not the thick modern performance design."
+    },
+    {
+      "sku": "SKU-SN-TRK",
+      "file": "hiking-shoes.webp",
+      "prompt": "Use case: product-mockup. Asset type: square ecommerce demo product illustration, photorealistic studio render. One product centered and fully visible, three-quarter view, filling about 75% of the square. Seamless white background, soft realistic grounding shadow, clean premium catalog lighting. Brandless generic illustrative design; no logos, no lettering, no labels, no watermark, no border, no collage. Subject: A pair of rugged low hiking shoes in taupe suede and dark grey mesh with orange lace accents and chunky grip soles, no person."
+    },
+    {
+      "sku": "SKU-JK-WND",
+      "file": "windbreaker.webp",
+      "prompt": "Use case: product-mockup. Asset type: square ecommerce demo product illustration, photorealistic studio render. One product centered and fully visible, three-quarter view, filling about 75% of the square. Seamless white background, soft realistic grounding shadow, clean premium catalog lighting. Brandless generic illustrative design; no logos, no lettering, no labels, no watermark, no border, no collage. Subject: A lightweight navy blue hooded zip-up windbreaker jacket, long sleeves, pockets and soft fabric folds, ghost mannequin product photography without visible mannequin or person."
+    },
+    {
+      "sku": "SKU-JK-DWN",
+      "file": "puffer-jacket.webp",
+      "prompt": "Use case: product-mockup. Asset type: square ecommerce demo product illustration, photorealistic studio render. One product centered and fully visible, three-quarter view, filling about 75% of the square. Seamless white background, soft realistic grounding shadow, clean premium catalog lighting. Brandless generic illustrative design; no logos, no lettering, no labels, no watermark, no border, no collage. Subject: A warm cream quilted puffer jacket with high collar, long sleeves, front zip and horizontal down-filled baffles, ghost mannequin product photography without visible mannequin or person."
+    },
+    {
+      "sku": "SKU-MB-PUMP1",
+      "file": "breast-pump.webp",
+      "prompt": "Use case: product-mockup. Asset type: square ecommerce demo product illustration, photorealistic studio render. One product centered and fully visible, three-quarter view, filling about 75% of the square. Seamless white background, soft realistic grounding shadow, clean premium catalog lighting. Brandless generic illustrative design; no logos, no lettering, no labels, no watermark, no border, no collage. Subject: A double electric breast pump kit with a compact pale blue motor unit, two clear milk collection bottles with white connectors and breast shields, neat transparent connecting tubes, no person."
+    },
+    {
+      "sku": "SKU-MB-PUMP2",
+      "file": "breast-pump-yellow.webp",
+      "prompt": "Use case: product-mockup. Asset type: individual square ecommerce demo illustration, photorealistic studio product render. Seamless pure white background, subtle soft grounding shadow, premium neutral studio lighting. Entire product fully visible with generous safety margin, three-quarter angle, about 75% of square. Distinct physical product design as specified, not a recolored duplicate of another design. Brandless illustrative concept, no logos, no printed words, no labels, no watermark, no frame, no collage, no people. Subject: A double electric breast pump set: a small flat WHITE OVAL motor unit with a vivid YELLOW circular control inset, two clear collection bottles with yellow collars and transparent breast shields connected by neat fine tubes. Compact portable design, distinct from a large pale blue pump motor."
+    },
+    {
+      "sku": "SKU-MB-STR1",
+      "file": "stroller.webp",
+      "prompt": "Use case: product-mockup. Asset type: square ecommerce demo product illustration, photorealistic studio render. One product centered and fully visible, three-quarter view, filling about 75% of the square. Seamless white background, soft realistic grounding shadow, clean premium catalog lighting. Brandless generic illustrative design; no logos, no lettering, no labels, no watermark, no border, no collage. Subject: A compact foldable baby stroller with sand beige fabric canopy and seat, dark graphite frame and four wheels, open and empty, fully visible."
+    },
+    {
+      "sku": "SKU-MB-STR2",
+      "file": "reversible-stroller.webp",
+      "prompt": "Use case: product-mockup. Asset type: individual square ecommerce demo illustration, photorealistic studio product render. Seamless pure white background, subtle soft grounding shadow, premium neutral studio lighting. Entire product fully visible with generous safety margin, three-quarter angle, about 75% of square. Distinct physical product design as specified, not a recolored duplicate of another design. Brandless illustrative concept, no logos, no printed words, no labels, no watermark, no frame, no collage, no people. Subject: An empty reversible-seat baby stroller with a NAVY blue padded seat facing BACK toward the handlebar, deep full canopy, silver frame, four larger black wheels, adjustable calf rest and substantial storage basket. Luxurious cushioned two-way seat construction, not a compact beige travel stroller."
+    },
+    {
+      "sku": "SKU-MB-MON",
+      "file": "bottle-warmer.webp",
+      "prompt": "Use case: product-mockup. Asset type: square ecommerce demo product illustration, photorealistic studio render. One product centered and fully visible, three-quarter view, filling about 75% of the square. Seamless white background, soft realistic grounding shadow, clean premium catalog lighting. Brandless generic illustrative design; no logos, no lettering, no labels, no watermark, no border, no collage. Subject: A compact cream countertop baby bottle warmer with one clear baby bottle inside its cylindrical top opening, subtle small dark control panel, no lettering."
+    },
+    {
+      "sku": "SKU-MB-STER",
+      "file": "sterilizer.webp",
+      "prompt": "Use case: product-mockup. Asset type: square ecommerce demo product illustration, photorealistic studio render. One product centered and fully visible, three-quarter view, filling about 75% of the square. Seamless white background, soft realistic grounding shadow, clean premium catalog lighting. Brandless generic illustrative design; no logos, no lettering, no labels, no watermark, no border, no collage. Subject: A countertop baby bottle steam sterilizer and dryer, cream-white body with a translucent grey upper chamber containing a few baby bottles, rounded rectangular footprint."
+    },
+    {
+      "sku": "SKU-MB-BOT",
+      "file": "baby-bottle.webp",
+      "prompt": "Use case: product-mockup. Asset type: square ecommerce demo product illustration, photorealistic studio render. One product centered and fully visible, three-quarter view, filling about 75% of the square. Seamless white background, soft realistic grounding shadow, clean premium catalog lighting. Brandless generic illustrative design; no logos, no lettering, no labels, no watermark, no border, no collage. Subject: One amber-tinted PPSU baby feeding bottle with a soft white collar, translucent silicone nipple and a clear protective cap placed beside it, no printed words or measurement text."
+    },
+    {
+      "sku": "SKU-MB-CAR",
+      "file": "car-seat.webp",
+      "prompt": "Use case: product-mockup. Asset type: square ecommerce demo product illustration, photorealistic studio render. One product centered and fully visible, three-quarter view, filling about 75% of the square. Seamless white background, soft realistic grounding shadow, clean premium catalog lighting. Brandless generic illustrative design; no logos, no lettering, no labels, no watermark, no border, no collage. Subject: An empty child safety car seat in dark charcoal fabric with a beige padded insert, high side bolsters, five-point harness and sturdy black base, no car or child."
+    },
+    {
+      "sku": "SKU-BDL-AIR",
+      "file": "airpure-y-bundle.webp",
+      "prompt": "Use case: precise-object-edit. Create the updated square ecommerce demo product kit image. Image 1 is the edit target: a white air purifier plus exactly two white cylindrical HEPA filters. Image 2 is the reference design for the replacement purifier. Replace ONLY the purifier in Image 1 with the exact slim oval white purifier design from Image 2: oval black top exhaust, black circular FRONT control panel, smooth white upper shell and narrow vertical intake slots around the lower body. Keep exactly two separate white pleated cylindrical filters with black rims from Image 1 alongside it. Preserve the clean white seamless backdrop, three-quarter studio perspective, soft grounding shadows and full-object visibility. Rebalance spacing naturally so nothing overlaps awkwardly. No logos, printed words, labels, watermark, border, or additional products.",
+      "editReferences": [
+        "air-purifier-bundle.webp",
+        "airpure-y.webp"
+      ]
+    },
+    {
+      "sku": "SKU-BDL-MOM",
+      "file": "breastfeeding-bundle.webp",
+      "prompt": "Use case: product-mockup. Asset type: square ecommerce demo product illustration, photorealistic studio render. One product centered and fully visible, three-quarter view, filling about 75% of the square. Seamless white background, soft realistic grounding shadow, clean premium catalog lighting. Brandless generic illustrative design; no logos, no lettering, no labels, no watermark, no border, no collage. Subject: An arranged breastfeeding product kit: a pale blue double electric breast pump motor with two clear collection bottles and breast shields, a compact cream bottle warmer and a small neat stack of empty translucent breast milk storage pouches. No person."
+    },
+    {
+      "sku": "SKU-AP-FLT-X",
+      "file": "air-filter.webp",
+      "prompt": "Use case: product-mockup. Asset type: square ecommerce demo product illustration, photorealistic studio render. One product centered and fully visible, three-quarter view, filling about 75% of the square. Seamless white background, soft realistic grounding shadow, clean premium catalog lighting. Brandless generic illustrative design; no logos, no lettering, no labels, no watermark, no border, no collage. Subject: One cylindrical pleated white HEPA replacement air filter with black circular top and bottom rims and fine paper folds, shown slightly from above to reveal its hollow center."
+    },
+    {
+      "sku": "SKU-AP-FLT-P",
+      "file": "air-filter-pro.webp",
+      "prompt": "Use case: product-mockup. Asset type: individual square ecommerce demo illustration, photorealistic studio product render. Seamless pure white background, subtle soft grounding shadow, premium neutral studio lighting. Entire product fully visible with generous safety margin, three-quarter angle, about 75% of square. Distinct physical product design as specified, not a recolored duplicate of another design. Brandless illustrative concept, no logos, no printed words, no labels, no watermark, no frame, no collage, no people. Subject: A large FLAT RECTANGULAR replacement air purifier filter cartridge, white densely pleated HEPA paper in a thick dark graphite rectangular frame, black fine carbon mesh visible on one edge. Standing slightly tilted in three-quarter view. Not a cylindrical filter."
+    },
+    {
+      "sku": "SKU-XM-FLT",
+      "file": "air-filter-xiaomi.webp",
+      "prompt": "Use case: product-mockup. Asset type: individual square ecommerce demo illustration, photorealistic studio product render. Seamless pure white background, subtle soft grounding shadow, premium neutral studio lighting. Entire product fully visible with generous safety margin, three-quarter angle, about 75% of square. Distinct physical product design as specified, not a recolored duplicate of another design. Brandless illustrative concept, no logos, no printed words, no labels, no watermark, no frame, no collage, no people. Subject: A tall cylindrical replacement air purifier HEPA cartridge with a distinct mint-green perforated outer mesh sleeve, white pleated paper visible through the outer mesh, charcoal plastic top and bottom rims and a wide hollow central opening. Taller and narrower than a short white filter."
+    },
+    {
+      "sku": "SKU-WF-CORE",
+      "file": "water-filters.webp",
+      "prompt": "Use case: product-mockup. Asset type: square ecommerce demo product illustration, photorealistic studio render. One product centered and fully visible, three-quarter view, filling about 75% of the square. Seamless white background, soft realistic grounding shadow, clean premium catalog lighting. Brandless generic illustrative design; no logos, no lettering, no labels, no watermark, no border, no collage. Subject: A set of exactly three replacement reverse-osmosis water filter cartridges, white cylindrical tubes with subtle pale blue accents and simple connector ends, standing upright side by side, no text."
+    },
+    {
+      "sku": "SKU-SN-SOCK",
+      "file": "sports-socks.webp",
+      "prompt": "Use case: product-mockup. Asset type: square ecommerce demo product illustration, photorealistic studio render. One product centered and fully visible, three-quarter view, filling about 75% of the square. Seamless white background, soft realistic grounding shadow, clean premium catalog lighting. Brandless generic illustrative design; no logos, no lettering, no labels, no watermark, no border, no collage. Subject: Three pairs of rolled and neatly folded athletic ankle socks in white, grey and navy, soft ribbed cotton texture, arranged as a small retail product set."
+    },
+    {
+      "sku": "SKU-MB-BAG",
+      "file": "milk-storage-bags.webp",
+      "prompt": "Use case: product-mockup. Asset type: square ecommerce demo product illustration, photorealistic studio render. One product centered and fully visible, three-quarter view, filling about 75% of the square. Seamless white background, soft realistic grounding shadow, clean premium catalog lighting. Brandless generic illustrative design; no logos, no lettering, no labels, no watermark, no border, no collage. Subject: A neat small stack of empty translucent breast milk storage pouches with pale blue double zipper seals, two pouches standing and the others stacked, no printed writing, not filled."
+    }
+  ]
+}

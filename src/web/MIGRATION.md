@@ -10,7 +10,7 @@ No backend, dataset, Figma, or production service was modified.
 | Feature | Legacy implementation | Synee destination | Migration |
 | --- | --- | --- | --- |
 | Text chat | JSON POST `/api/chat` | Shared `ChatPanel` | Same request/response normalization |
-| Audio | Multipart POST `/api/chat/audio` | One paperclip upload control | Same fields, preview/removal, limits and manual retry |
+| Audio | Multipart POST `/api/chat/audio` | One microphone icon for audio file upload | Same fields, preview/removal, limits and manual retry |
 | Session/history | React memory + generated UUID | `useConversation` above A/B/C | One client, messages, draft, file, phone and ID |
 | Customer phone | Header field | Account/conversation dialog | Same request field; starts empty instead of identifying everyone as the legacy example customer |
 | Readiness | GET `/health` | Composer status | Same polling, disabled send and recovery |

@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { connect } from './browser-support.mjs';
-const b=await connect(),base=process.env.BASE_URL||'http://127.0.0.1:3000',output='/tmp/synee-feedback';
+const b=await connect(),base=process.env.BASE_URL||'http://127.0.0.1:3000',output=process.env.BROWSER_ARTIFACT_DIR||'/tmp/synee-feedback';
 await mkdir(output,{recursive:true});
 const checks=[];const check=(label,value)=>{assert.ok(value,label);checks.push(label);console.log('PASS',label);};
 const click=s=>b.evaluate(`document.querySelector(${JSON.stringify(s)}).click()`);
@@ -29,11 +29,11 @@ try{
   await type('#inline-message','Tôi muốn xem máy lọc không khí');await b.evaluate("document.querySelector('.composer').requestSubmit()");await b.wait("document.querySelectorAll('.message').length===3");
   const id=await b.evaluate("window.__calls[0].body.conversation_id");
   await type('#inline-message','Giữ bản nháp này');await click('.mode-toggle button:last-child');
-  await click('.menu-button');
-  check('Category menu excludes duplicate account/cart/chat navigation',await b.evaluate("document.querySelectorAll('.menu-links > a').length===5&&!/Trò chuyện|Giỏ hàng|Đơn hàng|khách hàng|Analytics/.test(document.querySelector('.menu-links').textContent)"));
-  await click('.dialog-header button');
+  await b.wait("document.querySelector('dialog[open] .realtime-voice')");
+  await click('dialog[open] .dialog-header button');
+  check('Header omits the removed category menu',await b.evaluate("!document.querySelector('.menu-button')&&!document.querySelector('.menu-links')"));
   await b.send('Page.reload');await b.wait("document.querySelector('#inline-message')?.value==='Giữ bản nháp này'");
-  check('Reload restores messages, draft and Chat/Voice without an automatic send',await b.evaluate("document.querySelectorAll('.message').length===3&&document.querySelector('.mode-toggle button:last-child').getAttribute('aria-pressed')==='true'&&window.__calls.length===0"));
+  check('Reload restores messages, draft and Chat mode without an automatic send',await b.evaluate("document.querySelectorAll('.message').length===3&&document.querySelector('.mode-toggle button:first-child').getAttribute('aria-pressed')==='true'&&window.__calls.length===0"));
   await click('.account-trigger');check('Reload restores the exact ID and unverified phone hint',await b.evaluate(`document.querySelector('.session-id').textContent.includes(${JSON.stringify(id)})&&document.querySelector('#customer-phone').value==='0901234567'`));
   await snapshot('after-account');await click('.dialog-header button');
   await click('.product-card');await b.wait("document.querySelector('.pdp-ask')");await click('.pdp-ask');await b.wait("document.querySelector('.pdp-chat #floating-message')");
@@ -68,9 +68,8 @@ try{
   await click('.account-trigger');
   check('Profile page and account drawer have unique accessible IDs',await b.evaluate("(()=>{const ids=[...document.querySelectorAll('[id]')].map(n=>n.id);return new Set(ids).size===ids.length&&!!document.querySelector('#profile-phone')&&!!document.querySelector('dialog #customer-phone');})()"));await click('.dialog-header button');
   await route('/?category='+encodeURIComponent('Điện gia dụng')+'#catalog-heading');await b.wait("document.querySelectorAll('.product-card').length===18");
-  await click('.section-heading .quiet-button');await b.wait("document.querySelectorAll('.product-card').length===40");
-  await b.wait("location.search===''");
-  check('View all opens the full BTC catalog and navigates to product results',await b.evaluate("location.hash==='#catalog-heading'&&document.querySelectorAll('.product-card').length===40"));
+  await click('.filter-status button');await b.wait("document.querySelectorAll('.product-card').length===40");
+  check('Clearing filters restores the full BTC catalog without a View all button',await b.evaluate("document.querySelector('.category-nav button').getAttribute('aria-pressed')==='true'&&![...document.querySelectorAll('#catalog a')].some(link=>link.textContent.includes('Xem tất cả'))"));
   await b.send('Emulation.setDeviceMetricsOverride',{width:320,height:760,deviceScaleFactor:1,mobile:false});await b.evaluate("document.querySelector('.account-trigger').focus()");await click('.account-trigger');
   check('320px account drawer remains within the viewport',await b.evaluate("document.documentElement.scrollWidth<=320&&document.querySelector('.account-drawer').getBoundingClientRect().right<=320"));await snapshot('after-account-mobile');
   await b.send('Input.dispatchKeyEvent',{type:'keyDown',key:'Escape',code:'Escape',windowsVirtualKeyCode:27});await b.send('Input.dispatchKeyEvent',{type:'keyUp',key:'Escape',code:'Escape',windowsVirtualKeyCode:27});await b.wait("!document.querySelector('dialog[open]')");

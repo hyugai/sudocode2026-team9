@@ -3,9 +3,10 @@
 import { useEffect, useRef, useState } from "react";
 import { ChatApiError, createChatClient, type DebugInfo } from "./chat-api";
 import { conversationStorageKey, readGuestSession, writeGuestSession } from "./conversation-session";
+import type { CallBrief } from "./call-brief";
 
 // Keep the legacy deployment contract. This public URL must never contain a key.
-const apiBase = (process.env.NEXT_PUBLIC_API_BASE_URL || (
+export const apiBase = (process.env.NEXT_PUBLIC_API_BASE_URL || (
   process.env.NODE_ENV === "development"
     ? "http://localhost:8000"
     : "https://telesale-agent-api.onrender.com"
@@ -20,6 +21,8 @@ const welcome: Message[] = [{ role: "agent", text: "Mình là Synee AI. Mình c�
 export function useConversation() {
   const [messages, setMessages] = useState<Message[]>(welcome);
   const [debugLogs, setDebugLogs] = useState<LogEntry[]>([]);
+  const [callBrief, setCallBrief] = useState<CallBrief | null>(null);
+  const [callBriefStale, setCallBriefStale] = useState(false);
   const [input, setInput] = useState("");
   const [customerPhone, updateCustomerPhone] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -30,6 +33,7 @@ export function useConversation() {
   const [cooldownSeconds, setCooldownSeconds] = useState(0);
   const [sessionId, setSessionId] = useState("");
   const [voicePreview, setVoicePreview] = useState(false);
+  const [voiceActive, setVoiceActive] = useState(false);
   const [consultation, setConsultation] = useState<Consultation | null>(null);
   const conversationIdRef = useRef("");
   const [chatClient] = useState(() => createChatClient(apiBase));
@@ -61,16 +65,16 @@ export function useConversation() {
   }, [sessionReady, messages, sessionId, input, customerPhone, voicePreview, consultation]);
 
   const resetConversation = () => {
-    setMessages(welcome); setDebugLogs([]); setInput(""); setAudioFile(null); setAudioPreviewUrl("");
+    setMessages(welcome); setDebugLogs([]); setCallBrief(null); setCallBriefStale(false); setInput(""); setAudioFile(null); setAudioPreviewUrl("");
     setSessionId(""); conversationIdRef.current = ""; setConsultation(null); setErrorMessage(""); setSessionNotice("");
   };
   const setCustomerPhone = (phone: string) => {
-    if (isLoading || isClearing) return;
+    if (isLoading || isClearing || voiceActive) return;
     const next = phone.trim();
     if (next !== customerPhone) { resetConversation(); updateCustomerPhone(next); }
   };
   const endConversation = async () => {
-    if (isLoading || isClearing) return;
+    if (isLoading || isClearing || voiceActive) return;
     setIsClearing(true);
     try { await chatClient.clearSession(conversationIdRef.current); resetConversation(); }
     finally { setIsClearing(false); }
@@ -108,15 +112,16 @@ export function useConversation() {
     if (!file.size || file.size > 25 * 1024 * 1024) {
       setErrorMessage("Hãy chọn file ghi âm có dung lượng từ 1 byte đến 25 MB.");
       clearAudio();
-      return;
+      return false;
     }
     setAudioFile(file);
     // The URL belongs to the shared file, not either mounted chat surface.
     setAudioPreviewUrl(URL.createObjectURL(file));
+    return true;
   };
 
   const sendMessage = async () => {
-    if (!sessionReady || isClearing || (!input.trim() && !audioFile) || chatClient.isSending || !backendReady || chatClient.retryAfterSeconds) return;
+    if (!sessionReady || isClearing || voiceActive || (!input.trim() && !audioFile) || chatClient.isSending || !backendReady || chatClient.retryAfterSeconds) return;
     const userMessage = input.trim();
     const selectedAudio = audioFile;
     const conversationId = conversationIdRef.current || crypto.randomUUID();
@@ -139,10 +144,13 @@ export function useConversation() {
         { role: "user", text: transcript },
         { role: "agent", text: data.response || "Chưa nhận được phản hồi từ tư vấn viên." },
       ]);
+      setCallBrief(data.callBrief);
+      setCallBriefStale(false);
       if (selectedAudio) clearAudio();
       else setInput("");
       if (data.debug) setDebugLogs(prev => [...prev, { userMessage: transcript, debug: data.debug! }]);
     } catch (error) {
+      setCallBriefStale(true);
       if (error instanceof ChatApiError && error.connectionLost) setBackendReady(false);
       if (error instanceof ChatApiError) setCooldownSeconds(error.retryAfterSeconds);
       setErrorMessage(error instanceof ChatApiError && error.retryAfterSeconds > 0
@@ -151,10 +159,10 @@ export function useConversation() {
     } finally { setIsLoading(false); }
   };
 
-  return { messages, debugLogs, input, setInput, customerPhone, setCustomerPhone, isLoading: isLoading || isClearing,
+  return { messages, debugLogs, callBrief, callBriefStale, input, setInput, customerPhone, setCustomerPhone, isLoading: isLoading || isClearing || voiceActive,
     audioFile, audioPreviewUrl, clearAudio, selectAudio, errorMessage, backendReady,
     cooldownSeconds, sessionId, sendMessage, voicePreview, setVoicePreview, consultation, setConsultation,
-    sessionReady, sessionNotice, endConversation };
+    sessionReady, sessionNotice, endConversation, voiceActive, setVoiceActive };
 }
 
 export type Conversation = ReturnType<typeof useConversation>;

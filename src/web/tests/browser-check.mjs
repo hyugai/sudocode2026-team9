@@ -45,7 +45,7 @@ try {
   const geometry = await evaluate(`(() => {const r=s=>{const b=document.querySelector(s).getBoundingClientRect();return{x:b.x,y:b.y,w:b.width,h:b.height}};return{chat:r('#inline-chat'),hero:r('.hero'),search:r('.product-search'),header:r('.site-header'),card:r('.product-card'),grid:getComputedStyle(document.querySelector('.product-grid')).gridTemplateColumns,images:[...document.images].map(i=>({src:i.getAttribute('src'),w:i.getBoundingClientRect().width,h:i.getBoundingClientRect().height}))}})()`);
   await writeFile(`${output}/desktop-geometry.json`, JSON.stringify(geometry, null, 2));
   await snapshot("after-desktop-A");
-  check("Desktop inline 880 × 420, hero 650 and header 104", geometry.chat.w === 880 && geometry.chat.h === 420 && geometry.hero.h === 650 && geometry.header.h === 104);
+  check("Desktop inline 880 × 420 and dark hero fills the first viewport below the 88px header", geometry.chat.w === 880 && geometry.chat.h === 420 && geometry.hero.h >= 900 - geometry.header.h && geometry.header.h === 88);
   check("Search is centered in the viewport", Math.abs(geometry.search.x + geometry.search.w / 2 - 720) < 1);
   check("Five 224px product columns", geometry.grid.split(" ").length === 5 && geometry.card.w === 224);
   check("Every visible asset loads from local files", geometry.images.every(i => i.src.startsWith("/figma/") && i.w > 0 && i.h > 0));
@@ -116,8 +116,9 @@ try {
   check("Removing audio restores the preserved text draft", await evaluate("document.querySelector('#floating-message').value==='Giữ bản nháp này'&&!document.querySelector('#floating-message').disabled"));
   await upload();
   await click(".mode-toggle button:last-child");
-  check("Voice preview starts no recording or request", await evaluate("document.querySelector('.voice-preview').textContent.includes('Bản xem trước')&&window.__calls.length===1"));
-  await click(".mode-toggle button:first-child");
+  await wait("!!document.querySelector('dialog[open] .realtime-voice')");
+  check("Voice dialog opens without sending chat or starting a call", await evaluate("!!document.querySelector('.voice-start')&&window.__calls.length===1"));
+  await click("dialog[open] .dialog-header button");
   await submit();
   await wait("document.querySelectorAll('.message').length===5");
   const audio = await evaluate("window.__calls[1]");
@@ -172,7 +173,7 @@ try {
   await evaluate("document.querySelector('.product-search').requestSubmit()");
   await wait("document.querySelectorAll('.product-card').length===1");
   check("Traditional search filters the BTC catalog without a chat request", await evaluate(`document.querySelector('.product-card').dataset.sku==='SKU-WF-RO9'&&window.__calls.length===${count + 1}`));
-  await click(".section-heading .quiet-button");
+  await click(".filter-status button");
   await evaluate("[...document.querySelectorAll('.category-nav button')].find(n=>n.textContent==='Điện gia dụng').click()");
   await wait("!!document.querySelector('.subcategory-nav')");
   await evaluate("[...document.querySelectorAll('.subcategory-nav button')].find(n=>n.textContent==='Nồi chiên').click()");

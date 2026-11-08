@@ -11,6 +11,8 @@ async def prepare_context(harness, context, *, identity_started=None):
         if harness.identity:
             context.identity = await harness.identity.resolve_identity(context)
             context.state.identity = context.identity
+            if identity_started is None and context.identity and context.identity.phone:
+                identity_started = time.perf_counter()
         
         if harness.customer_context:
             await harness.customer_context.hydrate(context)

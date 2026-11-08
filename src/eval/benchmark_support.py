@@ -2,7 +2,6 @@
 from __future__ import annotations
 
 from collections import Counter
-from datetime import date
 import hashlib
 import json
 from pathlib import Path
@@ -158,28 +157,3 @@ def machine_metadata():
             ram = round(status.total_phys/(1024**3),2)
     return {"platform":platform.platform(), "cpu":platform.processor(),
             "ram_gb":ram,"gpu":"LLM hosted by API provider; local ASR uses CPU", "python":platform.python_version()}
-
-
-class FreshCallBrief:
-    """Refresh volatile evidence before finishing the measured call brief."""
-    def __init__(self, builder, db):
-        self.builder, self.db = builder, db
-
-    async def build_call_brief(self, context):
-        brief = await self.builder.build_call_brief(context)
-        if context.state.turn_number == 0:
-            facts = (context.state.customer_memory or {}).get("facts",{})
-            sku = facts.get("product_advised") or facts.get("variant_sku")
-            on = date.fromisoformat(context.input.metadata["call_date"])
-            current = {"checked_on":on.isoformat(),
-                       "crm_profile_and_order_history":"reloaded by customer_context.hydrate",
-                       "cross_channel_interactions":"not available in current CRM adapter"}
-            if sku:
-                current["inventory"] = self.db.check_stock(sku,on)
-                profile = context.state.customer_profile or {}
-                products = self.db.search_products(sku=sku).get("items",[])
-                current["active_promotions"] = self.db.get_active_promotions(
-                    [sku], [p.get("category","") for p in products], profile.get("region"), on)
-                brief.active_promotions = current["active_promotions"]
-            brief.verified_customer_data = {**brief.verified_customer_data,"freshness_check":current}
-        return brief

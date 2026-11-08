@@ -18,7 +18,6 @@ from langchain_core.callbacks import BaseCallbackHandler
 from langchain_core.tracers.context import register_configure_hook
 
 from telesale_agent.adapters.llm.usage_tracking import _ACTIVE_STAGE
-from telesale_agent.application.deepagent.streaming import chunk_text
 
 _ACTIVE = ContextVar("eval_latency_profile", default=None)
 _PARENT = ContextVar("eval_latency_parent", default=None)
@@ -133,16 +132,6 @@ class RequestTimings(BaseCallbackHandler):
     def on_llm_start(self, serialized, prompts, *, run_id, **kwargs):
         self._start(run_id,"llm."+_ACTIVE_STAGE.get(),"llm")
 
-    def on_llm_new_token(self, token, *, run_id, chunk=None, **kwargs):
-        record = self.runs.get(str(run_id))
-        if record is None:
-            return
-        now = (time.perf_counter()-self.timeline.origin)*1000
-        record.setdefault("first_chunk_at_ms",now)
-        message = getattr(chunk,"message",None)
-        if message is not None and chunk_text(message):
-            record.setdefault("first_public_text_at_ms",now)
-
     def on_llm_end(self, response, *, run_id, **kwargs):
         record = self.runs.get(str(run_id))
         if record is None:
@@ -157,9 +146,6 @@ class RequestTimings(BaseCallbackHandler):
                 details = (getattr(message,"usage_metadata",None) or {}).get("output_token_details") or {}
                 if details.get("reasoning") is not None:
                     reasoning = (reasoning or 0)+details["reasoning"]
-        for key in ("first_chunk","first_public_text"):
-            if key+"_at_ms" in record:
-                record[key+"_latency_ms"] = record[key+"_at_ms"]-record["start_ms"]
         self.timeline.stop(record,finish_reason=finish,reasoning_tokens=reasoning)
 
     def on_llm_error(self, error, *, run_id, **kwargs):
@@ -188,12 +174,6 @@ class _AgentProxy:
 
     def __getattr__(self, name):
         value = getattr(self.agent,name)
-        if name=="astream":
-            async def stream(*args,**kwargs):
-                with span("main_agent","stage"):
-                    async for event in value(*args,**kwargs):
-                        yield event
-            return stream
         if name=="ainvoke":
             return timed(value,"main_agent","stage")
         return value
@@ -226,14 +206,11 @@ def attach_profiler(harness):
 
     @wraps(original)
     async def run(turn_input,state=None,**kwargs):
-        output = kwargs.get("response_stream")
-        origin = output.started_at if output is not None else turn_input.metadata.get("_latency_started_at",time.perf_counter())
+        origin = turn_input.metadata.get("_latency_started_at",time.perf_counter())
         timeline = Timeline(origin)
         active = _ACTIVE.set(timeline)
         parent = _PARENT.set(None)
         callbacks = _CALLBACK.set(RequestTimings(timeline))
-        if output is not None:
-            output.eval_profile = timeline
         try:
             with timeline.span("turn","turn"):
                 result = await original(turn_input,state,**kwargs)
@@ -253,7 +230,7 @@ def attach_profiler(harness):
 @contextmanager
 def profiling_hooks():
     """Restore every module patch on exit; no application files are changed."""
-    from telesale_agent.application.deepagent import turn, streaming
+    from telesale_agent.application.deepagent import turn
     from telesale_agent.adapters.db.client import db_client
     from telesale_agent.adapters.llm import llm_persist
     from telesale_agent.adapters.memory import turn_persist, write_session
@@ -273,24 +250,6 @@ def profiling_hooks():
         for module in (llm_persist,turn_persist):
             stack.enter_context(patch.object(module,"persist_turn_memory",timed(module.persist_turn_memory,"canonical_facts")))
         stack.enter_context(patch.object(write_session.TurnMemoryWriteSession,"commit",timed(write_session.TurnMemoryWriteSession.commit,"snapshot_commit")))
-        original_send = streaming.AnswerStream.send
-        original_emitted = streaming.AnswerStream.emitted
-
-        @wraps(original_send)
-        async def send(output,event):
-            with span("stream_delivery_wait","stage"):
-                return await original_send(output,event)
-
-        @wraps(original_emitted)
-        def emitted(output,event):
-            result = original_emitted(output,event)
-            timeline = getattr(output,"eval_profile",None)
-            if timeline is not None and event["type"] in {"delta","replace"} and event.get("text"):
-                timeline.mark("answer_emit")
-            return result
-
-        stack.enter_context(patch.object(streaming.AnswerStream,"send",send))
-        stack.enter_context(patch.object(streaming.AnswerStream,"emitted",emitted))
         yield
 
 

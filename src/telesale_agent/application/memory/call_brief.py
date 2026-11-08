@@ -1,3 +1,5 @@
+from datetime import date
+
 from telesale_agent.core.interfaces import CallBriefBuilder
 from telesale_agent.core.models import CallBrief, TurnContext
 
@@ -22,6 +24,19 @@ class CallBriefProjector(CallBriefBuilder):
         raw_facts = memory.get("facts", {})
         if not isinstance(raw_facts, dict):
             raw_facts = {}
+        previous_brief = context.state.call_brief
+        if (
+            not context.identity.customer_id
+            and previous_brief is not None
+            and previous_brief.customer_id is None
+        ):
+            # Anonymous turns deliberately skip durable customer memory. Keep
+            # their normalized facts in this conversation's existing brief so
+            # post-persist refreshes and later turns do not discard them.
+            raw_facts = previous_brief.remembered_preferences.get("facts", {})
+        # Current-turn facts have already been normalized by perception. Overlay
+        # them in this read-only projection, including when memory is disabled.
+        raw_facts = {**raw_facts, **context.state.memory_deltas}
         canonical_facts = {
             key: value
             for key, value in raw_facts.items()
@@ -29,6 +44,8 @@ class CallBriefProjector(CallBriefBuilder):
         }
         unresolved = canonical_facts.get("unresolved_question")
         unresolved_issues = [unresolved] if isinstance(unresolved, str) else []
+        blocker = canonical_facts.get("blocker")
+        objections = [blocker] if isinstance(blocker, str) and blocker.strip() else []
         remembered_preferences = {
             "profile": memory.get("profile", ""),
             "behaviors": memory.get("behaviors", ""),
@@ -60,6 +77,7 @@ class CallBriefProjector(CallBriefBuilder):
             or memory.get("facts")
             or memory.get("atomic_facts")
             or memory.get("foresights")
+            or canonical_facts
         )
         if not has_history:
             current_intent = current_turn["intent"]
@@ -68,6 +86,7 @@ class CallBriefProjector(CallBriefBuilder):
                 customer_name=str(customer_name) if customer_name else None,
                 summary=f"New customer context. Current intent: {current_intent}.",
                 needs=[f"Current intent: {current_intent}"],
+                objections=objections,
                 active_promotions=active_promotions,
                 verified_customer_data=crm_profile,
                 remembered_preferences=remembered_preferences,
@@ -76,9 +95,19 @@ class CallBriefProjector(CallBriefBuilder):
             )
 
         facts = remembered_preferences.get("facts") or {}
+        current_keys = set(context.state.memory_deltas)
+        if context.perception:
+            current_keys.update(context.perception.memory_deltas)
+        # Prioritize facts mentioned now without resurrecting deltas rejected by
+        # persistence: values still come from the current canonical projection.
+        fact_items = (
+            [(key, value) for key, value in facts.items() if key in current_keys]
+            + [(key, value) for key, value in facts.items() if key not in current_keys][-8:]
+        )
         extracted_needs = [
-            f"{key}: {value}" for key, value in list(facts.items())[-8:]
-        ]
+            f"{key}: {value}" for key, value in fact_items
+            if key not in {"blocker", "unresolved_question"}
+        ][:8]
 
         ep_summaries = []
         for ep in past_sessions:
@@ -89,10 +118,16 @@ class CallBriefProjector(CallBriefBuilder):
                 compact = " ".join(str(episode_text).split())
                 ep_summaries.append(compact[-600:])
 
-        if ep_summaries:
-            summary = " | ".join(ep_summaries[-2:])
-        elif extracted_needs:
+        # Prefer current canonical facts over older episode prose, so explicit
+        # corrections made in this turn are visible in the returned brief.
+        if extracted_needs:
             summary = f"Customer facts: {', '.join(extracted_needs[:3])}"
+        elif objections:
+            summary = f"Customer concern: {objections[0]}"
+        elif unresolved_issues:
+            summary = f"Pending question: {unresolved_issues[0]}"
+        elif ep_summaries:
+            summary = " | ".join(ep_summaries[-2:])
         else:
             summary = "Returning customer."
 
@@ -103,9 +138,35 @@ class CallBriefProjector(CallBriefBuilder):
             customer_name=str(customer_name) if customer_name else None,
             summary=summary,
             needs=needs,
+            objections=objections,
             active_promotions=active_promotions,
             verified_customer_data=crm_profile,
             remembered_preferences=remembered_preferences,
             unresolved_issues=unresolved_issues,
             relevant_episodes=past_sessions,
         )
+
+
+class FreshCallBrief:
+    """Refresh volatile evidence before finishing the measured call brief."""
+    def __init__(self, builder, db):
+        self.builder, self.db = builder, db
+
+    async def build_call_brief(self, context):
+        brief = await self.builder.build_call_brief(context)
+        if context.state.turn_number == 0:
+            facts = (context.state.customer_memory or {}).get("facts",{})
+            sku = facts.get("product_advised") or facts.get("variant_sku")
+            on = date.fromisoformat(context.input.metadata.get("call_date") or date.today().isoformat())
+            current = {"checked_on":on.isoformat(),
+                       "crm_profile_and_order_history":"reloaded by customer_context.hydrate",
+                       "cross_channel_interactions":"not available in current CRM adapter"}
+            if sku:
+                current["inventory"] = self.db.check_stock(sku,on)
+                profile = context.state.customer_profile or {}
+                products = self.db.search_products(sku=sku).get("items",[])
+                current["active_promotions"] = self.db.get_active_promotions(
+                    [sku], [p.get("category","") for p in products], profile.get("region"), on)
+                brief.active_promotions = current["active_promotions"]
+            brief.verified_customer_data = {**brief.verified_customer_data,"freshness_check":current}
+        return brief

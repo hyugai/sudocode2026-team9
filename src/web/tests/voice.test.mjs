@@ -22,6 +22,33 @@ test("voice socket preserves deployment prefix and never copies query credential
   assert.throws(() => voiceSocketUrl("javascript:alert(1)", "abc"));
 });
 
+test("visualizer volume follows actual resampled output and clears when playback drains or is flushed", () => {
+  const { instance, messages } = processor("voice-playback-worklet", 48000);
+  instance.port.onmessage({ data: { type: "audio", buffer: new Int16Array(24000).fill(8192).buffer, generation: 1, turnId: "visual" } });
+  assert.equal(messages.filter(m => m.type === "visualizer").length, 0);
+  const out = new Float32Array(128);
+  instance.process([], [[out]]);
+  let visual = messages.filter(m => m.type === "visualizer");
+  assert.equal(visual[0].playing, true);
+  assert.equal(visual[0].volume, 0.5);
+  for (let i = 1; i < 400; i++) instance.process([], [[out]]);
+  visual = messages.filter(m => m.type === "visualizer");
+  assert.deepEqual({ ...visual.at(-1) }, { type: "visualizer", playing: false, generation: 1, volume: 0 });
+  assert.ok(visual.length <= 23, "telemetry stays near 20 Hz, not one event per audio quantum");
+  instance.port.onmessage({ data: { type: "audio", buffer: new Int16Array(24000).fill(8192).buffer, generation: 2, turnId: "interrupt" } });
+  instance.process([], [[out]]);
+  instance.port.onmessage({ data: { type: "flush", generation: 3 } });
+  assert.deepEqual({ ...messages.at(-1) }, { type: "visualizer", playing: false, generation: 3, volume: 0 });
+});
+
+test("microphone VAD reports one speech end after silence for the thinking animation", () => {
+  const { instance, messages } = processor("voice-capture-worklet", 48000);
+  for (let i = 0; i < 40; i++) instance.process([[new Float32Array(128).fill(.5)]]);
+  for (let i = 0; i < 300; i++) instance.process([[new Float32Array(128)]]);
+  assert.equal(messages.filter(m => m.type === "speech_start").length, 1);
+  assert.equal(messages.filter(m => m.type === "speech_end").length, 1);
+});
+
 test("one second of 48kHz microphone produces 50 real 20ms PCM16 frames", () => {
   const { instance, messages } = processor("voice-capture-worklet");
   for (let i = 0; i < 375; i++) instance.process([[new Float32Array(128).fill(.5)]]);

@@ -1,0 +1,33 @@
+.cubes-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  touch-action: pan-y;
+}
+
+.cubes-container::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-color: var(--cubes-face-color);
+  background-image: linear-gradient(var(--cubes-edge-color) 1px, transparent 1px), linear-gradient(90deg, var(--cubes-edge-color) 1px, transparent 1px);
+  background-size: calc(100% / var(--cubes-grid-size)) calc(100% / var(--cubes-grid-size));
+  opacity: .5;
+}
+
+.cubes-container[data-renderer='webgl']::before {
+  display: none;
+}
+
+.cubes-container:not([data-renderer='webgl']) .cubes-canvas {
+  visibility: hidden;
+}
+
+.cubes-canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
