@@ -199,7 +199,7 @@ try {
   await check("SYNEE / VOICE is centered at the top of its panel", "(() => { const s=document.querySelector('.voice-stage').getBoundingClientRect(); const t=document.querySelector('.voice-stage-heading span').getBoundingClientRect(); return Math.abs(t.left+t.width/2-s.left-s.width/2)<1; })()");
   await b.screenshot(`${output}/realtime-idle-desktop.png`);
   await click(".voice-start");
-  await b.wait("document.querySelector('.voice-wave')?.dataset.lkState === 'listening'");
+  await b.wait("document.querySelector('.voice-aura')?.dataset.lkState === 'listening'");
   await check("LiveKit uses the working voice client without rendering a text composer", "__test.mic === 1 && __test.sockets.length === 1 && !document.querySelector('#ai-message')");
   await b.evaluate("__test.sockets[0].emit({ type: 'transcript_update', turn_id: 'one', role: 'user', text: 'Mình cần tai nghe.' }); __test.sockets[0].emit({ type: 'transcript_update', turn_id: 'one', role: 'agent', text: 'Mình hỗ trợ bạn.' })");
   await b.wait("document.querySelectorAll('.voice-line').length === 2");
@@ -291,8 +291,8 @@ try {
   await b.send("Emulation.setDeviceMetricsOverride", { width: 1440, height: 900, deviceScaleFactor: 1, mobile: false });
   await b.screenshot(`${output}/realtime-desktop.png`);
   await b.send("Emulation.setEmulatedMedia", { features: [{ name: "prefers-reduced-motion", value: "reduce" }] });
-  await b.wait("!!document.querySelector('[data-wave-fallback]')");
-  await check("Reduced motion uses the LiveKit static fallback", "!document.querySelector('.voice-wave canvas')");
+  await b.wait("!!document.querySelector('[data-aura-fallback]')");
+  await check("Reduced motion uses a full-size static Aura", "!document.querySelector('.voice-aura canvas') && (() => { const aura=document.querySelector('.voice-aura').getBoundingClientRect(); const fallback=document.querySelector('[data-aura-fallback]').getBoundingClientRect(); return Math.abs(aura.width-fallback.width)<1 && Math.abs(aura.height-fallback.height)<1; })()");
   await check("Reduced motion also disables layout, panel and selector animations", "getComputedStyle(document.querySelector('.ai-workspace')).transitionDuration === '0s' && getComputedStyle(document.querySelector('.ai-voice-session')).animationName === 'none' && getComputedStyle(document.querySelector('.ai-mode-bar'), '::before').transitionDuration === '0s'");
   await check("Voice has no offline audio picker; upload stays in Chat", "!document.querySelector('input[type=file]') && !document.querySelector('#ai-message')");
   await mode("text");
@@ -334,7 +334,7 @@ try {
   await b.screenshot(`${output}/realtime-error-desktop.png`);
   await b.evaluate("__test.denyMic = false");
   await click(".voice-start");
-  await b.wait("document.querySelector('.voice-wave')?.dataset.lkState === 'listening'");
+  await b.wait("document.querySelector('.voice-aura')?.dataset.lkState === 'listening'");
   await openDashboard();
   await b.wait("__test.stopped === 1");
   await check("Leaving Voice for the dashboard closes the microphone and socket", "__test.sockets[0].readyState === 3 && __test.voiceRequests.some(request => request.method === 'DELETE') && !document.querySelector('.ai-voice-workspace')");

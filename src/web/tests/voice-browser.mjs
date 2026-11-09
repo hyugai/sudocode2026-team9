@@ -86,8 +86,8 @@ try {
   await type(".voice-code-input", "test-code");
   await click(".voice-start");
   await b.wait("document.querySelector('.voice-status')?.textContent === 'Đang lắng nghe'");
-  await b.wait("document.querySelector('.voice-wave canvas') || document.querySelector('[data-wave-fallback]')");
-  await check("LiveKit Wave renders with the connected listening state", "document.querySelector('.voice-wave').dataset.lkState === 'listening'");
+  await b.wait("document.querySelector('.voice-aura canvas') || document.querySelector('[data-aura-fallback]')");
+  await check("LiveKit Aura renders with the connected listening state", "document.querySelector('.voice-aura').dataset.lkState === 'listening'");
   await check("Voice starts once with access code and socket authentication", `__voice.mic === 1 && __voice.sockets.length === 1 && __voice.requests[0].headers['X-API-Key'] === 'test-code' && JSON.parse(__voice.sockets[0].sent[0]).type === 'authenticate'`);
   await b.evaluate(`__voice.sockets[0].emit({ type: 'transcript_update', turn_id: 'one', role: 'user', text: 'Tôi cần máy lọc' });
     __voice.sockets[0].emit({ type: 'transcript_update', turn_id: 'one', role: 'agent', text: 'Em hỗ trợ' });
@@ -98,14 +98,14 @@ try {
   await check("Transcript expands on request without replacing the voice controls", "document.querySelector('.voice-transcript').open && !!document.querySelector('.voice-stop')");
   await click(".voice-transcript summary");
   await b.evaluate("__voice.nodes.find(n => n.name === 'telesale-capture').port.onmessage({ data: { type: 'speech_end' } })");
-  await b.wait("document.querySelector('.voice-wave').dataset.lkState === 'thinking'");
-  await check("Microphone speech end changes Wave to thinking", "document.querySelector('.voice-status').textContent.includes('suy nghĩ')");
+  await b.wait("document.querySelector('.voice-aura').dataset.lkState === 'thinking'");
+  await check("Microphone speech end changes Aura to thinking", "document.querySelector('.voice-status').textContent.includes('suy nghĩ')");
   await b.evaluate("__voice.nodes.find(n => n.name === 'telesale-playback').port.onmessage({ data: { type: 'visualizer', playing: true, volume: .6, generation: 1 } })");
-  await b.wait("document.querySelector('.voice-wave').dataset.lkState === 'speaking'");
-  await check("Rendered playback changes Wave to speaking", "document.querySelector('.voice-status').textContent === 'Synee đang trả lời'");
+  await b.wait("document.querySelector('.voice-aura').dataset.lkState === 'speaking'");
+  await check("Rendered playback changes Aura to speaking", "document.querySelector('.voice-status').textContent === 'Synee đang trả lời'");
   await b.screenshot(`${output}/voice-speaking.png`);
   await b.evaluate("__voice.nodes.find(n => n.name === 'telesale-playback').port.onmessage({ data: { type: 'visualizer', playing: false, volume: 0, generation: 1 } })");
-  await b.wait("document.querySelector('.voice-wave').dataset.lkState === 'listening'");
+  await b.wait("document.querySelector('.voice-aura').dataset.lkState === 'listening'");
   await click(".voice-actions button[aria-pressed]");
   await check("Muting sends input_audio_end", "__voice.sockets[0].sent.some(value => typeof value === 'string' && JSON.parse(value).type === 'input_audio_end')");
   await click(".voice-actions button[aria-pressed]");
@@ -128,8 +128,8 @@ try {
   await check("Mobile keeps microphone and end-call controls inside the viewport", "[...document.querySelectorAll('.voice-actions button')].every(button => { const r = button.getBoundingClientRect(); return r.top >= 0 && r.bottom <= innerHeight; })");
   await b.screenshot(`${output}/voice-mobile.png`);
   await b.send("Emulation.setEmulatedMedia", { features: [{ name: "prefers-reduced-motion", value: "reduce" }] });
-  await b.wait("document.querySelector('[data-wave-fallback]') && !document.querySelector('.voice-wave canvas')");
-  await check("Reduced motion keeps a static Wave without a running WebGL canvas", "!!document.querySelector('.voice-wave[data-lk-state=listening]')");
+  await b.wait("document.querySelector('[data-aura-fallback]') && !document.querySelector('.voice-aura canvas')");
+  await check("Reduced motion keeps a static Aura without a running WebGL canvas", "!!document.querySelector('.voice-aura[data-lk-state=listening]')");
   await b.send("Emulation.setEmulatedMedia", { features: [{ name: "prefers-reduced-motion", value: "no-preference" }] });
   await b.send("Input.dispatchKeyEvent", { type: "keyDown", key: "Escape", code: "Escape", windowsVirtualKeyCode: 27 });
   await b.send("Input.dispatchKeyEvent", { type: "keyUp", key: "Escape", code: "Escape", windowsVirtualKeyCode: 27 });
@@ -158,7 +158,7 @@ try {
       return type === 'webgl' || type === 'experimental-webgl' ? null : originalContext.call(this, type, ...args);
     };`);
   await click(".mode-toggle button:last-child");
-  await b.wait("document.querySelector('[data-wave-fallback]') && document.querySelector('.voice-code-input')");
+  await b.wait("document.querySelector('[data-aura-fallback]') && document.querySelector('.voice-code-input')");
   await check("Unavailable WebGL falls back without starting the microphone or losing call controls", "__voice.mic === __voice.beforeFallbackMic && !!document.querySelector('.voice-start')");
 } catch (error) {
   console.error(await b.evaluate("({ url: location.href, dialog: !!document.querySelector('dialog[open]'), text: document.body.innerText.slice(0, 1800) })"));

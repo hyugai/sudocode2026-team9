@@ -112,7 +112,7 @@ main { padding-top: var(--site-header-height); }
 .voice-controls { display: flex; flex-direction: column; gap: 12px; }
 .voice-stage { position: relative; overflow: hidden; padding: 18px 20px 22px; border: 1px solid #24322c; border-radius: 20px; color: white; background: radial-gradient(ellipse at 50% 54%, #142c1d 0%, #0a1111 48%, #060a0e 85%); }
 .voice-stage-heading { display: flex; align-items: center; justify-content: center; text-align: center; color: #b8c6bc; font-size: 10px; line-height: 16px; letter-spacing: 1.7px; }
-.voice-wave { width: 100%; height: clamp(140px, 24dvh, 220px); aspect-ratio: auto; pointer-events: none; }
+.voice-aura { width: min(100%, 280px); height: auto; aspect-ratio: 1; pointer-events: none; }
 .voice-stage-caption { text-align: center; }
 .voice-status { color: #f4fff6; font-size: 17px; line-height: 24px; font-weight: 600; }
 .voice-state-hint { color: #9cabaa; font-size: 12px; line-height: 18px; }
@@ -137,7 +137,7 @@ main { padding-top: var(--site-header-height); }
   .voice-dialog .dialog-content { padding: 18px; }
   .voice-dialog .dialog-header h2 { font-size: 17px; line-height: 24px; }
   .voice-stage { padding: 14px 12px 18px; }
-  .voice-wave { height: 150px; }
+  .voice-aura { width: min(100%, 220px); }
   .voice-stage-heading { font-size: 9px; letter-spacing: 1px; }
   .voice-status { font-size: 16px; }
   .voice-line { padding: 8px 12px; }

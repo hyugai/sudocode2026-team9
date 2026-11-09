@@ -281,9 +281,9 @@ body:has(.ai-voice-workspace) { color-scheme: dark; background: #050811; }
 .ai-voice-header .ai-exit-link:hover { border-color: #506786; background: #1a2940; }
 .ai-voice-session { display: flex; flex: 1; flex-direction: column; align-items: center; min-width: 0; min-height: 0; padding: 32px clamp(16px, 5vw, 64px) max(32px, env(safe-area-inset-bottom)); overflow-y: auto; overscroll-behavior: contain; scrollbar-color: #334155 transparent; }
 .ai-voice-session .realtime-voice { flex: none; width: min(820px, 100%); margin: auto 0; gap: 20px; }
-.ai-voice-session .voice-stage { padding: 24px 32px 28px; border-color: var(--voice-border); border-radius: 28px; background: linear-gradient(170.67deg, #050811 10.99%, #080f22 53.901%, #091528 89.01%); box-shadow: 0 24px 80px #00000030; }
+.ai-voice-session .voice-stage { padding: 24px 32px 28px; border: 0; border-radius: 0; background: transparent; box-shadow: none; }
 .ai-voice-session .voice-stage-heading, .ai-voice-session .voice-state-hint { color: var(--voice-muted); }
-.ai-voice-session .voice-wave { width: min(100%, 480px); height: clamp(180px, 30dvh, 300px); }
+.ai-voice-session .voice-aura { width: min(100%, 400px, 42dvh); }
 .ai-voice-session .voice-status { font-size: 20px; line-height: 28px; }
 .ai-voice-session .voice-state-hint { margin-top: 4px; font-size: var(--text-caption); line-height: 20px; }
 .ai-voice-session .voice-controls { padding-top: 0; border: 0; }
@@ -305,7 +305,7 @@ body:has(.ai-voice-workspace) { color-scheme: dark; background: #050811; }
 @media (max-width: 600px) {
   .ai-voice-session { padding: 24px 12px max(24px, env(safe-area-inset-bottom)); }
   .ai-voice-session .realtime-voice { gap: 16px; }
-  .ai-voice-session .voice-stage { padding: 18px 12px 22px; border-radius: 22px; }
-  .ai-voice-session .voice-wave { height: clamp(140px, 25dvh, 220px); }
+  .ai-voice-session .voice-stage { padding: 18px 12px 22px; }
+  .ai-voice-session .voice-aura { width: min(100%, 280px, 38dvh); }
   .ai-voice-session .voice-status { font-size: 18px; line-height: 26px; }
 }
