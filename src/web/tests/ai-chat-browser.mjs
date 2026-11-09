@@ -24,7 +24,7 @@ const settleMode = () => b.evaluate(`(async () => {
     .map(animation => animation.finished.catch(() => {})));
 })()`);
 const watchHeader = () => b.evaluate(`(() => {
-  const selectors = ['.ai-header-brand', '.ai-header-brand h1', '.ai-brand-mark', '.ai-mode-bar', '.ai-mode-bar button:first-child', '.ai-mode-bar button:last-child', '.ai-exit-link'];
+  const selectors = ['.ai-header-brand', '.ai-header-brand h1', '.ai-brand-mark', '.ai-mode-bar', '.ai-mode-bar button:first-child', '.ai-mode-bar button:last-child', '.ai-exit-link', '.ai-cart-link'];
   const rects = () => selectors.map(selector => {
     const r = document.querySelector(selector).getBoundingClientRect();
     return [r.x, r.y, r.width, r.height];
@@ -70,6 +70,10 @@ try {
     if (!sessionStorage.getItem('ai-chat-test-seeded')) {
       sessionStorage.clear();
       sessionStorage.setItem('ai-chat-test-seeded', '1');
+      localStorage.setItem('synee.demo.cart.v1', JSON.stringify([
+        { productSku: 'SKU-AP-X', sku: 'SKU-AP-X', quantity: 2 },
+        { productSku: 'SKU-AF-4L', sku: 'SKU-AF-4L', quantity: 1 }
+      ]));
       sessionStorage.setItem('synee.guest.conversation.v1', JSON.stringify({ version: 1,
         messages: [{ role: 'agent', text: 'Chào bạn, mình là Synee AI.' }], input: '', sessionId: '',
         customerPhone: '0901234567', voicePreview: false, consultation: null }));
@@ -139,6 +143,28 @@ try {
   await click(".header-chat-link");
   await b.wait("location.pathname === '/ai-chat' && document.querySelector('#ai-message')?.value === 'Bản nháp mở từ nút Chatbot'");
   await check("Header Chatbot link opens the dedicated workspace with the draft and no automatic send or microphone", "location.search === '?mode=text' && __test.calls.length === 0 && __test.mic === 0 && document.querySelectorAll('.ai-message').length === 1 && document.querySelector('.ai-sidebar-footer strong').textContent === '0901234567'");
+  await check("Chat shares the dashboard cart and puts export to its left", "document.querySelector('.ai-cart-link .cart-count').textContent === '3' && document.querySelector('.ai-cart-link').getAttribute('href') === '/cart' && document.querySelector('[aria-label=\"Xuất hội thoại\"]').getBoundingClientRect().right <= document.querySelector('.ai-cart-link').getBoundingClientRect().left");
+  await b.evaluate("window.__cartInChat = JSON.stringify(document.querySelector('.ai-cart-link').getBoundingClientRect().toJSON())");
+  await watchHeader();
+  await mode("realtime");
+  await b.wait("!!document.querySelector('.voice-start')");
+  await settleMode();
+  await stopHeaderWatch();
+  await check("Cart and dashboard stay fixed when switching from Chat to Voice", "__headerMaxShift < 1 && JSON.stringify(document.querySelector('.ai-cart-link').getBoundingClientRect().toJSON()) === __cartInChat && document.querySelector('.ai-cart-link .cart-count').textContent === '3' && __test.mic === 0");
+  await b.screenshot(`${output}/cart-header-voice-desktop.png`);
+  await click(".ai-cart-link");
+  await b.wait("location.pathname === '/cart' && document.querySelectorAll('.order-line').length === 2");
+  await check("Voice opens the dashboard cart with the same product quantities", "document.querySelector('.cart-count').textContent === '3' && document.querySelector('.order-line[data-sku=SKU-AP-X] .quantity-control input').value === '2'");
+  await click(".order-line[data-sku=SKU-AP-X] .quantity-control button:last-child");
+  await b.wait("document.querySelector('.cart-count').textContent === '4'");
+  await click(".header-chat-link");
+  await b.wait("location.pathname === '/ai-chat' && !!document.querySelector('#ai-message')");
+  await check("Cart edits reach Chat while preserving its draft", "document.querySelector('.ai-cart-link .cart-count').textContent === '4' && document.querySelector('#ai-message').value === 'Bản nháp mở từ nút Chatbot' && __test.calls.length === 0");
+  await b.screenshot(`${output}/cart-header-chat-desktop.png`);
+  await openDashboard();
+  await check("Dashboard keeps the updated shared cart count", "document.querySelector('.cart-count').textContent === '4'");
+  await click(".header-chat-link");
+  await b.wait("!!document.querySelector('#ai-message')");
   await openDashboard();
   await type("#inline-message", "Tìm tai nghe dưới 3 triệu");
   await b.evaluate("document.querySelector('.composer').requestSubmit(); document.querySelector('.composer')?.requestSubmit()");
@@ -147,7 +173,7 @@ try {
   await check("Customer identity is preserved across navigation", "__test.calls[0].phone === '0901234567'");
   await check("Workspace exposes only Chat and Voice", "JSON.stringify([...document.querySelectorAll('.ai-mode-bar button')].map(button => button.textContent)) === JSON.stringify(['Chat', 'Voice'])");
   await check("Chat and Voice are centered across the entire viewport", "!!document.querySelector('.ai-workspace > .ai-topbar > .ai-mode-bar') && !document.querySelector('.ai-chat-stage .ai-mode-bar') && (() => { const m=document.querySelector('.ai-mode-bar').getBoundingClientRect(); return Math.abs(m.left+m.width/2-innerWidth/2) < 1; })()");
-  await check("The workspace omits the session note, ready heading and empty-input instruction", "!document.querySelector('.ai-session-note') && !document.querySelector('.ai-topbar [role=status]') && !document.body.innerText.includes('Synee đã sẵn sàng') && !document.body.innerText.includes('Cuộc trò chuyện cùng Synee') && document.querySelector('#ai-send-status').textContent === '' && getComputedStyle(document.querySelector('#ai-send-status')).display === 'none'");
+  await check("The workspace omits the session note, ready heading and empty-input instruction", "!document.querySelector('.ai-session-note') && !document.querySelector('.ai-topbar [role=status]:not(.cart-link [role=status])') && !document.body.innerText.includes('Synee đã sẵn sàng') && !document.body.innerText.includes('Cuộc trò chuyện cùng Synee') && document.querySelector('#ai-send-status').textContent === '' && getComputedStyle(document.querySelector('#ai-send-status')).display === 'none'");
   await b.evaluate("window.__conversationId = __test.calls[0].conversationId");
   await type("#ai-message", "Giữ bản nháp khi chuyển chế độ");
   await upload();

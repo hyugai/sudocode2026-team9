@@ -12,6 +12,7 @@ import { Icon } from "./icons";
 import { ReplyFeedback, ReplyFeedbackProvider } from "./reply-feedback";
 import { CallBriefPanel } from "./call-brief-panel";
 import { ChatProductCards } from "../components/chat-product-cards";
+import { CartLink } from "../components/cart-link";
 
 export type AiChatMode = "text" | "realtime";
 type Dialog = "history" | "details" | "profile" | "new" | null;
@@ -144,7 +145,10 @@ export function AiChatExperience({ mode }: { mode: AiChatMode }) {
         <div className="ai-topbar-actions">
           {!voiceMode && <button className="ai-icon-button" aria-label="Xuất hội thoại" onClick={exportConversation}><Icon name="share" /></button>}
           {!voiceMode && <button className="ai-detail-button" aria-label="Mở call brief" onClick={() => setDialog("details")}><Icon name="panel" /><span>Call brief</span></button>}
-          <Link href="/" className="ai-exit-link" aria-label="Trở lại dashboard"><Icon name="arrowLeft" /><span>Dashboard</span></Link>
+          <div className="ai-header-commerce">
+            <CartLink compact />
+            <Link href="/" className="ai-exit-link" aria-label="Trở lại dashboard" title="Trở lại dashboard"><Icon name="arrowLeft" /><span>Dashboard</span></Link>
+          </div>
         </div>
       </header>
       {!voiceMode && <aside className="ai-sidebar" aria-label="Lịch sử hội thoại">{sidebar}</aside>}

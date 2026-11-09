@@ -11,7 +11,7 @@ import { ProductDetail } from "./product-detail";
 import { ProductImage } from "./product-image";
 import { HeroBackdrop } from "./hero-backdrop";
 import { PurchaseJourney, type PurchaseView } from "./purchase-journey";
-import { usePurchase } from "./purchase-provider";
+import { CartLink } from "./cart-link";
 import type { Consultation } from "@/utils/use-conversation";
 import { AccountQuickLinks, AccountPage, type AccountView } from "./account-content";
 import { InformationPage } from "./information-content";
@@ -26,7 +26,6 @@ export default function Storefront({ product, catalogProducts = [], catalogError
   const [inlineVisible, setInlineVisible] = useState<boolean | null>(isCatalog ? null : false);
   const [floatingOpen, setFloatingOpen] = useState(false);
   const { voicePreview, setVoicePreview } = conversation;
-  const purchase = usePurchase();
   const [dialog, setDialog] = useState<Dialog>(null);
   const [category, setCategory] = useState<string>(categories.some(c => c.name === initialCategory) ? initialCategory : "Tất cả");
   const [subcategory, setSubcategory] = useState("");
@@ -137,7 +136,7 @@ export default function Storefront({ product, catalogProducts = [], catalogError
           <Asset name="search" /><label htmlFor="product-search" className="sr-only">Tìm sản phẩm, thương hiệu</label><input id="product-search" value={query} onChange={e => setQuery(e.target.value)} placeholder="Tìm sản phẩm, thương hiệu…" /><button type="submit" aria-label="Tìm sản phẩm"><Asset name="searchPurple" /><span>Tìm</span></button>
         </form>
         <div className="header-right">
-          <div className="commerce-actions"><Link href="/cart" className="cart-link" aria-label={`Giỏ hàng demo, ${purchase.cart.reduce((n, l) => n + l.quantity, 0)} sản phẩm`}><Asset name="cart" /><span>Giỏ hàng <span className="cart-count" aria-live="polite">{purchase.cart.reduce((n, l) => n + l.quantity, 0)}</span></span></Link>
+          <div className="commerce-actions"><CartLink />
             <div className="account-menu" ref={accountRef}>
               <button ref={accountTriggerRef} className="account-trigger" aria-label="Mở menu tài khoản" aria-controls={accountMenuId} aria-expanded={dialog === "account"} onClick={() => setDialog(value => value === "account" ? null : "account")} onKeyDown={event => {
                 if (event.key !== "ArrowDown") return;
