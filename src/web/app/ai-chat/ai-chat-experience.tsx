@@ -49,7 +49,7 @@ export function AiChatExperience({ mode }: { mode: AiChatMode }) {
     : !c.sessionReady ? "Đang khôi phục hội thoại…"
     : c.conversationEnded ? "Hội thoại đã kết thúc. Chọn Cuộc trò chuyện mới để tiếp tục."
     : c.voiceActive ? "Kết thúc phiên voice trước khi gửi tin nhắn hoặc ghi âm."
-    : c.isLoading ? (c.audioFile ? "Đang nhận dạng ghi âm và chờ phản hồi…" : "Đang chờ phản hồi…")
+    : c.isLoading ? (c.processingLabel || "Đang chờ phản hồi…")
     : !c.backendReady ? "Backend chưa sẵn sàng. Hệ thống đang kiểm tra lại; nội dung vẫn được giữ."
     : c.audioFile ? "Gửi ghi âm để chuyển thành văn bản và nhận phản hồi. Tối đa 25 MB / 120 giây."
     : "");
@@ -57,7 +57,7 @@ export function AiChatExperience({ mode }: { mode: AiChatMode }) {
   useEffect(() => {
     const history = historyRef.current;
     if (history && !query) history.scrollTop = history.scrollHeight;
-  }, [c.messages, c.isLoading, query, mode]);
+  }, [c.messages, c.isLoading, c.streamingText, query, mode]);
 
   useLayoutEffect(() => {
     const input = inputRef.current;
@@ -161,7 +161,8 @@ export function AiChatExperience({ mode }: { mode: AiChatMode }) {
                     {message.role === "agent" ? <ReplyFeedback message={c.messages[message.index]} messageNumber={message.index + 1} onCopy={() => void copy(message.text)} disabled={!c.sessionReady} /> : <div className="ai-message-tools"><button type="button" aria-label={`Sao chép tin nhắn ${message.index + 1}`} onClick={() => void copy(message.text)}><Icon name="copy" /></button></div>}
                   </div>
                 </article>)}
-                {c.isLoading && !c.voiceActive && <article className="ai-message assistant"><span className="ai-avatar"><Icon name="spark" /></span><div className="ai-thinking" role="status" aria-label="Synee đang xử lý"><i /><i /><i /></div></article>}
+                {c.pendingMessage && <article className="ai-message user"><div><div className="ai-message-meta"><strong>Bạn</strong></div><div className="ai-bubble">{c.pendingMessage}</div></div></article>}
+                {c.isLoading && !c.voiceActive && <article className="ai-message assistant"><span className="ai-avatar"><Icon name="spark" /></span><div><div className="ai-message-meta"><strong>Synee AI</strong><span role="status">{c.processingLabel || "Đang xử lý…"}</span></div>{c.streamingText ? <div className="ai-bubble" aria-live="off">{c.streamingText}</div> : <div className="ai-thinking" aria-hidden="true"><i /><i /><i /></div>}</div></article>}
               </div></ReplyFeedbackProvider>
               {query && <p className="ai-search-summary" role="status">{visibleMessages.length} tin nhắn phù hợp. <button className="text-link" onClick={() => setSearch("")}>Xóa tìm kiếm</button></p>}
               {c.messages.length === 1 && mode === "text" && !query && <div className="ai-suggestion-grid">{suggestions.map(item =>

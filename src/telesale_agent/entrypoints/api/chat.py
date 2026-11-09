@@ -10,7 +10,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi import Depends, FastAPI, File, Form, Header, HTTPException, UploadFile, Request
 from pydantic import BaseModel, Field, field_validator
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, StreamingResponse
 from fastapi.encoders import jsonable_encoder
 import sys
 
@@ -41,6 +41,8 @@ async def lifespan(app: FastAPI):
         yield
     finally:
         try:
+            if stream_tasks:
+                await asyncio.gather(*stream_tasks, return_exceptions=True)
             await shutdown_voice()
         finally:
             print("🛑 Đóng kết nối MCP Servers...")
@@ -73,7 +75,9 @@ class ArrivalTimingMiddleware:
         async def emit(message):
             nonlocal response_start
             if (message["type"] == "http.response.start" and message["status"] == 200
-                    and scope.get("path") in {"/api/chat", "/api/chat/audio"}):
+                    and scope.get("path") in {"/api/chat", "/api/chat/audio"}
+                    and any(key.lower() == b"content-type" and value.startswith(b"application/json")
+                            for key, value in message["headers"])):
                 response_start = message
                 return
             if response_start is not None:
@@ -118,6 +122,7 @@ app.add_middleware(
 # instance because customer .md memory lives on a persistent disk.
 sessions: dict[str, ConversationState] = {}
 session_locks: dict[str, asyncio.Lock] = {}
+stream_tasks: set[asyncio.Task] = set()
 
 
 def require_api_key(x_api_key: str | None = Header(default=None)) -> None:
@@ -157,6 +162,8 @@ async def chat_endpoint(req: ChatRequest, request: Request, repository: AppDataR
         metadata={"_latency_started_at": request.scope["telesale_received_at"]},
     )
     repository, user_id = await conversation_owner(request, req.conversation_id, repository)
+    if "text/event-stream" in request.headers.get("accept", ""):
+        return stream_chat_turn(turn_input, repository=repository, user_id=user_id)
     return await run_chat_turn(turn_input, repository=repository, user_id=user_id)
 
 
@@ -190,6 +197,8 @@ async def audio_chat_endpoint(
             metadata={"_latency_started_at": request.scope["telesale_received_at"], "offline_audio": True},
         )
         repository, user_id = await conversation_owner(request, conversation_id.strip(), repository)
+        if "text/event-stream" in request.headers.get("accept", ""):
+            return stream_chat_turn(turn_input, repository=repository, user_id=user_id)
         return await run_chat_turn(turn_input, repository=repository, user_id=user_id)
     finally:
         await file.close()
@@ -217,12 +226,80 @@ async def guard_guest_id(conversation_id: str, repository: AppDataRepository) ->
         raise auth_error(503, "Chưa kiểm tra được hội thoại. Hãy thử lại.") from exc
 
 
-async def run_chat_turn(turn_input: TurnInput, *, repository: AppDataRepository | None = None, user_id: str | None = None):
+def stream_chat_turn(turn_input: TurnInput, *, repository=None, user_id=None) -> StreamingResponse:
+    """Stream drafts, then one receipt after guardrails and the DB transaction."""
+    async def events():
+        queue = asyncio.Queue()
+        connected = True
+        latest_text, text_queued = "", False
+
+        async def on_text(text):
+            nonlocal latest_text, text_queued
+            latest_text = text
+            if connected and not text_queued:
+                text_queued = True
+                queue.put_nowait(("text", None))
+
+        async def on_status(stage):
+            if connected:
+                queue.put_nowait(("status", {"stage": stage}))
+
+        async def produce():
+            try:
+                result = await run_chat_turn(turn_input, repository=repository, user_id=user_id, on_text=on_text, on_status=on_status)
+                if isinstance(result, JSONResponse):
+                    data = json.loads(result.body)
+                    event = "error" if result.status_code >= 400 else "done"
+                    if event == "error":
+                        data["status"] = result.status_code
+                else:
+                    event, data = "done", result
+                if connected:
+                    queue.put_nowait((event, data))
+            except HTTPException as exc:
+                if connected:
+                    queue.put_nowait(("error", {"detail": exc.detail, "status": exc.status_code}))
+            except Exception:
+                logger.exception("Chat stream failed: %s", turn_input.conversation_id)
+                if connected:
+                    queue.put_nowait(("error", {"detail": "Kết nối bị gián đoạn. Hãy kiểm tra lịch sử trước khi gửi lại."}))
+
+        # Finish the current turn/save even if the browser disconnects; never replay it.
+        task = asyncio.create_task(produce())
+        stream_tasks.add(task)
+        task.add_done_callback(stream_tasks.discard)
+        try:
+            yield 'event: status\ndata: {"stage":"processing"}\n\n'
+            while True:
+                try:
+                    event, data = await asyncio.wait_for(queue.get(), timeout=15)
+                except TimeoutError:
+                    yield ": keepalive\n\n"
+                    continue
+                if event == "text":
+                    text_queued = False
+                    data = {"text": latest_text}
+                yield f"event: {event}\ndata: {json.dumps(jsonable_encoder(data), ensure_ascii=False)}\n\n"
+                if event in {"done", "error"}:
+                    break
+        finally:
+            connected = False
+
+    return StreamingResponse(events(), media_type="text/event-stream",
+                             headers={"Cache-Control": "no-store, no-transform", "X-Accel-Buffering": "no"})
+
+
+async def run_chat_turn(turn_input: TurnInput, *, repository: AppDataRepository | None = None, user_id: str | None = None, on_text=None, on_status=None):
     """Keep text and voice turns in the same ordered conversation."""
     if harness is None:
         raise HTTPException(status_code=503, detail="Agent is not ready")
 
     conversation_id = turn_input.conversation_id
+    if repository is not None:
+        try:
+            conversation_id = turn_input.conversation_id = str(UUID(conversation_id))
+        except ValueError as exc:
+            raise auth_error(422, "Mã hội thoại không hợp lệ.") from exc
     lock = session_locks.setdefault(conversation_id, asyncio.Lock())
 
     async with lock:
@@ -240,7 +317,8 @@ async def run_chat_turn(turn_input: TurnInput, *, repository: AppDataRepository 
         else:
             state = sessions.get(conversation_id) or ConversationState(conversation_id=conversation_id)
         try:
-            result = await harness.run_turn(turn_input, state)
+            result = (await harness.run_turn(turn_input, state, on_text=on_text, on_status=on_status)
+                      if on_text is not None else await harness.run_turn(turn_input, state))
         except AudioTooLargeError as exc:
             raise HTTPException(status_code=413, detail=str(exc)) from exc
         except AudioInputError as exc:
@@ -264,6 +342,8 @@ async def run_chat_turn(turn_input: TurnInput, *, repository: AppDataRepository 
         payload = turn_payload(turn_input, result)
         if repository is not None:
             try:
+                if on_status:
+                    await on_status("saving")
                 payload.update(await repository.save_turn(user_id, result.state, turn_input.text,
                                                          result.response_text, payload["call_brief"]))
             except Exception:

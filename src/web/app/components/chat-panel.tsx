@@ -42,7 +42,7 @@ export function ChatPanel({ conversation: c, compact = false, expanded = false, 
   useEffect(() => {
     const history = historyRef.current;
     if (history) history.scrollTop = history.scrollHeight;
-  }, [c.messages, c.isLoading]);
+  }, [c.messages, c.isLoading, c.streamingText]);
   useEffect(() => { if (compact) inputRef.current?.focus({ preventScroll: true }); }, [compact]);
   useLayoutEffect(() => {
     const input = inputRef.current;
@@ -74,14 +74,15 @@ export function ChatPanel({ conversation: c, compact = false, expanded = false, 
           {message.role === "agent" && <span className="synee-avatar" aria-label="Synee AI"><Asset name={compact ? "compactSparkle" : "sparkle"} /></span>}
           <p className="message-bubble">{message.text}</p>
         </div>)}
-        {c.isLoading && <div className="message agent"><span className="synee-avatar"><Asset name={compact ? "compactSparkle" : "sparkle"} /></span><span className="typing" aria-label="Synee AI đang xử lý"><i /><i /><i /></span></div>}
+        {c.pendingMessage && <div className="message user"><p className="message-bubble">{c.pendingMessage}</p></div>}
+        {c.isLoading && <div className="message agent"><span className="synee-avatar"><Asset name={compact ? "compactSparkle" : "sparkle"} /></span>{c.streamingText ? <p className="message-bubble" aria-live="off">{c.streamingText}</p> : <span className="typing" aria-label="Synee AI đang xử lý"><i /><i /><i /></span>}</div>}
       </div>}
       <div id={statusId} className="chat-status" aria-live="polite">
         {dashboard && c.sessionNotice && <p role="status">{c.sessionNotice}</p>}
         {c.errorMessage ? <p role="alert" className="error">{c.errorMessage}</p>
           : c.conversationEnded ? <p role="status">Hội thoại đã kết thúc. Mở Chat để bắt đầu cuộc trò chuyện mới.</p>
           : c.cooldownSeconds > 0 ? <p role="status">Dịch vụ hội thoại đang tạm giới hạn. Có thể gửi tiếp sau {c.cooldownSeconds} giây.</p>
-          : c.isLoading ? <p role="status">{c.audioFile ? "Đang nhận dạng ghi âm và chờ phản hồi…" : "Đang chờ phản hồi…"}</p>
+          : c.isLoading ? <p role="status">{c.processingLabel || "Đang chờ phản hồi…"}</p>
           : !c.backendReady ? <p role="status">Đang chờ kết nối backend sẵn sàng. Hệ thống sẽ tự kiểm tra lại…</p>
           : null}
       </div>

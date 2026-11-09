@@ -17,7 +17,7 @@ export function readCallBrief(value: unknown): CallBrief | null {
     summary: text(source.summary, 4000),
     needs: list(source.needs),
     objections: list(source.objections),
-    unresolvedIssues: list(source.unresolved_issues),
+    unresolvedIssues: list(source.unresolved_issues ?? source.unresolvedIssues),
   };
   return brief.summary || brief.needs.length || brief.objections.length || brief.unresolvedIssues.length ? brief : null;
 }

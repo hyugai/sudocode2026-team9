@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { ChatApiError, createChatClient, type DebugInfo } from "./chat-api";
+import { ChatApiError, chatStageLabels, createChatClient, type ChatStage, type DebugInfo } from "./chat-api";
 import { conversationStorageKey, readGuestSession, writeGuestSession } from "./conversation-session";
 import { readCallBrief, type CallBrief } from "./call-brief";
 import { accountConversationKey, conversationApi, type SavedConversation, type StoredFeedback } from "./conversation-api";
@@ -28,6 +28,9 @@ export function useConversation(persistGuest = true, enabled = true) {
   const [input, setInput] = useState("");
   const [customerPhone, updateCustomerPhone] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [streamingText, setStreamingText] = useState("");
+  const [pendingMessage, setPendingMessage] = useState("");
+  const [processingStage, setProcessingStage] = useState<ChatStage | null>(null);
   const [audioFile, setAudioFile] = useState<File | null>(null);
   const [audioPreviewUrl, setAudioPreviewUrl] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -73,6 +76,7 @@ export function useConversation(persistGuest = true, enabled = true) {
           setMessages(saved.messages.length ? saved.messages : welcome);
           setInput(saved.input); updateCustomerPhone(saved.customerPhone); setVoicePreview(saved.voicePreview);
           setConsultation(saved.consultation); setSessionId(saved.sessionId); conversationIdRef.current = saved.sessionId;
+          setCallBrief(readCallBrief(saved.callBrief));
         }
       } catch { if (active) setSessionNotice("Chưa khôi phục được hội thoại. Bạn có thể thử mở lại từ lịch sử."); }
       finally { if (active) setSessionReady(true); }
@@ -83,12 +87,12 @@ export function useConversation(persistGuest = true, enabled = true) {
 
   useEffect(() => {
     if (!sessionReady || !persistGuest) return;
-    try { sessionStorage.setItem(conversationStorageKey, writeGuestSession({ messages, sessionId, input, customerPhone, voicePreview, consultation })); }
+    try { sessionStorage.setItem(conversationStorageKey, writeGuestSession({ messages, sessionId, input, customerPhone, voicePreview, consultation, callBrief })); }
     catch {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setSessionNotice("Trình duyệt chưa lưu được hội thoại. Hãy giữ tab mở để tiếp tục tư vấn.");
     }
-  }, [persistGuest, sessionReady, messages, sessionId, input, customerPhone, voicePreview, consultation]);
+  }, [persistGuest, sessionReady, messages, sessionId, input, customerPhone, voicePreview, consultation, callBrief]);
 
   const resetConversation = () => {
     setMessages(welcome); setDebugLogs([]); setCallBrief(null); setCallBriefStale(false); setInput(""); setAudioFile(null); setAudioPreviewUrl("");
@@ -169,6 +173,9 @@ export function useConversation(persistGuest = true, enabled = true) {
     const selectedAudio = audioFile;
     submissionLock.current = true;
     setIsLoading(true);
+    setStreamingText("");
+    setProcessingStage("processing");
+    setPendingMessage(selectedAudio ? "Đang nhận dạng ghi âm…" : userMessage);
     setErrorMessage("");
     try {
       const conversationId = conversationIdRef.current || (accountMode ? (await conversationApi.create(customerPhone)).id : crypto.randomUUID());
@@ -177,7 +184,7 @@ export function useConversation(persistGuest = true, enabled = true) {
       const contextualMessage = consultation && !selectedAudio
         ? `Ngữ cảnh tư vấn: ${consultation.name} (${consultation.sku}), giá tham chiếu ${consultation.price}, số lượng ${consultation.quantity}.\nCâu hỏi của khách: ${userMessage}`
         : userMessage;
-      const data = await chatClient.send({ conversationId, message: contextualMessage, audioFile: selectedAudio, customerPhone });
+      const data = await chatClient.send({ conversationId, message: contextualMessage, audioFile: selectedAudio, customerPhone }, setStreamingText, setProcessingStage);
       if (!data) return;
       setCooldownSeconds(chatClient.retryAfterSeconds);
       const transcript = selectedAudio ? data.transcript : (data.normalized_message ?? userMessage);
@@ -200,7 +207,7 @@ export function useConversation(persistGuest = true, enabled = true) {
       setErrorMessage(error instanceof ChatApiError && error.retryAfterSeconds > 0
         ? ""
         : error instanceof Error ? error.message : "Lỗi kết nối. Vui lòng thử lại.");
-    } finally { submissionLock.current = false; setIsLoading(false); }
+    } finally { submissionLock.current = false; setIsLoading(false); setStreamingText(""); setPendingMessage(""); setProcessingStage(null); }
   };
 
   const setMessageFeedback = (id: string, feedback: StoredFeedback | null) => {
@@ -211,7 +218,8 @@ export function useConversation(persistGuest = true, enabled = true) {
     audioFile, audioPreviewUrl, clearAudio, selectAudio, errorMessage, backendReady,
     cooldownSeconds, sessionId, sendMessage, voicePreview, setVoicePreview, consultation, setConsultation,
     sessionReady, sessionNotice, endConversation, voiceActive, setVoiceActive,
-    accountMode, conversationEnded, openConversation, setMessageFeedback };
+    accountMode, conversationEnded, openConversation, setMessageFeedback, streamingText, pendingMessage,
+    processingLabel: processingStage ? chatStageLabels[processingStage] : "" };
 }
 
 export type Conversation = ReturnType<typeof useConversation>;

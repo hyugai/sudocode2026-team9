@@ -3,28 +3,36 @@ import time
 from telesale_agent.core.models import Message
 from telesale_agent.adapters.llm.usage_tracking import usage_stage
 
-async def prepare_context(harness, context, *, identity_started=None):
+async def prepare_context(harness, context, *, identity_started=None, on_status=None):
     call_brief_ms = None
     # 2a. Initialization phase (Only runs once per conversation)
     hydrated_this_turn = False
     if not context.state.identity:
         if harness.identity:
+            if on_status:
+                await on_status("identifying")
             context.identity = await harness.identity.resolve_identity(context)
             context.state.identity = context.identity
             if identity_started is None and context.identity and context.identity.phone:
                 identity_started = time.perf_counter()
         
         if harness.customer_context:
+            if on_status:
+                await on_status("retrieving")
             await harness.customer_context.hydrate(context)
             hydrated_this_turn = True
     else:
         context.identity = context.state.identity
         if harness.customer_context and context.state.customer_memory is None:
+            if on_status:
+                await on_status("retrieving")
             await harness.customer_context.hydrate(context)
             hydrated_this_turn = True
         
     # 2b. Turn-based phase (Runs every turn)
     if harness.perceive:
+        if on_status:
+            await on_status("analyzing")
         with usage_stage("perception"):
             context.perception = await harness.perceive.perceive(context)
         context.state.messages.append(
@@ -45,15 +53,21 @@ async def prepare_context(harness, context, *, identity_started=None):
                 should_retrieve = False
                 
         if should_retrieve:
+            if on_status:
+                await on_status("retrieving")
             context.retrieved = await harness.retrieve.retrieve(context)
             context.state.retrieved_data = context.retrieved
 
     if harness.customer_context and not hydrated_this_turn:
+        if on_status:
+            await on_status("retrieving")
         # The previous turn persists before returning. Reloading here makes
         # that canonical memory the input to this turn's new call brief.
         await harness.customer_context.refresh_memory(context)
 
     if harness.call_brief:
+        if on_status:
+            await on_status("brief")
         context.call_brief = await harness.call_brief.build_call_brief(context)
         context.state.call_brief = context.call_brief
         if identity_started is not None:

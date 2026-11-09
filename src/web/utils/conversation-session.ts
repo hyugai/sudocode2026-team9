@@ -1,3 +1,5 @@
+import { readCallBrief, type CallBrief } from "./call-brief.ts";
+
 /** Current-tab guest continuity only. This is not an authentication session. */
 export const conversationStorageKey = "synee.guest.conversation.v1";
 export type GuestSession = {
@@ -7,6 +9,7 @@ export type GuestSession = {
   customerPhone: string;
   voicePreview: boolean;
   consultation: { sku: string; name: string; price: string; quantity: number } | null;
+  callBrief?: CallBrief | null;
 };
 
 export function readGuestSession(raw: string | null): GuestSession | null {
@@ -22,12 +25,14 @@ export function readGuestSession(raw: string | null): GuestSession | null {
   if (!valid || (c !== null && (!c || typeof c.sku !== "string" || c.sku.length > 100 || typeof c.name !== "string" || c.name.length > 500 || typeof c.price !== "string" || c.price.length > 100 || !Number.isSafeInteger(c.quantity) || c.quantity < 1 || c.quantity > 10000))) {
     throw new Error("Không đọc được hội thoại đã lưu. Bạn vẫn có thể tư vấn trong phiên mới.");
   }
-  return { messages: s.messages, sessionId: s.sessionId, input: s.input, customerPhone: s.customerPhone, voicePreview: s.voicePreview, consultation: c };
+  return { messages: s.messages, sessionId: s.sessionId, input: s.input, customerPhone: s.customerPhone, voicePreview: s.voicePreview, consultation: c,
+    ...(s.callBrief === undefined ? {} : { callBrief: readCallBrief(s.callBrief) }) };
 }
 
 export function writeGuestSession(session: GuestSession): string {
   const { sessionId, input, customerPhone, voicePreview, consultation } = session;
-  const raw = JSON.stringify({ sessionId, input, customerPhone, voicePreview, consultation, messages: session.messages.slice(-300), version: 1 });
+  const callBrief = session.callBrief === undefined ? undefined : readCallBrief(session.callBrief);
+  const raw = JSON.stringify({ sessionId, input, customerPhone, voicePreview, consultation, callBrief, messages: session.messages.slice(-300), version: 1 });
   // Validate the same bounds before writing, including the total storage budget.
   readGuestSession(raw);
   return raw;

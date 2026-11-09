@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from contextlib import AsyncExitStack
+from collections.abc import Awaitable, Callable
 from typing import Any
 
 from langgraph.checkpoint.memory import MemorySaver
@@ -105,12 +106,16 @@ class DeepAgentHarness:
         self,
         turn_input: TurnInput,
         state: ConversationState | None = None,
+        *, on_text: Callable[[str], Awaitable[None]] | None = None,
+        on_status: Callable[[str], Awaitable[None]] | None = None,
     ) -> TurnResult:
-        return await run_turn(self, turn_input, state)
+        return await run_turn(self, turn_input, state, on_text=on_text, on_status=on_status)
 
     async def _run_turn_impl(
         self,
         turn_input: TurnInput,
         state: ConversationState | None = None,
+        *, on_text: Callable[[str], Awaitable[None]] | None = None,
+        on_status: Callable[[str], Awaitable[None]] | None = None,
     ) -> TurnResult:
-        return await run_turn_impl(self, turn_input, state)
+        return await run_turn_impl(self, turn_input, state, on_text=on_text, on_status=on_status)

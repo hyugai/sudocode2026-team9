@@ -5,6 +5,7 @@ from __future__ import annotations
 import os
 import logging
 import time
+from collections.abc import Awaitable, Callable
 
 from telesale_agent.core.models import (
     TurnContext,
@@ -57,11 +58,14 @@ async def run_turn(
     harness,
     turn_input: TurnInput,
     state: ConversationState | None = None,
+    *, on_text: Callable[[str], Awaitable[None]] | None = None,
+    on_status: Callable[[str], Awaitable[None]] | None = None,
 ) -> TurnResult:
     """Run one turn and always close its provider-usage scope."""
     usage_token = begin_usage_collection()
     try:
-        result = await harness._run_turn_impl(turn_input, state)
+        result = (await harness._run_turn_impl(turn_input, state, on_text=on_text, on_status=on_status)
+                  if on_text is not None or on_status is not None else await harness._run_turn_impl(turn_input, state))
     except BaseException as exc:
         usage = finish_usage_collection(usage_token)
         exc.telesale_usage = usage
@@ -73,6 +77,8 @@ async def run_turn_impl(
     harness,
     turn_input: TurnInput,
     state: ConversationState | None = None,
+    *, on_text: Callable[[str], Awaitable[None]] | None = None,
+    on_status: Callable[[str], Awaitable[None]] | None = None,
 ) -> TurnResult:
     """Execute the initialized Deep Agent pipeline for one turn."""
     if harness.agent is None:
@@ -100,6 +106,8 @@ async def run_turn_impl(
     if context.input.audio is not None and not context.input.text:
         if harness.asr is None:
             raise ASRUnavailableError("Chưa cấu hình ASR cho input giọng nói.")
+        if on_status:
+            await on_status("transcribing")
         asr_started = time.perf_counter()
         transcript = await harness.asr.transcribe(context)
         asr_ms = (time.perf_counter() - asr_started) * 1000
@@ -116,7 +124,7 @@ async def run_turn_impl(
     # A caller phone supplied with the request is known at arrival. Unlike
     # TTFT/Total, Call Brief does not subtract offline ASR from this interval.
     identity_started = backend_started if new_call and turn_input.customer_hint else None
-    call_brief_ms = await prepare_context(harness, context, identity_started=identity_started)
+    call_brief_ms = await prepare_context(harness, context, identity_started=identity_started, on_status=on_status)
 
     precomputed_parts = ["persisted_" + key for key in ("facts", "episodes", "atomic_facts", "foresights")
                          if (context.state.customer_memory or {}).get(key)]
@@ -163,6 +171,8 @@ async def run_turn_impl(
             set(allowed_tools)
             | {"create_new_order", "check_inventory", "get_pricing_quote"}
         )
+    if on_status and allowed_tools:
+        await on_status("tools")
     prefetched_calls, allowed_tools = await harness._prefetch_read_tools(
         context,
         allowed_tools,
@@ -188,12 +198,42 @@ async def run_turn_impl(
         f"allowed_tools={sorted(allowed_tools)}"
     )
     
+    first_text_at = None
+    if on_status:
+        await on_status("generating")
     with usage_stage("main_agent"):
         try:
             payload = {"messages": [{"role": "user", "content": enriched_user_msg}]}
             runtime_context = {"allowed_tools": sorted(allowed_tools),
                                "customer_id": context.identity.customer_id if context.identity else None}
-            result = await harness.agent.ainvoke(payload, config=config, context=runtime_context)
+            if on_text is None:
+                result = await harness.agent.ainvoke(payload, config=config, context=runtime_context)
+            else:
+                result, draft, message_key, tool_message = {}, "", None, False
+                async for mode, part in harness.agent.astream(
+                    payload, config=config, context=runtime_context, stream_mode=["messages", "values"],
+                ):
+                    if mode == "values":
+                        result = part
+                        continue
+                    chunk, metadata = part
+                    if metadata.get("langgraph_node") != "model":
+                        continue
+                    key = (chunk.id, metadata.get("langgraph_step"))
+                    if key != message_key:
+                        draft, message_key, tool_message = "", key, False
+                        if on_status:
+                            await on_status("generating")
+                    if getattr(chunk, "tool_call_chunks", None) or getattr(chunk, "tool_calls", None):
+                        if on_status and not tool_message:
+                            await on_status("tools")
+                        tool_message = True
+                        await on_text("")
+                    text = _message_text(chunk)
+                    if text and not tool_message:
+                        draft += text
+                        first_text_at = first_text_at or time.perf_counter()
+                        await on_text(draft)
         except Exception as exc:
             if is_rate_limit_error(exc):
                 # Do not accumulate customer messages or append to a failed turn
@@ -228,6 +268,8 @@ async def run_turn_impl(
     if not response_text.strip():
         response_text = _safe_fallback_response(context, orchestrated_calls)
 
+    if on_status:
+        await on_status("checking")
     response_text = await prepare_response(harness, context, tool_calls, response_text,
                                            basket_evidence=[*orchestrated_calls, *tool_calls])
 
@@ -242,6 +284,8 @@ async def run_turn_impl(
     memory_writes = []
     persist_started = time.perf_counter()
     if harness.persist:
+        if on_status:
+            await on_status("saving")
         with usage_stage("memory_persister"):
             memory_writes = await persist_shared(harness, context)
     if context.identity is not None and context.call_brief is not None:
@@ -253,8 +297,9 @@ async def run_turn_impl(
     state.turn_number += 1
     completed_ms = (persist_finished - response_started) * 1000
     latency = {
-        "ttft_ms": answer_ms, "total_ms": answer_ms,
-        "ttfa_ms": None, "measurement_mode": "non_streaming",
+        "ttft_ms": round((first_text_at - response_started) * 1000, 3) if first_text_at else answer_ms,
+        "total_ms": answer_ms,
+        "ttfa_ms": None, "measurement_mode": "streaming" if on_text else "non_streaming",
         "timing_boundary": "response_ready_before_persistence",
         "asr_ms": round(asr_ms, 3) if asr_ms is not None else None,
         "call_brief_ms": round(call_brief_ms, 3) if call_brief_ms is not None else None,
