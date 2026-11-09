@@ -142,7 +142,6 @@
 .ai-composer-actions button { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; color: var(--muted); background: transparent; }
 .ai-composer-actions button:hover:not(:disabled) { color: var(--brand-strong); background: var(--brand-soft); }
 .ai-composer-actions svg { width: 20px; height: 20px; }
-.ai-composer-actions .ai-composer-mic { color: var(--brand-strong); }
 .ai-composer-actions .ai-send { border: 1px solid var(--foreground); color: var(--foreground); background: var(--action); box-shadow: 0 3px 0 var(--action-front); }
 .ai-composer-actions .ai-send:hover:not(:disabled) { color: var(--foreground); background: color-mix(in srgb, var(--action), white 15%); }
 .ai-composer .audio-preview { max-width: 100%; margin-block: 10px; }

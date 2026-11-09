@@ -191,7 +191,7 @@ export function AiChatExperience({ mode }: { mode: AiChatMode }) {
                   event.target.value = "";
                 }} />
                 <div className="ai-composer-actions"><div><button type="button" aria-label="Tải file audio" title="Tải file audio · Tối đa 25 MB / 120 giây" disabled={busy} onClick={() => fileRef.current?.click()}><Icon name="mic" /></button></div>
-                  <div><button type="button" className="ai-composer-mic" aria-label="Chuyển sang Voice trực tiếp" title="Chuyển sang Voice trực tiếp" disabled={busy} onClick={() => switchMode("realtime")}><Icon name="mic" /></button><button type="submit" className="ai-send" disabled={!canSend} aria-describedby="ai-send-status" aria-label={c.audioFile ? "Gửi ghi âm" : c.errorMessage ? "Thử lại tin nhắn" : "Gửi tin nhắn"}><Icon name="arrowUp" /></button></div>
+                  <div><button type="submit" className="ai-send" disabled={!canSend} aria-describedby="ai-send-status" aria-label={c.audioFile ? "Gửi ghi âm" : c.errorMessage ? "Thử lại tin nhắn" : "Gửi tin nhắn"}><Icon name="arrowUp" /></button></div>
                 </div>
               </form>
               <p className="ai-disclaimer">Kiểm tra lại thông tin quan trọng trước khi đặt hàng.</p>
