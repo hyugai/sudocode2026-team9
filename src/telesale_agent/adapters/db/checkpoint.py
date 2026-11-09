@@ -53,7 +53,7 @@ def _decode(payload: Any) -> tuple[dict[str, Any], ConversationState]:
         state = _Checkpoint.model_validate_json(encoded, strict=True).state
         if not state.conversation_id.strip() or state.turn_number < 0:
             raise CheckpointError("Định danh hoặc số lượt không hợp lệ.")
-        if any(message.role not in {"user", "agent"} for message in state.messages):
+        if any(message.role not in {"user", "customer", "agent"} for message in state.messages):
             raise CheckpointError("Vai trò tin nhắn không hợp lệ.")
         return json.loads(encoded), state
     except (TypeError, ValueError, RecursionError) as exc:

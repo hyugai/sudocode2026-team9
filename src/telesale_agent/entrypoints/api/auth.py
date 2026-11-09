@@ -72,8 +72,8 @@ async def credentials(request: Request, *, register: bool = False) -> dict[str, 
     email = body["email"].strip().lower()
     if len(email) > 254 or not re.fullmatch(r"[^@\s]+@[^@\s]+\.[^@\s]+", email):
         raise auth_error(422, "Nhập địa chỉ email hợp lệ.")
-    if not (15 if register else 1) <= len(body["password"]) <= 128:
-        raise auth_error(422, "Mật khẩu phải có từ 15–128 ký tự." if register else "Nhập mật khẩu hợp lệ.")
+    if not (8 if register else 1) <= len(body["password"]) <= 128:
+        raise auth_error(422, "Mật khẩu phải có từ 8–128 ký tự." if register else "Nhập mật khẩu hợp lệ.")
     if register and not 2 <= len(body["name"].strip()) <= 100:
         raise auth_error(422, "Nhập họ và tên từ 2–100 ký tự.")
     return {**body, "email": email}

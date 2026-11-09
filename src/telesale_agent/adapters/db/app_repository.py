@@ -193,7 +193,7 @@ class AppDataRepository:
                 raise ValueError("Câu trả lời không được rỗng.")
             checkpoint = serialize_checkpoint(state)
             preview = _brief_preview(call_brief)
-            if len(state.messages) < 2 or [(m.role, m.content) for m in state.messages[-2:]] != [
+            if len(state.messages) < 2 or [("user" if m.role == "customer" else m.role, m.content) for m in state.messages[-2:]] != [
                 ("user", user_text), ("agent", response_text)
             ]:
                 raise ValueError("Tin nhắn lưu phải khớp lượt cuối của checkpoint.")
