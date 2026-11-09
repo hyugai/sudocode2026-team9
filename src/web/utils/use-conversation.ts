@@ -5,6 +5,8 @@ import { ChatApiError, chatStageLabels, createChatClient, type ChatStage, type D
 import { conversationStorageKey, readGuestSession, writeGuestSession } from "./conversation-session";
 import { readCallBrief, type CallBrief } from "./call-brief";
 import { accountConversationKey, conversationApi, type SavedConversation, type StoredFeedback } from "./conversation-api";
+import type { LiveProductDetails } from "./catalog";
+import { loadChatCatalog } from "./chat-products";
 
 // Keep the legacy deployment contract. This public URL must never contain a key.
 export const apiBase = (process.env.NEXT_PUBLIC_API_BASE_URL || (
@@ -35,6 +37,7 @@ export function useConversation(persistGuest = true, enabled = true) {
   const [audioPreviewUrl, setAudioPreviewUrl] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [backendReady, setBackendReady] = useState(false);
+  const [chatCatalog, setChatCatalog] = useState<LiveProductDetails[]>([]);
   const [cooldownSeconds, setCooldownSeconds] = useState(0);
   const [sessionId, setSessionId] = useState("");
   const [voicePreview, setVoicePreview] = useState(false);
@@ -143,6 +146,15 @@ export function useConversation(persistGuest = true, enabled = true) {
   }, [chatClient]);
 
   useEffect(() => {
+    if (!enabled || !backendReady) return;
+    const controller = new AbortController();
+    void loadChatCatalog(fetch, AbortSignal.any([controller.signal, AbortSignal.timeout(10000)]))
+      .then(products => { if (!controller.signal.aborted) setChatCatalog(products); })
+      .catch(() => {}); // Catalog failure must not interrupt the text conversation.
+    return () => controller.abort();
+  }, [enabled, backendReady]);
+
+  useEffect(() => {
     if (!cooldownSeconds) return;
     const timer = setTimeout(() => setCooldownSeconds(chatClient.retryAfterSeconds), 1000);
     return () => clearTimeout(timer);
@@ -218,7 +230,7 @@ export function useConversation(persistGuest = true, enabled = true) {
     audioFile, audioPreviewUrl, clearAudio, selectAudio, errorMessage, backendReady,
     cooldownSeconds, sessionId, sendMessage, voicePreview, setVoicePreview, consultation, setConsultation,
     sessionReady, sessionNotice, endConversation, voiceActive, setVoiceActive,
-    accountMode, conversationEnded, openConversation, setMessageFeedback, streamingText, pendingMessage,
+    accountMode, conversationEnded, openConversation, setMessageFeedback, streamingText, pendingMessage, chatCatalog,
     processingLabel: processingStage ? chatStageLabels[processingStage] : "" };
 }
 

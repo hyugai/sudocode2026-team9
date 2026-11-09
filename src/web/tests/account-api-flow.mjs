@@ -8,6 +8,7 @@ import { syncAuthOwner } from "../utils/auth-storage.ts";
 import { accountConversationKey } from "../utils/conversation-api.ts";
 import { conversationStorageKey } from "../utils/conversation-session.ts";
 import { CART_KEY, SESSION_KEY } from "../utils/commerce.ts";
+import { loadChatCatalog, matchChatProducts } from "../utils/chat-products.ts";
 
 const nativeFetch = globalThis.fetch;
 const base = process.env.ACCOUNT_FLOW_API;
@@ -63,7 +64,12 @@ const first = await send("Toi can tu van, ngan sach 3000000");
 assert.ok(first.message_id);
 assert.ok(drafts.length > 0, "UI must receive drafts before the final receipt");
 assert.equal(drafts.at(-1), "Draft answer");
-assert.equal(first.response, "Final verified answer");
+assert.equal(first.response, "Final verified answer: SKU-AP-X");
+const catalog = await loadChatCatalog();
+const [productCard] = matchChatProducts(first.response, catalog);
+assert.equal(productCard.sku, "SKU-AP-X");
+assert.equal(productCard.name, "Máy lọc không khí AirPure X");
+assert.equal(productCard.price, 1234567);
 assert.equal(first.latency.measurement_mode, "streaming");
 for (const stage of ["processing", "identifying", "analyzing", "brief", "generating", "checking", "saving"]) {
   assert.ok(stages.includes(stage), `Missing actual pipeline stage: ${stage}`);
@@ -75,7 +81,8 @@ const feedback = { rating: "positive", comment: "Useful" };
 await conversationApi.putFeedback(first.message_id, feedback);
 let saved = await conversationApi.load(conversation.id);
 assert.equal(saved.messages.length, 2);
-assert.equal(saved.messages[1].content, "Final verified answer");
+assert.equal(saved.messages[1].content, "Final verified answer: SKU-AP-X");
+assert.deepEqual(matchChatProducts(saved.messages[1].content, catalog), [productCard]);
 assert.deepEqual(saved.messages.map(message => message.role), ["user", "agent"]);
 assert.deepEqual(saved.messages[1].feedback, feedback);
 assert.deepEqual(readCallBrief(saved.call_brief), first.callBrief);
@@ -109,7 +116,7 @@ for (let attempt = 0; attempt < 30; attempt++) {
 }
 assert.equal(saved.turn_number, 4);
 assert.equal(saved.messages.length, 8);
-assert.equal(saved.messages.at(-1).content, "Final verified answer");
+assert.equal(saved.messages.at(-1).content, "Final verified answer: SKU-AP-X");
 await conversationApi.deleteFeedback(first.message_id);
 assert.equal((await conversationApi.load(conversation.id)).messages[1].feedback, null);
 await chat.clearSession(conversation.id);

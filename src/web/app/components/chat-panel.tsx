@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useEffect, useLayoutEffect, useRef } from "react";
 import type { Conversation } from "@/utils/use-conversation";
 import { ChatRecommendations } from "./chat-recommendations";
+import { ChatProductCards } from "./chat-product-cards";
 
 const paths = {
   search: "a-imgFrame.svg", searchPurple: "a-imgFrame1.svg",
@@ -42,7 +43,7 @@ export function ChatPanel({ conversation: c, compact = false, expanded = false, 
   useEffect(() => {
     const history = historyRef.current;
     if (history) history.scrollTop = history.scrollHeight;
-  }, [c.messages, c.isLoading, c.streamingText]);
+  }, [c.messages, c.isLoading, c.streamingText, c.chatCatalog]);
   useEffect(() => { if (compact) inputRef.current?.focus({ preventScroll: true }); }, [compact]);
   useLayoutEffect(() => {
     const input = inputRef.current;
@@ -72,7 +73,7 @@ export function ChatPanel({ conversation: c, compact = false, expanded = false, 
       {!dashboard && <div className="conversation-history" ref={historyRef} role="log" aria-label="Nội dung trò chuyện" aria-live="polite" aria-relevant="additions text" tabIndex={0}>
         {c.messages.map((message, index) => <div className={`message ${message.role}`} key={index}>
           {message.role === "agent" && <span className="synee-avatar" aria-label="Synee AI"><Asset name={compact ? "compactSparkle" : "sparkle"} /></span>}
-          <p className="message-bubble">{message.text}</p>
+          {message.role === "agent" ? <div className="chat-answer"><p className="message-bubble">{message.text}</p><ChatProductCards text={message.text} catalog={c.chatCatalog} /></div> : <p className="message-bubble">{message.text}</p>}
         </div>)}
         {c.pendingMessage && <div className="message user"><p className="message-bubble">{c.pendingMessage}</p></div>}
         {c.isLoading && <div className="message agent"><span className="synee-avatar"><Asset name={compact ? "compactSparkle" : "sparkle"} /></span>{c.streamingText ? <p className="message-bubble" aria-live="off">{c.streamingText}</p> : <span className="typing" aria-label="Synee AI đang xử lý"><i /><i /><i /></span>}</div>}

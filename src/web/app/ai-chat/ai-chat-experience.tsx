@@ -11,6 +11,7 @@ import { InfoDialog } from "../components/info-dialog";
 import { Icon } from "./icons";
 import { ReplyFeedback, ReplyFeedbackProvider } from "./reply-feedback";
 import { CallBriefPanel } from "./call-brief-panel";
+import { ChatProductCards } from "../components/chat-product-cards";
 
 export type AiChatMode = "text" | "realtime";
 type Dialog = "history" | "details" | "profile" | "new" | null;
@@ -57,7 +58,7 @@ export function AiChatExperience({ mode }: { mode: AiChatMode }) {
   useEffect(() => {
     const history = historyRef.current;
     if (history && !query) history.scrollTop = history.scrollHeight;
-  }, [c.messages, c.isLoading, c.streamingText, query, mode]);
+  }, [c.messages, c.isLoading, c.streamingText, c.chatCatalog, query, mode]);
 
   useLayoutEffect(() => {
     const input = inputRef.current;
@@ -158,6 +159,7 @@ export function AiChatExperience({ mode }: { mode: AiChatMode }) {
                 {visibleMessages.map(message => <article key={message.index} className={`ai-message ${message.role === "agent" ? "assistant" : "user"}`}>
                   {message.role === "agent" && <span className="ai-avatar"><Icon name="spark" /></span>}
                   <div><div className="ai-message-meta"><strong>{message.role === "agent" ? "Synee AI" : "Bạn"}</strong></div><div className="ai-bubble">{message.text}</div>
+                    {message.role === "agent" && <ChatProductCards text={message.text} catalog={c.chatCatalog} />}
                     {message.role === "agent" ? <ReplyFeedback message={c.messages[message.index]} messageNumber={message.index + 1} onCopy={() => void copy(message.text)} disabled={!c.sessionReady} /> : <div className="ai-message-tools"><button type="button" aria-label={`Sao chép tin nhắn ${message.index + 1}`} onClick={() => void copy(message.text)}><Icon name="copy" /></button></div>}
                   </div>
                 </article>)}

@@ -238,6 +238,14 @@ class AuthAPITests(unittest.TestCase):
         node = shutil.which("node")
         if node is None:
             self.skipTest("Node is required to exercise frontend API clients")
+        from telesale_agent.adapters.db.models import InventoryEvent, Product, ProductVariant
+        from telesale_agent.entrypoints.api import catalog
+        for table in (Product.__table__, ProductVariant.__table__, InventoryEvent.__table__):
+            table.create(self.engine, checkfirst=True)
+        with self.engine.begin() as connection:
+            connection.execute(Product.__table__.insert().values(
+                sku="SKU-AP-X", name="Máy lọc không khí AirPure X", brand="AirPure",
+                category="gia-dung/may-loc-khong-khi", list_price_vnd=1234567, stock=5, attributes={}))
         async def perceive(context):
             deltas = {"budget_vnd": 3000000} if "3000000" in context.input.text else {}
             return Perception(transcript=context.input.text, memory_deltas=deltas)
@@ -255,7 +263,7 @@ class AuthAPITests(unittest.TestCase):
         graph.add_edge("model", END)
         harness.agent = graph.compile()
         harness.guardrail = SimpleNamespace(check=AsyncMock(return_value=PolicyDecision(
-            allowed=True, safe_plan=ActionPlan(action="respond_to_customer", rationale="test", response_text="Final verified answer"),
+            allowed=True, safe_plan=ActionPlan(action="respond_to_customer", rationale="test", response_text="Final verified answer: SKU-AP-X"),
         )))
         previous_override = chat.app.dependency_overrides.get(auth.get_auth_repository)
         chat.app.dependency_overrides[auth.get_auth_repository] = lambda: self.repository
@@ -265,7 +273,7 @@ class AuthAPITests(unittest.TestCase):
         with socket.socket() as listener:
             listener.bind(("127.0.0.1", 0))
             port = listener.getsockname()[1]
-            with redirect_stdout(io.StringIO()), patch.object(chat, "harness", harness), patch.object(chat.provider_cooldown, "remaining", return_value=0), patch.dict(os.environ, {
+            with redirect_stdout(io.StringIO()), patch.object(catalog, "db_client", SimpleNamespace(get_session=self.repository.sessions)), patch.object(chat, "harness", harness), patch.object(chat.provider_cooldown, "remaining", return_value=0), patch.dict(os.environ, {
                 "API_KEY": "demo-service-key", "SESSION_COOKIE_SECURE": "false", "ENABLE_DEBUG_RESPONSE": "false",
             }):
                 thread = threading.Thread(target=server.run, kwargs={"sockets": [listener]}, daemon=True)
