@@ -13,9 +13,10 @@ import { ReplyFeedback, ReplyFeedbackProvider } from "./reply-feedback";
 import { CallBriefPanel } from "./call-brief-panel";
 import { ChatProductCards } from "../components/chat-product-cards";
 import { CartLink } from "../components/cart-link";
+import { AccountMenu } from "../components/account-menu";
 
 export type AiChatMode = "text" | "realtime";
-type Dialog = "history" | "details" | "profile" | "new" | null;
+type Dialog = "history" | "details" | "profile" | "new" | "account" | null;
 const modes = [
   ["text", "message", "Chat"],
   ["realtime", "mic", "Voice"],
@@ -147,6 +148,7 @@ export function AiChatExperience({ mode }: { mode: AiChatMode }) {
           {!voiceMode && <button className="ai-detail-button" aria-label="Mở call brief" onClick={() => setDialog("details")}><Icon name="panel" /><span>Call brief</span></button>}
           <div className="ai-header-commerce">
             <CartLink compact />
+            <AccountMenu className="ai-account-menu" open={dialog === "account"} onOpenChange={open => setDialog(open ? "account" : null)} />
             <Link href="/" className="ai-exit-link" aria-label="Trở lại dashboard" title="Trở lại dashboard"><Icon name="arrowLeft" /><span>Dashboard</span></Link>
           </div>
         </div>

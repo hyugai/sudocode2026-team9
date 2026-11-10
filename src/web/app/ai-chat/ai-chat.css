@@ -50,6 +50,9 @@
 .ai-icon-button:hover { color: var(--brand-strong); background: var(--brand-soft); }
 .ai-cart-link { position: relative; color: var(--brand-strong); }
 .ai-cart-link .cart-count { position: absolute; top: 0; right: 0; min-width: 20px; height: 20px; border: 2px solid var(--surface); font-size: 10px; line-height: 16px; }
+.ai-account-menu .account-trigger { display: flex; align-items: center; justify-content: center; gap: 8px; min-width: 44px; min-height: 44px; padding: 0 10px; border: 1px solid transparent; border-radius: 30px; color: var(--brand-strong); background: transparent; font-weight: 600; white-space: nowrap; }
+.ai-account-menu .account-trigger:hover, .ai-account-menu .account-trigger[aria-expanded=true] { background: var(--brand-soft); }
+.ai-account-menu .account-popover { color-scheme: light; }
 .ai-menu-trigger { display: none; }
 .ai-detail-button, .ai-exit-link { display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 16px; border: 1px solid var(--border); border-radius: 30px; color: var(--brand-strong); background: var(--surface); font-size: var(--text-body); font-weight: 600; }
 .ai-detail-button:hover, .ai-exit-link:hover { border-color: var(--brand-strong); background: var(--brand-soft); }
@@ -223,12 +226,14 @@
   .ai-topbar-actions { gap: 4px; }
   .ai-topbar-actions .ai-detail-button { width: 44px; padding: 0; }
   .ai-topbar-actions .ai-detail-button span { display: none; }
+  .ai-account-menu .account-trigger { width: 44px; padding: 0; }
+  .ai-account-menu .account-trigger > span { display: none; }
 }
 @media (max-width: 820px) {
   .ai-workspace { grid-template-columns: 0px minmax(0, 1fr); }
   .ai-workspace > .ai-sidebar { display: none; }
 }
-@media (max-width: 900px) {
+@media (max-width: 1000px) {
   .ai-topbar { gap: 12px 8px; padding: max(12px, env(safe-area-inset-top)) 12px 12px; }
   .ai-header-brand { grid-column: 1 / -1; grid-row: 1; gap: 8px; }
   .ai-header-brand .ai-brand-mark { flex-basis: 32px; height: 32px; }
@@ -290,6 +295,8 @@ body:has(.ai-voice-workspace) { color-scheme: dark; background: #050811; }
 .ai-voice-header .ai-cart-link { color: var(--voice-foreground); }
 .ai-voice-header .ai-cart-link:hover { color: var(--voice-foreground); background: #1a2940; }
 .ai-voice-header .ai-cart-link .cart-count { border-color: #050811; color: #031b18; background: var(--cyan); }
+.ai-voice-header .account-trigger { color: var(--voice-foreground); }
+.ai-voice-header .account-trigger:hover, .ai-voice-header .account-trigger[aria-expanded=true] { background: #1a2940; }
 .ai-voice-session { display: flex; flex: 1; flex-direction: column; align-items: center; min-width: 0; min-height: 0; padding: 32px clamp(16px, 5vw, 64px) max(32px, env(safe-area-inset-bottom)); overflow-y: auto; overscroll-behavior: contain; scrollbar-color: #334155 transparent; }
 .ai-voice-session .realtime-voice { flex: none; width: min(820px, 100%); margin: auto 0; gap: 20px; }
 .ai-voice-session .voice-stage { padding: 24px 32px 28px; border: 0; border-radius: 0; background: transparent; box-shadow: none; }

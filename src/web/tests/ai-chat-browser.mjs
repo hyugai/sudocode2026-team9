@@ -24,7 +24,7 @@ const settleMode = () => b.evaluate(`(async () => {
     .map(animation => animation.finished.catch(() => {})));
 })()`);
 const watchHeader = () => b.evaluate(`(() => {
-  const selectors = ['.ai-header-brand', '.ai-header-brand h1', '.ai-brand-mark', '.ai-mode-bar', '.ai-mode-bar button:first-child', '.ai-mode-bar button:last-child', '.ai-exit-link', '.ai-cart-link'];
+  const selectors = ['.ai-header-brand', '.ai-header-brand h1', '.ai-brand-mark', '.ai-mode-bar', '.ai-mode-bar button:first-child', '.ai-mode-bar button:last-child', '.ai-exit-link', '.ai-cart-link', '.account-trigger'];
   const rects = () => selectors.map(selector => {
     const r = document.querySelector(selector).getBoundingClientRect();
     return [r.x, r.y, r.width, r.height];
@@ -82,6 +82,7 @@ try {
     const state = window.__test, originalFetch = window.fetch.bind(window), NativeSocket = window.WebSocket;
     window.fetch = async (input, options = {}) => {
       const url = String(input);
+      if (url.endsWith('/api/auth/me')) return Response.json({ detail: 'Chưa đăng nhập.' }, { status: 401 });
       if (url.endsWith('/health')) return Response.json({}, { status: state.ready ? 200 : 503 });
       if (/\\/api\\/chat(?:\\/audio)?$/.test(url)) {
         const audio = options.body instanceof FormData;
@@ -144,6 +145,12 @@ try {
   await b.wait("location.pathname === '/ai-chat' && document.querySelector('#ai-message')?.value === 'Bản nháp mở từ nút Chatbot'");
   await check("Header Chatbot link opens the dedicated workspace with the draft and no automatic send or microphone", "location.search === '?mode=text' && __test.calls.length === 0 && __test.mic === 0 && document.querySelectorAll('.ai-message').length === 1 && document.querySelector('.ai-sidebar-footer strong').textContent === '0901234567'");
   await check("Chat shares the dashboard cart and puts export to its left", "document.querySelector('.ai-cart-link .cart-count').textContent === '3' && document.querySelector('.ai-cart-link').getAttribute('href') === '/cart' && document.querySelector('[aria-label=\"Xuất hội thoại\"]').getBoundingClientRect().right <= document.querySelector('.ai-cart-link').getBoundingClientRect().left");
+  await click(".account-trigger");
+  await b.wait("!!document.querySelector('.account-popover')");
+  await check("Chat uses the dashboard account menu and guest authentication state", "!!document.querySelector('.account-popover a[href=\"/account\"]') && !!document.querySelector('.account-popover a[href=\"/orders\"]') && !!document.querySelector('.account-popover a[href=\"/account/conversations\"]') && !!document.querySelector('.account-popover a[href=\"/login\"]') && !!document.querySelector('.account-popover a[href=\"/register\"]') && document.querySelector('.account-logout').disabled");
+  await escape();
+  await b.wait("!document.querySelector('.account-popover')");
+  await check("Escape restores focus to the Chat account button", "document.activeElement === document.querySelector('.account-trigger')");
   await b.evaluate("window.__cartInChat = JSON.stringify(document.querySelector('.ai-cart-link').getBoundingClientRect().toJSON())");
   await watchHeader();
   await mode("realtime");
@@ -151,6 +158,10 @@ try {
   await settleMode();
   await stopHeaderWatch();
   await check("Cart and dashboard stay fixed when switching from Chat to Voice", "__headerMaxShift < 1 && JSON.stringify(document.querySelector('.ai-cart-link').getBoundingClientRect().toJSON()) === __cartInChat && document.querySelector('.ai-cart-link .cart-count').textContent === '3' && __test.mic === 0");
+  await click(".account-trigger");
+  await b.wait("!!document.querySelector('.account-popover')");
+  await check("Voice shares the same guest menu without starting the microphone", "!!document.querySelector('.account-popover a[href=\"/login\"]') && document.querySelector('.account-logout').disabled && __test.mic === 0");
+  await click(".account-trigger");
   await b.screenshot(`${output}/cart-header-voice-desktop.png`);
   await click(".ai-cart-link");
   await b.wait("location.pathname === '/cart' && document.querySelectorAll('.order-line').length === 2");
