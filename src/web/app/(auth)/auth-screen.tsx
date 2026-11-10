@@ -114,6 +114,7 @@ export function AuthScreen({ mode }: { mode: AuthMode }) {
       {serverError && <p className="auth-field-error" role="alert">{serverError}</p>}
       {submitted && <div className="auth-result" ref={resultRef} tabIndex={-1} role="status"><span><AuthIcon name="check" /></span><div><strong>Đã tạo tài khoản</strong><p>Đăng nhập bằng email vừa đăng ký để tiếp tục.</p><Link href="/login">Đăng nhập <span aria-hidden="true">→</span></Link></div></div>}
       <div className="auth-card-bottom"><p>{register ? "Bạn đã có tài khoản?" : "Bạn chưa có tài khoản?"} <Link href={register ? "/login" : "/register"}>{register ? "Đăng nhập" : "Đăng ký ngay"}</Link></p><Link href="/" className="auth-guest-link">{auth.user ? "Về trang chủ" : "Tiếp tục với phiên khách"} <span aria-hidden="true">→</span></Link></div>
+      <p className="auth-demo-note"><Link href="/salesman" prefetch={false}>Xem demo Salesman <span aria-hidden="true">→</span></Link></p>
       <noscript><p className="auth-field-error">Bật JavaScript để sử dụng biểu mẫu tài khoản. Bạn vẫn có thể quay về trang chủ.</p></noscript>
     </section>
   </div>;

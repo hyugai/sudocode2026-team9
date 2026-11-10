@@ -513,6 +513,7 @@ Compose bind `.env` vào `/app/.env` ở chế độ chỉ đọc. Memory ghi tr
 - [Cài đặt và sử dụng ghi âm Zipformer](docs/deployment/local_voice_input.md)
 - [Cấu hình và giới hạn Gemini Live](docs/deployment/gemini_live.md)
 - [Kịch bản demo Call Brief](docs/deployment/call_brief_demo.md)
+- [Salesman: truy cập demo UI và kế hoạch thiết lập database](docs/deployment/salesman.md)
 - [Frontend và kiểm tra giao diện](src/web/README.md)
 - [Đánh giá và benchmark](src/eval/README.md)
 - [Trạng thái demo đăng nhập và kế hoạch xác thực](docs/Login%20and%20register/authentication-setup.md)

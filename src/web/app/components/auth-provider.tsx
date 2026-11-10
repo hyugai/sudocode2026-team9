@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from "react";
+import { usePathname } from "next/navigation";
 import { createAuthClient, type AuthUser } from "@/utils/auth-api";
 import { syncAuthOwner } from "@/utils/auth-storage";
 import { ConversationProvider } from "./conversation-provider";
@@ -18,6 +19,7 @@ type AuthContextValue = AuthState & {
 const AuthContext = createContext<AuthContextValue | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
+  const isSalesmanDemo = usePathname() === "/salesman";
   const [client] = useState(() => createAuthClient());
   const [state, setState] = useState<AuthState>({ user: null, ready: false, error: "" });
   const [busy, setBusy] = useState(false);
@@ -43,12 +45,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, [applyUser, client]);
   useEffect(() => {
+    if (isSalesmanDemo) return;
     const requests = revision;
     void refresh();
     const onFocus = () => { if (!lock.current) void refresh(); };
     window.addEventListener("focus", onFocus);
     return () => { requests.current++; window.removeEventListener("focus", onFocus); };
-  }, [refresh]);
+  }, [refresh, isSalesmanDemo]);
   const changeUser = async (operation: () => Promise<AuthUser | null>) => {
     if (lock.current) throw new Error("Đang xử lý tài khoản. Vui lòng chờ.");
     lock.current = true; revision.current++; setBusy(true);
@@ -59,7 +62,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     login: (email, password) => changeUser(() => client.login(email, password)),
     logout: () => changeUser(async () => { await client.logout(); return null; }),
   }}>
-    {state.error && <div className="container" role="alert"><p>{state.error}</p><button className="commerce-secondary" type="button" disabled={busy} onClick={() => void refresh()}>Kiểm tra lại phiên</button></div>}
+    {!isSalesmanDemo && state.error && <div className="container" role="alert"><p>{state.error}</p><button className="commerce-secondary" type="button" disabled={busy} onClick={() => void refresh()}>Kiểm tra lại phiên</button></div>}
     {children}
   </AuthContext.Provider>;
 }
@@ -73,6 +76,9 @@ export function useAuth() {
 /** Remount private state on login/logout; never import a guest draft into an account. */
 export function SessionProviders({ children }: { children: ReactNode }) {
   const { user, ready, scope } = useAuth();
+  const pathname = usePathname();
+  // The public preview has no account, cart, conversation state or backend calls.
+  if (pathname === "/salesman") return children;
   return <ConversationProvider key={`${scope}:${ready ? user?.id ?? "guest" : "checking"}`} persistGuest={ready && !user} enabled={ready}>
     <PurchaseProvider enabled={ready}>{children}</PurchaseProvider>
   </ConversationProvider>;
