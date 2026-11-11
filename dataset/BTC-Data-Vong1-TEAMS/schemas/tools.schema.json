@@ -1,5 +1,5 @@
 {
-  "description": "Schema chuẩn cho các tool mock. Nhóm PHẢI giữ đúng tên tool và tên tham số bắt buộc để script chấm của BTC đối chiếu được success_if (args_match). Được thêm tham số tùy chọn. Tool đánh dấu M2 không bắt buộc ở M1. Logic tham chiếu (giá sau KM, điều kiện KM, tồn kho theo ngày, giới hạn COD, dời lịch ngày nghỉ) nằm trong eval/mock_tools.py — kết quả của nhóm phải khớp trên cùng đầu vào. Mọi tool nhận thêm `on` (YYYY-MM-DD, ngày của cuộc gọi).",
+  "description": "Schema chuẩn cho các tool mock. Nhóm PHẢI giữ đúng tên tool và tên tham số bắt buộc để script chấm của BTC đối chiếu được success_if (args_match). Được thêm tham số tùy chọn. Tool đánh dấu M2 không bắt buộc ở M1. Logic tham chiếu (giá sau KM, điều kiện KM, tồn kho theo ngày, giới hạn COD, dời lịch ngày nghỉ) nằm trong eval/mock_tools.py — kết quả của nhóm phải khớp trên cùng đầu vào. Mọi tool nhận thêm `on` (YYYY-MM-DD, ngày của cuộc gọi). Cập nhật 11/2026: thêm pricing.quote_order và order.create(lines, basket_skus) cho đơn nhiều máy.",
   "tools": [
     {
       "name": "crm.get_customer",
@@ -65,12 +65,14 @@
     {
       "name": "order.create",
       "level": "M1",
-      "description": "Tạo đơn. args_match trong kịch bản đối chiếu sku và price_vnd (giá SAU khuyến mãi hợp lệ).",
+      "description": "Tạo MỘT đơn. Hai cách: (1) đơn 1 sản phẩm: sku + qty + price_vnd (như cũ); (2) đơn nhiều dòng (bổ sung 11/2026): lines = [{sku, qty, price_vnd}], price_vnd là giá MỘT máy sau KM lấy từ pricing.quote_order — khi các máy cùng SKU có giá khác nhau (VD một máy được AIR-2ND-50) thì mỗi máy một dòng qty=1. args_match trong kịch bản đối chiếu sku và price_vnd với TỪNG DÒNG; also_ordered và total_match_vnd tính trên mọi dòng của các lệnh order.create thành công. basket_skus chỉ dùng khi tách đơn (QT-01).",
       "input": {
         "customer_phone": "string",
-        "sku": "string",
-        "qty": "int",
-        "price_vnd": "int",
+        "sku": "string? (bắt buộc nếu không dùng lines)",
+        "qty": "int?",
+        "price_vnd": "int? (giá MỘT đơn vị sau KM)",
+        "lines": "array? [{sku: string, qty: int, price_vnd: int}] — đơn nhiều dòng",
+        "basket_skus": "array? — các máy lọc không khí ở đơn TÁCH cùng ngày cùng SĐT (xét AIR-2ND-50)",
         "promo_code": "string?",
         "payment": "COD|bank|momo|zalopay",
         "address": "string?"
@@ -78,21 +80,22 @@
       "output": {
         "order_id": "string",
         "status": "created",
-        "error": "out_of_stock | price_mismatch | cod_limit_exceeded",
+        "total_vnd": "int",
+        "error": "out_of_stock | price_mismatch (kèm expected_units) | cod_limit_exceeded",
         "estimated_delivery": "date (đã trừ CN + ngày nghỉ)"
       }
     },
     {
       "name": "pricing.get_quote",
       "level": "M1 (khuyến nghị) / M2",
-      "description": "Trả giá cuối kèm KM còn hiệu lực tại ngày `on` (mặc định hôm nay). Ở M1 nhóm có thể gộp logic này vào catalog.search + promotions.json.",
+      "description": "Giá cuối của MỘT đơn vị kèm KM còn hiệu lực tại ngày `on`. Đơn từ 2 máy lọc không khí trở lên → dùng pricing.quote_order (get_quote không phân định được máy nào nhận AIR-2ND-50 khi hai máy bằng giá).",
       "input": {
         "sku": "string",
         "on": "date?",
         "qty": "int?",
         "customer_phone": "string? (xét once_per_customer, requires_owned_sku)",
         "address": "string? (xét region)",
-        "basket_skus": "array? (xét AIR-2ND-50)"
+        "basket_skus": "array? (chỉ cho trường hợp máy này rẻ hơn hẳn các máy kia)"
       },
       "output": {
         "list_price_vnd": "int",
@@ -101,6 +104,24 @@
         "expired_promos": "array",
         "ineligible_promos": "array [{promo_code, reason}]",
         "not_applied_exclusive": "array",
+        "freeship": "boolean"
+      }
+    },
+    {
+      "name": "pricing.quote_order",
+      "level": "M1 (khuyến nghị cho đơn nhiều máy) / M2",
+      "description": "Bổ sung 11/2026. Báo giá TỪNG MÁY cho một đơn nhiều dòng theo luật: AIR-2ND-50 chỉ một máy/đơn (máy rẻ nhất, bằng giá thì máy sau), mỗi máy tối đa một KM không cộng dồn, TRADE-IN-AP tối đa một máy/đơn.",
+      "input": {
+        "lines": "array [{sku: string, qty: int}]",
+        "on": "date?",
+        "customer_phone": "string?",
+        "address": "string?"
+      },
+      "output": {
+        "units": "array [{unit, line, sku, list_price_vnd, final_price_vnd, applied_promos}]",
+        "lines": "array [{sku, qty, unit_prices_vnd, line_total_vnd}]",
+        "total_vnd": "int",
+        "order_promos": "array",
         "freeship": "boolean"
       }
     },

@@ -6,6 +6,12 @@ KẾT QUẢ GIỐNG file này trên cùng đầu vào (BTC chấm chéo dựa v�
 điều kiện KM, giới hạn COD). Chạy `python mock_tools.py --selftest` để xem ví dụ.
 
 Mọi hàm nhận `on` (YYYY-MM-DD) = "ngày hôm nay" của cuộc gọi (lấy từ kịch bản: call_date hoặc reference_date + days_later).
+
+Bản cập nhật 11/2026 (giải đáp thắc mắc về AIR-2ND-50):
+  * Đơn nhiều máy dùng pricing.quote_order(lines) để lấy giá TỪNG MÁY, rồi order.create(lines=...) để tạo một đơn.
+  * AIR-2ND-50: mỗi đơn chỉ MỘT máy lọc không khí được giảm 50% — máy có giá niêm yết thấp nhất (bằng giá thì chỉ một máy).
+  * Mỗi máy nhận tối đa một chương trình không cộng dồn; máy được AIR-2ND-50 thì không nhận AIR-OCT, máy còn lại vẫn nhận
+    chương trình có lợi nhất của riêng nó (KM-03/KM-04). TRADE-IN-AP áp tối đa 1 máy mỗi đơn (1 máy cũ đổi 1 máy mới).
 """
 import json, os, re, sys, argparse
 from datetime import date, datetime, timedelta
@@ -20,6 +26,7 @@ CRM = _load("crm_seed.json")["customers"]
 INV = _load("inventory_timeline.json")["events"]
 REF = _load("products.json")["reference_date"]
 HOLIDAYS = {"2026-10-26", "2027-01-01"}          # thong-bao-lich-nghi.md LN-02
+AIR_CAT = "gia-dung/may-loc-khong-khi"
 
 _BY_SKU = {p["sku"]: p for p in PRODUCTS}
 _VAR = {v["variant_sku"]: (p, v) for p in PRODUCTS for v in p["variants"]}
@@ -39,7 +46,7 @@ def _region_of(address):
 
 def _owned_skus(phone):
     c = crm_get_customer(phone=phone)
-    return {o["sku"] for o in c.get("orders", []) if o.get("status") == "delivered"} if c["found"] else set()
+    return {o["sku"] for o in c.get("orders", []) if o.get("status") == "delivered"} if c["found"] and not c.get("ambiguous") else set()
 
 # ------------------------------------------------------------------ crm.get_customer
 def crm_get_customer(phone=None, zalo_id=None, fb_id=None):
@@ -82,14 +89,18 @@ def inventory_check(sku, on=REF):
     return out
 
 # ------------------------------------------------------------------ pricing.get_quote
-def pricing_get_quote(sku, on=REF, qty=1, customer_phone=None, address=None, basket_skus=None):
-    """Giá cuối cho 1 đơn vị `sku` theo dieu-khoan-khuyen-mai.md. basket_skus: các SKU khác trong cùng đơn (cho AIR-2ND-50)."""
+def pricing_get_quote(sku, on=REF, qty=1, customer_phone=None, address=None, basket_skus=None, exclude=()):
+    """Giá cuối cho 1 đơn vị `sku` theo dieu-khoan-khuyen-mai.md.
+    basket_skus: các máy KHÁC trong cùng đơn — chỉ dùng cho trường hợp đơn giản (máy này rẻ hơn hẳn các máy kia).
+    Đơn từ 2 máy trở lên (nhất là 2 máy cùng giá) → dùng pricing_quote_order(lines) để có giá từng máy chính xác.
+    exclude: mã KM không xét (dùng nội bộ cho quote_order)."""
     p, v = _parent(sku)
     if p is None: return {"error": "unknown_sku"}
     base = p["list_price_vnd"] + (v["price_delta_vnd"] if v else 0)
     region = _region_of(address); owned = _owned_skus(customer_phone) if customer_phone else set()
     applied, expired, ineligible, candidates = [], [], [], []
     for pr in PROMOS:
+        if pr["promo_code"] in exclude: continue
         targets = pr["applies_to"]
         hit = "*" in targets or p["sku"] in targets or any(t.startswith("category:") and p["category"].startswith(t.split(":", 1)[1]) for t in targets)
         if not hit: continue
@@ -108,9 +119,10 @@ def pricing_get_quote(sku, on=REF, qty=1, customer_phone=None, address=None, bas
         if pr["type"] == "fixed": disc = pr["discount_vnd"]
         elif pr["type"] == "percent": disc = int(base * pr["discount_percent"] / 100)
         elif pr["type"] == "percent_second_item":
-            others = [pricing_get_quote(s, on, 1, customer_phone, address)["list_price_vnd"] for s in (basket_skus or []) if _parent(s)[0] and _parent(s)[0]["category"].startswith("gia-dung/may-loc-khong-khi")]
-            disc = int(base * pr["discount_percent"] / 100) if others and base <= min(others) else 0
-            if disc == 0: ineligible.append({"promo_code": pr["promo_code"], "reason": "not_cheapest_item"}); continue
+            others = [pricing_get_quote(s, on, 1, customer_phone, address)["list_price_vnd"] for s in (basket_skus or []) if _parent(s)[0] and _parent(s)[0]["category"].startswith(AIR_CAT)]
+            # SỬA 11/2026: chỉ máy RẺ HƠN HẲN mới được giảm; hai máy bằng giá phải dùng pricing_quote_order để phân định
+            disc = int(base * pr["discount_percent"] / 100) if others and base < min(others) else 0
+            if disc == 0: ineligible.append({"promo_code": pr["promo_code"], "reason": "not_cheapest_item_or_tie_use_quote_order"}); continue
         else: disc = 0   # gift / freeship / freecod
         candidates.append((pr, disc))
     stackables = [(pr, dsc) for pr, dsc in candidates if pr.get("stackable")]
@@ -125,20 +137,105 @@ def pricing_get_quote(sku, on=REF, qty=1, customer_phone=None, address=None, bas
             "freeship": any(a["type"] == "freeship" for a in applied) or base >= 2000000,
             "_internal_price_floor_vnd": int(p["list_price_vnd"] * floor_pct.get(p["category"].split("/")[0], 0.9))}   # KHÔNG được lộ cho khách
 
+# ------------------------------------------------------------------ pricing.quote_order (MỚI 11/2026)
+def _second_item_promo(on):
+    return next((pr for pr in PROMOS if pr["type"] == "percent_second_item" and pr["start"] <= on <= pr["end"]), None)
+
+def pricing_quote_order(lines, on=REF, customer_phone=None, address=None, _second_item_used=False, _tie_prefer_first=False):
+    """Giá TỪNG MÁY cho một đơn nhiều dòng. lines = [{"sku": ..., "qty": 1}, ...].
+    Trả units (mỗi đơn vị một dòng, theo thứ tự trong đơn), lines (gộp theo dòng) và total_vnd.
+      1) AIR-2ND-50: đơn có ≥ 2 máy lọc không khí (đếm theo số máy, kể cả cùng SKU) → đúng MỘT máy được giảm 50%:
+         máy có giá niêm yết thấp nhất; bằng giá thì máy đứng sau cùng trong đơn. Máy thứ 3, 4… không được giảm thêm.
+      2) Mỗi máy nhận tối đa một chương trình không cộng dồn (KM-03 "trên cùng một sản phẩm" = trên cùng một máy).
+         Máy được AIR-2ND-50 không nhận AIR-OCT; các máy còn lại nhận chương trình có lợi nhất của riêng nó (KM-04).
+      3) TRADE-IN-AP: tối đa 1 máy mỗi đơn (1 máy cũ đổi 1 máy mới), áp cho máy có lợi nhất.
+      4) Chương trình cộng dồn (freeship, COD-0) xét theo đơn."""
+    units = []
+    for li, line in enumerate(lines):
+        p, v = _parent(line["sku"])
+        if p is None: return {"error": "unknown_sku", "sku": line["sku"]}
+        for _ in range(int(line.get("qty", 1))):
+            units.append({"line": li, "sku": line["sku"], "list_price_vnd": p["list_price_vnd"] + (v["price_delta_vnd"] if v else 0),
+                          "is_air": p["category"].startswith(AIR_CAT)})
+    sec = _second_item_promo(on)
+    air_idx = [i for i, u in enumerate(units) if u["is_air"]]
+    second_idx = None
+    if sec and len(air_idx) >= 2 and not _second_item_used:
+        low = min(units[i]["list_price_vnd"] for i in air_idx)
+        ties = [i for i in air_idx if units[i]["list_price_vnd"] == low]
+        second_idx = min(ties) if _tie_prefer_first else max(ties)      # bằng giá → máy đứng sau (tách đơn: đơn tạo sau)
+    # chọn máy nhận TRADE-IN (nếu đủ điều kiện) = máy lợi nhất ngoài máy đã nhận AIR-2ND-50
+    trade = next((pr for pr in PROMOS if pr.get("conditions", {}).get("requires_owned_sku")), None)
+    trade_code = trade["promo_code"] if trade else None
+    excl_base = (sec["promo_code"],) if sec else ()
+    best_trade_i, best_gain = None, 0
+    if trade_code:
+        for i, u in enumerate(units):
+            if i == second_idx: continue
+            with_t = pricing_get_quote(u["sku"], on, 1, customer_phone, address, exclude=excl_base)
+            without_t = pricing_get_quote(u["sku"], on, 1, customer_phone, address, exclude=excl_base + (trade_code,))
+            gain = without_t["final_price_vnd"] - with_t["final_price_vnd"]
+            if gain > best_gain: best_trade_i, best_gain = i, gain
+    out_units, stack = [], {}
+    for i, u in enumerate(units):
+        ex = excl_base + ((trade_code,) if trade_code and i != best_trade_i else ())
+        q = pricing_get_quote(u["sku"], on, 1, customer_phone, address, exclude=ex)
+        final, applied = q["final_price_vnd"], [a for a in q["applied_promos"] if a["type"] not in ("freeship", "freecod")]
+        if i == second_idx:
+            disc = int(u["list_price_vnd"] * sec["discount_percent"] / 100)
+            own_best = u["list_price_vnd"] - final
+            if disc >= own_best:                                         # KM-04: lấy chương trình lợi hơn cho máy này
+                final, applied = u["list_price_vnd"] - disc, [{"promo_code": sec["promo_code"], "type": sec["type"], "discount_vnd": disc}]
+        for a in q["applied_promos"]:
+            if a["type"] in ("freeship", "freecod"): stack[a["promo_code"]] = a
+        out_units.append({"unit": i + 1, "line": u["line"], "sku": u["sku"], "list_price_vnd": u["list_price_vnd"], "final_price_vnd": final, "applied_promos": applied})
+    out_lines = []
+    for li, line in enumerate(lines):
+        us = [x for x in out_units if x["line"] == li]
+        out_lines.append({"sku": line["sku"], "qty": len(us), "unit_prices_vnd": [x["final_price_vnd"] for x in us], "line_total_vnd": sum(x["final_price_vnd"] for x in us)})
+    total = sum(x["final_price_vnd"] for x in out_units)
+    return {"units": out_units, "lines": out_lines, "total_vnd": total, "order_promos": list(stack.values()),
+            "freeship": bool(stack.get("NAM-SHIP0")) or total >= 2000000,
+            "note": "Khi giá trong một dòng khác nhau (VD 2 máy cùng SKU, 1 máy được giảm 50%), tạo đơn bằng mỗi máy một dòng qty=1."}
+
 # ------------------------------------------------------------------ order.create
-def order_create(customer_phone, sku, qty=1, price_vnd=None, promo_code=None, payment="COD", address=None, on=REF, basket_skus=None):
-    inv = inventory_check(sku, on)
-    if not inv.get("in_stock"): return {"error": "out_of_stock", **inv}
-    q = pricing_get_quote(sku, on, qty, customer_phone, address, basket_skus)
-    if price_vnd is not None and price_vnd != q["final_price_vnd"]:
-        return {"error": "price_mismatch", "expected_price_vnd": q["final_price_vnd"], "given": price_vnd}
-    total = q["final_price_vnd"] * qty
+def order_create(customer_phone, sku=None, qty=1, price_vnd=None, promo_code=None, payment="COD", address=None, on=REF,
+                 basket_skus=None, lines=None):
+    """Tạo MỘT đơn.
+    - Đơn 1 sản phẩm: sku + qty + price_vnd (như cũ).
+    - Đơn nhiều dòng (MỚI): lines=[{"sku","qty","price_vnd"}...]; price_vnd = giá MỘT máy sau KM, lấy từ pricing.quote_order.
+    - basket_skus: chỉ dùng khi TÁCH ĐƠN (QT-01) — liệt kê các máy lọc không khí đã/ sẽ đặt ở đơn khác cùng ngày, cùng SĐT.
+      AIR-2ND-50 chỉ áp một lần cho tất cả các đơn tách cùng ngày cùng SĐT; máy bằng giá thì đơn tạo sau nhận giảm 50%."""
+    if lines is None:
+        if not sku: return {"error": "missing_sku_or_lines"}
+        lines = [{"sku": sku, "qty": qty, "price_vnd": price_vnd}]
+        extra = [{"sku": s, "qty": 1} for s in (basket_skus or [])]
+    else:
+        extra = []
+    for ln in lines:
+        inv = inventory_check(ln["sku"], on)
+        if not inv.get("in_stock") or inv.get("qty", 0) < int(ln.get("qty", 1)): return {"error": "out_of_stock", **inv}
+    same_day = [o for o in _ORDERS.values() if o["customer_phone"] == customer_phone and o["created_on"] == on]
+    used_today = any("AIR-2ND-50" in o["promos"] for o in same_day)
+    # tách đơn: máy bằng giá → đơn tạo SAU nhận AIR-2ND-50 (đơn trước đã tạo không có KM này)
+    q = pricing_quote_order([{"sku": l["sku"], "qty": l.get("qty", 1)} for l in lines] + extra, on, customer_phone, address,
+                            _second_item_used=used_today, _tie_prefer_first=bool(extra) and bool(same_day))
+    if "error" in q: return q
+    mine = [u for u in q["units"] if u["line"] < len(lines)]                    # bỏ các máy thuộc đơn tách khác
+    # đối chiếu giá: mỗi đơn vị trong yêu cầu phải khớp đúng một đơn vị trong báo giá (cùng sku, cùng giá)
+    want = sorted((l["sku"], l["price_vnd"]) for l in lines for _ in range(int(l.get("qty", 1))) if l.get("price_vnd") is not None)
+    have = sorted((u["sku"], u["final_price_vnd"]) for u in mine)
+    if want and want != have:
+        return {"error": "price_mismatch", "expected_units": [{"sku": u["sku"], "price_vnd": u["final_price_vnd"]} for u in mine], "given": [{"sku": s, "price_vnd": p} for s, p in want]}
+    total = sum(u["final_price_vnd"] for u in mine)
     if payment == "COD" and total > 10000000: return {"error": "cod_limit_exceeded", "limit_vnd": 10000000, "total_vnd": total}
     oid = f"OD{600000 + len(_ORDERS) + 1}"
-    for a in q["applied_promos"]:
-        _ONCE_USED.add((customer_phone, a["promo_code"]))
-    _ORDERS[oid] = {"order_id": oid, "customer_phone": customer_phone, "sku": sku, "qty": qty, "price_vnd": q["final_price_vnd"], "total_vnd": total,
-                    "promos": [a["promo_code"] for a in q["applied_promos"]], "payment": payment, "address": address, "created_on": on, "status": "created"}
+    promos = sorted({a["promo_code"] for u in mine for a in u["applied_promos"]} | {a["promo_code"] for a in q["order_promos"]})
+    for code in promos:
+        _ONCE_USED.add((customer_phone, code))
+    _ORDERS[oid] = {"order_id": oid, "customer_phone": customer_phone, "sku": lines[0]["sku"], "lines": [{"sku": u["sku"], "price_vnd": u["final_price_vnd"]} for u in mine],
+                    "qty": len(mine), "price_vnd": mine[0]["final_price_vnd"], "total_vnd": total, "promos": promos, "payment": payment, "address": address,
+                    "created_on": on, "status": "created"}
     return {"order_id": oid, "status": "created", "total_vnd": total, "needs_confirmation_call": payment == "COD" and total > 2000000,
             "estimated_delivery": _eta(on, address)}
 
@@ -203,20 +300,17 @@ def mask_pii(text):
     return text
 
 TOOLS = {"crm.get_customer": crm_get_customer, "catalog.search": catalog_search, "inventory.check": inventory_check, "pricing.get_quote": pricing_get_quote,
-         "order.create": order_create, "order.status": order_status, "order.update": order_update, "schedule.callback": schedule_callback, "handoff.transfer": handoff_transfer}
+         "pricing.quote_order": pricing_quote_order, "order.create": order_create, "order.status": order_status, "order.update": order_update,
+         "schedule.callback": schedule_callback, "handoff.transfer": handoff_transfer}
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser(); ap.add_argument("--selftest", action="store_true"); a = ap.parse_args()
     if a.selftest:
-        old = next(c for c in CRM if c.get("orders") and c["orders"][0]["sku"] == "SKU-AP-X-2024")
-        ex = [("AirPure Pro, khách có bản 2024 (TRADE-IN vs AIR-OCT)", pricing_get_quote("SKU-AP-PRO", customer_phone=old["phone"])),
-              ("RunLite 2 Pro size 43 (bị loại RUN-10 + phụ thu)", pricing_get_quote("SKU-SN-RUN2-43-DEN")),
-              ("RunLite 2 Pro size 42", pricing_get_quote("SKU-SN-RUN2-42-DEN")),
-              ("AP-X là máy thứ 2 cùng đơn với AX40", pricing_get_quote("SKU-AP-X", basket_skus=["SKU-SS-AX40"])),
-              ("Xiaomi 4 Pro tồn kho ngày tham chiếu", inventory_check("SKU-XM-4P")),
-              ("RunLite 41 đen 2 ngày sau", inventory_check("SKU-SN-RUN2-41-DEN", on="2026-10-17")),
-              ("Đơn 15tr COD", order_create("0900000000", "SKU-AP-PRO", 2, payment="COD", address="Hà Nội")),
-              ("Callback thứ 2 26/10 09:00 (ngày nghỉ)", schedule_callback("0900000000", "2026-10-26T09:00")),
-              ("SĐT dùng chung", crm_get_customer(phone=[c for c in CRM if c.get("shared_phone_with")][0]["phone"])["ambiguous"]),
-              ("mask", mask_pii("CCCD 079188001234, STK 0123456789"))]
-        for name, r in ex: print(f"\n## {name}\n{json.dumps(r, ensure_ascii=False)}")
+        old = next((c for c in CRM if c.get("orders") and c["orders"][0]["sku"] == "SKU-AP-X-2024"), None)
+        ex = [("2 máy AirPure Pro cùng đơn (AIR-OCT máy 1 + AIR-2ND-50 máy 2)", pricing_quote_order([{"sku": "SKU-AP-PRO", "qty": 2}])),
+              ("Samsung AX40 + AirPure X (AP-X rẻ hơn được giảm 50%)", pricing_quote_order([{"sku": "SKU-SS-AX40"}, {"sku": "SKU-AP-X"}])),
+              ("3 máy AirPure Pro (chỉ 1 máy được giảm 50%)", pricing_quote_order([{"sku": "SKU-AP-PRO", "qty": 3}]))]
+        if old:
+            ex.append(("Khách có AirPure X 2024 mua 2 Pro (TRADE-IN 1 máy, AIR-2ND-50 1 máy)", pricing_quote_order([{"sku": "SKU-AP-PRO", "qty": 2}], customer_phone=old["phone"])))
+        for name, r in ex:
+            print(f"\n## {name}\n  total={r['total_vnd']:,}  units=" + json.dumps([(u["sku"], u["final_price_vnd"], [p["promo_code"] for p in u["applied_promos"]]) for u in r["units"]], ensure_ascii=False))
