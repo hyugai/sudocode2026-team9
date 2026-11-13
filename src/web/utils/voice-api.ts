@@ -43,10 +43,12 @@ export class VoiceClient {
   private abort = new AbortController();
   private apiBase: string;
   private onEvent: (event: VoiceEvent) => void;
+  private accountMode: boolean;
 
-  constructor(apiBase: string, onEvent: (event: VoiceEvent) => void) {
+  constructor(apiBase: string, onEvent: (event: VoiceEvent) => void, accountMode = false) {
     this.apiBase = apiBase;
     this.onEvent = onEvent;
+    this.accountMode = accountMode;
   }
 
   private control(value: Record<string, unknown>) {
@@ -82,9 +84,10 @@ export class VoiceClient {
       });
       if (this.disposed) return;
       const headers: Record<string, string> = { "Content-Type": "application/json" };
+      if (this.accountMode) headers["X-Conversation-Mode"] = "account";
       if (accessCode) headers["X-API-Key"] = accessCode;
-      const response = await fetch(this.apiBase + "/api/voice/sessions", {
-        method: "POST", headers,
+      const response = await fetch((this.accountMode ? "" : this.apiBase) + "/api/voice/sessions", {
+        method: "POST", headers, credentials: "same-origin",
         body: JSON.stringify({ customer_phone: phone || null }), signal: this.abort.signal,
       });
       const payload = await response.json();

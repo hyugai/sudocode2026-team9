@@ -3,7 +3,7 @@
 import os
 
 from dotenv import load_dotenv
-from sqlalchemy import CheckConstraint, UniqueConstraint, create_engine, inspect
+from sqlalchemy import CheckConstraint, UniqueConstraint, create_engine, inspect, text
 from sqlalchemy.engine import Engine
 
 from .app_models import APP_TABLES
@@ -33,6 +33,18 @@ def migrate_app_data(engine: Engine) -> list[str]:
         inspector = inspect(connection)
         if not inspector.has_table("customers", schema=schema):
             raise ValueError("Chưa có bảng customers. Thiết lập schema CRM trước; migration này không tạo/reset CRM.")
+        # Upgrade existing accounts before validating against the new model.
+        # The surrounding transaction also rolls this back if another table is incompatible.
+        if inspector.has_table("users", schema=schema):
+            quote = connection.dialect.identifier_preparer.quote
+            table_name = f"{quote(schema)}.users" if schema else "users"
+            columns = {column["name"] for column in inspector.get_columns("users", schema=schema)}
+            if "role" not in columns:
+                connection.execute(text(f"ALTER TABLE {table_name} ADD COLUMN role VARCHAR(16) NOT NULL DEFAULT 'user'"))
+            checks = {item["name"] for item in inspector.get_check_constraints("users", schema=schema)}
+            if "ck_users_role" not in checks:
+                connection.execute(text(f"ALTER TABLE {table_name} ADD CONSTRAINT ck_users_role CHECK (role IN ('user', 'salesman'))"))
+            inspector = inspect(connection)
         for table in APP_TABLES:
             if inspector.has_table(table.name, schema=schema):
                 actual = {column["name"]: column for column in inspector.get_columns(table.name, schema=schema)}

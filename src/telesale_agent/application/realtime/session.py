@@ -54,7 +54,7 @@ class VoiceSessionManager:
         await recover_memory(self.services, self.store)
         self.initialized = True
 
-    async def create(self, phone):
+    async def create(self, phone, *, user_id=None):
         async with self.lock:
             await self.initialize()
             now = time.monotonic()
@@ -70,7 +70,7 @@ class VoiceSessionManager:
                 self.settings, instructions(state),
                 tool_declarations(self.services.mcp_tools, self.settings.tools_mode))
             controller = VoiceSessionController(
-                self.services, self.settings, model, self.store, state, context, phone)
+                self.services, self.settings, model, self.store, state, context, phone, user_id=user_id)
             self.sessions[session_id] = Session(
                 controller, digest(owner), digest(ticket), now + 120)
             return {"session_id": session_id, "conversation_id": conversation_id,

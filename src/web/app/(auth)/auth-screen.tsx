@@ -32,6 +32,7 @@ export function AuthScreen({ mode }: { mode: AuthMode }) {
   const [submitted, setSubmitted] = useState(false);
   const [pending, setPending] = useState(false);
   const [serverError, setServerError] = useState("");
+  const [role, setRole] = useState<"user" | "salesman">("user");
   const submitLock = useRef(false);
   const resultRef = useRef<HTMLDivElement>(null);
 
@@ -67,14 +68,13 @@ export function AuthScreen({ mode }: { mode: AuthMode }) {
     try {
       const email = field("email").value.trim();
       const password = field("password").value;
-      if (register) await auth.register(field("name").value.trim(), email, password);
-      else await auth.login(email, password);
+      const user = register ? await auth.register(field("name").value.trim(), email, password, role) : await auth.login(email, password);
       form.querySelectorAll<HTMLInputElement>("[data-password]").forEach(input => { input.value = ""; });
       setShowPassword(false); setShowConfirm(false);
       if (register) {
         setSubmitted(true);
         requestAnimationFrame(() => resultRef.current?.focus({ preventScroll: true }));
-      } else router.replace("/account");
+      } else router.replace(user?.role === "salesman" ? "/salesman" : "/account");
     } catch (error) {
       setServerError(error instanceof Error ? error.message : "Chưa xử lý được tài khoản. Hãy thử lại.");
     } finally { submitLock.current = false; setPending(false); }
@@ -100,6 +100,7 @@ export function AuthScreen({ mode }: { mode: AuthMode }) {
       <form className="auth-form" noValidate onSubmit={submit} aria-describedby="auth-demo-note" aria-busy={pending}>
         <fieldset disabled={!interactive || !auth.ready || pending || auth.busy}>
           {register && <div className="auth-field"><label htmlFor="auth-name">Họ và tên</label><input id="auth-name" autoComplete="name" placeholder="Nguyễn Minh Anh" required maxLength={100} aria-invalid={!!errors.name} aria-describedby={describedBy("name")} onChange={() => clearFeedback("name")} />{errors.name && <p className="auth-field-error" id="auth-name-error">{errors.name}</p>}</div>}
+          {register && <div className="auth-field"><label htmlFor="auth-role">Vai trò demo</label><select id="auth-role" value={role} onChange={event => setRole(event.target.value as "user" | "salesman")}><option value="user">User — tư vấn sản phẩm</option><option value="salesman">Salesman — xem lịch sử hội thoại</option></select></div>}
           <div className="auth-field"><label htmlFor="auth-email">Email</label><input id="auth-email" type="email" autoComplete={register ? "email" : "username"} inputMode="email" autoCapitalize="none" spellCheck={false} placeholder="ban@example.com" required maxLength={254} aria-invalid={!!errors.email} aria-describedby={describedBy("email")} onChange={() => clearFeedback("email")} />{errors.email && <p className="auth-field-error" id="auth-email-error">{errors.email}</p>}</div>
           <div className="auth-field"><label htmlFor="auth-password">Mật khẩu</label><div className="auth-password-field"><input id="auth-password" data-password type={showPassword ? "text" : "password"} autoComplete={register ? "new-password" : "current-password"} placeholder={register ? "Tạo mật khẩu" : "Nhập mật khẩu"} required maxLength={128} aria-invalid={!!errors.password} aria-describedby={describedBy("password", register ? "auth-password-hint" : undefined)} onChange={() => clearFeedback("password")} /><button type="button" aria-label={showPassword ? "Ẩn mật khẩu" : "Hiện mật khẩu"} aria-pressed={showPassword} aria-controls="auth-password" onClick={() => setShowPassword(value => !value)}><AuthIcon name={showPassword ? "eyeOff" : "eye"} /></button></div>{register && <p className="auth-field-hint" id="auth-password-hint">Ít nhất 8 ký tự. Có thể dùng một cụm từ dễ nhớ.</p>}{errors.password && <p className="auth-field-error" id="auth-password-error">{errors.password}</p>}</div>
           {register && <>
@@ -114,7 +115,7 @@ export function AuthScreen({ mode }: { mode: AuthMode }) {
       {serverError && <p className="auth-field-error" role="alert">{serverError}</p>}
       {submitted && <div className="auth-result" ref={resultRef} tabIndex={-1} role="status"><span><AuthIcon name="check" /></span><div><strong>Đã tạo tài khoản</strong><p>Đăng nhập bằng email vừa đăng ký để tiếp tục.</p><Link href="/login">Đăng nhập <span aria-hidden="true">→</span></Link></div></div>}
       <div className="auth-card-bottom"><p>{register ? "Bạn đã có tài khoản?" : "Bạn chưa có tài khoản?"} <Link href={register ? "/login" : "/register"}>{register ? "Đăng nhập" : "Đăng ký ngay"}</Link></p><Link href="/" className="auth-guest-link">{auth.user ? "Về trang chủ" : "Tiếp tục với phiên khách"} <span aria-hidden="true">→</span></Link></div>
-      <p className="auth-demo-note"><Link href="/salesman" prefetch={false}>Xem demo Salesman <span aria-hidden="true">→</span></Link></p>
+      <p className="auth-demo-note">Đăng ký vai trò Salesman để xem lịch sử Chat và Voice đã lưu.</p>
       <noscript><p className="auth-field-error">Bật JavaScript để sử dụng biểu mẫu tài khoản. Bạn vẫn có thể quay về trang chủ.</p></noscript>
     </section>
   </div>;

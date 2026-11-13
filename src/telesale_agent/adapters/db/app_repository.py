@@ -43,7 +43,7 @@ def _page(limit: int, offset: int) -> None:
 
 
 def _user(row: User) -> dict[str, Any]:
-    return {"id": row.id, "name": row.name, "email": row.email}
+    return {"id": row.id, "name": row.name, "email": row.email, "role": row.role}
 
 
 def _conversation(row: Conversation) -> dict[str, Any]:
@@ -84,13 +84,16 @@ def _brief_preview(value: dict[str, Any] | None) -> dict[str, Any] | None:
 
 class AppDataRepository:
     def __init__(self, engine: Engine):
+        self.engine = engine
         self.sessions = sessionmaker(bind=engine, expire_on_commit=False)
 
-    async def create_user(self, name: str, email: str, password_hash: str) -> dict[str, Any]:
+    async def create_user(self, name: str, email: str, password_hash: str, role: str = "user") -> dict[str, Any]:
+        if role not in ("user", "salesman"):
+            raise ValueError("Vai trò tài khoản không hợp lệ.")
         def write():
             with self.sessions.begin() as session:
                 row = User(name=_text(name, 100), email=_text(email, 254).lower(),
-                           password_hash=_text(password_hash, 1000))
+                           password_hash=_text(password_hash, 1000), role=role)
                 session.add(row)
                 session.flush()
                 return _user(row)

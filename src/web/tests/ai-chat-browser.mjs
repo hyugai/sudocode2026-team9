@@ -197,7 +197,7 @@ try {
   await check("Failed upload preserves file and draft without retrying", "__test.calls.length === 2 && !!document.querySelector('audio') && document.querySelector('#ai-message').value.includes('Giữ bản nháp')");
   await b.evaluate("__test.apiMode = 'ok'");
   await submit();
-  await b.wait("document.querySelectorAll('.ai-message').length === 5");
+  await b.wait("document.querySelectorAll('.ai-message').length === 5 && !document.querySelector('audio') && [...document.querySelectorAll('.ai-bubble')].some(bubble => bubble.textContent === 'Tôi cần tai nghe pin lâu.')");
   await check("Chat audio uses the ASR endpoint, renders its transcript and shares the text conversation ID", "__test.calls.every(call => call.conversationId === __conversationId) && __test.calls[2].url.endsWith('/api/chat/audio') && __test.calls[2].file.endsWith('.wav') && [...document.querySelectorAll('.ai-bubble')].some(bubble => bubble.textContent === 'Tôi cần tai nghe pin lâu.') && document.querySelector('#ai-message').value.includes('Giữ bản nháp') && !document.querySelector('audio')");
   await mode("text");
   await b.evaluate("__test.apiMode = 'limit'");
@@ -376,4 +376,7 @@ try {
   await b.wait("__test.stopped === 1");
   await check("Leaving Voice for the dashboard closes the microphone and socket", "__test.sockets[0].readyState === 3 && __test.voiceRequests.some(request => request.method === 'DELETE') && !document.querySelector('.ai-voice-workspace')");
   console.log("AI chat browser regression complete");
+} catch (error) {
+  console.error(await b.evaluate("({url:location.href,calls:window.__test?.calls,conversationId:window.__conversationId,bubbles:[...document.querySelectorAll('.ai-bubble')].map(n=>n.textContent),draft:document.querySelector('#ai-message')?.value,audio:!!document.querySelector('audio')})"));
+  throw error;
 } finally { await b.close(); }

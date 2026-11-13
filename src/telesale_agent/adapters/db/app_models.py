@@ -23,8 +23,10 @@ class User(Base):
     name = Column(String(100), nullable=False)
     email = Column(String(254), nullable=False, unique=True)
     password_hash = Column(Text, nullable=False)
+    role = Column(String(16), nullable=False, default="user", server_default="user")
     created_at = Column(DateTime(timezone=True), nullable=False, default=utc_now)
     __table_args__ = (
+        CheckConstraint("role IN ('user', 'salesman')", name="ck_users_role"),
         CheckConstraint("email = lower(trim(email)) AND length(email) > 0", name="ck_users_email"),
         CheckConstraint("length(trim(name)) > 0", name="ck_users_name"),
     )

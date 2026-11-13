@@ -26,7 +26,7 @@ from telesale_agent.adapters.rules.pii_utils import mask_pii
 from contextlib import asynccontextmanager
 from telesale_agent.adapters.db.app_repository import AppDataNotFound, AppDataRepository, ConversationConflict
 from telesale_agent.adapters.db.checkpoint import CheckpointError
-from telesale_agent.entrypoints.api.auth import COOKIE_NAME, auth_error, get_auth_repository, require_origin, require_user
+from telesale_agent.entrypoints.api.auth import COOKIE_NAME, auth_error, get_auth_repository, require_origin, require_user, require_customer
 
 # Global harness reference
 harness = None
@@ -54,12 +54,22 @@ app = FastAPI(title="Telesale Agent API", lifespan=lifespan)
 from telesale_agent.entrypoints.api.catalog import router as catalog_router
 from telesale_agent.entrypoints.api.auth import router as auth_router
 from telesale_agent.entrypoints.api.conversations import router as conversations_router
+from telesale_agent.entrypoints.api.salesman import router as salesman_router
 from telesale_agent.entrypoints.api.voice import create_voice_router
 app.include_router(catalog_router)
 app.include_router(auth_router)
 app.include_router(conversations_router)
+app.include_router(salesman_router)
 voice_router, shutdown_voice = create_voice_router(lambda: harness)
 app.include_router(voice_router)
+
+
+@app.middleware("http")
+async def private_history_headers(request: Request, call_next):
+    response = await call_next(request)
+    if request.url.path.startswith("/api/salesman/"):
+        response.headers["Cache-Control"] = "no-store"
+    return response
 
 
 class ArrivalTimingMiddleware:
@@ -136,7 +146,8 @@ async def require_chat_access(request: Request, x_api_key: str | None = Header(d
                               repository: AppDataRepository = Depends(get_auth_repository)) -> None:
     if request.cookies.get(COOKIE_NAME) or request.headers.get("X-Conversation-Mode") == "account":
         require_origin(request)
-        await require_user(request, repository)
+        user = await require_user(request, repository)
+        await require_customer(user)
     else:
         require_api_key(x_api_key)
 
@@ -426,7 +437,10 @@ def rate_limit_response() -> JSONResponse:
     "/api/sessions/{conversation_id}",
     dependencies=[Depends(require_api_key)],
 )
-async def clear_session(conversation_id: str, repository: AppDataRepository = Depends(get_auth_repository)):
+async def clear_session(conversation_id: str, request: Request, repository: AppDataRepository = Depends(get_auth_repository)):
+    if request.cookies.get(COOKIE_NAME) or request.headers.get("X-Conversation-Mode") == "account":
+        user = await require_user(request, repository)
+        await require_customer(user)
     await guard_guest_id(conversation_id, repository)
     sessions.pop(conversation_id, None)
     session_locks.pop(conversation_id, None)

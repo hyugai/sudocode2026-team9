@@ -1,7 +1,9 @@
-export type AuthUser = { id: string; name: string; email: string };
+export type AuthRole = "user" | "salesman";
+export type AuthUser = { id: string; name: string; email: string; role: AuthRole };
 
 export class AuthApiError extends Error {
-  constructor(message: string, readonly status = 0) { super(message); }
+  readonly status: number;
+  constructor(message: string, status = 0) { super(message); this.status = status; }
 }
 
 export function createAuthClient(fetcher: typeof fetch = fetch) {
@@ -21,10 +23,10 @@ export function createAuthClient(fetcher: typeof fetch = fetch) {
   };
   const userFrom = (data: { user?: AuthUser } | null): AuthUser => {
     const user = data?.user;
-    if (!user || typeof user.id !== "string" || typeof user.name !== "string" || typeof user.email !== "string") {
+    if (!user || typeof user.id !== "string" || typeof user.name !== "string" || typeof user.email !== "string" || (user.role !== "user" && user.role !== "salesman")) {
       throw new AuthApiError("Dịch vụ chưa xác nhận thông tin tài khoản hợp lệ.");
     }
-    return { id: user.id, name: user.name, email: user.email };
+    return { id: user.id, name: user.name, email: user.email, role: user.role };
   };
   const mutate = async <T,>(operation: () => Promise<T>): Promise<T> => {
     if (saving) throw new AuthApiError("Đang xử lý tài khoản. Vui lòng chờ.");
@@ -32,7 +34,7 @@ export function createAuthClient(fetcher: typeof fetch = fetch) {
     try { return await operation(); } finally { saving = false; }
   };
   return {
-    register: (name: string, email: string, password: string) => mutate(async () => userFrom(await request("register", { name, email, password }))),
+    register: (name: string, email: string, password: string, role: AuthRole = "user") => mutate(async () => userFrom(await request("register", { name, email, password, role }))),
     login: (email: string, password: string) => mutate(async () => userFrom(await request("login", { email, password }))),
     async me(): Promise<AuthUser | null> {
       try { return userFrom(await request("me")); }

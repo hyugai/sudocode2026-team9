@@ -52,7 +52,8 @@ async def probe():
         os.environ['ENABLE_DEBUG_RESPONSE'] = 'true'
         response = await namespace['run_chat_turn'](turn)
         debug_exposes_profile = response['debug']['crm_profile']['owner'] == 'synthetic-user-a'
-        await namespace['clear_session'](sid)
+        namespace['COOKIE_NAME'] = 'synee_session'
+        await namespace['clear_session'](sid, NS(cookies={}, headers={}))
         foreign_state_deleted = sid not in namespace['sessions']
         os.environ['API_KEY'] = 'm3-synthetic-service-key'
         try:
@@ -68,7 +69,7 @@ async def probe():
     routes=[]
     for n in source.body:
         for d in getattr(n,'decorator_list',[]):
-            if isinstance(d,ast.Call) and isinstance(d.func,ast.Attribute) and isinstance(d.func.value,ast.Name) and d.func.value.id=='app' and d.args and isinstance(d.args[0],ast.Constant):
+            if isinstance(d,ast.Call) and isinstance(d.func,ast.Attribute) and isinstance(d.func.value,ast.Name) and d.func.value.id=='app' and d.func.attr in {'get','post','put','patch','delete','options','head'} and d.args and isinstance(d.args[0],ast.Constant):
                 routes.append([d.func.attr.upper(),d.args[0].value])
     return dict(routes=routes,anonymous_allowed=anonymous_allowed,configured_guard_rejects_missing=configured_guard_rejects_missing,
         reused_foreign_state=reused_foreign_state,foreign_state_deleted=foreign_state_deleted,

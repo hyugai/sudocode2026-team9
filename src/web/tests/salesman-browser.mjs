@@ -1,108 +1,137 @@
-// Public preview: real UI fixtures, no mocked login and no backend required.
+// Real UI with synthetic API responses. Run the separate backend integration tests too.
 import assert from "node:assert/strict";
 import { mkdir } from "node:fs/promises";
+import { fileURLToPath } from "node:url";
+import { salesmanDemo } from "../utils/salesman-demo.ts";
 import { connect } from "./browser-support.mjs";
 
 const base = process.env.BASE_URL || "http://127.0.0.1:3100";
-const output = process.env.BROWSER_ARTIFACT_DIR || "artifacts/salesman-demo";
+const output = process.env.BROWSER_ARTIFACT_DIR || fileURLToPath(new URL("../../../outputs/debug/streaming-ui/salesman/", import.meta.url));
 await mkdir(output, { recursive: true });
+const first = await salesmanDemo.list("", "all");
+const second = await salesmanDemo.list("", "all", first.items.length);
+const items = [...first.items, ...second.items];
+const details = {};
+for (const item of items) {
+  const value = await salesmanDemo.get(item.source, item.id);
+  if (value.has_more) value.messages.push(...(await salesmanDemo.get(item.source, item.id, value.next_offset)).messages);
+  details[`${item.source}:${item.id}`] = value;
+}
 const b = await connect();
 const check = async (name, expression) => { assert.ok(await b.evaluate(expression), name); console.log("PASS", name); };
 const click = selector => b.evaluate(`document.querySelector(${JSON.stringify(selector)}).click()`);
 const type = (selector, value) => b.evaluate(`(() => { const node=document.querySelector(${JSON.stringify(selector)}); Object.getOwnPropertyDescriptor(node.tagName==='SELECT'?HTMLSelectElement.prototype:HTMLInputElement.prototype,'value').set.call(node,${JSON.stringify(value)}); node.dispatchEvent(new Event(node.tagName==='SELECT'?'change':'input',{bubbles:true})); })()`);
 const search = async value => { await type("#sales-search", value); await click(".sales-search button"); };
-const key = async (name, code, number) => {
-  await b.send("Input.dispatchKeyEvent", { type: "keyDown", key: name, code, windowsVirtualKeyCode: number });
-  await b.send("Input.dispatchKeyEvent", { type: "keyUp", key: name, code, windowsVirtualKeyCode: number });
-};
-
 try {
   await b.send("Page.enable");
   await b.send("Emulation.setDeviceMetricsOverride", { width: 1440, height: 960, deviceScaleFactor: 1, mobile: false });
   await b.send("Page.addScriptToEvaluateOnNewDocument", { source: `
-    window.__demoRequests=[];
-    window.__demoOriginalStorage={local:JSON.stringify({...localStorage}),session:JSON.stringify({...sessionStorage})};
-    const originalFetch=window.fetch.bind(window);
-    window.fetch=(input,options)=>{
+    window.__salesRequests=[];
+    window.__salesMode='ok';
+    window.__salesRole=sessionStorage.getItem('sales-test-role') || 'salesman';
+    window.__salesAuthUnavailable=sessionStorage.getItem('sales-test-auth-error')==='1';
+    const items=${JSON.stringify(items)}, details=${JSON.stringify(details)};
+    const normalize=s=>s.toLowerCase().normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').replace(/đ/g,'d');
+    const native=fetch.bind(window);
+    window.fetch=async(input,options={})=>{
       const url=new URL(input instanceof Request?input.url:String(input),location.origin);
-      if(url.pathname.startsWith('/api/')){
-        __demoRequests.push(url.pathname);
-        return Promise.resolve(Response.json({detail:'Backend unavailable in preview test'},{status:503}));
+      const path=url.pathname;
+      if(!path.startsWith('/api/')) return native(input,options);
+      __salesRequests.push({path,method:options.method||'GET'});
+      const user={id:'sales-test',name:'Salesman kiểm thử',email:'sales@example.invalid',role:__salesRole};
+      if(path==='/api/auth/me') return __salesAuthUnavailable?Response.json({detail:'Chưa kết nối được dịch vụ tài khoản'},{status:503}):__salesRole==='guest'?Response.json({detail:'Hết phiên'},{status:401}):Response.json({user});
+      if(path==='/api/auth/logout') { __salesRole='guest'; sessionStorage.setItem('sales-test-role','guest'); return Response.json({status:'logged_out'}); }
+      if(path==='/api/auth/login') { __salesRole='salesman'; __salesMode='ok'; sessionStorage.setItem('sales-test-role','salesman'); return Response.json({user:{...user,role:'salesman'}}); }
+      if(path.startsWith('/api/salesman/')){
+        if(__salesMode==='expired') { __salesRole='guest'; sessionStorage.setItem('sales-test-role','guest'); return Response.json({detail:'Phiên đã hết hạn'},{status:401}); }
+        if(__salesMode==='error') return Response.json({detail:'Chưa kết nối được lịch sử'},{status:503});
+        const offset=Number(url.searchParams.get('offset')||0);
+        if(path==='/api/salesman/conversations'){
+          const source=url.searchParams.get('source'), query=normalize(url.searchParams.get('q')||'');
+          if(query==='slow') await new Promise(resolve=>setTimeout(resolve,500));
+          options.signal?.throwIfAborted();
+          const filtered=items.filter(i=>(source==='all'||i.source===source)&&normalize([i.user_name,i.user_email,i.customer_phone,i.id,i.customer_id].join(' ')).includes(query));
+          return Response.json({items:filtered.slice(offset,offset+4),total:filtered.length,has_more:offset+4<filtered.length});
+        }
+        const parts=path.split('/'), row=details[parts[4]+':'+decodeURIComponent(parts[5])];
+        if(!row) return Response.json({detail:'Không tìm thấy'},{status:404});
+        return Response.json({...row,messages:row.messages.slice(offset,offset+6),next_offset:offset+Math.min(6,row.messages.length-offset),has_more:offset+6<row.messages.length});
       }
-      return originalFetch(input,options);
+      if(path==='/api/health') return Response.json({status:'ready'});
+      return Response.json({detail:'Not part of the Salesman flow'},{status:404});
     };
   ` });
   await b.send("Page.navigate", { url: base + "/salesman" });
   await b.wait("document.querySelectorAll('.sales-conversation').length===4 && document.querySelectorAll('.sales-message').length===6");
-  await check("Demo opens without authentication or backend", "document.querySelector('.sales-account').textContent.includes('Salesman demo') && !document.querySelector('[role=alert]') && __demoRequests.length===0");
-  await check("Sample data is clearly labeled and controls are read-only", "document.querySelector('.sales-demo-note').textContent.includes('Dữ liệu mẫu') && !document.querySelector('textarea,audio,.voice-start,.ai-new-chat,.cart-link')");
-  await check("Header starts at the top and history spans Chat and Voice", "document.querySelector('.sales-header').getBoundingClientRect().top===0 && [...document.querySelectorAll('.sales-item-heading small')].some(n=>n.textContent==='Voice') && document.querySelector('.sales-list-heading').textContent.includes('8 hội thoại')");
+  await check("Authenticated Salesman loads the history API and account identity", "document.querySelector('.sales-account').textContent.includes('Salesman kiểm thử') && __salesRequests.some(r=>r.path==='/api/auth/me') && __salesRequests.some(r=>r.path==='/api/salesman/conversations')");
+  await check("No chat/cart/microphone providers or demo fallback on the review page", "!document.querySelector('textarea,audio,.voice-start,.ai-new-chat,.cart-link') && !__salesRequests.some(r=>r.path==='/api/health'||r.path.includes('/api/catalog')) && !document.querySelector('.sales-demo-note').textContent.includes('Dữ liệu mẫu')");
   await b.screenshot(`${output}/history-desktop.png`);
   await click(".sales-tab-panel .sales-load-more");
   await b.wait("document.querySelectorAll('.sales-message').length===12");
-  await check("Long transcript pagination preserves all messages", "!document.querySelector('.sales-tab-panel .sales-load-more') && new Set([...document.querySelectorAll('.sales-message p')].map(n=>n.textContent)).size===12");
+  await check("Transcript pagination keeps every message once", "new Set([...document.querySelectorAll('.sales-message p')].map(n=>n.textContent)).size===12");
   await click("#sales-tab-brief");
-  await b.wait("!!document.querySelector('.sales-brief')");
-  await check("Call brief shows summary, needs, objections and next steps", "document.querySelectorAll('.sales-brief section').length===4 && document.querySelector('.sales-brief').textContent.includes('sau 18:00') && document.querySelector('.sales-brief').textContent.includes('chi phí màng lọc')");
-  await b.screenshot(`${output}/brief-desktop.png`);
+  await check("Call brief renders four saved fields", "document.querySelectorAll('.sales-brief section').length===4");
   await click("#sales-tab-memory");
-  await b.wait("!!document.querySelector('.sales-memory pre')");
-  await check("Memory shows six categories and the selected customer's facts", "document.querySelectorAll('.sales-memory details').length===6 && document.querySelector('.sales-memory pre').textContent.includes('5000000')");
-  await b.screenshot(`${output}/memory-desktop.png`);
-  for (const width of [1440, 840, 375, 320]) {
-    await b.send("Emulation.setDeviceMetricsOverride", { width, height: 900, deviceScaleFactor: 1, mobile: false });
-    await check(`Layout wraps without horizontal scrolling at ${width}px`, "document.documentElement.scrollWidth<=innerWidth && [...document.querySelectorAll('.sales-tabs button,.sales-account a')].every(n=>n.getBoundingClientRect().right<=innerWidth)");
-    if (width === 320) {
-      await b.evaluate("document.querySelector('.sales-review').scrollIntoView({block:'start',behavior:'instant'})");
-      await b.screenshot(`${output}/memory-mobile.png`);
-    }
+  await check("Memory is labeled as the saved end-of-turn version", "document.querySelectorAll('.sales-memory details').length===6 && document.querySelector('.sales-memory').textContent.includes('Bản lưu cuối lượt')");
+  await b.evaluate("document.getElementById('sales-tab-messages').focus()");
+  await b.send("Input.dispatchKeyEvent", { type:"keyDown", key:"ArrowRight", code:"ArrowRight", windowsVirtualKeyCode:39 });
+  await check("Review tabs support keyboard navigation", "document.activeElement.id==='sales-tab-brief' && document.activeElement.getAttribute('aria-selected')==='true'");
+  for (const width of [320,375,768,1440]) {
+    await b.send("Emulation.setDeviceMetricsOverride", { width,height:960,deviceScaleFactor:1,mobile:false });
+    await check(`Content wraps at ${width}px`, "document.documentElement.scrollWidth<=innerWidth");
+    if(width===320) await b.screenshot(`${output}/history-mobile.png`);
   }
-  await b.evaluate("document.querySelector('#sales-tab-memory').focus()");
-  await key("Home", "Home", 36);
-  await check("Tabs support keyboard selection and focus", "document.activeElement.id==='sales-tab-messages' && document.activeElement.getAttribute('aria-selected')==='true'");
-  await key("ArrowRight", "ArrowRight", 39);
-  await check("Arrow keys select the next review tab", "document.activeElement.id==='sales-tab-brief' && !!document.querySelector('.sales-brief')");
-  await b.send("Emulation.setDeviceMetricsOverride", { width: 1440, height: 960, deviceScaleFactor: 1, mobile: false });
   await click(".sales-sidebar > .sales-load-more");
   await b.wait("document.querySelectorAll('.sales-conversation').length===8");
-  await check("History pagination includes earlier sessions", "!document.querySelector('.sales-sidebar > .sales-load-more')");
   await search("le thu ha");
   await b.wait("document.querySelectorAll('.sales-conversation').length===2");
-  await check("Accent-insensitive search finds multiple sessions of a customer", "[...document.querySelectorAll('.sales-item-heading strong')].every(n=>n.textContent==='Lê Thu Hà')");
-  await search("no-match-example");
-  await b.wait("!!document.querySelector('.sales-empty-list')");
-  await check("Empty search clears the previous customer's details", "!document.querySelector('.sales-review-heading') && !document.querySelector('.sales-memory,.sales-brief,.sales-message')");
+  await check("Search handles Vietnamese diacritics", "[...document.querySelectorAll('.sales-item-heading strong')].every(n=>n.textContent==='Lê Thu Hà')");
+  await search("slow");
+  await search("demo-chat-001");
+  await b.wait("document.querySelectorAll('.sales-conversation').length===1 && document.querySelectorAll('.sales-message').length===6");
+  await b.evaluate("new Promise(resolve=>setTimeout(resolve,600))");
+  await check("An old search cannot overwrite the selected customer's data", "document.querySelector('.sales-review-heading small').textContent.includes('demo-chat-001') && document.querySelectorAll('.sales-conversation').length===1");
   await search("");
-  await type("#sales-source", "voice");
-  await b.wait("document.querySelectorAll('.sales-conversation').length===3 && document.querySelector('.sales-review-heading small')?.textContent.includes('demo-voice-002')");
+  await type("#sales-source","voice");
+  await b.wait("document.querySelectorAll('.sales-conversation').length===3");
+  await search("demo-voice-004");
+  await b.wait("!!document.querySelector('.sales-message span')");
+  await check("Interrupted Voice transcript is explicit", "document.querySelector('.sales-messages').textContent.includes('Chưa hoàn tất / bị ngắt')");
   await click("#sales-tab-memory");
-  await b.wait("!!document.querySelector('.sales-memory pre')");
-  await check("Voice has its own saved example memory", "document.querySelector('.sales-memory pre').textContent.includes('8000000') && !document.querySelector('.sales-memory pre').textContent.includes('5000000')");
-  await click(".sales-conversation:nth-child(2)");
-  await b.wait("document.querySelectorAll('.sales-message').length===3");
-  await check("Interrupted Voice transcript is marked", "document.querySelector('.sales-messages').textContent.includes('Chưa hoàn tất / bị ngắt')");
-  await click("#sales-tab-brief");
-  await check("Missing call brief has an explicit empty state", "document.querySelector('.sales-empty').textContent.includes('chưa lưu call brief')");
-  await click("#sales-tab-memory");
-  await check("Legacy Voice without memory has an explicit empty state", "document.querySelector('.sales-empty').textContent.includes('chưa lưu snapshot memory')");
-  await type("#sales-source", "all");
-  await search("demo-chat-008");
-  await b.wait("!!document.querySelector('.sales-tab-panel .sales-empty') && document.querySelector('.sales-review-heading small')?.textContent.includes('demo-chat-008')");
-  await click("#sales-tab-messages");
-  await check("New empty conversation has no fabricated messages", "document.querySelector('.sales-empty').textContent.includes('Chưa có tin nhắn')");
-  await search("minhanh@example.invalid");
-  await b.wait("document.querySelectorAll('.sales-message').length===6");
-  await click(".sales-review-heading button");
-  await b.wait("document.querySelectorAll('.sales-message').length===6");
-  await check("Refresh reads unchanged local fixtures without API requests", "__demoRequests.length===0 && document.querySelector('.sales-review-heading h2').textContent==='Nguyễn Minh Anh'");
-  await b.evaluate("window.dispatchEvent(new Event('focus'))");
-  await check("Demo preserves existing browser storage and avoids auth refresh", "__demoRequests.length===0 && JSON.stringify({...localStorage})===__demoOriginalStorage.local && JSON.stringify({...sessionStorage})===__demoOriginalStorage.session");
-  await b.send("Page.reload", { ignoreCache: true });
-  await b.wait("document.querySelectorAll('.sales-conversation').length===4 && document.querySelectorAll('.sales-message').length===6");
-  await check("Direct reload remains accessible without an account", "__demoRequests.length===0 && location.pathname==='/salesman'");
-  console.log("Salesman demo browser verification complete");
+  await check("Legacy Voice without snapshot has an empty state", "document.querySelector('.sales-empty').textContent.includes('chưa lưu snapshot memory')");
+  await b.evaluate("__salesMode='error'");
+  await click(".sales-list-heading button");
+  await b.wait("!!document.querySelector('.sales-error')");
+  await check("Unavailable backend clears old details and never falls back to fixtures", "document.querySelectorAll('.sales-conversation').length===0 && !document.querySelector('.sales-message,.sales-memory')");
+  await b.evaluate("__salesMode='ok'");
+  await click(".sales-error button");
+  await b.wait("document.querySelectorAll('.sales-conversation').length===1");
+  await check("Retry reloads data manually", "document.querySelector('.sales-review-heading small').textContent.includes('demo-voice-004')");
+  await b.evaluate("__salesMode='expired'");
+  await click(".sales-list-heading button");
+  await b.wait("location.pathname==='/login' && !!document.querySelector('#auth-email')");
+  await check("Session expiry removes private history before login", "!document.querySelector('.sales-message,.sales-memory,.sales-conversation')");
+  await type("#auth-email","sales@example.invalid");
+  await type("#auth-password","Demo2026");
+  await click(".auth-submit");
+  await b.wait("location.pathname==='/salesman' && !!document.querySelector('.sales-account button')");
+  await check("Salesman login redirects to the workspace", "document.querySelector('.sales-account').textContent.includes('Salesman kiểm thử')");
+  await click(".sales-account button");
+  await b.wait("location.pathname==='/login'");
+  await check("Logout removes the workspace", "!document.querySelector('.sales-message,.sales-memory')");
+  await b.evaluate("sessionStorage.setItem('sales-test-role','user')");
+  await b.send("Page.navigate",{url:base+'/salesman'});
+  await b.wait("location.pathname==='/'");
+  await check("A regular user cannot mount the Salesman workspace", "!document.querySelector('.sales-workspace') && !__salesRequests.some(r=>r.path.startsWith('/api/salesman/'))");
+  await b.evaluate("sessionStorage.setItem('sales-test-auth-error','1')");
+  await b.send("Page.navigate",{url:base+'/login'});
+  await b.wait("document.body.innerText.includes('Chưa xác nhận được phiên đăng nhập')");
+  await check("Auth failure offers retry instead of an endless loading screen", "!!document.querySelector('[role=alert] button') && !document.body.innerText.includes('Đang kiểm tra phiên đăng nhập…')");
+  await b.evaluate("__salesAuthUnavailable=false; sessionStorage.removeItem('sales-test-auth-error')");
+  await click("[role=alert] button");
+  await b.wait("!!document.querySelector('#auth-email')");
+  console.log("Salesman live-contract browser verification complete");
 } catch (error) {
-  console.error(await b.evaluate("({url:location.href,text:document.body.innerText.slice(0,1500),requests:window.__demoRequests})"));
-  await b.screenshot(`${output}/failure.png`);
+  console.error(await b.evaluate("({url:location.href,text:document.body.innerText.slice(0,1800),requests:window.__salesRequests})"));
   throw error;
 } finally { await b.close(); }

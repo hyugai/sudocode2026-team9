@@ -11,8 +11,8 @@ html:has(.sales-workspace) { scroll-padding-top: 16px; }
 .sales-read-only svg { width: 16px; height: 16px; }
 .sales-account { display: flex; align-items: center; gap: 16px; min-width: 0; margin-left: auto; }
 .sales-account strong, .sales-account small { overflow-wrap: anywhere; }
-.sales-account > a { display: inline-flex; flex: none; align-items: center; min-height: 44px; padding: 0 14px; border: 1px solid #ffffff30; border-radius: 30px; color: white; background: #101929; }
-.sales-account > a:hover { background: #1a2940; }
+.sales-account > button { display: inline-flex; flex: none; align-items: center; min-height: 44px; padding: 0 14px; border: 1px solid #ffffff30; border-radius: 30px; color: white; background: #101929; }
+.sales-account > button:hover { background: #1a2940; }
 .sales-header :focus-visible { outline-color: var(--cyan); }
 .sales-demo-note { display: flex; align-items: center; gap: 12px; padding: 12px 28px; border-bottom: 1px solid var(--border-strong); color: var(--brand-strong); background: var(--brand-soft); font-size: 12px; }
 .sales-demo-note strong { flex: none; padding: 2px 8px; border: 1px solid var(--border-strong); border-radius: 6px; font-weight: 600; }

@@ -66,7 +66,9 @@ async def credentials(request: Request, *, register: bool = False) -> dict[str, 
         body = await request.json()
     except (json.JSONDecodeError, UnicodeDecodeError) as exc:
         raise auth_error(422, "Thông tin tài khoản không hợp lệ.") from exc
-    expected = {"email", "password", "name"} if register else {"email", "password"}
+    if register and isinstance(body, dict):
+        body = {"role": "user", **body}
+    expected = {"email", "password", "name", "role"} if register else {"email", "password"}
     if not isinstance(body, dict) or set(body) != expected or any(not isinstance(value, str) for value in body.values()):
         raise auth_error(422, "Thông tin tài khoản không hợp lệ.")
     email = body["email"].strip().lower()
@@ -76,6 +78,8 @@ async def credentials(request: Request, *, register: bool = False) -> dict[str, 
         raise auth_error(422, "Mật khẩu phải có từ 8–128 ký tự." if register else "Nhập mật khẩu hợp lệ.")
     if register and not 2 <= len(body["name"].strip()) <= 100:
         raise auth_error(422, "Nhập họ và tên từ 2–100 ký tự.")
+    if register and body["role"] not in ("user", "salesman"):
+        raise auth_error(422, "Chọn vai trò User hoặc Salesman.")
     return {**body, "email": email}
 
 
@@ -94,13 +98,25 @@ async def require_user(request: Request, repository: AppDataRepository = Depends
     return user
 
 
+async def require_customer(user: dict = Depends(require_user)) -> dict:
+    if user["role"] != "user":
+        raise auth_error(403, "Tài khoản Salesman chỉ được xem lịch sử hội thoại.")
+    return user
+
+
+async def require_salesman(user: dict = Depends(require_user)) -> dict:
+    if user["role"] != "salesman":
+        raise auth_error(403, "Chỉ tài khoản Salesman được xem trang quản lý.")
+    return user
+
+
 @router.post("/register", status_code=201, dependencies=[Depends(require_origin)])
 async def register(request: Request, response: Response,
                    repository: AppDataRepository = Depends(get_auth_repository)):
     body = await credentials(request, register=True)
     hashed = await asyncio.to_thread(passwords.hash, body["password"])
     try:
-        user = await repository.create_user(body["name"], body["email"], hashed)
+        user = await repository.create_user(body["name"], body["email"], hashed, body["role"])
     except IntegrityError as exc:
         raise auth_error(409, "Email này đã được đăng ký. Hãy đăng nhập.") from exc
     except SQLAlchemyError as exc:
@@ -135,7 +151,7 @@ async def login(request: Request, response: Response,
     response.set_cookie(COOKIE_NAME, token, max_age=int(ttl.total_seconds()), expires=expires,
                         httponly=True, secure=cookie_secure(), samesite="lax", path="/")
     response.headers.update(NO_STORE)
-    return {"user": {key: user[key] for key in ("id", "name", "email")}}
+    return {"user": {key: user[key] for key in ("id", "name", "email", "role")}}
 
 
 @router.get("/me")

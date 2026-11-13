@@ -3,12 +3,13 @@ import asyncio
 import logging
 import os
 import secrets
-from fastapi import APIRouter, Header, HTTPException, Request, WebSocket
+from fastapi import APIRouter, Depends, Header, HTTPException, Request, WebSocket
 from pydantic import BaseModel, Field
 from telesale_agent.config.realtime import RealtimeSettings
 from telesale_agent.application.conversation.services import ConversationServices
 from telesale_agent.application.realtime.session import VoiceSessionManager
 from telesale_agent.adapters.db.voice_store import VoiceStore
+from .auth import COOKIE_NAME, get_auth_repository, require_user, require_customer, require_origin
 
 logger = logging.getLogger(__name__)
 
@@ -46,13 +47,20 @@ def create_voice_router(get_harness, *, manager_factory=None):
                 "requires_access_code": bool(os.getenv("API_KEY", "").strip())}
 
     @router.post("/sessions")
-    async def create(request: Request, body: VoiceRequest, x_api_key: str | None = Header(default=None)):
+    async def create(request: Request, body: VoiceRequest, x_api_key: str | None = Header(default=None),
+                     repository=Depends(get_auth_repository)):
+        user = None
+        if request.cookies.get(COOKIE_NAME) or request.headers.get("X-Conversation-Mode") == "account":
+            require_origin(request)
+            user = await require_user(request, repository)
+            await require_customer(user)
         expected = os.getenv("API_KEY", "").strip()
-        if expected and (not x_api_key or not secrets.compare_digest(expected, x_api_key)):
+        if user is None and expected and (not x_api_key or not secrets.compare_digest(expected, x_api_key)):
             raise HTTPException(401, "Invalid or missing API key")
         try:
             voice = await get_manager()
-            result = await asyncio.wait_for(voice.create(body.customer_phone), timeout=45)
+            creation = voice.create(body.customer_phone, user_id=user["id"]) if user else voice.create(body.customer_phone)
+            result = await asyncio.wait_for(creation, timeout=45)
             return result
         except HTTPException:
             raise

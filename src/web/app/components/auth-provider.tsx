@@ -1,8 +1,8 @@
 "use client";
 
 import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from "react";
-import { usePathname } from "next/navigation";
-import { createAuthClient, type AuthUser } from "@/utils/auth-api";
+import { usePathname, useRouter } from "next/navigation";
+import { createAuthClient, type AuthUser, type AuthRole } from "@/utils/auth-api";
 import { syncAuthOwner } from "@/utils/auth-storage";
 import { ConversationProvider } from "./conversation-provider";
 import { PurchaseProvider } from "./purchase-provider";
@@ -11,15 +11,14 @@ type AuthState = { user: AuthUser | null; ready: boolean; error: string };
 type AuthContextValue = AuthState & {
   busy: boolean;
   scope: number;
-  register: (name: string, email: string, password: string) => Promise<AuthUser>;
-  login: (email: string, password: string) => Promise<void>;
+  register: (name: string, email: string, password: string, role?: AuthRole) => Promise<AuthUser>;
+  login: (email: string, password: string) => Promise<AuthUser | null>;
   logout: () => Promise<void>;
   refresh: () => Promise<void>;
 };
 const AuthContext = createContext<AuthContextValue | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const isSalesmanDemo = usePathname() === "/salesman";
   const [client] = useState(() => createAuthClient());
   const [state, setState] = useState<AuthState>({ user: null, ready: false, error: "" });
   const [busy, setBusy] = useState(false);
@@ -45,24 +44,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, [applyUser, client]);
   useEffect(() => {
-    if (isSalesmanDemo) return;
     const requests = revision;
     void refresh();
     const onFocus = () => { if (!lock.current) void refresh(); };
     window.addEventListener("focus", onFocus);
     return () => { requests.current++; window.removeEventListener("focus", onFocus); };
-  }, [refresh, isSalesmanDemo]);
+  }, [refresh]);
   const changeUser = async (operation: () => Promise<AuthUser | null>) => {
     if (lock.current) throw new Error("Đang xử lý tài khoản. Vui lòng chờ.");
     lock.current = true; revision.current++; setBusy(true);
-    try { applyUser(await operation(), true); }
+    try { const user = await operation(); applyUser(user, true); return user; }
     finally { lock.current = false; setBusy(false); }
   };
   return <AuthContext.Provider value={{ ...state, busy, scope, register: client.register, refresh,
     login: (email, password) => changeUser(() => client.login(email, password)),
-    logout: () => changeUser(async () => { await client.logout(); return null; }),
+    logout: async () => { await changeUser(async () => { await client.logout(); return null; }); },
   }}>
-    {!isSalesmanDemo && state.error && <div className="container" role="alert"><p>{state.error}</p><button className="commerce-secondary" type="button" disabled={busy} onClick={() => void refresh()}>Kiểm tra lại phiên</button></div>}
+    {state.error && <div className="container" role="alert"><p>{state.error}</p><button className="commerce-secondary" type="button" disabled={busy} onClick={() => void refresh()}>Kiểm tra lại phiên</button></div>}
     {children}
   </AuthContext.Provider>;
 }
@@ -75,10 +73,19 @@ export function useAuth() {
 
 /** Remount private state on login/logout; never import a guest draft into an account. */
 export function SessionProviders({ children }: { children: ReactNode }) {
-  const { user, ready, scope } = useAuth();
+  const { user, ready, scope, error } = useAuth();
   const pathname = usePathname();
-  // The public preview has no account, cart, conversation state or backend calls.
-  if (pathname === "/salesman") return children;
+  const router = useRouter();
+  const authRoute = pathname === "/login" || pathname === "/register";
+  const salesmanRoute = pathname === "/salesman";
+  const destination = ready && !authRoute
+    ? salesmanRoute && user?.role !== "salesman" ? user ? "/" : "/login"
+      : user?.role === "salesman" && !salesmanRoute ? "/salesman" : null
+    : null;
+  useEffect(() => { if (destination) router.replace(destination); }, [destination, router]);
+  if (!ready && error) return <main className="container"><p>Chưa xác nhận được phiên đăng nhập. Bấm “Kiểm tra lại phiên” để thử lại.</p></main>;
+  if (!ready || destination) return <main className="container" role="status"><p>{destination ? "Đang chuyển trang…" : "Đang kiểm tra phiên đăng nhập…"}</p></main>;
+  if (salesmanRoute || authRoute) return <div key={`${scope}:${user?.id ?? "guest"}:${user?.role ?? "guest"}`}>{children}</div>;
   return <ConversationProvider key={`${scope}:${ready ? user?.id ?? "guest" : "checking"}`} persistGuest={ready && !user} enabled={ready}>
     <PurchaseProvider enabled={ready}>{children}</PurchaseProvider>
   </ConversationProvider>;

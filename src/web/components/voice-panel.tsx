@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { VoiceClient, type VoiceEvent } from "@/utils/voice-api";
 import { AgentAudioVisualizerAura } from "@/components/agents-ui/agent-audio-visualizer-aura";
 import { idleVisualizer, updateVoiceVisualizer } from "@/utils/voice-visualizer";
+import { useAuth } from "@/app/components/auth-provider";
 
 type Line = { key: string; role: "user" | "agent"; text: string };
 type Status = "idle" | "connecting" | "connected" | "reconnecting";
@@ -11,6 +12,8 @@ type Status = "idle" | "connecting" | "connected" | "reconnecting";
 export default function VoicePanel({ apiBase, customerPhone, onActiveChange }: {
   apiBase: string; customerPhone: string; onActiveChange: (active: boolean) => void;
 }) {
+  const { user } = useAuth();
+  const accountMode = !!user;
   const client = useRef<VoiceClient | null>(null);
   const [status, setStatus] = useState<Status>("idle");
   const [visualizer, setVisualizer] = useState(idleVisualizer);
@@ -35,7 +38,7 @@ export default function VoicePanel({ apiBase, customerPhone, onActiveChange }: {
       .then((data) => {
         if (!abort.signal.aborted) {
           setAvailable(data.enabled === true);
-          setRequiresCode(data.requires_access_code === true);
+          setRequiresCode(!accountMode && data.requires_access_code === true);
         }
       })
       .catch(() => { if (!abort.signal.aborted) setAvailable(false); });
@@ -46,7 +49,7 @@ export default function VoicePanel({ apiBase, customerPhone, onActiveChange }: {
       client.current = null;
       onActiveChange(false);
     };
-  }, [apiBase, onActiveChange]);
+  }, [apiBase, onActiveChange, accountMode]);
 
   useEffect(() => {
     const history = historyRef.current;
@@ -89,7 +92,7 @@ export default function VoicePanel({ apiBase, customerPhone, onActiveChange }: {
     setStatus("connecting");
     setVisualizer({ state: "connecting", volume: 0 });
     onActiveChange(true);
-    const next = new VoiceClient(apiBase, handle);
+    const next = new VoiceClient(apiBase, handle, !!user);
     client.current = next;
     await next.connect(customerPhone, accessCode);
   };

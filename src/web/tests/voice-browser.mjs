@@ -116,25 +116,22 @@ try {
   await b.evaluate("window.scrollTo({ top: 1100, behavior: 'instant' })");
   await b.wait("!document.querySelector('#inline-chat')");
   await check("Switching away from inline chat keeps one live voice connection", "document.querySelectorAll('.realtime-voice').length === 1 && __voice.sockets.length === 1 && __voice.stopped === 0");
-  // Native modal dialogs make background links inert. Temporarily release only
-  // native modality to test a client navigation while the React voice stays mounted.
-  await b.evaluate("document.querySelector('.voice-dialog').close()");
-  await click(".product-card");
-  await b.wait("document.querySelector('.product-detail')");
-  await b.evaluate("document.querySelector('.voice-dialog').showModal()");
-  await check("Client navigation preserves the voice dialog and microphone", "!!document.querySelector('dialog[open] .voice-stop') && __voice.stopped === 0 && __voice.sockets.length === 1");
   await b.send("Emulation.setDeviceMetricsOverride", { width: 320, height: 760, deviceScaleFactor: 1, mobile: false });
-  await check("Voice dialog fits a 320px viewport", "document.documentElement.scrollWidth <= 320 && document.querySelector('dialog').scrollWidth <= document.querySelector('dialog').clientWidth");
+  await b.evaluate("window.scrollTo({top:0,behavior:'instant'})");
+  await check("Inline Voice fits a 320px viewport", "document.documentElement.scrollWidth <= 320 && !!document.querySelector('.ai-voice-workspace')");
   await check("Mobile keeps microphone and end-call controls inside the viewport", "[...document.querySelectorAll('.voice-actions button')].every(button => { const r = button.getBoundingClientRect(); return r.top >= 0 && r.bottom <= innerHeight; })");
   await b.screenshot(`${output}/voice-mobile.png`);
   await b.send("Emulation.setEmulatedMedia", { features: [{ name: "prefers-reduced-motion", value: "reduce" }] });
   await b.wait("document.querySelector('[data-aura-fallback]') && !document.querySelector('.voice-aura canvas')");
   await check("Reduced motion keeps a static Aura without a running WebGL canvas", "!!document.querySelector('.voice-aura[data-lk-state=listening]')");
   await b.send("Emulation.setEmulatedMedia", { features: [{ name: "prefers-reduced-motion", value: "no-preference" }] });
-  await b.send("Input.dispatchKeyEvent", { type: "keyDown", key: "Escape", code: "Escape", windowsVirtualKeyCode: 27 });
-  await b.send("Input.dispatchKeyEvent", { type: "keyUp", key: "Escape", code: "Escape", windowsVirtualKeyCode: 27 });
-  await b.wait("!document.querySelector('dialog[open]') && __voice.stopped === 1 && __voice.requests.some(r => r.method === 'DELETE')");
+  await click(".ai-mode-bar button:first-child");
+  await b.wait("!document.querySelector('.ai-voice-workspace') && __voice.stopped === 1 && __voice.requests.some(r => r.method === 'DELETE')");
   await check("Closing Voice releases microphone, context, socket and backend session", "__voice.closed === 1 && __voice.sockets[0].readyState === 3 && __voice.requests.find(r => r.method === 'DELETE').headers.Authorization === 'Bearer test-owner'");
+  await b.send("Emulation.setDeviceMetricsOverride", { width: 1440, height: 900, deviceScaleFactor: 1, mobile: false });
+  await click(".ai-exit-link");
+  await b.wait("!!document.querySelector('.product-card')");
+  await click(".product-card");
   await b.wait("document.querySelector('.pdp-ask') && !document.querySelector('.pdp-ask').disabled");
   await click(".pdp-ask");
   await b.wait("document.querySelector('#floating-message')");
