@@ -72,5 +72,6 @@ async def prepare_context(harness, context, *, identity_started=None, on_status=
         context.state.call_brief = context.call_brief
         if identity_started is not None:
             call_brief_ms = (time.perf_counter() - identity_started) * 1000
+            context.call_brief.latency_ms = round(call_brief_ms)
 
     return call_brief_ms

@@ -220,83 +220,53 @@ class MutationToolExecutor:
             customer_id = (
                 context.identity.customer_id if context.identity else None
             )
-            verified_items: list[tuple[str, int, str | None]] = []
-            for sku in target_skus:
-                stock = _orchestrated_result(
-                    verified_calls, "inventory.check", sku=sku
+            if len(target_skus) != len(set(target_skus)):
+                quantity = 1
+            counts = {sku: target_skus.count(sku) * quantity for sku in target_skus}
+            multiple_units = sum(counts.values()) > 1
+            quote = _orchestrated_result(verified_calls, "pricing.quote_order") if multiple_units else None
+            units = quote.get("units", []) if isinstance(quote, dict) else []
+            if not multiple_units and target_skus:
+                single_quote = _orchestrated_result(verified_calls, "pricing.get_quote", sku=target_skus[0])
+                if isinstance(single_quote, dict) and isinstance(single_quote.get("final_price_vnd"), (int, float)):
+                    units = [{"sku": target_skus[0], "final_price_vnd": int(single_quote["final_price_vnd"]),
+                              "applied_promos": single_quote.get("applied_promos", [])}]
+            quoted_counts = {sku: sum(unit.get("sku") == sku for unit in units) for sku in counts}
+            all_items_verified = bool(counts) and quoted_counts == counts and len(units) == sum(counts.values())
+            for sku, needed in counts.items():
+                stock = _orchestrated_result(verified_calls, "inventory.check", sku=sku)
+                all_items_verified = all_items_verified and bool(
+                    isinstance(stock, dict) and stock.get("in_stock") is True
+                    and int(stock.get("qty") or 0) >= needed
                 )
-                quote = _orchestrated_result(
-                    verified_calls, "pricing.get_quote", sku=sku
-                )
-                price = (
-                    quote.get("final_price_vnd")
-                    if isinstance(quote, dict)
-                    else None
-                )
-                promo_code = None
-                if isinstance(quote, dict):
-                    promos = quote.get("applied_promos") or []
-                    first_promo = next(
-                        (
-                            promo
-                            for promo in promos
-                            if isinstance(promo, dict)
-                            and (promo.get("discount_vnd") or 0) > 0
-                        ),
-                        promos[0] if promos else None,
-                    )
-                    promo_code = (
-                        first_promo.get("promo_code")
-                        if isinstance(first_promo, dict)
-                        else first_promo
-                    )
-                if (
-                    isinstance(price, (int, float))
-                    and isinstance(stock, dict)
-                    and stock.get("in_stock") is True
-                    and int(stock.get("qty") or 0) >= quantity
-                ):
-                    verified_items.append((sku, int(price), promo_code))
-
-            all_items_verified = bool(target_skus) and (
-                len(verified_items) == len(target_skus)
-            )
-            if (
-                all_items_verified
-                and phone
-                and customer_id
-                and payment
-                and address
-            ):
-                all_created = True
-                for sku, price, promo_code in verified_items:
-                    args: dict[str, Any] = {
-                        "customer_phone": phone,
-                        "customer_id": customer_id,
-                        "sku": sku,
-                        "price_vnd": price,
-                        "qty": quantity,
-                        "payment_method": payment,
-                        "address": address,
-                        "idempotency_key": (
-                            f"{context.state.conversation_id}:"
-                            f"{context.input.metadata.get('call_key', 'call')}:"
-                            f"create:{sku}"
-                        ),
-                    }
-                    if isinstance(promo_code, str) and promo_code:
-                        args["promo_code"] = promo_code
-                    if call_date:
-                        args["on"] = call_date
-                    await invoke("create_new_order", args)
-                    result = calls[-1].get("result")
-                    succeeded = not (
-                        isinstance(result, dict) and result.get("error")
-                    )
-                    all_created = all_created and succeeded
-                    if succeeded and isinstance(result, dict):
-                        created_orders[sku] = result.get("order_id") or True
-                if all_created:
+            if all_items_verified and phone and customer_id and payment and address:
+                args: dict[str, Any] = {
+                    "customer_phone": phone, "customer_id": customer_id,
+                    "payment_method": payment, "address": address,
+                    "idempotency_key": (
+                        f"{context.state.conversation_id}:"
+                        f"{context.input.metadata.get('call_key', 'call')}:"
+                        f"create:{','.join(target_skus)}"
+                    ),
+                }
+                if multiple_units:
+                    args["lines"] = [{"sku": unit["sku"], "qty": 1, "price_vnd": unit["final_price_vnd"]}
+                                     for unit in units]
+                else:
+                    unit = units[0]
+                    args.update(sku=unit["sku"], qty=1, price_vnd=unit["final_price_vnd"])
+                    promos = unit.get("applied_promos") or []
+                    promo = next((item for item in promos if item.get("discount_vnd", 0) > 0),
+                                 promos[0] if promos else None)
+                    if promo and promo.get("promo_code"):
+                        args["promo_code"] = promo["promo_code"]
+                if call_date:
+                    args["on"] = call_date
+                await invoke("create_new_order", args)
+                result = calls[-1].get("result")
+                if isinstance(result, dict) and not result.get("error") and result.get("order_id"):
+                    for sku in counts:
+                        created_orders[sku] = result["order_id"]
                     context.state.working_memory.pop("pending_order", None)
             elif target_skus:
                 pending_payload: dict[str, Any] = {
@@ -307,8 +277,8 @@ class MutationToolExecutor:
                     pending_payload["basket_skus"] = target_skus
                 if quantity != 1:
                     pending_payload["quantity"] = quantity
-                if len(verified_items) == 1:
-                    pending_payload["price_vnd"] = verified_items[0][1]
+                if len(units) == 1:
+                    pending_payload["price_vnd"] = units[0]["final_price_vnd"]
                 if address:
                     pending_payload["address"] = address
                 if pending_order.get("checkout_confirmed"):
@@ -386,30 +356,29 @@ class MutationToolExecutor:
                 else {}
             )
             generated_at = (
-                f"{call_date}T00:00:00" if call_date else datetime.now().isoformat()
+                f"{call_date}T00:00:00+07:00" if call_date else datetime.now().astimezone().isoformat()
             )
             await invoke(
                 "mcp_escalate_to_human",
-                {
-                    "reason": "medical_advice_out_of_scope",
+                {"brief": {
                     "customer_id": (
                         context.identity.customer_id if context.identity else None
                     ),
-                    "summary": "Khách yêu cầu tư vấn y tế ngoài phạm vi bán hàng.",
                     "customer_phone": _customer_phone(context),
                     "customer_name": profile.get("name"),
-                    "escalation_reason": "medical_advice_out_of_scope",
+                    "escalation_reason": "cau_hoi_y_te",
                     "conversation_summary": _clip_text(
-                        context.call_brief.summary if context.call_brief else "", 500
+                        "Khách yêu cầu tư vấn y tế ngoài phạm vi bán hàng. "
+                        + (context.call_brief.summary if context.call_brief else ""), 500
                     ),
                     "product_advised": facts.get("product_advised")
                     or facts.get("variant_sku"),
                     "price_quoted_vnd": facts.get("price_quoted_vnd"),
-                    "open_questions": facts.get("medical_question")
-                    or context.input.text,
+                    "open_questions": [facts.get("medical_question") or context.input.text or "Khách cần tư vấn y tế."],
+                    "facts_confirmed": facts,
                     "next_action": "Nhân viên có chuyên môn tiếp nhận và tư vấn an toàn.",
                     "generated_at": generated_at,
-                },
+                }},
             )
         remaining.discard("mcp_escalate_to_human")
 

@@ -76,6 +76,9 @@ def tool_call_accuracy(
     for scenario_id, scenario in scenarios.items():
         for call_key, call_spec in scenario["calls"].items():
             rows = trace.get((scenario_id, call_key), [])
+            earlier = [row for key in sorted(scenario["calls"]) if key < call_key
+                       for row in trace.get((scenario_id, key), [])]
+            aliases = REFERENCE.created_order_ids(earlier)
             actual_calls = [
                 tool_call
                 for row in rows
@@ -100,7 +103,10 @@ def tool_call_accuracy(
                 matches = [
                     call
                     for call in same_name
-                    if REFERENCE.args_match(expected_args, call.get("args", {}))
+                    if any(REFERENCE.args_match(expected_args, args, aliases) for args in (
+                        REFERENCE.order_lines([call]) if tool_name == "order.create"
+                        else [call.get("args", {})]
+                    ))
                 ]
                 if tool_name == "handoff.transfer" and success_if.get(
                     "brief_must_contain"
@@ -394,13 +400,16 @@ def evaluate_team(
             if not spec.get("success_if"):
                 continue
             rows = trace.get((sid,call),[])
-            ok, reasons = REFERENCE.check_call(spec, rows)
+            earlier = [row for key in sorted(scenario["calls"]) if key < call
+                       for row in execution_trace.get((sid, key), [])]
+            aliases = REFERENCE.created_order_ids(earlier)
+            ok, reasons = REFERENCE.check_call(spec, rows, aliases)
             if not rows or any(r.get("_error") for r in rows):
                 ok = False
                 reasons.append("missing/failed customer turn")
             tool = spec["success_if"].get("tool_called")
             if ok and tool in MUTATION_TOOLS:
-                ok, extra = REFERENCE.check_call(spec, execution_trace.get((sid,call),[]))
+                ok, extra = REFERENCE.check_call(spec, execution_trace.get((sid,call),[]), aliases)
                 reasons.extend(extra)
             checks.append(bool(ok))
             if not ok:

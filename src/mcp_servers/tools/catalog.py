@@ -8,6 +8,7 @@ import unicodedata
 from typing import Any
 
 from telesale_agent.adapters.db.client import db_client
+from mcp_servers.tools.pricing import PricingCalculator
 
 REFERENCE_DATE = date(2026, 10, 15)
 
@@ -39,6 +40,7 @@ def catalog_search(
         category=category,
         sku=sku,
         max_price_vnd=max_price_vnd,
+        min_room_area_m2=min_room_area_m2,
     )
     if result.get("items") or not query or sku:
         return _filter_requested_variants(result, query)
@@ -47,7 +49,7 @@ def catalog_search(
     # every catalog product literally mentioned in the customer query inside
     # this same tool execution, so the agent does not need repeated searches.
     normalized_query = _search_text(query)
-    catalog = db_client.search_products()
+    catalog = db_client.search_products(max_price_vnd=max_price_vnd, min_room_area_m2=min_room_area_m2)
     mentioned_items = [
         item
         for item in catalog.get("items", [])
@@ -76,6 +78,7 @@ def catalog_search(
         result = db_client.search_products(
             query=compact_query,
             max_price_vnd=max_price_vnd,
+            min_room_area_m2=min_room_area_m2,
         )
     return _filter_requested_variants(result, query)
 
@@ -141,181 +144,27 @@ def pricing_get_quote(
     customer_phone: str | None = None,
     customer_id: str | None = None,
     address: str | None = None,
-    basket_skus: list | None = None,
+    basket_skus: list[str] | None = None,
 ) -> dict[str, Any]:
-    """Calculate final price including applicable promotions.
-
-    BTC tool name: pricing.get_quote
-    """
-    call_date = _today(on)
-    
-    # Exact-SKU pricing must also work for a discontinued product so callers
-    # can explain historical ownership and its successor. Catalog search still
-    # hides discontinued products by default.
-    product_res = db_client.search_products(sku=sku, include_discontinued=True)
-    if not product_res["items"]:
-        return {"error": "product_not_found"}
-
-    product = product_res["items"][0]
-    base_sku = product.get("sku")
-    list_price = int(product.get("list_price_vnd", 0))
-    if sku != base_sku:
-        requested_variant = next(
-            (
-                variant
-                for variant in product.get("variants") or []
-                if variant.get("variant_sku") == sku
-            ),
-            None,
-        )
-        if requested_variant:
-            list_price += int(requested_variant.get("price_delta") or 0)
-    category = product.get("category", "")
-
-    skus_in_basket = list(basket_skus or [])
-    if sku not in skus_in_basket:
-        skus_in_basket.append(sku)
-    # Promotion targeting is about the item being quoted. A variant inherits
-    # its product's base-SKU promotions, but another basket item's promotion
-    # must not discount this item.
-    eligible_skus = {sku}
-    if isinstance(base_sku, str) and base_sku:
-        eligible_skus.add(base_sku)
-
-    customer = db_client.get_pricing_customer_context(
-        customer_phone=customer_phone,
-        customer_id=customer_id,
-    )
-    region = customer.get("region")
-    owned_skus = set(customer.get("owned_skus") or [])
-    used_promos = set(customer.get("used_promos") or [])
-
-    def applies(promo: dict[str, Any]) -> bool:
-        targets = promo.get("applies_to") or []
-        if "*" in targets:
-            return True
-        for target in targets:
-            if target in eligible_skus:
-                return True
-            if isinstance(target, str) and target.startswith("category:"):
-                expected = target.split(":", 1)[1]
-                if category == expected or category.startswith(expected + "/"):
-                    return True
-        return False
-
-    def discount_value(promo: dict[str, Any]) -> int:
-        promo_type = promo.get("type")
-        if promo_type == "fixed":
-            return min(list_price, int(promo.get("discount_vnd") or 0))
-        if promo_type in {"percent", "percent_second_item"}:
-            return int(list_price * int(promo.get("discount_percent") or 0) / 100)
-        return 0
-
-    def public_promo(promo: dict[str, Any], discount: int) -> dict[str, Any]:
-        value = {
-            "promo_code": promo.get("promo_code"),
-            "type": promo.get("type"),
-            "discount_vnd": discount,
-        }
-        if promo.get("gift_sku"):
-            value["gift_sku"] = promo["gift_sku"]
-        return value
-
-    active_eligible: list[tuple[dict[str, Any], int]] = []
-    expired_promos: list[str] = []
-    ineligible_promos: list[dict[str, str]] = []
-    requested_variant = next(
-        (
-            variant
-            for variant in product.get("variants") or []
-            if variant.get("variant_sku") == sku
-        ),
-        {},
-    )
-    basket_quantity = max(qty, len(skus_in_basket))
-
-    for promo in db_client.get_promotions():
-        if not applies(promo):
-            continue
-        start_date = promo.get("start_date")
-        end_date = promo.get("end_date")
-        if end_date and call_date > end_date:
-            expired_promos.append(str(promo.get("promo_code")))
-            continue
-        if start_date and call_date < start_date:
-            continue
-
-        conditions = promo.get("conditions") or {}
-        reason = None
-        required_region = conditions.get("region")
-        if required_region and region not in required_region:
-            reason = "region"
-        required_qty = int(conditions.get("min_qty") or 0)
-        if not reason and required_qty and basket_quantity < required_qty:
-            reason = "min_qty"
-        required_owned_sku = conditions.get("requires_owned_sku")
-        if not reason and required_owned_sku and required_owned_sku not in owned_skus:
-            reason = "requires_owned_sku"
-        excluded_sizes = {
-            str(value) for value in conditions.get("exclude_variant_size") or []
-        }
-        if (
-            not reason
-            and excluded_sizes
-            and str(requested_variant.get("size")) in excluded_sizes
-        ):
-            reason = "excluded_variant_size"
-        if (
-            not reason
-            and conditions.get("once_per_customer")
-            and promo.get("promo_code") in used_promos
-        ):
-            reason = "once_per_customer"
-        min_order = int(promo.get("min_order_vnd") or 0)
-        if not reason and min_order and list_price * qty < min_order:
-            reason = "min_order_vnd"
-
-        if reason:
-            ineligible_promos.append(
-                {"promo_code": str(promo.get("promo_code")), "reason": reason}
-            )
-            continue
-        active_eligible.append((promo, discount_value(promo)))
-
-    stackable = [item for item in active_eligible if item[0].get("stackable")]
-    exclusive = [item for item in active_eligible if not item[0].get("stackable")]
-    selected_exclusive = max(exclusive, key=lambda item: item[1], default=None)
-    selected = [*stackable]
-    if selected_exclusive:
-        selected.append(selected_exclusive)
-
-    discount = sum(value for _, value in stackable)
-    if selected_exclusive:
-        discount += selected_exclusive[1]
-    final_price = max(0, list_price - discount)
-    applied_promos = [public_promo(promo, value) for promo, value in selected]
-    not_applied_exclusive = [
-        str(promo.get("promo_code"))
-        for promo, _ in exclusive
-        if selected_exclusive is not None and promo is not selected_exclusive[0]
-    ]
-    freeship = (final_price * qty) >= 1_500_000 or any(
-        promo.get("type") == "freeship" for promo, _ in selected
+    """Quote one unit; use pricing.quote_order for a multi-unit order."""
+    return PricingCalculator(db_client, _today(on), customer_phone, customer_id, address).quote(
+        sku, qty, basket_skus,
     )
 
-    return {
-        "sku": sku,
-        "list_price_vnd": list_price,
-        "final_price_vnd": final_price,
-        "applied_promos": applied_promos,
-        "expired_promos": expired_promos,
-        "ineligible_promos": ineligible_promos,
-        "not_applied_exclusive": not_applied_exclusive,
-        "freeship": freeship,
-    }
+
+def pricing_quote_order(
+    lines: list[dict[str, Any]],
+    on: str | None = None,
+    customer_phone: str | None = None,
+    address: str | None = None,
+    customer_id: str | None = None,
+) -> dict[str, Any]:
+    """Quote every physical unit in one order, including repeated SKUs."""
+    return PricingCalculator(db_client, _today(on), customer_phone, customer_id, address).quote_order(lines)
 
 TOOLS = {
     "catalog.search": catalog_search,
     "inventory.check": inventory_check,
     "pricing.get_quote": pricing_get_quote,
+    "pricing.quote_order": pricing_quote_order,
 }

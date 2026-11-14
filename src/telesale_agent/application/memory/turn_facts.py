@@ -250,6 +250,14 @@ def _tool_memory_candidates(context: TurnContext) -> dict[str, Any]:
                             None,
                         )
                         candidates["promo_code"] = monetary_promo or promo_codes[0]
+        elif name == "pricing.quote_order":
+            candidates["basket_unit_quotes"] = [
+                {"sku": unit["sku"], "price_quoted_vnd": unit["final_price_vnd"],
+                 "quoted_on": args.get("on") or context.input.metadata.get("call_date"),
+                 "promo_code": next((promo["promo_code"] for promo in unit.get("applied_promos", [])
+                                     if promo.get("discount_vnd", 0) > 0), None)}
+                for unit in output.get("units", [])
+            ]
         elif name == "order.create":
             if args.get("sku"):
                 candidates.update(_variant_facts(args["sku"]))
@@ -263,6 +271,10 @@ def _tool_memory_candidates(context: TurnContext) -> dict[str, Any]:
                 sku = args.get("sku")
                 if isinstance(sku, str) and sku:
                     order_ids_by_sku[sku] = order_id
+                    candidates["order_ids_by_sku"] = dict(order_ids_by_sku)
+                for line in args.get("lines", []):
+                    order_ids_by_sku[line["sku"]] = order_id
+                if args.get("lines"):
                     candidates["order_ids_by_sku"] = dict(order_ids_by_sku)
         elif name == "order.status":
             orders = output.get("orders") or []

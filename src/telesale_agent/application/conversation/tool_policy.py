@@ -373,6 +373,8 @@ def select_tools_for_turn(
         if not any(word in text for word in ("còn hàng", "tồn kho")):
             selected.discard("check_inventory")
 
+    if "get_pricing_quote" in selected:
+        selected.add("get_order_quote")
     return frozenset(selected)
 
 

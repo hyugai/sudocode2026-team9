@@ -18,6 +18,7 @@ logger = logging.getLogger(__name__)
 
 
 async def initialize_customer(services, conversation_id, phone, customer_id=None):
+    started = time.perf_counter()
     state = ConversationState(conversation_id=conversation_id)
     # Session setup is not a customer utterance and does not go through run_turn.
     init = SessionInit(conversation_id, phone)
@@ -31,6 +32,7 @@ async def initialize_customer(services, conversation_id, phone, customer_id=None
         await services.customer_context.hydrate(context)
     if services.call_brief:
         state.call_brief = await services.call_brief.build_call_brief(context)
+        state.call_brief.latency_ms = round((time.perf_counter() - started) * 1000)
     return state, context
 
 

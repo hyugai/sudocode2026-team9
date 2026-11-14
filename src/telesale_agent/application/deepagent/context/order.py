@@ -175,19 +175,16 @@ def _quantity(context: TurnContext) -> int:
             return int(val)
         if val in word_map:
             return word_map[val]
+    pending = context.state.working_memory.get("pending_order") or {}
+    if isinstance(pending.get("quantity"), int) and pending["quantity"] > 0:
+        return pending["quantity"]
     return 1
 
 def _basket_skus(context: TurnContext) -> list[str]:
     value = _current_fact(context, "basket_skus")
     if not isinstance(value, list):
         return []
-    return list(
-        dict.fromkeys(
-            str(sku).strip()
-            for sku in value
-            if isinstance(sku, str) and sku.strip()
-        )
-    )
+    return [sku.strip() for sku in value if isinstance(sku, str) and sku.strip()]
 
 def _customer_phone(context: TurnContext) -> str | None:
     """Return only the phone already verified by CRM/identity resolution."""

@@ -27,6 +27,7 @@ _BTC_TOOL_NAMES = {
     "search_catalog": "catalog.search",
     "check_inventory": "inventory.check",
     "get_pricing_quote": "pricing.get_quote",
+    "get_order_quote": "pricing.quote_order",
     "create_new_order": "order.create",
     "check_order_status": "order.status",
     "update_order": "order.update",
@@ -92,6 +93,9 @@ def compact_orchestrated_result(name: str, result: Any) -> Any:
                 "order_id",
                 "restock_expected",
                 "successor_sku",
+                "expected_units",
+                "total_vnd",
+                "limit_vnd",
             )
             if key in result
         }
@@ -196,6 +200,8 @@ def compact_orchestrated_result(name: str, result: Any) -> Any:
             "status",
             "created_on",
             "exchange_count",
+            "lines",
+            "total_vnd",
         )
         return {
             "orders": [
@@ -209,6 +215,12 @@ def compact_orchestrated_result(name: str, result: Any) -> Any:
         "status",
         "estimated_delivery",
         "fee_vnd",
+        "total_vnd",
+        "needs_confirmation_call",
+        "price_diff_vnd",
+        "refund_vnd",
+        "extra_payment_vnd",
+        "refund_days",
         "callback_id",
         "callback_at",
         "moved_from",

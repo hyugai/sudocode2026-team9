@@ -84,6 +84,7 @@ class Order(Base):
     sku = Column(String(50))
     qty = Column(Integer, nullable=False, default=1)
     price_vnd = Column(Numeric(15, 2))
+    lines = Column(JSONB, nullable=True)
     promo_code = Column(String(50))
     payment = Column(String(50), nullable=False, default="COD")
     address = Column(String)
