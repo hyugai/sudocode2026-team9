@@ -41,6 +41,7 @@ voice = [
 dev = [
     "pytest==9.1.1",
     "pytest-asyncio==1.4.0",
+    "jsonschema>=4.18,<5",
 ]
 
 [tool.setuptools.packages.find]

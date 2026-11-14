@@ -64,6 +64,20 @@ services:
         value: llm_learning
       - key: CUSTOMER_MEMORY_BACKEND
         value: file
+      - key: CUSTOMER_MEMORY_PREFIX
+        value: users
+      # For an existing Blueprint, add these values in Render Environment before syncing.
+      # Keep credentials out of this file.
+      - key: CUSTOMER_MEMORY_BUCKET
+        sync: "user-memory"
+      - key: AWS_ENDPOINT_URL_S3
+        sync: false
+      - key: AWS_ACCESS_KEY_ID
+        sync: false
+      - key: AWS_SECRET_ACCESS_KEY
+        sync: false
+      - key: AWS_REGION
+        sync: "ap-southeast-1"
       - key: CUSTOMER_MEMORY_ROOT
         value: /app/data/memory-root/users
       - key: AGENT_INSTRUCTIONS_ROOT
