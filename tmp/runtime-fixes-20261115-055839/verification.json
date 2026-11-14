@@ -1,0 +1,81 @@
+{
+  "backend_tests": {
+    "passed": 370,
+    "skipped": 0,
+    "subtests_passed": 5203
+  },
+  "frontend_tests": {
+    "passed": 64
+  },
+  "data": {
+    "orders": {
+      "rows": 2,
+      "sha256": "7714f2b7b95b0f55dc50812ad82de917a8a75b86b3115a16b166e99bfe64e71e",
+      "unchanged": true
+    },
+    "customers": {
+      "rows": 50,
+      "sha256": "fec82b1363707665a3e8661f5042ea54f5e6274e189512c82eb86d4be02519cd",
+      "unchanged": true
+    }
+  },
+  "e2e": {
+    "current": {
+      "reference_date": "2026-11-15",
+      "expected_total_vnd": 18170000,
+      "e2e_passed": true,
+      "quote_unit_breakdown_passed": true,
+      "cleanup_passed": true,
+      "old_orders_unchanged": true,
+      "old_customers_unchanged": true,
+      "api_session_cleared": true,
+      "deleted_test_order_ids": [
+        "ORD-7A78462A"
+      ],
+      "test_memory_removed": true
+    },
+    "replay": {
+      "reference_date": "2026-10-15",
+      "expected_total_vnd": 16475000,
+      "e2e_passed": true,
+      "quote_unit_breakdown_passed": true,
+      "cleanup_passed": true,
+      "old_orders_unchanged": true,
+      "old_customers_unchanged": true,
+      "api_session_cleared": true,
+      "deleted_test_order_ids": [
+        "ORD-D0498B34"
+      ],
+      "test_memory_removed": true
+    }
+  },
+  "health": {
+    "status": "ok",
+    "checks": {
+      "agent": "ok",
+      "database": "ok",
+      "mcp_db": "ok",
+      "mcp_knowledge": "ok",
+      "mcp_workflow": "ok"
+    },
+    "tracing": {
+      "status": "disabled",
+      "reason": "authorization_failed"
+    }
+  },
+  "inventory": {
+    "current": {
+      "web": 0,
+      "agent": 0
+    },
+    "2026-10-15": {
+      "web": 2,
+      "agent": 2
+    }
+  },
+  "langsmith": {
+    "fallback_warnings": 1,
+    "ingest_403_errors": 0
+  },
+  "postgres_test_database_removed": true
+}

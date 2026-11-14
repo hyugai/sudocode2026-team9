@@ -2,7 +2,7 @@
 
 import importlib.util
 import json
-from datetime import date
+from datetime import date, datetime
 from pathlib import Path
 
 import pytest
@@ -11,6 +11,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.ext.compiler import compiles
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.pool import StaticPool
 
 from mcp_servers.tools import catalog, order, workflow
 from telesale_agent.adapters.db.client import PostgresClient
@@ -36,7 +37,13 @@ def btc_db(monkeypatch):
     spec = importlib.util.spec_from_file_location("btc_reference_tools", BTC / "eval/mock_tools.py")
     reference = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(reference)
-    engine = create_engine("sqlite://")
+    # These contract fixtures replay BTC's reference day, not the live clock.
+    class ReferenceClock:
+        @staticmethod
+        def now(tz=None):
+            return datetime.fromisoformat(reference.REF).replace(tzinfo=tz)
+    monkeypatch.setattr("telesale_agent.core.business_time.datetime", ReferenceClock)
+    engine = create_engine("sqlite://", connect_args={"check_same_thread": False}, poolclass=StaticPool)
     Base.metadata.create_all(engine)
     db = object.__new__(PostgresClient)
     db.SessionLocal = sessionmaker(bind=engine)
@@ -516,3 +523,227 @@ async def test_voice_initialization_measures_btc_brief_latency(monkeypatch):
     state, _ = await controller.initialize_customer(services, "btc-voice", "0900000000")
     assert state.call_brief.latency_ms == 90
     validate_schema("call_brief", state.call_brief.to_btc())
+
+
+def checkout_context(reference, skus, text, quantity=1, saved_lines=None):
+    from telesale_agent.core.models import CallBrief, ConversationState, CustomerIdentity, Perception, TurnContext, TurnInput
+    customer = reference.CRM[0]
+    names = {p["sku"]: p["name"] for p in reference.PRODUCTS}
+    facts = {"product_advised": skus[0], "variant_sku": skus[0], "basket_skus": skus,
+             "basket_product_names": {sku: names.get(sku, sku) for sku in skus},
+             "quantity": quantity, "payment": "bank", "delivery_address": "100 đường Kiểm Thử, Hà Nội"}
+    if saved_lines is not None:
+        facts["basket_lines"] = saved_lines
+    state = ConversationState("btc-regression", customer_profile={"phone": customer["phone"]}, customer_memory={"facts": facts})
+    identity = CustomerIdentity(customer_id=customer["customer_id"], phone=customer["phone"])
+    state.identity = identity
+    return TurnContext(TurnInput("btc-regression", text=text, customer_hint=customer["phone"], metadata={"call_date": "2026-10-15"}),
+        state, identity=identity, perception=Perception(transcript=text, intent="create_order", entities={"quantity": quantity}),
+        call_brief=CallBrief(customer_id=customer["customer_id"], remembered_preferences={"facts": facts}))
+
+
+def checkout_tools():
+    from mcp_servers import mcp_db
+
+    class LocalTool:
+        def __init__(self, function):
+            self.function = function
+            self.calls = []
+
+        async def ainvoke(self, args):
+            self.calls.append(args)
+            return self.function(**args)
+
+    return {name: LocalTool(getattr(mcp_db, name)) for name in (
+        "check_inventory", "get_pricing_quote", "get_order_quote", "create_new_order", "update_order")}
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("quantities,description", [
+    ((2, 1), "2 máy AirPure Pro và 1 máy AirPure Mini"),
+    ((1, 3), "1 máy AirPure Pro và 3 máy AirPure Mini"),
+    ((2, 1), "hai máy AirPure Pro và một máy AirPure Mini"),
+    ((2, 1), "AirPure Pro 2 máy và AirPure Mini 1 máy"),
+])
+async def test_checkout_preserves_each_product_quantity(btc_db, quantities, description):
+    from collections import Counter
+    from telesale_agent.application.tools.reads import ReadToolExecutor
+    from telesale_agent.application.tools.mutations import MutationToolExecutor
+    reference, db = btc_db
+    skus = ["SKU-AP-PRO", "SKU-AP-MINI"]
+    ctx = checkout_context(reference, skus, f"Chốt đơn {description}, chuyển khoản.", quantities[0])
+    tools = checkout_tools()
+    reads, remaining = await ReadToolExecutor(tools).prefetch(ctx, frozenset(tools))
+    writes, _ = await MutationToolExecutor(tools).execute(ctx, remaining, reads)
+    lines = [{"sku": sku, "qty": qty} for sku, qty in zip(skus, quantities)]
+    expected = reference.pricing_quote_order(lines, customer_phone=reference.CRM[0]["phone"], address="Hà Nội")
+    quote_call = next(c for c in reads if c["name"] == "pricing.quote_order")
+    assert quote_call["args"]["lines"] == lines
+    assert quote_call["result"] == expected
+    assert len(writes) == 1
+    assert writes[0]["result"]["total_vnd"] == expected["total_vnd"]
+    saved = db.find_orders(order_id=writes[0]["result"]["order_id"])[0]
+    assert Counter(l["sku"] for l in saved["lines"]) == dict(zip(skus, quantities))
+
+
+@pytest.mark.asyncio
+async def test_per_item_counts_survive_payment_only_followup(btc_db):
+    from telesale_agent.application.tools.reads import ReadToolExecutor
+    from telesale_agent.application.tools.mutations import MutationToolExecutor
+    reference, _ = btc_db
+    lines = [{"sku": "SKU-AP-PRO", "qty": 2}, {"sku": "SKU-AP-MINI", "qty": 1}]
+    ctx = checkout_context(reference, [l["sku"] for l in lines], "Chốt đơn, chị chọn chuyển khoản.", 2, lines)
+    tools = checkout_tools()
+    reads, remaining = await ReadToolExecutor(tools).prefetch(ctx, frozenset(tools))
+    writes, _ = await MutationToolExecutor(tools).execute(ctx, remaining, reads)
+    assert next(c for c in reads if c["name"] == "pricing.quote_order")["args"]["lines"] == lines
+    assert len(writes[0]["args"]["lines"]) == 3
+
+
+@pytest.mark.asyncio
+async def test_successful_create_invalidates_once_per_customer_quote_cache(btc_db):
+    from telesale_agent.application.tools.reads import ReadToolExecutor
+    from telesale_agent.application.tools.mutations import MutationToolExecutor
+    reference, _ = btc_db
+    sku = "SKU-SN-RUN2-38-DEN"
+    ctx = checkout_context(reference, [sku], "Chốt đơn 1 đôi, chuyển khoản.")
+    tools = checkout_tools()
+    executor = ReadToolExecutor(tools)
+    reads, remaining = await executor.prefetch(ctx, frozenset(tools))
+    initial = next(c for c in reads if c["name"] == "pricing.get_quote")["result"]["final_price_vnd"]
+    writes, _ = await MutationToolExecutor(tools).execute(ctx, remaining, reads)
+    assert writes[0]["result"].get("order_id")
+    assert "read_tool_cache" not in ctx.state.working_memory
+    ctx.input.text = "Giá hiện tại của đôi giày này là bao nhiêu?"
+    later, _ = await executor.prefetch(ctx, frozenset({"get_pricing_quote", "get_order_quote"}))
+    quote = next(c for c in later if c["name"] == "pricing.get_quote")
+    assert not quote.get("_cached")
+    fresh = catalog.pricing_get_quote(sku, customer_phone=reference.CRM[0]["phone"], address="Hà Nội")
+    assert initial == 1_521_000
+    assert quote["result"]["final_price_vnd"] == fresh["final_price_vnd"] == 1_690_000
+
+
+@pytest.mark.parametrize("legacy", [False, True])
+def test_exchange_keeps_header_and_lines_consistent(btc_db, legacy):
+    reference, db = btc_db
+    customer = reference.CRM[0]
+    if legacy:
+        with db.get_session() as session:
+            session.add(Order(order_id="OLD-EXCHANGE", customer_id=customer["customer_id"],
+                              sku="SKU-AP-X", qty=1, price_vnd=4_890_000))
+            session.commit()
+        oid = "OLD-EXCHANGE"
+    else:
+        oid = order.order_create(customer["phone"], sku="SKU-AP-X", payment="bank", address="Hà Nội")["order_id"]
+    actual = order.order_update(oid, "exchange_product", new_variant_sku="SKU-AP-Y")
+    assert actual["status"] == "pickup_scheduled"
+    saved = db.find_orders(order_id=oid)[0]
+    assert saved["sku"] == saved["lines"][0]["sku"] == "SKU-AP-Y"
+    assert saved["total_vnd"] == sum(l["price_vnd"] * l.get("qty", 1) for l in saved["lines"])
+    assert saved["exchange_count"] == 1
+
+
+def test_exchange_without_line_selector_cannot_rewrite_multi_line_order(btc_db):
+    reference, db = btc_db
+    created = order.order_create(reference.CRM[0]["phone"], lines=[{"sku": "SKU-AP-PRO", "qty": 2}], payment="bank", address="Hà Nội")
+    before = db.find_orders(order_id=created["order_id"])[0]
+    result = order.order_update(created["order_id"], "exchange_product", new_variant_sku="SKU-AP-Y")
+    assert result["error"] == "ambiguous_order_line"
+    assert db.find_orders(order_id=created["order_id"])[0] == before
+
+
+@pytest.mark.parametrize("lines", [
+    [{"sku": "SKU-AP-PRO", "qty": 1}, {"sku": "SKU-AP-PRO", "qty": 1}],
+    [{"sku": "SKU-AP-PRO", "qty": 2}],
+])
+def test_stock_is_checked_for_total_units_per_sku(btc_db, monkeypatch, lines):
+    reference, db = btc_db
+    monkeypatch.setattr(order, "inventory_check", lambda sku, on: {"sku": sku, "in_stock": True, "qty": 1})
+    result = order.order_create(reference.CRM[0]["phone"], lines=lines, payment="bank", address="Hà Nội")
+    assert result["error"] == "out_of_stock"
+    assert db.find_orders(customer_phone=reference.CRM[0]["phone"]) == []
+
+
+def test_order_lines_migration_is_repeatable_and_preserves_old_rows(btc_db):
+    from sqlalchemy import inspect, text
+    reference, db = btc_db
+    engine = db.SessionLocal.kw["bind"]
+    with engine.begin() as conn:
+        before = conn.execute(text("SELECT order_id, sku, qty, price_vnd FROM orders ORDER BY order_id")).all()
+        conn.execute(text("ALTER TABLE orders DROP COLUMN lines"))
+    module_spec = importlib.util.spec_from_file_location("order_lines_migration", BTC.parents[1] / "scripts/migrate_order_lines.py")
+    migration = importlib.util.module_from_spec(module_spec)
+    module_spec.loader.exec_module(migration)
+    assert migration.migrate_order_lines(engine) is True
+    assert migration.migrate_order_lines(engine) is False
+    assert next(c for c in inspect(engine).get_columns("orders") if c["name"] == "lines")["nullable"]
+    with engine.connect() as conn:
+        assert conn.execute(text("SELECT order_id, sku, qty, price_vnd FROM orders ORDER BY order_id")).all() == before
+    existing = next(o for c in reference.CRM for o in c.get("orders", []))
+    saved = db.find_orders(order_id=existing["order_id"])[0]
+    assert saved["lines"][0]["sku"] == existing["sku"]
+
+
+@pytest.mark.asyncio
+async def test_realtime_basket_quote_matches_btc_and_binds_private_arguments(btc_db, monkeypatch):
+    from datetime import datetime, timezone, timedelta
+    from types import SimpleNamespace
+    from telesale_agent.application.realtime import tool_dispatch
+    from telesale_agent.application.realtime.context import tool_declarations
+    from telesale_agent.config.realtime import RealtimeSettings
+    reference, db = btc_db
+    ctx = checkout_context(reference, ["SKU-AP-PRO", "SKU-AP-MINI"], "Báo giá 2 máy Pro và 1 máy Mini.")
+
+    class Clock:
+        @staticmethod
+        def now(tz):
+            return datetime(2026, 11, 15, 9, tzinfo=tz)
+
+    monkeypatch.setattr("telesale_agent.core.business_time.datetime", Clock)
+    tools = checkout_tools()
+    services = SimpleNamespace(mcp_tools=tools)
+    settings = RealtimeSettings()
+    lines = [{"sku": "SKU-AP-PRO", "qty": 2}, {"sku": "SKU-AP-MINI", "qty": 1}]
+    result, evidence = await tool_dispatch.dispatch(services, settings, ctx.state, ctx, "get_order_quote", {"lines": lines}, "quote")
+    expected = reference.pricing_quote_order(lines, customer_phone=reference.CRM[0]["phone"], address="Hà Nội")
+    assert result == expected
+    assert evidence["name"] == "pricing.quote_order"
+    args = tools["get_order_quote"].calls[0]
+    assert args["customer_id"] == reference.CRM[0]["customer_id"]
+    assert args["on"] == "2026-10-15"
+    assert args["address"] == "100 đường Kiểm Thử, Hà Nội"
+    assert "create_new_order" not in {d["name"] for d in tool_declarations(tools, "read_only")}
+    for invalid in ([], [{"sku": "A", "qty": True}], [{"sku": "A", "qty": 1, "customer_id": "other"}]):
+        rejected, _ = await tool_dispatch.dispatch(services, settings, ctx.state, ctx, "get_order_quote", {"lines": invalid}, "bad")
+        assert rejected["error"] == "invalid_arguments"
+    assert len(tools["get_order_quote"].calls) == 1
+    assert db.find_orders(customer_phone=reference.CRM[0]["phone"]) == []
+
+
+@pytest.mark.parametrize("failed_order", [False, True])
+def test_first_quote_grounds_unit_prices_without_hiding_order_errors(btc_db, failed_order):
+    from telesale_agent.application.deepagent.response import ground_basket_recap
+    reference, _ = btc_db
+    ctx = checkout_context(reference, ["SKU-AP-PRO", "SKU-AP-MINI"],
+        "Báo giá từng máy và tổng tiền cho 2 AirPure Pro và 1 AirPure Mini, chưa tạo đơn.", 2)
+    ctx.call_brief.remembered_preferences = {"facts": {}}
+    ctx.state.customer_memory = {"facts": {}}
+    ctx.input.metadata.pop("call_date")
+    lines = [{"sku": "SKU-AP-PRO", "qty": 2}, {"sku": "SKU-AP-MINI", "qty": 1}]
+    quote = catalog.pricing_quote_order(lines)
+    calls = [
+        {"name": "catalog.search", "result": {"items": [p for p in reference.PRODUCTS if p["sku"] in {"SKU-AP-PRO", "SKU-AP-MINI"}]}},
+        {"name": "pricing.quote_order", "args": {"lines": lines}, "result": quote},
+    ]
+    if failed_order:
+        calls.append({"name": "order.create", "result": {"error": "cod_limit_exceeded"}})
+        response = "Đơn vượt giới hạn COD 10 triệu, chưa tạo đơn."
+        assert ground_basket_recap(ctx, calls, response) == response
+    else:
+        wrong = "Pro 7.990.000đ/máy; Mini 495.000đ; tổng 16.475.000đ."
+        response = ground_basket_recap(ctx, calls, wrong)
+        assert response.count("7.690.000") == 2
+        assert "1.095.000" in response
+        assert "16.475.000" in response
+        assert "7.990.000" not in response
+        assert "495.000" not in response

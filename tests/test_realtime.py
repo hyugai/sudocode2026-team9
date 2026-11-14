@@ -72,7 +72,7 @@ class RealtimeTests(unittest.IsolatedAsyncioTestCase):
         from telesale_agent.application.deepagent import runtime
         registry = {"search_catalog": object(), "search_policy": object()}
         harness = SimpleNamespace(agent=None, memory=self.svc.memory, exit_stack=object(),
-                                  checkpointer=None, _prewarm_knowledge_mcp=AsyncMock())
+                                  checkpointer=None, mcp_sessions={}, _prewarm_knowledge_mcp=AsyncMock())
         compiled_agent = object()
         instruction_dir = Path(__file__).resolve().parents[1] / "data/memory-root/agents/telesales_agent"
         with patch.dict("os.environ", {"AGENT_INSTRUCTIONS_ROOT": str(instruction_dir)}), patch(
@@ -89,7 +89,7 @@ class RealtimeTests(unittest.IsolatedAsyncioTestCase):
             self.assertIs(harness.agent, compiled_agent)
             # An initialized harness must reuse the same connection and graph.
             await runtime.initialize_runtime(harness)
-            connect.assert_awaited_once_with(harness.exit_stack, harness.memory)
+            connect.assert_awaited_once_with(harness.exit_stack, harness.memory, sessions=harness.mcp_sessions)
             harness._prewarm_knowledge_mcp.assert_awaited_once()
             build_agent.assert_called_once()
 

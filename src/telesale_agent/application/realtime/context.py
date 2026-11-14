@@ -4,7 +4,7 @@ from dataclasses import asdict
 from telesale_agent.adapters.rules.pii_utils import mask_pii
 
 READ_TOOLS = frozenset({
-    "search_catalog", "check_inventory", "get_pricing_quote", "search_policy",
+    "search_catalog", "check_inventory", "get_pricing_quote", "get_order_quote", "search_policy",
     "search_knowledge_base", "search_customer_memory_archive",
 })
 
@@ -32,6 +32,7 @@ def instructions(state):
         "Bạn là tư vấn viên telesale, nói tiếng Việt tự nhiên, ngắn gọn. "
         "Chỉ thông tin có trong dữ liệu backend hoặc kết quả tool mới là dữ liệu đã xác minh. "
         "Tra tool trước khi khẳng định giá, tồn kho hoặc chính sách; không suy đoán. "
+        "Dùng get_order_quote cho nhiều sản phẩm hoặc nhiều máy cùng SKU; báo tổng theo total_vnd. "
         "Dùng get_customer_context khi cần thông tin khách/cập nhật bộ nhớ. "
         "Phiên này CHỈ TƯ VẤN: không thể tạo/sửa đơn, đặt lịch hay chuyển cuộc gọi. "
         "Khi khách muốn thực hiện các hành động này, giải thích rằng cần chuyển sang chế độ chat. "
@@ -52,6 +53,11 @@ def tool_declarations(registry, mode):
         "search_catalog": {"query": {"type": "string"}, "sku": {"type": "string"}},
         "check_inventory": {"sku": {"type": "string"}},
         "get_pricing_quote": {"sku": {"type": "string"}, "qty": {"type": "integer", "minimum": 1}},
+        "get_order_quote": {"lines": {"type": "array", "minItems": 1, "maxItems": 100,
+            "items": {"type": "object", "properties": {
+                "sku": {"type": "string", "minLength": 1},
+                "qty": {"type": "integer", "minimum": 1, "maximum": 100}},
+                "required": ["sku", "qty"], "additionalProperties": False}}},
         "search_policy": {"query": {"type": "string"}, "k": {"type": "integer", "minimum": 1, "maximum": 5}},
         "search_knowledge_base": {"query": {"type": "string"}, "k": {"type": "integer", "minimum": 1, "maximum": 5}},
         "search_customer_memory_archive": {"query": {"type": "string"}},
@@ -61,7 +67,7 @@ def tool_declarations(registry, mode):
     for name, properties in schemas.items():
         if name not in registry:
             continue
-        required = ["sku"] if name in {"check_inventory", "get_pricing_quote"} else (
+        required = ["lines"] if name == "get_order_quote" else ["sku"] if name in {"check_inventory", "get_pricing_quote"} else (
             ["query"] if name != "search_catalog" else [])
         tools.append({
             "name": name, "description": str(getattr(registry[name], "description", name))[:600],

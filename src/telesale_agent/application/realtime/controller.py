@@ -4,8 +4,8 @@ import json
 import logging
 import time
 from copy import deepcopy
-from datetime import datetime, timezone, timedelta
 from telesale_agent.core.models import Channel, ConversationState, CustomerIdentity, TurnContext, TurnInput, Message
+from telesale_agent.core.business_time import business_date
 from telesale_agent.core.realtime import VoiceTurnRecord, SessionInit
 from telesale_agent.application.asr_normalization import normalize_asr_transcript
 from telesale_agent.application.conversation.prepare import prepare_context
@@ -22,6 +22,7 @@ async def initialize_customer(services, conversation_id, phone, customer_id=None
     state = ConversationState(conversation_id=conversation_id)
     # Session setup is not a customer utterance and does not go through run_turn.
     init = SessionInit(conversation_id, phone)
+    init.metadata["call_date"] = business_date().isoformat()
     context = TurnContext(input=init, state=state)
     if customer_id:
         context.identity = CustomerIdentity(customer_id=customer_id, phone=phone)
@@ -48,7 +49,7 @@ async def turn_context(services, state, record, phone, source):
             customer_hint=phone, metadata={
                 "raw_asr_transcript": record.input_text, "memory_source_id": source,
                 "call_key": state.conversation_id,
-                "call_date": datetime.now(timezone(timedelta(hours=7))).date().isoformat(),
+                "call_date": business_date().isoformat(),
             }),
         state=isolated,
     )

@@ -42,6 +42,8 @@ _BTC_TOOL_NAMES = {
 def canonical_tool_name(name: str | None) -> str:
     if not name:
         return "unknown"
+    if "." in name:
+        return name
     return _BTC_TOOL_NAMES.get(name, name.replace("_", "."))
 
 

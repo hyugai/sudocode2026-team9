@@ -500,9 +500,15 @@ class PostgresClient:
             if row is None:
                 return {"error": "order_not_found"}
             order, phone = row
+            if new_variant_sku and order.lines and len(order.lines) != 1:
+                # The legacy contract has no line selector. Never silently
+                # exchange every item of a multi-line order.
+                return {"error": "ambiguous_order_line"}
             order.status = status
             if new_variant_sku:
                 order.sku = new_variant_sku
+                if order.lines:
+                    order.lines = [{**order.lines[0], "sku": new_variant_sku}]
             if increment_exchange:
                 order.exchange_count = (order.exchange_count or 0) + 1
             order.updated_at = datetime.utcnow()

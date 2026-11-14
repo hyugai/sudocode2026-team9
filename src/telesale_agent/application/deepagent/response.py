@@ -134,7 +134,7 @@ def _format_vnd(value: Any) -> str:
         return ""
 
 
-def _basket_product_names(context: TurnContext) -> dict[str, str]:
+def _basket_product_names(context: TurnContext, tool_calls=()) -> dict[str, str]:
     preferences = (
         context.call_brief.remembered_preferences
         if context.call_brief
@@ -143,13 +143,19 @@ def _basket_product_names(context: TurnContext) -> dict[str, str]:
     )
     facts = preferences.get("facts") or {}
     names = facts.get("basket_product_names") if isinstance(facts, dict) else None
-    if not isinstance(names, dict):
-        return {}
-    return {
+    names = names if isinstance(names, dict) else {}
+    verified = {
         sku: name
         for sku, name in names.items()
         if isinstance(sku, str) and isinstance(name, str) and name.strip()
     }
+    for call in tool_calls:
+        result = call.get("result") or {}
+        if call.get("name") == "catalog.search" and isinstance(result, dict) and not result.get("error"):
+            for item in result.get("items", []):
+                if isinstance(item, dict) and item.get("sku") and item.get("name"):
+                    verified[item["sku"]] = item["name"]
+    return verified
 
 
 def ground_basket_recap(
@@ -159,10 +165,30 @@ def ground_basket_recap(
 ) -> str:
     """Repeat a saved cart using exact catalog names and current verified prices."""
     if not is_basket_recap_request(context.input.text or ""):
+        text = (context.input.text or "").casefold()
+        asks_price = any(phrase in text for phrase in ("giá", "tổng tiền", "bao nhiêu", "khuyến mãi", "khuyến mại"))
+        has_mutation = any(call.get("name") in {"order.create", "order.update"} for call in tool_calls)
+        if asks_price and not has_mutation:
+            # The first quote may precede durable cart memory. Ground its unit
+            # prices too: a correct total does not justify invented allocation.
+            names = _basket_product_names(context, tool_calls)
+            call_date = context.input.metadata.get("call_date")
+            for call in reversed(tool_calls):
+                quote = call.get("result")
+                if (call.get("name") != "pricing.quote_order" or not isinstance(quote, dict)
+                        or quote.get("error") or not quote.get("units")
+                        or call_date and (call.get("args") or {}).get("on") != call_date):
+                    continue
+                if any(unit["sku"] not in names for unit in quote["units"]):
+                    continue
+                lines = "\n".join(f"{index}. {names[unit['sku']]} — {_format_vnd(unit['final_price_vnd'])}"
+                                  for index, unit in enumerate(quote["units"], 1))
+                return ("Dạ báo giá giỏ hàng của mình gồm:\n" + lines
+                        + f"\nTổng tiền: {_format_vnd(quote['total_vnd'])}.")
         return response_text
     skus = _basket_skus(context)
-    names = _basket_product_names(context)
-    if len(skus) < 2 or any(sku not in names for sku in skus):
+    names = _basket_product_names(context, tool_calls)
+    if not skus or any(sku not in names for sku in skus):
         if asks_basket_total(context.input.text or ""):
             return (
                 "Dạ em chưa xác minh đủ giỏ hàng và giá hiện tại, "
@@ -239,7 +265,7 @@ def ground_multi_item_order_confirmation(
         and call["result"].get("order_id")
     ]
     skus = _basket_skus(context)
-    names = _basket_product_names(context)
+    names = _basket_product_names(context, tool_calls)
     if len(created) == 1 and (created[0].get("args") or {}).get("lines"):
         call = created[0]
         args, result = call["args"], call["result"]

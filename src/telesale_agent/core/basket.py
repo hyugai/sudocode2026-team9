@@ -17,6 +17,53 @@ def _normalize(value: str) -> str:
     return " ".join(re.sub(r"[^a-z0-9]+", " ", unaccented).split())
 
 
+def _product_names(name: str) -> list[str]:
+    full = _normalize(name)
+    short = re.sub(r"^may loc khong khi\s+", "", full)
+    return list(dict.fromkeys([full, short]))
+
+
+def product_lines(
+    customer_text: str, items: list[dict[str, Any]],
+    previous: list[dict[str, Any]] | None = None, default_qty: int = 1,
+) -> list[dict[str, Any]]:
+    """Resolve quantities against catalog names, never against one cart-wide count."""
+    text = _normalize(customer_text)
+    words = {"mot": 1, "hai": 2, "ba": 3, "bon": 4, "nam": 5}
+    number = r"(\d+|mot|hai|ba|bon|nam)"
+    unit = r"(?:may(?: loc khong khi)?|chiec|cai|doi|bo|hop|mon|san pham)"
+    each = re.search(r"\b(?:moi mon|moi thu|moi loai)\s+" + number + r"\b", text)
+    old = {}
+    for line in previous or []:
+        if (isinstance(line, dict) and isinstance(line.get("sku"), str)
+                and type(line.get("qty", 1)) is int and line.get("qty", 1) > 0):
+            old[line["sku"]] = old.get(line["sku"], 0) + line.get("qty", 1)
+
+    def count(token):
+        return int(token) if token.isdigit() else words[token]
+
+    lines = []
+    for item in items:
+        qty = count(each[1]) if each else old.get(item["sku"], default_qty)
+        found = False
+        for name in _product_names(str(item.get("name") or item["sku"])):
+            hit = re.search(r"\b" + re.escape(name) + r"\b", text)
+            if not hit:
+                continue
+            before = re.search(number + r"\s*(?:" + unit + r"\s*)?$", text[:hit.start()])
+            after = re.match(r"\s*(?:(?:lay|so luong|x)\s*)?" + number + r"\s*" + unit + r"\b", text[hit.end():])
+            explicit = before or after
+            if explicit:
+                qty, found = count(explicit[1]), True
+                break
+        if len(items) == 1 and not each and not found:
+            explicit = re.search(r"\b" + number + r"\s+" + unit + r"\b", text)
+            if explicit:
+                qty = count(explicit[1])
+        lines.append({"sku": item["sku"], "qty": qty if type(qty) is int and qty > 0 else 1})
+    return lines
+
+
 def mentioned_catalog_items(
     customer_text: str, catalog_items: list[dict[str, Any]]
 ) -> list[dict[str, Any]]:
@@ -30,12 +77,14 @@ def mentioned_catalog_items(
     for item in catalog_items:
         if not isinstance(item, dict) or not item.get("sku") or not item.get("name"):
             continue
-        needle = f" {_normalize(str(item['name']))} "
-        if len(needle.strip()) < 4:
-            continue
-        position = haystack.find(needle)
-        if position >= 0:
-            matches.append((position, position + len(needle), item))
+        for name in _product_names(str(item["name"])):
+            needle = f" {name} "
+            if len(name) < 4:
+                continue
+            position = haystack.find(needle)
+            if position >= 0:
+                matches.append((position, position + len(needle), item))
+                break
     selected: list[tuple[int, dict[str, Any]]] = []
     occupied: list[tuple[int, int]] = []
     for start, end, item in sorted(matches, key=lambda match: (-(match[1] - match[0]), match[0])):

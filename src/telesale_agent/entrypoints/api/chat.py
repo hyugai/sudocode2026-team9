@@ -5,6 +5,7 @@ import re
 import secrets
 import json
 import time
+from datetime import date
 from uuid import UUID
 from sqlalchemy.exc import SQLAlchemyError
 from fastapi.middleware.cors import CORSMiddleware
@@ -22,6 +23,7 @@ from telesale_agent.adapters.asr.config import ASRConfig
 from telesale_agent.adapters.llm.rate_limits import is_rate_limit_error, provider_cooldown
 from telesale_agent.core.errors import ASRUnavailableError, AudioInputError, AudioTooLargeError
 from telesale_agent.core.models import CallBrief, Channel, TurnInput, ConversationState
+from telesale_agent.core.business_time import business_date
 from telesale_agent.adapters.rules.pii_utils import mask_pii
 from contextlib import asynccontextmanager
 from telesale_agent.adapters.db.app_repository import AppDataNotFound, AppDataRepository, ConversationConflict
@@ -48,6 +50,7 @@ async def lifespan(app: FastAPI):
             print("🛑 Đóng kết nối MCP Servers...")
             if harness:
                 await harness.__aexit__(None, None, None)
+            harness = None
 
 app = FastAPI(title="Telesale Agent API", lifespan=lifespan)
 
@@ -156,6 +159,7 @@ class ChatRequest(BaseModel):
     conversation_id: str
     message: str = Field(max_length=10000)
     customer_phone: str | None = None
+    call_date: date | None = None
 
     @field_validator("conversation_id", "message")
     @classmethod
@@ -170,7 +174,8 @@ async def chat_endpoint(req: ChatRequest, request: Request, repository: AppDataR
         conversation_id=req.conversation_id,
         text=req.message,
         customer_hint=req.customer_phone,
-        metadata={"_latency_started_at": request.scope["telesale_received_at"]},
+        metadata={"_latency_started_at": request.scope["telesale_received_at"],
+                  "call_date": business_date(req.call_date).isoformat()},
     )
     repository, user_id = await conversation_owner(request, req.conversation_id, repository)
     if "text/event-stream" in request.headers.get("accept", ""):
@@ -184,6 +189,7 @@ async def audio_chat_endpoint(
     conversation_id: str = Form(...),
     file: UploadFile = File(...),
     customer_phone: str | None = Form(default=None),
+    call_date: date | None = Form(default=None),
     repository: AppDataRepository = Depends(get_auth_repository),
 ):
     try:
@@ -205,7 +211,8 @@ async def audio_chat_endpoint(
             audio=audio,
             channel=Channel.VOICE,
             customer_hint=customer_phone or None,
-            metadata={"_latency_started_at": request.scope["telesale_received_at"], "offline_audio": True},
+            metadata={"_latency_started_at": request.scope["telesale_received_at"], "offline_audio": True,
+                      "call_date": business_date(call_date).isoformat()},
         )
         repository, user_id = await conversation_owner(request, conversation_id.strip(), repository)
         if "text/event-stream" in request.headers.get("accept", ""):
@@ -454,7 +461,13 @@ def read_root():
 
 @app.get("/health")
 @app.get("/api/health")
-def health():
+async def health():
     if harness is None:
         raise HTTPException(status_code=503, detail="Agent is starting")
-    return {"status": "ok"}
+    from telesale_agent.entrypoints.api.readiness import check_readiness
+    from telesale_agent.adapters.llm.tracing import tracing_status
+    checks = await check_readiness(harness)
+    ready = all(value == "ok" for value in checks.values())
+    return JSONResponse(status_code=200 if ready else 503,
+                        content={"status": "ok" if ready else "unavailable",
+                                 "checks": checks, "tracing": tracing_status()})

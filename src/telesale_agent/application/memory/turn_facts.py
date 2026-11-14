@@ -9,7 +9,7 @@ from telesale_agent.core.address import (
     extract_explicit_delivery_address,
     looks_like_delivery_address,
 )
-from telesale_agent.core.basket import mentioned_catalog_items
+from telesale_agent.core.basket import mentioned_catalog_items, product_lines
 from telesale_agent.core.models import TurnContext
 from telesale_agent.application.customer_text import literal_customer_text
 
@@ -104,6 +104,8 @@ def _basket_memory_candidates(
             basket = prior
     elif len(mentioned_skus) >= 2:
         basket = mentioned_skus
+    elif len(mentioned_skus) == 1 and product_lines(literal_text, mentioned_items)[0]["qty"] > 1:
+        basket = mentioned_skus
     else:
         return {}
 
@@ -120,6 +122,8 @@ def _basket_memory_candidates(
     }
     if names:
         result["basket_product_names"] = names
+    result["basket_lines"] = product_lines(literal_text,
+        [{"sku": sku, "name": names.get(sku, sku)} for sku in basket], prior_facts.get("basket_lines"))
     result.update(
         {f"basket_item_{index}": sku for index, sku in enumerate(basket, start=1)}
     )
@@ -251,6 +255,8 @@ def _tool_memory_candidates(context: TurnContext) -> dict[str, Any]:
                         )
                         candidates["promo_code"] = monetary_promo or promo_codes[0]
         elif name == "pricing.quote_order":
+            candidates["basket_lines"] = [{"sku": line["sku"], "qty": line.get("qty", 1)} for line in args.get("lines", [])]
+            candidates["basket_skus"] = list(dict.fromkeys(line["sku"] for line in candidates["basket_lines"]))
             candidates["basket_unit_quotes"] = [
                 {"sku": unit["sku"], "price_quoted_vnd": unit["final_price_vnd"],
                  "quoted_on": args.get("on") or context.input.metadata.get("call_date"),
@@ -259,6 +265,10 @@ def _tool_memory_candidates(context: TurnContext) -> dict[str, Any]:
                 for unit in output.get("units", [])
             ]
         elif name == "order.create":
+            if args.get("lines"):
+                candidates["order_lines"] = args["lines"]
+            if output.get("total_vnd") is not None:
+                candidates["order_total_vnd"] = output["total_vnd"]
             if args.get("sku"):
                 candidates.update(_variant_facts(args["sku"]))
             if args.get("price_vnd") is not None:

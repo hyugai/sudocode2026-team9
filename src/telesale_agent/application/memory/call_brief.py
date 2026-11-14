@@ -1,7 +1,8 @@
-from datetime import date, datetime, timezone
+from datetime import datetime, timezone
 
 from telesale_agent.core.interfaces import CallBriefBuilder
 from telesale_agent.core.models import CallBrief, JsonObject, TurnContext
+from telesale_agent.core.business_time import business_date
 
 class CallBriefProjector(CallBriefBuilder):
     """Build a compact call brief deterministically from CRM and memory."""
@@ -224,7 +225,7 @@ class FreshCallBrief:
         if context.state.turn_number == 0:
             facts = (context.state.customer_memory or {}).get("facts",{})
             sku = facts.get("product_advised") or facts.get("variant_sku")
-            on = date.fromisoformat(context.input.metadata.get("call_date") or date.today().isoformat())
+            on = business_date(context.input.metadata.get("call_date"))
             current = {"checked_on":on.isoformat(),
                        "crm_profile_and_order_history":"reloaded by customer_context.hydrate",
                        "cross_channel_interactions":"not available in current CRM adapter"}

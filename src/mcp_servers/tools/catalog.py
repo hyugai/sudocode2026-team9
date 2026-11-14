@@ -9,8 +9,8 @@ from typing import Any
 
 from telesale_agent.adapters.db.client import db_client
 from mcp_servers.tools.pricing import PricingCalculator
-
-REFERENCE_DATE = date(2026, 10, 15)
+from telesale_agent.core.basket import mentioned_catalog_items
+from telesale_agent.core.business_time import business_date
 
 
 def _search_text(value: str) -> str:
@@ -21,7 +21,7 @@ def _search_text(value: str) -> str:
     return " ".join(re.sub(r"[^a-z0-9]+", " ", without_marks).split())
 
 def _today(on: str | None) -> date:
-    return date.fromisoformat(on) if on else REFERENCE_DATE
+    return business_date(on)
 
 def catalog_search(
     query: str | None = None,
@@ -48,15 +48,8 @@ def catalog_search(
     # Multi-item utterances do not match one product name as a whole. Resolve
     # every catalog product literally mentioned in the customer query inside
     # this same tool execution, so the agent does not need repeated searches.
-    normalized_query = _search_text(query)
     catalog = db_client.search_products(max_price_vnd=max_price_vnd, min_room_area_m2=min_room_area_m2)
-    mentioned_items = [
-        item
-        for item in catalog.get("items", [])
-        if isinstance(item, dict)
-        and item.get("name")
-        and _search_text(str(item["name"])) in normalized_query
-    ]
+    mentioned_items = mentioned_catalog_items(query, catalog.get("items", []))
     if mentioned_items:
         return _filter_requested_variants({"items": mentioned_items}, query)
 

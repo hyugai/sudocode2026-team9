@@ -1,0 +1,27 @@
+{
+  "database": "telesale",
+  "host": "localhost",
+  "port": 5432,
+  "schema": "public",
+  "migration": "scripts/migrate_order_lines.py",
+  "column_added": true,
+  "repeat_run_added_column": false,
+  "lines": {
+    "type": "jsonb",
+    "nullable": true,
+    "default": null
+  },
+  "pre_existing_schema_unchanged": true,
+  "orders_before": 2,
+  "orders_after": 2,
+  "unchanged_orders": 2,
+  "orders_before_sha256": "b1d813d022e50116fcb643fe400724e592191ee9ccb14baf558c2d68a7921f8d",
+  "orders_after_sha256": "b1d813d022e50116fcb643fe400724e592191ee9ccb14baf558c2d68a7921f8d",
+  "all_pre_existing_order_fields_unchanged": true,
+  "committed": true,
+  "post_commit_verified": true,
+  "orders_after_commit_sha256": "b1d813d022e50116fcb643fe400724e592191ee9ccb14baf558c2d68a7921f8d",
+  "orders_with_null_lines": 2,
+  "orders_readable_through_current_orm": 2,
+  "verified_at_utc": "2026-11-14T22:06:59.908366+00:00"
+}

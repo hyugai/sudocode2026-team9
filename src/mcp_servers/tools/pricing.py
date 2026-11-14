@@ -9,6 +9,24 @@ from typing import Any
 AIR_CATEGORY = "gia-dung/may-loc-khong-khi"
 
 
+def normalize_lines(lines: Any) -> list[dict[str, Any]]:
+    """Validate physical quantities before quoting, checking stock or saving."""
+    if not isinstance(lines, list) or not lines:
+        raise ValueError("invalid_quantity")
+    normalized = []
+    for line in lines:
+        if not isinstance(line, dict) or not isinstance(line.get("sku"), str) or not line["sku"].strip():
+            raise ValueError("invalid_order_line")
+        qty = line.get("qty", 1)
+        if type(qty) is not int or qty < 1:
+            raise ValueError("invalid_quantity")
+        price = line.get("price_vnd")
+        if price is not None and (type(price) is not int or price < 0):
+            raise ValueError("invalid_price")
+        normalized.append({**line, "sku": line["sku"].strip(), "qty": qty})
+    return normalized
+
+
 def region_of(address: str | None) -> str:
     address = (address or "").lower()
     if any(name in address for name in (
@@ -132,6 +150,10 @@ class PricingCalculator:
         self, lines: list[dict[str, Any]], *, second_item_used: bool = False,
         tie_prefer_first: bool = False,
     ) -> dict[str, Any]:
+        try:
+            lines = normalize_lines(lines)
+        except ValueError as exc:
+            return {"error": str(exc)}
         units = []
         for index, line in enumerate(lines):
             product, _ = self.product(line["sku"])

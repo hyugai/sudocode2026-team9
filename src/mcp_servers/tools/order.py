@@ -4,17 +4,19 @@ from __future__ import annotations
 
 import uuid
 import hashlib
+from collections import Counter
 from datetime import date
 from typing import Any
 
-from mcp_servers.tools.catalog import inventory_check, pricing_get_quote, REFERENCE_DATE
+from mcp_servers.tools.catalog import inventory_check, pricing_get_quote
+from telesale_agent.core.business_time import business_date
 from mcp_servers.tools.business_calendar import delivery_date
-from mcp_servers.tools.pricing import PricingCalculator
+from mcp_servers.tools.pricing import PricingCalculator, normalize_lines
 from telesale_agent.adapters.db.client import db_client
 
 
 def _today(on: str | None) -> date:
-    return date.fromisoformat(on) if on else REFERENCE_DATE
+    return business_date(on)
 
 
 COD_LIMIT_VND = 10_000_000  # >10M must use bank transfer
@@ -39,9 +41,10 @@ def order_create(
         return {"error": "missing_delivery_address"}
     if lines is None and not sku:
         return {"error": "missing_sku_or_lines"}
-    requested = lines if lines is not None else [{"sku": sku, "qty": qty, "price_vnd": price_vnd}]
-    if not requested or any(int(line.get("qty", 1)) < 1 for line in requested):
-        return {"error": "invalid_quantity"}
+    try:
+        requested = normalize_lines(lines if lines is not None else [{"sku": sku, "qty": qty, "price_vnd": price_vnd}])
+    except ValueError as exc:
+        return {"error": str(exc)}
     extra = [{"sku": item, "qty": 1} for item in basket_skus or []] if lines is None else []
     order_id = (
         "ORD-" + hashlib.sha256(idempotency_key.encode("utf-8")).hexdigest()[:8].upper()
@@ -78,9 +81,12 @@ def order_create(
     replay = replay_if_matching()
     if replay:
         return replay
+    quantities = Counter()
     for line in requested:
-        stock = inventory_check(line["sku"], on)
-        if not stock.get("in_stock") or stock.get("qty", 0) < int(line.get("qty", 1)):
+        quantities[line["sku"]] += line["qty"]
+    for item_sku, quantity in quantities.items():
+        stock = inventory_check(item_sku, on)
+        if not stock.get("in_stock") or stock.get("qty", 0) < quantity:
             return {"error": "out_of_stock", **stock}
     same_day = [order for order in db_client.find_orders(customer_phone=customer_phone)
                 if order.get("created_on") == call_date.isoformat()]
@@ -163,7 +169,8 @@ def order_update(
     else:
         return {"error": "unknown_action"}
     persisted = db_client.update_order(
-        order_id=order_id, status=result["status"], new_variant_sku=new_variant_sku,
+        order_id=order_id, status=result["status"],
+        new_variant_sku=new_variant_sku if action.startswith("exchange") else None,
         increment_exchange=action.startswith("exchange"),
     )
     return persisted if persisted.get("error") else result

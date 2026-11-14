@@ -20,6 +20,7 @@ from telesale_agent.application.deepagent.context.order import (
     _customer_phone,
     _delivery_address,
     _basket_skus,
+    _basket_lines,
     _catalog_query,
     _known_variant_sku,
     _quantity,
@@ -60,6 +61,7 @@ class ReadToolExecutor:
         order_workflow = "check_order_status" in remaining
         current_turn_sku: str | None = None
         selected_multi_skus: list[str] = []
+        catalog_items: list[dict[str, Any]] = []
         read_cache = context.state.working_memory.setdefault("read_tool_cache", {})
 
         async def invoke(name: str, args: dict[str, Any]) -> dict[str, Any] | None:
@@ -229,7 +231,9 @@ class ReadToolExecutor:
             if not skus:
                 sku = current_turn_sku or _known_variant_sku(context)
                 skus = [sku] if sku else []
-            quantity = 1 if len(skus) != len(set(skus)) else _quantity(context)
+            names = {str(item["sku"]): str(item["name"]) for item in catalog_items
+                     if isinstance(item, dict) and item.get("sku") and item.get("name")}
+            lines = _basket_lines(context, skus, names)
             pricing_args: dict[str, Any] = {}
             if call_date:
                 pricing_args["on"] = call_date
@@ -241,12 +245,12 @@ class ReadToolExecutor:
             address = _delivery_address(context)
             if address:
                 pricing_args["address"] = address
-            if skus and (len(skus) > 1 or quantity > 1):
-                pricing_args["lines"] = [{"sku": sku, "qty": quantity} for sku in skus]
+            if lines and sum(line["qty"] for line in lines) > 1:
+                pricing_args["lines"] = lines
                 await invoke("get_order_quote", pricing_args)
                 remaining.discard("get_pricing_quote")
-            elif skus:
-                pricing_args.update(sku=skus[0], qty=quantity)
+            elif lines:
+                pricing_args.update(sku=lines[0]["sku"], qty=lines[0]["qty"])
                 await invoke("get_pricing_quote", pricing_args)
             remaining.discard("get_order_quote")
 

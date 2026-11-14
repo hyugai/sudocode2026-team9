@@ -1,6 +1,6 @@
 # Kết quả sửa contract BTC
 
-Triển khai theo [audit F01–F12](btc-src-contract-audit.md) và `CLAUDE.md`. Nguồn đối chiếu là các schema cùng `eval/mock_tools.py` / `eval/reference_eval.py` hiện có trong `dataset/BTC-Data-Vong1-TEAMS`.
+Bản đồng bộ F01–F12 và sáu bản sửa sau review. Nguồn đối chiếu là các schema cùng `eval/mock_tools.py` / `eval/reference_eval.py` hiện có trong `dataset/BTC-Data-Vong1-TEAMS`.
 
 ## Phạm vi đã hoàn tất
 
@@ -28,42 +28,60 @@ Chỉ bổ sung một cột nullable `orders.lines JSONB`. Đơn cũ vẫn đọ
 Migration: [scripts/migrate_order_lines.py](../../scripts/migrate_order_lines.py). SQL dùng `ADD COLUMN IF NOT EXISTS`, có thể chạy lại khi triển khai môi trường khác:
 
 ```powershell
-.\.venv-salesman\Scripts\python.exe scripts/migrate_order_lines.py
+.\.venv\Scripts\python.exe scripts/migrate_order_lines.py
 ```
 
-**Đã áp dụng vào database hiện cấu hình trong phiên làm việc**, sau khi test source: xác nhận cột tồn tại và số đơn trước/sau không thay đổi. Không reset, seed lại hoặc tạo đơn thử trên database này. Các đơn kiểm thử chỉ nằm trong SQLite tạm.
+Migration đã được chạy trên PostgreSQL `telesale` và kiểm tra chạy lặp không thay đổi dữ liệu. Cột `lines` là JSONB nullable, không có default; hai đơn cũ vẫn giữ NULL và toàn bộ các cột cũ giữ nguyên. Không seed/reset dữ liệu. `migrate_catalog.py --orders-only` cũng đã nhận cột `lines`. Môi trường triển khai khác vẫn cần chạy migration với cấu hình DB riêng.
 
-## Kết quả kiểm thử
+## Sáu lỗi sau review đã xử lý
 
-- Bộ BTC mới: **64 test** tại [test_btc_contract.py](../../tests/test_btc_contract.py). Bao gồm so sánh trực tiếp với reference, validate schema chính thức và luồng agent → MCP wrapper → lưu/đọc đơn.
-- Lần chạy hồi quy gộp: **342 pass, 3 fail từ trước, 30 skip**, thêm **35 subtest pass**.
-- Kiểm tra cuối sau chỉnh matcher: `src/eval`, bộ BTC và `tests/test_team_eval.py`: **105 pass**, thêm **4 subtest pass**.
-- `compileall` cho các package Python thay đổi và `git diff --check`: pass.
+1. Giỏ hàng giữ `basket_lines=[{sku, qty}]` từ báo giá đến tạo đơn và bộ nhớ. Đọc được dữ liệu cũ chỉ có `basket_skus`, SKU lặp và `quantity_each`. Ca 2 AirPure Pro + 1 AirPure Mini tại ngày tham chiếu 15/10/2026 tạo đúng 3 máy, tổng 16.475.000đ.
+2. Tạo/cập nhật đơn làm mất hiệu lực cache giá, khuyến mãi và tra đơn, kể cả khi lần ghi cần thử lại. Sau khi dùng RUN-10, báo giá mới lấy lại từ DB.
+3. Đổi một dòng hàng cập nhật `orders.sku` và `orders.lines` trong cùng transaction. Đơn cũ chưa có `lines` vẫn đọc qua các cột cũ. Yêu cầu đổi đơn nhiều dòng chưa chỉ định dòng trả `ambiguous_order_line` và giữ nguyên dữ liệu.
+4. Backend cộng số lượng tất cả dòng trùng SKU trước khi kiểm tra tồn. Đây là kiểm tra chặt hơn vòng kiểm tra từng dòng trong BTC mock; các phép đối chiếu giá/khuyến mãi hợp lệ giữ nguyên.
+5. Voice realtime công bố `get_order_quote`, kiểm tra cấu trúc/giới hạn dòng hàng và gắn danh tính, địa chỉ, ngày từ backend. Phiên voice vẫn chỉ có quyền đọc.
+6. Đưa `scripts/migrate_order_lines.py` vào repo. PostgreSQL dùng `ADD COLUMN IF NOT EXISTS lines JSONB`; migration chỉ bổ sung cột nullable, không seed lại dữ liệu.
 
-Lệnh kiểm tra contract/evaluator:
+## Kết quả kiểm thử ngày 15/11/2026
+
+- Bộ contract BTC tại [test_btc_contract.py](../../tests/test_btc_contract.py) kiểm tra các ca tái hiện sáu lỗi, giá từng máy trong câu trả lời và so sánh với reference. Fixture đặt ngày tham chiếu 15/10/2026; không phụ thuộc ngày thực chạy test.
+- Hồi quy gộp `src/eval tests` với PostgreSQL test riêng: **370 pass, 0 skip**, thêm **5.203 subtest pass**, không có lỗi import hoặc test failure. Database tạm đã được dọn; DB nghiệp vụ không dùng làm nơi ghi/xóa của test integration.
+- Frontend `npm test`: **64 pass**. Lần audit trước cũng đã qua lint, TypeScript và production build; phiên sửa runtime không đổi source frontend.
+- Hai file test cũ đã được cập nhật sang `PricingCalculator` / `get_order_quote`; test lưu trữ/migration kiểm tra cấu trúc `orders.lines` hiện tại. Các test vẫn kiểm tra giá sai, đơn lỗi, COD, tách đơn, idempotency và đọc đơn cũ.
+- Kiểm tra cú pháp các module nghiệp vụ thay đổi và `git diff --check`: pass.
+
+Lệnh kiểm tra:
 
 ```powershell
 $env:PYTHONPATH='src'
 $env:PYTHONIOENCODING='utf-8'
-.\.venv-salesman\Scripts\python.exe -m pytest src/eval tests/test_btc_contract.py tests/test_team_eval.py -q
+.\.venv\Scripts\python.exe -B -m pytest -p no:cacheprovider src/eval tests -q
 ```
 
-Hồi quy gộp đã chạy các nhóm orchestration, pricing, order idempotency, basket, brief, latency, response grounding, memory, realtime voice, API và evaluator liên quan. Các test cũ bị ảnh hưởng được cập nhật expectation cho contract mới; không đổi test để chấp nhận đơn sai giá hoặc tính đơn lỗi là thành công.
+Các nhóm đã chạy gồm orchestration, pricing, order idempotency, basket, brief, latency, response grounding, memory, realtime voice, API, migration, readiness và evaluator. Unit/integration test mock dịch vụ LLM/MCP bên ngoài; E2E riêng bên dưới dùng HTTP, MCP, LLM cấu hình thật và PostgreSQL thật, với khách/đơn thử riêng đã dọn.
 
-### Ba lỗi có sẵn, giữ nguyên ngoài phạm vi
+Để chạy các test PostgreSQL opt-in, cấu hình `APP_DATA_TEST_DATABASE_URL` đến database test tách biệt trước lệnh pytest. Không cần thay `DATABASE_URL` của môi trường đang vận hành. Các test tiếp tục tự tạo và dọn schema riêng trong database test.
 
-Đã chạy lại ba test này với các module thay đổi được nạp từ `git HEAD` trong một subprocess, không checkout/revert workspace. Cả ba cho cùng lỗi trước khi có bản sửa BTC:
+## Sửa ngày nghiệp vụ, readiness và tracing
 
-1. `test_deepagent_runtime_refactor.py::test_runtime_loads_instructions_and_mcp_paths_from_project_root`: test monkeypatch `runtime.stdio_client`, nhưng module không còn thuộc tính này.
-2. `test_deepagent_trace.py::test_harness_uses_turn_checkpoint_and_rebuilds_bounded_brief`: expectation runtime context chưa có `customer_id`.
-3. `test_customer_context_service.py::test_refresh_memory_reloads_turn_updates_without_querying_crm`: fixture memory không có fact `budget_vnd` như test kỳ vọng.
+1. [business_time.py](../../src/telesale_agent/core/business_time.py) là nguồn ngày hiện tại theo UTC+7 cho catalog, giá, tồn kho, tạo đơn và voice. Context ghim ngày trước bước nạp khách/brief. Không lấy ngày tạo đơn cũ làm ngày hiện tại và không cập nhật lại giá/ngày/ETA đã lưu của đơn cũ khi replay idempotent.
+2. `/api/chat` nhận `call_date` tùy chọn dạng `YYYY-MM-DD`; audio nhận trường form cùng tên. Thiếu ngày thì dùng ngày Việt Nam hiện tại; ngày sai trả 422. Harness/evaluator vẫn giữ `metadata.call_date` của kịch bản BTC. Catalog web hỗ trợ `?on=YYYY-MM-DD` để replay, mặc định dùng cùng đồng hồ. Luồng giỏ hàng demo trong trình duyệt vẫn là snapshot BTC 15/10 đã được ghi nhãn rõ, không tạo đơn thật.
+3. `/health` và `/api/health` truy vấn `SELECT 1` bằng pool riêng và ping đủ ba session MCP db/knowledge/workflow. Probe có timeout 3 giây; thiếu session, lỗi DB/MCP hoặc agent chưa sẵn sàng trả 503. Kết quả chỉ chứa trạng thái; không trả URL DB hoặc exception. Đây là readiness, không phải cơ chế tự khởi động lại MCP.
+4. LangSmith được preflight quyền đọc project trước khi dựng model/MCP. Key/project hiện cấu hình bị từ chối 403; runtime tạm ngừng tracing, ghi một cảnh báo và công bố `tracing={status: disabled, reason: authorization_failed}` trong health. `.env` và key không bị sửa/xóa. Thay key/quyền project/workspace rồi restart để kiểm tra lại; quyền tài khoản LangSmith chưa được khôi phục bởi bản sửa này. Tracing là phụ thuộc tùy chọn nên không chặn bán hàng/readiness DB/MCP.
 
-Không sửa các lỗi này vì không thuộc F01–F12.
+E2E cùng giỏ **2 AirPure Pro + 1 AirPure Mini** đã qua cả hai chế độ:
+
+| Ngày | Tổng tiền | Đơn giá | Kết quả |
+| --- | --- | --- | --- |
+| Mặc định hiện tại 15/11/2026 | 18.170.000đ | Pro 7.990.000đ × 2, Mini 2.190.000đ | COD bị chặn, bank tạo một đơn, retry không trùng |
+| `call_date=2026-10-15` | 16.475.000đ | Pro 7.690.000đ × 2, Mini 1.095.000đ | Giữ đúng ưu đãi BTC cũ, COD/bank/retry đều đúng |
+
+SKU-MB-STR1 hiện có tồn 0 ở cả web lẫn tool agent; replay 15/10 có tồn 2 ở cả hai. Đơn/khách/memory thử và session API đã dọn. Hash toàn bộ nội dung hai đơn cũ và 50 khách khớp trước/sau. API cùng ba MCP đã restart và tiếp tục chạy; log ingest LangSmith mới không còn 403 lặp lại sau tám lượt chat thật.
 
 ## Giới hạn còn lại
 
-- 30 test skip do thiếu cấu hình PostgreSQL test riêng hoặc weights ASR. Persistence của contract đã được kiểm tra qua SQLAlchemy với SQLite trong bộ nhớ; chưa chạy bộ PostgreSQL API integration trong phiên này.
-- Chưa chạy benchmark LLM/ASR thật hay xác nhận điểm thi. Test orchestration dùng tool nghiệp vụ thật và fixture BTC, không gọi dịch vụ trả phí.
+- PostgreSQL API/auth/persistence integration đã chạy, không còn 29 test skip của phiên trước. E2E thật chỉ kiểm tra luồng text báo giá/tạo đơn; chưa chạy audio ASR hoặc voice realtime thật trong phiên này.
+- Chưa chạy benchmark đủ tối thiểu 100 lượt, bỏ 3 warm-up, để kết luận p95 đạt chuẩn BTC; chưa xác nhận điểm thi hoặc độ bền dưới tải dài hạn. Tám lượt E2E thật không thay thế benchmark.
 - Claim extractor vẫn là heuristic cho các mẫu đã hỗ trợ; không thay thế LLM judge/đối chiếu thủ công toàn bộ lời thoại.
 - Trace lỗi/không có phép đo dùng `measurement_mode="unavailable"`, `ttft_ms=0` để giữ kiểu bắt buộc của schema. Đây là giá trị đánh dấu thiếu phép đo, không phải TTFT đo được; bộ tổng hợp nội bộ không tính các lượt này vào measured latency.
 - Không sửa artifact benchmark cũ. Cần sinh trace mới khi đánh giá bản code này.

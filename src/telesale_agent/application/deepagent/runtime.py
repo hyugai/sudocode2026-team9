@@ -70,7 +70,7 @@ async def initialize_runtime(harness):
     )
 
     from telesale_agent.adapters.mcp.runtime import connect_tools
-    harness.mcp_tools = await connect_tools(harness.exit_stack, harness.memory)
+    harness.mcp_tools = await connect_tools(harness.exit_stack, harness.memory, sessions=harness.mcp_sessions)
     await harness._prewarm_knowledge_mcp()
             
     model_config = resolve_model_config()
@@ -168,6 +168,9 @@ async def prewarm_knowledge_mcp(harness) -> None:
     print(f"   -> Knowledge MCP ready in {elapsed:.1f}s")
 
 async def close_runtime(harness, exc_type, exc_val, exc_tb):
-    await harness.exit_stack.aclose()
-    harness.agent = None
+    try:
+        await harness.exit_stack.aclose()
+    finally:
+        harness.agent = None
+        harness.mcp_sessions.clear()
 
