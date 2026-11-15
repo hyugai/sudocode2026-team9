@@ -23,7 +23,7 @@ from eval.model_config import configure_eval_model
 from eval.benchmark_support import machine_metadata
 from telesale_agent.adapters.llm.model_factory import resolve_model_config
 DEFAULT_SCENARIOS = (
-    REPO_ROOT / "dataset" / "iterative-refinement" / "scenarios_complete dataset"
+    REPO_ROOT / "dataset" / "main" / "scenarios_complete"
 )
 DEFAULT_OUTPUT_ROOT = REPO_ROOT / "outputs" / "benchmark"
 TEAM_EVAL = HERE / "team_eval.py"
@@ -147,7 +147,7 @@ Notes:
 def main() -> int:
     load_dotenv(REPO_ROOT / ".env")
     parser = argparse.ArgumentParser(
-        description="Run iterative-refinement scenarios into a versioned benchmark folder."
+        description="Run main scenarios into a versioned benchmark folder."
     )
     parser.add_argument("--version", required=True, help="Example: benchmark_v1")
     parser.add_argument("--scenarios", default=str(DEFAULT_SCENARIOS))

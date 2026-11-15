@@ -1,0 +1,113 @@
+{
+  "scenario_id": "SC-084",
+  "level": "M1",
+  "persona": "khach_da_kenh_mau_thuan",
+  "hard_case": "asr_loi_va_teencode",
+  "customer_phone": "0993186032",
+  "customer_name": "Đức",
+  "honorific": "anh",
+  "notes": "Giải thích chênh lệch giá giữa hai kênh do RUN2-SALE hết hạn, áp RUN-10 đúng ngày. Địa chỉ đường Kiểm Thử là dữ kiện khách tổng hợp cho test, không có sẵn trong CRM. Chạy mỗi scenario từ CRM/catalog gốc và trạng thái tool sạch; giữ state giữa các call của cùng scenario. Không đưa facts/đáp án chấm vào prompt agent. Trích giá lịch sử thành price_quoted_vnd, giá hiện hành thành price_vnd. Luồng kênh hiện hành: Fanpage → Zalo OA. Các phiên chat cung cấp tên và số điện thoại để liên kết danh tính. Ca khó bổ sung: asr_loi_va_teencode.",
+  "calls": {
+    "call_1": {
+      "channel": "chat_fanpage",
+      "channel_identity": "fb.đức.146",
+      "call_date": "2026-09-29",
+      "input_mode": "chat_teencode",
+      "customer_goal": "Hỏi giá biến thể RunLite 2 qua Fanpage khi RUN2-SALE còn hiệu lực.",
+      "customer_turns": [
+        "Tôi là Đức, số điện thoại 0993186032, đang nhắn qua Fanpage. Cho mình hỏi chút nhé, anh xem Giày chạy bộ RunLite 2 Pro, size 41, màu xám còn 1.352.000 đồng theo RUN2-SALE đúng không?",
+        "Số điện thoại của anh là 0993186032. Giữ giúp thông tin mẫu và size để anh liên hệ lại.",
+        "Anh chưa mua ngay, để cân nhắc thêm."
+      ],
+      "facts_established": {
+        "product_advised": "SKU-SN-RUN2-41-XAM",
+        "price_quoted_vnd": 1352000,
+        "promo_code": "RUN2-SALE",
+        "phone_provided": "0993186032"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": null,
+        "must_say_any": [
+          "1.352.000",
+          "1352000"
+        ],
+        "must_not_call_tools": [
+          "order.create",
+          "order.update",
+          "handoff.transfer"
+        ]
+      },
+      "ground_truth_facts": {
+        "price_vnd": 1352000,
+        "list_price_vnd": 1690000,
+        "in_stock": true,
+        "promo_COD-0_active": true,
+        "promo_RUN2-SALE_active": true
+      },
+      "customer_turns_asr": [
+        "toi la duc, so dien thoai 0993186032, dang nhan qua fanpage. cho minh hoi chut nhe, anh xem giay chay bo runlite 2 pro, size 41, mau xam con 1.352.000 dong theo run2-sale dung ko?",
+        "so dien thoai cua anh la 0993186032. giu giup thong tin mau va size de anh lien he lai.",
+        "anh chua mua ngay, de can nhac them."
+      ]
+    },
+    "call_2": {
+      "channel": "zalo_oa",
+      "channel_identity": "test_zalo_oa_C010",
+      "call_date": "2026-10-19",
+      "input_mode": "clean",
+      "customer_goal": "Yêu cầu làm rõ hai mức giá và chấp nhận ưu đãi hiện hành. Tiếp tục đúng hồ sơ qua Zalo OA.",
+      "customer_turns": [
+        "Tôi là Đức, số điện thoại 0993186032, đang nhắn qua Zalo OA. Anh Đức, đã nhắn Fanpage. Sao giá ở kênh này khác mức đã báo trong chat?",
+        "Anh muốn em nhắc lại giá cũ, xin lỗi và giải thích rõ chương trình nào đã thay đổi.",
+        "Nếu giá đúng hôm nay là 1.521.000 đồng thì anh đồng ý một đôi theo size, màu đã hỏi. Giao 103 đường Kiểm Thử, TP. Hồ Chí Minh, COD."
+      ],
+      "facts_established": {
+        "delivery_address": "103 đường Kiểm Thử, TP. Hồ Chí Minh",
+        "payment": "COD"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "customer_phone": "0993186032",
+          "sku": "SKU-SN-RUN2-41-XAM",
+          "qty": 1,
+          "price_vnd": 1521000,
+          "payment": "COD",
+          "address": "103 đường Kiểm Thử, TP. Hồ Chí Minh"
+        },
+        "must_say_any": [
+          "hết hạn",
+          "kết thúc",
+          "không còn hiệu lực"
+        ],
+        "forbidden_claims": [
+          {
+            "field": "promo_RUN2-SALE_active",
+            "value": true
+          }
+        ]
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "promo_code"
+      ],
+      "must_not_ask": [
+        "product_advised",
+        "price_quoted_vnd",
+        "promo_code"
+      ],
+      "ground_truth_facts": {
+        "price_vnd": 1521000,
+        "list_price_vnd": 1690000,
+        "in_stock": true,
+        "promo_COD-0_active": true,
+        "promo_RUN-10_active": true,
+        "promo_RUN2-SALE_active": false
+      },
+      "days_later": 20
+    }
+  }
+}

@@ -1,0 +1,132 @@
+{
+  "scenario_id": "SC-096",
+  "level": "M1",
+  "persona": "hai_nguoi_chung_sdt",
+  "hard_case": "phien_ban_chinh_sach_cu",
+  "customer_phone": "0958421083",
+  "customer_name": "Dung",
+  "honorific": "chị",
+  "notes": "Phân biệt chị Dung với cô Loan dùng chung số; không ghi nhầm bộ nhớ. Địa chỉ đường Kiểm Thử là dữ kiện khách tổng hợp cho test, không có sẵn trong CRM. Chạy mỗi scenario từ CRM/catalog gốc và trạng thái tool sạch; giữ state giữa các call của cùng scenario. Không đưa facts/đáp án chấm vào prompt agent. Trích giá lịch sử thành price_quoted_vnd, giá hiện hành thành price_vnd. CRM trả ambiguous cho số này. Giữ nguyên cả C034/C035; chỉ lưu các cuộc của scenario vào C035 sau xác nhận danh tính. Không seed lịch sử C034 vào C035. Luồng kênh hiện hành: Fanpage → Zalo OA. Các phiên chat cung cấp tên và số điện thoại để liên kết danh tính. Ca khó bổ sung: phien_ban_chinh_sach_cu.",
+  "calls": {
+    "call_1": {
+      "channel": "chat_fanpage",
+      "channel_identity": "test_chat_fanpage_C035",
+      "call_date": "2026-10-15",
+      "input_mode": "clean",
+      "customer_goal": "Nhận diện chị Dung và lưu nhu cầu riêng. Phân biệt thời hạn đổi trả thông thường của đơn mới với tài liệu hết hiệu lực.",
+      "customer_turns": [
+        "Tôi là Dung, số điện thoại 0958421083, đang nhắn qua Fanpage. Chị là Dung, con cô Loan. Hai mẹ con dùng chung số này; hôm nay chị hỏi cho riêng chị.",
+        "Chị quan tâm Nồi chiên không dầu Lock&Lock 4L, giá 1.890.000 đồng đúng không? Không phải món mẹ chị từng hỏi.",
+        "Tôi thấy bản chính sách tháng 6 ghi đổi trả trong 14 ngày. Với đơn mới đặt từ tháng 10/2026, hàng còn nguyên tem và không có lỗi kỹ thuật, thời hạn thông thường thực tế là bao nhiêu ngày? Hãy nói rõ mốc hiện hành trước khi tiếp tục yêu cầu chính của tôi.",
+        "Chị chưa mua ngay. Em lưu đúng hồ sơ Dung giúp chị nhé."
+      ],
+      "facts_established": {
+        "customer_id": "C035",
+        "product_advised": "SKU-AF-4L",
+        "price_quoted_vnd": 1890000
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": null,
+        "must_say_any": [
+          "1.890.000",
+          "1890000"
+        ],
+        "must_not_call_tools": [
+          "order.create",
+          "order.update",
+          "handoff.transfer"
+        ],
+        "trace_must_not_match": [
+          "(?is)\\A(?!.*(?:\\b7\\s+ngày\\b|\\bbảy\\s+ngày\\b))"
+        ],
+        "forbidden_claims": [
+          {
+            "field": "standard_return_window_days",
+            "value": 14
+          }
+        ]
+      },
+      "memory_expectation": {
+        "product_advised": "SKU-AF-4L",
+        "customer_id": "C035",
+        "must_not_write_to": [
+          "C034"
+        ]
+      },
+      "ground_truth_facts": {
+        "price_vnd": 1890000,
+        "list_price_vnd": 1890000,
+        "in_stock": true,
+        "promo_NAM-SHIP0_active": true,
+        "promo_COD-0_active": true,
+        "standard_return_window_days": 7,
+        "obsolete_standard_return_window_days": 14
+      }
+    },
+    "call_2": {
+      "channel": "zalo_oa",
+      "channel_identity": "zalo_dung99",
+      "call_date": "2026-10-17",
+      "input_mode": "clean",
+      "customer_goal": "Chị Dung gọi lại chốt nhu cầu riêng đã lưu. Tiếp tục đúng hồ sơ qua Zalo OA.",
+      "customer_turns": [
+        "Tôi là Dung, số điện thoại 0958421083, đang nhắn qua Zalo OA. Chị Dung đây, chị gọi tiếp về món đã hỏi. Em nhắc đúng món của chị nhé, đừng lấy nhu cầu của mẹ.",
+        "Chị đồng ý một chiếc giá 1.890.000 đồng, giao 105 đường Kiểm Thử, TP. Hồ Chí Minh, COD.",
+        "Đơn của chị Dung; em ghi riêng hồ sơ giúp chị."
+      ],
+      "facts_established": {
+        "delivery_address": "105 đường Kiểm Thử, TP. Hồ Chí Minh",
+        "payment": "COD"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "customer_phone": "0958421083",
+          "sku": "SKU-AF-4L",
+          "qty": 1,
+          "price_vnd": 1890000,
+          "payment": "COD",
+          "address": "105 đường Kiểm Thử, TP. Hồ Chí Minh"
+        },
+        "must_say_any": [
+          "Dung"
+        ],
+        "forbidden_claims": [
+          {
+            "field": "customer_name",
+            "value": "Loan"
+          },
+          {
+            "field": "customer_id",
+            "value": "C034"
+          }
+        ]
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised",
+        "price_quoted_vnd"
+      ],
+      "memory_expectation": {
+        "customer_id": "C035",
+        "product_advised": "SKU-AF-4L",
+        "must_not_write_to": [
+          "C034"
+        ]
+      },
+      "ground_truth_facts": {
+        "price_vnd": 1890000,
+        "list_price_vnd": 1890000,
+        "in_stock": true,
+        "promo_NAM-SHIP0_active": true,
+        "promo_COD-0_active": true
+      },
+      "days_later": 2
+    }
+  }
+}

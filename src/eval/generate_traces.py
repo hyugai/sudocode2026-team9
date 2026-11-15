@@ -35,8 +35,8 @@ load_dotenv(REPO_ROOT / ".env")
 DEFAULT_SCENARIOS_DIR = (
     REPO_ROOT
     / "dataset"
-    / "iterative-refinement"
-    / "scenarios_complete dataset"
+    / "main"
+    / "scenarios_complete"
 )
 DEFAULT_OUT_DIR = REPO_ROOT / "outputs" / "eval"
 TEAM_EVAL_PATH = HERE / "team_eval.py"
@@ -429,7 +429,7 @@ async def main():
     parser.add_argument("--input-kind", choices=["text","audio"], default="text")
     parser.add_argument("--llm-provider",default=None)
     parser.add_argument("--llm-model",default=None)
-    parser.add_argument("--audio-root", type=Path, default=REPO_ROOT / "dataset/iterative-refinement/audio")
+    parser.add_argument("--audio-root", type=Path, default=REPO_ROOT / "dataset/main/audio")
     parser.add_argument(
         "--scenario-ids",
         nargs="+",

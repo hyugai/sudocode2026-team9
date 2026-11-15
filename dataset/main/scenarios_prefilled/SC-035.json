@@ -1,0 +1,359 @@
+{
+  "scenario_id": "SC-035",
+  "scenario_seed": {
+    "scenario_id": "SC-035",
+    "level": "M1",
+    "persona": "khach_hoi_nhieu_khong_mua",
+    "hard_case": "phien_ban_chinh_sach_cu",
+    "customer_phone": "0994893949",
+    "customer_name": "Hạnh",
+    "honorific": "chị",
+    "calls": {
+      "call_1": {
+        "channel": "hotline",
+        "channel_identity": "0994893949",
+        "call_date": "2026-10-19",
+        "input_mode": "clean",
+        "facts_established": {
+          "product_advised": "SKU-SN-CAS-40-DEN",
+          "price_quoted_vnd": 890000,
+          "blocker": "chưa rõ điều kiện đổi size"
+        },
+        "expected_outcome": "tu_choi",
+        "success_if": {
+          "tool_called": null,
+          "must_say_any": [
+            "890.000",
+            "890000"
+          ],
+          "must_not_call_tools": [
+            "order.create",
+            "order.update",
+            "handoff.transfer"
+          ]
+        },
+        "ground_truth_facts": {
+          "price_vnd": 890000,
+          "list_price_vnd": 890000,
+          "in_stock": true,
+          "promo_COD-0_active": true
+        }
+      },
+      "call_2": {
+        "channel": "hotline",
+        "channel_identity": "0994893949",
+        "call_date": "2026-10-21",
+        "input_mode": "clean",
+        "facts_established": {
+          "purchase_decision": "chưa mua"
+        },
+        "expected_outcome": "tu_choi",
+        "success_if": {
+          "tool_called": null,
+          "must_say_any": [
+            "7 ngày",
+            "bảy ngày"
+          ],
+          "forbidden_claims": [
+            {
+              "field": "return_days",
+              "value": 14
+            },
+            {
+              "field": "exchange_fee_vnd",
+              "value": 20000
+            }
+          ],
+          "must_not_call_tools": [
+            "order.create",
+            "order.update",
+            "schedule.callback",
+            "handoff.transfer"
+          ]
+        },
+        "must_carry_over": [
+          "product_advised",
+          "blocker"
+        ],
+        "must_not_ask": [
+          "product_advised",
+          "blocker"
+        ],
+        "ground_truth_facts": {
+          "return_days": 7,
+          "exchange_fee_vnd": 0,
+          "policy_version": "2026-10"
+        },
+        "days_later": 2
+      }
+    }
+  },
+  "fields_to_generate": [
+    "notes",
+    "calls.call_1.customer_goal",
+    "calls.call_1.customer_turns",
+    "calls.call_2.customer_goal",
+    "calls.call_2.customer_turns"
+  ],
+  "generation_context": {
+    "test_objective": "Nhớ sản phẩm khách đang cân nhắc, sửa hiểu nhầm chính sách cũ và không tạo đơn khi chưa đồng ý.",
+    "customer": {
+      "customer_id": "C017",
+      "name": "Hạnh",
+      "honorific": "chị",
+      "phone": "0994893949",
+      "zalo_id": "zalo_hạnh44",
+      "fb_id": null,
+      "region": "nam",
+      "orders": []
+    },
+    "persona": {
+      "persona_id": "khach_hoi_nhieu_khong_mua",
+      "patience_initial": {
+        "call_1": 5,
+        "call_2": 4,
+        "call_3": 3
+      },
+      "style": "hỏi nhiều chi tiết, chưa quyết",
+      "system_prompt": "Bạn thích hỏi kỹ nhiều chi tiết kỹ thuật và so sánh, chưa muốn mua. Mục tiêu: {goal}. Đã biết: {facts}. Dàn ý: {turn_outline}. Bạn hỏi tối đa theo dàn ý, kết thúc bằng 'để xem thêm' trừ khi dàn ý nói bạn chốt. Nếu nhân viên bịa thông số, bạn hỏi lại 'em chắc không?'."
+    },
+    "products": [
+      {
+        "sku": "SKU-SN-CAS",
+        "name": "Giày sneaker Urban Classic",
+        "category": "thoi-trang/giay",
+        "brand": "Urban",
+        "list_price_vnd": 890000,
+        "attributes": {
+          "material": "vải lưới + đế EVA",
+          "return_days": 7
+        },
+        "stock": 109,
+        "variants": [
+          {
+            "variant_sku": "SKU-SN-CAS-38-DEN",
+            "size": 38,
+            "color": "den",
+            "price_delta_vnd": 0,
+            "stock": 0
+          },
+          {
+            "variant_sku": "SKU-SN-CAS-38-TRANG",
+            "size": 38,
+            "color": "trang",
+            "price_delta_vnd": 0,
+            "stock": 5
+          },
+          {
+            "variant_sku": "SKU-SN-CAS-38-XAM",
+            "size": 38,
+            "color": "xam",
+            "price_delta_vnd": 0,
+            "stock": 9
+          },
+          {
+            "variant_sku": "SKU-SN-CAS-39-DEN",
+            "size": 39,
+            "color": "den",
+            "price_delta_vnd": 0,
+            "stock": 9
+          },
+          {
+            "variant_sku": "SKU-SN-CAS-39-TRANG",
+            "size": 39,
+            "color": "trang",
+            "price_delta_vnd": 0,
+            "stock": 5
+          },
+          {
+            "variant_sku": "SKU-SN-CAS-39-XAM",
+            "size": 39,
+            "color": "xam",
+            "price_delta_vnd": 0,
+            "stock": 0
+          },
+          {
+            "variant_sku": "SKU-SN-CAS-40-DEN",
+            "size": 40,
+            "color": "den",
+            "price_delta_vnd": 0,
+            "stock": 5
+          },
+          {
+            "variant_sku": "SKU-SN-CAS-40-TRANG",
+            "size": 40,
+            "color": "trang",
+            "price_delta_vnd": 0,
+            "stock": 9
+          },
+          {
+            "variant_sku": "SKU-SN-CAS-40-XAM",
+            "size": 40,
+            "color": "xam",
+            "price_delta_vnd": 0,
+            "stock": 9
+          },
+          {
+            "variant_sku": "SKU-SN-CAS-41-DEN",
+            "size": 41,
+            "color": "den",
+            "price_delta_vnd": 0,
+            "stock": 5
+          },
+          {
+            "variant_sku": "SKU-SN-CAS-41-TRANG",
+            "size": 41,
+            "color": "trang",
+            "price_delta_vnd": 0,
+            "stock": 5
+          },
+          {
+            "variant_sku": "SKU-SN-CAS-41-XAM",
+            "size": 41,
+            "color": "xam",
+            "price_delta_vnd": 0,
+            "stock": 9
+          },
+          {
+            "variant_sku": "SKU-SN-CAS-42-DEN",
+            "size": 42,
+            "color": "den",
+            "price_delta_vnd": 0,
+            "stock": 2
+          },
+          {
+            "variant_sku": "SKU-SN-CAS-42-TRANG",
+            "size": 42,
+            "color": "trang",
+            "price_delta_vnd": 0,
+            "stock": 5
+          },
+          {
+            "variant_sku": "SKU-SN-CAS-42-XAM",
+            "size": 42,
+            "color": "xam",
+            "price_delta_vnd": 0,
+            "stock": 9
+          },
+          {
+            "variant_sku": "SKU-SN-CAS-43-DEN",
+            "size": 43,
+            "color": "den",
+            "price_delta_vnd": 50000,
+            "stock": 5
+          },
+          {
+            "variant_sku": "SKU-SN-CAS-43-TRANG",
+            "size": 43,
+            "color": "trang",
+            "price_delta_vnd": 50000,
+            "stock": 9
+          },
+          {
+            "variant_sku": "SKU-SN-CAS-43-XAM",
+            "size": 43,
+            "color": "xam",
+            "price_delta_vnd": 50000,
+            "stock": 9
+          }
+        ]
+      }
+    ],
+    "business_snapshots": [
+      {
+        "call": "call_1",
+        "sku": "SKU-SN-CAS-40-DEN",
+        "on": "2026-10-19",
+        "quote": {
+          "sku": "SKU-SN-CAS-40-DEN",
+          "list_price_vnd": 890000,
+          "final_price_vnd": 890000,
+          "applied_promos": [
+            {
+              "promo_code": "COD-0",
+              "type": "freecod",
+              "discount_vnd": 0
+            }
+          ],
+          "expired_promos": [],
+          "ineligible_promos": [],
+          "not_applied_exclusive": [],
+          "freeship": false
+        },
+        "inventory": {
+          "sku": "SKU-SN-CAS-40-DEN",
+          "in_stock": true,
+          "qty": 5
+        }
+      },
+      {
+        "call": "call_2",
+        "sku": "SKU-SN-CAS-40-DEN",
+        "on": "2026-10-21",
+        "quote": {
+          "sku": "SKU-SN-CAS-40-DEN",
+          "list_price_vnd": 890000,
+          "final_price_vnd": 890000,
+          "applied_promos": [
+            {
+              "promo_code": "COD-0",
+              "type": "freecod",
+              "discount_vnd": 0
+            }
+          ],
+          "expired_promos": [],
+          "ineligible_promos": [],
+          "not_applied_exclusive": [],
+          "freeship": false
+        },
+        "inventory": {
+          "sku": "SKU-SN-CAS-40-DEN",
+          "in_stock": true,
+          "qty": 5
+        }
+      }
+    ],
+    "planned_goals": {
+      "call_1": "Tìm hiểu sản phẩm, chưa mua.",
+      "call_2": "Xác minh chính sách đổi size cho đơn mới, chưa mua."
+    },
+    "synthetic_customer_facts": {
+      "delivery_address": "104 đường Kiểm Thử, TP. Hồ Chí Minh",
+      "note": "Synthetic test address supplied in customer dialogue; not copied from CRM."
+    },
+    "runner_contract": {
+      "reset_before_each_scenario": true,
+      "preserve_state_between_calls": true,
+      "reference_tools": "eval/mock_tools.py",
+      "scenario_export": "Write scenario_seed plus generated fields as <scenario_id>.json, preserving the existing scenario_id; remove this wrapper.",
+      "memory_expectation_requires_memory_writes": false
+    },
+    "constraints": [
+      "Preserve every populated seed value.",
+      "Generate only listed missing fields; do not add an agent response.",
+      "Customer dialogue must establish the planned facts before a later call relies on them.",
+      "Earlier quoted prices are historical; do not classify them as current price_vnd.",
+      "Do not invent products, promotions, stock, CRM identity or policy facts.",
+      "Do not expose private success_if, ground_truth_facts or memory labels to the tested agent."
+    ],
+    "fixture_notes": [],
+    "sources_sha256": {
+      "schemas/scenario_format.md": "91acb65f8164cd234e3d2dfc00865d92a9af15830e6841e0e77eb76db7ec4927",
+      "schemas/tools.schema.json": "4cc8935e3e7f1a37b43eab0d68d85e8383037e52423e9f7cc022da916c97d4e0",
+      "schemas/handoff_brief.schema.json": "d57546f15e5d18feece2d270794c99dea9dd74fdab02354cd49b3faabe7f6b8b",
+      "catalog/crm_seed.json": "468c0401ad406c2d1186314eac4afaaf17afe34f1fa654676bc13f818faf18e3",
+      "catalog/products.json": "ba8f86b5bf80d6570d2cc84649c66d12a2a7050c4622458af942b41232adc2cd",
+      "catalog/promotions.json": "e22d9bfa68e3b1d153324fad2de872061d632e518ff4f305a8c8d88e1c5c25be",
+      "catalog/inventory_timeline.json": "aabaf8dc955ab93782a49d6a70526df0db77bd27fd8fbf8f37dbf6181474cf80",
+      "simulator/personas.json": "c86b9d7c9988a12a7be8f01870de3c8c02813ea612df21c3b97bc12c37868857",
+      "eval/mock_tools.py": "e1264037edeec98fb090b851061cc6e653ca8279752f899278e7ab057286f926",
+      "eval/reference_eval.py": "818fc4900a18f9b92c1abb3adebcca997774dfc3da23083c9030bad2f7229ddc",
+      "policy/chinh-sach-doi-tra.md": "8177c41dd7f026623d5fe106cdb0d0cdaa85b1d7cbe2652d6efa07fafcdc2493",
+      "policy/changelog.md": "106960c3777e8995c5dcd84ea8e62c9593c2d74e2eff335e393f436ab71d0dfa",
+      "policy/dieu-khoan-khuyen-mai.md": "46f8b1e14cfd2194d0f5187f6fd8139b2f2290367102191fa87bd1427464c009",
+      "policy/playbook-telesale.md": "ca74b496676a1bf88c7d0caf36cfaada69c9f9003045c98055426f259a0fae0d",
+      "policy/chinh-sach-van-chuyen-thanh-toan.md": "6583a76c6c652a04584016cb5741b795b4f66a1ac6579a76e89cacc2b0af75c6",
+      "policy/thong-bao-lich-nghi.md": "332bbaeb4f235e064d5d2fc5c14b7560e27aaf19127c8740487b49bc13da57e9"
+    }
+  }
+}

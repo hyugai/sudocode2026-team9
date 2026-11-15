@@ -1,0 +1,269 @@
+{
+  "scenario_id": "SC-014",
+  "scenario_seed": {
+    "scenario_id": "SC-014",
+    "level": "M1",
+    "persona": "khach_so_gia",
+    "hard_case": "doi_khuyen_mai_het_han",
+    "customer_phone": "0975475177",
+    "customer_name": "Long",
+    "honorific": "anh",
+    "calls": {
+      "call_1": {
+        "channel": "hotline",
+        "channel_identity": "0975475177",
+        "call_date": "2026-09-23",
+        "input_mode": "clean",
+        "facts_established": {
+          "product_advised": "SKU-AP-X",
+          "price_quoted_vnd": 4390000,
+          "promo_code": "AP-SEP",
+          "promo_expiry": "2026-09-30",
+          "budget_vnd": 4990000
+        },
+        "expected_outcome": "hen_goi_lai",
+        "success_if": {
+          "tool_called": null,
+          "must_say_any": [
+            "4.390.000",
+            "4390000"
+          ],
+          "must_not_call_tools": [
+            "order.create",
+            "order.update",
+            "handoff.transfer"
+          ]
+        },
+        "ground_truth_facts": {
+          "price_vnd": 4390000,
+          "list_price_vnd": 4890000,
+          "in_stock": true,
+          "promo_COD-0_active": true,
+          "promo_AP-SEP_active": true
+        }
+      },
+      "call_2": {
+        "channel": "hotline",
+        "channel_identity": "0975475177",
+        "call_date": "2026-10-05",
+        "input_mode": "clean",
+        "facts_established": {
+          "delivery_address": "103 đường Kiểm Thử, TP. Hồ Chí Minh",
+          "payment": "COD"
+        },
+        "expected_outcome": "chot_don",
+        "success_if": {
+          "tool_called": "order.create",
+          "args_match": {
+            "customer_phone": "0975475177",
+            "sku": "SKU-AP-X",
+            "qty": 1,
+            "price_vnd": 4890000,
+            "payment": "COD",
+            "address": "103 đường Kiểm Thử, TP. Hồ Chí Minh"
+          },
+          "must_say_any": [
+            "hết hạn",
+            "kết thúc",
+            "không còn hiệu lực"
+          ],
+          "forbidden_claims": [
+            {
+              "field": "promo_AP-SEP_active",
+              "value": true
+            }
+          ]
+        },
+        "must_carry_over": [
+          "product_advised",
+          "price_quoted_vnd",
+          "promo_code"
+        ],
+        "must_not_ask": [
+          "product_advised",
+          "price_quoted_vnd",
+          "promo_code"
+        ],
+        "ground_truth_facts": {
+          "price_vnd": 4890000,
+          "list_price_vnd": 4890000,
+          "in_stock": true,
+          "promo_COD-0_active": true,
+          "promo_GIFT-FILTER_active": true,
+          "promo_AP-SEP_active": false
+        },
+        "days_later": 12
+      }
+    }
+  },
+  "fields_to_generate": [
+    "notes",
+    "calls.call_1.customer_goal",
+    "calls.call_1.customer_turns",
+    "calls.call_2.customer_goal",
+    "calls.call_2.customer_turns"
+  ],
+  "generation_context": {
+    "test_objective": "Nhớ giá cũ, giải thích AP-SEP hết hạn và chỉ tạo đơn theo giá hiện hành.",
+    "customer": {
+      "customer_id": "C008",
+      "name": "Long",
+      "honorific": "anh",
+      "phone": "0975475177",
+      "zalo_id": null,
+      "fb_id": null,
+      "region": "nam",
+      "orders": []
+    },
+    "persona": {
+      "persona_id": "khach_so_gia",
+      "patience_initial": {
+        "call_1": 3,
+        "call_2": 3,
+        "call_3": 2
+      },
+      "style": "thực dụng, nhắc giá đối thủ, đòi giảm",
+      "system_prompt": "Bạn là khách hàng thực dụng, quan tâm giá. Mục tiêu: {goal}. Đã biết: {facts}. Dàn ý: {turn_outline}. Bạn nêu giá đối thủ và đòi giảm; nếu nhân viên không giảm nhưng nêu được giá trị đi kèm (bảo hành, quà, đổi trả), bạn chấp nhận theo dàn ý. Nếu nhân viên tự ý giảm giá không có chương trình, bạn hỏi 'chương trình gì?' để kiểm tra. Không bịa thông tin mới."
+    },
+    "products": [
+      {
+        "sku": "SKU-AP-X",
+        "name": "Máy lọc không khí AirPure X",
+        "category": "gia-dung/may-loc-khong-khi",
+        "brand": "AirPure",
+        "list_price_vnd": 4890000,
+        "attributes": {
+          "room_area_m2": 25,
+          "features": "HEPA H13, cảm biến PM2.5, chế độ ngủ",
+          "warranty_months": 24,
+          "child_safe_lock": false
+        },
+        "stock": 40,
+        "variants": []
+      }
+    ],
+    "business_snapshots": [
+      {
+        "call": "call_1",
+        "sku": "SKU-AP-X",
+        "on": "2026-09-23",
+        "quote": {
+          "sku": "SKU-AP-X",
+          "list_price_vnd": 4890000,
+          "final_price_vnd": 4390000,
+          "applied_promos": [
+            {
+              "promo_code": "COD-0",
+              "type": "freecod",
+              "discount_vnd": 0
+            },
+            {
+              "promo_code": "AP-SEP",
+              "type": "fixed",
+              "discount_vnd": 500000
+            }
+          ],
+          "expired_promos": [],
+          "ineligible_promos": [
+            {
+              "promo_code": "TRADE-IN-AP",
+              "reason": "requires_owned_sku"
+            }
+          ],
+          "not_applied_exclusive": [],
+          "freeship": true
+        },
+        "inventory": {
+          "sku": "SKU-AP-X",
+          "in_stock": true,
+          "qty": 40
+        }
+      },
+      {
+        "call": "call_2",
+        "sku": "SKU-AP-X",
+        "on": "2026-10-05",
+        "quote": {
+          "sku": "SKU-AP-X",
+          "list_price_vnd": 4890000,
+          "final_price_vnd": 4890000,
+          "applied_promos": [
+            {
+              "promo_code": "COD-0",
+              "type": "freecod",
+              "discount_vnd": 0
+            },
+            {
+              "promo_code": "GIFT-FILTER",
+              "type": "gift",
+              "discount_vnd": 0,
+              "gift_sku": "SKU-AP-FLT-X"
+            }
+          ],
+          "expired_promos": [
+            "AP-SEP"
+          ],
+          "ineligible_promos": [
+            {
+              "promo_code": "AIR-2ND-50",
+              "reason": "min_qty"
+            },
+            {
+              "promo_code": "TRADE-IN-AP",
+              "reason": "requires_owned_sku"
+            }
+          ],
+          "not_applied_exclusive": [],
+          "freeship": true
+        },
+        "inventory": {
+          "sku": "SKU-AP-X",
+          "in_stock": true,
+          "qty": 40
+        }
+      }
+    ],
+    "planned_goals": {
+      "call_1": "So giá AirPure X trong thời gian khuyến mãi AP-SEP.",
+      "call_2": "Yêu cầu giá cũ, nghe giải thích và chấp nhận giá mới."
+    },
+    "synthetic_customer_facts": {
+      "delivery_address": "103 đường Kiểm Thử, TP. Hồ Chí Minh",
+      "note": "Synthetic test address supplied in customer dialogue; not copied from CRM."
+    },
+    "runner_contract": {
+      "reset_before_each_scenario": true,
+      "preserve_state_between_calls": true,
+      "reference_tools": "eval/mock_tools.py",
+      "scenario_export": "Write scenario_seed plus generated fields as <scenario_id>.json, preserving the existing scenario_id; remove this wrapper.",
+      "memory_expectation_requires_memory_writes": false
+    },
+    "constraints": [
+      "Preserve every populated seed value.",
+      "Generate only listed missing fields; do not add an agent response.",
+      "Customer dialogue must establish the planned facts before a later call relies on them.",
+      "Earlier quoted prices are historical; do not classify them as current price_vnd.",
+      "Do not invent products, promotions, stock, CRM identity or policy facts.",
+      "Do not expose private success_if, ground_truth_facts or memory labels to the tested agent."
+    ],
+    "fixture_notes": [],
+    "sources_sha256": {
+      "schemas/scenario_format.md": "91acb65f8164cd234e3d2dfc00865d92a9af15830e6841e0e77eb76db7ec4927",
+      "schemas/tools.schema.json": "4cc8935e3e7f1a37b43eab0d68d85e8383037e52423e9f7cc022da916c97d4e0",
+      "schemas/handoff_brief.schema.json": "d57546f15e5d18feece2d270794c99dea9dd74fdab02354cd49b3faabe7f6b8b",
+      "catalog/crm_seed.json": "468c0401ad406c2d1186314eac4afaaf17afe34f1fa654676bc13f818faf18e3",
+      "catalog/products.json": "ba8f86b5bf80d6570d2cc84649c66d12a2a7050c4622458af942b41232adc2cd",
+      "catalog/promotions.json": "e22d9bfa68e3b1d153324fad2de872061d632e518ff4f305a8c8d88e1c5c25be",
+      "catalog/inventory_timeline.json": "aabaf8dc955ab93782a49d6a70526df0db77bd27fd8fbf8f37dbf6181474cf80",
+      "simulator/personas.json": "c86b9d7c9988a12a7be8f01870de3c8c02813ea612df21c3b97bc12c37868857",
+      "eval/mock_tools.py": "e1264037edeec98fb090b851061cc6e653ca8279752f899278e7ab057286f926",
+      "eval/reference_eval.py": "818fc4900a18f9b92c1abb3adebcca997774dfc3da23083c9030bad2f7229ddc",
+      "policy/chinh-sach-doi-tra.md": "8177c41dd7f026623d5fe106cdb0d0cdaa85b1d7cbe2652d6efa07fafcdc2493",
+      "policy/changelog.md": "106960c3777e8995c5dcd84ea8e62c9593c2d74e2eff335e393f436ab71d0dfa",
+      "policy/dieu-khoan-khuyen-mai.md": "46f8b1e14cfd2194d0f5187f6fd8139b2f2290367102191fa87bd1427464c009",
+      "policy/playbook-telesale.md": "ca74b496676a1bf88c7d0caf36cfaada69c9f9003045c98055426f259a0fae0d",
+      "policy/chinh-sach-van-chuyen-thanh-toan.md": "6583a76c6c652a04584016cb5741b795b4f66a1ac6579a76e89cacc2b0af75c6",
+      "policy/thong-bao-lich-nghi.md": "332bbaeb4f235e064d5d2fc5c14b7560e27aaf19127c8740487b49bc13da57e9"
+    }
+  }
+}

@@ -1,13 +1,15 @@
 # Scenario Tests — 120 Paired Records
 
-This package contains **120 scenarios across all 12 BTC personas**, with **250 calls**. Each JSONL line is one JSON object. Records match between the two files by `scenario_id`, from `SC-G9-001` to `SC-G9-120`.
+This package contains **120 scenarios across all 12 BTC personas**, with **250 calls**. The current sources are individual JSON files, paired by `scenario_id` from `SC-001` to `SC-120`. Each filename matches its ID.
 
 ## Files
 
-| File | Purpose | One line contains |
+| Path | Purpose | One file contains |
 |---|---|---|
-| `01_scenarios_prefilled.jsonl` | Input for completing or regenerating a scenario | A fixed scenario seed, missing-field list and supporting context |
-| `02_scenarios_complete.jsonl` | Completed scenario tests | One BTC-format scenario with Vietnamese customer turns and grading conditions |
+| `scenarios_prefilled/SC-xxx.json` | Input for completing or regenerating a scenario | A fixed scenario seed, missing-field list and supporting context |
+| `scenarios_complete/SC-xxx.json` | Completed scenario tests, used directly by the evaluator | One BTC-format scenario with Vietnamese customer turns and grading conditions |
+
+The superseded `01_scenarios_prefilled.jsonl` and `02_scenarios_complete.jsonl` files have been deleted. The existing JSON files are retained as the current versions. No JSONL conversion is needed.
 
 ## 1. Prefilled file
 
@@ -26,34 +28,24 @@ To use it with an LLM, supply the record, ask it to fill only `fields_to_generat
 
 Each record contains the BTC scenario fields: identity, persona, notes and `calls`. Calls include customer dialogue, facts, memory requirements and success conditions as relevant.
 
-This file is ready for scenario loading/export. It contains **customer inputs and private grading expectations**. Actual agent responses and tool calls are produced later by running the system and saved as traces.
+These complete JSON files are ready for scenario loading. They contain **customer inputs and private grading expectations**. Actual agent responses and tool calls are produced later by running the system and saved as traces.
 
-The complete file already fills the missing fields from the prefilled file; using an LLM again is optional.
+The complete scenarios already fill the generated fields; using an LLM again is optional. Review any seed/complete differences before regenerating content.
 
-## Export for BTC's evaluator
+## Run with the evaluator
 
-BTC's reference evaluator loads a folder containing one JSON file per scenario. Run this Python code from the directory containing the complete JSONL file:
+BTC's reference evaluator loads a folder containing one JSON file per scenario. Use `dataset/main/scenarios_complete/` directly; the prefilled folder contains generation wrappers and must not be passed to the evaluator.
 
-```python
-import json
-from pathlib import Path
+From the repository root, run the team runner under `full` and `baseline_no_memory`, saving actual traces. Score those traces with BTC's reference evaluator:
 
-output = Path("scenarios")
-output.mkdir(exist_ok=True)
-
-with Path("02_scenarios_complete.jsonl").open(encoding="utf-8") as source:
-    for line in source:
-        if not line.strip():
-            continue
-        scenario = json.loads(line)
-        path = output / f"{scenario['scenario_id']}.json"
-        path.write_text(
-            json.dumps(scenario, ensure_ascii=False, indent=2) + "\n",
-            encoding="utf-8",
-        )
+```bash
+python dataset/organizer/eval/reference_eval.py \
+  --scenarios dataset/main/scenarios_complete \
+  --trace outputs/eval/full.jsonl \
+  --baseline outputs/eval/baseline.jsonl
 ```
 
-The team runner then executes these scenarios under `full` and `baseline_no_memory` and records actual traces for BTC scoring.
+The trace paths above are examples; supply the paths produced by your runs. Trace logs remain JSONL. `manifest.jsonl` is also retained as metadata, alongside the JSON and CSV manifests.
 
 ## Execution notes
 
@@ -66,6 +58,12 @@ The team runner then executes these scenarios under `full` and `baseline_no_memo
 
 ## Validation status
 
-The package passed checks for record pairing, preserved seed values, structure, customer identity, dates, business facts and expected reference-tool behavior. It was generated from templates with 10 variations per persona and **has not been run against the actual agent**. Semantic review and system pilot runs remain necessary.
+The original package used templates with 10 variations per persona. The quality revision changes only **SC-041–SC-120** and their paired prefilled records. **SC-001–SC-040, all 250 WAV files, and all three manifests remain unchanged.**
+
+Current session distribution is **150 hotline (60%), 50 Fanpage (20%), and 50 Zalo OA (20%)**; 70 scenarios span multiple channels. Among the 80 revised scenarios, 24 retain their core difficulty, 42 add one hard case, and 14 add two. The first four persona groups remain unchanged because their scenarios have audio.
+
+See `coverage.json` for per-scenario channels, core/additional hard cases, grading evidence, synthetic chat identities, source-hash audit, and 12 pilot IDs. Original provenance hashes are preserved: three recorded source hashes differ from the current organizer package and remain unresolved.
+
+Offline checks verified 80 seed/complete pairs, 230 price/inventory snapshots against current BTC tools, 84 positive/negative grading probes, and audio/transcript/checksum consistency. These are fixture checks, not agent responses or performance results. **Actual-agent pilots have not run** because this environment lacks backend dependencies; semantic review and pilot runs remain necessary.
 
 These are scenario tests. They do not by themselves satisfy BTC's separate requirements for complete customer-and-agent transcripts and audio conversations.

@@ -419,9 +419,9 @@ và tính p95 bằng `reference_eval.py`. Smoke test 5 scenario chỉ có tối 
 ## 8. Evaluation flow
 
 Runner một lệnh hiện tại là `src/eval/run_suite.py`. Mặc định chọn 40 scenario
-đầu từ `dataset/iterative-refinement/scenarios_complete dataset`, kiểm tra
+đầu từ `dataset/main/scenarios_complete`, kiểm tra
 manifest/text/checksum audio tương ứng trong
-`dataset/iterative-refinement/audio`, rồi chạy tuần tự bốn nhóm:
+`dataset/main/audio`, rồi chạy tuần tự bốn nhóm:
 
 ```text
 text/baseline_no_memory -> text/full
