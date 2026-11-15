@@ -169,7 +169,7 @@ async def run_turn_impl(
     ):
         allowed_tools = frozenset(
             set(allowed_tools)
-            | {"create_new_order", "check_inventory", "get_pricing_quote"}
+            | {"create_new_order", "check_inventory", "get_pricing_quote", "get_order_quote"}
         )
     if on_status and allowed_tools:
         await on_status("tools")
@@ -276,7 +276,7 @@ async def run_turn_impl(
     response_ready = time.perf_counter()
     # Non-streaming TTFT/Total end when the complete guarded answer is ready.
     # Memory persistence runs afterwards and has its own completion metrics.
-    answer_ms = round((response_ready - response_started) * 1000, 3)
+    answer_ms = round((response_ready - response_started) * 1000)
 
     print(f"   -> Agent Response: {response_text}")
     if response_text:
@@ -297,12 +297,12 @@ async def run_turn_impl(
     state.turn_number += 1
     completed_ms = (persist_finished - response_started) * 1000
     latency = {
-        "ttft_ms": round((first_text_at - response_started) * 1000, 3) if first_text_at else answer_ms,
+        "ttft_ms": round((first_text_at - response_started) * 1000) if first_text_at else answer_ms,
         "total_ms": answer_ms,
         "ttfa_ms": None, "measurement_mode": "streaming" if on_text else "non_streaming",
         "timing_boundary": "response_ready_before_persistence",
         "asr_ms": round(asr_ms, 3) if asr_ms is not None else None,
-        "call_brief_ms": round(call_brief_ms, 3) if call_brief_ms is not None else None,
+        "call_brief_ms": round(call_brief_ms) if call_brief_ms is not None else None,
         "response_ready_ms": answer_ms,
         "persistence_ms": round((persist_finished - persist_started) * 1000, 3),
         "request_complete_ms": round(completed_ms, 3),

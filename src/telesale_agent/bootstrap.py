@@ -27,6 +27,8 @@ MemoryMode = Literal["durable", "evaluation", "disabled"]
 def build_deepagent_harness(memory_mode: MemoryMode = "durable"):
     """Configure an unstarted Deep Agent harness for use with ``async with``."""
     load_dotenv()
+    from telesale_agent.adapters.llm.tracing import configure_tracing
+    configure_tracing()
     from telesale_agent.application.deepagent.harness import DeepAgentHarness
 
     local_memory = FileCustomerMemoryRepository()

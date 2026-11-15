@@ -92,6 +92,32 @@ def extract_claims(
             value = float(re.sub(r"[.,]", "", number))
         add("list_price_vnd" if "niêm" in match[0].casefold() else "price_vnd", int(value))
 
+    policy_patterns = (
+        ("return_days", re.compile(r"(?:đổi\s*trả|trả\s*hàng|đổi\s*hàng|đổi(?:\s+size)?\s+trong)"
+                                   r"[^.!?;\d]{0,30}(\d+)\s*ngày", re.I)),
+        ("warranty_months", re.compile(r"bảo\s*hành[^.!?;\d]{0,20}(\d+)\s*(tháng|năm)", re.I)),
+        ("exchange_fee_vnd", re.compile(r"phí\s+đổi(?:\s+(?:size|sản\s*phẩm|hàng))?\s*"
+                                        r"(?:(?:là|chỉ|còn|:)\s*)?(\d[\d.,]*(?:\s\d{3})*)\s*"
+                                        r"(triệu|nghìn|ngàn|tr|k|đồng|vnd|₫|đ)?", re.I)),
+    )
+    for field, pattern in policy_patterns:
+        for match in pattern.finditer(response_text):
+            if not _asserted_policy(response_text, match):
+                continue
+            number = match[1].replace(" ", "").rstrip(".,")
+            if field == "exchange_fee_vnd":
+                unit = (match[2] or "").casefold()
+                if unit in {"triệu", "tr", "nghìn", "ngàn", "k"}:
+                    value = float(number.replace(",", ".")) * (1_000_000 if unit in {"triệu", "tr"} else 1000)
+                else:
+                    value = float(re.sub(r"[.,]", "", number))
+            else:
+                value = int(number) * (12 if field == "warranty_months" and match[2].casefold() == "năm" else 1)
+            add(field, int(value))
+    for match in re.finditer(r"đổi(?:\s+size)?[^.!?;]{0,25}miễn\s*phí", response_text, re.I):
+        if _asserted_policy(response_text, match) and not re.search(r"không\s+miễn", match[0], re.I):
+            add("exchange_fee_vnd", 0)
+
     for call in tool_calls:
         name = call.get("name")
         result = call.get("result") or {}
@@ -129,6 +155,17 @@ def extract_claims(
             ):
                 add("in_stock", False)
 
+        elif name == "pricing.quote_order":
+            for unit in result.get("units", []):
+                if spoken_number(unit["final_price_vnd"]):
+                    add("price_vnd", unit["final_price_vnd"])
+                    add(f"price_vnd_{unit['sku']}", unit["final_price_vnd"])
+                for promo in unit.get("applied_promos", []):
+                    if promo["promo_code"].casefold() in response_folded:
+                        add(f"promo_{promo['promo_code']}_active", True)
+            if spoken_number(result.get("total_vnd")):
+                add("total_vnd", result["total_vnd"])
+
         elif name == "order.create" and result.get("estimated_delivery") and call_date:
             try:
                 delivery_days = (
@@ -144,6 +181,17 @@ def extract_claims(
                 pass
 
     return claims
+
+
+def _asserted_policy(text: str, match: re.Match[str]) -> bool:
+    """Exclude a denied rule or a quoted old/customer claim being corrected."""
+    prefix = re.split(r"[;!?\n]|,\s+", text[:match.start()])[-1].casefold()
+    suffix = text[match.end():match.end() + 30].casefold()
+    if re.search(r"(?:không\s+phải|không\s+áp\s+dụng|không\s+còn|chưa\s+xác\s+nhận)\s*(?:là\s*)?$", prefix):
+        return False
+    if re.match(r"[\s”\"']*(?:là\s+)?(?:sai|không\s+đúng|không\s+áp\s+dụng)", suffix):
+        return False
+    return not bool(re.search(r"(?:khách\s+(?:nói|hỏi)|bài\s+cũ|thông\s+tin\s+cũ)[^.!?]{0,60}[“\"]\s*$", prefix))
 
 
 _FACT_PATTERNS: dict[str, re.Pattern[str]] = {

@@ -17,6 +17,7 @@ from datetime import date, timedelta
 from pathlib import Path
 
 from dotenv import load_dotenv
+from jsonschema import Draft202012Validator, FormatChecker
 
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8")
@@ -61,6 +62,12 @@ from eval.trace_extractors import (  # noqa: E402
 )
 from eval.benchmark_support import audio_path, validate_inputs  # noqa: E402
 from eval.model_config import configure_eval_model, permanent_provider_error  # noqa: E402
+
+_SCHEMAS = REPO_ROOT / "dataset" / "BTC-Data-Vong1-TEAMS" / "schemas"
+_TRACE_VALIDATOR = Draft202012Validator(json.loads(
+    (_SCHEMAS / "trace_log.schema.json").read_text(encoding="utf-8")))
+_BRIEF_VALIDATOR = Draft202012Validator(json.loads(
+    (_SCHEMAS / "call_brief.schema.json").read_text(encoding="utf-8")), format_checker=FormatChecker())
 
 
 # ---------------------------------------------------------------------------
@@ -275,7 +282,10 @@ async def run_scenario(
                 total_ms = int((time.perf_counter() - t0) * 1000)
                 latency = dict(getattr(result, "latency", {}) or {})
                 if not latency:
-                    latency = {"ttft_ms":None,"total_ms":total_ms,"ttfa_ms":None,"measurement_mode":"unavailable"}
+                    latency = {"ttft_ms":0,"total_ms":total_ms,"ttfa_ms":None,"measurement_mode":"unavailable"}
+                for key in ("ttft_ms", "total_ms", "ttfa_ms", "call_brief_ms"):
+                    if latency.get(key) is not None:
+                        latency[key] = round(latency[key])
 
                 tool_calls = _extract_tool_calls(result)
                 created_order_ids.update(
@@ -341,6 +351,9 @@ async def run_scenario(
                     row["audio"] = audio_info
                 if turn_idx == 1:
                     row["call_brief_latency_ms"] = latency.get("call_brief_ms")
+                    if not is_baseline and getattr(result.call_brief, "generated_at", None):
+                        row["call_brief"] = result.call_brief.to_btc()
+                        _BRIEF_VALIDATOR.validate(row["call_brief"])
 
             except Exception as exc:
                 total_ms = int((time.perf_counter() - t0) * 1000)
@@ -368,12 +381,14 @@ async def run_scenario(
                     },
                     "customer_input_mode": input_mode,
                     "input_kind": input_kind,
-                    "latency": {"ttft_ms": None, "total_ms": total_ms, "ttfa_ms": None},
+                    "latency": {"ttft_ms": 0, "total_ms": total_ms, "ttfa_ms": None,
+                                "measurement_mode": "unavailable"},
                     "_error": error_text,
                     "_fatal_provider_error": permanent_provider_error(exc),
                 }
                 if getattr(exc,"telesale_profile",None):
                     row["latency"]["profile"] = exc.telesale_profile
+            _TRACE_VALIDATOR.validate(row)
             rows.append(row)
             if row.get("_fatal_provider_error"):
                 cleanup_created_orders()

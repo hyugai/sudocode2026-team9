@@ -10,13 +10,15 @@ from sqlalchemy.orm import selectinload
 
 from telesale_agent.adapters.db.client import db_client
 from telesale_agent.adapters.db.models import InventoryEvent, Product
+from telesale_agent.core.business_time import business_date
 
 router = APIRouter(prefix="/api/catalog", tags=["catalog"])
 logger = logging.getLogger(__name__)
 
 
-def read_products(sku: str | None = None) -> list[dict]:
+def read_products(sku: str | None = None, on: date | None = None) -> list[dict]:
     """Return product, variant and effective stock fields needed by the web UI."""
+    day = business_date(on)
     with db_client.get_session() as session:
         statement = select(Product).options(selectinload(Product.variants)).order_by(Product.sku)
         if sku is not None:
@@ -29,7 +31,7 @@ def read_products(sku: str | None = None) -> list[dict]:
         skus.update(variant.variant_sku for product in products for variant in product.variants)
         events = session.scalars(
             select(InventoryEvent)
-            .where(InventoryEvent.sku.in_(skus), InventoryEvent.event_date <= date.today())
+            .where(InventoryEvent.sku.in_(skus), InventoryEvent.event_date <= day)
             .order_by(InventoryEvent.event_date.desc(), InventoryEvent.id.desc())
         ).all()
         latest_stock: dict[str, int] = {}
@@ -68,18 +70,18 @@ def read_products(sku: str | None = None) -> list[dict]:
 
 
 @router.get("/products")
-def list_products():
+def list_products(on: date | None = None):
     try:
-        return {"items": read_products()}
+        return {"items": read_products(on=on)}
     except SQLAlchemyError as exc:
         logger.exception("Catalog query failed")
         raise HTTPException(status_code=503, detail="Catalog is unavailable") from exc
 
 
 @router.get("/products/{sku}")
-def get_product(sku: str):
+def get_product(sku: str, on: date | None = None):
     try:
-        products = read_products(sku)
+        products = read_products(sku, on=on)
     except SQLAlchemyError as exc:
         logger.exception("Catalog query failed")
         raise HTTPException(status_code=503, detail="Catalog is unavailable") from exc
