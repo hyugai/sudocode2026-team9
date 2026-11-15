@@ -133,6 +133,17 @@ class FileCustomerMemoryRepository:
             facts.update(self._parse_facts(item["content"]))
         return facts
 
+    def ensure_customer(self, customer_id: str) -> None:
+        """Create the initial user-memory tree without changing existing memory."""
+        with _customer_lock(self.root, customer_id):
+            if self._user_dir(customer_id).exists():
+                return
+            user_dir = self._user_dir(customer_id, create=True)
+            for filename, heading in (("user.md", "User Profile"),
+                                      ("behaviors.md", "Behavioral Patterns"),
+                                      ("facts.md", "Customer Facts")):
+                _atomic_write_text(user_dir / filename, f"# {heading}\n\n")
+
     def load(self, customer_id: str) -> dict[str, Any]:
         with _customer_lock(self.root, customer_id):
             user_dir = self._user_dir(customer_id)

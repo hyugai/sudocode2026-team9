@@ -4,6 +4,7 @@ from urllib.parse import quote_plus
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from telesale_agent.adapters.db.customer_identity import customer_contacts, get_or_create_customer
 
 from telesale_agent.adapters.db.models import (
     Product, ProductVariant, Promotion, InventoryEvent, Customer, Order
@@ -319,12 +320,12 @@ class PostgresClient:
                 return {"found": False, "orders": []}
             return self._serialize_customer(customer)
 
-    def get_customer(self, phone: str = None, zalo_id: str = None, fb_id: str = None):
+    def get_customer(self, phone: str = None, zalo_id: str = None, fb_id: str = None, email: str = None):
         with self.get_session() as session:
             stmt = session.query(Customer)
             
-            if phone:
-                stmt = stmt.filter_by(phone=phone)
+            if phone or email:
+                customers = customer_contacts(session, phone=phone, email=email)
             elif zalo_id:
                 stmt = stmt.filter_by(zalo_id=zalo_id)
             elif fb_id:
@@ -332,7 +333,8 @@ class PostgresClient:
             else:
                 return {"found": False, "orders": []}
                 
-            customers = stmt.all()
+            if not (phone or email):
+                customers = stmt.all()
             
             if len(customers) == 0:
                 return {"found": False, "orders": []}
@@ -355,29 +357,19 @@ class PostgresClient:
             
             return self._serialize_customer(customers[0])
 
-    def create_customer(self, phone: str) -> str:
-        """Tạo khách hàng mới nếu chưa có, auto-generate mã CXXX."""
-        with self.get_session() as session:
-            # Tìm mã CXXX lớn nhất
-            last_customer = session.query(Customer).filter(Customer.customer_id.like("C%")).order_by(Customer.customer_id.desc()).first()
-            if last_customer and len(last_customer.customer_id) >= 4:
-                try:
-                    last_num = int(last_customer.customer_id[1:])
-                    new_id = f"C{last_num + 1:03d}"
-                except ValueError:
-                    new_id = "C001"
-            else:
-                new_id = "C001"
-                
-            new_customer = Customer(
-                customer_id=new_id,
-                phone=phone,
-                name="Khách hàng mới",
-                honorific="Anh/Chị"
-            )
-            session.add(new_customer)
-            session.commit()
-            return new_id
+    def resolve_customer(self, *, phone=None, email=None, name=None):
+        with self.get_session() as session, session.begin():
+            customers, created = get_or_create_customer(session, phone=phone, email=email, name=name)
+            if len(customers) > 1:
+                return {"found": True, "ambiguous": True,
+                        "candidates": [self._serialize_customer(customer) for customer in customers], "orders": []}
+            return {**self._serialize_customer(customers[0]), "is_new": created}
+
+    def create_customer(self, phone: str = None, *, email: str = None) -> str:
+        result = self.resolve_customer(phone=phone, email=email)
+        if result.get("ambiguous"):
+            raise ValueError("Số điện thoại thuộc nhiều khách hàng.")
+        return result["customer_id"]
 
     def update_customer_attributes(self, phone: str, deltas: dict):
         if not deltas:

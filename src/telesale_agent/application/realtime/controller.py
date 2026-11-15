@@ -12,17 +12,20 @@ from telesale_agent.application.conversation.prepare import prepare_context
 from telesale_agent.application.memory.coordinator import commit_voice
 from telesale_agent.core.history import brief_preview, memory_preview
 from telesale_agent.application.tools.protocol import tool_calls_to_steps
+from telesale_agent.application.memory.lifecycle import flush_customer_memory
 from telesale_agent.application.realtime.tool_dispatch import dispatch
 
 logger = logging.getLogger(__name__)
 
 
-async def initialize_customer(services, conversation_id, phone, customer_id=None):
+async def initialize_customer(services, conversation_id, phone, customer_id=None, *, contact=None):
     started = time.perf_counter()
     state = ConversationState(conversation_id=conversation_id)
     # Session setup is not a customer utterance and does not go through run_turn.
     init = SessionInit(conversation_id, phone)
     init.metadata["call_date"] = business_date().isoformat()
+    if contact:
+        init.metadata.update(contact)
     context = TurnContext(input=init, state=state)
     if customer_id:
         context.identity = CustomerIdentity(customer_id=customer_id, phone=phone)
@@ -395,4 +398,7 @@ class VoiceSessionController:
             if self.jobs:
                 # Backend persistence must finish independently of playback/disconnect.
                 await asyncio.gather(*list(self.jobs), return_exceptions=True)
-            await self.model.close()
+            try:
+                await flush_customer_memory(self.services, self.state)
+            finally:
+                await self.model.close()

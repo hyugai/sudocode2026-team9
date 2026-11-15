@@ -72,13 +72,22 @@ class DeepAgentHarness:
         self.mcp_sessions: dict[str, Any] = {}
 
     async def __aenter__(self):
-        return await initialize_runtime(self)
+        await initialize_runtime(self)
+        start_memory = getattr(self.memory, "start", None)
+        if callable(start_memory):
+            await start_memory()
+        return self
 
     async def _prewarm_knowledge_mcp(self) -> None:
         await prewarm_knowledge_mcp(self)
 
     async def __aexit__(self, exc_type, exc_val, exc_tb):
-        await close_runtime(self, exc_type, exc_val, exc_tb)
+        try:
+            close_memory = getattr(self.memory, "close", None)
+            if callable(close_memory):
+                await close_memory()
+        finally:
+            await close_runtime(self, exc_type, exc_val, exc_tb)
 
     def reset_customer_memory(self) -> None:
         """Reset an isolated evaluation memory repository between scenarios."""

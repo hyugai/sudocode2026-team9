@@ -106,6 +106,7 @@ export function GuestProfile({ idPrefix = "customer" }: { idPrefix?: string }) {
     <div className="profile-layout">
       <div className="profile-fields">
         <div className="profile-field profile-readonly"><span>{user ? "Tài khoản" : "Loại hồ sơ"}</span><div><strong>{user?.name ?? "Khách tư vấn"}</strong><small>{user?.email ?? "Đây là thông tin tư vấn trong tab này, không phải tài khoản đăng nhập."}</small></div></div>
+        {c.customerId && <div className="profile-field profile-readonly" role="status"><span>Mã khách hàng</span><div><strong>{c.customerId}</strong><small>Đã nhận diện từ thông tin tư vấn của bạn.</small></div></div>}
         <div className="profile-field">
           <label htmlFor={`${idPrefix}-phone`}>Số điện thoại <span>(không bắt buộc)</span></label>
           <div><input id={`${idPrefix}-phone`} type="tel" autoComplete="tel" maxLength={30} placeholder="VD: 0901234567" value={phone} onChange={e => { setPhone(e.target.value); setSaved(false); }} disabled={c.isLoading || !c.sessionReady} aria-invalid={!!error} aria-describedby={`${idPrefix}-note`} />

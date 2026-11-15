@@ -51,6 +51,7 @@ def _conversation(row: Conversation) -> dict[str, Any]:
     state = snapshot.get("state") or {}
     identity = state.get("identity") if isinstance(state, dict) else None
     return {"id": row.id, "status": row.status, "turn_number": row.turn_number,
+            "customer_id": row.customer_id,
             "customer_phone": identity.get("phone") if isinstance(identity, dict) else None,
             "created_at": row.created_at, "updated_at": row.updated_at, "ended_at": row.ended_at}
 
@@ -105,6 +106,16 @@ class AppDataRepository:
             with self.sessions() as session:
                 row = session.scalar(select(User).where(User.email == _text(email, 254).lower()))
                 return {**_user(row), "password_hash": row.password_hash} if row else None
+        return await asyncio.to_thread(read)
+
+    async def identity_contact(self, user_id: str) -> dict[str, str]:
+        """Only the authenticated account supplies an email identity hint."""
+        def read():
+            with self.sessions() as session:
+                user = session.get(User, _uuid(user_id))
+                if user is None or user.role != "user":
+                    raise AppDataNotFound("Không tìm thấy khách hàng.")
+                return {"account_email": user.email, "account_name": user.name}
         return await asyncio.to_thread(read)
 
     async def create_auth_session(self, user_id: str, token_hash: str, expires_at: datetime) -> None:

@@ -22,6 +22,7 @@ export interface DebugInfo {
 }
 
 interface ChatResponse {
+  customer_id?: string | null;
   user_message_id?: string;
   message_id?: string;
   response: string;
@@ -117,7 +118,7 @@ export function createChatClient(apiBase: string, fetcher: typeof fetch = fetch,
       if (!conversationId) return;
       try {
         const response = await fetcher(accountMode ? `/api/conversations/${encodeURIComponent(conversationId)}/end` : `${apiBase}/api/sessions/${encodeURIComponent(conversationId)}`, {
-          method: accountMode ? "POST" : "DELETE", credentials: "same-origin", signal: AbortSignal.timeout(10000),
+          method: accountMode ? "POST" : "DELETE", credentials: "same-origin", signal: AbortSignal.timeout(30000),
         });
         if (!response.ok) throw new ChatApiError(response.status === 401 || response.status === 403
           ? "Dịch vụ chưa cấp quyền kết thúc hội thoại. Dữ liệu trên thiết bị vẫn được giữ."

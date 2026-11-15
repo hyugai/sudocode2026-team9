@@ -28,6 +28,8 @@ from telesale_agent.adapters.rules.pii_utils import mask_pii
 from contextlib import asynccontextmanager
 from telesale_agent.adapters.db.app_repository import AppDataNotFound, AppDataRepository, ConversationConflict
 from telesale_agent.adapters.db.checkpoint import CheckpointError
+from telesale_agent.adapters.db.customer_identity import CustomerContactError
+from telesale_agent.application.memory.lifecycle import flush_customer_memory
 from telesale_agent.entrypoints.api.auth import COOKIE_NAME, auth_error, get_auth_repository, require_origin, require_user, require_customer
 
 # Global harness reference
@@ -131,8 +133,7 @@ app.add_middleware(
     expose_headers=["Retry-After"],
 )
 
-# Active call state is intentionally in-memory. Render is configured with one
-# instance because customer .md memory lives on a persistent disk.
+# Active calls and pending memory uploads share one backend worker.
 sessions: dict[str, ConversationState] = {}
 session_locks: dict[str, asyncio.Lock] = {}
 stream_tasks: set[asyncio.Task] = set()
@@ -335,6 +336,8 @@ async def run_chat_turn(turn_input: TurnInput, *, repository: AppDataRepository 
         else:
             state = sessions.get(conversation_id) or ConversationState(conversation_id=conversation_id)
         try:
+            if repository is not None and not state.identity:
+                turn_input.metadata.update(await repository.identity_contact(user_id))
             result = (await harness.run_turn(turn_input, state, on_text=on_text, on_status=on_status)
                       if on_text is not None else await harness.run_turn(turn_input, state))
         except AudioTooLargeError as exc:
@@ -343,6 +346,8 @@ async def run_chat_turn(turn_input: TurnInput, *, repository: AppDataRepository 
             raise HTTPException(status_code=422, detail=str(exc)) from exc
         except ASRUnavailableError as exc:
             raise HTTPException(status_code=503, detail=str(exc)) from exc
+        except CustomerContactError as exc:
+            raise HTTPException(status_code=422, detail=str(exc)) from exc
         except HTTPException:
             raise
         except Exception as exc:
@@ -400,6 +405,8 @@ def _call_brief_preview(brief: CallBrief | None) -> dict[str, str | list[str]] |
 
 def turn_payload(turn_input, result):
     response = {"response": result.response_text, "latency": getattr(result, "latency", {})}
+    identity = getattr(result.state, "identity", None)
+    response["customer_id"] = identity.customer_id if identity else None
     response["call_brief"] = _call_brief_preview(getattr(result, "call_brief", None))
     response["call_brief_latency_ms"] = response["latency"].get("call_brief_ms")
     if turn_input.channel == Channel.VOICE:
@@ -449,8 +456,13 @@ async def clear_session(conversation_id: str, request: Request, repository: AppD
         user = await require_user(request, repository)
         await require_customer(user)
     await guard_guest_id(conversation_id, repository)
-    sessions.pop(conversation_id, None)
-    session_locks.pop(conversation_id, None)
+    async with session_locks.setdefault(conversation_id, asyncio.Lock()):
+        try:
+            await flush_customer_memory(harness, sessions.get(conversation_id))
+        except Exception as exc:
+            logger.exception("Could not flush guest memory before ending session")
+            raise HTTPException(503, "Chưa đồng bộ được bộ nhớ. Phiên vẫn được giữ, hãy thử kết thúc lại.") from exc
+        sessions.pop(conversation_id, None)
     return {"status": "cleared", "conversation_id": conversation_id}
 
 # Optional root endpoint for health checks

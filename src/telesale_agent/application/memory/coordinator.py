@@ -94,7 +94,11 @@ async def commit_voice(services, context, store, source):
                     continue
             getattr(repository, name)(*args, **operation["kwargs"])
         await session.commit()
-        await store.committed(source)
+        defer_commit = getattr(services.memory, "defer_commit", None)
+        if callable(defer_commit):
+            defer_commit(customer_id, source, lambda: store.committed(source))
+        else:
+            await store.committed(source)
         context.state.memory_deltas.clear()
         context.state.customer_memory = repository.load(customer_id)
         return batch["writes"]

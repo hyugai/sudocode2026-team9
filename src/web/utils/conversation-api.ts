@@ -1,6 +1,7 @@
 export type StoredFeedback = { rating: "positive" | "negative" | null; comment: string };
 export type SavedMessage = { id: string; role: "user" | "agent"; content: string; turn_number: number; feedback: StoredFeedback | null };
 export type SavedConversation = {
+  customer_id?: string | null;
   id: string; status: "active" | "ended"; turn_number: number; customer_phone: string | null;
   created_at: string; updated_at: string; messages: SavedMessage[]; call_brief: unknown; has_more: boolean;
 };

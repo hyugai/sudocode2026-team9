@@ -65,7 +65,11 @@ class VoiceSessionManager:
                 raise ValueError("Hệ thống đang đủ phiên realtime; thử lại sau")
             session_id, owner, ticket = uuid4().hex, secrets.token_urlsafe(32), secrets.token_urlsafe(32)
             conversation_id = "live-" + session_id
-            state, context = await initialize_customer(self.services, conversation_id, phone)
+            contact = None
+            if user_id:
+                from telesale_agent.adapters.db.app_repository import AppDataRepository
+                contact = await AppDataRepository(self.store.engine).identity_contact(user_id)
+            state, context = await initialize_customer(self.services, conversation_id, phone, contact=contact)
             model = self.model_factory(
                 self.settings, instructions(state),
                 tool_declarations(self.services.mcp_tools, self.settings.tools_mode))

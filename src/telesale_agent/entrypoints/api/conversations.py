@@ -11,6 +11,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from telesale_agent.adapters.db.app_repository import AppDataNotFound, AppDataRepository, ConversationConflict
 from telesale_agent.adapters.db.checkpoint import CheckpointError, CheckpointTooLargeError
 from .auth import NO_STORE, auth_error, get_auth_repository, require_origin, require_customer
+from telesale_agent.application.memory.lifecycle import flush_customer_memory
 
 
 def no_store(response: Response) -> None:
@@ -72,6 +73,11 @@ async def end_conversation(conversation_id: UUID, user: dict = Depends(require_c
     from . import chat
     key = str(conversation_id)
     async with chat.session_locks.setdefault(key, asyncio.Lock()):
+        state = await repository.load_state(user["id"], key)
+        try:
+            await flush_customer_memory(chat.harness, state)
+        except Exception as exc:
+            raise auth_error(503, "Chưa đồng bộ được bộ nhớ. Phiên vẫn được giữ, hãy thử kết thúc lại.") from exc
         await repository.end_conversation(user["id"], key)
         chat.sessions.pop(key, None)
     return {"status": "ended"}

@@ -29,6 +29,7 @@ export function useConversation(persistGuest = true, enabled = true) {
   const [callBriefStale, setCallBriefStale] = useState(false);
   const [input, setInput] = useState("");
   const [customerPhone, updateCustomerPhone] = useState("");
+  const [customerId, setCustomerId] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [streamingText, setStreamingText] = useState("");
   const [pendingMessage, setPendingMessage] = useState("");
@@ -57,6 +58,7 @@ export function useConversation(persistGuest = true, enabled = true) {
     setSessionId(saved.id); conversationIdRef.current = saved.id;
     setCallBrief(readCallBrief(saved.call_brief)); setCallBriefStale(false);
     updateCustomerPhone(saved.customer_phone ?? "");
+    setCustomerId(saved.customer_id ?? "");
     setConversationEnded(saved.status === "ended");
   }, []);
 
@@ -80,6 +82,7 @@ export function useConversation(persistGuest = true, enabled = true) {
           setInput(saved.input); updateCustomerPhone(saved.customerPhone); setVoicePreview(saved.voicePreview);
           setConsultation(saved.consultation); setSessionId(saved.sessionId); conversationIdRef.current = saved.sessionId;
           setCallBrief(readCallBrief(saved.callBrief));
+          setCustomerId(saved.customerId ?? "");
         }
       } catch { if (active) setSessionNotice("Chưa khôi phục được hội thoại. Bạn có thể thử mở lại từ lịch sử."); }
       finally { if (active) setSessionReady(true); }
@@ -90,17 +93,18 @@ export function useConversation(persistGuest = true, enabled = true) {
 
   useEffect(() => {
     if (!sessionReady || !persistGuest) return;
-    try { sessionStorage.setItem(conversationStorageKey, writeGuestSession({ messages, sessionId, input, customerPhone, voicePreview, consultation, callBrief })); }
+    try { sessionStorage.setItem(conversationStorageKey, writeGuestSession({ messages, sessionId, input, customerPhone, customerId, voicePreview, consultation, callBrief })); }
     catch {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setSessionNotice("Trình duyệt chưa lưu được hội thoại. Hãy giữ tab mở để tiếp tục tư vấn.");
     }
-  }, [persistGuest, sessionReady, messages, sessionId, input, customerPhone, voicePreview, consultation, callBrief]);
+  }, [persistGuest, sessionReady, messages, sessionId, input, customerPhone, customerId, voicePreview, consultation, callBrief]);
 
   const resetConversation = () => {
     setMessages(welcome); setDebugLogs([]); setCallBrief(null); setCallBriefStale(false); setInput(""); setAudioFile(null); setAudioPreviewUrl("");
     setSessionId(""); conversationIdRef.current = ""; setConsultation(null); setErrorMessage(""); setSessionNotice("");
     setConversationEnded(false);
+    setCustomerId("");
     if (accountMode) {
       try { sessionStorage.removeItem(accountConversationKey); }
       catch { setSessionNotice("Trình duyệt chưa xóa được dấu hội thoại cũ."); }
@@ -208,6 +212,7 @@ export function useConversation(persistGuest = true, enabled = true) {
         { id: data.message_id, role: "agent", text: data.response || "Chưa nhận được phản hồi từ tư vấn viên.", feedback: null },
       ]);
       setCallBrief(data.callBrief);
+      setCustomerId(data.customer_id ?? "");
       setCallBriefStale(false);
       if (selectedAudio) clearAudio();
       else setInput("");
@@ -226,7 +231,7 @@ export function useConversation(persistGuest = true, enabled = true) {
     setMessages(previous => previous.map(message => message.id === id ? { ...message, feedback } : message));
   };
 
-  return { messages, debugLogs, callBrief, callBriefStale, input, setInput, customerPhone, setCustomerPhone, isLoading: isLoading || isClearing || voiceActive,
+  return { messages, debugLogs, callBrief, callBriefStale, input, setInput, customerPhone, customerId, setCustomerPhone, isLoading: isLoading || isClearing || voiceActive,
     audioFile, audioPreviewUrl, clearAudio, selectAudio, errorMessage, backendReady,
     cooldownSeconds, sessionId, sendMessage, voicePreview, setVoicePreview, consultation, setConsultation,
     sessionReady, sessionNotice, endConversation, voiceActive, setVoiceActive,

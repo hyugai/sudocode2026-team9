@@ -15,6 +15,7 @@ from unittest.mock import patch
 
 source = ast.parse(open(sys.argv[1], encoding='utf-8').read())
 identity_source = ast.parse(open(sys.argv[2], encoding='utf-8').read())
+contacts_source = ast.parse(open(sys.argv[3], encoding='utf-8').read())
 class HTTPError(Exception):
     def __init__(self, status_code, detail): self.status_code = status_code
 class InputError(Exception): pass
@@ -32,6 +33,7 @@ async def probe():
     sid = '10000000-0000-4000-8000-000000000001'
     state = NS(conversation_id=sid, owner='synthetic-user-a', customer_profile={'owner':'synthetic-user-a'}, customer_memory={'synthetic':True}, past_history={'synthetic':True})
     calls = []
+    async def flush_memory(*args): pass
     async def run_turn(turn, existing):
         calls.append((turn.customer_hint, existing.owner))
         return NS(state=existing, response_text='synthetic response', perception=None, retrieved=None, tool_calls=[], memory_writes=[], usage={})
@@ -41,7 +43,9 @@ async def probe():
         Header=lambda **kw:None, HTTPException=HTTPError,
         harness=NS(run_turn=run_turn), sessions={sid:state}, session_locks={},
         provider_cooldown=NS(remaining=lambda:0), Channel=NS(VOICE='voice'),
-        AudioTooLargeError=InputError, AudioInputError=InputError, ASRUnavailableError=InputError)
+        flush_customer_memory=flush_memory,
+        AudioTooLargeError=InputError, AudioInputError=InputError, ASRUnavailableError=InputError,
+        CustomerContactError=InputError)
     load(source, {'require_api_key','run_chat_turn','_call_brief_preview','turn_payload','guard_guest_id','clear_session'}, namespace)
     with patch.dict(os.environ, {'API_KEY':'', 'ENABLE_DEBUG_RESPONSE':'false'}, clear=True):
         namespace['require_api_key']()
@@ -62,10 +66,11 @@ async def probe():
         except HTTPError as e:
             configured_guard_rejects_missing = e.status_code == 401
         namespace['require_api_key']('m3-synthetic-service-key')
-    identity = dict(re=re, unicodedata=unicodedata, IdentityResolver=object, CustomerIdentity=lambda **kw:NS(**kw),
-        db_client=NS(get_customer=lambda **kw: {'found':True,'customer_id':'synthetic-user-b','name':'Synthetic B'}))
+    identity = dict(re=re, asyncio=asyncio, unicodedata=unicodedata, IdentityResolver=object, CustomerIdentity=lambda **kw:NS(**kw), CustomerContactError=ValueError,
+        db_client=NS(resolve_customer=lambda **kw: {'found':True,'customer_id':'synthetic-user-b','name':'Synthetic B'}))
+    load(contacts_source, {'normalize_phone', 'normalize_email'}, identity)
     load(identity_source, {'_normalized_identity_text','_identity_tokens','HintIdentityResolver'}, identity)
-    resolved = await identity['HintIdentityResolver']().resolve_identity(NS(input=NS(customer_hint='0000000000', text='synthetic')))
+    resolved = await identity['HintIdentityResolver']().resolve_identity(NS(input=NS(customer_hint='0000000000', text='synthetic', metadata={})))
     routes=[]
     for n in source.body:
         for d in getattr(n,'decorator_list',[]):
@@ -79,7 +84,8 @@ print(json.dumps(asyncio.run(probe())))
 const pythonCommand = process.env.PYTHON || (process.platform === 'win32' ? 'python' : 'python3');
 const processResult = spawnSync(pythonCommand, ['-I', '-B', '-c', python,
   fileURLToPath(new URL('../../telesale_agent/entrypoints/api/chat.py', import.meta.url)),
-  fileURLToPath(new URL('../../telesale_agent/adapters/mock/identity.py', import.meta.url))], { encoding:'utf8' });
+  fileURLToPath(new URL('../../telesale_agent/adapters/mock/identity.py', import.meta.url)),
+  fileURLToPath(new URL('../../telesale_agent/adapters/db/customer_identity.py', import.meta.url))], { encoding:'utf8' });
 assert.equal(processResult.status, 0, processResult.stderr || processResult.error?.message);
 const findings = JSON.parse(processResult.stdout);
 

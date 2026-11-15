@@ -19,6 +19,7 @@ from telesale_agent.adapters.memory import (
     TurnMemoryPersister,
 )
 from telesale_agent.adapters.llm.llm_persist import LLMPersister
+from telesale_agent.adapters.memory.buffered import BufferedCustomerMemoryStore
 from telesale_agent.adapters.rules.pii_guardrail import PIIGuardrail
 
 MemoryMode = Literal["durable", "evaluation", "disabled"]
@@ -37,7 +38,7 @@ def build_deepagent_harness(memory_mode: MemoryMode = "durable"):
         if memory_backend == "file":
             memory = local_memory
         elif memory_backend in {"object_storage", "s3"}:
-            memory = ObjectStorageCustomerMemoryRepository()
+            memory = BufferedCustomerMemoryStore(ObjectStorageCustomerMemoryRepository())
         else:
             raise ValueError(f"Unsupported CUSTOMER_MEMORY_BACKEND: {memory_backend}")
         persister_mode = os.environ.get(
