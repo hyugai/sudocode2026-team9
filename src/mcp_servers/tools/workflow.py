@@ -3,28 +3,17 @@
 from __future__ import annotations
 
 import uuid
-from datetime import date, datetime, timedelta
+from datetime import datetime
 from typing import Any
 
-REFERENCE_DATE = date(2026, 10, 15)
-
-# Official holidays for the competition period (extend as needed)
-_HOLIDAYS: set[date] = {
-    date(2026, 10, 20),
-    date(2026, 11, 20),
-}
+from pydantic import ValidationError
+from mcp_servers.tools.business_calendar import callback_datetime
+from telesale_agent.core.briefs import HandoffBrief
 
 
 def _next_working_datetime(dt: datetime) -> tuple[datetime, bool]:
-    """Shift dt to next working day if it falls on a weekend or holiday.
-    Returns (adjusted_dt, was_moved).
-    """
-    original = dt
-    while dt.weekday() >= 5 or dt.date() in _HOLIDAYS:  # 5=Sat, 6=Sun
-        dt += timedelta(days=1)
-        # Keep the same time of day on the new date
-        dt = dt.replace(hour=original.hour, minute=original.minute, second=0)
-    return dt, dt != original
+    adjusted = callback_datetime(dt)
+    return adjusted, adjusted != dt
 
 
 def schedule_callback(
@@ -33,7 +22,7 @@ def schedule_callback(
     note: str | None = None,
     on: str | None = None,
 ) -> dict[str, Any]:
-    """Schedule a callback. Auto-reschedules if it falls on a holiday or weekend.
+    """Schedule a callback using the BTC holiday and opening-hour rules.
 
     BTC tool name: schedule.callback
     The agent MUST inform the customer whenever moved_from is not null.
@@ -44,8 +33,10 @@ def schedule_callback(
     callback_id = f"CB-{uuid.uuid4().hex[:6].upper()}"
     return {
         "callback_id": callback_id,
-        "callback_at": adjusted_dt.isoformat(),
-        "moved_from": callback_dt.isoformat() if was_moved else None,
+        "customer_phone": customer_phone,
+        "callback_at": adjusted_dt.isoformat(timespec="minutes"),
+        "moved_from": callback_at if was_moved else None,
+        "note": note,
     }
 
 
@@ -58,13 +49,17 @@ def handoff_transfer(
     BTC tool name: handoff.transfer
     brief must conform to schemas/handoff_brief.schema.json (required fields).
     """
-    required_fields = {"reason", "customer_id", "summary"}
-    missing = required_fields - set(brief.keys())
+    required_fields = set(HandoffBrief.model_json_schema()["required"])
+    missing = sorted(required_fields - brief.keys())
     if missing:
-        return {"error": f"handoff_brief_missing_fields: {missing}"}
+        return {"error": "brief_invalid", "missing": missing}
+    try:
+        HandoffBrief.model_validate(brief)
+    except ValidationError:
+        return {"error": "brief_invalid"}
 
     ticket_id = f"TKT-{uuid.uuid4().hex[:8].upper()}"
-    return {"ticket_id": ticket_id, "status": "queued"}
+    return {"ticket_id": ticket_id, "status": "queued", "brief_ok": True}
 
 
 TOOLS = {

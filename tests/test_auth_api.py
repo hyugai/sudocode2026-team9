@@ -7,7 +7,7 @@ from unittest.mock import AsyncMock, patch
 
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
-from sqlalchemy import delete, func, select, update
+from sqlalchemy import delete, func, select, update, text
 from sqlalchemy.exc import OperationalError
 
 from test_app_data import private_schema
@@ -262,6 +262,14 @@ class AuthAPITests(unittest.TestCase):
         graph.add_edge(START, "model")
         graph.add_edge("model", END)
         harness.agent = graph.compile()
+        harness.mcp_sessions = {name: SimpleNamespace(send_ping=AsyncMock())
+                                for name in ("db", "knowledge", "workflow")}
+        def probe_test_database():
+            with self.engine.connect() as connection:
+                connection.execute(text("SELECT 1"))
+        readiness_probe = patch("telesale_agent.entrypoints.api.readiness.probe_database", probe_test_database)
+        readiness_probe.start()
+        self.addCleanup(readiness_probe.stop)
         harness.guardrail = SimpleNamespace(check=AsyncMock(return_value=PolicyDecision(
             allowed=True, safe_plan=ActionPlan(action="respond_to_customer", rationale="test", response_text="Final verified answer: SKU-AP-X"),
         )))

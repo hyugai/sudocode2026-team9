@@ -69,6 +69,7 @@ class DeepAgentHarness:
         self.exit_stack = AsyncExitStack()
         self.agent = None
         self.mcp_tools: dict[str, Any] = {}
+        self.mcp_sessions: dict[str, Any] = {}
 
     async def __aenter__(self):
         return await initialize_runtime(self)

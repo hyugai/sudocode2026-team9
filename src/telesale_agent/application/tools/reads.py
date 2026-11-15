@@ -17,7 +17,10 @@ from telesale_agent.application.tools.protocol import (
     decode_tool_result as _decode_tool_result,
 )
 from telesale_agent.application.deepagent.context.order import (
+    _customer_phone,
+    _delivery_address,
     _basket_skus,
+    _basket_lines,
     _catalog_query,
     _known_variant_sku,
     _quantity,
@@ -58,6 +61,7 @@ class ReadToolExecutor:
         order_workflow = "check_order_status" in remaining
         current_turn_sku: str | None = None
         selected_multi_skus: list[str] = []
+        catalog_items: list[dict[str, Any]] = []
         read_cache = context.state.working_memory.setdefault("read_tool_cache", {})
 
         async def invoke(name: str, args: dict[str, Any]) -> dict[str, Any] | None:
@@ -132,19 +136,6 @@ class ReadToolExecutor:
                     if call_date:
                         inventory_args["on"] = call_date
                     await invoke("check_inventory", inventory_args)
-            if "get_pricing_quote" in remaining:
-                for basket_sku in basket_skus:
-                    pricing_args: dict[str, Any] = {
-                        "sku": basket_sku,
-                        "qty": _quantity(context),
-                    }
-                    if call_date:
-                        pricing_args["on"] = call_date
-                    if context.input.customer_hint:
-                        pricing_args["customer_phone"] = context.input.customer_hint
-                    if context.identity and context.identity.customer_id:
-                        pricing_args["customer_id"] = context.identity.customer_id
-                    await invoke("get_pricing_quote", pricing_args)
 
         # Catalog + inventory is a deterministic dependency chain when the
         # requested size/color resolves to exactly one variant. Running it here
@@ -235,39 +226,33 @@ class ReadToolExecutor:
 
         # A price-only follow-up can reuse the variant persisted by the prior
         # catalog/inventory turn, avoiding another model call just to choose SKU.
-        if "get_pricing_quote" in remaining and basket_skus:
-            for basket_sku in basket_skus:
-                pricing_args = {"sku": basket_sku, "qty": _quantity(context)}
-                if call_date:
-                    pricing_args["on"] = call_date
-                if context.input.customer_hint:
-                    pricing_args["customer_phone"] = context.input.customer_hint
-                if context.identity and context.identity.customer_id:
-                    pricing_args["customer_id"] = context.identity.customer_id
+        if "get_pricing_quote" in remaining or "get_order_quote" in remaining:
+            skus = selected_multi_skus or basket_skus
+            if not skus:
+                sku = current_turn_sku or _known_variant_sku(context)
+                skus = [sku] if sku else []
+            names = {str(item["sku"]): str(item["name"]) for item in catalog_items
+                     if isinstance(item, dict) and item.get("sku") and item.get("name")}
+            lines = _basket_lines(context, skus, names)
+            pricing_args: dict[str, Any] = {}
+            if call_date:
+                pricing_args["on"] = call_date
+            phone = _customer_phone(context)
+            if phone:
+                pricing_args["customer_phone"] = phone
+            if context.identity and context.identity.customer_id:
+                pricing_args["customer_id"] = context.identity.customer_id
+            address = _delivery_address(context)
+            if address:
+                pricing_args["address"] = address
+            if lines and sum(line["qty"] for line in lines) > 1:
+                pricing_args["lines"] = lines
+                await invoke("get_order_quote", pricing_args)
+                remaining.discard("get_pricing_quote")
+            elif lines:
+                pricing_args.update(sku=lines[0]["sku"], qty=lines[0]["qty"])
                 await invoke("get_pricing_quote", pricing_args)
-
-        if "get_pricing_quote" in remaining and selected_multi_skus:
-            for sku in selected_multi_skus:
-                pricing_args = {"sku": sku, "qty": _quantity(context)}
-                if call_date:
-                    pricing_args["on"] = call_date
-                if context.input.customer_hint:
-                    pricing_args["customer_phone"] = context.input.customer_hint
-                if context.identity and context.identity.customer_id:
-                    pricing_args["customer_id"] = context.identity.customer_id
-                await invoke("get_pricing_quote", pricing_args)
-
-        if "get_pricing_quote" in remaining:
-            sku = current_turn_sku or _known_variant_sku(context)
-            if sku:
-                pricing_args = {"sku": sku, "qty": _quantity(context)}
-                if call_date:
-                    pricing_args["on"] = call_date
-                if context.input.customer_hint:
-                    pricing_args["customer_phone"] = context.input.customer_hint
-                if context.identity and context.identity.customer_id:
-                    pricing_args["customer_id"] = context.identity.customer_id
-                await invoke("get_pricing_quote", pricing_args)
+            remaining.discard("get_order_quote")
 
         return calls, frozenset(remaining)
 

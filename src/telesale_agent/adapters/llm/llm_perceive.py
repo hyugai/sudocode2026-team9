@@ -68,6 +68,9 @@ _AUTHORITATIVE_ONLY_MEMORY_KEYS = {
     "promo_code",
     "order_id",
     "basket_skus",
+    "basket_lines",
+    "order_lines",
+    "order_total_vnd",
     "basket_product_names",
     "removed_sku",
 }

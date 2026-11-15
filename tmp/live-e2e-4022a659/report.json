@@ -1,0 +1,237 @@
+{
+  "run": "4022a659",
+  "mode": "real HTTP + live MCP + PostgreSQL + configured LLM",
+  "steps": [
+    {
+      "stage": "01_quote",
+      "http_status": 200,
+      "elapsed_seconds": 12.7,
+      "response": "Dạ báo giá giỏ hàng của mình gồm:\n1. Máy lọc không khí AirPure Pro — 7.690.000 đồng\n2. Máy lọc không khí AirPure Pro — 7.690.000 đồng\n3. Máy lọc không khí AirPure Mini — 1.095.000 đồng\nTổng tiền: 16.475.000 đồng.",
+      "latency": {
+        "ttft_ms": 7713,
+        "total_ms": 7713,
+        "ttfa_ms": null,
+        "measurement_mode": "non_streaming",
+        "timing_boundary": "response_ready_before_persistence",
+        "asr_ms": null,
+        "call_brief_ms": 3709,
+        "response_ready_ms": 7713,
+        "persistence_ms": 4983.323,
+        "request_complete_ms": 12696.557,
+        "backend_total_ms": 12696.557,
+        "precomputed_parts": []
+      },
+      "test_orders": []
+    },
+    {
+      "stage": "03_cod_limit",
+      "http_status": 200,
+      "elapsed_seconds": 6.33,
+      "response": "Dạ em đã ghi nhận anh/chị muốn chốt đơn hàng gồm 2 Máy lọc không khí AirPure Pro và 1 Máy lọc không khí AirPure Mini giao đến địa chỉ 100 đường Kiểm Thử, Hà Nội. \n\nTuy nhiên, hệ thống ghi nhận tổng giá trị đơn hàng của mình là 16.475.000 đồng, trong khi phương thức thanh toán khi nhận hàng (COD) chỉ áp dụng cho đơn hàng tối đa 10.000.000 đồng. \n\nAnh/Chị xem giúp em có thể chuyển sang phương thức thanh toán chuyển khoản cho đơn hàng này, hoặc mình chia nhỏ giỏ hàng ra để thanh toán COD được không ạ?",
+      "latency": {
+        "ttft_ms": 2964,
+        "total_ms": 2964,
+        "ttfa_ms": null,
+        "measurement_mode": "non_streaming",
+        "timing_boundary": "response_ready_before_persistence",
+        "asr_ms": null,
+        "call_brief_ms": null,
+        "response_ready_ms": 2964,
+        "persistence_ms": 3351.52,
+        "request_complete_ms": 6315.92,
+        "backend_total_ms": 6315.92,
+        "precomputed_parts": [
+          "persisted_facts",
+          "persisted_episodes",
+          "persisted_atomic_facts"
+        ]
+      },
+      "test_orders": []
+    },
+    {
+      "stage": "04_bank_create",
+      "http_status": 200,
+      "elapsed_seconds": 6.02,
+      "response": "Dạ em đã tạo đơn ORD-5BC31871 cho giỏ hàng:\n1. Máy lọc không khí AirPure Pro — 7.690.000 đồng\n2. Máy lọc không khí AirPure Pro — 7.690.000 đồng\n3. Máy lọc không khí AirPure Mini — 1.095.000 đồng\nTổng tiền: 16.475.000 đồng.\nGiao đến 100 đường Kiểm Thử, Hà Nội.\nThanh toán bank.\nDự kiến giao: 2026-10-17.",
+      "latency": {
+        "ttft_ms": 2716,
+        "total_ms": 2716,
+        "ttfa_ms": null,
+        "measurement_mode": "non_streaming",
+        "timing_boundary": "response_ready_before_persistence",
+        "asr_ms": null,
+        "call_brief_ms": null,
+        "response_ready_ms": 2716,
+        "persistence_ms": 3292.569,
+        "request_complete_ms": 6008.166,
+        "backend_total_ms": 6008.166,
+        "precomputed_parts": [
+          "persisted_facts",
+          "persisted_episodes",
+          "persisted_atomic_facts"
+        ]
+      },
+      "test_orders": [
+        {
+          "order_id": "ORD-5BC31871",
+          "lines": [
+            {
+              "qty": 1,
+              "sku": "SKU-AP-PRO",
+              "promos": [
+                "AIR-OCT",
+                "COD-0"
+              ],
+              "price_vnd": 7690000
+            },
+            {
+              "qty": 1,
+              "sku": "SKU-AP-PRO",
+              "promos": [
+                "AIR-OCT",
+                "COD-0"
+              ],
+              "price_vnd": 7690000
+            },
+            {
+              "qty": 1,
+              "sku": "SKU-AP-MINI",
+              "promos": [
+                "AIR-2ND-50",
+                "COD-0"
+              ],
+              "price_vnd": 1095000
+            }
+          ],
+          "qty": 3,
+          "payment": "bank",
+          "total_vnd": 16475000
+        }
+      ]
+    },
+    {
+      "stage": "05_duplicate_retry",
+      "http_status": 200,
+      "elapsed_seconds": 6.61,
+      "response": "Dạ, em xác nhận đơn hàng của mình đã được tạo thành công trước đó với mã đơn là **ORD-5BC31871** rồi ạ. \n\nThông tin đơn hàng đã chốt bao gồm:\n- **Sản phẩm:** 2 máy AirPure Pro và 1 máy AirPure Mini\n- **Tổng tiền:** 16.475.000 đồng\n- **Hình thức thanh toán:** Chuyển khoản ngân hàng\n- **Địa chỉ giao hàng:** 100 đường Kiểm Thử, Hà Nội\n\nAnh/chị yên tâm là đơn hàng đã sẵn sàng và đang được xử lý theo đúng thông tin trên ạ. Em có thể hỗ trợ thêm thông tin nào khác cho mình nữa không ạ?",
+      "latency": {
+        "ttft_ms": 2911,
+        "total_ms": 2911,
+        "ttfa_ms": null,
+        "measurement_mode": "non_streaming",
+        "timing_boundary": "response_ready_before_persistence",
+        "asr_ms": null,
+        "call_brief_ms": null,
+        "response_ready_ms": 2911,
+        "persistence_ms": 3690.326,
+        "request_complete_ms": 6601.35,
+        "backend_total_ms": 6601.35,
+        "precomputed_parts": [
+          "persisted_facts",
+          "persisted_episodes",
+          "persisted_atomic_facts"
+        ]
+      },
+      "test_orders": [
+        {
+          "order_id": "ORD-5BC31871",
+          "lines": [
+            {
+              "qty": 1,
+              "sku": "SKU-AP-PRO",
+              "promos": [
+                "AIR-OCT",
+                "COD-0"
+              ],
+              "price_vnd": 7690000
+            },
+            {
+              "qty": 1,
+              "sku": "SKU-AP-PRO",
+              "promos": [
+                "AIR-OCT",
+                "COD-0"
+              ],
+              "price_vnd": 7690000
+            },
+            {
+              "qty": 1,
+              "sku": "SKU-AP-MINI",
+              "promos": [
+                "AIR-2ND-50",
+                "COD-0"
+              ],
+              "price_vnd": 1095000
+            }
+          ],
+          "qty": 3,
+          "payment": "bank",
+          "total_vnd": 16475000
+        }
+      ]
+    }
+  ],
+  "database": "telesale",
+  "orders_before": 2,
+  "orders_before_sha256": "7714f2b7b95b0f55dc50812ad82de917a8a75b86b3115a16b166e99bfe64e71e",
+  "customers_before": 50,
+  "customers_before_sha256": "fec82b1363707665a3e8661f5042ea54f5e6274e189512c82eb86d4be02519cd",
+  "customer_id": "E2E-4022a659",
+  "conversation_id": "live-e2e-4022a659",
+  "reference_date": "2026-10-15",
+  "expected_total_vnd": 16475000,
+  "expected_units": [
+    [
+      "SKU-AP-PRO",
+      7690000
+    ],
+    [
+      "SKU-AP-PRO",
+      7690000
+    ],
+    [
+      "SKU-AP-MINI",
+      1095000
+    ]
+  ],
+  "quote_unit_breakdown_passed": true,
+  "created_test_order_ids": [
+    "ORD-5BC31871"
+  ],
+  "e2e_passed": true,
+  "quote_only_did_not_create": true,
+  "cod_rejected_without_order": true,
+  "bank_order_matches_btc": true,
+  "retry_did_not_duplicate": true,
+  "api_session_cleared": true,
+  "deleted_test_order_ids": [
+    "ORD-5BC31871"
+  ],
+  "test_customer_deleted": true,
+  "test_memory_removed": true,
+  "orders_after": 2,
+  "orders_after_sha256": "7714f2b7b95b0f55dc50812ad82de917a8a75b86b3115a16b166e99bfe64e71e",
+  "old_orders_unchanged": true,
+  "customers_after": 50,
+  "customers_after_sha256": "fec82b1363707665a3e8661f5042ea54f5e6274e189512c82eb86d4be02519cd",
+  "old_customers_unchanged": true,
+  "cleanup_passed": true,
+  "completed_at_utc": "2026-11-14T22:33:52.459021+00:00",
+  "final_db_verification": {
+    "orders_count": 2,
+    "orders_sha256": "7714f2b7b95b0f55dc50812ad82de917a8a75b86b3115a16b166e99bfe64e71e",
+    "unchanged_since_first_e2e": true,
+    "lines_schema": {
+      "data_type": "jsonb",
+      "is_nullable": "YES",
+      "column_default": null
+    },
+    "remaining_test_orders": 0,
+    "remaining_test_customers": 0,
+    "regression": {
+      "passed": 314,
+      "skipped": 29,
+      "subtests_passed": 5196
+    }
+  }
+}

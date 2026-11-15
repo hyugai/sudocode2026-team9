@@ -81,7 +81,7 @@ class MetricTests(unittest.TestCase):
         scenarios,trace = fixture()
         trace[("SC-001","call_1")][0]["tool_calls"][0]["result"] = {"error":"out_of_stock"}
         result = evaluate_team(scenarios,trace,pricing=PRICING)
-        self.assertEqual(result["reference_task_success_rate"]["value"],100)
+        self.assertEqual(result["reference_task_success_rate"]["value"],0)
         self.assertEqual(result["task_success_rate"]["value"],0)
         self.assertEqual(result["calls_to_close"]["n_closed"],0)
 

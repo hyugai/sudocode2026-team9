@@ -1,0 +1,38 @@
+{
+  "response": "Dạ, em xác nhận đơn hàng của mình đã được tạo thành công trước đó với mã đơn là **ORD-5BC31871** rồi ạ. \n\nThông tin đơn hàng đã chốt bao gồm:\n- **Sản phẩm:** 2 máy AirPure Pro và 1 máy AirPure Mini\n- **Tổng tiền:** 16.475.000 đồng\n- **Hình thức thanh toán:** Chuyển khoản ngân hàng\n- **Địa chỉ giao hàng:** 100 đường Kiểm Thử, Hà Nội\n\nAnh/chị yên tâm là đơn hàng đã sẵn sàng và đang được xử lý theo đúng thông tin trên ạ. Em có thể hỗ trợ thêm thông tin nào khác cho mình nữa không ạ?",
+  "latency": {
+    "ttft_ms": 2911,
+    "total_ms": 2911,
+    "ttfa_ms": null,
+    "measurement_mode": "non_streaming",
+    "timing_boundary": "response_ready_before_persistence",
+    "asr_ms": null,
+    "call_brief_ms": null,
+    "response_ready_ms": 2911,
+    "persistence_ms": 3690.326,
+    "request_complete_ms": 6601.35,
+    "backend_total_ms": 6601.35,
+    "precomputed_parts": [
+      "persisted_facts",
+      "persisted_episodes",
+      "persisted_atomic_facts"
+    ]
+  },
+  "call_brief": {
+    "summary": "Customer facts: payment: chuyển khoản, basket_item_2: SKU-AP-MINI, product_advised: SKU-AP-MINI",
+    "needs": [
+      "payment: chuyển khoản",
+      "basket_item_2: SKU-AP-MINI",
+      "product_advised: SKU-AP-MINI",
+      "basket_unit_quotes: [{'sku': 'SKU-AP-PRO', 'price_quoted_vnd': 7690000, 'quoted_on': None, 'promo_code': 'AIR-OCT'}, {'sku': 'SKU-AP-PRO', 'price_quoted_vnd': 7690000, 'quoted_on': None, 'promo_code': 'AIR-OCT'}, {'sku': 'SKU-AP-MINI', 'price_quoted_vnd': 1095000, 'quoted_on': None, 'promo_code': 'AIR-2ND-50'}]",
+      "delivery_address: 100 đường Kiểm Thử, Hà Nội",
+      "order_lines: [{'sku': 'SKU-AP-PRO', 'qty': 1, 'price_vnd': 7690000}, {'sku': 'SKU-AP-PRO', 'qty': 1, 'price_vnd': 7690000}, {'sku': 'SKU-AP-MINI', 'qty': 1, 'price_vnd': 1095000}]",
+      "order_total_vnd: 16475000",
+      "order_id: ORD-5BC31871"
+    ],
+    "objections": [],
+    "unresolved_issues": []
+  },
+  "call_brief_latency_ms": null,
+  "normalized_message": "Xác nhận lại đơn vừa chốt: đúng 2 máy AirPure Pro và 1 máy AirPure Mini, chuyển khoản, giao 100 đường Kiểm Thử, Hà Nội. Chốt lại giúp tôi."
+}

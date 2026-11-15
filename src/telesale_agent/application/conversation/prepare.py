@@ -1,9 +1,13 @@
 """Channel-independent customer and turn context preparation."""
 import time
 from telesale_agent.core.models import Message
+from telesale_agent.core.business_time import business_date
 from telesale_agent.adapters.llm.usage_tracking import usage_stage
 
 async def prepare_context(harness, context, *, identity_started=None, on_status=None):
+    # Pin the date before freshness checks, reads and mutations. A prior order's
+    # creation date must never become today's clock for a returning customer.
+    context.input.metadata["call_date"] = business_date(context.input.metadata.get("call_date")).isoformat()
     call_brief_ms = None
     # 2a. Initialization phase (Only runs once per conversation)
     hydrated_this_turn = False
@@ -72,5 +76,6 @@ async def prepare_context(harness, context, *, identity_started=None, on_status=
         context.state.call_brief = context.call_brief
         if identity_started is not None:
             call_brief_ms = (time.perf_counter() - identity_started) * 1000
+            context.call_brief.latency_ms = round(call_brief_ms)
 
     return call_brief_ms
