@@ -31,10 +31,10 @@ if hasattr(sys.stderr, "reconfigure"):
 HERE = Path(__file__).resolve().parent
 REPO_ROOT = HERE.parent.parent
 REFERENCE_EVAL = (
-    REPO_ROOT / "dataset" / "BTC-Data-Vong1-TEAMS" / "eval" / "reference_eval.py"
+    REPO_ROOT / "dataset" / "organizer" / "eval" / "reference_eval.py"
 )
 DEFAULT_RAG_QA = (
-    REPO_ROOT / "dataset" / "BTC-Data-Vong1-TEAMS" / "rag" / "qa_labeled.json"
+    REPO_ROOT / "dataset" / "organizer" / "rag" / "qa_labeled.json"
 )
 MUTATION_TOOLS = {
     "order.create",

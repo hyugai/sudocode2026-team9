@@ -19,7 +19,7 @@ from telesale_agent.adapters.db.models import (
     Base, Customer, InventoryEvent, Order, Product, ProductVariant, Promotion,
 )
 
-BTC = Path(__file__).resolve().parents[1] / "dataset/BTC-Data-Vong1-TEAMS"
+BTC = Path(__file__).resolve().parents[1] / "dataset/organizer"
 
 
 @compiles(JSONB, "sqlite")

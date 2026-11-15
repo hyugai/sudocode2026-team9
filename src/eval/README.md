@@ -249,7 +249,7 @@ outputs/benchmark/benchmark_vN/
 Nguồn công thức tham chiếu:
 
 ```text
-dataset/BTC-Data-Vong1-TEAMS/eval/reference_eval.py
+dataset/organizer/eval/reference_eval.py
 ```
 
 `team_eval.py` tải trực tiếp file này để tránh viết lại các metric BTC theo một công thức khác.

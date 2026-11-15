@@ -63,7 +63,7 @@ from eval.trace_extractors import (  # noqa: E402
 from eval.benchmark_support import audio_path, validate_inputs  # noqa: E402
 from eval.model_config import configure_eval_model, permanent_provider_error  # noqa: E402
 
-_SCHEMAS = REPO_ROOT / "dataset" / "BTC-Data-Vong1-TEAMS" / "schemas"
+_SCHEMAS = REPO_ROOT / "dataset" / "organizer" / "schemas"
 _TRACE_VALIDATOR = Draft202012Validator(json.loads(
     (_SCHEMAS / "trace_log.schema.json").read_text(encoding="utf-8")))
 _BRIEF_VALIDATOR = Draft202012Validator(json.loads(

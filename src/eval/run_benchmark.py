@@ -320,7 +320,7 @@ def main() -> int:
             "LLM_THINKING_LEVEL", "NLU_THINKING_LEVEL", "DEEPAGENT_THINKING_LEVEL")},
         "measurement_mode": "non_streaming", "warmup_turns": 3,
         "timing_boundary": "harness arrival to complete guarded answer before persistence; TTFT=Total; offline ASR excluded; request completion reported separately",
-        "latency_guide": "dataset/BTC-Data-Vong1-TEAMS/eval/huong-dan-do-latency.md",
+        "latency_guide": "dataset/organizer/eval/huong-dan-do-latency.md",
         "command": _command_text(reproduce_cmd), "git_commit": _git_value("rev-parse", "HEAD"),
     }
     metadata_path = run_dir / "metadata.json"

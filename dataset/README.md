@@ -1,5 +1,17 @@
 # Tổng quan dataset và schema kịch bản Sudo Code 2026
 
+## Nguồn dữ liệu và cấu trúc thư mục
+
+| Đường dẫn | Nguồn | Nội dung và mục đích |
+|---|---|---|
+| `organizer/` | Ban Tổ chức (BTC) | Catalog, CRM seed, chính sách, schema, simulator, kịch bản mẫu, ASR ground truth, dữ liệu RAG và công cụ chấm tham chiếu. |
+| `main/` | Nhóm phát triển | 120 kịch bản kiểm thử gồm 250 cuộc gọi, bản prefilled, bản hoàn chỉnh và audio. Các kịch bản sử dụng định dạng và dữ liệu tham chiếu của BTC. |
+| `text-to-speech/` | Nhóm phát triển | Notebook khảo sát dữ liệu giọng nói và sinh audio. |
+
+Gói BTC có tên thư mục gốc là `BTC-Data-Vong1-TEAMS`, được đổi tên thành `organizer/` để phân biệt nguồn dữ liệu. Giữ nguyên cấu trúc bên trong và nội dung các tệp do BTC cung cấp. Xem [README của BTC](organizer/README.md) và [README kịch bản của nhóm](main/README.md) để biết chi tiết.
+
+Các script seed, ingest và đánh giá sử dụng đường dẫn `dataset/organizer/`. Nếu chuẩn bị dữ liệu thủ công, đặt gói BTC vào thư mục này.
+
 Tài liệu này mô tả yêu cầu dataset của đề Sudo Code 2026, các nguồn dữ liệu đầu vào và định dạng file scenario dùng để chạy agent và đánh giá tự động. Bản Markdown đã bổ sung kiểu dữ liệu, mức bắt buộc, ràng buộc giữa các trường và một scenario JSON hoàn chỉnh.
 
 ## Truy cập dataset audio dành cho BTC

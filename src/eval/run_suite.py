@@ -318,7 +318,7 @@ def main():
                 "measurement_mode":"non_streaming",
                 "profile":args.profile,"memory_backend":os.environ.get("CUSTOMER_MEMORY_BACKEND","file"),
                 "timing_boundary":"harness entry to complete guarded answer before persistence; TTFT=Total; offline ASR subtracted; request completion reported separately",
-                "latency_guide":"dataset/BTC-Data-Vong1-TEAMS/eval/huong-dan-do-latency.md",
+                "latency_guide":"dataset/organizer/eval/huong-dan-do-latency.md",
                 "precomputed_parts":[],"precomputed_parts_policy":"observed per turn before current-turn persistence",
                 "freshness":"CRM/profile/order history reloaded at call entry; remembered SKU inventory/promotions rechecked; cross-channel interaction source unavailable"}
     source_paths = sorted((ROOT / "src/eval").glob("*.py")) + [
