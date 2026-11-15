@@ -66,7 +66,7 @@ async def probe():
         except HTTPError as e:
             configured_guard_rejects_missing = e.status_code == 401
         namespace['require_api_key']('m3-synthetic-service-key')
-    identity = dict(re=re, asyncio=asyncio, unicodedata=unicodedata, IdentityResolver=object, CustomerIdentity=lambda **kw:NS(**kw), CustomerContactError=ValueError,
+    identity = dict(re=re, asyncio=asyncio, unicodedata=unicodedata, IdentityResolver=object, CustomerIdentity=lambda **kw:NS(**kw), CustomerContactError=ValueError, explicit_honorific=lambda text:None,
         db_client=NS(resolve_customer=lambda **kw: {'found':True,'customer_id':'synthetic-user-b','name':'Synthetic B'}))
     load(contacts_source, {'normalize_phone', 'normalize_email'}, identity)
     load(identity_source, {'_normalized_identity_text','_identity_tokens','HintIdentityResolver'}, identity)

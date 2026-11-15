@@ -349,5 +349,6 @@ async def prepare_response(harness, context, tool_calls, response_text, *, baske
         if context.policy.safe_plan is not None:
             response_text = context.policy.safe_plan.response_text or ""
 
-    return response_text
+    from telesale_agent.application.customer_addressing import ground_generic_salutation
+    return ground_generic_salutation(response_text, context)
 

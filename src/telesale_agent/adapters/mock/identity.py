@@ -6,6 +6,7 @@ from telesale_agent.core.interfaces import IdentityResolver
 from telesale_agent.core.models import CustomerIdentity, TurnContext
 from telesale_agent.adapters.db.client import db_client
 from telesale_agent.adapters.db.customer_identity import normalize_phone, normalize_email
+from telesale_agent.application.customer_addressing import explicit_honorific
 
 
 def _normalized_identity_text(value: str | None) -> str:
@@ -30,7 +31,8 @@ class HintIdentityResolver(IdentityResolver):
         
         # Check if customer exists in DB
         result = await asyncio.to_thread(db_client.resolve_customer, phone=phone, email=email,
-                                         name=context.input.metadata.get("account_name"))
+                                         name=context.input.metadata.get("account_name"),
+                                         honorific=explicit_honorific(context.input.text))
         
         if result.get("ambiguous"):
             spoken_text = _normalized_identity_text(context.input.text)
@@ -93,3 +95,12 @@ class HintIdentityResolver(IdentityResolver):
                 "is_new": result.get("is_new", False),
             } if result.get("found") else {},
         )
+
+    async def update_profile(self, context: TurnContext) -> bool:
+        identity = context.state.identity
+        honorific = explicit_honorific(context.input.text)
+        if not identity or not identity.customer_id or not honorific:
+            return False
+        changed = await asyncio.to_thread(db_client.update_customer_honorific, identity.customer_id, honorific)
+        identity.profile["honorific"] = honorific
+        return changed

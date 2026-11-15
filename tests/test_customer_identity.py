@@ -79,11 +79,26 @@ def test_shared_phone_stays_ambiguous_without_creating_or_merging_customer(datab
         assert session.scalar(select(func.count()).select_from(Customer)) == 2
 
 
-def test_conflicting_email_and_phone_are_not_silently_merged(database):
+def test_new_phone_does_not_move_existing_email_or_merge_memory_identity(database):
     with Session(database) as session, session.begin():
         get_or_create_customer(session, phone="0901234567", email="old@example.com")
-    with Session(database) as session, session.begin(), pytest.raises(ValueError, match="không khớp"):
-        get_or_create_customer(session, phone="0923456789", email="old@example.com")
+    with Session(database) as session, session.begin():
+        new, created = get_or_create_customer(session, phone="0923456789", email="old@example.com")
+        assert created and new[0].customer_id == "C051"
+        original, created = get_or_create_customer(session, email="old@example.com")
+        assert not created and original[0].customer_id == "C050"
+
+
+def test_explicit_old_phone_wins_over_logged_in_email_customer(database):
+    with Session(database) as session, session.begin():
+        account, _ = get_or_create_customer(session, email="owner@example.com")
+        assert account[0].customer_id == "C051"
+    with Session(database) as session, session.begin():
+        customer, created = get_or_create_customer(session, phone="0901234567", email="owner@example.com")
+        assert not created and customer[0].customer_id == "C050"
+        assert not customer[0].attributes
+        account, _ = get_or_create_customer(session, email="owner@example.com")
+        assert account[0].customer_id == "C051"
 
 
 @pytest.mark.asyncio
@@ -112,6 +127,91 @@ def test_bad_contacts_are_rejected_before_allocating(database):
             normalize_phone(value)
     with Session(database) as session, session.begin(), pytest.raises(ValueError):
         get_or_create_customer(session, email="invalid")
+
+
+@pytest.mark.asyncio
+async def test_crm_honorific_reaches_chat_prompt_and_final_salutation(database, monkeypatch):
+    from telesale_agent.adapters.db.client import PostgresClient
+    from telesale_agent.adapters.mock import identity
+    from telesale_agent.adapters.crm import crm_retriever
+    from telesale_agent.adapters.memory.in_memory import InMemoryCustomerMemoryRepository
+    from telesale_agent.application.customer_context import CustomerContextService
+    from telesale_agent.application.memory.call_brief import CallBriefProjector
+    from telesale_agent.application.deepagent.context.prompt import build_base_user_message
+    from telesale_agent.application.customer_addressing import ground_generic_salutation
+
+    with Session(database) as session, session.begin():
+        customer = session.get(Customer, "C050")
+        customer.name, customer.honorific = "Hoa", "chị"
+        get_or_create_customer(session, email="account@example.com")
+    client = object.__new__(PostgresClient)
+    client.engine, client.SessionLocal = database, sessionmaker(bind=database)
+    monkeypatch.setattr(identity, "db_client", client)
+    monkeypatch.setattr(crm_retriever, "db_client", client)
+    context = TurnContext(TurnInput("test", text="Xin chào", customer_hint="+84901234567",
+                                   metadata={"account_email": "account@example.com"}), ConversationState("test"))
+    context.identity = await identity.HintIdentityResolver().resolve_identity(context)
+    context.state.identity = context.identity
+    assert context.identity.customer_id == "C050"
+    assert context.identity.profile["honorific"] == "chị"
+    await CustomerContextService(crm_retriever.PostgresCRMRetriever(), InMemoryCustomerMemoryRepository()).hydrate(context)
+    context.call_brief = await CallBriefProjector().build_call_brief(context)
+    _, prompt = build_base_user_message(context, [])
+    assert "Gọi khách là 'chị'" in prompt
+    assert "Name: Hoa" in prompt
+    assert context.call_brief.honorific == "chị"
+    assert context.call_brief.suggested_opening.startswith("Chào chị Hoa")
+    assert ground_generic_salutation("Anh/chị cần gì? Em hỗ trợ anh/chị nhé.", context) == "Chị cần gì? Em hỗ trợ chị nhé."
+
+
+@pytest.mark.asyncio
+async def test_new_customer_honorific_is_saved_in_customers_table(database, monkeypatch):
+    from telesale_agent.adapters.db.client import PostgresClient
+    from telesale_agent.adapters.mock import identity
+
+    client = object.__new__(PostgresClient)
+    client.engine, client.SessionLocal = database, sessionmaker(bind=database)
+    monkeypatch.setattr(identity, "db_client", client)
+    context = TurnContext(TurnInput("new", text="Cứ gọi tôi là anh nhé", customer_hint="0912345678"),
+                          ConversationState("new"))
+    context.identity = await identity.HintIdentityResolver().resolve_identity(context)
+    context.state.identity = context.identity
+    assert context.identity.customer_id == "C051"
+    with Session(database) as session:
+        customer = session.get(Customer, "C051")
+        assert customer.phone == "0912345678"
+        assert customer.honorific == "anh"
+    context.input.text = "Gọi tôi là chú nhé"
+    assert await identity.HintIdentityResolver().update_profile(context)
+    with Session(database) as session:
+        assert session.get(Customer, "C051").honorific == "chú"
+
+
+def test_unknown_honorific_is_not_inferred_from_mentions_or_names():
+    from telesale_agent.application.customer_addressing import explicit_honorific, addressing_instruction
+
+    for text in ("Chị có máy lọc không?", "Mua cho chị gái", "Tôi tên Hoa", "Anh/chị tư vấn giúp tôi"):
+        assert explicit_honorific(text) is None
+    context = TurnContext(TurnInput("new", text="Xin chào"), ConversationState("new"),
+                          identity=SimpleNamespace(profile={"name": "Hoa", "honorific": "Anh/Chị"}))
+    assert "Chưa có cách xưng hô" in addressing_instruction(context)
+    assert "Dùng 'bạn'" in addressing_instruction(context)
+
+
+@pytest.mark.asyncio
+async def test_old_anonymous_checkpoint_can_resolve_after_login():
+    from unittest.mock import AsyncMock
+    from telesale_agent.application.conversation.prepare import prepare_context
+    from telesale_agent.core.models import CustomerIdentity
+
+    state = ConversationState("old", identity=CustomerIdentity(profile={"identity_missing": True}))
+    context = TurnContext(TurnInput("old", text="Xin chào", metadata={"account_email": "owner@gmail.com"}), state)
+    services = SimpleNamespace(identity=SimpleNamespace(resolve_identity=AsyncMock(
+        return_value=CustomerIdentity(customer_id="C051", profile={"honorific": "anh"}))),
+        customer_context=SimpleNamespace(hydrate=AsyncMock()), perceive=None, retrieve=None, call_brief=None)
+    await prepare_context(services, context)
+    assert state.identity.customer_id == "C051"
+    services.customer_context.hydrate.assert_awaited_once_with(context)
 
 
 def test_postgres_concurrent_contacts_get_unique_codes_and_same_phone_is_reused():

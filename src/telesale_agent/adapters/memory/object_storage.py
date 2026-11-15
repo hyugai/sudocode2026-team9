@@ -56,6 +56,7 @@ class ObjectStorageCustomerMemoryRepository:
             self.client = boto3.client(
                 "s3",
                 endpoint_url=os.environ.get("AWS_ENDPOINT_URL_S3") or None,
+                region_name=os.environ.get("AWS_REGION") or os.environ.get("AWS_DEFAULT_REGION") or None,
                 config=Config(
                     s3={"addressing_style": "path"},
                     connect_timeout=3,

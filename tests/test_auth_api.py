@@ -21,6 +21,25 @@ PASSWORD = "Demo2026"
 ORIGIN = "http://localhost:3000"
 
 
+class AuthOriginConfigTests(unittest.TestCase):
+    def test_local_origin_is_accepted_and_other_sites_are_rejected(self):
+        from fastapi import HTTPException
+        from starlette.requests import Request
+
+        def request(origin):
+            return Request({"type": "http", "headers": [(b"origin", origin.encode())]})
+
+        with patch.dict(os.environ, {"WEB_ORIGIN": " http://localhost:3000/ "}):
+            auth.require_origin(request(ORIGIN))
+            for origin in ("https://untrusted.invalid", "http://localhost:3001", "null"):
+                with self.subTest(origin=origin), self.assertRaises(HTTPException) as failure:
+                    auth.require_origin(request(origin))
+                self.assertEqual(failure.exception.status_code, 403)
+        with patch.dict(os.environ, {"WEB_ORIGIN": "https://agentweb-alpha.vercel.app"}):
+            with self.assertRaises(HTTPException):
+                auth.require_origin(request(ORIGIN))
+
+
 class AuthAPITests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):

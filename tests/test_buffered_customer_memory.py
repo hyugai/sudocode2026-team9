@@ -225,12 +225,15 @@ async def test_ending_uncached_customer_after_restart_is_a_noop():
 
 
 @pytest.mark.asyncio
-async def test_first_account_turn_passes_trusted_email_without_phone(monkeypatch):
+@pytest.mark.parametrize("old_anonymous_identity", [False, True])
+async def test_first_account_turn_passes_trusted_email_without_phone(monkeypatch, old_anonymous_identity):
     from telesale_agent.entrypoints.api import chat
     from telesale_agent.core.models import TurnInput
 
     key = str(uuid4())
     state = ConversationState(key)
+    if old_anonymous_identity:
+        state.identity = CustomerIdentity(profile={"identity_missing": True})
     observed = []
     async def run(turn, current):
         observed.append(dict(turn.metadata))

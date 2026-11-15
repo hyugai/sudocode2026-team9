@@ -3,6 +3,7 @@ from datetime import datetime, timezone
 from telesale_agent.core.interfaces import CallBriefBuilder
 from telesale_agent.core.models import CallBrief, JsonObject, TurnContext
 from telesale_agent.core.business_time import business_date
+from telesale_agent.application.customer_addressing import customer_honorific
 
 class CallBriefProjector(CallBriefBuilder):
     """Build a compact call brief deterministically from CRM and memory."""
@@ -193,18 +194,20 @@ def _btc_brief_fields(
     returning = bool(previous or profile.get("orders") or memory.get("facts") or memory.get("profile"))
     if prior:
         returning = prior.is_returning
-    name = profile.get("name") or "anh/chị"
+    honorific = customer_honorific(context)
+    name = profile.get("name")
+    greeting_name = " ".join(part for part in (honorific, name) if part) or "bạn"
     return {
         "customer_phone": profile.get("phone") or context.identity.phone or context.input.customer_hint or "",
-        "honorific": profile.get("honorific"), "is_returning": returning,
+        "honorific": honorific, "is_returning": returning,
         "n_previous_sessions": len(previous), "last_session": last,
         "profile_facts": {"facts": facts, "atomic_facts": memory.get("atomic_facts", [])},
         "products_advised": products, "orders": profile.get("orders", []),
         "open_blockers": objections, "open_questions": questions,
         "must_not_ask": sorted(facts),
         "suggested_opening": (
-            f"Chào {name}, em xin tiếp tục nội dung mình đã trao đổi." if returning
-            else f"Chào {name}, em có thể hỗ trợ gì ạ?"
+            f"Chào {greeting_name}, em xin tiếp tục nội dung mình đã trao đổi." if returning
+            else f"Chào {greeting_name}, em có thể hỗ trợ gì ạ?"
         ),
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "latency_ms": prior.latency_ms if prior else 0,

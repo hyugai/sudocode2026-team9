@@ -336,7 +336,7 @@ async def run_chat_turn(turn_input: TurnInput, *, repository: AppDataRepository 
         else:
             state = sessions.get(conversation_id) or ConversationState(conversation_id=conversation_id)
         try:
-            if repository is not None and not state.identity:
+            if repository is not None and (not state.identity or not state.identity.customer_id):
                 turn_input.metadata.update(await repository.identity_contact(user_id))
             result = (await harness.run_turn(turn_input, state, on_text=on_text, on_status=on_status)
                       if on_text is not None else await harness.run_turn(turn_input, state))

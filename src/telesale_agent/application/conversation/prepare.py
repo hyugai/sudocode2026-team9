@@ -9,9 +9,10 @@ async def prepare_context(harness, context, *, identity_started=None, on_status=
     # creation date must never become today's clock for a returning customer.
     context.input.metadata["call_date"] = business_date(context.input.metadata.get("call_date")).isoformat()
     call_brief_ms = None
-    # 2a. Initialization phase (Only runs once per conversation)
+    # Resolve once successful; old anonymous/ambiguous checkpoints may resolve
+    # on a later message after login or after the customer clarifies identity.
     hydrated_this_turn = False
-    if not context.state.identity:
+    if not context.state.identity or not context.state.identity.customer_id:
         if harness.identity:
             if on_status:
                 await on_status("identifying")
@@ -27,7 +28,9 @@ async def prepare_context(harness, context, *, identity_started=None, on_status=
             hydrated_this_turn = True
     else:
         context.identity = context.state.identity
-        if harness.customer_context and context.state.customer_memory is None:
+        update_profile = getattr(harness.identity, "update_profile", None)
+        profile_changed = await update_profile(context) if callable(update_profile) else False
+        if harness.customer_context and (context.state.customer_memory is None or profile_changed):
             if on_status:
                 await on_status("retrieving")
             await harness.customer_context.hydrate(context)

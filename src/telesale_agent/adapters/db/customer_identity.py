@@ -5,6 +5,7 @@ import re
 from sqlalchemy import select, text
 
 from .models import Customer
+from telesale_agent.application.customer_addressing import HONORIFICS
 
 
 class CustomerContactError(ValueError):
@@ -52,26 +53,42 @@ def customer_contacts(session, *, phone=None, email=None):
                 + [(customer.attributes or {}).get("email", "")])])]
 
 
-def get_or_create_customer(session, *, phone=None, email=None, name=None):
+def get_or_create_customer(session, *, phone=None, email=None, name=None, honorific=None):
     """Return (candidates, created); never merge ambiguous contacts."""
     phone, email = normalize_phone(phone), normalize_email(email)
     if not phone and not email:
         raise ValueError("Cần số điện thoại hoặc email để tạo khách hàng.")
+    if honorific is not None and honorific not in HONORIFICS:
+        raise CustomerContactError("Cách xưng hô không hợp lệ.")
     # Serialize allocation across connections, including an empty table.
     if session.get_bind().dialect.name == "postgresql":
         schema = session.connection().get_execution_options().get("schema_translate_map", {}).get(None)
         preparer = session.get_bind().dialect.identifier_preparer
         table = (preparer.quote_schema(schema) + "." if schema else "") + "customers"
         session.execute(text(f"LOCK TABLE {table} IN SHARE ROW EXCLUSIVE MODE"))
-    candidates = customer_contacts(session, phone=phone, email=email)
+    phone_matches = customer_contacts(session, phone=phone) if phone else []
+    email_matches = customer_contacts(session, email=email) if email else []
+    # An explicitly supplied phone identifies this conversation's customer.
+    # The signed-in email is a fallback; it must not make a known phone
+    # ambiguous or move another customer's email/memory to that phone.
+    if phone_matches:
+        candidates = phone_matches
+        if email_matches and {item.customer_id for item in email_matches} != {item.customer_id for item in candidates}:
+            email = ""
+    elif email_matches and (not phone or all(not item.phone for item in email_matches)):
+        candidates = email_matches
+    else:
+        candidates = []
+        if email_matches:
+            email = ""
     if len(candidates) != 1 and candidates:
         return candidates, False
     if candidates:
         customer = candidates[0]
-        if phone and customer.phone and not _phone_matches(customer.phone, phone):
-            raise CustomerContactError("Email và số điện thoại không khớp khách hàng đã lưu.")
         if phone and not customer.phone:
             customer.phone = phone
+        if honorific:
+            customer.honorific = honorific
         if email:
             attributes = dict(customer.attributes or {})
             emails = list(attributes.get("emails") or [])
@@ -86,7 +103,7 @@ def get_or_create_customer(session, *, phone=None, email=None, name=None):
                if (match := re.fullmatch(r"C(\d+)", identifier))]
     customer = Customer(
         customer_id=f"C{max(numbers, default=0) + 1:03d}",
-        phone=phone, name=name or "Khách hàng mới", honorific="Anh/Chị",
+        phone=phone, name=name or "Khách hàng mới", honorific=honorific or "Anh/Chị",
         attributes={"email": email, "emails": [email]} if email else {},
     )
     session.add(customer)

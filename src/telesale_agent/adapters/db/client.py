@@ -357,9 +357,9 @@ class PostgresClient:
             
             return self._serialize_customer(customers[0])
 
-    def resolve_customer(self, *, phone=None, email=None, name=None):
+    def resolve_customer(self, *, phone=None, email=None, name=None, honorific=None):
         with self.get_session() as session, session.begin():
-            customers, created = get_or_create_customer(session, phone=phone, email=email, name=name)
+            customers, created = get_or_create_customer(session, phone=phone, email=email, name=name, honorific=honorific)
             if len(customers) > 1:
                 return {"found": True, "ambiguous": True,
                         "candidates": [self._serialize_customer(customer) for customer in customers], "orders": []}
@@ -370,6 +370,17 @@ class PostgresClient:
         if result.get("ambiguous"):
             raise ValueError("Số điện thoại thuộc nhiều khách hàng.")
         return result["customer_id"]
+
+    def update_customer_honorific(self, customer_id: str, honorific: str) -> bool:
+        from telesale_agent.application.customer_addressing import HONORIFICS
+        if honorific not in HONORIFICS:
+            raise ValueError("Cách xưng hô không hợp lệ.")
+        with self.get_session() as session, session.begin():
+            customer = session.query(Customer).filter_by(customer_id=customer_id).with_for_update().one()
+            if (customer.honorific or "").strip().lower() == honorific:
+                return False
+            customer.honorific = honorific
+            return True
 
     def update_customer_attributes(self, phone: str, deltas: dict):
         if not deltas:

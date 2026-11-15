@@ -37,7 +37,7 @@ def get_auth_repository() -> AppDataRepository:
 
 
 def require_origin(request: Request) -> None:
-    origin = os.environ.get("WEB_ORIGIN", "http://localhost:3000").rstrip("/")
+    origin = os.environ.get("WEB_ORIGIN", "http://localhost:3000").strip().rstrip("/")
     if request.headers.get("origin") != origin:
         raise auth_error(403, "Nguồn gửi yêu cầu không được phép.")
 
