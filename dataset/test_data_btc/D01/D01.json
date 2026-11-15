@@ -1,0 +1,146 @@
+{
+  "schema_version": 1,
+  "scenario_id": "D01",
+  "title": "Khách do dự hỏi chồng",
+  "source": {
+    "document": "Kịch-bản-thu-âm-D01-D04.docx",
+    "sha256": "676f81303e57e6f9f1b31310e7377e3afec9d459c1e9d9a00131232caea9e552",
+    "text_policy": "Nguyên văn từng lượt trong tài liệu BTC; không đưa nhãn vai hay hướng dẫn thu âm vào TTS."
+  },
+  "customer_group_id": "BTC_CUSTOMER_01",
+  "follows_dialogue": null,
+  "days_after_previous": null,
+  "voice_cast": {
+    "advisor": "NU_2",
+    "customer": "NU_1"
+  },
+  "calls": {
+    "call_1": {
+      "customer_turns": [
+        "alo, chị muốn hỏi máy lọc không khí cho phòng ngủ, phòng chị khoảng hai mươi lăm mét vuông",
+        "có, nhà chị có bé hai tuổi, ngân sách tầm năm triệu thôi em",
+        "hơi vượt ngân sách chị chút, còn mẫu x thì bao nhiêu",
+        "ừ để chị hỏi ông xã rồi gọi lại em nhé",
+        "ừ chiều mai gọi chị, số này luôn nhé"
+      ],
+      "dialogue_turns": [
+        {
+          "turn_index": 0,
+          "turn_number": 1,
+          "role": "advisor",
+          "role_label": "Tư vấn",
+          "voice_id": "NU_2",
+          "voice_label": "Nữ 2",
+          "customer_turn_index": null,
+          "text": "dạ shop bê tê xê xin nghe, em có thể giúp gì cho mình ạ",
+          "source_body_index": 14
+        },
+        {
+          "turn_index": 1,
+          "turn_number": 2,
+          "role": "customer",
+          "role_label": "Khách",
+          "voice_id": "NU_1",
+          "voice_label": "Nữ 1",
+          "customer_turn_index": 0,
+          "text": "alo, chị muốn hỏi máy lọc không khí cho phòng ngủ, phòng chị khoảng hai mươi lăm mét vuông",
+          "source_body_index": 15
+        },
+        {
+          "turn_index": 2,
+          "turn_number": 3,
+          "role": "advisor",
+          "role_label": "Tư vấn",
+          "voice_id": "NU_2",
+          "voice_label": "Nữ 2",
+          "customer_turn_index": null,
+          "text": "dạ phòng hai mươi lăm mét thì bên em có hai mẫu phù hợp là e pia x và e pia y ạ, nhà mình có bé nhỏ không chị",
+          "source_body_index": 16
+        },
+        {
+          "turn_index": 3,
+          "turn_number": 4,
+          "role": "customer",
+          "role_label": "Khách",
+          "voice_id": "NU_1",
+          "voice_label": "Nữ 1",
+          "customer_turn_index": 1,
+          "text": "có, nhà chị có bé hai tuổi, ngân sách tầm năm triệu thôi em",
+          "source_body_index": 17
+        },
+        {
+          "turn_index": 4,
+          "turn_number": 5,
+          "role": "advisor",
+          "role_label": "Tư vấn",
+          "voice_id": "NU_2",
+          "voice_label": "Nữ 2",
+          "customer_turn_index": null,
+          "text": "dạ vậy em gợi ý mẫu e pia y có khóa trẻ em, giá năm triệu hai trăm nghìn, đang có khuyến mãi tặng một màng lọc đến hết ngày hai mươi hai tháng mười ạ",
+          "source_body_index": 18
+        },
+        {
+          "turn_index": 5,
+          "turn_number": 6,
+          "role": "customer",
+          "role_label": "Khách",
+          "voice_id": "NU_1",
+          "voice_label": "Nữ 1",
+          "customer_turn_index": 2,
+          "text": "hơi vượt ngân sách chị chút, còn mẫu x thì bao nhiêu",
+          "source_body_index": 19
+        },
+        {
+          "turn_index": 6,
+          "turn_number": 7,
+          "role": "advisor",
+          "role_label": "Tư vấn",
+          "voice_id": "NU_2",
+          "voice_label": "Nữ 2",
+          "customer_turn_index": null,
+          "text": "dạ mẫu x là bốn triệu tám trăm chín mươi nghìn, cũng được tặng màng lọc, nhưng không có khóa trẻ em chị ạ",
+          "source_body_index": 20
+        },
+        {
+          "turn_index": 7,
+          "turn_number": 8,
+          "role": "customer",
+          "role_label": "Khách",
+          "voice_id": "NU_1",
+          "voice_label": "Nữ 1",
+          "customer_turn_index": 3,
+          "text": "ừ để chị hỏi ông xã rồi gọi lại em nhé",
+          "source_body_index": 21
+        },
+        {
+          "turn_index": 8,
+          "turn_number": 9,
+          "role": "advisor",
+          "role_label": "Tư vấn",
+          "voice_id": "NU_2",
+          "voice_label": "Nữ 2",
+          "customer_turn_index": null,
+          "text": "dạ vâng, em ghi nhận, mai hoặc ngày kia em gọi lại chị được không ạ",
+          "source_body_index": 22
+        },
+        {
+          "turn_index": 9,
+          "turn_number": 10,
+          "role": "customer",
+          "role_label": "Khách",
+          "voice_id": "NU_1",
+          "voice_label": "Nữ 1",
+          "customer_turn_index": 4,
+          "text": "ừ chiều mai gọi chị, số này luôn nhé",
+          "source_body_index": 23
+        }
+      ]
+    }
+  },
+  "audio_spec": {
+    "sample_rate": 24000,
+    "channels": 1,
+    "subtype": "PCM_16",
+    "gap_seconds": 1.0
+  }
+}

@@ -1,0 +1,12 @@
+D01 — Khách do dự hỏi chồng
+
+01. Tư vấn (Nữ 2): dạ shop bê tê xê xin nghe, em có thể giúp gì cho mình ạ
+02. Khách (Nữ 1): alo, chị muốn hỏi máy lọc không khí cho phòng ngủ, phòng chị khoảng hai mươi lăm mét vuông
+03. Tư vấn (Nữ 2): dạ phòng hai mươi lăm mét thì bên em có hai mẫu phù hợp là e pia x và e pia y ạ, nhà mình có bé nhỏ không chị
+04. Khách (Nữ 1): có, nhà chị có bé hai tuổi, ngân sách tầm năm triệu thôi em
+05. Tư vấn (Nữ 2): dạ vậy em gợi ý mẫu e pia y có khóa trẻ em, giá năm triệu hai trăm nghìn, đang có khuyến mãi tặng một màng lọc đến hết ngày hai mươi hai tháng mười ạ
+06. Khách (Nữ 1): hơi vượt ngân sách chị chút, còn mẫu x thì bao nhiêu
+07. Tư vấn (Nữ 2): dạ mẫu x là bốn triệu tám trăm chín mươi nghìn, cũng được tặng màng lọc, nhưng không có khóa trẻ em chị ạ
+08. Khách (Nữ 1): ừ để chị hỏi ông xã rồi gọi lại em nhé
+09. Tư vấn (Nữ 2): dạ vâng, em ghi nhận, mai hoặc ngày kia em gọi lại chị được không ạ
+10. Khách (Nữ 1): ừ chiều mai gọi chị, số này luôn nhé

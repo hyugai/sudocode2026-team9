@@ -1,0 +1,11 @@
+﻿turn_index,turn_number,role,voice_id,voice_label,customer_turn_index,text,source_body_index
+0,1,advisor,NU_2,Nữ 2,,"dạ shop bê tê xê xin nghe, em có thể giúp gì cho mình ạ",14
+1,2,customer,NU_1,Nữ 1,0,"alo, chị muốn hỏi máy lọc không khí cho phòng ngủ, phòng chị khoảng hai mươi lăm mét vuông",15
+2,3,advisor,NU_2,Nữ 2,,"dạ phòng hai mươi lăm mét thì bên em có hai mẫu phù hợp là e pia x và e pia y ạ, nhà mình có bé nhỏ không chị",16
+3,4,customer,NU_1,Nữ 1,1,"có, nhà chị có bé hai tuổi, ngân sách tầm năm triệu thôi em",17
+4,5,advisor,NU_2,Nữ 2,,"dạ vậy em gợi ý mẫu e pia y có khóa trẻ em, giá năm triệu hai trăm nghìn, đang có khuyến mãi tặng một màng lọc đến hết ngày hai mươi hai tháng mười ạ",18
+5,6,customer,NU_1,Nữ 1,2,"hơi vượt ngân sách chị chút, còn mẫu x thì bao nhiêu",19
+6,7,advisor,NU_2,Nữ 2,,"dạ mẫu x là bốn triệu tám trăm chín mươi nghìn, cũng được tặng màng lọc, nhưng không có khóa trẻ em chị ạ",20
+7,8,customer,NU_1,Nữ 1,3,ừ để chị hỏi ông xã rồi gọi lại em nhé,21
+8,9,advisor,NU_2,Nữ 2,,"dạ vâng, em ghi nhận, mai hoặc ngày kia em gọi lại chị được không ạ",22
+9,10,customer,NU_1,Nữ 1,4,"ừ chiều mai gọi chị, số này luôn nhé",23
