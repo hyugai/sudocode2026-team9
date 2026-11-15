@@ -14,8 +14,6 @@ html:has(.sales-workspace) { scroll-padding-top: 16px; }
 .sales-account > button { display: inline-flex; flex: none; align-items: center; min-height: 44px; padding: 0 14px; border: 1px solid #ffffff30; border-radius: 30px; color: white; background: #101929; }
 .sales-account > button:hover { background: #1a2940; }
 .sales-header :focus-visible { outline-color: var(--cyan); }
-.sales-demo-note { display: flex; align-items: center; gap: 12px; padding: 12px 28px; border-bottom: 1px solid var(--border-strong); color: var(--brand-strong); background: var(--brand-soft); font-size: 12px; }
-.sales-demo-note strong { flex: none; padding: 2px 8px; border: 1px solid var(--border-strong); border-radius: 6px; font-weight: 600; }
 .sales-layout { display: grid; grid-template-columns: 320px minmax(0, 1fr); min-height: calc(100dvh - 86px); }
 .sales-sidebar { display: flex; flex-direction: column; gap: 16px; min-width: 0; padding: 24px 16px; border-right: 1px solid var(--border-strong); background: white; }
 .sales-sidebar-heading h1 { font-size: 20px; line-height: 28px; font-weight: 600; }
@@ -57,7 +55,7 @@ html:has(.sales-workspace) { scroll-padding-top: 16px; }
 .sales-message span { color: var(--muted); }
 .sales-message > p { padding: 14px 18px; border: 1px solid var(--border); border-radius: 18px; background: white; white-space: pre-wrap; overflow-wrap: anywhere; }
 .sales-message.user > p { border-color: #dfedf8; background: var(--brand-soft); }
-.sales-brief-sidebar { grid-column: 2; grid-row: 1 / 4; position: sticky; top: 0; align-self: start; min-width: 0; min-height: calc(100dvh - 142px); max-height: 100dvh; padding: 24px 16px; border-left: 1px solid var(--border); background: var(--surface-muted); overflow-y: auto; scrollbar-width: thin; }
+.sales-brief-sidebar { grid-column: 2; grid-row: 1 / 4; position: sticky; top: 0; align-self: start; min-width: 0; min-height: calc(100dvh - 86px); max-height: 100dvh; padding: 24px 16px; border-left: 1px solid var(--border); background: var(--surface-muted); overflow-y: auto; scrollbar-width: thin; }
 .sales-brief-heading { padding-bottom: 16px; border-bottom: 1px solid var(--border); }
 .sales-brief-heading > span, .sales-brief-heading > p { color: var(--muted); font-size: 12px; line-height: 20px; }
 .sales-brief-heading h2 { margin: 4px 0; font-size: 20px; line-height: 28px; font-weight: 600; }
@@ -97,7 +95,6 @@ html:has(.sales-workspace) { scroll-padding-top: 16px; }
 }
 @media (max-width: 840px) {
   .sales-header { flex-wrap: wrap; gap: 12px; padding: 16px; }
-  .sales-demo-note { align-items: flex-start; padding: 12px 16px; }
   .sales-account { flex-basis: 100%; margin-left: 0; justify-content: space-between; }
   .sales-read-only { margin-left: auto; }
   .sales-layout { grid-template-columns: minmax(0, 1fr); }

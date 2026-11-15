@@ -67,7 +67,7 @@ try {
   await b.send("Page.navigate", { url: base + "/salesman" });
   await b.wait("document.querySelectorAll('.sales-conversation').length===4 && document.querySelectorAll('.sales-message').length===6");
   await check("Authenticated Salesman loads the history API and account identity", "document.querySelector('.sales-account').textContent.includes('Salesman kiểm thử') && __salesRequests.some(r=>r.path==='/api/auth/me') && __salesRequests.some(r=>r.path==='/api/salesman/conversations')");
-  await check("No chat/cart/microphone providers or demo fallback on the review page", "!document.querySelector('textarea,audio,.voice-start,.ai-new-chat,.cart-link') && !__salesRequests.some(r=>r.path==='/api/health'||r.path.includes('/api/catalog')) && !document.querySelector('.sales-demo-note').textContent.includes('Dữ liệu mẫu')");
+  await check("No chat/cart/microphone providers, demo fallback or redundant notice on the review page", "!document.querySelector('textarea,audio,.voice-start,.ai-new-chat,.cart-link,.sales-demo-note') && !__salesRequests.some(r=>r.path==='/api/health'||r.path.includes('/api/catalog')) && !document.querySelector('.sales-workspace').textContent.includes('Dữ liệu mẫu')");
   await b.screenshot(`${output}/history-desktop.png`);
   await click(".sales-tab-panel .sales-load-more");
   await b.wait("document.querySelectorAll('.sales-message').length===12");

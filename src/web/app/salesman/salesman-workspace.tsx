@@ -132,7 +132,6 @@ export function SalesmanWorkspace() {
       <span className="sales-read-only"><Icon name="shield" />Chỉ xem</span>
       <div className="sales-account"><span><strong>{auth.user?.name}</strong><small>{auth.user?.email} · Salesman</small></span><button type="button" disabled={auth.busy} onClick={async () => { try { await auth.logout(); router.replace("/login"); } catch (reason) { setError(reason instanceof Error ? reason.message : "Chưa đăng xuất được."); } }}>{auth.busy ? "Đang đăng xuất…" : "Đăng xuất"}</button></div>
     </header>
-    <div className="sales-demo-note"><strong>Chỉ xem</strong><p>Hội thoại được đọc từ backend. Bản lưu cuối lượt có thể chưa có ở nhật ký cũ.</p></div>
     <div className="sales-layout"><aside className="sales-sidebar" aria-label="Danh sách hội thoại">
       <div className="sales-sidebar-heading"><h1>Lịch sử hội thoại</h1><p>Xem lại các phiên Chat và Voice của khách hàng.</p></div>
       <form className="sales-search" onSubmit={event => { event.preventDefault(); setQuery(search.trim()); setRevision(value => value + 1); }}><label htmlFor="sales-search">Tìm khách hàng hoặc hội thoại</label><div><input id="sales-search" type="search" value={search} onChange={event => setSearch(event.target.value)} placeholder="Tên, email, SĐT hoặc mã phiên" maxLength={200} /><button type="submit" aria-label="Tìm hội thoại"><Icon name="search" /></button></div></form>
