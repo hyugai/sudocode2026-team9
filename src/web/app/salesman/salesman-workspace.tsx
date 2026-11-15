@@ -7,6 +7,7 @@ import { readCallBrief } from "@/utils/call-brief";
 import { createSalesmanClient, SalesmanApiError } from "@/utils/salesman-api";
 import { useAuth } from "../components/auth-provider";
 import type { HistoryDetail, HistoryItem } from "@/utils/salesman-types";
+import { SalesCallBrief } from "./sales-call-brief";
 
 const date = (value: string) => {
   const parsed = new Date(value);
@@ -22,7 +23,7 @@ const memorySections = [
   ["past_history", "Lịch sử tham chiếu", "Dữ liệu lịch sử đã cung cấp cho agent."],
   ["retrieved_data", "Dữ liệu truy xuất", "Kiến thức, lịch sử và chương trình ưu đãi đã truy xuất."],
 ] as const;
-const tabs = [["messages", "Hội thoại"], ["brief", "Call brief"], ["memory", "Memory agent"]] as const;
+const tabs = [["messages", "Hội thoại"], ["memory", "Memory agent"]] as const;
 type Tab = typeof tabs[number][0];
 
 export function SalesmanWorkspace() {
@@ -148,17 +149,19 @@ export function SalesmanWorkspace() {
       {!selected ? <div className="sales-welcome"><span><Icon name="message" /></span><h2>{loading ? "Đang tải hội thoại…" : "Chọn một hội thoại"}</h2><p>Xem nội dung trao đổi, call brief và memory agent đã ghi nhận.</p></div> : <>
         <header className="sales-review-heading"><div><span>{selected.source === "voice" ? "Realtime Voice" : "Chat / ghi âm"}</span><h2>{title(selected)}</h2><p>{detail?.user?.email || selected.user_email || selected.customer_phone || "Chưa có thông tin liên hệ"}</p><small>Mã phiên: {selected.id}</small></div><button type="button" disabled={detailLoading} onClick={() => setDetailRevision(value => value + 1)}>Làm mới dữ liệu</button></header>
         <p className="sales-snapshot-note">{detail ? `Hội thoại cập nhật: ${date(detail.updated_at)}.${detail.snapshot_at ? ` Bản lưu cuối lượt: ${date(detail.snapshot_at)}.` : " Chưa có snapshot memory phù hợp."}` : "Đang đọc bản lưu hội thoại…"}</p>
-        <div className="sales-tabs" role="tablist" aria-label="Nội dung xem">{tabs.map(([value, label], index) => <button key={value} type="button" id={`sales-tab-${value}`} role="tab" aria-selected={tab === value} aria-controls="sales-tab-panel" tabIndex={tab === value ? 0 : -1} onClick={() => setTab(value)} onKeyDown={event => {
-          const next = event.key === "ArrowRight" ? (index + 1) % tabs.length : event.key === "ArrowLeft" ? (index + tabs.length - 1) % tabs.length : event.key === "Home" ? 0 : event.key === "End" ? tabs.length - 1 : -1;
-          if (next < 0) return; event.preventDefault(); setTab(tabs[next][0]); document.getElementById(`sales-tab-${tabs[next][0]}`)?.focus();
-        }}>{label}</button>)}</div>
-        {detailLoading && <p className="sales-loading" role="status">Đang tải nội dung…</p>}
-        {detailError && <p className="sales-error" role="alert">{detailError} <button type="button" onClick={() => setDetailRevision(value => value + 1)}>Thử lại</button></p>}
-        <div id="sales-tab-panel" className="sales-tab-panel" role="tabpanel" aria-labelledby={`sales-tab-${tab}`} tabIndex={0}>
-          {detail && tab === "messages" && <>{!detail.messages.length && <p className="sales-empty">Chưa có tin nhắn được lưu.</p>}<ol className="sales-messages">{detail.messages.map(message => <li key={message.id} className={`sales-message ${message.role}`}><div><strong>{message.role === "user" ? "Khách hàng" : "Synee AI"}</strong>{message.incomplete && <span>Chưa hoàn tất / bị ngắt</span>}</div><p>{message.content}</p></li>)}</ol>{detail.has_more && <button type="button" className="sales-load-more" disabled={moreMessages} onClick={() => void loadMessages()}>{moreMessages ? "Đang tải…" : "Tải thêm tin nhắn"}</button>}</>}
-          {detail && tab === "brief" && (brief ? <div className="sales-brief"><section><h3>Tóm tắt</h3><p>{brief.summary || "Chưa có tóm tắt."}</p></section>{[["Nhu cầu", brief.needs], ["Băn khoăn", brief.objections], ["Cần xử lý tiếp", brief.unresolvedIssues]].map(([label, values]) => <section key={String(label)}><h3>{String(label)}</h3>{(values as string[]).length ? <ul>{(values as string[]).map((value, index) => <li key={index}>{value}</li>)}</ul> : <p>Chưa ghi nhận.</p>}</section>)}</div> : <p className="sales-empty">Hội thoại này chưa lưu call brief. Dữ liệu không được tạo lại khi xem.</p>)}
-          {detail && tab === "memory" && (detail.memory ? <div className="sales-memory"><p>Bản lưu cuối lượt của hội thoại đang chọn. Dữ liệu không được tạo lại khi xem và có thể khác memory hiện tại của khách.</p>{memorySections.map(([key, label, description]) => <details key={`${detail.source}:${detail.id}:${key}`} open={key === "customer_memory"}><summary>{label}</summary><p>{description}</p>{detail.memory?.[key] == null ? <p>Chưa ghi nhận.</p> : <pre>{JSON.stringify(detail.memory[key], null, 2)}</pre>}</details>)}</div> : <p className="sales-empty">Hội thoại này chưa lưu snapshot memory. Các nhật ký Voice cũ có thể chỉ chứa transcript.</p>)}
+        <div className="sales-review-body">
+          <div className="sales-tabs" role="tablist" aria-label="Nội dung xem">{tabs.map(([value, label], index) => <button key={value} type="button" id={`sales-tab-${value}`} role="tab" aria-selected={tab === value} aria-controls="sales-tab-panel" tabIndex={tab === value ? 0 : -1} onClick={() => setTab(value)} onKeyDown={event => {
+            const next = event.key === "ArrowRight" ? (index + 1) % tabs.length : event.key === "ArrowLeft" ? (index + tabs.length - 1) % tabs.length : event.key === "Home" ? 0 : event.key === "End" ? tabs.length - 1 : -1;
+            if (next < 0) return; event.preventDefault(); setTab(tabs[next][0]); document.getElementById(`sales-tab-${tabs[next][0]}`)?.focus();
+          }}>{label}</button>)}</div>
+          {detailLoading && <p className="sales-loading" role="status">Đang tải nội dung…</p>}
+          {detailError && <p className="sales-error" role="alert">{detailError} <button type="button" onClick={() => setDetailRevision(value => value + 1)}>Thử lại</button></p>}
+          <div id="sales-tab-panel" className="sales-tab-panel" role="tabpanel" aria-labelledby={`sales-tab-${tab}`} tabIndex={0}>
+            {detail && tab === "messages" && <>{!detail.messages.length && <p className="sales-empty">Chưa có tin nhắn được lưu.</p>}<ol className="sales-messages">{detail.messages.map(message => <li key={message.id} className={`sales-message ${message.role}`}><div><strong>{message.role === "user" ? "Khách hàng" : "Synee AI"}</strong>{message.incomplete && <span>Chưa hoàn tất / bị ngắt</span>}</div><p>{message.content}</p></li>)}</ol>{detail.has_more && <button type="button" className="sales-load-more" disabled={moreMessages} onClick={() => void loadMessages()}>{moreMessages ? "Đang tải…" : "Tải thêm tin nhắn"}</button>}</>}
+            {detail && tab === "memory" && (detail.memory ? <div className="sales-memory"><p>Bản lưu cuối lượt của hội thoại đang chọn. Dữ liệu không được tạo lại khi xem và có thể khác memory hiện tại của khách.</p>{memorySections.map(([key, label, description]) => <details key={`${detail.source}:${detail.id}:${key}`} open={key === "customer_memory"}><summary>{label}</summary><p>{description}</p>{detail.memory?.[key] == null ? <p>Chưa ghi nhận.</p> : <pre>{JSON.stringify(detail.memory[key], null, 2)}</pre>}</details>)}</div> : <p className="sales-empty">Hội thoại này chưa lưu snapshot memory. Các nhật ký Voice cũ có thể chỉ chứa transcript.</p>)}
+          </div>
         </div>
+        <SalesCallBrief key={keyOf(selected)} brief={brief} loading={detailLoading || (!detail && !detailError)} error={!detail && !!detailError} />
       </>}
     </section></div>
   </main>;
