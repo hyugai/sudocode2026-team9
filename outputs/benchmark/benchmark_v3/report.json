@@ -1,6 +1,6 @@
 {
   "evaluator": "team_eval_v1",
-  "reference_evaluator": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\dataset\\BTC-Data-Vong1-TEAMS\\eval\\reference_eval.py",
+  "reference_evaluator": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\dataset\\organizer\\eval\\reference_eval.py",
   "n_scenarios": 120,
   "system": {
     "repeat_question_rate": {

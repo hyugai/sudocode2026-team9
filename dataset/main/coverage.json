@@ -1,0 +1,2516 @@
+{
+  "format_version": 1,
+  "scope": "120 scenarios; only SC-041–SC-120 revised; audio-covered SC-001–SC-040 unchanged",
+  "summary": {
+    "scenarios": 120,
+    "calls": 250,
+    "channels": {
+      "hotline": 150,
+      "chat_fanpage": 50,
+      "zalo_oa": 50
+    },
+    "channel_percent": {
+      "hotline": 60.0,
+      "chat_fanpage": 20.0,
+      "zalo_oa": 20.0
+    },
+    "multi_channel_scenarios": 70,
+    "revised_scenarios": 80,
+    "additional_hard_case_distribution": {
+      "0": 64,
+      "1": 42,
+      "2": 14
+    }
+  },
+  "constraints": [
+    "All audio files and three manifests remain byte-for-byte unchanged.",
+    "First four persona groups retain original coverage because all their scenarios have audio.",
+    "Five proposed hard cases are not forced across incompatible persona/product combinations.",
+    "Core persona difficulties are listed separately from added hard cases; primary BTC hard_case remains string/null."
+  ],
+  "pilot_scenario_ids": [
+    "SC-001",
+    "SC-011",
+    "SC-021",
+    "SC-031",
+    "SC-049",
+    "SC-059",
+    "SC-069",
+    "SC-079",
+    "SC-089",
+    "SC-099",
+    "SC-109",
+    "SC-119"
+  ],
+  "validation": {
+    "protected_files_unchanged": 333,
+    "actual_agent_pilots": "not run: backend dependencies pytest and sqlalchemy are unavailable; static/fixture checks do not demonstrate agent performance",
+    "source_audit": [
+      {
+        "path": "schemas/tools.schema.json",
+        "recorded_sha256": "4cc8935e3e7f1a37b43eab0d68d85e8383037e52423e9f7cc022da916c97d4e0",
+        "current_sha256": "c6a43f18bd482336a5b36eaac324e8b5b1e134a41b5cf94e1b1add4ca5350dbf",
+        "status": "unresolved: recorded source version not found in available Git history; original provenance hash preserved"
+      },
+      {
+        "path": "eval/mock_tools.py",
+        "recorded_sha256": "e1264037edeec98fb090b851061cc6e653ca8279752f899278e7ab057286f926",
+        "current_sha256": "ceda57e5737e4ae628d92d3d3847030578cae33d72acf0f99afdf6a04c6a6a55",
+        "status": "unresolved: recorded source version not found in available Git history; original provenance hash preserved"
+      },
+      {
+        "path": "eval/reference_eval.py",
+        "recorded_sha256": "818fc4900a18f9b92c1abb3adebcca997774dfc3da23083c9030bad2f7229ddc",
+        "current_sha256": "cca362cf74bc070a37493af756a2963d02bfca8004c5d964e9e4ca0a67b48807",
+        "status": "unresolved: recorded source version not found in available Git history; original provenance hash preserved"
+      }
+    ],
+    "paired_revised_scenarios": 80,
+    "business_snapshots_checked": 230,
+    "grading_positive_negative_checks": 84,
+    "protected_audio_files_checked": 250,
+    "synthetic_chat_sessions_with_explicit_name_phone": 41,
+    "offline_pilot_records_checked": 12
+  },
+  "scenarios": [
+    {
+      "scenario_id": "SC-001",
+      "persona": "khach_do_du_hoi_nguoi_nha",
+      "audio_available": true,
+      "protected_audio_fixture": true,
+      "core_hard_case": null,
+      "additional_hard_cases": [],
+      "evidence": [],
+      "channels": {
+        "call_1": "hotline",
+        "call_2": "hotline"
+      },
+      "primary_hard_case": null
+    },
+    {
+      "scenario_id": "SC-002",
+      "persona": "khach_do_du_hoi_nguoi_nha",
+      "audio_available": true,
+      "protected_audio_fixture": true,
+      "core_hard_case": null,
+      "additional_hard_cases": [],
+      "evidence": [],
+      "channels": {
+        "call_1": "hotline",
+        "call_2": "hotline"
+      },
+      "primary_hard_case": null
+    },
+    {
+      "scenario_id": "SC-003",
+      "persona": "khach_do_du_hoi_nguoi_nha",
+      "audio_available": true,
+      "protected_audio_fixture": true,
+      "core_hard_case": "het_hang_luc_tu_van_nhap_lai_truoc_khi_chot",
+      "additional_hard_cases": [],
+      "evidence": [],
+      "channels": {
+        "call_1": "hotline",
+        "call_2": "hotline"
+      },
+      "primary_hard_case": "het_hang_luc_tu_van_nhap_lai_truoc_khi_chot"
+    },
+    {
+      "scenario_id": "SC-004",
+      "persona": "khach_do_du_hoi_nguoi_nha",
+      "audio_available": true,
+      "protected_audio_fixture": true,
+      "core_hard_case": null,
+      "additional_hard_cases": [],
+      "evidence": [],
+      "channels": {
+        "call_1": "hotline",
+        "call_2": "hotline"
+      },
+      "primary_hard_case": null
+    },
+    {
+      "scenario_id": "SC-005",
+      "persona": "khach_do_du_hoi_nguoi_nha",
+      "audio_available": true,
+      "protected_audio_fixture": true,
+      "core_hard_case": null,
+      "additional_hard_cases": [],
+      "evidence": [],
+      "channels": {
+        "call_1": "hotline",
+        "call_2": "hotline"
+      },
+      "primary_hard_case": null
+    },
+    {
+      "scenario_id": "SC-006",
+      "persona": "khach_do_du_hoi_nguoi_nha",
+      "audio_available": true,
+      "protected_audio_fixture": true,
+      "core_hard_case": "het_hang_luc_tu_van_nhap_lai_truoc_khi_chot",
+      "additional_hard_cases": [],
+      "evidence": [],
+      "channels": {
+        "call_1": "hotline",
+        "call_2": "hotline"
+      },
+      "primary_hard_case": "het_hang_luc_tu_van_nhap_lai_truoc_khi_chot"
+    },
+    {
+      "scenario_id": "SC-007",
+      "persona": "khach_do_du_hoi_nguoi_nha",
+      "audio_available": true,
+      "protected_audio_fixture": true,
+      "core_hard_case": null,
+      "additional_hard_cases": [],
+      "evidence": [],
+      "channels": {
+        "call_1": "hotline",
+        "call_2": "hotline"
+      },
+      "primary_hard_case": null
+    },
+    {
+      "scenario_id": "SC-008",
+      "persona": "khach_do_du_hoi_nguoi_nha",
+      "audio_available": true,
+      "protected_audio_fixture": true,
+      "core_hard_case": null,
+      "additional_hard_cases": [],
+      "evidence": [],
+      "channels": {
+        "call_1": "hotline",
+        "call_2": "hotline"
+      },
+      "primary_hard_case": null
+    },
+    {
+      "scenario_id": "SC-009",
+      "persona": "khach_do_du_hoi_nguoi_nha",
+      "audio_available": true,
+      "protected_audio_fixture": true,
+      "core_hard_case": null,
+      "additional_hard_cases": [],
+      "evidence": [],
+      "channels": {
+        "call_1": "hotline",
+        "call_2": "hotline"
+      },
+      "primary_hard_case": null
+    },
+    {
+      "scenario_id": "SC-010",
+      "persona": "khach_do_du_hoi_nguoi_nha",
+      "audio_available": true,
+      "protected_audio_fixture": true,
+      "core_hard_case": null,
+      "additional_hard_cases": [],
+      "evidence": [],
+      "channels": {
+        "call_1": "hotline",
+        "call_2": "hotline"
+      },
+      "primary_hard_case": null
+    },
+    {
+      "scenario_id": "SC-011",
+      "persona": "khach_so_gia",
+      "audio_available": true,
+      "protected_audio_fixture": true,
+      "core_hard_case": "doi_khuyen_mai_het_han",
+      "additional_hard_cases": [],
+      "evidence": [],
+      "channels": {
+        "call_1": "hotline",
+        "call_2": "hotline"
+      },
+      "primary_hard_case": "doi_khuyen_mai_het_han"
+    },
+    {
+      "scenario_id": "SC-012",
+      "persona": "khach_so_gia",
+      "audio_available": true,
+      "protected_audio_fixture": true,
+      "core_hard_case": "doi_khuyen_mai_het_han",
+      "additional_hard_cases": [],
+      "evidence": [],
+      "channels": {
+        "call_1": "hotline",
+        "call_2": "hotline"
+      },
+      "primary_hard_case": "doi_khuyen_mai_het_han"
+    },
+    {
+      "scenario_id": "SC-013",
+      "persona": "khach_so_gia",
+      "audio_available": true,
+      "protected_audio_fixture": true,
+      "core_hard_case": "doi_khuyen_mai_het_han",
+      "additional_hard_cases": [],
+      "evidence": [],
+      "channels": {
+        "call_1": "hotline",
+        "call_2": "hotline"
+      },
+      "primary_hard_case": "doi_khuyen_mai_het_han"
+    },
+    {
+      "scenario_id": "SC-014",
+      "persona": "khach_so_gia",
+      "audio_available": true,
+      "protected_audio_fixture": true,
+      "core_hard_case": "doi_khuyen_mai_het_han",
+      "additional_hard_cases": [],
+      "evidence": [],
+      "channels": {
+        "call_1": "hotline",
+        "call_2": "hotline"
+      },
+      "primary_hard_case": "doi_khuyen_mai_het_han"
+    },
+    {
+      "scenario_id": "SC-015",
+      "persona": "khach_so_gia",
+      "audio_available": true,
+      "protected_audio_fixture": true,
+      "core_hard_case": "doi_khuyen_mai_het_han",
+      "additional_hard_cases": [],
+      "evidence": [],
+      "channels": {
+        "call_1": "hotline",
+        "call_2": "hotline"
+      },
+      "primary_hard_case": "doi_khuyen_mai_het_han"
+    },
+    {
+      "scenario_id": "SC-016",
+      "persona": "khach_so_gia",
+      "audio_available": true,
+      "protected_audio_fixture": true,
+      "core_hard_case": "doi_khuyen_mai_het_han",
+      "additional_hard_cases": [],
+      "evidence": [],
+      "channels": {
+        "call_1": "hotline",
+        "call_2": "hotline"
+      },
+      "primary_hard_case": "doi_khuyen_mai_het_han"
+    },
+    {
+      "scenario_id": "SC-017",
+      "persona": "khach_so_gia",
+      "audio_available": true,
+      "protected_audio_fixture": true,
+      "core_hard_case": "doi_khuyen_mai_het_han",
+      "additional_hard_cases": [],
+      "evidence": [],
+      "channels": {
+        "call_1": "hotline",
+        "call_2": "hotline"
+      },
+      "primary_hard_case": "doi_khuyen_mai_het_han"
+    },
+    {
+      "scenario_id": "SC-018",
+      "persona": "khach_so_gia",
+      "audio_available": true,
+      "protected_audio_fixture": true,
+      "core_hard_case": "doi_khuyen_mai_het_han",
+      "additional_hard_cases": [],
+      "evidence": [],
+      "channels": {
+        "call_1": "hotline",
+        "call_2": "hotline"
+      },
+      "primary_hard_case": "doi_khuyen_mai_het_han"
+    },
+    {
+      "scenario_id": "SC-019",
+      "persona": "khach_so_gia",
+      "audio_available": true,
+      "protected_audio_fixture": true,
+      "core_hard_case": "doi_khuyen_mai_het_han",
+      "additional_hard_cases": [],
+      "evidence": [],
+      "channels": {
+        "call_1": "hotline",
+        "call_2": "hotline"
+      },
+      "primary_hard_case": "doi_khuyen_mai_het_han"
+    },
+    {
+      "scenario_id": "SC-020",
+      "persona": "khach_so_gia",
+      "audio_available": true,
+      "protected_audio_fixture": true,
+      "core_hard_case": "doi_khuyen_mai_het_han",
+      "additional_hard_cases": [],
+      "evidence": [],
+      "channels": {
+        "call_1": "hotline",
+        "call_2": "hotline"
+      },
+      "primary_hard_case": "doi_khuyen_mai_het_han"
+    },
+    {
+      "scenario_id": "SC-021",
+      "persona": "khach_da_mua_doi_size",
+      "audio_available": true,
+      "protected_audio_fixture": true,
+      "core_hard_case": "doi_size_sau_khi_nhan_hang",
+      "additional_hard_cases": [],
+      "evidence": [],
+      "channels": {
+        "call_1": "hotline",
+        "call_2": "hotline"
+      },
+      "primary_hard_case": "doi_size_sau_khi_nhan_hang"
+    },
+    {
+      "scenario_id": "SC-022",
+      "persona": "khach_da_mua_doi_size",
+      "audio_available": true,
+      "protected_audio_fixture": true,
+      "core_hard_case": "doi_size_sau_khi_nhan_hang",
+      "additional_hard_cases": [],
+      "evidence": [],
+      "channels": {
+        "call_1": "hotline",
+        "call_2": "hotline"
+      },
+      "primary_hard_case": "doi_size_sau_khi_nhan_hang"
+    },
+    {
+      "scenario_id": "SC-023",
+      "persona": "khach_da_mua_doi_size",
+      "audio_available": true,
+      "protected_audio_fixture": true,
+      "core_hard_case": "doi_size_sau_khi_nhan_hang",
+      "additional_hard_cases": [],
+      "evidence": [],
+      "channels": {
+        "call_1": "hotline",
+        "call_2": "hotline"
+      },
+      "primary_hard_case": "doi_size_sau_khi_nhan_hang"
+    },
+    {
+      "scenario_id": "SC-024",
+      "persona": "khach_da_mua_doi_size",
+      "audio_available": true,
+      "protected_audio_fixture": true,
+      "core_hard_case": "doi_size_sau_khi_nhan_hang",
+      "additional_hard_cases": [],
+      "evidence": [],
+      "channels": {
+        "call_1": "hotline",
+        "call_2": "hotline"
+      },
+      "primary_hard_case": "doi_size_sau_khi_nhan_hang"
+    },
+    {
+      "scenario_id": "SC-025",
+      "persona": "khach_da_mua_doi_size",
+      "audio_available": true,
+      "protected_audio_fixture": true,
+      "core_hard_case": "doi_size_sau_khi_nhan_hang",
+      "additional_hard_cases": [],
+      "evidence": [],
+      "channels": {
+        "call_1": "hotline",
+        "call_2": "hotline"
+      },
+      "primary_hard_case": "doi_size_sau_khi_nhan_hang"
+    },
+    {
+      "scenario_id": "SC-026",
+      "persona": "khach_da_mua_doi_size",
+      "audio_available": true,
+      "protected_audio_fixture": true,
+      "core_hard_case": "doi_size_sau_khi_nhan_hang",
+      "additional_hard_cases": [],
+      "evidence": [],
+      "channels": {
+        "call_1": "hotline",
+        "call_2": "hotline"
+      },
+      "primary_hard_case": "doi_size_sau_khi_nhan_hang"
+    },
+    {
+      "scenario_id": "SC-027",
+      "persona": "khach_da_mua_doi_size",
+      "audio_available": true,
+      "protected_audio_fixture": true,
+      "core_hard_case": "doi_size_sau_khi_nhan_hang",
+      "additional_hard_cases": [],
+      "evidence": [],
+      "channels": {
+        "call_1": "hotline",
+        "call_2": "hotline"
+      },
+      "primary_hard_case": "doi_size_sau_khi_nhan_hang"
+    },
+    {
+      "scenario_id": "SC-028",
+      "persona": "khach_da_mua_doi_size",
+      "audio_available": true,
+      "protected_audio_fixture": true,
+      "core_hard_case": "doi_size_sau_khi_nhan_hang",
+      "additional_hard_cases": [],
+      "evidence": [],
+      "channels": {
+        "call_1": "hotline",
+        "call_2": "hotline"
+      },
+      "primary_hard_case": "doi_size_sau_khi_nhan_hang"
+    },
+    {
+      "scenario_id": "SC-029",
+      "persona": "khach_da_mua_doi_size",
+      "audio_available": true,
+      "protected_audio_fixture": true,
+      "core_hard_case": "doi_size_sau_khi_nhan_hang",
+      "additional_hard_cases": [],
+      "evidence": [],
+      "channels": {
+        "call_1": "hotline",
+        "call_2": "hotline"
+      },
+      "primary_hard_case": "doi_size_sau_khi_nhan_hang"
+    },
+    {
+      "scenario_id": "SC-030",
+      "persona": "khach_da_mua_doi_size",
+      "audio_available": true,
+      "protected_audio_fixture": true,
+      "core_hard_case": "doi_size_sau_khi_nhan_hang",
+      "additional_hard_cases": [],
+      "evidence": [],
+      "channels": {
+        "call_1": "hotline",
+        "call_2": "hotline"
+      },
+      "primary_hard_case": "doi_size_sau_khi_nhan_hang"
+    },
+    {
+      "scenario_id": "SC-031",
+      "persona": "khach_hoi_nhieu_khong_mua",
+      "audio_available": true,
+      "protected_audio_fixture": true,
+      "core_hard_case": "phien_ban_chinh_sach_cu",
+      "additional_hard_cases": [],
+      "evidence": [],
+      "channels": {
+        "call_1": "hotline",
+        "call_2": "hotline"
+      },
+      "primary_hard_case": "phien_ban_chinh_sach_cu"
+    },
+    {
+      "scenario_id": "SC-032",
+      "persona": "khach_hoi_nhieu_khong_mua",
+      "audio_available": true,
+      "protected_audio_fixture": true,
+      "core_hard_case": "phien_ban_chinh_sach_cu",
+      "additional_hard_cases": [],
+      "evidence": [],
+      "channels": {
+        "call_1": "hotline",
+        "call_2": "hotline"
+      },
+      "primary_hard_case": "phien_ban_chinh_sach_cu"
+    },
+    {
+      "scenario_id": "SC-033",
+      "persona": "khach_hoi_nhieu_khong_mua",
+      "audio_available": true,
+      "protected_audio_fixture": true,
+      "core_hard_case": "phien_ban_chinh_sach_cu",
+      "additional_hard_cases": [],
+      "evidence": [],
+      "channels": {
+        "call_1": "hotline",
+        "call_2": "hotline"
+      },
+      "primary_hard_case": "phien_ban_chinh_sach_cu"
+    },
+    {
+      "scenario_id": "SC-034",
+      "persona": "khach_hoi_nhieu_khong_mua",
+      "audio_available": true,
+      "protected_audio_fixture": true,
+      "core_hard_case": "phien_ban_chinh_sach_cu",
+      "additional_hard_cases": [],
+      "evidence": [],
+      "channels": {
+        "call_1": "hotline",
+        "call_2": "hotline"
+      },
+      "primary_hard_case": "phien_ban_chinh_sach_cu"
+    },
+    {
+      "scenario_id": "SC-035",
+      "persona": "khach_hoi_nhieu_khong_mua",
+      "audio_available": true,
+      "protected_audio_fixture": true,
+      "core_hard_case": "phien_ban_chinh_sach_cu",
+      "additional_hard_cases": [],
+      "evidence": [],
+      "channels": {
+        "call_1": "hotline",
+        "call_2": "hotline"
+      },
+      "primary_hard_case": "phien_ban_chinh_sach_cu"
+    },
+    {
+      "scenario_id": "SC-036",
+      "persona": "khach_hoi_nhieu_khong_mua",
+      "audio_available": true,
+      "protected_audio_fixture": true,
+      "core_hard_case": "phien_ban_chinh_sach_cu",
+      "additional_hard_cases": [],
+      "evidence": [],
+      "channels": {
+        "call_1": "hotline",
+        "call_2": "hotline"
+      },
+      "primary_hard_case": "phien_ban_chinh_sach_cu"
+    },
+    {
+      "scenario_id": "SC-037",
+      "persona": "khach_hoi_nhieu_khong_mua",
+      "audio_available": true,
+      "protected_audio_fixture": true,
+      "core_hard_case": "phien_ban_chinh_sach_cu",
+      "additional_hard_cases": [],
+      "evidence": [],
+      "channels": {
+        "call_1": "hotline",
+        "call_2": "hotline"
+      },
+      "primary_hard_case": "phien_ban_chinh_sach_cu"
+    },
+    {
+      "scenario_id": "SC-038",
+      "persona": "khach_hoi_nhieu_khong_mua",
+      "audio_available": true,
+      "protected_audio_fixture": true,
+      "core_hard_case": "phien_ban_chinh_sach_cu",
+      "additional_hard_cases": [],
+      "evidence": [],
+      "channels": {
+        "call_1": "hotline",
+        "call_2": "hotline"
+      },
+      "primary_hard_case": "phien_ban_chinh_sach_cu"
+    },
+    {
+      "scenario_id": "SC-039",
+      "persona": "khach_hoi_nhieu_khong_mua",
+      "audio_available": true,
+      "protected_audio_fixture": true,
+      "core_hard_case": "phien_ban_chinh_sach_cu",
+      "additional_hard_cases": [],
+      "evidence": [],
+      "channels": {
+        "call_1": "hotline",
+        "call_2": "hotline"
+      },
+      "primary_hard_case": "phien_ban_chinh_sach_cu"
+    },
+    {
+      "scenario_id": "SC-040",
+      "persona": "khach_hoi_nhieu_khong_mua",
+      "audio_available": true,
+      "protected_audio_fixture": true,
+      "core_hard_case": "phien_ban_chinh_sach_cu",
+      "additional_hard_cases": [],
+      "evidence": [],
+      "channels": {
+        "call_1": "hotline",
+        "call_2": "hotline"
+      },
+      "primary_hard_case": "phien_ban_chinh_sach_cu"
+    },
+    {
+      "scenario_id": "SC-041",
+      "persona": "khach_goi_lan_3_het_kien_nhan",
+      "audio_available": false,
+      "protected_audio_fixture": false,
+      "core_hard_case": "goi_lan_ba_mat_kien_nhan",
+      "additional_hard_cases": [],
+      "evidence": [],
+      "noisy_calls": [],
+      "channels": {
+        "call_1": "hotline",
+        "call_2": "hotline",
+        "call_3": "hotline"
+      },
+      "primary_hard_case": "goi_lan_ba_mat_kien_nhan"
+    },
+    {
+      "scenario_id": "SC-042",
+      "persona": "khach_goi_lan_3_het_kien_nhan",
+      "audio_available": false,
+      "protected_audio_fixture": false,
+      "core_hard_case": "goi_lan_ba_mat_kien_nhan",
+      "additional_hard_cases": [],
+      "evidence": [],
+      "noisy_calls": [],
+      "channels": {
+        "call_1": "hotline",
+        "call_2": "hotline",
+        "call_3": "hotline"
+      },
+      "primary_hard_case": "goi_lan_ba_mat_kien_nhan"
+    },
+    {
+      "scenario_id": "SC-043",
+      "persona": "khach_goi_lan_3_het_kien_nhan",
+      "audio_available": false,
+      "protected_audio_fixture": false,
+      "core_hard_case": "goi_lan_ba_mat_kien_nhan",
+      "additional_hard_cases": [],
+      "evidence": [],
+      "noisy_calls": [],
+      "channels": {
+        "call_1": "hotline",
+        "call_2": "hotline",
+        "call_3": "hotline"
+      },
+      "primary_hard_case": "goi_lan_ba_mat_kien_nhan"
+    },
+    {
+      "scenario_id": "SC-044",
+      "persona": "khach_goi_lan_3_het_kien_nhan",
+      "audio_available": false,
+      "protected_audio_fixture": false,
+      "core_hard_case": "goi_lan_ba_mat_kien_nhan",
+      "additional_hard_cases": [
+        "asr_loi_va_teencode"
+      ],
+      "evidence": [
+        {
+          "hard_case": "asr_loi_va_teencode",
+          "call": "call_1",
+          "grading": "Existing facts, quote, order and memory expectations apply to noisy input; numeric entities are preserved."
+        }
+      ],
+      "noisy_calls": [
+        "call_1"
+      ],
+      "channels": {
+        "call_1": "hotline",
+        "call_2": "hotline",
+        "call_3": "hotline"
+      },
+      "primary_hard_case": "asr_loi_va_teencode"
+    },
+    {
+      "scenario_id": "SC-045",
+      "persona": "khach_goi_lan_3_het_kien_nhan",
+      "audio_available": false,
+      "protected_audio_fixture": false,
+      "core_hard_case": "goi_lan_ba_mat_kien_nhan",
+      "additional_hard_cases": [
+        "phien_ban_chinh_sach_cu"
+      ],
+      "evidence": [
+        {
+          "hard_case": "phien_ban_chinh_sach_cu",
+          "call": "call_1",
+          "grading": "Require 7 ngày / bảy ngày in response trace; reject a 14-day current-policy claim.",
+          "source": "policy/chinh-sach-doi-tra.md#DT-01"
+        }
+      ],
+      "noisy_calls": [],
+      "channels": {
+        "call_1": "hotline",
+        "call_2": "hotline",
+        "call_3": "hotline"
+      },
+      "primary_hard_case": "phien_ban_chinh_sach_cu"
+    },
+    {
+      "scenario_id": "SC-046",
+      "persona": "khach_goi_lan_3_het_kien_nhan",
+      "audio_available": false,
+      "protected_audio_fixture": false,
+      "core_hard_case": "goi_lan_ba_mat_kien_nhan",
+      "additional_hard_cases": [
+        "phien_ban_chinh_sach_cu"
+      ],
+      "evidence": [
+        {
+          "hard_case": "phien_ban_chinh_sach_cu",
+          "call": "call_1",
+          "grading": "Require 7 ngày / bảy ngày in response trace; reject a 14-day current-policy claim.",
+          "source": "policy/chinh-sach-doi-tra.md#DT-01"
+        }
+      ],
+      "compatibility_note": "No expired product-specific promotion fits the established basket; use a policy-version challenge instead.",
+      "noisy_calls": [],
+      "channels": {
+        "call_1": "hotline",
+        "call_2": "hotline",
+        "call_3": "hotline"
+      },
+      "primary_hard_case": "phien_ban_chinh_sach_cu"
+    },
+    {
+      "scenario_id": "SC-047",
+      "persona": "khach_goi_lan_3_het_kien_nhan",
+      "audio_available": false,
+      "protected_audio_fixture": false,
+      "core_hard_case": "goi_lan_ba_mat_kien_nhan",
+      "additional_hard_cases": [
+        "asr_loi_va_teencode"
+      ],
+      "evidence": [
+        {
+          "hard_case": "asr_loi_va_teencode",
+          "call": "call_1",
+          "grading": "Existing facts, quote, order and memory expectations apply to noisy input; numeric entities are preserved."
+        }
+      ],
+      "noisy_calls": [
+        "call_1"
+      ],
+      "channels": {
+        "call_1": "hotline",
+        "call_2": "hotline",
+        "call_3": "hotline"
+      },
+      "primary_hard_case": "asr_loi_va_teencode"
+    },
+    {
+      "scenario_id": "SC-048",
+      "persona": "khach_goi_lan_3_het_kien_nhan",
+      "audio_available": false,
+      "protected_audio_fixture": false,
+      "core_hard_case": "goi_lan_ba_mat_kien_nhan",
+      "additional_hard_cases": [
+        "phien_ban_chinh_sach_cu"
+      ],
+      "evidence": [
+        {
+          "hard_case": "phien_ban_chinh_sach_cu",
+          "call": "call_1",
+          "grading": "Require 7 ngày / bảy ngày in response trace; reject a 14-day current-policy claim.",
+          "source": "policy/chinh-sach-doi-tra.md#DT-01"
+        }
+      ],
+      "noisy_calls": [],
+      "channels": {
+        "call_1": "hotline",
+        "call_2": "hotline",
+        "call_3": "hotline"
+      },
+      "primary_hard_case": "phien_ban_chinh_sach_cu"
+    },
+    {
+      "scenario_id": "SC-049",
+      "persona": "khach_goi_lan_3_het_kien_nhan",
+      "audio_available": false,
+      "protected_audio_fixture": false,
+      "core_hard_case": "goi_lan_ba_mat_kien_nhan",
+      "additional_hard_cases": [
+        "phien_ban_chinh_sach_cu",
+        "asr_loi_va_teencode"
+      ],
+      "evidence": [
+        {
+          "hard_case": "phien_ban_chinh_sach_cu",
+          "call": "call_1",
+          "grading": "Require 7 ngày / bảy ngày in response trace; reject a 14-day current-policy claim.",
+          "source": "policy/chinh-sach-doi-tra.md#DT-01"
+        },
+        {
+          "hard_case": "asr_loi_va_teencode",
+          "call": "call_1",
+          "grading": "Existing facts, quote, order and memory expectations apply to noisy input; numeric entities are preserved."
+        }
+      ],
+      "noisy_calls": [
+        "call_1"
+      ],
+      "channels": {
+        "call_1": "hotline",
+        "call_2": "hotline",
+        "call_3": "hotline"
+      },
+      "primary_hard_case": "phien_ban_chinh_sach_cu"
+    },
+    {
+      "scenario_id": "SC-050",
+      "persona": "khach_goi_lan_3_het_kien_nhan",
+      "audio_available": false,
+      "protected_audio_fixture": false,
+      "core_hard_case": "goi_lan_ba_mat_kien_nhan",
+      "additional_hard_cases": [
+        "phien_ban_chinh_sach_cu",
+        "asr_loi_va_teencode"
+      ],
+      "evidence": [
+        {
+          "hard_case": "phien_ban_chinh_sach_cu",
+          "call": "call_1",
+          "grading": "Require 7 ngày / bảy ngày in response trace; reject a 14-day current-policy claim.",
+          "source": "policy/chinh-sach-doi-tra.md#DT-01"
+        },
+        {
+          "hard_case": "asr_loi_va_teencode",
+          "call": "call_1",
+          "grading": "Existing facts, quote, order and memory expectations apply to noisy input; numeric entities are preserved."
+        }
+      ],
+      "compatibility_note": "No expired product-specific promotion fits the established basket; use a policy-version challenge instead.",
+      "noisy_calls": [
+        "call_1"
+      ],
+      "channels": {
+        "call_1": "hotline",
+        "call_2": "hotline",
+        "call_3": "hotline"
+      },
+      "primary_hard_case": "phien_ban_chinh_sach_cu"
+    },
+    {
+      "scenario_id": "SC-051",
+      "persona": "khach_da_kenh_fb_hotline",
+      "audio_available": false,
+      "protected_audio_fixture": false,
+      "core_hard_case": "asr_loi_va_teencode",
+      "additional_hard_cases": [],
+      "evidence": [],
+      "noisy_calls": [
+        "call_1"
+      ],
+      "channels": {
+        "call_1": "chat_fanpage",
+        "call_2": "hotline"
+      },
+      "primary_hard_case": "asr_loi_va_teencode"
+    },
+    {
+      "scenario_id": "SC-052",
+      "persona": "khach_da_kenh_fb_hotline",
+      "audio_available": false,
+      "protected_audio_fixture": false,
+      "core_hard_case": "asr_loi_va_teencode",
+      "additional_hard_cases": [],
+      "evidence": [],
+      "noisy_calls": [
+        "call_1"
+      ],
+      "channels": {
+        "call_1": "chat_fanpage",
+        "call_2": "hotline"
+      },
+      "primary_hard_case": "asr_loi_va_teencode"
+    },
+    {
+      "scenario_id": "SC-053",
+      "persona": "khach_da_kenh_fb_hotline",
+      "audio_available": false,
+      "protected_audio_fixture": false,
+      "core_hard_case": "asr_loi_va_teencode",
+      "additional_hard_cases": [],
+      "evidence": [],
+      "noisy_calls": [
+        "call_1"
+      ],
+      "channels": {
+        "call_1": "chat_fanpage",
+        "call_2": "hotline"
+      },
+      "primary_hard_case": "asr_loi_va_teencode"
+    },
+    {
+      "scenario_id": "SC-054",
+      "persona": "khach_da_kenh_fb_hotline",
+      "audio_available": false,
+      "protected_audio_fixture": false,
+      "core_hard_case": "asr_loi_va_teencode",
+      "additional_hard_cases": [
+        "phien_ban_chinh_sach_cu"
+      ],
+      "evidence": [
+        {
+          "hard_case": "phien_ban_chinh_sach_cu",
+          "call": "call_1",
+          "grading": "Require 7 ngày / bảy ngày in response trace; reject a 14-day current-policy claim.",
+          "source": "policy/chinh-sach-doi-tra.md#DT-01"
+        }
+      ],
+      "noisy_calls": [
+        "call_1"
+      ],
+      "channels": {
+        "call_1": "chat_fanpage",
+        "call_2": "hotline"
+      },
+      "primary_hard_case": "phien_ban_chinh_sach_cu",
+      "compatibility_note": "Noisy chat is already part of the original core case; it is preserved but not counted as an additional difficulty. No expired promotion fits this product."
+    },
+    {
+      "scenario_id": "SC-055",
+      "persona": "khach_da_kenh_fb_hotline",
+      "audio_available": false,
+      "protected_audio_fixture": false,
+      "core_hard_case": "asr_loi_va_teencode",
+      "additional_hard_cases": [
+        "phien_ban_chinh_sach_cu"
+      ],
+      "evidence": [
+        {
+          "hard_case": "phien_ban_chinh_sach_cu",
+          "call": "call_1",
+          "grading": "Require 7 ngày / bảy ngày in response trace; reject a 14-day current-policy claim.",
+          "source": "policy/chinh-sach-doi-tra.md#DT-01"
+        }
+      ],
+      "noisy_calls": [
+        "call_1"
+      ],
+      "channels": {
+        "call_1": "chat_fanpage",
+        "call_2": "hotline"
+      },
+      "primary_hard_case": "phien_ban_chinh_sach_cu"
+    },
+    {
+      "scenario_id": "SC-056",
+      "persona": "khach_da_kenh_fb_hotline",
+      "audio_available": false,
+      "protected_audio_fixture": false,
+      "core_hard_case": "asr_loi_va_teencode",
+      "additional_hard_cases": [
+        "phien_ban_chinh_sach_cu"
+      ],
+      "evidence": [
+        {
+          "hard_case": "phien_ban_chinh_sach_cu",
+          "call": "call_1",
+          "grading": "Require 7 ngày / bảy ngày in response trace; reject a 14-day current-policy claim.",
+          "source": "policy/chinh-sach-doi-tra.md#DT-01"
+        }
+      ],
+      "compatibility_note": "No expired product-specific promotion fits the established basket; use a policy-version challenge instead.",
+      "noisy_calls": [
+        "call_1"
+      ],
+      "channels": {
+        "call_1": "chat_fanpage",
+        "call_2": "hotline"
+      },
+      "primary_hard_case": "phien_ban_chinh_sach_cu"
+    },
+    {
+      "scenario_id": "SC-057",
+      "persona": "khach_da_kenh_fb_hotline",
+      "audio_available": false,
+      "protected_audio_fixture": false,
+      "core_hard_case": "asr_loi_va_teencode",
+      "additional_hard_cases": [
+        "phien_ban_chinh_sach_cu"
+      ],
+      "evidence": [
+        {
+          "hard_case": "phien_ban_chinh_sach_cu",
+          "call": "call_1",
+          "grading": "Require 7 ngày / bảy ngày in response trace; reject a 14-day current-policy claim.",
+          "source": "policy/chinh-sach-doi-tra.md#DT-01"
+        }
+      ],
+      "noisy_calls": [
+        "call_1"
+      ],
+      "channels": {
+        "call_1": "chat_fanpage",
+        "call_2": "hotline"
+      },
+      "primary_hard_case": "phien_ban_chinh_sach_cu",
+      "compatibility_note": "Noisy chat is already part of the original core case; it is preserved but not counted as an additional difficulty. No expired promotion fits this product."
+    },
+    {
+      "scenario_id": "SC-058",
+      "persona": "khach_da_kenh_fb_hotline",
+      "audio_available": false,
+      "protected_audio_fixture": false,
+      "core_hard_case": "asr_loi_va_teencode",
+      "additional_hard_cases": [
+        "phien_ban_chinh_sach_cu"
+      ],
+      "evidence": [
+        {
+          "hard_case": "phien_ban_chinh_sach_cu",
+          "call": "call_1",
+          "grading": "Require 7 ngày / bảy ngày in response trace; reject a 14-day current-policy claim.",
+          "source": "policy/chinh-sach-doi-tra.md#DT-01"
+        }
+      ],
+      "noisy_calls": [
+        "call_1"
+      ],
+      "channels": {
+        "call_1": "chat_fanpage",
+        "call_2": "hotline"
+      },
+      "primary_hard_case": "phien_ban_chinh_sach_cu"
+    },
+    {
+      "scenario_id": "SC-059",
+      "persona": "khach_da_kenh_fb_hotline",
+      "audio_available": false,
+      "protected_audio_fixture": false,
+      "core_hard_case": "asr_loi_va_teencode",
+      "additional_hard_cases": [
+        "phien_ban_chinh_sach_cu"
+      ],
+      "evidence": [
+        {
+          "hard_case": "phien_ban_chinh_sach_cu",
+          "call": "call_1",
+          "grading": "Require 7 ngày / bảy ngày in response trace; reject a 14-day current-policy claim.",
+          "source": "policy/chinh-sach-doi-tra.md#DT-01"
+        }
+      ],
+      "noisy_calls": [
+        "call_1"
+      ],
+      "channels": {
+        "call_1": "chat_fanpage",
+        "call_2": "hotline"
+      },
+      "primary_hard_case": "phien_ban_chinh_sach_cu",
+      "compatibility_note": "Noisy chat is already part of the original core case; it is preserved but not counted as an additional difficulty. No expired promotion fits this product."
+    },
+    {
+      "scenario_id": "SC-060",
+      "persona": "khach_da_kenh_fb_hotline",
+      "audio_available": false,
+      "protected_audio_fixture": false,
+      "core_hard_case": "asr_loi_va_teencode",
+      "additional_hard_cases": [
+        "phien_ban_chinh_sach_cu"
+      ],
+      "evidence": [
+        {
+          "hard_case": "phien_ban_chinh_sach_cu",
+          "call": "call_1",
+          "grading": "Require 7 ngày / bảy ngày in response trace; reject a 14-day current-policy claim.",
+          "source": "policy/chinh-sach-doi-tra.md#DT-01"
+        }
+      ],
+      "compatibility_note": "Noisy chat is already part of the original core case; it is preserved but not counted as an additional difficulty. No expired promotion fits this product.",
+      "noisy_calls": [
+        "call_1"
+      ],
+      "channels": {
+        "call_1": "chat_fanpage",
+        "call_2": "hotline"
+      },
+      "primary_hard_case": "phien_ban_chinh_sach_cu"
+    },
+    {
+      "scenario_id": "SC-061",
+      "persona": "khach_ngoai_pham_vi_chuyen_may",
+      "audio_available": false,
+      "protected_audio_fixture": false,
+      "core_hard_case": "cau_hoi_y_te_can_chuyen_may",
+      "additional_hard_cases": [],
+      "evidence": [],
+      "noisy_calls": [],
+      "channels": {
+        "call_1": "zalo_oa",
+        "call_2": "chat_fanpage"
+      },
+      "primary_hard_case": "cau_hoi_y_te_can_chuyen_may"
+    },
+    {
+      "scenario_id": "SC-062",
+      "persona": "khach_ngoai_pham_vi_chuyen_may",
+      "audio_available": false,
+      "protected_audio_fixture": false,
+      "core_hard_case": "cau_hoi_y_te_can_chuyen_may",
+      "additional_hard_cases": [],
+      "evidence": [],
+      "noisy_calls": [],
+      "channels": {
+        "call_1": "hotline",
+        "call_2": "zalo_oa"
+      },
+      "primary_hard_case": "cau_hoi_y_te_can_chuyen_may"
+    },
+    {
+      "scenario_id": "SC-063",
+      "persona": "khach_ngoai_pham_vi_chuyen_may",
+      "audio_available": false,
+      "protected_audio_fixture": false,
+      "core_hard_case": "cau_hoi_y_te_can_chuyen_may",
+      "additional_hard_cases": [],
+      "evidence": [],
+      "noisy_calls": [],
+      "channels": {
+        "call_1": "chat_fanpage",
+        "call_2": "hotline"
+      },
+      "primary_hard_case": "cau_hoi_y_te_can_chuyen_may"
+    },
+    {
+      "scenario_id": "SC-064",
+      "persona": "khach_ngoai_pham_vi_chuyen_may",
+      "audio_available": false,
+      "protected_audio_fixture": false,
+      "core_hard_case": "cau_hoi_y_te_can_chuyen_may",
+      "additional_hard_cases": [
+        "asr_loi_va_teencode"
+      ],
+      "evidence": [
+        {
+          "hard_case": "asr_loi_va_teencode",
+          "call": "call_1",
+          "grading": "Existing facts, quote, order and memory expectations apply to noisy input; numeric entities are preserved."
+        }
+      ],
+      "noisy_calls": [
+        "call_1"
+      ],
+      "channels": {
+        "call_1": "zalo_oa",
+        "call_2": "chat_fanpage"
+      },
+      "primary_hard_case": "asr_loi_va_teencode"
+    },
+    {
+      "scenario_id": "SC-065",
+      "persona": "khach_ngoai_pham_vi_chuyen_may",
+      "audio_available": false,
+      "protected_audio_fixture": false,
+      "core_hard_case": "cau_hoi_y_te_can_chuyen_may",
+      "additional_hard_cases": [
+        "phien_ban_chinh_sach_cu"
+      ],
+      "evidence": [
+        {
+          "hard_case": "phien_ban_chinh_sach_cu",
+          "call": "call_1",
+          "grading": "Require 7 ngày / bảy ngày in response trace; reject a 14-day current-policy claim.",
+          "source": "policy/chinh-sach-doi-tra.md#DT-01"
+        }
+      ],
+      "noisy_calls": [],
+      "channels": {
+        "call_1": "zalo_oa",
+        "call_2": "hotline"
+      },
+      "primary_hard_case": "phien_ban_chinh_sach_cu"
+    },
+    {
+      "scenario_id": "SC-066",
+      "persona": "khach_ngoai_pham_vi_chuyen_may",
+      "audio_available": false,
+      "protected_audio_fixture": false,
+      "core_hard_case": "cau_hoi_y_te_can_chuyen_may",
+      "additional_hard_cases": [
+        "doi_khuyen_mai_het_han"
+      ],
+      "evidence": [
+        {
+          "hard_case": "doi_khuyen_mai_het_han",
+          "call": "call_1",
+          "promo_code": "PUMP-GIFT",
+          "expires_on": "2026-10-13",
+          "grading": "Require expiry explanation and reject active-promotion claim; retain existing quote/order checks."
+        }
+      ],
+      "noisy_calls": [],
+      "channels": {
+        "call_1": "chat_fanpage",
+        "call_2": "zalo_oa"
+      },
+      "primary_hard_case": "doi_khuyen_mai_het_han"
+    },
+    {
+      "scenario_id": "SC-067",
+      "persona": "khach_ngoai_pham_vi_chuyen_may",
+      "audio_available": false,
+      "protected_audio_fixture": false,
+      "core_hard_case": "cau_hoi_y_te_can_chuyen_may",
+      "additional_hard_cases": [
+        "asr_loi_va_teencode"
+      ],
+      "evidence": [
+        {
+          "hard_case": "asr_loi_va_teencode",
+          "call": "call_1",
+          "grading": "Existing facts, quote, order and memory expectations apply to noisy input; numeric entities are preserved."
+        }
+      ],
+      "noisy_calls": [
+        "call_1"
+      ],
+      "channels": {
+        "call_1": "zalo_oa",
+        "call_2": "chat_fanpage"
+      },
+      "primary_hard_case": "asr_loi_va_teencode"
+    },
+    {
+      "scenario_id": "SC-068",
+      "persona": "khach_ngoai_pham_vi_chuyen_may",
+      "audio_available": false,
+      "protected_audio_fixture": false,
+      "core_hard_case": "cau_hoi_y_te_can_chuyen_may",
+      "additional_hard_cases": [
+        "phien_ban_chinh_sach_cu"
+      ],
+      "evidence": [
+        {
+          "hard_case": "phien_ban_chinh_sach_cu",
+          "call": "call_1",
+          "grading": "Require 7 ngày / bảy ngày in response trace; reject a 14-day current-policy claim.",
+          "source": "policy/chinh-sach-doi-tra.md#DT-01"
+        }
+      ],
+      "noisy_calls": [],
+      "channels": {
+        "call_1": "hotline",
+        "call_2": "zalo_oa"
+      },
+      "primary_hard_case": "phien_ban_chinh_sach_cu"
+    },
+    {
+      "scenario_id": "SC-069",
+      "persona": "khach_ngoai_pham_vi_chuyen_may",
+      "audio_available": false,
+      "protected_audio_fixture": false,
+      "core_hard_case": "cau_hoi_y_te_can_chuyen_may",
+      "additional_hard_cases": [
+        "phien_ban_chinh_sach_cu",
+        "asr_loi_va_teencode"
+      ],
+      "evidence": [
+        {
+          "hard_case": "phien_ban_chinh_sach_cu",
+          "call": "call_1",
+          "grading": "Require 7 ngày / bảy ngày in response trace; reject a 14-day current-policy claim.",
+          "source": "policy/chinh-sach-doi-tra.md#DT-01"
+        },
+        {
+          "hard_case": "asr_loi_va_teencode",
+          "call": "call_1",
+          "grading": "Existing facts, quote, order and memory expectations apply to noisy input; numeric entities are preserved."
+        }
+      ],
+      "noisy_calls": [
+        "call_1"
+      ],
+      "channels": {
+        "call_1": "chat_fanpage",
+        "call_2": "hotline"
+      },
+      "primary_hard_case": "phien_ban_chinh_sach_cu"
+    },
+    {
+      "scenario_id": "SC-070",
+      "persona": "khach_ngoai_pham_vi_chuyen_may",
+      "audio_available": false,
+      "protected_audio_fixture": false,
+      "core_hard_case": "cau_hoi_y_te_can_chuyen_may",
+      "additional_hard_cases": [
+        "phien_ban_chinh_sach_cu",
+        "asr_loi_va_teencode"
+      ],
+      "evidence": [
+        {
+          "hard_case": "phien_ban_chinh_sach_cu",
+          "call": "call_1",
+          "grading": "Require 7 ngày / bảy ngày in response trace; reject a 14-day current-policy claim.",
+          "source": "policy/chinh-sach-doi-tra.md#DT-01"
+        },
+        {
+          "hard_case": "asr_loi_va_teencode",
+          "call": "call_1",
+          "grading": "Existing facts, quote, order and memory expectations apply to noisy input; numeric entities are preserved."
+        }
+      ],
+      "compatibility_note": "No expired product-specific promotion fits the established basket; use a policy-version challenge instead.",
+      "noisy_calls": [
+        "call_1"
+      ],
+      "channels": {
+        "call_1": "zalo_oa",
+        "call_2": "chat_fanpage"
+      },
+      "primary_hard_case": "phien_ban_chinh_sach_cu"
+    },
+    {
+      "scenario_id": "SC-071",
+      "persona": "khach_hoi_ngoai_tai_lieu",
+      "audio_available": false,
+      "protected_audio_fixture": false,
+      "core_hard_case": "cau_hoi_ngoai_tai_lieu",
+      "additional_hard_cases": [],
+      "evidence": [],
+      "noisy_calls": [],
+      "channels": {
+        "call_1": "zalo_oa",
+        "call_2": "hotline"
+      },
+      "primary_hard_case": "cau_hoi_ngoai_tai_lieu"
+    },
+    {
+      "scenario_id": "SC-072",
+      "persona": "khach_hoi_ngoai_tai_lieu",
+      "audio_available": false,
+      "protected_audio_fixture": false,
+      "core_hard_case": "cau_hoi_ngoai_tai_lieu",
+      "additional_hard_cases": [],
+      "evidence": [],
+      "noisy_calls": [],
+      "channels": {
+        "call_1": "chat_fanpage",
+        "call_2": "zalo_oa"
+      },
+      "primary_hard_case": "cau_hoi_ngoai_tai_lieu"
+    },
+    {
+      "scenario_id": "SC-073",
+      "persona": "khach_hoi_ngoai_tai_lieu",
+      "audio_available": false,
+      "protected_audio_fixture": false,
+      "core_hard_case": "cau_hoi_ngoai_tai_lieu",
+      "additional_hard_cases": [],
+      "evidence": [],
+      "noisy_calls": [],
+      "channels": {
+        "call_1": "zalo_oa",
+        "call_2": "chat_fanpage"
+      },
+      "primary_hard_case": "cau_hoi_ngoai_tai_lieu"
+    },
+    {
+      "scenario_id": "SC-074",
+      "persona": "khach_hoi_ngoai_tai_lieu",
+      "audio_available": false,
+      "protected_audio_fixture": false,
+      "core_hard_case": "cau_hoi_ngoai_tai_lieu",
+      "additional_hard_cases": [
+        "asr_loi_va_teencode"
+      ],
+      "evidence": [
+        {
+          "hard_case": "asr_loi_va_teencode",
+          "call": "call_1",
+          "grading": "Existing facts, quote, order and memory expectations apply to noisy input; numeric entities are preserved."
+        }
+      ],
+      "noisy_calls": [
+        "call_1"
+      ],
+      "channels": {
+        "call_1": "hotline",
+        "call_2": "zalo_oa"
+      },
+      "primary_hard_case": "asr_loi_va_teencode"
+    },
+    {
+      "scenario_id": "SC-075",
+      "persona": "khach_hoi_ngoai_tai_lieu",
+      "audio_available": false,
+      "protected_audio_fixture": false,
+      "core_hard_case": "cau_hoi_ngoai_tai_lieu",
+      "additional_hard_cases": [
+        "phien_ban_chinh_sach_cu"
+      ],
+      "evidence": [
+        {
+          "hard_case": "phien_ban_chinh_sach_cu",
+          "call": "call_1",
+          "grading": "Require 7 ngày / bảy ngày in response trace; reject a 14-day current-policy claim.",
+          "source": "policy/chinh-sach-doi-tra.md#DT-01"
+        }
+      ],
+      "noisy_calls": [],
+      "channels": {
+        "call_1": "chat_fanpage",
+        "call_2": "hotline"
+      },
+      "primary_hard_case": "phien_ban_chinh_sach_cu"
+    },
+    {
+      "scenario_id": "SC-076",
+      "persona": "khach_hoi_ngoai_tai_lieu",
+      "audio_available": false,
+      "protected_audio_fixture": false,
+      "core_hard_case": "cau_hoi_ngoai_tai_lieu",
+      "additional_hard_cases": [
+        "phien_ban_chinh_sach_cu"
+      ],
+      "evidence": [
+        {
+          "hard_case": "phien_ban_chinh_sach_cu",
+          "call": "call_1",
+          "grading": "Require 7 ngày / bảy ngày in response trace; reject a 14-day current-policy claim.",
+          "source": "policy/chinh-sach-doi-tra.md#DT-01"
+        }
+      ],
+      "compatibility_note": "No expired product-specific promotion fits the established basket; use a policy-version challenge instead.",
+      "noisy_calls": [],
+      "channels": {
+        "call_1": "zalo_oa",
+        "call_2": "chat_fanpage"
+      },
+      "primary_hard_case": "phien_ban_chinh_sach_cu"
+    },
+    {
+      "scenario_id": "SC-077",
+      "persona": "khach_hoi_ngoai_tai_lieu",
+      "audio_available": false,
+      "protected_audio_fixture": false,
+      "core_hard_case": "cau_hoi_ngoai_tai_lieu",
+      "additional_hard_cases": [
+        "asr_loi_va_teencode"
+      ],
+      "evidence": [
+        {
+          "hard_case": "asr_loi_va_teencode",
+          "call": "call_1",
+          "grading": "Existing facts, quote, order and memory expectations apply to noisy input; numeric entities are preserved."
+        }
+      ],
+      "noisy_calls": [
+        "call_1"
+      ],
+      "channels": {
+        "call_1": "zalo_oa",
+        "call_2": "hotline"
+      },
+      "primary_hard_case": "asr_loi_va_teencode"
+    },
+    {
+      "scenario_id": "SC-078",
+      "persona": "khach_hoi_ngoai_tai_lieu",
+      "audio_available": false,
+      "protected_audio_fixture": false,
+      "core_hard_case": "cau_hoi_ngoai_tai_lieu",
+      "additional_hard_cases": [
+        "phien_ban_chinh_sach_cu"
+      ],
+      "evidence": [
+        {
+          "hard_case": "phien_ban_chinh_sach_cu",
+          "call": "call_1",
+          "grading": "Require 7 ngày / bảy ngày in response trace; reject a 14-day current-policy claim.",
+          "source": "policy/chinh-sach-doi-tra.md#DT-01"
+        }
+      ],
+      "noisy_calls": [],
+      "channels": {
+        "call_1": "chat_fanpage",
+        "call_2": "zalo_oa"
+      },
+      "primary_hard_case": "phien_ban_chinh_sach_cu"
+    },
+    {
+      "scenario_id": "SC-079",
+      "persona": "khach_hoi_ngoai_tai_lieu",
+      "audio_available": false,
+      "protected_audio_fixture": false,
+      "core_hard_case": "cau_hoi_ngoai_tai_lieu",
+      "additional_hard_cases": [
+        "phien_ban_chinh_sach_cu",
+        "asr_loi_va_teencode"
+      ],
+      "evidence": [
+        {
+          "hard_case": "phien_ban_chinh_sach_cu",
+          "call": "call_1",
+          "grading": "Require 7 ngày / bảy ngày in response trace; reject a 14-day current-policy claim.",
+          "source": "policy/chinh-sach-doi-tra.md#DT-01"
+        },
+        {
+          "hard_case": "asr_loi_va_teencode",
+          "call": "call_1",
+          "grading": "Existing facts, quote, order and memory expectations apply to noisy input; numeric entities are preserved."
+        }
+      ],
+      "noisy_calls": [
+        "call_1"
+      ],
+      "channels": {
+        "call_1": "zalo_oa",
+        "call_2": "chat_fanpage"
+      },
+      "primary_hard_case": "phien_ban_chinh_sach_cu"
+    },
+    {
+      "scenario_id": "SC-080",
+      "persona": "khach_hoi_ngoai_tai_lieu",
+      "audio_available": false,
+      "protected_audio_fixture": false,
+      "core_hard_case": "cau_hoi_ngoai_tai_lieu",
+      "additional_hard_cases": [
+        "phien_ban_chinh_sach_cu",
+        "asr_loi_va_teencode"
+      ],
+      "evidence": [
+        {
+          "hard_case": "phien_ban_chinh_sach_cu",
+          "call": "call_1",
+          "grading": "Require 7 ngày / bảy ngày in response trace; reject a 14-day current-policy claim.",
+          "source": "policy/chinh-sach-doi-tra.md#DT-01"
+        },
+        {
+          "hard_case": "asr_loi_va_teencode",
+          "call": "call_1",
+          "grading": "Existing facts, quote, order and memory expectations apply to noisy input; numeric entities are preserved."
+        }
+      ],
+      "compatibility_note": "No expired product-specific promotion fits the established basket; use a policy-version challenge instead.",
+      "noisy_calls": [
+        "call_1"
+      ],
+      "channels": {
+        "call_1": "hotline",
+        "call_2": "zalo_oa"
+      },
+      "primary_hard_case": "phien_ban_chinh_sach_cu"
+    },
+    {
+      "scenario_id": "SC-081",
+      "persona": "khach_da_kenh_mau_thuan",
+      "audio_available": false,
+      "protected_audio_fixture": false,
+      "core_hard_case": "gia_da_kenh_thay_doi_theo_khuyen_mai",
+      "additional_hard_cases": [],
+      "evidence": [],
+      "noisy_calls": [],
+      "channels": {
+        "call_1": "chat_fanpage",
+        "call_2": "hotline"
+      },
+      "primary_hard_case": "gia_da_kenh_thay_doi_theo_khuyen_mai"
+    },
+    {
+      "scenario_id": "SC-082",
+      "persona": "khach_da_kenh_mau_thuan",
+      "audio_available": false,
+      "protected_audio_fixture": false,
+      "core_hard_case": "gia_da_kenh_thay_doi_theo_khuyen_mai",
+      "additional_hard_cases": [],
+      "evidence": [],
+      "noisy_calls": [],
+      "channels": {
+        "call_1": "zalo_oa",
+        "call_2": "chat_fanpage"
+      },
+      "primary_hard_case": "gia_da_kenh_thay_doi_theo_khuyen_mai"
+    },
+    {
+      "scenario_id": "SC-083",
+      "persona": "khach_da_kenh_mau_thuan",
+      "audio_available": false,
+      "protected_audio_fixture": false,
+      "core_hard_case": "gia_da_kenh_thay_doi_theo_khuyen_mai",
+      "additional_hard_cases": [],
+      "evidence": [],
+      "noisy_calls": [],
+      "channels": {
+        "call_1": "zalo_oa",
+        "call_2": "hotline"
+      },
+      "primary_hard_case": "gia_da_kenh_thay_doi_theo_khuyen_mai"
+    },
+    {
+      "scenario_id": "SC-084",
+      "persona": "khach_da_kenh_mau_thuan",
+      "audio_available": false,
+      "protected_audio_fixture": false,
+      "core_hard_case": "gia_da_kenh_thay_doi_theo_khuyen_mai",
+      "additional_hard_cases": [
+        "asr_loi_va_teencode"
+      ],
+      "evidence": [
+        {
+          "hard_case": "asr_loi_va_teencode",
+          "call": "call_1",
+          "grading": "Existing facts, quote, order and memory expectations apply to noisy input; numeric entities are preserved."
+        }
+      ],
+      "noisy_calls": [
+        "call_1"
+      ],
+      "channels": {
+        "call_1": "chat_fanpage",
+        "call_2": "zalo_oa"
+      },
+      "primary_hard_case": "asr_loi_va_teencode"
+    },
+    {
+      "scenario_id": "SC-085",
+      "persona": "khach_da_kenh_mau_thuan",
+      "audio_available": false,
+      "protected_audio_fixture": false,
+      "core_hard_case": "gia_da_kenh_thay_doi_theo_khuyen_mai",
+      "additional_hard_cases": [
+        "phien_ban_chinh_sach_cu"
+      ],
+      "evidence": [
+        {
+          "hard_case": "phien_ban_chinh_sach_cu",
+          "call": "call_2",
+          "grading": "Require 7 ngày / bảy ngày in response trace; reject a 14-day current-policy claim.",
+          "source": "policy/chinh-sach-doi-tra.md#DT-01"
+        }
+      ],
+      "noisy_calls": [],
+      "channels": {
+        "call_1": "zalo_oa",
+        "call_2": "chat_fanpage"
+      },
+      "primary_hard_case": "phien_ban_chinh_sach_cu"
+    },
+    {
+      "scenario_id": "SC-086",
+      "persona": "khach_da_kenh_mau_thuan",
+      "audio_available": false,
+      "protected_audio_fixture": false,
+      "core_hard_case": "gia_da_kenh_thay_doi_theo_khuyen_mai",
+      "additional_hard_cases": [
+        "phien_ban_chinh_sach_cu"
+      ],
+      "evidence": [
+        {
+          "hard_case": "phien_ban_chinh_sach_cu",
+          "call": "call_1",
+          "grading": "Require 7 ngày / bảy ngày in response trace; reject a 14-day current-policy claim.",
+          "source": "policy/chinh-sach-doi-tra.md#DT-01"
+        }
+      ],
+      "compatibility_note": "No expired product-specific promotion fits the established basket; use a policy-version challenge instead.",
+      "noisy_calls": [],
+      "channels": {
+        "call_1": "hotline",
+        "call_2": "zalo_oa"
+      },
+      "primary_hard_case": "phien_ban_chinh_sach_cu"
+    },
+    {
+      "scenario_id": "SC-087",
+      "persona": "khach_da_kenh_mau_thuan",
+      "audio_available": false,
+      "protected_audio_fixture": false,
+      "core_hard_case": "gia_da_kenh_thay_doi_theo_khuyen_mai",
+      "additional_hard_cases": [
+        "asr_loi_va_teencode"
+      ],
+      "evidence": [
+        {
+          "hard_case": "asr_loi_va_teencode",
+          "call": "call_1",
+          "grading": "Existing facts, quote, order and memory expectations apply to noisy input; numeric entities are preserved."
+        }
+      ],
+      "noisy_calls": [
+        "call_1"
+      ],
+      "channels": {
+        "call_1": "chat_fanpage",
+        "call_2": "hotline"
+      },
+      "primary_hard_case": "asr_loi_va_teencode"
+    },
+    {
+      "scenario_id": "SC-088",
+      "persona": "khach_da_kenh_mau_thuan",
+      "audio_available": false,
+      "protected_audio_fixture": false,
+      "core_hard_case": "gia_da_kenh_thay_doi_theo_khuyen_mai",
+      "additional_hard_cases": [
+        "phien_ban_chinh_sach_cu"
+      ],
+      "evidence": [
+        {
+          "hard_case": "phien_ban_chinh_sach_cu",
+          "call": "call_1",
+          "grading": "Require 7 ngày / bảy ngày in response trace; reject a 14-day current-policy claim.",
+          "source": "policy/chinh-sach-doi-tra.md#DT-01"
+        }
+      ],
+      "noisy_calls": [],
+      "channels": {
+        "call_1": "zalo_oa",
+        "call_2": "chat_fanpage"
+      },
+      "primary_hard_case": "phien_ban_chinh_sach_cu"
+    },
+    {
+      "scenario_id": "SC-089",
+      "persona": "khach_da_kenh_mau_thuan",
+      "audio_available": false,
+      "protected_audio_fixture": false,
+      "core_hard_case": "gia_da_kenh_thay_doi_theo_khuyen_mai",
+      "additional_hard_cases": [
+        "phien_ban_chinh_sach_cu",
+        "asr_loi_va_teencode"
+      ],
+      "evidence": [
+        {
+          "hard_case": "phien_ban_chinh_sach_cu",
+          "call": "call_1",
+          "grading": "Require 7 ngày / bảy ngày in response trace; reject a 14-day current-policy claim.",
+          "source": "policy/chinh-sach-doi-tra.md#DT-01"
+        },
+        {
+          "hard_case": "asr_loi_va_teencode",
+          "call": "call_1",
+          "grading": "Existing facts, quote, order and memory expectations apply to noisy input; numeric entities are preserved."
+        }
+      ],
+      "noisy_calls": [
+        "call_1"
+      ],
+      "channels": {
+        "call_1": "zalo_oa",
+        "call_2": "hotline"
+      },
+      "primary_hard_case": "phien_ban_chinh_sach_cu"
+    },
+    {
+      "scenario_id": "SC-090",
+      "persona": "khach_da_kenh_mau_thuan",
+      "audio_available": false,
+      "protected_audio_fixture": false,
+      "core_hard_case": "gia_da_kenh_thay_doi_theo_khuyen_mai",
+      "additional_hard_cases": [
+        "phien_ban_chinh_sach_cu",
+        "asr_loi_va_teencode"
+      ],
+      "evidence": [
+        {
+          "hard_case": "phien_ban_chinh_sach_cu",
+          "call": "call_1",
+          "grading": "Require 7 ngày / bảy ngày in response trace; reject a 14-day current-policy claim.",
+          "source": "policy/chinh-sach-doi-tra.md#DT-01"
+        },
+        {
+          "hard_case": "asr_loi_va_teencode",
+          "call": "call_1",
+          "grading": "Existing facts, quote, order and memory expectations apply to noisy input; numeric entities are preserved."
+        }
+      ],
+      "compatibility_note": "No expired product-specific promotion fits the established basket; use a policy-version challenge instead.",
+      "noisy_calls": [
+        "call_1"
+      ],
+      "channels": {
+        "call_1": "chat_fanpage",
+        "call_2": "zalo_oa"
+      },
+      "primary_hard_case": "phien_ban_chinh_sach_cu"
+    },
+    {
+      "scenario_id": "SC-091",
+      "persona": "hai_nguoi_chung_sdt",
+      "audio_available": false,
+      "protected_audio_fixture": false,
+      "core_hard_case": "hai_nguoi_chung_sdt",
+      "additional_hard_cases": [],
+      "evidence": [],
+      "noisy_calls": [],
+      "channels": {
+        "call_1": "zalo_oa",
+        "call_2": "chat_fanpage"
+      },
+      "primary_hard_case": "hai_nguoi_chung_sdt"
+    },
+    {
+      "scenario_id": "SC-092",
+      "persona": "hai_nguoi_chung_sdt",
+      "audio_available": false,
+      "protected_audio_fixture": false,
+      "core_hard_case": "hai_nguoi_chung_sdt",
+      "additional_hard_cases": [],
+      "evidence": [],
+      "noisy_calls": [],
+      "channels": {
+        "call_1": "hotline",
+        "call_2": "zalo_oa"
+      },
+      "primary_hard_case": "hai_nguoi_chung_sdt"
+    },
+    {
+      "scenario_id": "SC-093",
+      "persona": "hai_nguoi_chung_sdt",
+      "audio_available": false,
+      "protected_audio_fixture": false,
+      "core_hard_case": "hai_nguoi_chung_sdt",
+      "additional_hard_cases": [],
+      "evidence": [],
+      "noisy_calls": [],
+      "channels": {
+        "call_1": "chat_fanpage",
+        "call_2": "hotline"
+      },
+      "primary_hard_case": "hai_nguoi_chung_sdt"
+    },
+    {
+      "scenario_id": "SC-094",
+      "persona": "hai_nguoi_chung_sdt",
+      "audio_available": false,
+      "protected_audio_fixture": false,
+      "core_hard_case": "hai_nguoi_chung_sdt",
+      "additional_hard_cases": [
+        "asr_loi_va_teencode"
+      ],
+      "evidence": [
+        {
+          "hard_case": "asr_loi_va_teencode",
+          "call": "call_1",
+          "grading": "Existing facts, quote, order and memory expectations apply to noisy input; numeric entities are preserved."
+        }
+      ],
+      "noisy_calls": [
+        "call_1"
+      ],
+      "channels": {
+        "call_1": "zalo_oa",
+        "call_2": "chat_fanpage"
+      },
+      "primary_hard_case": "asr_loi_va_teencode"
+    },
+    {
+      "scenario_id": "SC-095",
+      "persona": "hai_nguoi_chung_sdt",
+      "audio_available": false,
+      "protected_audio_fixture": false,
+      "core_hard_case": "hai_nguoi_chung_sdt",
+      "additional_hard_cases": [
+        "phien_ban_chinh_sach_cu"
+      ],
+      "evidence": [
+        {
+          "hard_case": "phien_ban_chinh_sach_cu",
+          "call": "call_1",
+          "grading": "Require 7 ngày / bảy ngày in response trace; reject a 14-day current-policy claim.",
+          "source": "policy/chinh-sach-doi-tra.md#DT-01"
+        }
+      ],
+      "noisy_calls": [],
+      "channels": {
+        "call_1": "zalo_oa",
+        "call_2": "hotline"
+      },
+      "primary_hard_case": "phien_ban_chinh_sach_cu"
+    },
+    {
+      "scenario_id": "SC-096",
+      "persona": "hai_nguoi_chung_sdt",
+      "audio_available": false,
+      "protected_audio_fixture": false,
+      "core_hard_case": "hai_nguoi_chung_sdt",
+      "additional_hard_cases": [
+        "phien_ban_chinh_sach_cu"
+      ],
+      "evidence": [
+        {
+          "hard_case": "phien_ban_chinh_sach_cu",
+          "call": "call_1",
+          "grading": "Require 7 ngày / bảy ngày in response trace; reject a 14-day current-policy claim.",
+          "source": "policy/chinh-sach-doi-tra.md#DT-01"
+        }
+      ],
+      "compatibility_note": "No expired product-specific promotion fits the established basket; use a policy-version challenge instead.",
+      "noisy_calls": [],
+      "channels": {
+        "call_1": "chat_fanpage",
+        "call_2": "zalo_oa"
+      },
+      "primary_hard_case": "phien_ban_chinh_sach_cu"
+    },
+    {
+      "scenario_id": "SC-097",
+      "persona": "hai_nguoi_chung_sdt",
+      "audio_available": false,
+      "protected_audio_fixture": false,
+      "core_hard_case": "hai_nguoi_chung_sdt",
+      "additional_hard_cases": [
+        "asr_loi_va_teencode"
+      ],
+      "evidence": [
+        {
+          "hard_case": "asr_loi_va_teencode",
+          "call": "call_1",
+          "grading": "Existing facts, quote, order and memory expectations apply to noisy input; numeric entities are preserved."
+        }
+      ],
+      "noisy_calls": [
+        "call_1"
+      ],
+      "channels": {
+        "call_1": "zalo_oa",
+        "call_2": "chat_fanpage"
+      },
+      "primary_hard_case": "asr_loi_va_teencode"
+    },
+    {
+      "scenario_id": "SC-098",
+      "persona": "hai_nguoi_chung_sdt",
+      "audio_available": false,
+      "protected_audio_fixture": false,
+      "core_hard_case": "hai_nguoi_chung_sdt",
+      "additional_hard_cases": [
+        "phien_ban_chinh_sach_cu"
+      ],
+      "evidence": [
+        {
+          "hard_case": "phien_ban_chinh_sach_cu",
+          "call": "call_1",
+          "grading": "Require 7 ngày / bảy ngày in response trace; reject a 14-day current-policy claim.",
+          "source": "policy/chinh-sach-doi-tra.md#DT-01"
+        }
+      ],
+      "noisy_calls": [],
+      "channels": {
+        "call_1": "hotline",
+        "call_2": "zalo_oa"
+      },
+      "primary_hard_case": "phien_ban_chinh_sach_cu"
+    },
+    {
+      "scenario_id": "SC-099",
+      "persona": "hai_nguoi_chung_sdt",
+      "audio_available": false,
+      "protected_audio_fixture": false,
+      "core_hard_case": "hai_nguoi_chung_sdt",
+      "additional_hard_cases": [
+        "phien_ban_chinh_sach_cu",
+        "asr_loi_va_teencode"
+      ],
+      "evidence": [
+        {
+          "hard_case": "phien_ban_chinh_sach_cu",
+          "call": "call_1",
+          "grading": "Require 7 ngày / bảy ngày in response trace; reject a 14-day current-policy claim.",
+          "source": "policy/chinh-sach-doi-tra.md#DT-01"
+        },
+        {
+          "hard_case": "asr_loi_va_teencode",
+          "call": "call_1",
+          "grading": "Existing facts, quote, order and memory expectations apply to noisy input; numeric entities are preserved."
+        }
+      ],
+      "noisy_calls": [
+        "call_1"
+      ],
+      "channels": {
+        "call_1": "chat_fanpage",
+        "call_2": "hotline"
+      },
+      "primary_hard_case": "phien_ban_chinh_sach_cu"
+    },
+    {
+      "scenario_id": "SC-100",
+      "persona": "hai_nguoi_chung_sdt",
+      "audio_available": false,
+      "protected_audio_fixture": false,
+      "core_hard_case": "hai_nguoi_chung_sdt",
+      "additional_hard_cases": [
+        "phien_ban_chinh_sach_cu",
+        "asr_loi_va_teencode"
+      ],
+      "evidence": [
+        {
+          "hard_case": "phien_ban_chinh_sach_cu",
+          "call": "call_1",
+          "grading": "Require 7 ngày / bảy ngày in response trace; reject a 14-day current-policy claim.",
+          "source": "policy/chinh-sach-doi-tra.md#DT-01"
+        },
+        {
+          "hard_case": "asr_loi_va_teencode",
+          "call": "call_1",
+          "grading": "Existing facts, quote, order and memory expectations apply to noisy input; numeric entities are preserved."
+        }
+      ],
+      "compatibility_note": "No expired product-specific promotion fits the established basket; use a policy-version challenge instead.",
+      "noisy_calls": [
+        "call_1"
+      ],
+      "channels": {
+        "call_1": "zalo_oa",
+        "call_2": "chat_fanpage"
+      },
+      "primary_hard_case": "phien_ban_chinh_sach_cu"
+    },
+    {
+      "scenario_id": "SC-101",
+      "persona": "khach_quay_lai_sau_8_thang",
+      "audio_available": false,
+      "protected_audio_fixture": false,
+      "core_hard_case": "khach_cu_ttl_sku_ngung_ban",
+      "additional_hard_cases": [],
+      "evidence": [],
+      "noisy_calls": [],
+      "channels": {
+        "call_1": "zalo_oa",
+        "call_2": "hotline"
+      },
+      "primary_hard_case": "khach_cu_ttl_sku_ngung_ban"
+    },
+    {
+      "scenario_id": "SC-102",
+      "persona": "khach_quay_lai_sau_8_thang",
+      "audio_available": false,
+      "protected_audio_fixture": false,
+      "core_hard_case": "khach_cu_ttl_sku_ngung_ban",
+      "additional_hard_cases": [],
+      "evidence": [],
+      "noisy_calls": [],
+      "channels": {
+        "call_1": "chat_fanpage",
+        "call_2": "zalo_oa"
+      },
+      "primary_hard_case": "khach_cu_ttl_sku_ngung_ban"
+    },
+    {
+      "scenario_id": "SC-103",
+      "persona": "khach_quay_lai_sau_8_thang",
+      "audio_available": false,
+      "protected_audio_fixture": false,
+      "core_hard_case": "khach_cu_ttl_sku_ngung_ban",
+      "additional_hard_cases": [],
+      "evidence": [],
+      "noisy_calls": [],
+      "channels": {
+        "call_1": "zalo_oa",
+        "call_2": "chat_fanpage"
+      },
+      "primary_hard_case": "khach_cu_ttl_sku_ngung_ban"
+    },
+    {
+      "scenario_id": "SC-104",
+      "persona": "khach_quay_lai_sau_8_thang",
+      "audio_available": false,
+      "protected_audio_fixture": false,
+      "core_hard_case": "khach_cu_ttl_sku_ngung_ban",
+      "additional_hard_cases": [
+        "asr_loi_va_teencode"
+      ],
+      "evidence": [
+        {
+          "hard_case": "asr_loi_va_teencode",
+          "call": "call_1",
+          "grading": "Existing facts, quote, order and memory expectations apply to noisy input; numeric entities are preserved."
+        }
+      ],
+      "noisy_calls": [
+        "call_1"
+      ],
+      "channels": {
+        "call_1": "hotline",
+        "call_2": "zalo_oa"
+      },
+      "primary_hard_case": "asr_loi_va_teencode"
+    },
+    {
+      "scenario_id": "SC-105",
+      "persona": "khach_quay_lai_sau_8_thang",
+      "audio_available": false,
+      "protected_audio_fixture": false,
+      "core_hard_case": "khach_cu_ttl_sku_ngung_ban",
+      "additional_hard_cases": [
+        "phien_ban_chinh_sach_cu"
+      ],
+      "evidence": [
+        {
+          "hard_case": "phien_ban_chinh_sach_cu",
+          "call": "call_1",
+          "grading": "Require 7 ngày / bảy ngày in response trace; reject a 14-day current-policy claim.",
+          "source": "policy/chinh-sach-doi-tra.md#DT-01"
+        }
+      ],
+      "noisy_calls": [],
+      "channels": {
+        "call_1": "chat_fanpage",
+        "call_2": "hotline"
+      },
+      "primary_hard_case": "phien_ban_chinh_sach_cu"
+    },
+    {
+      "scenario_id": "SC-106",
+      "persona": "khach_quay_lai_sau_8_thang",
+      "audio_available": false,
+      "protected_audio_fixture": false,
+      "core_hard_case": "khach_cu_ttl_sku_ngung_ban",
+      "additional_hard_cases": [
+        "phien_ban_chinh_sach_cu"
+      ],
+      "evidence": [
+        {
+          "hard_case": "phien_ban_chinh_sach_cu",
+          "call": "call_1",
+          "grading": "Require 7 ngày / bảy ngày in response trace; reject a 14-day current-policy claim.",
+          "source": "policy/chinh-sach-doi-tra.md#DT-01"
+        }
+      ],
+      "compatibility_note": "No expired product-specific promotion fits the established basket; use a policy-version challenge instead.",
+      "noisy_calls": [],
+      "channels": {
+        "call_1": "zalo_oa",
+        "call_2": "chat_fanpage"
+      },
+      "primary_hard_case": "phien_ban_chinh_sach_cu"
+    },
+    {
+      "scenario_id": "SC-107",
+      "persona": "khach_quay_lai_sau_8_thang",
+      "audio_available": false,
+      "protected_audio_fixture": false,
+      "core_hard_case": "khach_cu_ttl_sku_ngung_ban",
+      "additional_hard_cases": [
+        "asr_loi_va_teencode"
+      ],
+      "evidence": [
+        {
+          "hard_case": "asr_loi_va_teencode",
+          "call": "call_1",
+          "grading": "Existing facts, quote, order and memory expectations apply to noisy input; numeric entities are preserved."
+        }
+      ],
+      "noisy_calls": [
+        "call_1"
+      ],
+      "channels": {
+        "call_1": "zalo_oa",
+        "call_2": "hotline"
+      },
+      "primary_hard_case": "asr_loi_va_teencode"
+    },
+    {
+      "scenario_id": "SC-108",
+      "persona": "khach_quay_lai_sau_8_thang",
+      "audio_available": false,
+      "protected_audio_fixture": false,
+      "core_hard_case": "khach_cu_ttl_sku_ngung_ban",
+      "additional_hard_cases": [
+        "phien_ban_chinh_sach_cu"
+      ],
+      "evidence": [
+        {
+          "hard_case": "phien_ban_chinh_sach_cu",
+          "call": "call_1",
+          "grading": "Require 7 ngày / bảy ngày in response trace; reject a 14-day current-policy claim.",
+          "source": "policy/chinh-sach-doi-tra.md#DT-01"
+        }
+      ],
+      "noisy_calls": [],
+      "channels": {
+        "call_1": "chat_fanpage",
+        "call_2": "zalo_oa"
+      },
+      "primary_hard_case": "phien_ban_chinh_sach_cu"
+    },
+    {
+      "scenario_id": "SC-109",
+      "persona": "khach_quay_lai_sau_8_thang",
+      "audio_available": false,
+      "protected_audio_fixture": false,
+      "core_hard_case": "khach_cu_ttl_sku_ngung_ban",
+      "additional_hard_cases": [
+        "phien_ban_chinh_sach_cu",
+        "asr_loi_va_teencode"
+      ],
+      "evidence": [
+        {
+          "hard_case": "phien_ban_chinh_sach_cu",
+          "call": "call_1",
+          "grading": "Require 7 ngày / bảy ngày in response trace; reject a 14-day current-policy claim.",
+          "source": "policy/chinh-sach-doi-tra.md#DT-01"
+        },
+        {
+          "hard_case": "asr_loi_va_teencode",
+          "call": "call_1",
+          "grading": "Existing facts, quote, order and memory expectations apply to noisy input; numeric entities are preserved."
+        }
+      ],
+      "noisy_calls": [
+        "call_1"
+      ],
+      "channels": {
+        "call_1": "zalo_oa",
+        "call_2": "chat_fanpage"
+      },
+      "primary_hard_case": "phien_ban_chinh_sach_cu"
+    },
+    {
+      "scenario_id": "SC-110",
+      "persona": "khach_quay_lai_sau_8_thang",
+      "audio_available": false,
+      "protected_audio_fixture": false,
+      "core_hard_case": "khach_cu_ttl_sku_ngung_ban",
+      "additional_hard_cases": [
+        "doi_khuyen_mai_het_han",
+        "asr_loi_va_teencode"
+      ],
+      "evidence": [
+        {
+          "hard_case": "doi_khuyen_mai_het_han",
+          "call": "call_1",
+          "promo_code": "GIFT-FILTER",
+          "expires_on": "2026-10-22",
+          "grading": "Require expiry explanation and reject active-promotion claim; retain existing quote/order checks."
+        },
+        {
+          "hard_case": "asr_loi_va_teencode",
+          "call": "call_1",
+          "grading": "Existing facts, quote, order and memory expectations apply to noisy input; numeric entities are preserved."
+        }
+      ],
+      "noisy_calls": [
+        "call_1"
+      ],
+      "channels": {
+        "call_1": "hotline",
+        "call_2": "zalo_oa"
+      },
+      "primary_hard_case": "doi_khuyen_mai_het_han"
+    },
+    {
+      "scenario_id": "SC-111",
+      "persona": "khach_mua_nhieu_mon",
+      "audio_available": false,
+      "protected_audio_fixture": false,
+      "core_hard_case": "doi_y_gio_hang_nhieu_mon",
+      "additional_hard_cases": [],
+      "evidence": [],
+      "noisy_calls": [],
+      "channels": {
+        "call_1": "chat_fanpage",
+        "call_2": "hotline"
+      },
+      "primary_hard_case": "doi_y_gio_hang_nhieu_mon"
+    },
+    {
+      "scenario_id": "SC-112",
+      "persona": "khach_mua_nhieu_mon",
+      "audio_available": false,
+      "protected_audio_fixture": false,
+      "core_hard_case": "doi_y_gio_hang_nhieu_mon",
+      "additional_hard_cases": [],
+      "evidence": [],
+      "noisy_calls": [],
+      "channels": {
+        "call_1": "zalo_oa",
+        "call_2": "chat_fanpage"
+      },
+      "primary_hard_case": "doi_y_gio_hang_nhieu_mon"
+    },
+    {
+      "scenario_id": "SC-113",
+      "persona": "khach_mua_nhieu_mon",
+      "audio_available": false,
+      "protected_audio_fixture": false,
+      "core_hard_case": "doi_y_gio_hang_nhieu_mon",
+      "additional_hard_cases": [],
+      "evidence": [],
+      "noisy_calls": [],
+      "channels": {
+        "call_1": "zalo_oa",
+        "call_2": "hotline"
+      },
+      "primary_hard_case": "doi_y_gio_hang_nhieu_mon"
+    },
+    {
+      "scenario_id": "SC-114",
+      "persona": "khach_mua_nhieu_mon",
+      "audio_available": false,
+      "protected_audio_fixture": false,
+      "core_hard_case": "doi_y_gio_hang_nhieu_mon",
+      "additional_hard_cases": [
+        "asr_loi_va_teencode"
+      ],
+      "evidence": [
+        {
+          "hard_case": "asr_loi_va_teencode",
+          "call": "call_1",
+          "grading": "Existing facts, quote, order and memory expectations apply to noisy input; numeric entities are preserved."
+        }
+      ],
+      "noisy_calls": [
+        "call_1"
+      ],
+      "channels": {
+        "call_1": "chat_fanpage",
+        "call_2": "zalo_oa"
+      },
+      "primary_hard_case": "asr_loi_va_teencode"
+    },
+    {
+      "scenario_id": "SC-115",
+      "persona": "khach_mua_nhieu_mon",
+      "audio_available": false,
+      "protected_audio_fixture": false,
+      "core_hard_case": "doi_y_gio_hang_nhieu_mon",
+      "additional_hard_cases": [
+        "phien_ban_chinh_sach_cu"
+      ],
+      "evidence": [
+        {
+          "hard_case": "phien_ban_chinh_sach_cu",
+          "call": "call_1",
+          "grading": "Require 7 ngày / bảy ngày in response trace; reject a 14-day current-policy claim.",
+          "source": "policy/chinh-sach-doi-tra.md#DT-01"
+        }
+      ],
+      "noisy_calls": [],
+      "channels": {
+        "call_1": "zalo_oa",
+        "call_2": "chat_fanpage"
+      },
+      "primary_hard_case": "phien_ban_chinh_sach_cu"
+    },
+    {
+      "scenario_id": "SC-116",
+      "persona": "khach_mua_nhieu_mon",
+      "audio_available": false,
+      "protected_audio_fixture": false,
+      "core_hard_case": "doi_y_gio_hang_nhieu_mon",
+      "additional_hard_cases": [
+        "doi_khuyen_mai_het_han"
+      ],
+      "evidence": [
+        {
+          "hard_case": "doi_khuyen_mai_het_han",
+          "call": "call_1",
+          "promo_code": "AP-SEP",
+          "expires_on": "2026-09-30",
+          "grading": "Require expiry explanation and reject active-promotion claim; retain existing quote/order checks."
+        }
+      ],
+      "noisy_calls": [],
+      "channels": {
+        "call_1": "hotline",
+        "call_2": "zalo_oa"
+      },
+      "primary_hard_case": "doi_khuyen_mai_het_han"
+    },
+    {
+      "scenario_id": "SC-117",
+      "persona": "khach_mua_nhieu_mon",
+      "audio_available": false,
+      "protected_audio_fixture": false,
+      "core_hard_case": "doi_y_gio_hang_nhieu_mon",
+      "additional_hard_cases": [
+        "asr_loi_va_teencode"
+      ],
+      "evidence": [
+        {
+          "hard_case": "asr_loi_va_teencode",
+          "call": "call_1",
+          "grading": "Existing facts, quote, order and memory expectations apply to noisy input; numeric entities are preserved."
+        }
+      ],
+      "noisy_calls": [
+        "call_1"
+      ],
+      "channels": {
+        "call_1": "chat_fanpage",
+        "call_2": "hotline"
+      },
+      "primary_hard_case": "asr_loi_va_teencode"
+    },
+    {
+      "scenario_id": "SC-118",
+      "persona": "khach_mua_nhieu_mon",
+      "audio_available": false,
+      "protected_audio_fixture": false,
+      "core_hard_case": "doi_y_gio_hang_nhieu_mon",
+      "additional_hard_cases": [
+        "phien_ban_chinh_sach_cu"
+      ],
+      "evidence": [
+        {
+          "hard_case": "phien_ban_chinh_sach_cu",
+          "call": "call_1",
+          "grading": "Require 7 ngày / bảy ngày in response trace; reject a 14-day current-policy claim.",
+          "source": "policy/chinh-sach-doi-tra.md#DT-01"
+        }
+      ],
+      "noisy_calls": [],
+      "channels": {
+        "call_1": "zalo_oa",
+        "call_2": "chat_fanpage"
+      },
+      "primary_hard_case": "phien_ban_chinh_sach_cu"
+    },
+    {
+      "scenario_id": "SC-119",
+      "persona": "khach_mua_nhieu_mon",
+      "audio_available": false,
+      "protected_audio_fixture": false,
+      "core_hard_case": "doi_y_gio_hang_nhieu_mon",
+      "additional_hard_cases": [
+        "phien_ban_chinh_sach_cu",
+        "asr_loi_va_teencode"
+      ],
+      "evidence": [
+        {
+          "hard_case": "phien_ban_chinh_sach_cu",
+          "call": "call_1",
+          "grading": "Require 7 ngày / bảy ngày in response trace; reject a 14-day current-policy claim.",
+          "source": "policy/chinh-sach-doi-tra.md#DT-01"
+        },
+        {
+          "hard_case": "asr_loi_va_teencode",
+          "call": "call_1",
+          "grading": "Existing facts, quote, order and memory expectations apply to noisy input; numeric entities are preserved."
+        }
+      ],
+      "noisy_calls": [
+        "call_1"
+      ],
+      "channels": {
+        "call_1": "zalo_oa",
+        "call_2": "hotline"
+      },
+      "primary_hard_case": "phien_ban_chinh_sach_cu"
+    },
+    {
+      "scenario_id": "SC-120",
+      "persona": "khach_mua_nhieu_mon",
+      "audio_available": false,
+      "protected_audio_fixture": false,
+      "core_hard_case": "doi_y_gio_hang_nhieu_mon",
+      "additional_hard_cases": [
+        "phien_ban_chinh_sach_cu",
+        "asr_loi_va_teencode"
+      ],
+      "evidence": [
+        {
+          "hard_case": "phien_ban_chinh_sach_cu",
+          "call": "call_1",
+          "grading": "Require 7 ngày / bảy ngày in response trace; reject a 14-day current-policy claim.",
+          "source": "policy/chinh-sach-doi-tra.md#DT-01"
+        },
+        {
+          "hard_case": "asr_loi_va_teencode",
+          "call": "call_1",
+          "grading": "Existing facts, quote, order and memory expectations apply to noisy input; numeric entities are preserved."
+        }
+      ],
+      "compatibility_note": "No expired product-specific promotion fits the established basket; use a policy-version challenge instead.",
+      "noisy_calls": [
+        "call_1"
+      ],
+      "channels": {
+        "call_1": "chat_fanpage",
+        "call_2": "zalo_oa"
+      },
+      "primary_hard_case": "phien_ban_chinh_sach_cu"
+    }
+  ]
+}

@@ -7,7 +7,7 @@ from langchain_chroma import Chroma
 
 # Paths
 ROOT_DIR = Path(__file__).resolve().parents[1]
-POLICY_DIR = ROOT_DIR / "dataset" / "BTC-Data-Vong1-TEAMS" / "policy"
+POLICY_DIR = ROOT_DIR / "dataset" / "organizer" / "policy"
 CHROMA_DB_DIR = ROOT_DIR / "data" / "chroma_db"
 
 # Exclude trap files (Internal, Expired)

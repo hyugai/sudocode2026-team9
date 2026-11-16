@@ -23,7 +23,7 @@ from eval.model_config import configure_eval_model
 from eval.benchmark_support import machine_metadata
 from telesale_agent.adapters.llm.model_factory import resolve_model_config
 DEFAULT_SCENARIOS = (
-    REPO_ROOT / "dataset" / "iterative-refinement" / "scenarios_complete dataset"
+    REPO_ROOT / "dataset" / "main" / "scenarios_complete"
 )
 DEFAULT_OUTPUT_ROOT = REPO_ROOT / "outputs" / "benchmark"
 TEAM_EVAL = HERE / "team_eval.py"
@@ -147,7 +147,7 @@ Notes:
 def main() -> int:
     load_dotenv(REPO_ROOT / ".env")
     parser = argparse.ArgumentParser(
-        description="Run iterative-refinement scenarios into a versioned benchmark folder."
+        description="Run main scenarios into a versioned benchmark folder."
     )
     parser.add_argument("--version", required=True, help="Example: benchmark_v1")
     parser.add_argument("--scenarios", default=str(DEFAULT_SCENARIOS))
@@ -320,7 +320,7 @@ def main() -> int:
             "LLM_THINKING_LEVEL", "NLU_THINKING_LEVEL", "DEEPAGENT_THINKING_LEVEL")},
         "measurement_mode": "non_streaming", "warmup_turns": 3,
         "timing_boundary": "harness arrival to complete guarded answer before persistence; TTFT=Total; offline ASR excluded; request completion reported separately",
-        "latency_guide": "dataset/BTC-Data-Vong1-TEAMS/eval/huong-dan-do-latency.md",
+        "latency_guide": "dataset/organizer/eval/huong-dan-do-latency.md",
         "command": _command_text(reproduce_cmd), "git_commit": _git_value("rev-parse", "HEAD"),
     }
     metadata_path = run_dir / "metadata.json"

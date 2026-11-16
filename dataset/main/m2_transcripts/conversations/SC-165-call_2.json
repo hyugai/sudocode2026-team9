@@ -1,0 +1,145 @@
+{
+  "transcript_id": "SC-165-call_2",
+  "scenario_id": "SC-165",
+  "source_scenario_id": "SC-045",
+  "customer_id": "C021",
+  "call": "call_2",
+  "channel": "hotline",
+  "channel_identity": "0901304118",
+  "call_date": "2026-10-21",
+  "language": "vi",
+  "origin": "authored_synthetic_reference_dialogue",
+  "is_actual_agent_trace": false,
+  "audio_status": "pending_recording",
+  "voice_region_target": "bac",
+  "noise_target": false,
+  "utterances": [
+    {
+      "speaker": "customer",
+      "text": "Chị đã cân nhắc xong rồi. Mẫu, số lượng, địa chỉ và COD giữ nguyên.",
+      "source_customer_turn_index": 0
+    },
+    {
+      "speaker": "agent",
+      "text": "Dạ chị, em tiếp tục đúng yêu cầu lần trước và sẽ xử lý ngắn gọn.",
+      "source_refs": [
+        "schemas/tools.schema.json",
+        "catalog/products.json"
+      ],
+      "tool_refs": [
+        0
+      ]
+    },
+    {
+      "speaker": "customer",
+      "text": "Chị còn bận, em gọi lại lúc 10 giờ ngày 2026-10-23. Đừng bắt chị nói lại thông tin nữa nhé.",
+      "source_customer_turn_index": 1
+    },
+    {
+      "speaker": "agent",
+      "text": "Em đã ghi lịch liên hệ lại lúc 2026-10-23 10:00. Em lưu phần đang cân nhắc để lần tới mình tiếp tục, chưa tạo đơn.",
+      "source_refs": [
+        "policy/playbook-telesale.md#PB-03"
+      ],
+      "tool_refs": [
+        1
+      ]
+    }
+  ],
+  "private_annotations": {
+    "persona": "khach_goi_lan_3_het_kien_nhan",
+    "customer_goal": "Giữ nguyên lựa chọn và hẹn cuộc cuối.",
+    "expected_outcome": "hen_goi_lai",
+    "facts_established": {},
+    "sentiment_target": "trung tính",
+    "objection": null,
+    "fact_provenance_after_call": {
+      "product_advised": {
+        "value": "SKU-FAN-SEN",
+        "source_session": "SC-165-call_1",
+        "last_confirmed_session": "SC-165-call_1",
+        "valid_from": "2026-10-19",
+        "supersedes_session": null
+      },
+      "price_quoted_vnd": {
+        "value": 590000,
+        "source_session": "SC-165-call_1",
+        "last_confirmed_session": "SC-165-call_1",
+        "valid_from": "2026-10-19",
+        "supersedes_session": null
+      },
+      "delivery_address": {
+        "value": "104 đường Kiểm Thử, Đà Nẵng",
+        "source_session": "SC-165-call_1",
+        "last_confirmed_session": "SC-165-call_1",
+        "valid_from": "2026-10-19",
+        "supersedes_session": null
+      },
+      "payment": {
+        "value": "COD",
+        "source_session": "SC-165-call_1",
+        "last_confirmed_session": "SC-165-call_1",
+        "valid_from": "2026-10-19",
+        "supersedes_session": null
+      },
+      "quantity": {
+        "value": 1,
+        "source_session": "SC-165-call_1",
+        "last_confirmed_session": "SC-165-call_1",
+        "valid_from": "2026-10-19",
+        "supersedes_session": null
+      }
+    },
+    "memory_expectation": null,
+    "memory_rules": {
+      "price_and_stock": "revalidate with tools every session; historical quote remains episodic",
+      "address_ttl_days": 180,
+      "intent_ttl_days": 30,
+      "shared_phone": "resolve customer_id; never merge profiles solely by phone"
+    },
+    "source_refs": [
+      "catalog/products.json",
+      "policy/playbook-telesale.md#PB-03",
+      "schemas/tools.schema.json"
+    ],
+    "reference_tool_executions": [
+      {
+        "name": "crm.get_customer",
+        "args": {
+          "phone": "0901304118"
+        },
+        "result": {
+          "found": true,
+          "ambiguous": false,
+          "customer_id": "C021",
+          "name": "Yến",
+          "honorific": "chị",
+          "phone": "0901304118",
+          "identities": {
+            "zalo_id": "zalo_yến83",
+            "fb_id": null
+          },
+          "orders": [],
+          "sessions": []
+        },
+        "origin": "executed_reference_mock_for_authored_fixture"
+      },
+      {
+        "name": "schedule.callback",
+        "args": {
+          "customer_phone": "0901304118",
+          "callback_at": "2026-10-23T10:00"
+        },
+        "result": {
+          "callback_id": "CB0002",
+          "customer_phone": "0901304118",
+          "callback_at": "2026-10-23T10:00",
+          "moved_from": null,
+          "note": null
+        },
+        "origin": "executed_reference_mock_for_authored_fixture"
+      }
+    ],
+    "review_status": "automated_fixture_checks; human_semantic_review_pending"
+  }
+}

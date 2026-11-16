@@ -1,0 +1,120 @@
+{
+  "scenario_id": "SC-093",
+  "level": "M1",
+  "persona": "hai_nguoi_chung_sdt",
+  "hard_case": "hai_nguoi_chung_sdt",
+  "customer_phone": "0958421083",
+  "customer_name": "Dung",
+  "honorific": "chị",
+  "notes": "Phân biệt chị Dung với cô Loan dùng chung số; không ghi nhầm bộ nhớ. Địa chỉ đường Kiểm Thử là dữ kiện khách tổng hợp cho test, không có sẵn trong CRM. Chạy mỗi scenario từ CRM/catalog gốc và trạng thái tool sạch; giữ state giữa các call của cùng scenario. Không đưa facts/đáp án chấm vào prompt agent. Trích giá lịch sử thành price_quoted_vnd, giá hiện hành thành price_vnd. CRM trả ambiguous cho số này. Giữ nguyên cả C034/C035; chỉ lưu các cuộc của scenario vào C035 sau xác nhận danh tính. Không seed lịch sử C034 vào C035. Luồng kênh hiện hành: Fanpage → hotline. Các phiên chat cung cấp tên và số điện thoại để liên kết danh tính.",
+  "calls": {
+    "call_1": {
+      "channel": "chat_fanpage",
+      "channel_identity": "test_chat_fanpage_C035",
+      "call_date": "2026-10-17",
+      "input_mode": "clean",
+      "customer_goal": "Nhận diện chị Dung và lưu nhu cầu riêng.",
+      "customer_turns": [
+        "Tôi là Dung, số điện thoại 0958421083, đang nhắn qua Fanpage. Chị là Dung, con cô Loan. Hai mẹ con dùng chung số này; hôm nay chị hỏi cho riêng chị.",
+        "Chị quan tâm Máy lọc không khí AirPure Mini, giá 2.190.000 đồng đúng không? Không phải món mẹ chị từng hỏi.",
+        "Chị chưa mua ngay. Em lưu đúng hồ sơ Dung giúp chị nhé."
+      ],
+      "facts_established": {
+        "customer_id": "C035",
+        "product_advised": "SKU-AP-MINI",
+        "price_quoted_vnd": 2190000
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": null,
+        "must_say_any": [
+          "2.190.000",
+          "2190000"
+        ],
+        "must_not_call_tools": [
+          "order.create",
+          "order.update",
+          "handoff.transfer"
+        ]
+      },
+      "memory_expectation": {
+        "product_advised": "SKU-AP-MINI",
+        "customer_id": "C035",
+        "must_not_write_to": [
+          "C034"
+        ]
+      },
+      "ground_truth_facts": {
+        "price_vnd": 2190000,
+        "list_price_vnd": 2190000,
+        "in_stock": true,
+        "promo_NAM-SHIP0_active": true,
+        "promo_COD-0_active": true
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0958421083",
+      "call_date": "2026-10-19",
+      "input_mode": "clean",
+      "customer_goal": "Chị Dung gọi lại chốt nhu cầu riêng đã lưu.",
+      "customer_turns": [
+        "Tôi là Dung, số điện thoại 0958421083, đã nhắn qua Fanpage. Chị Dung đây, chị quay lại để chốt việc đang hỏi. Em nhắc đúng món của chị nhé, đừng lấy nhu cầu của mẹ.",
+        "Chị đồng ý một chiếc giá 2.190.000 đồng, giao 102 đường Kiểm Thử, TP. Hồ Chí Minh, COD.",
+        "Đơn của chị Dung; em ghi riêng hồ sơ giúp chị."
+      ],
+      "facts_established": {
+        "delivery_address": "102 đường Kiểm Thử, TP. Hồ Chí Minh",
+        "payment": "COD"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "customer_phone": "0958421083",
+          "sku": "SKU-AP-MINI",
+          "qty": 1,
+          "price_vnd": 2190000,
+          "payment": "COD",
+          "address": "102 đường Kiểm Thử, TP. Hồ Chí Minh"
+        },
+        "must_say_any": [
+          "Dung"
+        ],
+        "forbidden_claims": [
+          {
+            "field": "customer_name",
+            "value": "Loan"
+          },
+          {
+            "field": "customer_id",
+            "value": "C034"
+          }
+        ]
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised",
+        "price_quoted_vnd"
+      ],
+      "memory_expectation": {
+        "customer_id": "C035",
+        "product_advised": "SKU-AP-MINI",
+        "must_not_write_to": [
+          "C034"
+        ]
+      },
+      "ground_truth_facts": {
+        "price_vnd": 2190000,
+        "list_price_vnd": 2190000,
+        "in_stock": true,
+        "promo_NAM-SHIP0_active": true,
+        "promo_COD-0_active": true
+      },
+      "days_later": 2
+    }
+  }
+}

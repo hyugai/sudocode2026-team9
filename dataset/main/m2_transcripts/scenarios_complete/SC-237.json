@@ -1,0 +1,134 @@
+{
+  "scenario_id": "SC-237",
+  "level": "M2",
+  "persona": "khach_mua_nhieu_mon",
+  "hard_case": "asr_loi_va_teencode",
+  "customer_phone": "0979298416",
+  "customer_name": "Hương",
+  "honorific": "chị",
+  "notes": "Nhớ giỏ nhiều món, xử lý khách đổi lựa chọn, tính đúng tổng và phương thức thanh toán. Địa chỉ đường Kiểm Thử là dữ kiện khách tổng hợp cho test, không có sẵn trong CRM. Chạy mỗi scenario từ CRM/catalog gốc và trạng thái tool sạch; giữ state giữa các call của cùng scenario. Không đưa facts/đáp án chấm vào prompt agent. Trích giá lịch sử thành price_quoted_vnd, giá hiện hành thành price_vnd. Có thể tạo một đơn nhiều dòng bằng order.create(lines=...); also_ordered và total_match_vnd dùng quy ước chấm BTC. Giá claim theo SKU dùng price_vnd_<SKU> để tránh nhập nhằng. Luồng kênh hiện hành: Fanpage → hotline. Các phiên chat cung cấp tên và số điện thoại để liên kết danh tính. Ca khó bổ sung: asr_loi_va_teencode. Bản mở rộng có đối thoại mẫu hai người nói; đây là dữ liệu tổng hợp có đáp án, không phải trace agent thực tế. Reset state giữa scenario, giữ state giữa call.",
+  "calls": {
+    "call_1": {
+      "channel": "chat_fanpage",
+      "channel_identity": "test_chat_fanpage_C005",
+      "call_date": "2026-10-16",
+      "input_mode": "chat_teencode",
+      "customer_goal": "Thảo luận giỏ hai món và sửa lựa chọn thứ hai trước khi đặt.",
+      "customer_turns": [
+        "Tôi là Hương, số điện thoại 0979298416, đang nhắn qua Fanpage. Mình cần kiểm tra một việc, chị mua đồ cho nhà mới, đang tính Nồi chiên không dầu Lock&Lock 4L với Quạt đứng Senko TS16.",
+        "À đổi ý, bỏ món thứ hai vừa nói, thay bằng Máy tiệt trùng sấy khô Moaz Bebe. Mỗi loại một chiếc nhé.",
+        "Chị muốn biết giá em báo là giá một sản phẩm hay đã gồm nhiều món; nếu quay lại hôm khác có cần kiểm tra lại không?",
+        "Nếu hàng bị lỗi thì bảo hành khác đổi trả ở điểm nào? Chị muốn biết điều kiện để còn giữ giấy tờ.",
+        "Còn thời hạn đổi trả của đơn đặt hôm nay thì tính từ lúc nào? Chị cần chuẩn bị tem hộp thế nào?",
+        "Nếu cần bảo hành, chị gửi qua shop thế nào? Có được hứa xong ngay trong ngày không?",
+        "Ngân sách tổng của chị là 4.080.000 đồng. Hôm nay chỉ nhờ em ghi lại giỏ cuối cùng, chưa đặt.",
+        "Em xác nhận lại đúng hai món sau khi sửa giúp chị."
+      ],
+      "facts_established": {
+        "basket_skus": [
+          "SKU-AF-4L",
+          "SKU-MB-STER"
+        ],
+        "removed_sku": "SKU-FAN-SEN",
+        "budget_vnd": 4080000,
+        "quantity_each": 1
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": null,
+        "must_say_any": [
+          "Máy tiệt trùng sấy khô Moaz Bebe",
+          "SKU-MB-STER"
+        ],
+        "must_not_call_tools": [
+          "order.create",
+          "order.update"
+        ]
+      },
+      "ground_truth_facts": {
+        "price_vnd_SKU-AF-4L": 1890000,
+        "price_vnd_SKU-MB-STER": 1890000
+      },
+      "customer_turns_asr": [
+        "toi la huong, so dien thoai 0979298416, dang nhan qua fanpage. minh can kiem tra mot viec, chi mua do cho nha moi, dang tinh noi chien ko dau lock&lock 4l voi quat dung senko ts16.",
+        "a doi y, bo mon thu hai vua noi, thay bang may tiet trung say kho moaz bebe. moi loai mot chiec nhe.",
+        "chi muon biet gia em bao la gia mot san pham hay da gom nhieu mon; neu quay lai hom khac co can kiem tra lai khong?",
+        "neu hang bi loi thi bao hanh khac doi tra o diem nao? chi muon biet dieu kien de con giu giay to.",
+        "con thoi han doi tra cua don dat hom nay thi tinh tu luc nao? chi can chuan bi tem hop the nao?",
+        "neu can bao hanh, chi gui qua shop the nao? co duoc hua xong ngay trong ngay khong?",
+        "ngan sach tong cua chi la 4.080.000 dong. hom nay chi nho em ghi lai gio cuoi cung, chua dat.",
+        "em xac nhan lai dung hai mon sau khi sua giup chi."
+      ]
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0979298416",
+      "call_date": "2026-10-19",
+      "input_mode": "clean",
+      "customer_goal": "Chốt đúng giỏ sau khi đổi ý và tổng tiền đã xác nhận.",
+      "customer_turns": [
+        "Tôi là Hương, số điện thoại 0979298416, đã nhắn qua Fanpage. Chị cần xử lý nốt việc lần trước. Em nhắc đúng hai món cuối cùng sau khi sửa và tổng tiền nhé.",
+        "Tổng 3.780.000 đồng nằm trong ngân sách, mỗi món một chiếc, giao 106 đường Kiểm Thử, Hà Nội.",
+        "Khi giao hàng, ngày nghỉ có tính vào thời gian giao không? Chị cần biết đây là thời gian dự kiến hay một giờ giao được bảo đảm.",
+        "Nếu cần tra tiến độ sau này, chị xem ở đâu? Em đừng coi vừa tạo đơn là đã giao xong nhé.",
+        "Chị chọn thanh toán COD.",
+        "Em lên đơn đúng giỏ cuối cùng, bỏ món Quạt đứng Senko TS16 đã hủy nhé.",
+        "Đúng rồi, chị xác nhận đúng sản phẩm, số lượng, tổng tiền, địa chỉ và cách thanh toán vừa nhắc. Em tạo đơn giúp nhé."
+      ],
+      "facts_established": {
+        "payment": "COD",
+        "delivery_address": "106 đường Kiểm Thử, Hà Nội"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "customer_phone": "0979298416",
+          "sku": "SKU-AF-4L",
+          "qty": 1,
+          "price_vnd": 1890000,
+          "payment": "COD",
+          "address": "106 đường Kiểm Thử, Hà Nội"
+        },
+        "also_ordered": [
+          "SKU-AF-4L",
+          "SKU-MB-STER"
+        ],
+        "total_match_vnd": 3780000
+      },
+      "must_carry_over": [
+        "basket_skus",
+        "budget_vnd",
+        "quantity_each"
+      ],
+      "must_not_ask": [
+        "basket_skus",
+        "budget_vnd",
+        "quantity_each"
+      ],
+      "ground_truth_facts": {
+        "total_vnd": 3780000,
+        "all_items_in_stock": true,
+        "price_vnd_SKU-AF-4L": 1890000,
+        "price_vnd_SKU-MB-STER": 1890000
+      },
+      "memory_expectation": {
+        "basket_item_1": "SKU-AF-4L",
+        "basket_item_2": "SKU-MB-STER",
+        "profile_state": {
+          "basket_skus": [
+            "SKU-AF-4L",
+            "SKU-MB-STER"
+          ]
+        },
+        "superseded": {
+          "basket_skus": [
+            "SKU-AF-4L",
+            "SKU-FAN-SEN"
+          ]
+        }
+      },
+      "days_later": 3
+    }
+  }
+}

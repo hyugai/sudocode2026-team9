@@ -1,0 +1,101 @@
+{
+  "scenario_id": "SC-053",
+  "level": "M1",
+  "persona": "khach_da_kenh_fb_hotline",
+  "hard_case": "asr_loi_va_teencode",
+  "customer_phone": "0960161055",
+  "customer_name": "Thảo",
+  "honorific": "chị",
+  "notes": "Nhận diện đúng Facebook sang hotline và nhớ lựa chọn từ chat có teencode. Địa chỉ đường Kiểm Thử là dữ kiện khách tổng hợp cho test, không có sẵn trong CRM. Chạy mỗi scenario từ CRM/catalog gốc và trạng thái tool sạch; giữ state giữa các call của cùng scenario. Không đưa facts/đáp án chấm vào prompt agent. Trích giá lịch sử thành price_quoted_vnd, giá hiện hành thành price_vnd. Luồng kênh hiện hành: Fanpage → hotline. Các phiên chat cung cấp tên và số điện thoại để liên kết danh tính.",
+  "calls": {
+    "call_1": {
+      "channel": "chat_fanpage",
+      "channel_identity": "fb.thảo.126",
+      "call_date": "2026-10-17",
+      "input_mode": "chat_teencode",
+      "customer_goal": "Hỏi giá trên Fanpage và liên kết số điện thoại.",
+      "customer_turns": [
+        "Tôi là Thảo, số điện thoại 0960161055, đang nhắn qua Fanpage. Shop ơi, chị muốn hỏi Máy lọc không khí AirPure Mini.",
+        "Giá 2.190.000 đồng đúng không? Chị cần một chiếc, số điện thoại là 0960161055.",
+        "Chị sẽ gọi hotline sau, chưa đặt nhé."
+      ],
+      "facts_established": {
+        "product_advised": "SKU-AP-MINI",
+        "price_quoted_vnd": 2190000,
+        "phone_provided": "0960161055",
+        "quantity": 1
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": null,
+        "must_say_any": [
+          "2.190.000",
+          "2190000"
+        ],
+        "must_not_call_tools": [
+          "order.create",
+          "order.update",
+          "handoff.transfer"
+        ]
+      },
+      "customer_turns_asr": [
+        "toi la thao, so dien thoai 0960161055, dang nhan qua fanpage. shop oi, chi muon hoi may loc ko khi airpure mini.",
+        "gia 2.190.000 dong dung ko? chi can mot chiec, so dien thoai la 0960161055.",
+        "chi se goi hotline sau, chua dat nhe."
+      ],
+      "ground_truth_facts": {
+        "price_vnd": 2190000,
+        "list_price_vnd": 2190000,
+        "in_stock": true,
+        "promo_NAM-SHIP0_active": true,
+        "promo_COD-0_active": true
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0960161055",
+      "call_date": "2026-10-19",
+      "input_mode": "clean",
+      "customer_goal": "Gọi hotline để chốt sản phẩm đã hỏi qua Fanpage.",
+      "customer_turns": [
+        "Tôi là Thảo, số điện thoại 0960161055, đã nhắn qua Fanpage. Chị Thảo đây, đã nhắn Fanpage bằng số này. Bên em còn nội dung chat không?",
+        "Em nhắc lại mẫu và giá đã báo trong chat giúp nhé.",
+        "Chị đồng ý giá hôm nay 2.190.000 đồng, một chiếc, giao 102 đường Kiểm Thử, TP. Hồ Chí Minh, COD."
+      ],
+      "facts_established": {
+        "delivery_address": "102 đường Kiểm Thử, TP. Hồ Chí Minh",
+        "payment": "COD"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "customer_phone": "0960161055",
+          "sku": "SKU-AP-MINI",
+          "qty": 1,
+          "price_vnd": 2190000,
+          "payment": "COD",
+          "address": "102 đường Kiểm Thử, TP. Hồ Chí Minh"
+        }
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "quantity"
+      ],
+      "must_not_ask": [
+        "product_advised",
+        "price_quoted_vnd",
+        "quantity"
+      ],
+      "ground_truth_facts": {
+        "price_vnd": 2190000,
+        "list_price_vnd": 2190000,
+        "in_stock": true,
+        "promo_NAM-SHIP0_active": true,
+        "promo_COD-0_active": true
+      },
+      "days_later": 2
+    }
+  }
+}

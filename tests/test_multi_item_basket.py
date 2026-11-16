@@ -50,7 +50,7 @@ def test_real_scenario_first_turn_resolves_only_named_catalog_items(scenario_id,
         _ROOT / "dataset" / "iterative-refinement"
         / "scenarios_complete dataset" / f"{scenario_id}.json"
     )
-    catalog_path = _ROOT / "dataset" / "BTC-Data-Vong1-TEAMS" / "catalog" / "products.json"
+    catalog_path = _ROOT / "dataset" / "organizer" / "catalog" / "products.json"
     scenario = json.loads(scenario_path.read_text(encoding="utf-8"))
     catalog = json.loads(catalog_path.read_text(encoding="utf-8"))["products"]
     text = scenario["calls"]["call_1"]["customer_turns"][0]

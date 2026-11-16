@@ -1,0 +1,105 @@
+{
+  "scenario_id": "SC-121",
+  "level": "M2",
+  "persona": "khach_do_du_hoi_nguoi_nha",
+  "hard_case": null,
+  "customer_phone": "0984726714",
+  "customer_name": "Hoa",
+  "honorific": "chị",
+  "notes": "Nhớ nhu cầu và rào cản chờ hỏi người nhà; hẹn đúng lịch rồi chốt đơn. Địa chỉ đường Kiểm Thử là dữ kiện khách tổng hợp cho test, không có sẵn trong CRM. Chạy mỗi scenario từ CRM/catalog gốc và trạng thái tool sạch; giữ state giữa các call của cùng scenario. Không đưa facts/đáp án chấm vào prompt agent. Trích giá lịch sử thành price_quoted_vnd, giá hiện hành thành price_vnd. Bản mở rộng có đối thoại mẫu hai người nói; đây là dữ liệu tổng hợp có đáp án, không phải trace agent thực tế. Reset state giữa scenario, giữ state giữa call.",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0984726714",
+      "call_date": "2026-10-15",
+      "input_mode": "clean",
+      "customer_goal": "Hỏi giá và đặt lịch gọi lại sau khi trao đổi với người nhà.",
+      "customer_turns": [
+        "Alo em, chị đang cân nhắc Máy lọc không khí AirPure X.",
+        "Em tách giúp chị giá từng món với tổng giỏ nhé. Giá hôm nay có được tự giữ cho lần liên hệ sau không?",
+        "Ngoài giá, chị cần rõ bảo hành có bao gồm rơi vỡ hay tự làm hỏng không, để tránh hiểu sai lúc mua.",
+        "Nếu đặt hôm nay mà nhận về không phù hợp, chị có được đổi vô điều kiện không? Em nói giúp mốc thời gian và tình trạng hàng.",
+        "Khi đổi kênh liên hệ, em có nhớ đúng nhu cầu của chị không? Chị cũng muốn biết em là người thật hay trợ lý ảo.",
+        "Chị xem giá 4.890.000 đồng; em kiểm tra giúp giá và hàng hiện tại nhé. Ngân sách của chị là 5.190.000 đồng.",
+        "Chị còn phải hỏi người nhà. Gọi lại cho chị lúc 10 giờ ngày 2026-10-17 nhé, chưa lên đơn."
+      ],
+      "facts_established": {
+        "product_advised": "SKU-AP-X",
+        "price_quoted_vnd": 4890000,
+        "budget_vnd": 5190000,
+        "blocker": "cần hỏi người nhà",
+        "callback_at": "2026-10-17T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0984726714",
+          "callback_at": "2026-10-17T10:00"
+        },
+        "must_not_call_tools": [
+          "order.create"
+        ]
+      },
+      "ground_truth_facts": {
+        "price_vnd": 4890000,
+        "list_price_vnd": 4890000,
+        "in_stock": true,
+        "promo_COD-0_active": true,
+        "promo_GIFT-FILTER_active": true,
+        "promo_AP-SEP_active": false
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0984726714",
+      "call_date": "2026-10-17",
+      "input_mode": "clean",
+      "customer_goal": "Mua sản phẩm đã trao đổi sau khi người nhà đồng ý.",
+      "customer_turns": [
+        "Chị gọi lại chuyện hôm trước, người nhà đã đồng ý rồi.",
+        "Khi giao hàng, ngày nghỉ có tính vào thời gian giao không? Chị cần biết đây là thời gian dự kiến hay một giờ giao được bảo đảm.",
+        "Nếu cần tra tiến độ sau này, chị xem ở đâu? Em đừng coi vừa tạo đơn là đã giao xong nhé.",
+        "Em nhắc lại mẫu và giá đã trao đổi giúp chị; hôm nay hàng có sẵn chưa?",
+        "Chị đồng ý giá hiện tại 4.890.000 đồng, mua một chiếc. Giao đến 100 đường Kiểm Thử, Hà Nội, thanh toán COD nhé.",
+        "Đúng rồi, chị xác nhận đúng sản phẩm, số lượng, tổng tiền, địa chỉ và cách thanh toán vừa nhắc. Em tạo đơn giúp nhé."
+      ],
+      "facts_established": {
+        "family_approved": true,
+        "delivery_address": "100 đường Kiểm Thử, Hà Nội",
+        "payment": "COD"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "customer_phone": "0984726714",
+          "sku": "SKU-AP-X",
+          "qty": 1,
+          "price_vnd": 4890000,
+          "payment": "COD",
+          "address": "100 đường Kiểm Thử, Hà Nội"
+        }
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "blocker"
+      ],
+      "must_not_ask": [
+        "product_advised",
+        "price_quoted_vnd",
+        "blocker"
+      ],
+      "ground_truth_facts": {
+        "price_vnd": 4890000,
+        "list_price_vnd": 4890000,
+        "in_stock": true,
+        "promo_COD-0_active": true,
+        "promo_GIFT-FILTER_active": true,
+        "promo_AP-SEP_active": false
+      },
+      "days_later": 2
+    }
+  }
+}
