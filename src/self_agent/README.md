@@ -1,5 +1,15 @@
 # Self Agent: post-session Knowledge Gap Loop
 
+Thiết kế hiện hành và lịch sử trace: [knowledge-gap-loop-plan.md, mục 14](../../docs/implementation/knowledge-gap-loop-plan.md#14-thiết-kế-hiện-hành-english-lessons-routing-và-response-validation).
+Lesson mới được sinh và kiểm tra bằng tiếng Anh, lưu `lessons/approved/*.md`.
+Vòng 1 đóng băng lesson từ đúng vòng 0; mỗi câu hỏi chỉ nhận tối đa ba lesson
+khớp trigger. Validator có một lần sửa lời đáp, không chạy lại business tool;
+lỗi kiểm tra dùng fallback. Xem `turns[].lesson_trace` để biết lesson nào thực
+sự được đưa vào generate, đã pass/repaired/fallback hay chưa được gọi.
+Validation là chi phí online riêng có thể tăng latency/token khi bật lesson;
+benchmark gốc không cài layer này. Bản này cần chạy vòng 0/vòng 1 mới, không
+tự nâng cấp artifact cũ chỉ có câu nhắc chung thành lesson được duyệt.
+
 Hướng dẫn [nối API end session và test từng scenario](../../docs/implementation/self-learning-be-integration-and-testing.md): mô tả trạng thái hiện tại, các hook BE cần thêm và cách đọc artifact sau mỗi call. API backend chưa được nối tự động.
 
 Package độc lập bọc base harness; benchmark `src/eval` không import package này.
@@ -19,11 +29,13 @@ Runner gọi `end_session` rồi chủ động đợi worker, ngoài thời gian
 Đóng wrapper không tự sinh job, nhưng hủy công việc đang chạy và giữ job để retry.
 Một process/worker ghi vào một root; không chạy nhiều runner cùng root.
 
-Kết quả cải tiến ở `data/memory-root/agents/telesales_agent/knowledge_gap_loop/`:
-`gaps/`, `knowledge/`, `patterns/`, `regression_cases/` và `releases/`.
-Job/snapshot để retry và report/token/thời gian ở
-`outputs/self-agent/learning-runtime/jobs/` và `outputs/self-agent/learning-runtime/reports/`.
-Không có gap/pattern thì agent memory có thể rỗng, dù job chạy thành công.
+Agent memory chỉ giữ lesson dùng cho lần sau:
+`data/memory-root/agents/telesales_agent/knowledge_gap_loop/lessons/approved/*.md`.
+Toàn bộ JSON trung gian (`gaps`, `patterns`, `knowledge`, `regression_cases`,
+`releases`) cùng job/snapshot/report/token/thời gian nằm ở
+`outputs/self-agent/learning-runtime/`. Pattern JSON phục vụ trace và chọn lesson
+cho thí nghiệm; không phải một bản memory thứ hai.
+Không có lesson hợp lệ thì agent memory có thể rỗng, dù job chạy thành công.
 Queue chưa hoàn tất cũng ở runtime root; không xóa thư mục này nếu muốn retry.
 Deployment cần lưu runtime root trên storage bền vững nếu yêu cầu phục hồi job.
 `LearningConfig.runtime_root` có thể được inject riêng, không cần thêm env switch.
@@ -50,14 +62,15 @@ chỉ lưu quy tắc chung theo loại lỗi, không chép câu khách, số ti�
 Các câu hỏi trong gap/FAQ/test dùng template chung; nội dung nguồn nghiệp vụ được
 giữ để kiểm tra chính sách. Pattern đạt kiểm tra có status approved, nhưng gap
 vẫn pending_remediation: ghi bài học không có nghĩa đã sửa hành vi model. Pattern
-chưa tự được đưa vào prompt hoặc publish Pinecone trong bản hiện tại.
+không tự đổi prompt của backend/benchmark hoặc publish Pinecone. Chế độ opt-in
+`--round 1` áp dụng pattern chung đã duyệt vào bản instruction riêng của runner.
 
 ## Tái sử dụng DB/Pinecone hiện có
 
 Runner giữ nguyên `KNOWLEDGE_BACKEND`, `PINECONE_INDEX_NAME`,
 `PINECONE_NAMESPACE` và các cấu hình retrieval hiện tại. Worker tìm nguồn qua
 `base.mcp_tools["search_policy"]`; không tạo Chroma, index mới hay đổi embedding.
-Agent memory chỉ lưu gap, FAQ ứng viên, test và báo cáo, không thay DB nghiệp vụ.
+Agent memory chỉ lưu lesson đã duyệt; FAQ ứng viên, test và báo cáo ở outputs.
 
 `adapters.knowledge.publish_pinecone(chunks, index, namespace=...)` nhận instance
 index đang có và ghi text records bằng `upsert_records`. Backend dùng model
@@ -72,6 +85,68 @@ học riêng trong cùng index, hoặc chỉ phát hành vào nguồn dùng chun
 đánh giá đã chốt. Tách code không tự ngăn thay đổi dữ liệu dùng chung.
 
 ## Minh chứng M1 và kiểm thử
+
+### Hai vòng trên cùng bộ SC đã phát hiện lỗi
+
+```powershell
+.\scripts\run_self_learning_two_rounds.ps1 -Judge
+```
+
+Mặc định chạy lại SC-121 và SC-123 trong `dataset/main/m2_transcripts/scenarios_complete`.
+Vòng 0 dùng instruction gốc, học sau session; vòng 1 dùng bản instruction chốt
+các pattern approved có evidence refs. Cả hai vòng có user memory RAM ban đầu
+trống, không seed từ file user cũ; memory giữa các call cùng SC vẫn được giữ.
+Không được lấy run cũ trước bản sửa làm baseline vì đã thay chính sách seed.
+
+Mỗi lần chạy script có kho học mới dưới `<output>/learning-memory/`.
+Vòng 0 không đọc pattern/FAQ của bất kỳ lần chạy trước. Vòng 1 chỉ lấy pattern
+approved trong `artifact_changes` của chính report vòng 0, kiểm tra job/evidence
+provenance; không quét kho pattern toàn cục. `generation_context` trong từng report
+ghi instruction hash/root, lesson_sources và applied_patterns để kiểm tra đầu vào
+generate. Nếu vòng 0 không sinh bài học hợp lệ, vòng 1 giữ prompt gốc và báo
+`learning_applied: false`; không dùng pattern cũ hoặc ép tạo lỗi để làm đẹp điểm.
+
+`outputs/self-agent/two-rounds/<timestamp>/` có round0, round1 và comparison.json
+khi bật `-Judge`. Round manifest chặn thay bộ test, model/retrieval settings đã
+ghi và instruction gốc; bản instruction áp dụng ghi rõ các pattern đã chọn.
+Không cập nhật instruction giữa các call trong cùng vòng. Backend/benchmark gốc
+không đọc instruction này; Pinecone và DB không bị chuyển backend.
+
+`-Judge` gọi thêm LLM chấm theo cùng scenario spec/evidence ở cả hai vòng, tách
+khỏi learner. Comparison báo tỷ lệ đạt, chênh lệch điểm phần trăm, sai→đúng,
+đúng→sai, tỷ lệ sửa lỗi và detector failures. Đây là điểm judge bằng mô hình,
+cần xem rationale, không tự xem là đáp án tuyệt đối. Chi phí/thời gian chấm và
+học không cộng vào latency hội thoại. Giữ DB/catalog/chính sách tương đương khi
+chạy hai vòng; manifest chưa tự snapshot toàn bộ dịch vụ ngoài.
+
+LLM học có output budget riêng 4096 và retry JSON tối đa hai lần mỗi request;
+nếu detector vẫn lỗi, job/report failed thay vì no_candidates. Open question
+vẫn được ghi backlog, nhưng không dùng lỗi parser như minh chứng không có gap.
+
+### Chạy 2 scenario song song
+
+```powershell
+.\scripts\run_self_learning_unseen.ps1 -Limit 5 -Workers 2
+```
+
+Chạy tối đa hai process SC, mỗi process có base harness, customer memory RAM,
+MCP connections và kho learning riêng. Các call/lượt trong cùng SC vẫn tuần tự;
+end call mới học. SC cùng số điện thoại được serialize để tránh thao tác đồng
+thời trên cùng khách trong DB. DB/catalog/Pinecone vẫn dùng chung cấu hình,
+không phải bản sao database riêng; quota/rate limit vẫn dùng chung.
+
+Trong thư mục output có `summary.json` và `<SC-ID>/` chứa report từng call,
+`console.log`, `runtime/` chứa toàn bộ JSON trung gian. Lesson nằm riêng tại
+`<output>/learning-memory/<SC-ID>/lessons/approved/`;
+đường dẫn được ghi trong summary. Không tự merge các pattern/knowledge về kho
+chung vì cần kiểm tra trùng và xung đột trước. Một SC lỗi được ghi failed, các
+SC khác tiếp tục; runner trả exit code 1 nếu có lỗi. Đường output phải chưa tồn tại.
+
+Chỉ liệt kê lựa chọn, không gọi DB/LLM:
+
+```powershell
+.\scripts\run_self_learning_unseen.ps1 -Limit 5 -Workers 2 -List
+```
 
 ### Replay dataset sau từng session
 

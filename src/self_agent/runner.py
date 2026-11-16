@@ -13,10 +13,12 @@ async def run(args):
     from telesale_agent.bootstrap import build_deepagent_harness
     from telesale_agent.core.models import ConversationState, TurnInput
     from .harness import SelfAgentHarness
+    from .lessons import load_lesson
     import uuid
     sid = "self-agent-" + uuid.uuid4().hex
     state = ConversationState(sid)
-    async with SelfAgentHarness(build_deepagent_harness(), config=config) as agent:
+    lessons = [load_lesson(p) for p in sorted((config.root/'lessons/approved').glob('*.md'))] if config.enabled else []
+    async with SelfAgentHarness(build_deepagent_harness(), config=config, lessons=lessons) as agent:
         turn_results = []
         for question in args.questions:
             result = await agent.run_turn(TurnInput(sid, text=question), state)

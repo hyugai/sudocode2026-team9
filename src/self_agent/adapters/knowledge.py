@@ -24,8 +24,8 @@ def build_release(memory, corpus, *, build=None):
                        "source_file": case["source_file"], "chunk_id": case["chunk_id"],
                        "audience": "customer", "is_expired": False})
     version = digest(chunks)
-    path = (memory.root / "releases" / version).resolve()
-    marker = path.parent / "ready"
+    path = (memory.runtime_root / "releases" / version).resolve()
+    marker = path / "ready"
     if not marker.exists():
         if build is None:
             raise ValueError("Provide a publisher for the existing DB/Pinecone backend")

@@ -6,19 +6,44 @@ from .models import LearningJob, digest, snapshot
 
 
 class SelfAgentHarness:
-    def __init__(self, base, *, config=None, learner_factory=None):
+    def __init__(self, base, *, config=None, learner_factory=None, lessons=(), validation_model=None):
         self.base = base
         self.config = config if config is not None else LearningConfig.from_env()
         self.learner_factory = learner_factory
         self.memory = self.learner = self.worker = None
         self.lock = asyncio.Lock()
+        from .lessons import LessonRouter
+        self.lesson_router = LessonRouter(lessons if self.config.enabled else ())
+        self.validation_model = validation_model
+        self.lesson_traces = {}
 
     async def __aenter__(self):
+        import os
+        if self.lesson_router.lessons and os.getenv('DEEPAGENT_CHECKPOINT_SCOPE', 'turn') == 'conversation':
+            raise ValueError('Scoped lesson routing requires per-turn checkpoints, not conversation checkpoints')
         await self.base.__aenter__()
+        if self.lesson_router.lessons:
+            from .lesson_runtime import LessonAgent
+            from .adapters.llm import LearningModel
+            self.base.agent = LessonAgent(self.base.agent, self.validation_model or LearningModel())
         return self
 
     async def run_turn(self, turn_input, state=None, *, on_text=None, on_status=None):
-        return await self.base.run_turn(turn_input, state, on_text=on_text, on_status=on_status)
+        lessons = self.lesson_router.select(getattr(turn_input, 'text', '') or '')
+        if not lessons:
+            return await self.base.run_turn(turn_input, state, on_text=on_text, on_status=on_status)
+        from .lesson_runtime import CURRENT_LESSONS
+        from .models import digest
+        trace = {'selected_lessons': [{'id': l['id'], 'hash': digest(l)} for l in lessons], 'validation': 'not_invoked'}
+        token = CURRENT_LESSONS.set({'lessons': lessons, 'question': turn_input.text, 'trace': trace})
+        try:
+            result = await self.base.run_turn(turn_input, state, on_text=on_text, on_status=on_status)
+            self.lesson_traces.setdefault(result.conversation_id, []).append(trace)
+            if on_text:
+                await on_text(result.response_text or '')
+            return result
+        finally:
+            CURRENT_LESSONS.reset(token)
 
     async def end_session(self, state, *, turn_results=(), feedback=()):
         if not self.config.enabled:
@@ -65,8 +90,11 @@ class SelfAgentHarness:
                 job.update(status="running", attempts=job["attempts"] + 1)
                 self.memory.write("jobs", job["id"], job)
                 try:
-                    await self.learner.process(job["id"], job["snapshot"])
-                    job.update(status="done", error=None)
+                    report = await self.learner.process(job["id"], job["snapshot"])
+                    if isinstance(report, dict) and report.get("detector_error"):
+                        job.update(status="failed", error=report["detector_error"])
+                    else:
+                        job.update(status="done", error=None)
                 except asyncio.CancelledError:
                     job["status"] = "queued"
                     job["attempts"] -= 1

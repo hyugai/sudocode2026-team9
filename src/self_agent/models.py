@@ -26,7 +26,10 @@ PRIVATE_KEYS = {"name", "customer_name", "full_name", "phone", "customer_phone",
 def sanitize(value, secrets=()):
     """Redact nested tool payloads while retaining typed business quantities."""
     if isinstance(value, dict):
-        return {str(k): "[private]" if str(k).lower() in PRIVATE_KEYS else sanitize(v, secrets)
+        public_tool = (isinstance(value.get('name'), str) and {'args', 'result'} <= value.keys()
+                       and re.fullmatch(r'[a-zA-Z_][a-zA-Z0-9_.]*', value['name']))
+        return {str(k): value[k] if k == 'name' and public_tool else
+                "[private]" if str(k).lower() in PRIVATE_KEYS else sanitize(v, secrets)
                 for k, v in value.items()}
     if isinstance(value, (list, tuple)):
         return [sanitize(v, secrets) for v in value]
@@ -41,7 +44,8 @@ def sanitize(value, secrets=()):
 def shared_question(question):
     """Only fixed, reusable patterns may leave the restricted session snapshot."""
     text = question.casefold()
-    for words, template in [(("size", "đổi", "trả"), "Đổi size và đổi trả áp dụng điều kiện nào?"),
+    for words, template in [(("sê-ri", "serial", "chiếc sẽ giao"), "Thông tin từng chiếc hàng cần bằng chứng riêng nào?"),
+                            (("size", "đổi", "trả"), "Đổi size và đổi trả áp dụng điều kiện nào?"),
                             (("giá", "ngân sách"), "Giá hiện tại cần được xác minh từ nguồn nào?"),
                             (("bảo hành",), "Chính sách bảo hành áp dụng điều kiện nào?"),
                             (("hàng", "kho"), "Tình trạng hàng cần được xác minh từ nguồn nào?")]:
@@ -73,7 +77,7 @@ def snapshot(state, turn_results=(), feedback=()):
     value = {"session": digest(state.conversation_id), "revision": state.turn_number,
              "messages": messages, "open_questions": [clean(q) for q in questions],
              "feedback": [clean(f) for f in feedback],
-             "evidence_coverage": "transcript_only", "workflow_version": 2}
+             "evidence_coverage": "transcript_only", "workflow_version": 3}
     evidence = []
     for i, result in enumerate(turn_results):
         retrieved = getattr(result, "retrieved", None)
