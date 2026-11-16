@@ -3,10 +3,18 @@
 Thiết kế hiện hành và lịch sử trace: [knowledge-gap-loop-plan.md, mục 14](../../docs/implementation/knowledge-gap-loop-plan.md#14-thiết-kế-hiện-hành-english-lessons-routing-và-response-validation).
 Lesson mới được sinh và kiểm tra bằng tiếng Anh, lưu `lessons/approved/*.md`.
 Vòng 1 đóng băng lesson từ đúng vòng 0; mỗi câu hỏi chỉ nhận tối đa ba lesson
-khớp trigger. Validator có một lần sửa lời đáp, không chạy lại business tool;
+được router chọn theo ý nghĩa và ngữ cảnh gần nhất, không bắt khớp cụm trigger.
+Validator có một lần sửa lời đáp, không chạy lại business tool;
 lỗi kiểm tra dùng fallback. Xem `turns[].lesson_trace` để biết lesson nào thực
 sự được đưa vào generate, đã pass/repaired/fallback hay chưa được gọi.
-Validation là chi phí online riêng có thể tăng latency/token khi bật lesson;
+Validator nhận cả tool do harness chạy trước generate, knowledge của lượt hiện
+tại và tool message mới. Claim nghiệp vụ phải cite evidence ID hợp lệ; lesson
+và fallback không phải nguồn chính sách. Thiếu nguồn chỉ được nói chưa xác minh,
+không suy ra dịch vụ không tồn tại hoặc hứa một quy trình thay thế. Runtime áp
+dụng quy tắc fallback này cho cả lesson cũ. Xem `evidence_stages/origins`,
+`tool_evidence_count`, `source_evidence_count`, `initial_grounding_valid` trong trace.
+Citation vẫn cần model kiểm tra ý nghĩa; `passed` không bảo đảm tuyệt đối đúng.
+Routing và validation là chi phí online riêng có thể tăng latency/token khi bật lesson;
 benchmark gốc không cài layer này. Bản này cần chạy vòng 0/vòng 1 mới, không
 tự nâng cấp artifact cũ chỉ có câu nhắc chung thành lesson được duyệt.
 
@@ -104,7 +112,23 @@ approved trong `artifact_changes` của chính report vòng 0, kiểm tra job/ev
 provenance; không quét kho pattern toàn cục. `generation_context` trong từng report
 ghi instruction hash/root, lesson_sources và applied_patterns để kiểm tra đầu vào
 generate. Nếu vòng 0 không sinh bài học hợp lệ, vòng 1 giữ prompt gốc và báo
-`learning_applied: false`; không dùng pattern cũ hoặc ép tạo lỗi để làm đẹp điểm.
+`lessons_loaded: false`; không dùng pattern cũ hoặc ép tạo lỗi để làm đẹp điểm.
+
+`round_manifest.lessons_loaded` chỉ xác nhận có lesson. Xem `turns[].lesson_trace`:
+`routing`, `selected_lessons`, `injected`, `validation`, `routing_ms/usage` và
+`wrapper_total_ms`. Router lỗi thì giữ base flow và ghi `routing: failed`, không
+giả làm không có lesson phù hợp. `injected: true` xác nhận context đã vào lời
+gọi agent; `validation: not_invoked` cảnh báo base đã đi đường không qua decorator.
+Router duyệt mọi lesson approved theo lô tối đa 24, rồi chọn tối đa ba; không có
+lọc keyword trước bước chọn theo nghĩa. Model vẫn có thể chọn sai, cần đọc trace.
+
+Khi bật `-Judge`, `comparison.json` có hai phép đo riêng: `quality` cho mục tiêu
+session và `lesson_quality.quality` cho chính tiêu chí lesson đã đóng băng, chấm
+cả hai vòng kể cả khi router bỏ sót. `learning_applied` trong comparison chỉ true
+khi có lượt thật sự `injected`; `learning_runtime` báo số lượt chọn/đưa lesson vào
+generate và lỗi routing. Không có cặp applicable ở cả hai vòng thì điểm lesson
+là null. Đây là đánh giá lỗi mục tiêu học từ vòng 0, không phải điểm tổng quát
+độc lập; judge vẫn cần được đối chiếu bằng chứng.
 
 `outputs/self-agent/two-rounds/<timestamp>/` có round0, round1 và comparison.json
 khi bật `-Judge`. Round manifest chặn thay bộ test, model/retrieval settings đã

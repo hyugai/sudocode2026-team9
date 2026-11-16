@@ -70,6 +70,7 @@ async def replay(scenarios, agent, output, *, state_factory, input_factory, clea
                     for text in spec.get("customer_turns_asr") or spec.get("customer_turns", []):
                         for expected, actual in order_map.items():
                             text = text.replace(expected, actual)
+                        trace_count = len(agent.lesson_traces.get(sid, []))
                         result = await agent.run_turn(input_factory(sid, text=text,
                             customer_hint=scenario.get("customer_phone"),
                             metadata={"call_date": current_date.isoformat(), "scenario_id": scenario["scenario_id"], "call_key": call}), state)
@@ -77,8 +78,8 @@ async def replay(scenarios, agent, output, *, state_factory, input_factory, clea
                         turn_results.append(result)
                         turns.append({"customer": redact(text), "agent": redact(result.response_text or ""),
                                       "latency": result.latency,
-                                      "lesson_trace": (agent.lesson_traces.get(sid) or [None])[-1]
-                                      if agent.lesson_router.select(text) else None})
+                                      "lesson_trace": agent.lesson_traces[sid][-1]
+                                      if len(agent.lesson_traces.get(sid, [])) > trace_count else None})
                         for tool in result.tool_calls or []:
                             if tool.get("name") in {"order.create", "create_new_order"}:
                                 order_id = (tool.get("result") or {}).get("order_id")
@@ -161,10 +162,10 @@ async def run(args, scenarios):
         if round_number is not None:
             manifest = json.loads((Path(args.output) / 'round_manifest.json').read_text(encoding='utf-8'))
             agent.generation_context = {k: manifest[k] for k in
-                ('round', 'instruction_hash', 'applied_patterns', 'learning_applied', 'lesson_sources', 'lesson_files')}
+                ('round', 'instruction_hash', 'applied_patterns', 'lessons_loaded', 'lesson_sources', 'lesson_files')}
             agent.generation_context['instruction_root'] = str(instructions)
             print(f"Round {round_number}: loaded {len(manifest['applied_patterns'])} patterns from this round 0; "
-                  f"learning_applied={manifest['learning_applied']}")
+                  f"lessons_loaded={manifest['lessons_loaded']}")
         await replay(scenarios, agent, args.output, state_factory=ConversationState,
                      input_factory=TurnInput, cleanup=db_client.delete_orders)
 

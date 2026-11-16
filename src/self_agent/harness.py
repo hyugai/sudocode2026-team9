@@ -1,8 +1,9 @@
 """Composition facade. The existing harness and benchmark never import this."""
 import asyncio
 import traceback
+import time
 from .config import LearningConfig
-from .models import LearningJob, digest, snapshot
+from .models import LearningJob, digest, snapshot, sanitize
 
 
 class SelfAgentHarness:
@@ -16,6 +17,8 @@ class SelfAgentHarness:
         self.lesson_router = LessonRouter(lessons if self.config.enabled else ())
         self.validation_model = validation_model
         self.lesson_traces = {}
+        self.evidence_bridge = None
+        self.original_agent = None
 
     async def __aenter__(self):
         import os
@@ -23,23 +26,51 @@ class SelfAgentHarness:
             raise ValueError('Scoped lesson routing requires per-turn checkpoints, not conversation checkpoints')
         await self.base.__aenter__()
         if self.lesson_router.lessons:
-            from .lesson_runtime import LessonAgent
+            from .lesson_runtime import LessonAgent, TurnEvidenceBridge
             from .adapters.llm import LearningModel
-            self.base.agent = LessonAgent(self.base.agent, self.validation_model or LearningModel())
+            self.validation_model = self.validation_model or LearningModel()
+            self.original_agent = self.base.agent
+            self.evidence_bridge = TurnEvidenceBridge(self.base).install()
+            self.base.agent = LessonAgent(self.base.agent, self.validation_model)
         return self
 
     async def run_turn(self, turn_input, state=None, *, on_text=None, on_status=None):
-        lessons = self.lesson_router.select(getattr(turn_input, 'text', '') or '')
-        if not lessons:
+        if not self.lesson_router.lessons:
             return await self.base.run_turn(turn_input, state, on_text=on_text, on_status=on_status)
         from .lesson_runtime import CURRENT_LESSONS
         from .models import digest
-        trace = {'selected_lessons': [{'id': l['id'], 'hash': digest(l)} for l in lessons], 'validation': 'not_invoked'}
-        token = CURRENT_LESSONS.set({'lessons': lessons, 'question': turn_input.text, 'trace': trace})
+        if self.validation_model is None:
+            from .adapters.llm import LearningModel
+            self.validation_model = LearningModel()
+        trace = {'lessons_loaded': len(self.lesson_router.lessons), 'selected_lessons': [],
+                 'injected': False, 'validation': 'not_invoked', 'routing': 'no_match'}
+        started = time.perf_counter()
+        usage_before = dict(getattr(self.validation_model, 'usage', {}))
+        history = [{'role': m.role, 'content': m.content}
+                   for m in (getattr(state, 'messages', []) or [])[-4:]]
+        identity = getattr(state, 'identity', None)
+        profile = getattr(identity, 'profile', None) or {}
+        secrets = [getattr(identity, 'phone', None),
+                   *[profile.get(k) for k in ('name', 'address', 'phone', 'email')]]
+        try:
+            lessons = await self.lesson_router.select(sanitize(turn_input.text or '', secrets),
+                model=self.validation_model, history=sanitize(history, secrets))
+            trace['routing'] = 'selected' if lessons else 'no_match'
+        except Exception as exc:
+            lessons = []
+            trace.update(routing='failed', routing_error=type(exc).__name__)
+        trace.update(routing_ms=round((time.perf_counter() - started) * 1000, 3),
+                     routing_usage={k: v - usage_before.get(k, 0)
+                                    for k, v in getattr(self.validation_model, 'usage', {}).items()},
+                     selected_lessons=[{'id': l['id'], 'hash': digest(l)} for l in lessons])
+        trace['evidence_adapter_stages'] = sorted(self.evidence_bridge.originals) if self.evidence_bridge else []
+        token = CURRENT_LESSONS.set({'lessons': lessons, 'question': sanitize(turn_input.text, secrets),
+                                    'secrets': secrets, 'evidence': [], 'trace': trace})
         try:
             result = await self.base.run_turn(turn_input, state, on_text=on_text, on_status=on_status)
+            trace['wrapper_total_ms'] = round((time.perf_counter() - started) * 1000, 3)
             self.lesson_traces.setdefault(result.conversation_id, []).append(trace)
-            if on_text:
+            if on_text and lessons:
                 await on_text(result.response_text or '')
             return result
         finally:
@@ -124,4 +155,7 @@ class SelfAgentHarness:
                 await self.worker
             except asyncio.CancelledError:
                 pass
+        if self.evidence_bridge:
+            self.evidence_bridge.restore()
+            self.base.agent = self.original_agent
         return await self.base.__aexit__(exc_type, exc_value, traceback)

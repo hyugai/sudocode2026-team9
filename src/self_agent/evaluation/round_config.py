@@ -65,7 +65,7 @@ def prepare_round(scenarios, output, instruction_root, pattern_root, *, round_nu
     for name, content in files.items():
         (target / name).write_text(content, encoding='utf-8')
     manifest = {'round': round_number, 'signature': signature, 'applied_patterns': selected,
-                'learning_applied': bool(selected), 'lesson_sources': lesson_sources,
+                'lessons_loaded': bool(frozen_lessons), 'lesson_sources': lesson_sources,
                 'lesson_files': [{'id': l['id'], 'hash': digest(l), 'path': str(lesson_dir / (l['id'] + '.md'))} for l in frozen_lessons],
                 'instruction_hash': digest(files), 'limitations': 'External DB/catalog/policy must be kept equivalent by operator.'}
     (output / 'round_manifest.json').write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding='utf-8')
