@@ -1,5 +1,7 @@
 # Scenario Tests — 120 Paired Records
 
+For the **M2 transcript corpus**, see [m2_transcripts/README.md](m2_transcripts/README.md): 358 authored customer-and-agent conversations, 156 scenario fixtures (`SC-121`–`SC-276`) and 78 customers with multiple sessions, including 62 with two hotline calls in one journey. The text-count minimums are checked; matching two-speaker audio and actual-agent evaluation remain pending. This separate corpus preserves the original files below.
+
 This package contains **120 scenarios across all 12 BTC personas**, with **250 calls**. The current sources are individual JSON files, paired by `scenario_id` from `SC-001` to `SC-120`. Each filename matches its ID.
 
 ## Files

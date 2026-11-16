@@ -1,0 +1,330 @@
+{
+  "transcript_id": "SC-156-call_1",
+  "scenario_id": "SC-156",
+  "source_scenario_id": "SC-036",
+  "customer_id": "C018",
+  "call": "call_1",
+  "channel": "hotline",
+  "channel_identity": "0982141621",
+  "call_date": "2026-10-15",
+  "language": "vi",
+  "origin": "authored_synthetic_reference_dialogue",
+  "is_actual_agent_trace": false,
+  "audio_status": "pending_recording",
+  "voice_region_target": "trung",
+  "noise_target": true,
+  "utterances": [
+    {
+      "speaker": "customer",
+      "text": "Chào em, anh muốn xem Áo khoác gió Windbreak, size M, màu xanh navy, giá hiện tại có phải 690.000 đồng không?",
+      "source_customer_turn_index": 0
+    },
+    {
+      "speaker": "agent",
+      "text": "Dạ anh, Áo khoác gió Windbreak, size M, màu navy có giá 690.000 đồng một sản phẩm, hiện còn hàng. Em sẽ tư vấn theo sản phẩm và điều kiện hiện hành, chưa tạo đơn khi mình chưa đồng ý.",
+      "source_refs": [
+        "schemas/tools.schema.json",
+        "catalog/products.json"
+      ],
+      "tool_refs": [
+        0,
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "speaker": "customer",
+      "text": "Anh muốn biết giá em báo là giá một sản phẩm hay đã gồm nhiều món; nếu quay lại hôm khác có cần kiểm tra lại không?"
+    },
+    {
+      "speaker": "agent",
+      "text": "Giá một sản phẩm là giá sau ưu đãi được hệ thống kiểm tra ở ngày tư vấn; tổng giỏ là cộng các đơn vị mình chọn. Khi quay lại em kiểm tra lại theo ngày tạo đơn. Chưa có mã đơn thì giá cũ là lịch sử, không phải cam kết giữ giá qua ngày hết hạn.",
+      "source_refs": [
+        "policy/dieu-khoan-khuyen-mai.md#KM-01"
+      ],
+      "tool_refs": []
+    },
+    {
+      "speaker": "customer",
+      "text": "Nếu hàng bị lỗi thì bảo hành khác đổi trả ở điểm nào? Anh muốn biết điều kiện để còn giữ giấy tờ."
+    },
+    {
+      "speaker": "agent",
+      "text": "Em chưa có thời hạn bảo hành riêng của mẫu này trong catalog để khẳng định thêm. Với giày và áo khoác, chính sách áp dụng đổi trả, không phải bảo hành như đồ điện. Khi có vấn đề, mình giữ hóa đơn, tem nhãn và nêu rõ tình trạng để shop đối chiếu đúng điều kiện.",
+      "source_refs": [
+        "catalog/products.json",
+        "policy/chinh-sach-bao-hanh.md#BH-01",
+        "policy/chinh-sach-bao-hanh.md#BH-02"
+      ],
+      "tool_refs": []
+    },
+    {
+      "speaker": "customer",
+      "text": "Còn thời hạn đổi trả của đơn đặt hôm nay thì tính từ lúc nào? Anh cần chuẩn bị tem hộp thế nào?"
+    },
+    {
+      "speaker": "agent",
+      "text": "Thời hạn thông thường là 7 ngày kể từ ngày nhận, với hàng còn tem nhãn, hộp, chưa sử dụng và có hóa đơn hoặc mã đơn. Gia dụng, mẹ và bé có lỗi kỹ thuật nhà sản xuất được xét đổi mới trong 30 ngày khi đủ xác nhận. Hàng vệ sinh đã bóc seal và hư do người dùng có điều kiện loại trừ, nên không phải mọi lý do đều đổi được.",
+      "source_refs": [
+        "policy/chinh-sach-doi-tra.md#DT-01",
+        "policy/chinh-sach-doi-tra.md#DT-02",
+        "policy/chinh-sach-doi-tra.md#DT-06"
+      ],
+      "tool_refs": []
+    },
+    {
+      "speaker": "customer",
+      "text": "Size vừa chọn có được bảo đảm chắc chắn vừa không? Anh cần giữ hàng thế nào nếu phải đổi size?"
+    },
+    {
+      "speaker": "agent",
+      "text": "Bảng size là hướng dẫn tham khảo, em không thể bảo đảm vừa tuyệt đối khi mình chưa thử. Mình giữ nguyên tem nhãn, hộp, chưa giặt và chưa làm mòn sản phẩm; nếu cần đổi, shop kiểm tra điều kiện và tồn kho đúng biến thể mới. Em không tự đổi size đã chọn khi chưa có yêu cầu.",
+      "source_refs": [
+        "policy/spec-thoi-trang-me-be.md#SP-JK-01",
+        "policy/chinh-sach-doi-tra.md#DT-02"
+      ],
+      "tool_refs": []
+    },
+    {
+      "speaker": "customer",
+      "text": "Anh chỉ tham khảo, chưa đặt đơn. Khi quay lại anh sẽ hỏi thêm điều kiện đổi size.",
+      "source_customer_turn_index": 1
+    },
+    {
+      "speaker": "agent",
+      "text": "Dạ anh, em đã ghi nhận nội dung vừa xác nhận và giữ đúng lựa chọn của mình. Giá và tồn kho vẫn cần kiểm tra tại ngày đặt; em chưa tự tạo đơn hay thêm lịch gọi ngoài yêu cầu của anh.",
+      "source_refs": [
+        "schemas/tools.schema.json",
+        "catalog/products.json"
+      ],
+      "tool_refs": []
+    },
+    {
+      "speaker": "customer",
+      "text": "Em ghi nhớ giúp sản phẩm này để lần sau mình không phải nói lại nhé.",
+      "source_customer_turn_index": 2
+    },
+    {
+      "speaker": "agent",
+      "text": "Dạ anh, em ghi nhận mình chưa đặt hàng và giữ nội dung vừa trao đổi để tiếp tục đúng nhu cầu. Em chưa tạo đơn hay tự thêm lịch gọi lại.",
+      "source_refs": [
+        "policy/playbook-telesale.md#PB-03"
+      ],
+      "tool_refs": []
+    }
+  ],
+  "private_annotations": {
+    "persona": "khach_hoi_nhieu_khong_mua",
+    "customer_goal": "Tìm hiểu sản phẩm, chưa mua.",
+    "expected_outcome": "tu_choi",
+    "facts_established": {
+      "product_advised": "SKU-JK-WND-M-NAVY",
+      "price_quoted_vnd": 690000,
+      "blocker": "chưa rõ điều kiện đổi size"
+    },
+    "sentiment_target": "trung tính",
+    "objection": "chưa rõ điều kiện đổi size",
+    "fact_provenance_after_call": {
+      "product_advised": {
+        "value": "SKU-JK-WND-M-NAVY",
+        "source_session": "SC-156-call_1",
+        "last_confirmed_session": "SC-156-call_1",
+        "valid_from": "2026-10-15",
+        "supersedes_session": null
+      },
+      "price_quoted_vnd": {
+        "value": 690000,
+        "source_session": "SC-156-call_1",
+        "last_confirmed_session": "SC-156-call_1",
+        "valid_from": "2026-10-15",
+        "supersedes_session": null
+      },
+      "blocker": {
+        "value": "chưa rõ điều kiện đổi size",
+        "source_session": "SC-156-call_1",
+        "last_confirmed_session": "SC-156-call_1",
+        "valid_from": "2026-10-15",
+        "supersedes_session": null
+      }
+    },
+    "memory_expectation": null,
+    "memory_rules": {
+      "price_and_stock": "revalidate with tools every session; historical quote remains episodic",
+      "address_ttl_days": 180,
+      "intent_ttl_days": 30,
+      "shared_phone": "resolve customer_id; never merge profiles solely by phone"
+    },
+    "source_refs": [
+      "catalog/products.json",
+      "policy/chinh-sach-bao-hanh.md#BH-01",
+      "policy/chinh-sach-bao-hanh.md#BH-02",
+      "policy/chinh-sach-doi-tra.md#DT-01",
+      "policy/chinh-sach-doi-tra.md#DT-02",
+      "policy/chinh-sach-doi-tra.md#DT-06",
+      "policy/dieu-khoan-khuyen-mai.md#KM-01",
+      "policy/playbook-telesale.md#PB-03",
+      "policy/spec-thoi-trang-me-be.md#SP-JK-01",
+      "schemas/tools.schema.json"
+    ],
+    "reference_tool_executions": [
+      {
+        "name": "crm.get_customer",
+        "args": {
+          "phone": "0982141621"
+        },
+        "result": {
+          "found": true,
+          "ambiguous": false,
+          "customer_id": "C018",
+          "name": "Quân",
+          "honorific": "anh",
+          "phone": "0982141621",
+          "identities": {
+            "zalo_id": null,
+            "fb_id": null
+          },
+          "orders": [],
+          "sessions": []
+        },
+        "origin": "executed_reference_mock_for_authored_fixture"
+      },
+      {
+        "name": "catalog.search",
+        "args": {
+          "sku": "SKU-JK-WND-M-NAVY"
+        },
+        "result": {
+          "items": [
+            {
+              "sku": "SKU-JK-WND",
+              "name": "Áo khoác gió Windbreak",
+              "category": "thoi-trang/ao-khoac",
+              "list_price_vnd": 690000,
+              "attributes": {
+                "return_days": 7
+              },
+              "variants": [
+                {
+                  "variant_sku": "SKU-JK-WND-S-DEN",
+                  "size": "S",
+                  "color": "den",
+                  "price_delta_vnd": 0
+                },
+                {
+                  "variant_sku": "SKU-JK-WND-S-NAVY",
+                  "size": "S",
+                  "color": "navy",
+                  "price_delta_vnd": 0
+                },
+                {
+                  "variant_sku": "SKU-JK-WND-S-BE",
+                  "size": "S",
+                  "color": "be",
+                  "price_delta_vnd": 0
+                },
+                {
+                  "variant_sku": "SKU-JK-WND-M-DEN",
+                  "size": "M",
+                  "color": "den",
+                  "price_delta_vnd": 0
+                },
+                {
+                  "variant_sku": "SKU-JK-WND-M-NAVY",
+                  "size": "M",
+                  "color": "navy",
+                  "price_delta_vnd": 0
+                },
+                {
+                  "variant_sku": "SKU-JK-WND-M-BE",
+                  "size": "M",
+                  "color": "be",
+                  "price_delta_vnd": 0
+                },
+                {
+                  "variant_sku": "SKU-JK-WND-L-DEN",
+                  "size": "L",
+                  "color": "den",
+                  "price_delta_vnd": 0
+                },
+                {
+                  "variant_sku": "SKU-JK-WND-L-NAVY",
+                  "size": "L",
+                  "color": "navy",
+                  "price_delta_vnd": 0
+                },
+                {
+                  "variant_sku": "SKU-JK-WND-L-BE",
+                  "size": "L",
+                  "color": "be",
+                  "price_delta_vnd": 0
+                },
+                {
+                  "variant_sku": "SKU-JK-WND-XL-DEN",
+                  "size": "XL",
+                  "color": "den",
+                  "price_delta_vnd": 40000
+                },
+                {
+                  "variant_sku": "SKU-JK-WND-XL-NAVY",
+                  "size": "XL",
+                  "color": "navy",
+                  "price_delta_vnd": 40000
+                },
+                {
+                  "variant_sku": "SKU-JK-WND-XL-BE",
+                  "size": "XL",
+                  "color": "be",
+                  "price_delta_vnd": 40000
+                }
+              ]
+            }
+          ],
+          "total": 1
+        },
+        "origin": "executed_reference_mock_for_authored_fixture"
+      },
+      {
+        "name": "inventory.check",
+        "args": {
+          "sku": "SKU-JK-WND-M-NAVY",
+          "on": "2026-10-15"
+        },
+        "result": {
+          "sku": "SKU-JK-WND-M-NAVY",
+          "in_stock": true,
+          "qty": 12
+        },
+        "origin": "executed_reference_mock_for_authored_fixture"
+      },
+      {
+        "name": "pricing.get_quote",
+        "args": {
+          "sku": "SKU-JK-WND-M-NAVY",
+          "customer_phone": "0982141621",
+          "address": null,
+          "on": "2026-10-15"
+        },
+        "result": {
+          "sku": "SKU-JK-WND-M-NAVY",
+          "list_price_vnd": 690000,
+          "final_price_vnd": 690000,
+          "applied_promos": [
+            {
+              "promo_code": "COD-0",
+              "type": "freecod",
+              "discount_vnd": 0
+            }
+          ],
+          "expired_promos": [],
+          "ineligible_promos": [],
+          "not_applied_exclusive": [],
+          "freeship": false,
+          "_internal_price_floor_vnd": 552000
+        },
+        "origin": "executed_reference_mock_for_authored_fixture"
+      }
+    ],
+    "review_status": "automated_fixture_checks; human_semantic_review_pending"
+  }
+}

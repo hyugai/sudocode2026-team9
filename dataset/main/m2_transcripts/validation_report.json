@@ -1,0 +1,62 @@
+{
+  "status": "pass",
+  "scope": "authored text fixtures only; no agent performance or audio completion claimed",
+  "numbering": {
+    "source_max_scenario_id": "SC-120",
+    "first_scenario_id": "SC-121",
+    "last_scenario_id": "SC-276",
+    "count": 156
+  },
+  "counts": {
+    "scenarios": 156,
+    "transcripts": 358,
+    "utterances": 4308,
+    "customers": 78,
+    "multi_session_customers": 78,
+    "customers_with_three_call_journey": 46,
+    "call_and_chat_customers": 61,
+    "channels": {
+      "hotline": 222,
+      "chat_fanpage": 68,
+      "zalo_oa": 68
+    },
+    "personas": {
+      "khach_do_du_hoi_nguoi_nha": 10,
+      "khach_so_gia": 10,
+      "khach_da_mua_doi_size": 10,
+      "khach_hoi_nhieu_khong_mua": 10,
+      "khach_goi_lan_3_het_kien_nhan": 10,
+      "khach_da_kenh_fb_hotline": 10,
+      "khach_ngoai_pham_vi_chuyen_may": 10,
+      "khach_hoi_ngoai_tai_lieu": 10,
+      "khach_da_kenh_mau_thuan": 10,
+      "hai_nguoi_chung_sdt": 10,
+      "khach_quay_lai_sau_8_thang": 10,
+      "khach_mua_nhieu_mon": 46
+    },
+    "catalog_categories": [
+      "gia-dung",
+      "me-be",
+      "thoi-trang"
+    ],
+    "active_catalog_leaf_skus": 128,
+    "call_and_chat_customers_within_journey": 57,
+    "customers_with_two_hotline_calls_in_journey": 62
+  },
+  "checks": {
+    "reference_tool_executions_replayed": 2021,
+    "positive_call_assertions": 358,
+    "negative_order_probes": 172,
+    "source_hashes": 26
+  },
+  "text_m2_minimums_met": true,
+  "catalog_counting": "128 active distinct leaf SKUs, including size/color variants; 40 parent product models",
+  "audio_m2_minimums_met": false,
+  "pending": [
+    "record at least 100 two-speaker conversations totaling at least 10800 measured seconds",
+    "verify three actual regional voices and noise on at least 20% of actual recordings",
+    "derive diarization timestamps from completed audio",
+    "human semantic review; real-agent and three-seed simulator runs"
+  ],
+  "errors": []
+}

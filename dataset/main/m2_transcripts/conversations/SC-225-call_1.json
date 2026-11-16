@@ -1,0 +1,360 @@
+{
+  "transcript_id": "SC-225-call_1",
+  "scenario_id": "SC-225",
+  "source_scenario_id": "SC-105",
+  "customer_id": "C031",
+  "call": "call_1",
+  "channel": "chat_fanpage",
+  "channel_identity": "fb.oanh.620",
+  "call_date": "2026-10-27",
+  "language": "vi",
+  "origin": "authored_synthetic_reference_dialogue",
+  "is_actual_agent_trace": false,
+  "audio_status": "text_chat",
+  "voice_region_target": null,
+  "noise_target": false,
+  "utterances": [
+    {
+      "speaker": "customer",
+      "text": "Tôi là Oanh, số điện thoại 0985003703, đang nhắn qua Fanpage. Chị Oanh đây. Hồi tháng hai chị mua AirPure X bản 2024 của shop, giờ muốn đổi máy.",
+      "source_customer_turn_index": 0
+    },
+    {
+      "speaker": "agent",
+      "text": "Dạ chị, em tra lịch sử mua trước đây để kiểm tra điều kiện thu cũ đổi mới. Bản AirPure X 2024 đã ngừng bán; em sẽ kiểm tra riêng máy mới chị chọn, không dùng lại giá hay địa chỉ từ tám tháng trước.",
+      "source_refs": [
+        "schemas/tools.schema.json",
+        "catalog/products.json"
+      ],
+      "tool_refs": [
+        0
+      ]
+    },
+    {
+      "speaker": "customer",
+      "text": "Chị đang xem Máy lọc không khí AirPure Y. Với máy cũ trong đơn OD188213, chị có được áp thu cũ đổi mới không?",
+      "source_customer_turn_index": 1
+    },
+    {
+      "speaker": "agent",
+      "text": "Em đã đối chiếu lịch sử sở hữu máy cũ để xét thu cũ đổi mới. Máy lọc không khí AirPure Y có giá 4.800.000 đồng một sản phẩm, hiện còn hàng. Địa chỉ từ tám tháng trước cần xác nhận lại trước khi dùng cho đơn mới.",
+      "source_refs": [
+        "schemas/tools.schema.json",
+        "catalog/products.json"
+      ],
+      "tool_refs": [
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "speaker": "customer",
+      "text": "Chị muốn biết giá em báo là giá một sản phẩm hay đã gồm nhiều món; nếu quay lại hôm khác có cần kiểm tra lại không?"
+    },
+    {
+      "speaker": "agent",
+      "text": "Giá một sản phẩm là giá sau ưu đãi được hệ thống kiểm tra ở ngày tư vấn; tổng giỏ là cộng các đơn vị mình chọn. Khi quay lại em kiểm tra lại theo ngày tạo đơn. Chưa có mã đơn thì giá cũ là lịch sử, không phải cam kết giữ giá qua ngày hết hạn.",
+      "source_refs": [
+        "policy/dieu-khoan-khuyen-mai.md#KM-01"
+      ],
+      "tool_refs": []
+    },
+    {
+      "speaker": "customer",
+      "text": "Nếu hàng bị lỗi thì bảo hành khác đổi trả ở điểm nào? Chị muốn biết điều kiện để còn giữ giấy tờ."
+    },
+    {
+      "speaker": "agent",
+      "text": "Catalog của mẫu này ghi bảo hành 24 tháng. Phạm vi là lỗi kỹ thuật do nhà sản xuất; hao mòn tự nhiên, rơi vỡ, vào nước, dùng sai điện áp hoặc tự tháo máy không thuộc phạm vi đó. Mình giữ hóa đơn hoặc mã đơn để đối chiếu. Đổi trả là quy trình khác và phải xét thời hạn riêng.",
+      "source_refs": [
+        "catalog/products.json",
+        "policy/chinh-sach-bao-hanh.md#BH-01",
+        "policy/chinh-sach-bao-hanh.md#BH-02"
+      ],
+      "tool_refs": []
+    },
+    {
+      "speaker": "customer",
+      "text": "Còn thời hạn đổi trả của đơn đặt hôm nay thì tính từ lúc nào? Chị cần chuẩn bị tem hộp thế nào?"
+    },
+    {
+      "speaker": "agent",
+      "text": "Thời hạn thông thường là 7 ngày kể từ ngày nhận, với hàng còn tem nhãn, hộp, chưa sử dụng và có hóa đơn hoặc mã đơn. Gia dụng, mẹ và bé có lỗi kỹ thuật nhà sản xuất được xét đổi mới trong 30 ngày khi đủ xác nhận. Hàng vệ sinh đã bóc seal và hư do người dùng có điều kiện loại trừ, nên không phải mọi lý do đều đổi được.",
+      "source_refs": [
+        "policy/chinh-sach-doi-tra.md#DT-01",
+        "policy/chinh-sach-doi-tra.md#DT-02",
+        "policy/chinh-sach-doi-tra.md#DT-06"
+      ],
+      "tool_refs": []
+    },
+    {
+      "speaker": "customer",
+      "text": "Nếu cần bảo hành, chị gửi qua shop thế nào? Có được hứa xong ngay trong ngày không?"
+    },
+    {
+      "speaker": "agent",
+      "text": "Mình có thể mang đến trung tâm bảo hành hãng hoặc gửi qua shop để hỗ trợ chuyển đến hãng; phí vận chuyển chiều đi do khách chịu. Thời gian xử lý theo chính sách là 7–15 ngày làm việc. Em không hứa xong ngay trong ngày, vì cần kiểm tra và xác nhận tình trạng thực tế trước.",
+      "source_refs": [
+        "policy/chinh-sach-bao-hanh.md#BH-03"
+      ],
+      "tool_refs": []
+    },
+    {
+      "speaker": "customer",
+      "text": "Chị xem giá sau ưu đãi là 4.800.000 đồng. Địa chỉ cũ ở Hoàng Cầu không dùng nữa; giờ giao 104 đường Kiểm Thử, Hà Nội.",
+      "source_customer_turn_index": 2
+    },
+    {
+      "speaker": "agent",
+      "text": "Em ghi nhận địa chỉ mới chị vừa cung cấp; địa chỉ cũ chỉ giữ trong lịch sử, không đưa vào đơn mới. Em chưa tạo đơn khi mình chưa quyết định.",
+      "source_refs": [
+        "schemas/tools.schema.json",
+        "catalog/products.json"
+      ],
+      "tool_refs": []
+    },
+    {
+      "speaker": "customer",
+      "text": "Tôi thấy bản chính sách tháng 6 ghi đổi trả trong 14 ngày. Với đơn mới đặt từ tháng 10/2026, hàng còn nguyên tem và không có lỗi kỹ thuật, thời hạn thông thường thực tế là bao nhiêu ngày? Hãy nói rõ mốc hiện hành trước khi tiếp tục yêu cầu chính của tôi.",
+      "source_customer_turn_index": 3
+    },
+    {
+      "speaker": "agent",
+      "text": "Với đơn mới từ tháng 10/2026, thời hạn đổi trả thông thường là 7 ngày kể từ ngày nhận, khi hàng đủ điều kiện. Bản tháng 6 có 14 ngày chỉ để tra đơn cũ, không áp cho đơn mới này.",
+      "source_refs": [
+        "schemas/tools.schema.json",
+        "catalog/products.json"
+      ],
+      "tool_refs": []
+    },
+    {
+      "speaker": "customer",
+      "text": "Chị còn hỏi người nhà, liên hệ lại lúc 10 giờ ngày 2026-10-29 nhé.",
+      "source_customer_turn_index": 4
+    },
+    {
+      "speaker": "agent",
+      "text": "Em đã ghi lịch liên hệ lại lúc 2026-10-29 10:00. Em lưu phần đang cân nhắc để lần tới mình tiếp tục, chưa tạo đơn.",
+      "source_refs": [
+        "policy/playbook-telesale.md#PB-03"
+      ],
+      "tool_refs": [
+        4
+      ]
+    }
+  ],
+  "private_annotations": {
+    "persona": "khach_quay_lai_sau_8_thang",
+    "customer_goal": "Tra đơn tháng 2 và hỏi đổi máy cũ sang mẫu đang bán. Phân biệt thời hạn đổi trả thông thường của đơn mới với tài liệu hết hiệu lực.",
+    "expected_outcome": "hen_goi_lai",
+    "facts_established": {
+      "product_advised": "SKU-AP-Y",
+      "price_quoted_vnd": 4800000,
+      "owned_sku": "SKU-AP-X-2024",
+      "promo_code": "TRADE-IN-AP",
+      "delivery_address": "104 đường Kiểm Thử, Hà Nội"
+    },
+    "sentiment_target": "trung tính",
+    "objection": null,
+    "fact_provenance_after_call": {
+      "product_advised": {
+        "value": "SKU-AP-Y",
+        "source_session": "SC-225-call_1",
+        "last_confirmed_session": "SC-225-call_1",
+        "valid_from": "2026-10-27",
+        "supersedes_session": null
+      },
+      "price_quoted_vnd": {
+        "value": 4800000,
+        "source_session": "SC-225-call_1",
+        "last_confirmed_session": "SC-225-call_1",
+        "valid_from": "2026-10-27",
+        "supersedes_session": null
+      },
+      "owned_sku": {
+        "value": "SKU-AP-X-2024",
+        "source_session": "SC-225-call_1",
+        "last_confirmed_session": "SC-225-call_1",
+        "valid_from": "2026-10-27",
+        "supersedes_session": null
+      },
+      "promo_code": {
+        "value": "TRADE-IN-AP",
+        "source_session": "SC-225-call_1",
+        "last_confirmed_session": "SC-225-call_1",
+        "valid_from": "2026-10-27",
+        "supersedes_session": null
+      },
+      "delivery_address": {
+        "value": "104 đường Kiểm Thử, Hà Nội",
+        "source_session": "SC-225-call_1",
+        "last_confirmed_session": "SC-225-call_1",
+        "valid_from": "2026-10-27",
+        "supersedes_session": null
+      }
+    },
+    "memory_expectation": {
+      "delivery_address": "104 đường Kiểm Thử, Hà Nội",
+      "superseded": {
+        "delivery_address": "12 ngõ 38 Hoàng Cầu, Đống Đa, Hà Nội"
+      },
+      "address_ttl_check": true
+    },
+    "memory_rules": {
+      "price_and_stock": "revalidate with tools every session; historical quote remains episodic",
+      "address_ttl_days": 180,
+      "intent_ttl_days": 30,
+      "shared_phone": "resolve customer_id; never merge profiles solely by phone"
+    },
+    "source_refs": [
+      "catalog/products.json",
+      "policy/changelog.md#CL-01",
+      "policy/chinh-sach-bao-hanh.md#BH-01",
+      "policy/chinh-sach-bao-hanh.md#BH-02",
+      "policy/chinh-sach-bao-hanh.md#BH-03",
+      "policy/chinh-sach-doi-tra.md#DT-01",
+      "policy/chinh-sach-doi-tra.md#DT-02",
+      "policy/chinh-sach-doi-tra.md#DT-06",
+      "policy/dieu-khoan-khuyen-mai.md#KM-01",
+      "policy/playbook-telesale.md#PB-03",
+      "schemas/tools.schema.json"
+    ],
+    "reference_tool_executions": [
+      {
+        "name": "crm.get_customer",
+        "args": {
+          "phone": "0985003703"
+        },
+        "result": {
+          "found": true,
+          "ambiguous": false,
+          "customer_id": "C031",
+          "name": "Oanh",
+          "honorific": "chị",
+          "phone": "0985003703",
+          "identities": {
+            "zalo_id": "zalo_oanh96",
+            "fb_id": "fb.oanh.620"
+          },
+          "orders": [
+            {
+              "order_id": "OD188213",
+              "sku": "SKU-AP-X-2024",
+              "price_vnd": 4290000,
+              "date": "2026-02-17",
+              "status": "delivered"
+            }
+          ],
+          "sessions": [
+            {
+              "session_id": "S-OLD-1",
+              "date": "2026-02-17",
+              "channel": "hotline",
+              "summary": "Mua AirPure X bản 2024 giá 4.290.000đ, phòng 20m², địa chỉ giao: 12 ngõ 38 Hoàng Cầu, Đống Đa, Hà Nội",
+              "outcome": "chot_don"
+            }
+          ]
+        },
+        "origin": "executed_reference_mock_for_authored_fixture"
+      },
+      {
+        "name": "catalog.search",
+        "args": {
+          "sku": "SKU-AP-Y"
+        },
+        "result": {
+          "items": [
+            {
+              "sku": "SKU-AP-Y",
+              "name": "Máy lọc không khí AirPure Y",
+              "category": "gia-dung/may-loc-khong-khi",
+              "list_price_vnd": 5200000,
+              "attributes": {
+                "room_area_m2": 30,
+                "features": "HEPA H13 + than hoạt tính, app điều khiển",
+                "warranty_months": 24,
+                "child_safe_lock": true
+              },
+              "variants": []
+            }
+          ],
+          "total": 1
+        },
+        "origin": "executed_reference_mock_for_authored_fixture"
+      },
+      {
+        "name": "inventory.check",
+        "args": {
+          "sku": "SKU-AP-Y",
+          "on": "2026-10-27"
+        },
+        "result": {
+          "sku": "SKU-AP-Y",
+          "in_stock": true,
+          "qty": 15
+        },
+        "origin": "executed_reference_mock_for_authored_fixture"
+      },
+      {
+        "name": "pricing.get_quote",
+        "args": {
+          "sku": "SKU-AP-Y",
+          "customer_phone": "0985003703",
+          "address": "104 đường Kiểm Thử, Hà Nội",
+          "on": "2026-10-27"
+        },
+        "result": {
+          "sku": "SKU-AP-Y",
+          "list_price_vnd": 5200000,
+          "final_price_vnd": 4800000,
+          "applied_promos": [
+            {
+              "promo_code": "COD-0",
+              "type": "freecod",
+              "discount_vnd": 0
+            },
+            {
+              "promo_code": "TRADE-IN-AP",
+              "type": "fixed",
+              "discount_vnd": 400000
+            }
+          ],
+          "expired_promos": [
+            "GIFT-FILTER"
+          ],
+          "ineligible_promos": [
+            {
+              "promo_code": "AIR-2ND-50",
+              "reason": "min_qty"
+            },
+            {
+              "promo_code": "NAM-SHIP0",
+              "reason": "region"
+            }
+          ],
+          "not_applied_exclusive": [],
+          "freeship": true,
+          "_internal_price_floor_vnd": 4680000
+        },
+        "origin": "executed_reference_mock_for_authored_fixture"
+      },
+      {
+        "name": "schedule.callback",
+        "args": {
+          "customer_phone": "0985003703",
+          "callback_at": "2026-10-29T10:00"
+        },
+        "result": {
+          "callback_id": "CB0001",
+          "customer_phone": "0985003703",
+          "callback_at": "2026-10-29T10:00",
+          "moved_from": null,
+          "note": null
+        },
+        "origin": "executed_reference_mock_for_authored_fixture"
+      }
+    ],
+    "review_status": "automated_fixture_checks; human_semantic_review_pending"
+  }
+}

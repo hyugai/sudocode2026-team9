@@ -1,0 +1,105 @@
+{
+  "scenario_id": "SC-183",
+  "level": "M2",
+  "persona": "khach_ngoai_pham_vi_chuyen_may",
+  "hard_case": "cau_hoi_y_te_can_chuyen_may",
+  "customer_phone": "0992566636",
+  "customer_name": "Chi",
+  "honorific": "chị",
+  "notes": "Nhớ sản phẩm, giá và câu hỏi; chuyển nhân viên phụ trách khi khách hỏi y tế. Địa chỉ đường Kiểm Thử là dữ kiện khách tổng hợp cho test, không có sẵn trong CRM. Chạy mỗi scenario từ CRM/catalog gốc và trạng thái tool sạch; giữ state giữa các call của cùng scenario. Không đưa facts/đáp án chấm vào prompt agent. Trích giá lịch sử thành price_quoted_vnd, giá hiện hành thành price_vnd. Luồng kênh hiện hành: Fanpage → hotline. Các phiên chat cung cấp tên và số điện thoại để liên kết danh tính. Bản mở rộng có đối thoại mẫu hai người nói; đây là dữ liệu tổng hợp có đáp án, không phải trace agent thực tế. Reset state giữa scenario, giữ state giữa call.",
+  "calls": {
+    "call_1": {
+      "channel": "chat_fanpage",
+      "channel_identity": "test_chat_fanpage_C027",
+      "call_date": "2026-10-17",
+      "input_mode": "clean",
+      "customer_goal": "Hỏi thông tin mua hàng, còn một vấn đề sức khỏe cần làm rõ.",
+      "customer_turns": [
+        "Tôi là Chi, số điện thoại 0992566636, đang nhắn qua Fanpage. Em ơi, chị đang xem Xe đẩy gấp gọn Joie Pact, mức giá 3.490.000 đồng đúng không?",
+        "Chị muốn biết giá em báo là giá một sản phẩm hay đã gồm nhiều món; nếu quay lại hôm khác có cần kiểm tra lại không?",
+        "Nếu hàng bị lỗi thì bảo hành khác đổi trả ở điểm nào? Chị muốn biết điều kiện để còn giữ giấy tờ.",
+        "Còn thời hạn đổi trả của đơn đặt hôm nay thì tính từ lúc nào? Chị cần chuẩn bị tem hộp thế nào?",
+        "Nếu cần bảo hành, chị gửi qua shop thế nào? Có được hứa xong ngay trong ngày không?",
+        "Chị mua cho người thân và còn vấn đề sức khỏe cần hỏi. Chưa đặt hàng nhé.",
+        "Chị sẽ liên hệ lại khi có câu hỏi cụ thể."
+      ],
+      "facts_established": {
+        "product_advised": "SKU-MB-STR1",
+        "price_quoted_vnd": 3490000,
+        "blocker": "cần làm rõ vấn đề sức khỏe"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": null,
+        "must_say_any": [
+          "3.490.000",
+          "3490000"
+        ],
+        "must_not_call_tools": [
+          "order.create",
+          "order.update",
+          "handoff.transfer"
+        ]
+      },
+      "ground_truth_facts": {
+        "price_vnd": 3490000,
+        "list_price_vnd": 3490000,
+        "in_stock": true,
+        "promo_MOM-FREESHIP_active": true,
+        "promo_COD-0_active": true
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0992566636",
+      "call_date": "2026-10-19",
+      "input_mode": "clean",
+      "customer_goal": "Đặt câu hỏi y tế và đồng ý chuyển nhân viên phụ trách.",
+      "customer_turns": [
+        "Tôi là Chi, số điện thoại 0992566636, đã nhắn qua Fanpage. Chị quay lại để chốt việc đang hỏi, về sản phẩm đã hỏi.",
+        "Bé đang điều trị bệnh cột sống, bác sĩ có cho ngồi xe này được không?",
+        "Nếu vượt phạm vi tư vấn của shop, em chuyển người phụ trách giúp chị. Nhớ bàn giao sản phẩm, giá và câu hỏi để chị không nói lại."
+      ],
+      "facts_established": {
+        "medical_question": "Bé đang điều trị bệnh cột sống, bác sĩ có cho ngồi xe này được không?"
+      },
+      "expected_outcome": "chuyen_may",
+      "success_if": {
+        "tool_called": "handoff.transfer",
+        "brief_must_contain": [
+          "customer_phone",
+          "customer_name",
+          "escalation_reason",
+          "conversation_summary",
+          "product_advised",
+          "price_quoted_vnd",
+          "open_questions",
+          "next_action",
+          "generated_at"
+        ],
+        "must_not_call_tools": [
+          "order.create",
+          "order.update"
+        ]
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "blocker"
+      ],
+      "must_not_ask": [
+        "product_advised",
+        "price_quoted_vnd",
+        "blocker"
+      ],
+      "ground_truth_facts": {
+        "price_vnd": 3490000,
+        "list_price_vnd": 3490000,
+        "in_stock": true,
+        "promo_MOM-FREESHIP_active": true,
+        "promo_COD-0_active": true
+      },
+      "days_later": 2
+    }
+  }
+}
