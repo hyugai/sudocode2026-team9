@@ -54,6 +54,9 @@ try {
           return Response.json({items:filtered.slice(offset,offset+4),total:filtered.length,has_more:offset+4<filtered.length});
         }
         const parts=path.split('/'), row=details[parts[4]+':'+decodeURIComponent(parts[5])];
+        if(__salesMode==='detail-error') return Response.json({detail:'Chưa tải được bản lưu hội thoại'},{status:503});
+        if(__salesMode==='detail-slow') await new Promise(resolve=>setTimeout(resolve,500));
+        options.signal?.throwIfAborted();
         if(!row) return Response.json({detail:'Không tìm thấy'},{status:404});
         return Response.json({...row,messages:row.messages.slice(offset,offset+6),next_offset:offset+Math.min(6,row.messages.length-offset),has_more:offset+6<row.messages.length});
       }
@@ -64,23 +67,50 @@ try {
   await b.send("Page.navigate", { url: base + "/salesman" });
   await b.wait("document.querySelectorAll('.sales-conversation').length===4 && document.querySelectorAll('.sales-message').length===6");
   await check("Authenticated Salesman loads the history API and account identity", "document.querySelector('.sales-account').textContent.includes('Salesman kiểm thử') && __salesRequests.some(r=>r.path==='/api/auth/me') && __salesRequests.some(r=>r.path==='/api/salesman/conversations')");
-  await check("No chat/cart/microphone providers or demo fallback on the review page", "!document.querySelector('textarea,audio,.voice-start,.ai-new-chat,.cart-link') && !__salesRequests.some(r=>r.path==='/api/health'||r.path.includes('/api/catalog')) && !document.querySelector('.sales-demo-note').textContent.includes('Dữ liệu mẫu')");
+  await check("No chat/cart/microphone providers, demo fallback or redundant notice on the review page", "!document.querySelector('textarea,audio,.voice-start,.ai-new-chat,.cart-link,.sales-demo-note') && !__salesRequests.some(r=>r.path==='/api/health'||r.path.includes('/api/catalog')) && !document.querySelector('.sales-workspace').textContent.includes('Dữ liệu mẫu')");
   await b.screenshot(`${output}/history-desktop.png`);
   await click(".sales-tab-panel .sales-load-more");
   await b.wait("document.querySelectorAll('.sales-message').length===12");
   await check("Transcript pagination keeps every message once", "new Set([...document.querySelectorAll('.sales-message p')].map(n=>n.textContent)).size===12");
-  await click("#sales-tab-brief");
-  await check("Call brief renders four saved fields", "document.querySelectorAll('.sales-brief section').length===4");
+  await check("Call brief renders beside the transcript without a tab switch", "document.querySelectorAll('.sales-brief section').length===4 && document.querySelectorAll('.sales-message').length===12 && !document.querySelector('#sales-tab-brief') && document.querySelector('.sales-brief-sidebar').getBoundingClientRect().left>=document.querySelector('.sales-review-body').getBoundingClientRect().right");
+  await b.send("Emulation.setDeviceMetricsOverride", { width:1440,height:640,deviceScaleFactor:1,mobile:false });
+  await b.evaluate("document.querySelector('.sales-brief-sidebar').scrollTop=100");
+  await check("Long call briefs scroll independently of the transcript", "document.querySelector('.sales-brief-sidebar').scrollTop>0 && scrollY===0");
+  await click(".sales-conversation:nth-child(2)");
+  await b.wait("document.querySelector('.sales-brief-summary')?.textContent.includes('robot hút bụi')");
+  await check("Selecting another conversation resets the brief's scroll position", "document.querySelector('.sales-brief-sidebar').scrollTop===0");
+  await click(".sales-conversation");
+  await b.wait("document.querySelector('.sales-brief-summary')?.textContent.includes('máy lọc không khí')");
+  await b.send("Emulation.setDeviceMetricsOverride", { width:1440,height:960,deviceScaleFactor:1,mobile:false });
+  await b.evaluate("__salesMode='detail-slow'");
+  await click(".sales-review-heading button");
+  await b.wait("document.querySelector('.sales-brief-sidebar').getAttribute('aria-busy')==='true'");
+  await check("Refreshing the selected brief announces loading and clears the previous snapshot", "!document.querySelector('.sales-brief') && document.querySelector('.sales-brief-status').textContent.includes('Đang tải')");
+  await b.wait("document.querySelectorAll('.sales-brief section').length===4");
+  await b.evaluate("__salesMode='detail-error'");
+  await click(".sales-review-heading button");
+  await b.wait("!!document.querySelector('.sales-error')");
+  await check("A detail failure explains how to retry without displaying a stale brief", "!document.querySelector('.sales-brief') && document.querySelector('.sales-brief-empty').textContent.includes('Hãy thử lại')");
+  await b.evaluate("__salesMode='ok'");
+  await click(".sales-error button");
+  await b.wait("document.querySelectorAll('.sales-brief section').length===4");
   await click("#sales-tab-memory");
   await check("Memory is labeled as the saved end-of-turn version", "document.querySelectorAll('.sales-memory details').length===6 && document.querySelector('.sales-memory').textContent.includes('Bản lưu cuối lượt')");
+  await check("Call brief remains available while viewing memory", "document.querySelectorAll('.sales-brief section').length===4");
   await b.evaluate("document.getElementById('sales-tab-messages').focus()");
   await b.send("Input.dispatchKeyEvent", { type:"keyDown", key:"ArrowRight", code:"ArrowRight", windowsVirtualKeyCode:39 });
-  await check("Review tabs support keyboard navigation", "document.activeElement.id==='sales-tab-brief' && document.activeElement.getAttribute('aria-selected')==='true'");
-  for (const width of [320,375,768,1440]) {
+  await check("Review tabs support keyboard navigation", "document.activeElement.id==='sales-tab-memory' && document.activeElement.getAttribute('aria-selected')==='true'");
+  await click("#sales-tab-messages");
+  for (const width of [320,375,768,1024,1199,1200,1440]) {
     await b.send("Emulation.setDeviceMetricsOverride", { width,height:960,deviceScaleFactor:1,mobile:false });
     await check(`Content wraps at ${width}px`, "document.documentElement.scrollWidth<=innerWidth");
-    if(width===320) await b.screenshot(`${output}/history-mobile.png`);
+    await check(`Call brief uses the expected layout at ${width}px`, width>=1200 ? "document.querySelector('.sales-brief-sidebar').getBoundingClientRect().left>=document.querySelector('.sales-review-body').getBoundingClientRect().right" : "document.querySelector('.sales-brief-sidebar').getBoundingClientRect().bottom<=document.querySelector('.sales-review-body').getBoundingClientRect().top");
+    if(width===320) {
+      await b.evaluate("document.querySelector('.sales-brief-sidebar').scrollIntoView({behavior:'instant'}); new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))");
+      await b.screenshot(`${output}/history-mobile.png`);
+    }
   }
+  await b.evaluate("scrollTo({top:0,behavior:'instant'})");
   await click(".sales-sidebar > .sales-load-more");
   await b.wait("document.querySelectorAll('.sales-conversation').length===8");
   await search("le thu ha");
@@ -97,12 +127,13 @@ try {
   await search("demo-voice-004");
   await b.wait("!!document.querySelector('.sales-message span')");
   await check("Interrupted Voice transcript is explicit", "document.querySelector('.sales-messages').textContent.includes('Chưa hoàn tất / bị ngắt')");
+  await check("A conversation without a saved brief never shows the previous customer's brief", "!document.querySelector('.sales-brief') && document.querySelector('.sales-brief-empty').textContent.includes('chưa lưu call brief')");
   await click("#sales-tab-memory");
   await check("Legacy Voice without snapshot has an empty state", "document.querySelector('.sales-empty').textContent.includes('chưa lưu snapshot memory')");
   await b.evaluate("__salesMode='error'");
   await click(".sales-list-heading button");
   await b.wait("!!document.querySelector('.sales-error')");
-  await check("Unavailable backend clears old details and never falls back to fixtures", "document.querySelectorAll('.sales-conversation').length===0 && !document.querySelector('.sales-message,.sales-memory')");
+  await check("Unavailable backend clears old details and never falls back to fixtures", "document.querySelectorAll('.sales-conversation').length===0 && !document.querySelector('.sales-message,.sales-memory,.sales-brief-sidebar')");
   await b.evaluate("__salesMode='ok'");
   await click(".sales-error button");
   await b.wait("document.querySelectorAll('.sales-conversation').length===1");
