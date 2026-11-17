@@ -238,10 +238,12 @@ tests/
 !/tests/test_btc_pricing.py
 !/tests/test_btc_order_flow.py
 !/tests/test_runtime_readiness.py
+!/tests/test_omnivoice_continuation.py
 !/src/web/tests/
 
 # Generated recordings, screenshots and isolated local UI fixtures.
 /outputs/debug/streaming-ui/
+/outputs/audio-continuation/
 
 # Runtime data required by the Render image. Customer memory is intentionally
 # reviewable before commit; do not place secrets outside these documented files.
