@@ -1,0 +1,21 @@
+{
+  "type": "object", "additionalProperties": false,
+  "required": ["journey_id", "checks"],
+  "properties": {
+    "journey_id": {"type": "string"},
+    "checks": {"type": "array", "items": {
+      "type": "object", "additionalProperties": false,
+      "required": ["criterion", "verdict", "reason", "evidence"],
+      "properties": {
+        "criterion": {"type": "string", "enum": ["factuality", "continuity", "persona", "naturalness", "diversity", "outcome_alignment", "privacy"]},
+        "verdict": {"type": "string", "enum": ["pass", "fail", "uncertain"]},
+        "reason": {"type": "string"},
+        "evidence": {"type": "array", "items": {
+          "type": "object", "additionalProperties": false,
+          "required": ["transcript_id", "turn_index", "quote"],
+          "properties": {"transcript_id": {"type": "string"}, "turn_index": {"type": "integer"}, "quote": {"type": "string"}}
+        }}
+      }
+    }}
+  }
+}

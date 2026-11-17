@@ -1,0 +1,59 @@
+name: Dataset pipeline
+
+on:
+  pull_request:
+    paths:
+      - "dataset/pipeline/**"
+      - "dataset/organizer/**"
+      - ".github/workflows/dataset-pipeline.yml"
+  push:
+    paths:
+      - "dataset/pipeline/**"
+      - "dataset/organizer/**"
+      - ".github/workflows/dataset-pipeline.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  offline:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.11", "3.13"]
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Setup environment and verify without LLM API calls
+        run: >-
+          python -B -m dataset.pipeline.setup_env
+          --mode offline
+          --config dataset/pipeline/configs/hackathon_m2.json
+          --venv "${{ runner.temp }}/dataset-managed-venv"
+          --output "${{ runner.temp }}/dataset-report"
+      - name: Check agent-driven setup and token pause without SDK or credentials
+        run: |
+          for profile in M1 M2; do
+            python -B -m dataset.pipeline.agent init \
+              --profile "$profile" --limit 1 \
+              --output "${{ runner.temp }}/dataset-agent-$profile"
+            python -B -m dataset.pipeline.agent next \
+              --run "${{ runner.temp }}/dataset-agent-$profile" \
+              --remaining-context-tokens 1 --context-source ci-fixture
+          done
+      - name: Preserve reports even after failure
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dataset-offline-python-${{ matrix.python }}
+          path: |
+            ${{ runner.temp }}/dataset-report/
+            ${{ runner.temp }}/dataset-agent-M1/
+            ${{ runner.temp }}/dataset-agent-M2/
+          if-no-files-found: warn
+          retention-days: 7

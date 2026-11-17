@@ -2,6 +2,8 @@
 
 Bộ này bổ sung **lời khách và lời agent mẫu bằng tiếng Việt** để dùng làm transcript tổng hợp, kịch bản thu âm/TTS và fixture kiểm thử. Yêu cầu được đọc từ `dataset/organizer/SUDO CODE 2026 - Đề Bài Dự Án Cuối Kì.pdf`, mục C.1, C.4 và Phụ lục B; đối chiếu thêm `DIEU-CHINH-DE.md` và mock cập nhật 11/2026.
 
+Có thêm bước tùy chọn [biên tập ngôn ngữ bằng LLM](NATURALIZATION.md): dùng corpus hiện có làm baseline, gửi lời thoại nguyên văn và ràng buộc cho model, kiểm tra kết quả rồi lưu candidate riêng để người duyệt. Bước này không có masker; live request có thể chứa định danh trong lời nói. Nó không thay đổi 358 transcript baseline, không tự tạo audio hoặc được coi là kết quả agent. Xem hướng dẫn prepare offline, gọi model và replay response đã lưu trong tài liệu trên.
+
 **Đã đạt các mức tối thiểu về số lượng transcript và cấu trúc kịch bản. Chưa đạt toàn bộ M2:** chưa thu/sinh audio hai người nói, chưa đo ASR/diarization và chưa chạy agent hoặc simulator. Lời agent trong bộ này là lời mẫu được soạn, có kiểm tra nghiệp vụ bằng mock; không phải kết quả hay điểm số của agent thực tế.
 
 ## Đối chiếu yêu cầu
@@ -75,4 +77,4 @@ Kế hoạch thu âm chứa toàn bộ hai người nói, không có timestamp g
 
 250 WAV cũ ở `../audio/` chỉ là các lượt khách của bộ nguồn; tổng khoảng 1.770,87 giây. Chúng không khớp lời thoại mở rộng hai người nói nên **không được đếm thành 250 hội thoại có audio** cho bộ này.
 
-Danh tính và địa chỉ là fixture tổng hợp. Chúng chỉ phục vụ kiểm thử local; không gọi hoặc gửi tin tới các số đó. Lời agent tránh đọc lại đầy đủ số điện thoại và số nhà; tham số tool vẫn có định danh cần cho nghiệp vụ. Trước khi gửi fixture ra dịch vụ/model ngoài, cần token hóa/ẩn thông tin theo pipeline của dự án; corpus này không tự triển khai cơ chế đó. Các quy tắc TTL, supersede, provenance và bảo vệ hồ sơ chung số là **kỳ vọng kiểm thử**, chưa chứng minh backend đã thực hiện chúng. Rà soát ngữ nghĩa thủ công và pilot agent vẫn cần trước khi dùng làm benchmark chính thức.
+Danh tính và địa chỉ là fixture tổng hợp. Chúng chỉ phục vụ kiểm thử; không gọi hoặc gửi tin tới các số đó. Lời agent tránh đọc lại đầy đủ số điện thoại và số nhà; tham số tool vẫn có định danh cần cho nghiệp vụ. Đề yêu cầu che PII khi gửi model ngoài; bước biên tập tùy chọn hiện gửi lời thoại nguyên văn và không thực hiện yêu cầu đó. Các quy tắc TTL, supersede, provenance và bảo vệ hồ sơ chung số là **kỳ vọng kiểm thử**, chưa chứng minh backend đã thực hiện chúng. Rà soát ngữ nghĩa thủ công và pilot agent vẫn cần trước khi dùng làm benchmark chính thức.
