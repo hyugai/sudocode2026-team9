@@ -6,6 +6,8 @@ import re
 import unicodedata
 from dataclasses import dataclass
 
+from .common import fingerprint
+
 
 def normalized(transcript: dict, entities: list[str] | None = None) -> str:
     text = " ".join(f"{u['speaker']} {u['text']}" for u in transcript["utterances"])
@@ -34,13 +36,19 @@ class Entry:
 
 
 class DuplicateIndex:
-    def __init__(self):
+    def __init__(self, cache: dict | None = None):
+        self.cache = cache if cache is not None else {}
         self.entries: list[Entry] = []
 
     def add(self, transcript: dict, entities: list[str], source: str) -> None:
-        text = normalized(transcript, entities)
+        key = fingerprint({"algorithm": "word_trigram_v1", "utterances": transcript["utterances"], "entities": sorted(set(entities))})
+        if key not in self.cache:
+            text = normalized(transcript, entities)
+            self.cache[key] = {"text": text, "grams": [list(g) for g in sorted(shingles(text))]}
+        features = self.cache[key]
+        text = features["text"]
         dialogue = {"transcript_id": transcript["transcript_id"], "utterances": transcript["utterances"]}
-        self.entries.append(Entry(dialogue, text, shingles(text), hashlib.sha256(text.encode()).hexdigest(), source))
+        self.entries.append(Entry(dialogue, text, {tuple(g) for g in features["grams"]}, hashlib.sha256(text.encode()).hexdigest(), source))
 
     def compare(self, candidate: dict, entities: list[str], config: dict) -> dict:
         text = normalized(candidate, entities)
@@ -59,6 +67,6 @@ class DuplicateIndex:
                 "matches": matches[:3], "algorithm": "nfc_casefold_entity_number_normalized_word_trigram_jaccard_v1"}
 
     def copy(self) -> "DuplicateIndex":
-        other = DuplicateIndex()
+        other = DuplicateIndex(self.cache)
         other.entries = list(self.entries)
         return other

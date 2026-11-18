@@ -79,6 +79,24 @@ class FakeProvider:
 
 
 class PipelineTests(unittest.TestCase):
+    def test_balanced_plan_covers_persona_category_pairs_without_mutating_default(self):
+        from dataset.pipeline.common import HERE
+        from dataset.pipeline.domain import load_domain
+        from dataset.pipeline.planner import build_plans
+        config = read(HERE / "configs/hackathon_m1.json")
+        config["planning"].update(customers=150, multichannel_customers=60, coverage_strategy="balanced")
+        domain = load_domain((HERE / "configs" / config["domain"]["root"]).resolve(), config["domain"])
+        plans = build_plans(config, domain)
+        pairs = {(p["persona"], p["sessions"][0]["facts"]["product"]["category"].split("/")[0]) for p in plans}
+        for persona in ("hesitant", "price_comparison"):
+            self.assertEqual(len([pair for pair in pairs if pair[0] == persona]), 3)
+            hard = {p["sessions"][0]["hard_case"] for p in plans if p["persona"] == persona}
+            self.assertTrue(set(config["planning"]["hard_cases"]) <= hard)
+        self.assertEqual(len(plans), 150)
+        self.assertEqual(sum(len(p["sessions"]) for p in plans), 360)
+        self.assertEqual(plans, build_plans(config, domain))
+        self.assertEqual(read(HERE / "configs/hackathon_m1.json")["planning"]["customers"], 50)
+
     def test_plan_reproduces_without_any_m1_scenario_inputs(self):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)

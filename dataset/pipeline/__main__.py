@@ -52,7 +52,8 @@ def main() -> int:
             if original["kind"] != "generation" or original["code_sha256"] != code_hashes():
                 raise ValueError("replay needs a generation run made with identical pipeline code/prompts/schema")
             provider = ReplayProvider(args.run)
-            result = generate_run(args.run / "plan", args.output, provider, limit=original["limit"])
+            result = generate_run(args.run / "plan", args.output, provider, limit=original["limit"],
+                                  samples=original.get("samples"), journey_ids=original.get("journey_ids"))
         else:
             print(json.dumps(verify_run(args.run), ensure_ascii=False, indent=2))
             return 0

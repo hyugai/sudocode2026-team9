@@ -34,8 +34,8 @@ def write(path: Path, value: Any) -> None:
 
 def new_directory(path: Path) -> Path:
     path = path.resolve()
-    if path == HERE or path.is_relative_to(HERE) or HERE.is_relative_to(path):
-        raise ValueError("output must be outside pipeline code and must not contain it")
+    if HERE.is_relative_to(path) or (path.is_relative_to(HERE) and not path.is_relative_to(HERE / "output")):
+        raise ValueError("output must be outside pipeline code or inside pipeline/output, and must not contain code")
     path.mkdir(parents=True, exist_ok=False, mode=0o700)
     (path / ".gitignore").write_text("*\n", encoding="utf-8")
     return path
@@ -44,6 +44,7 @@ def new_directory(path: Path) -> Path:
 def code_hashes() -> dict[str, str]:
     return {str(p.relative_to(HERE)): file_hash(p) for p in sorted(HERE.rglob("*"))
             if p.is_file() and p.suffix in {".py", ".md", ".json"}
+            and not p.is_relative_to(HERE / "output")
             and "tests" not in p.parts and "configs" not in p.parts}
 
 

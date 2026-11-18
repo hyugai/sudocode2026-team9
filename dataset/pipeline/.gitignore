@@ -1,3 +1,4 @@
 # Keep pipeline regression tests despite the repository-wide tests/ ignore.
 !tests/
 !tests/*.py
+output/

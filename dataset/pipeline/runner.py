@@ -12,6 +12,7 @@ from .duplicates import DuplicateIndex
 from .planner import build_plans, coverage, validate_config
 from .providers import ProviderFailure, Recorder
 from .review import review_record, validate_review
+from .selection import select_plans
 
 JUDGE_SCHEMA = {"type": "object", "additionalProperties": False,
                 "required": ["duplicate", "reason"],
@@ -106,14 +107,13 @@ def plan_run(config_path: Path, output: Path, references: list[Path] | None = No
     return report
 
 
-def verify_plan(root: Path) -> tuple[dict, list[dict], list[dict]]:
+def verify_plan(root: Path, *, rebuild: bool = True, expected_code: dict | None = None) -> tuple[dict, list[dict], list[dict]]:
     verify_files(root, read(root / "seal.json")["files"])
-    if read(root / "run.json")["code_sha256"] != code_hashes():
+    if read(root / "run.json")["code_sha256"] != (code_hashes() if expected_code is None else expected_code):
         raise ValueError("pipeline code/prompts/schema changed; create a new plan run")
     config = read(root / "config.json")
-    domain = load_domain(root / "snapshot/domain", config["domain"])
     plans = read(root / "plans.json")
-    if build_plans(config, domain) != plans:
+    if rebuild and build_plans(config, load_domain(root / "snapshot/domain", config["domain"])) != plans:
         raise ValueError("frozen plans cannot be reproduced from their domain/config")
     return config, plans, read(root / "catalog.json")
 
@@ -193,11 +193,10 @@ def journey_artifacts(plan: dict, history: list[dict], decisions: list[dict], re
     return artifacts, []
 
 
-def generate_run(plan_root: Path, output: Path, provider, *, limit: int | None = 1) -> dict:
+def generate_run(plan_root: Path, output: Path, provider, *, limit: int | None = 1,
+                 samples: int | None = None, journey_ids: list[str] | None = None) -> dict:
     config, all_plans, catalog = verify_plan(plan_root)
-    if limit is not None and (type(limit) is not int or limit < 1):
-        raise ValueError("limit must be positive or None for all")
-    plans = all_plans if limit is None else all_plans[:limit]
+    plans = select_plans(all_plans, limit=limit, samples=samples, journey_ids=journey_ids)
     output = new_directory(output)
     shutil.copytree(plan_root, output / "plan")
     schema = read(HERE / "response.schema.json")
@@ -211,7 +210,8 @@ def generate_run(plan_root: Path, output: Path, provider, *, limit: int | None =
     recorder = Recorder(provider, output, config["generation"]["max_api_calls"])
     metadata = {"kind": "generation", "created_at": stamp(), "status": "running", "runtime": runtime(),
                 "provider": provider.metadata, "plan_seal_sha256": file_hash(plan_root / "seal.json"),
-                "code_sha256": code_hashes(), "selected_journeys": len(plans), "limit": limit,
+                "code_sha256": code_hashes(), "selected_journeys": len(plans), "limit": limit, "samples": samples,
+                "journey_ids": journey_ids,
                 "input_handling": "original synthetic dialogue/facts; no masker",
                 "review_mode": "automated_llm_rubric_and_deterministic_checks", "audio_generated": False}
     write(output / "run.json", metadata)
@@ -364,7 +364,10 @@ def verify_run(root: Path) -> dict:
         found = False
         for call in matching:
             try:
-                found |= call["request"]["kind"] == "generate" and parse_response(call["response"]) == body
+                response_body = parse_response(call["response"])
+                found |= (call["request"]["kind"] == "generate" and response_body == body)
+                if call["request"]["kind"] == "generate_journey":
+                    found |= body in response_body["transcripts"]
             except (KeyError, ValueError, TypeError):
                 pass
         if not found:

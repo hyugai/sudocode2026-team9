@@ -1,5 +1,26 @@
 # Chạy pipeline transcript bằng coding agent
 
+## Sinh theo hành trình để giảm số task
+
+Run lightweight mới mặc định dùng `generation_unit=journey`: mỗi task `generate_journey` trả `{"transcripts": [...]}` gồm toàn bộ phiên theo thứ tự trong `journey_plan`. Một task review riêng vẫn bắt buộc. Ví dụ 10 hành trình, mỗi hành trình 3 phiên: tối thiểu 20 task thay vì 40, chưa tính judge/repair. Không cam kết thời gian hoặc token giảm tương ứng.
+
+Đọc toàn bộ task hiện tại, tự viết từng phiên theo facts và lịch sử đã được nói; không đưa ngân sách, quyết định hoặc kết quả đơn của phiên sau vào phiên trước dù đã nhìn thấy kế hoạch. Python kiểm tra từng phiên theo thứ tự, so trùng với corpus và các phiên trước trong batch. Cặp gần trùng vẫn tạo task judge riêng. Lỗi bất kỳ phiên nào hoặc review không đạt khiến cả hành trình được sửa trong giới hạn retry; chưa commit một phần hành trình.
+
+Checkpoint lưu candidate còn chờ nếu phải judge, giữ task budget/token gate và khôi phục sau gián đoạn. Đặc trưng chuẩn hóa/hash/shingle được cache theo nội dung và entities trong checkpoint; cache không tự đưa failed attempt vào corpus. Mỗi lệnh vẫn kiểm tra checksum nguồn và code. Không dựng lại toàn bộ planner mỗi task; dựng/đối chiếu plan đầy đủ khi finalize, rồi verify output trước export.
+
+Có thể dùng `init --generation-unit session` để giữ cách sinh từng phiên. `--archive` mặc định dùng session cho replay runner cũ; không kết hợp `--archive --generation-unit journey`. Run đã có không đổi đơn vị sinh. Các ví dụ `session_plan` bên dưới áp dụng session mode; journey mode dùng `journey_plan` và schema trong task làm nguồn chuẩn.
+
+## Provenance gọn cho run mới
+
+Mặc định `init` dùng `lightweight`: không sao chép source vào `reproducibility/`, không bắt buộc replay khi finalize. Vẫn kiểm tra schema, dữ kiện, trùng lặp, review và toàn vẹn artifact. `final_report.json` ghi replay là `skipped`, không phải `passed`.
+
+Muốn lưu source đầy đủ và bắt buộc replay, thêm `--archive` vào lệnh `init`. Run cũ không có trường `archive_mode` được xử lý như full archive; không chuyển đổi hoặc xóa run cũ.
+
+`generation/provenance.json` lưu profile, seed, config hiệu lực, hash nguồn/code/prompt/schema, metadata agent thực tế và kết quả kiểm tra. Khi xuất scenario, metadata này được đưa vào `manifest.json` của bộ dataset. Hash chỉ nhận diện nội dung, không khôi phục được file đã mất. Seed không bảo đảm LLM sinh cùng hội thoại.
+
+Checkpoint, journal, plan/nguồn làm việc và bằng chứng kiểm tra vẫn được giữ để resume, kiểm tra trùng và verify. Không tự xóa chúng sau finalize. Lightweight vẫn yêu cầu phiên bản code tương ứng khi resume; người vận hành giữ checkout đó vì không còn bản sao source tự động. Runner API tùy chọn giữ hành vi archive/replay hiện có.
+
+
 Đây là điểm bắt đầu cho coding agent đã đăng nhập, dùng model đang được chọn trong ứng dụng. Chạy lệnh từ **gốc repository**. Luồng `dataset.pipeline.agent` dùng file task/response và Python standard library; không yêu cầu API key, model argument, OpenAI SDK, backend, database, frontend hay ASR. Python không tự gọi model: chính phiên agent đang đọc tài liệu tạo response và chạy lệnh tiếp theo.
 
 ## Lời giao việc ban đầu
@@ -37,6 +58,18 @@ python3 -B -m dataset.pipeline.agent init \
 
 Với M2 dùng `--profile M2` và output mới, chẳng hạn `outputs/benchmark/agent_m2_v1`. Không thêm `--limit` khi người dùng yêu cầu toàn bộ; `--limit 1` chỉ dành cho pilot và vẫn được kiểm tra coverage theo đầy đủ profile.
 
+Nếu người dùng yêu cầu đúng một số transcript, dùng `--samples`, không dùng `--limit` (đếm hành trình):
+
+```bash
+python3 -B -m dataset.pipeline.agent init \
+  --profile M1 --samples 5 \
+  --output outputs/benchmark/m1_samples_5_v1
+```
+
+Runner chọn nguyên hành trình sao cho tổng số phiên đúng yêu cầu, ưu tiên ít hành trình rồi thứ tự sớm nhất trong plan. Với M1 hiện tại, năm mẫu là `J0001` (ba phiên) và `J0021` (hai phiên). ID được đóng băng và giữ nguyên khi resume/replay; không cắt phiên khỏi hành trình. Số không thể tạo từ nguyên hành trình bị từ chối. `--samples` và `--limit` loại trừ nhau. `sample_count_met=true` chỉ chứng minh đủ mẫu yêu cầu; kết quả vẫn là `partial_coverage` so với toàn bộ M1, không hạ yêu cầu profile.
+
+Với pilot hai hành trình trong cùng batch khi token còn lại unknown, chỉ dùng override `{"unknown_batch_journeys": 2}` qua `--token-policy <file.json>` nếu đã được người dùng cho phép trước init. Các reserve/safety factor vẫn giữ nguyên mặc định; cảnh báo context/quota vẫn yêu cầu checkpoint.
+
 Init yêu cầu Python 3.11+ có `venv`, quyền đọc/ghi và nguồn cấu hình hợp lệ. Lệnh tạo venv không có pip trong output, chạy regression suite bằng Python đó, rồi snapshot/verify nguồn và plan. Không tải package hoặc gọi API. Kết quả SDK integration test có thể skipped vì môi trường này không cài SDK; phải đọc đúng số test/skipped thực tế. Host agent đã đăng nhập là điều kiện do ứng dụng quản lý; Python không đọc credential hoặc chứng minh đăng nhập bằng cách giả lập probe.
 
 Run khởi tạo xong có `status=awaiting_task`. Chưa có transcript production. Thiếu môi trường/nguồn hoặc regression fail phải dừng; đọc `initialization_error.json`, `environment_report.json`, `test_results.json`, `logs/tests.log` tùy artifact đã tạo.
@@ -44,6 +77,20 @@ Run khởi tạo xong có `status=awaiting_task`. Chưa có transcript productio
 Chỉ khi host cung cấp metadata, có thể thêm `--agent-info <file.json>` với các trường chuỗi `application`, `version`, `model`. Tất cả đều tùy chọn; không có thông tin thì lưu `unknown`. Không đọc auth file để suy ra model; không yêu cầu người dùng chọn model thêm lần nữa.
 
 ## 2. Nhận và hoàn thành một task
+
+Export scenario dùng `manifest.json` phiên bản 2 làm nguồn mapping và kiểm tra toàn vẹn: SHA-256 cho các file cùng checksum của payload manifest theo JSON chuẩn hóa. Không tạo `seal.json` riêng ở thư mục export. File thêm/xóa/sửa hoặc metadata manifest đổi sẽ bị verifier từ chối; checksum không phải chữ ký chống giả mạo. Với export cũ, chạy `python3 -B -m dataset.pipeline.scenario_export --migrate-manifest --output <output_export>`; lệnh xác minh seal cũ trước khi chuyển, không tự hợp thức hóa dữ liệu đã đổi. Các seal **bên trong run** vẫn giữ nguyên cho snapshot/resume/replay.
+
+Để thêm hành trình mới mà không sinh lại những hành trình đã có, init run mới với `--journey-ids J0002 J0003 J0004` thay cho `--samples`/`--limit`. Chỉ chọn ID thật trong plan, giữ thứ tự plan và đóng băng lựa chọn cho resume/replay. Dùng `--reference-dir <run_cũ>/generation/transcripts` để kiểm tra trùng với corpus đã sinh. Không sửa run cũ đã seal.
+
+Output được phép nằm dưới `dataset/pipeline/output/`; thư mục này được loại khỏi source hashes và Git để artifact không tự trở thành code/input của run. Các vị trí code khác vẫn bị chặn. Để xuất một JSON cho **mỗi hành trình** theo dạng `scenarios_complete/SC-XXX.json`, sau finalize chạy:
+
+```bash
+python3 -B -m dataset.pipeline.scenario_export \
+  --run <run_đã_finalize_1> --run <run_đã_finalize_2> \
+  --output dataset/pipeline/output/m1_samples_5_v1
+```
+
+Thay placeholder bằng đường dẫn thật. Các run phải có khách/hành trình riêng và không quarantine. Scenario chỉ chứa customer turns cùng điều kiện chấm; đối thoại hai phía giữ nguyên byte tại `transcripts/`. Manifest lưu mapping và checksum tới nguồn; nhãn tên/ID tổng hợp được nêu rõ, không tự điền số điện thoại thật hoặc facts khách chưa nói. Định dạng được kiểm tra không đồng nghĩa đã chạy benchmark agent thật. Kiểm chứng export bằng `python3 -B -m dataset.pipeline.scenario_export --verify --output <output_export>`.
 
 ```bash
 python3 -B -m dataset.pipeline.agent next \
@@ -68,7 +115,7 @@ python3 -B -m dataset.pipeline.agent submit \
 
 Mỗi lần chỉ có một task được cấp. Response khác run, checksum sai, task chưa cấp hoặc đã được xử lý bị từ chối; không tiêu thụ budget cho envelope không hợp lệ. Body JSON sai schema/facts hoặc review không đạt được ghi nhận, tiêu thụ một task và tạo feedback cho lượt thử tiếp theo; không tự chấp nhận. Nếu file envelope không parse được, sửa transport envelope rồi submit lại; không lặp vô hạn khi lệnh báo lỗi.
 
-Lặp `next` → đọc task → viết response → `submit`. Python xử lý luân phiên: sinh từng phiên → máy kiểm tra → duplicate judge khi cần → review cả hành trình → repair/quarantine hoặc commit. Các lượt quality review phải đánh giá theo rubric và trích dẫn thật, chọn fail/uncertain khi thiếu căn cứ. Cùng agent sinh và review được ghi **`same_agent_self_review`**, không phải đánh giá độc lập. Không có bước người duyệt bắt buộc.
+Lặp `next` → đọc task → viết response → `submit`. Python xử lý luân phiên: sinh hành trình (hoặc từng phiên với session mode) → máy kiểm tra → duplicate judge khi cần → review cả hành trình → repair/quarantine hoặc commit. Các lượt quality review phải đánh giá theo rubric và trích dẫn thật, chọn fail/uncertain khi thiếu căn cứ. Cùng agent sinh và review được ghi **`same_agent_self_review`**, không phải đánh giá độc lập. Không có bước người duyệt bắt buộc.
 
 ## 3. Token budget, checkpoint và bàn giao
 
@@ -105,7 +152,7 @@ Chính sách mặc định được đóng băng trong `settings.json`:
 Có thể cung cấp JSON override qua `init --token-policy <file.json>` **trước generation**; không tự hạ reserve hoặc sửa settings giữa run để vượt ngưỡng. Nếu một task luôn vượt sức chứa host, giữ checkpoint và báo giới hạn; không liên tục mở phiên mới rồi thử vô hạn.
 
 - Biết budget và không đủ threshold: `paused_token_budget`, không cấp task mới.
-- Không biết budget: tối đa một hành trình mỗi batch, sau đó `paused_token_budget` trước hành trình tiếp theo. Mỗi submit vẫn được checkpoint; không hứa phát hiện trước mọi lần host ngắt đột ngột.
+- Không biết budget: tối đa số hành trình đã chốt trong `unknown_batch_journeys` mỗi batch, sau đó `paused_token_budget` trước hành trình tiếp theo. Mỗi submit vẫn được checkpoint; không hứa phát hiện trước mọi lần host ngắt đột ngột.
 - Host báo hết quota: chạy `pause --run <run> --reason usage_limit`, ghi `paused_usage_limit`.
 - Agent nhận cảnh báo context sắp hết: chạy `pause --run <run> --reason token_budget` trước khi làm thêm task.
 
@@ -130,7 +177,10 @@ python3 -B -m dataset.pipeline.agent resume \
 
 `--fresh-context` là xác nhận của agent/người vận hành, không phải phép đo do Python tự kiểm chứng. Nếu có budget mới do host báo, có thể truyền hai tham số đo thay cho xác nhận context mới. Sau quota pause, chỉ thêm `--usage-restored` khi thực sự dùng model tiếp được; quota phục hồi không tự có nghĩa context mới. Có thể ghi metadata của phiên tiếp tục bằng `--agent-info`.
 
-Resume trả task còn chờ hoặc trạng thái tiếp theo. Nếu `ready_to_finalize`, đi thẳng bước 4. Nếu đang hoạt động và chưa bị pause, có thể resume không cần `--fresh-context`; tiến độ vẫn giữ nguyên. Việc mở phiên mới do host/người vận hành thực hiện, không do pipeline tự đăng nhập hoặc đổi model.
+Resume trả task còn chờ hoặc trạng thái tiếp theo. Nếu pause chỉ do hết batch khi context unknown, lệnh `resume --run <run>` do người dùng yêu cầu cho phép batch tiếp theo ngay trong cùng session. Ghi `same_session_batch_authorized=true`, `fresh_context_attested=false`, remaining context vẫn unknown; không giả số đo hoặc context mới. Chỉ reset mốc batch, giữ nguyên tổng task budget, retry và phần đã accepted. Không tự lặp resume để bỏ qua checkpoint khi người dùng chưa yêu cầu. Nếu pause do host báo context thấp hoặc agent nhận cảnh báo token, resume thường vẫn bị chặn; cần context mới thật hoặc số đo mới từ host. Pause quota vẫn cần `--usage-restored` khi thực sự được phục hồi.
+
+Run lightweight đang chạy trước thay đổi này cần lệnh opt-in `python3 -B -m dataset.pipeline.agent upgrade-resume-policy --run <run>` trước khi resume. Lệnh chỉ cho phép khác biệt trong agent.py/runner.py/HANDS_OFF.md của bản nâng cấp policy này; giữ nguyên settings, plan seals và events. Receipt `resume_policy_upgrade.json` ghi hash code cũ/mới, được kiểm tra khi tiếp tục và đưa vào provenance/release. Mọi thay đổi prompt/schema/planner khác vẫn bị chặn; không dùng lệnh để hợp thức hóa dữ liệu đã sửa. Run đã finalize hoặc full archive không được nâng cấp bằng cách này.
+ Nếu `ready_to_finalize`, đi thẳng bước 4. Nếu đang hoạt động và chưa bị pause, có thể resume không cần `--fresh-context`; tiến độ vẫn giữ nguyên. Việc mở phiên mới do host/người vận hành thực hiện, không do pipeline tự đăng nhập hoặc đổi model.
 
 ## 4. Hoàn tất và kiểm chứng tái lập
 
@@ -142,7 +192,7 @@ python3 -B -m dataset.pipeline.agent verify \
   --run outputs/benchmark/agent_m1_v1
 ```
 
-Finalize chỉ chạy khi mọi hành trình đã chọn được xử lý. Lệnh verify schema/manifest/review/citation/liên kết phiên, rồi replay request/response đã ghi bằng runner gốc trong thư mục tạm. Transcript và manifest phải khớp từng byte, số task và trạng thái phải khớp; không gọi model lần nữa. Bản replay tạm được xóa sau kiểm tra, bằng chứng kết quả nằm trong `final_report.json`. Có thể chạy riêng `python3 -B -m dataset.pipeline replay --run <run>/generation --output <output_mới>` để giữ bản replay.
+Finalize chỉ chạy khi mọi hành trình đã chọn được xử lý và luôn verify schema/manifest/review/citation/liên kết phiên. Với lightweight, replay được bỏ qua có ghi lý do. Với `--archive`, runner replay request/response trong thư mục tạm và yêu cầu transcript/manifest khớp từng byte cùng số task/trạng thái; không gọi model lần nữa. Có thể chạy replay riêng nếu còn đầy đủ artifact và đúng phiên bản code: `python3 -B -m dataset.pipeline replay --run <run>/generation --output <output_mới>`.
 
 Profile/config/seed chỉ làm kế hoạch tái lập được; **gọi model lại không được bảo đảm sinh cùng nội dung**. Model identity không biết phải giữ unknown, không bịa seed/temperature/usage. Checksum phát hiện thay đổi so với artifact đã ghi, không phải chữ ký chứng thực nguồn hoặc bằng chứng đánh giá độc lập.
 
@@ -150,32 +200,33 @@ Profile/config/seed chỉ làm kế hoạch tái lập được; **gọi model l
 | --- | --- |
 | `awaiting_task` | Agent cần nhận và submit task tiếp theo |
 | `ready_to_finalize` | Hết task của các hành trình đã chọn; chưa xác nhận release |
-| `completed` | Finalize/replay đạt, không quarantine và coverage transcript đạt config |
-| `partial_coverage` | Finalize/replay đạt nhưng chưa đủ coverage, thường là pilot |
+| `completed` | Finalize/verify đạt, không quarantine và coverage transcript đạt config |
+| `partial_coverage` | Finalize/verify đạt nhưng chưa đủ coverage, thường là pilot |
 | `quarantined` | Có hành trình không đạt sau số lần thử cho phép |
 | `paused_token_budget`, `paused_usage_limit` | Có checkpoint, chờ điều kiện tiếp tục |
 | `exhausted_task_budget` | Đã dùng hết tổng task cho phép; không tự tăng budget |
 | `blocked` | Lệnh lỗi; đọc detail và artifact hiện có, không coi là thành công |
 
-Mã thoát: `0` cho lệnh hợp lệ, bao gồm trạng thái tạm dừng; `3` cho kết quả partial coverage; `2` cho lỗi/quarantine/hết task budget. **Exit 0 của init/next/submit hoặc pause không có nghĩa dataset hoàn tất**; luôn đọc status, production_transcripts, dataset_requirements_met và kết quả finalize/replay.
+Mã thoát: `0` cho lệnh hợp lệ, bao gồm trạng thái tạm dừng; `3` cho kết quả partial coverage; `2` cho lỗi/quarantine/hết task budget. **Exit 0 của init/next/submit hoặc pause không có nghĩa dataset hoàn tất**; luôn đọc status, production_transcripts, dataset_requirements_met và kết quả finalize/verify và trạng thái replay.
 
 ## Artifact của luồng agent
 
 | Đường dẫn trong run | Bằng chứng |
 | --- | --- |
 | `settings.json`, `settings.seal.json` | Profile, config checksum, chính sách token, task budget và metadata ban đầu |
+| `generation/provenance.json` | Profile, seed, config, hashes, metadata agent và kết quả kiểm tra; được đưa vào manifest export |
 | `generation/plan/` | Nguồn/config/seed/plan và checksum đã đóng băng |
-| `reproducibility/source/`, `reproducibility/seal.json` | Bản sao code/prompt/schema/guide được hash; lock của runner API được lưu riêng để đối chiếu |
+| `reproducibility/source/`, `reproducibility/seal.json` | Chỉ khi `--archive`: bản sao code/prompt/schema/guide và lock |
 | `environment_report.json`, `test_results.json`, `logs/` | Runtime, venv stdlib, kết quả test thật; không mặc định mọi test đều chạy |
 | `tasks/`, `events/`, `generation/calls/` | Task đã cấp, journal response có chuỗi checksum và request/response dùng replay |
 | `checkpoint.json`, `staging.json`, `RESUME.md` | Trạng thái task, attempt, phản hồi, phiên agent, token observations và hướng dẫn tiếp tục |
 | `generation/transcripts/`, `generation/manifest.json` | Mỗi transcript một JSON; chỉ hành trình đã được chấp nhận |
 | `generation/reviews/`, `generation/quarantine.json` | Quyết định review và ca không đạt |
-| `agent_report.json`, `final_report.json`, `final.seal.json` | Tiến độ, coverage, kết quả finalize/replay và release checksum |
+| `agent_report.json`, `final_report.json`, `final.seal.json` | Tiến độ, coverage, kết quả finalize/verify và trạng thái replay và release checksum |
 
 Duplicate index được dựng lại từ corpus tham chiếu đóng băng, transcript đã chấp nhận và phiên đã đạt trong attempt hiện tại; không phụ thuộc bộ nhớ hội thoại của agent. Không đưa failed attempt vào index của corpus được chấp nhận. Journal/checkpoint trên đĩa là nguồn tiến độ; tóm tắt chat không thay thế được chúng.
 
-Không sửa artifact đã seal. Khi code/prompt/guide đổi, dùng checkout riêng chứa đúng phiên bản nguồn đã lưu để resume/replay run cũ, hoặc tạo run mới; không sửa checksum để vượt verifier. `.agent.lock` chứa PID, chặn hai agent cập nhật cùng run. Nếu process bị kill cứng, xác minh process đã dừng trước khi xử lý khóa còn sót. Nếu finalize bị ngắt, chạy lại finalize; không ghi đè các transcript đã commit.
+Không sửa artifact đã seal. Khi code/prompt/guide đổi, dùng checkout riêng chứa đúng phiên bản nguồn (lightweight không tự lưu source) để resume/replay run cũ, hoặc tạo run mới; không sửa checksum để vượt verifier. `.agent.lock` chứa PID, chặn hai agent cập nhật cùng run. Nếu process bị kill cứng, xác minh process đã dừng trước khi xử lý khóa còn sót. Nếu finalize bị ngắt, chạy lại finalize; không ghi đè các transcript đã commit.
 
 Agent báo cáo profile, status, số task, số transcript thật sự được chấp nhận, coverage, review mode, replay và đường dẫn báo cáo. Không trộn fixture vào production, không tuyên bố audio/ASR/simulator đã hoàn tất. Không có masker; dùng dữ liệu nghiệp vụ được phép sử dụng và ID khách tổng hợp. Không tự thêm thông tin cá nhân thật hoặc credential vào nguồn/prompt/response.
 
@@ -283,3 +334,7 @@ Agent báo kết quả từ artifact thực tế: mode, status, exit code, tests
 [Workflow dataset riêng](../../.github/workflows/dataset-pipeline.yml) chạy API-free trên Python 3.11 và 3.13 khi pipeline/nguồn BTC thay đổi; lưu báo cáo và log dưới artifact của từng job. CI không cần OpenAI secret và không gọi live theo mặc định. Matrix được cấu hình trong repository; chỉ kết quả GitHub Actions thực tế mới chứng minh các job đã chạy đạt.
 
 Chi tiết schema, kiểm tra trùng, rubric và giới hạn: [README.md](README.md). Không sửa `AGENTS.md` của nhóm để vận hành pipeline này.
+
+## Phân bố mở rộng M1
+
+Config tùy chỉnh có thể đặt `planning.coverage_strategy=balanced`: tách chu kỳ persona/ngành, luân phiên ca khó theo nhóm persona thay vì chỉ gán cho khách do dự, và thêm trọng tâm policy theo phiên. Exchange chỉ dùng hàng có biến thể và không gắn ca khó mâu thuẫn với sự kiện đổi đã kiểm chứng. Giữ nguyên config mặc định 50 khách; config mở rộng phải được lưu và freeze trước khi sinh. Báo coverage trên transcript thực sự accepted, không lấy số kế hoạch làm số đã sinh. Các ca callback/handoff, identity conflict hoặc xóa dữ liệu chưa có reference_event trong adapter hiện tại phải báo là khoảng trống, không gán nhãn đã bao phủ.

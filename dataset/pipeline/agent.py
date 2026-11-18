@@ -22,6 +22,7 @@ from .common import HERE, code_hashes, encode, file_hash, files_manifest, finger
 from .planner import coverage
 from .providers import ReplayProvider
 from .runner import generate_run, journey_artifacts, plan_run, stamp, verify_plan, verify_run, write_dataset_card
+from .selection import select_plans
 
 REPO = HERE.parents[1]
 PROFILES = {name: HERE / f"configs/hackathon_{name.lower()}.json" for name in ("M1", "M2")}
@@ -74,11 +75,19 @@ def setup_checks(root: Path) -> dict:
 
 def initialize(profile: str, output: Path, *, limit: int | None = None,
                references: list[Path] | None = None, info: dict | None = None,
-               policy: dict | None = None) -> dict:
+               policy: dict | None = None, samples: int | None = None,
+               journey_ids: list[str] | None = None, archive: bool = False, generation_unit: str | None = None) -> dict:
+    generation_unit = generation_unit or ("session" if archive else "journey")
+    if generation_unit not in {"session", "journey"} or (archive and generation_unit != "session"):
+        raise ValueError("archive replay requires session generation; choose lightweight for journey generation")
     if profile not in PROFILES:
         raise ValueError("select M1 or M2 explicitly before initializing")
     if limit is not None and (type(limit) is not int or limit < 1):
         raise ValueError("limit must be positive")
+    if samples is not None and (type(samples) is not int or samples < 1):
+        raise ValueError("samples must be positive")
+    if sum(x is not None for x in (limit, samples, journey_ids)) > 1:
+        raise ValueError("choose one selection mode")
     effective_policy = {**POLICY, **(policy or {})}
     if effective_policy.keys() != POLICY.keys():
         raise ValueError("unknown token policy field")
@@ -98,28 +107,33 @@ def initialize(profile: str, output: Path, *, limit: int | None = None,
             if not planned["transcript_requirements_met"]:
                 raise ValueError("source/config cannot cover the requested profile; see generation/plan/coverage_report.json")
             config = read(root / "generation/plan/config.json")
+            selected = select_plans(read(root / "generation/plan/plans.json"), limit=limit, samples=samples, journey_ids=journey_ids)
             code = code_hashes()
-            for relative in code:
-                target = root / "reproducibility/source" / relative
-                target.parent.mkdir(parents=True, exist_ok=True)
-                shutil.copyfile(HERE / relative, target)
-            for name in ("requirements.lock", "requirements.txt"):
-                shutil.copyfile(HERE / name, root / "reproducibility" / name)
+            if archive:
+                for relative in code:
+                    target = root / "reproducibility/source" / relative
+                    target.parent.mkdir(parents=True, exist_ok=True)
+                    shutil.copyfile(HERE / relative, target)
+                for name in ("requirements.lock", "requirements.txt"):
+                    shutil.copyfile(HERE / name, root / "reproducibility" / name)
             revision = subprocess.run(["git", "rev-parse", "HEAD"], cwd=REPO, text=True, capture_output=True, check=False)
-            settings = {"format_version": 1, "run_id": uuid4().hex, "profile": profile,
-                        "source_config_sha256": file_hash(source), "limit": limit, "token_policy": effective_policy,
+            settings = {"format_version": 2, "archive_mode": "full" if archive else "lightweight", "generation_unit": generation_unit, "run_id": uuid4().hex, "profile": profile,
+                        "source_config_sha256": file_hash(source), "limit": limit, "samples": samples,
+                        "journey_ids": [p["journey_id"] for p in selected] if journey_ids is not None else None,
+                        "selected_journey_ids": [p["journey_id"] for p in selected], "token_policy": effective_policy,
                         "max_model_tasks": config["generation"]["max_api_calls"],
                         "code_sha256": code, "git_revision": revision.stdout.strip() if revision.returncode == 0 else None,
                         "created_at": stamp(), "initial_agent": info or agent_info(),
                         "review_mode": "same_agent_self_review", "api_calls": 0}
             write(root / "settings.json", settings)
-            write(root / "reproducibility/seal.json", {"files": files_manifest(root / "reproducibility")})
+            if archive:
+                write(root / "reproducibility/seal.json", {"files": files_manifest(root / "reproducibility")})
             write(root / "settings.seal.json", {"settings_sha256": file_hash(root / "settings.json")})
             generation = root / "generation"
             for name in ("response.schema.json", "transcript.schema.json", "review.schema.json"):
                 write(generation / "schemas" / name, read(HERE / name))
             state = engine.initial_state()
-            state.update(batch_start=0, issued_task_sha256=None)
+            state.update(batch_start=0, issued_task_sha256=None, generation_unit=generation_unit)
             state["sessions"].append({"at": stamp(), "agent": settings["initial_agent"]})
             save(root, state)
             config, plans, catalog, refs = inputs(root, settings)
@@ -131,12 +145,65 @@ def initialize(profile: str, output: Path, *, limit: int | None = None,
             raise
 
 
+POLICY_UPGRADE_FILES = {"agent.py", "runner.py", "HANDS_OFF.md"}
+
+
+def execution_code(root: Path, settings: dict) -> dict:
+    current = code_hashes()
+    if settings["code_sha256"] == current:
+        return current
+    path = root / "resume_policy_upgrade.json"
+    if path.is_file():
+        record = read(path)
+        payload = {k: v for k, v in record.items() if k != "sha256"}
+        changed = {k for k in set(current) | set(settings["code_sha256"])
+                   if current.get(k) != settings["code_sha256"].get(k)}
+        if (settings.get("archive_mode") == "lightweight" and record.get("kind") == "same_session_batch_resume_v1"
+                and record.get("run_id") == settings["run_id"] and record.get("previous_code") == settings["code_sha256"]
+                and record.get("execution_code") == current and fingerprint(payload) == record.get("sha256")
+                and changed <= POLICY_UPGRADE_FILES):
+            return current
+    raise ValueError("pipeline code/prompts/guide changed; restore the frozen source version before resuming")
+
+
+def upgrade_resume_policy(root: Path) -> dict:
+    """Explicit opt-in upgrade. Preserve frozen settings, plan seals and submitted events."""
+    with locked(root):
+        settings = read(root / "settings.json")
+        if (settings.get("archive_mode") != "lightweight" or (root / "final.seal.json").exists()
+                or read(root / "checkpoint.json")["state"]["status"] in FINISHED):
+            raise ValueError("policy upgrade is only for unfinished lightweight runs")
+        if read(root / "settings.seal.json")["settings_sha256"] != file_hash(root / "settings.json"):
+            raise ValueError("settings changed before policy upgrade")
+        current = code_hashes()
+        changed = {k for k in set(current) | set(settings["code_sha256"])
+                   if current.get(k) != settings["code_sha256"].get(k)}
+        if not changed or not changed <= POLICY_UPGRADE_FILES:
+            raise ValueError("policy upgrade rejects unrelated code/prompt/schema changes")
+        path = root / "resume_policy_upgrade.json"
+        if path.exists():
+            execution_code(root, settings)
+            return read(path)
+        payload = {"kind": "same_session_batch_resume_v1", "run_id": settings["run_id"],
+                   "at": stamp(), "previous_code": settings["code_sha256"], "execution_code": current,
+                   "changed_files": sorted(changed), "authorization": "explicit upgrade-resume-policy command"}
+        write(path, {**payload, "sha256": fingerprint(payload)})
+        try:
+            load(root)  # Verify plan, settings, checkpoint, journal and materialized accepted data.
+        except Exception:
+            path.unlink()
+            raise
+        return read(path)
+
+
 def inputs(root: Path, settings: dict) -> tuple:
-    if settings["code_sha256"] != code_hashes():
-        raise ValueError("pipeline code/prompts/guide changed; restore the frozen source version before resuming")
-    verify_files(root / "reproducibility", read(root / "reproducibility/seal.json")["files"])
-    config, plans, catalog = verify_plan(root / "generation/plan")
-    plans = plans if settings["limit"] is None else plans[:settings["limit"]]
+    execution_code(root, settings)
+    if settings.get("archive_mode", "full") == "full":
+        verify_files(root / "reproducibility", read(root / "reproducibility/seal.json")["files"])
+    config, plans, catalog = verify_plan(root / "generation/plan", rebuild=False, expected_code=settings["code_sha256"])
+    plans = select_plans(plans, limit=settings["limit"], samples=settings.get("samples"), journey_ids=settings.get("journey_ids"))
+    if settings.get("selected_journey_ids", [p["journey_id"] for p in plans]) != [p["journey_id"] for p in plans]:
+        raise ValueError("frozen journey selection differs from the reproducible selection")
     refs = [read(p) for p in sorted((root / "generation/plan/snapshot/references").glob("*.json"))]
     return config, plans, catalog, refs
 
@@ -258,6 +325,7 @@ def estimate(state: dict, plans: list[dict], config: dict, policy: dict) -> dict
     for position in range(state["position"] + 1, len(plans)):
         cursor = engine.initial_state()
         cursor["position"] = position
+        cursor["generation_unit"] = state.get("generation_unit", "session")
         whole += journey_estimate(cursor)
     return {"required_tokens": current, "whole_dataset_estimate_tokens": math.ceil(whole),
             "method": "heuristic: task JSON characters repeated per anticipated request, output caps, up to 3 judges/session, review, one repair allowance and reserve per journey; not measured tokens or an upper bound", "tokenizer": "unknown"}
@@ -266,6 +334,9 @@ def estimate(state: dict, plans: list[dict], config: dict, policy: dict) -> dict
 def report(root: Path, settings: dict, state: dict, plans: list[dict], config: dict, catalog: list[dict]) -> dict:
     counts = coverage([plans[a["position"]] for a in state["accepted"]], catalog, config["requirements"])
     result = {"run_id": settings["run_id"], "profile": settings["profile"], "status": state["status"],
+              "requested_samples": settings.get("samples"),
+              "sample_count_met": counts["counts"]["transcripts"] == settings["samples"] if settings.get("samples") is not None else None,
+              "selected_journey_ids": [p["journey_id"] for p in plans],
               "api_calls": 0, "model_tasks_submitted": state["calls"], "max_model_tasks": settings["max_model_tasks"],
               "api_calls_scope": "direct pipeline API calls only; active-agent host usage is not measured",
               "accepted_journeys": len(state["accepted"]), "production_transcripts": counts["counts"]["transcripts"],
@@ -280,13 +351,15 @@ def report(root: Path, settings: dict, state: dict, plans: list[dict], config: d
         f"Đã nhận {state['calls']} response, chấp nhận {len(state['accepted'])} hành trình. "
         "Đọc HANDS_OFF.md của phiên bản mã đã đóng băng và agent_report.json. Không đổi profile hoặc reset retry/budget.\n\n"
         f"```bash\n{command}\n```\n\n"
-        "Nếu dừng vì token và bắt đầu context mới, thêm `--fresh-context`. Nếu host cung cấp số token còn lại, "
+        "Nếu chỉ dừng do hết batch với context unknown, lệnh resume cho phép batch tiếp trong cùng session; không tự động lặp resume nếu người dùng chưa yêu cầu. "
+        "Nếu thực sự bắt đầu context mới, thêm `--fresh-context`. Nếu host cung cấp số token còn lại, "
         "thêm `--remaining-context-tokens <số thực tế> --context-source <nguồn đo>`; nếu không, để unknown. "
         "Nếu dừng vì quota, chỉ thêm `--usage-restored` khi host đã cho phép tiếp tục. "
         "Sau resume chạy `next --run <đường dẫn run>` và submit task được trả về. "
         "Nếu ready_to_finalize, chạy finalize thay vì next. Không ghi đè transcript đã chấp nhận.\n\n"
         "Checkpoint: `checkpoint.json`; journal: `events/`; config/nguồn: `generation/plan/`; "
-        "mã và guide: `reproducibility/source/`. Checksum nằm trong checkpoint và các seal. "
+        "hash mã/guide: `settings.json`; bản sao nguồn chỉ có khi init với `--archive`. "
+        "Lightweight không tự khôi phục mã cũ; giữ checkout tương ứng để resume. Checksum nằm trong checkpoint và các seal. "
         "Không tự sửa checksum để bỏ qua lỗi; không tự đổi model khi hết quota.\n", encoding="utf-8")
     return result
 
@@ -307,7 +380,7 @@ def next_task(root: Path, *, remaining: int | None = None, source: str | None = 
         elif remaining is not None and remaining < budget["required_tokens"]:
             state.update(status="paused_token_budget", pause_reason="insufficient reported context for remaining journey work and checkpoint reserve")
         elif remaining is None and state["position"] - state["batch_start"] >= settings["token_policy"]["unknown_batch_journeys"]:
-            state.update(status="paused_token_budget", pause_reason="unknown context budget: batch complete; continue in a fresh context")
+            state.update(status="paused_token_budget", pause_reason="unknown context budget: batch complete; explicitly resume to authorize another batch")
         else:
             task = task_for(settings, state, plans, config)
             path = root / "tasks" / f"{task['sequence']:06d}.json"
@@ -363,15 +436,20 @@ def resume(root: Path, *, fresh: bool = False, usage_restored: bool = False, inf
             return report(root, settings, state, plans, config, catalog)
         if state["status"] == "paused_usage_limit" and not usage_restored:
             raise ValueError("usage limit is still pending; confirm actual restoration with --usage-restored")
-        if state["status"] == "paused_token_budget" and not fresh and remaining is None:
+        same_session_batch = (state["status"] == "paused_token_budget"
+                              and (state.get("pause_reason") or "").startswith("unknown context budget: batch complete")
+                              and not fresh and remaining is None)
+        if state["status"] == "paused_token_budget" and not fresh and remaining is None and not same_session_batch:
             raise ValueError("token pause requires --fresh-context or a new host-reported remaining budget")
-        if fresh:
+        if fresh or same_session_batch:
             state["batch_start"] = state["position"]
         if state["status"] in {"paused_usage_limit", "paused_token_budget"}:
             if remaining is not None:
                 state["batch_start"] = state["position"]
             state.update(status="awaiting_task", pause_reason=None, issued_task_sha256=None)
-        state["sessions"].append({"at": stamp(), "agent": info or agent_info(), "fresh_context_attested": fresh})
+        state["sessions"].append({"at": stamp(), "agent": info or agent_info(), "fresh_context_attested": fresh,
+                                  "same_session_batch_authorized": same_session_batch,
+                                  "remaining_context_tokens": remaining if remaining is not None else "unknown"})
         save(root, state)
     return next_task(root, remaining=remaining, source=source)
 
@@ -404,6 +482,7 @@ def finalize(root: Path) -> dict:
         if state["status"] != "ready_to_finalize" and state["status"] not in FINISHED:
             raise ValueError("run has unfinished tasks; resume/checkpoint instead of claiming completion")
         generation = root / "generation"
+        verify_plan(generation / "plan", expected_code=settings["code_sha256"])
         counts = coverage([plans[a["position"]] for a in state["accepted"]], catalog, config["requirements"])
         counts["scope"] = "active coding agent responses passing checks and same-agent self-review"
         status = "quarantined" if state["quarantine"] else "automated_release" if counts["transcript_requirements_met"] else "automated_partial_coverage"
@@ -412,7 +491,9 @@ def finalize(root: Path) -> dict:
         write(generation / "run.json", {"kind": "generation", "created_at": settings["created_at"], "status": status,
                                        "runtime": runtime(), "provider": provider, "code_sha256": settings["code_sha256"],
                                        "plan_seal_sha256": file_hash(generation / "plan/seal.json"), "selected_journeys": len(plans),
-                                       "limit": settings["limit"], "model_calls": state["calls"], "stop_reason": None,
+                                       "limit": settings["limit"], "samples": settings.get("samples"),
+                                       "journey_ids": settings.get("journey_ids"),
+                                       "model_calls": state["calls"], "stop_reason": None,
                                        "review_mode": "same_agent_self_review", "audio_generated": False})
         write(generation / "coverage_report.json", counts)
         write(generation / "validation_report.json", {"status": status, "exported_transcripts": len(manifest),
@@ -425,28 +506,44 @@ def finalize(root: Path) -> dict:
         write_dataset_card(generation, counts, status, provider)
         with (generation / "DATASET_CARD.md").open("a", encoding="utf-8") as stream:
             stream.write("\nReview: `same_agent_self_review`; không phải đánh giá độc lập. Model không xác định được ghi unknown.\n")
+        write(generation / "provenance.json", {
+            "format_version": 1, "profile": settings["profile"],
+            "archive_mode": settings.get("archive_mode", "full"),
+            "seed": config["planning"]["seed"], "effective_config": config,
+            "code_prompt_schema_sha256": settings["code_sha256"],
+            "source_sha256": read(generation / "plan/seal.json")["files"],
+            "execution_code_sha256": execution_code(root, settings),
+            "resume_policy_upgrade": read(root / "resume_policy_upgrade.json") if (root / "resume_policy_upgrade.json").exists() else None,
+            "generation": provider, "validation": read(generation / "validation_report.json"),
+            "coverage": counts,
+            "limitation": "Hashes identify inputs but cannot restore missing content; model output is not deterministic."
+        })
         write(generation / "seal.json", {"files": files_manifest(generation)})
         verified = verify_run(generation)
-        # Reuse the original synchronous engine as an independent execution path.
-        # A temporary directory makes an interrupted finalize safely retryable.
-        with tempfile.TemporaryDirectory(prefix="replay-", dir=root) as temp:
-            replay_root = Path(temp) / "generation"
-            replay = generate_run(generation / "plan", replay_root, ReplayProvider(generation), limit=settings["limit"])
-            verify_run(replay_root)
-            if read(replay_root / "manifest.json") != manifest or any(file_hash(replay_root / row["path"]) != row["sha256"] for row in manifest):
-                raise ValueError("recorded-response replay differs from accepted agent transcripts")
-            if replay["model_calls"] != state["calls"] or replay["status"] != status:
-                raise ValueError("agent transitions diverged from recorded-response replay")
+        replay_result = {"status": "skipped", "reason": "lightweight mode: replay is optional",
+                         "api_calls": 0}
+        if settings.get("archive_mode", "full") == "full":
+            # Reuse the original synchronous engine as an independent execution path.
+            # A temporary directory makes an interrupted finalize safely retryable.
+            with tempfile.TemporaryDirectory(prefix="replay-", dir=root) as temp:
+                replay_root = Path(temp) / "generation"
+                replay = generate_run(generation / "plan", replay_root, ReplayProvider(generation), limit=settings["limit"],
+                                      samples=settings.get("samples"), journey_ids=settings.get("journey_ids"))
+                verify_run(replay_root)
+                if read(replay_root / "manifest.json") != manifest or any(file_hash(replay_root / row["path"]) != row["sha256"] for row in manifest):
+                    raise ValueError("recorded-response replay differs from accepted agent transcripts")
+                if replay["model_calls"] != state["calls"] or replay["status"] != status:
+                    raise ValueError("agent transitions diverged from recorded-response replay")
+            replay_result = {"status": "passed", "byte_identical_transcripts_and_manifest": True, "api_calls": 0}
         state["status"] = "quarantined" if state["quarantine"] else "completed" if counts["transcript_requirements_met"] else "partial_coverage"
         save(root, state)
         result = report(root, settings, state, plans, config, catalog)
-        result.update(output_verification=verified, replay={"status": "passed", "byte_identical_transcripts_and_manifest": True,
-                                                          "api_calls": 0})
+        result.update(output_verification=verified, replay=replay_result)
         write(root / "final_report.json", result)
         # Mutable reports, lock and the interpreter installation are not release artifacts.
         release = {str(p.relative_to(root)): file_hash(p) for prefix in ("generation", "events", "tasks", "reproducibility")
                    for p in (root / prefix).rglob("*") if p.is_file() and p.suffix != ".partial"}
-        for name in ("settings.json", "settings.seal.json", "checkpoint.json", "final_report.json"):
+        for name in ("settings.json", "settings.seal.json", "checkpoint.json", "final_report.json") + (("resume_policy_upgrade.json",) if (root / "resume_policy_upgrade.json").exists() else ()):
             release[name] = file_hash(root / name)
         write(root / "final.seal.json", {"files": release})
         return result
@@ -456,7 +553,7 @@ def verify_release(root: Path) -> dict:
     expected = read(root / "final.seal.json")["files"]
     actual = {str(p.relative_to(root)): file_hash(p) for prefix in ("generation", "events", "tasks", "reproducibility")
               for p in (root / prefix).rglob("*") if p.is_file() and p.suffix != ".partial"}
-    for name in ("settings.json", "settings.seal.json", "checkpoint.json", "final_report.json"):
+    for name in ("settings.json", "settings.seal.json", "checkpoint.json", "final_report.json") + (("resume_policy_upgrade.json",) if (root / "resume_policy_upgrade.json").exists() else ()):
         actual[name] = file_hash(root / name)
     if actual != expected:
         raise ValueError("final agent release checksum changed")
@@ -469,10 +566,17 @@ def main(argv=None) -> int:
     init = sub.add_parser("init", help="check environment and freeze an explicit M1/M2 profile")
     init.add_argument("--profile", choices=tuple(PROFILES), required=True)
     init.add_argument("--output", type=Path, required=True)
-    init.add_argument("--limit", type=int, help="pilot journeys; default processes the whole profile")
+    size = init.add_mutually_exclusive_group()
+    size.add_argument("--limit", type=int, help="pilot journeys; default processes the whole profile")
+    size.add_argument("--samples", type=int, help="exact transcript count, selecting only complete journeys")
+    size.add_argument("--journey-ids", nargs="+", help="specific complete journeys, retained in frozen plan order")
     init.add_argument("--reference-dir", type=Path, action="append", default=[])
+    init.add_argument("--generation-unit", choices=("journey", "session"), help="default: journey; archive defaults to session")
+    init.add_argument("--archive", action="store_true", help="archive source code and require recorded-response replay at finalize")
     init.add_argument("--agent-info", type=Path)
     init.add_argument("--token-policy", type=Path, help="JSON overrides for frozen token reserves/batch policy")
+    upgrade = sub.add_parser("upgrade-resume-policy", help="explicitly adopt same-session batch resume for an unfinished lightweight run")
+    upgrade.add_argument("--run", type=Path, required=True)
     for command in ("next", "submit", "status", "resume", "pause", "finalize", "verify"):
         cmd = sub.add_parser(command)
         cmd.add_argument("--run", type=Path, required=True)
@@ -492,10 +596,14 @@ def main(argv=None) -> int:
         if args.command == "init":
             result = initialize(args.profile, args.output.resolve(), limit=args.limit,
                                 references=args.reference_dir, info=agent_info(args.agent_info),
-                                policy=read(args.token_policy) if args.token_policy else None)
+                                policy=read(args.token_policy) if args.token_policy else None, samples=args.samples,
+                                journey_ids=args.journey_ids, archive=args.archive, generation_unit=args.generation_unit)
         else:
             root = args.run.resolve()
-            if args.command == "next":
+            if args.command == "upgrade-resume-policy":
+                receipt = upgrade_resume_policy(root)
+                result = {"status": "policy_upgraded", "receipt": receipt}
+            elif args.command == "next":
                 result = next_task(root, remaining=args.remaining_context_tokens, source=args.context_source)
             elif args.command == "submit":
                 result = submit(root, args.response)

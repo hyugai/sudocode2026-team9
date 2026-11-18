@@ -1,8 +1,8 @@
 # Mô tả bộ dữ liệu transcript và audio
 
-Đối chiếu tệp local ngày **16/11/2026**. Dữ liệu phục vụ phát triển và kiểm thử agent telesales tiếng Việt. Các số dưới đây mô tả dữ liệu đang có; không phải kết quả đánh giá chất lượng agent.
+Phần corpus gốc/M2/audio đối chiếu local ngày **16/11/2026**; phần **ma trận M1 pipeline** cập nhật riêng ngày **18/11/2026**. Hai phạm vi được thống kê riêng, không cộng thành một corpus độc lập. Dữ liệu phục vụ phát triển/kiểm thử agent telesales tiếng Việt; số đếm không phải kết quả đánh giá chất lượng agent.
 
-## Mô tả ngắn để bàn giao
+## Mô tả ngắn để bàn giao corpus gốc/M2/audio
 
 - **Cách sinh dữ liệu:** transcript M2 được dựng bằng quy tắc/câu mẫu từ kịch bản và dữ liệu nghiệp vụ BTC, có lời khách và agent mẫu, kiểm tra bằng mock. Audio cũ được manifest ghi nhận sinh bằng OmniVoice Vietnamese với giọng tham chiếu ViMD; không phải cuộc gọi khách hàng thực tế.
 - **Phân bố:** M2 có 358 transcript/156 kịch bản/78 khách, gồm 222 phiên hotline, 68 Fanpage và 68 Zalo OA, bao phủ 12 persona và ba ngành hàng tham chiếu. Audio hiện có gồm 250 lượt khách của 80 phiên thuộc bộ gốc, tổng 29 phút 30,87 giây; metadata chọn giọng có Bắc, Trung, Nam. M2 chưa có audio khớp transcript mới.
@@ -11,7 +11,107 @@
 
 Phần dưới ghi chi tiết và căn cứ cho bản mô tả ngắn; các khoảng trống được giữ nguyên để người nhận không nhầm là đã hoàn tất thu âm hoặc xử lý quyền riêng tư.
 
-## Phụ lục đối chiếu
+## Ma trận thống kê M1 từ pipeline — cập nhật 18/11/2026
+
+### Phạm vi, trạng thái và cách đếm
+
+Phần này chỉ mô tả corpus M1 mới trong `pipeline/output/`, **không cộng với corpus gốc/M2 và audio ở `main/`**. Đối chiếu manifest, SHA-256 từng transcript, số phiên đầy đủ theo plan và nhãn accepted; không dùng tổng số file candidate hoặc bản tóm tắt tiến độ làm nguồn đếm. Hai nguồn là [run 10 hành trình đầu](pipeline/output/runs/m1_first_10_v1/) và [run bổ sung](pipeline/output/runs/m1_additional_140_v1/); bộ đã xuất nằm ở [m1_first_10_v1](pipeline/output/m1_first_10_v1/).
+
+Một **hành trình** là một khách tổng hợp qua nhiều phiên; một **transcript** là một phiên gồm cả hai vai; một **lượt nói** là một phát ngôn. Một **file scenario** là bản xuất `SC-XXX.json` của hành trình: có thể đã có đủ transcript nhưng chưa có file scenario. Đơn vị trong các bảng phải đọc riêng, không cộng hành trình và transcript với nhau.
+
+| Đơn vị | Đã có / accepted | Kế hoạch tổng | Còn lại |
+| --- | --- | --- | --- |
+| File scenario đã export | 10 | 150 | 140 file chưa export (gồm cả hành trình chưa sinh) |
+| Hành trình / khách duy nhất | 60 | 150 | 90 hành trình chưa sinh |
+| Transcript | 180 | 360 | 180 phiên chưa sinh |
+| Lượt nói | 1076 | Không ấn định | Không suy từ kế hoạch |
+| Audio gắn với transcript mới | 0 | Ngoài đợt sinh transcript | Chưa thực hiện |
+
+Hiện có **60 hành trình / 180 transcript accepted**, trong đó 10 hành trình / 30 transcript thuộc run đầu đã finalize, 50 hành trình / 150 transcript thuộc run bổ sung đang checkpoint, chưa finalize toàn run. Tất cả hành trình hiện có gồm ba phiên, có hai hotline và một phiên chat; không suy rằng toàn bộ corpus sau khi hoàn tất cũng có phân bố này. Có 538 lượt khách và 538 lượt agent; số lượt/phiên từ 4 đến 8, trung bình 5,98. Đây là số đếm nội dung, không phải điểm chất lượng ngôn ngữ.
+
+**Quy ước tỷ lệ:** ô ghi `n (p%)`; các bảng hành trình dùng mẫu số **60**, bảng kênh dùng **180** transcript. Phần trăm tính trên toàn mẫu của bảng, không phải trong từng hàng; làm tròn một chữ số nên tổng có thể lệch nhẹ 100%. Ô 0 cho biết chưa có mẫu theo nhãn đó. Nhãn persona, hard case, ngành lấy từ plan gắn với transcript accepted; chúng không thay thế kiểm tra ngữ nghĩa của lời thoại.
+
+### Persona × ca khó chính — đơn vị hành trình
+
+| Persona | Không gán ca khó | Đổi ý | Sửa ngân sách | KM hết hạn | Thiếu thông tin | Tổng |
+| --- | --- | --- | --- | --- | --- | --- |
+| Do dự (`hesitant`) | 3 (5,0%) | 4 (6,7%) | 4 (6,7%) | 4 (6,7%) | 5 (8,3%) | 20 (33,3%) |
+| So giá (`price_comparison`) | 6 (10,0%) | 3 (5,0%) | 3 (5,0%) | 4 (6,7%) | 4 (6,7%) | 20 (33,3%) |
+| Đổi sau mua (`exchange`) | 20 (33,3%) | 0 (0,0%) | 0 (0,0%) | 0 (0,0%) | 0 (0,0%) | 20 (33,3%) |
+| **Tổng** | 29 (48,3%) | 7 (11,7%) | 7 (11,7%) | 8 (13,3%) | 9 (15,0%) | 60 (100,0%) |
+
+Mỗi hành trình chỉ có một nhãn ca khó chính hoặc `none`; một cuộc trao đổi có thể đồng thời chạm nhiều quy tắc nghiệp vụ. `none` không có nghĩa không chứa tình huống khó khác. Các ví dụ hết hàng hoặc khác biệt nguồn bảo hành được mô tả riêng dưới đây, không tự đổi nhãn để tăng độ phủ.
+
+### Persona × ngành hàng — đơn vị hành trình
+
+| Persona | Gia dụng | Mẹ & bé | Thời trang | Tổng |
+| --- | --- | --- | --- | --- |
+| Do dự (`hesitant`) | 9 (15,0%) | 6 (10,0%) | 5 (8,3%) | 20 (33,3%) |
+| So giá (`price_comparison`) | 6 (10,0%) | 9 (15,0%) | 5 (8,3%) | 20 (33,3%) |
+| Đổi sau mua (`exchange`) | 0 (0,0%) | 0 (0,0%) | 20 (33,3%) | 20 (33,3%) |
+| **Tổng** | 15 (25,0%) | 15 (25,0%) | 30 (50,0%) | 60 (100,0%) |
+
+**Khoảng trống thấy được:** persona đổi sau mua hiện chỉ có thời trang, do adapter chọn sản phẩm có biến thể để dựng sự kiện đổi. Có đủ ba ngành không chứng minh mọi persona đều phủ cả ba ngành; hai ô ngành còn lại của nhóm exchange là 0, không được diễn giải thành đã thử khiếu nại/đổi hàng gia dụng hoặc mẹ & bé.
+
+### Kênh × vị trí phiên — đơn vị transcript
+
+| Kênh | Phiên 1 | Phiên 2 | Phiên 3 | Tổng |
+| --- | --- | --- | --- | --- |
+| Fanpage | 30 (16,7%) | 0 (0,0%) | 0 (0,0%) | 30 (16,7%) |
+| Zalo OA | 30 (16,7%) | 0 (0,0%) | 0 (0,0%) | 30 (16,7%) |
+| Hotline | 0 (0,0%) | 60 (33,3%) | 60 (33,3%) | 120 (66,7%) |
+| **Tổng** | 60 (33,3%) | 60 (33,3%) | 60 (33,3%) | 180 (100,0%) |
+
+Phân bố hiện tại chỉ có chat ở phiên đầu và hotline ở phiên sau; chưa chứng minh phủ hotline → chat hoặc chat xen giữa các lần gọi. Đếm khách đa kênh theo nhóm cùng `customer_id`/hành trình, không đếm một khách nhiều lần vì có nhiều phiên.
+
+### Kết quả phiên cuối × persona — đơn vị hành trình
+
+| Persona | Tư vấn (`consultation`) | Tạo đơn (`order.create`) | Yêu cầu đổi (`order.update`) | Tổng |
+| --- | --- | --- | --- | --- |
+| Do dự (`hesitant`) | 17 (28,3%) | 3 (5,0%) | 0 (0,0%) | 20 (33,3%) |
+| So giá (`price_comparison`) | 15 (25,0%) | 5 (8,3%) | 0 (0,0%) | 20 (33,3%) |
+| Đổi sau mua (`exchange`) | 0 (0,0%) | 0 (0,0%) | 20 (33,3%) | 20 (33,3%) |
+| **Tổng** | 32 (53,3%) | 8 (13,3%) | 20 (33,3%) | 60 (100,0%) |
+
+| Nhãn kết quả trên mọi phiên | Số transcript / tỷ lệ |
+| --- | --- |
+| consultation | 132 (73,3%) |
+| order.create | 28 (15,6%) |
+| order.update | 20 (11,1%) |
+
+Kết quả trên là nhãn tham chiếu trong transcript/plan, **không phải tool trace hoặc tỷ lệ thành công của sales agent thật**. `consultation` chưa phân biệt được còn cân nhắc với từ chối dứt khoát; muốn thống kê hai loại đó cần nhãn kết quả ngữ nghĩa bổ sung. `order.update` ở đây ghi nhận yêu cầu đổi với `pickup_scheduled`, chưa có nghĩa đổi đã hoàn tất. Bảng hành trình đếm phiên cuối một lần; bảng transcript còn tính phiên tạo đơn trước đó trong cùng hành trình đổi, nên hai tổng `order.create` khác nhau là đúng.
+
+### Quy tắc nghiệp vụ × ví dụ đã đối chiếu lời thoại
+
+Bảng dưới là **mẫu chú giải trên năm hành trình accepted**, không phải thống kê tần suất toàn corpus. `✓` là có đoạn thoại đã đọc đối chiếu cho quy tắc; `—` là chưa gán nhãn trong bảng ví dụ, **không khẳng định quy tắc vắng mặt**. Không lấy số từ khóa hoặc số mục tiêu trong plan làm số ca đã kiểm thử.
+
+| Quy tắc / tình huống | J0032 | J0038 | J0049 | J0055 | J0060 |
+| --- | --- | --- | --- | --- | --- |
+| Phí/thời gian giao có điều kiện | ✓ | ✓ | ✓ | — | — |
+| Phân biệt báo giá / ngân sách / phương thức với thanh toán | ✓ | — | — | ✓ | ✓ |
+| Thông tin bảo hành theo SKU | — | ✓ | ✓ | — | — |
+| Đổi trả / phí đổi khác chênh lệch | — | ✓ | — | — | ✓ |
+| Điều kiện/hiệu lực khuyến mãi | ✓ | — | ✓ | ✓ | — |
+| Không bịa địa chỉ / không lộ giá nội bộ | — | — | — | ✓ | — |
+| Cập nhật hết hàng khi khách quay lại | ✓ | — | — | — | — |
+| Hoàn tiền dự kiến khác đã hoàn | — | — | — | — | ✓ |
+
+Bằng chứng có thể mở trực tiếp trong [transcripts run bổ sung](pipeline/output/runs/m1_additional_140_v1/generation/transcripts/): J0032-S01/S02/S03 (phí, COD, hết hàng); J0038-S02/S03 (catalog 24 tháng ưu tiên policy chung 12 tháng, điều kiện trả); J0049-S01/S02 (bảo hành, ngưỡng MOM-FREESHIP và không tự thêm món); J0055-S01/S02/S03 (hỏi giá không là đặt, không gán địa chỉ để lấy mã, không tiết lộ giá sàn); J0060-S02/S03 (phí/chênh lệch và khoản hoàn chưa thực hiện). Mỗi phiên có `utterances` luân phiên và review có trích dẫn; lời thoại tham chiếu được kiểm tra không có nghĩa agent thật đã thực thi quy tắc.
+
+Muốn đếm quy tắc trên toàn corpus, cần bảng nhãn riêng gồm `journey_id`, `transcript_id`, `turn_index`, `rule`, `evidence`, trạng thái `observed/not_observed/uncertain` và nguồn/phương pháp gán nhãn. Giữ đa nhãn khi một hành trình có nhiều quy tắc; mẫu số và tỷ lệ phải công bố theo đơn vị đã chọn. Chưa có bảng gán nhãn đầy đủ đó, nên không công bố phần trăm phủ nghiệp vụ từ các ví dụ này.
+
+### Giới hạn diễn giải và cập nhật
+
+- Đây là ảnh chụp tiến độ ngày 18/11/2026; đếm lại khi có manifest accepted mới. Kế hoạch 150 hành trình / 360 transcript không phải số đã sinh. Không đếm lại run M1 đầy đủ cũ chứa bản sao J0001 hoặc các bản replay/candidate vào corpus này.
+- Độ cân bằng persona hiện tại không chứng minh tính đại diện khách hàng thực. Mọi hành trình hiện có ba phiên và luồng chat → hotline → hotline, nhóm exchange tập trung thời trang; đây là thiên lệch thiết kế và thứ tự sinh.
+- Có kiểm tra schema/facts/duplicates và review cùng coding agent (`same_agent_self_review`); vẫn có thể bỏ sót lỗi ngữ nghĩa hoặc paraphrase gần trùng. Không gọi đó là đánh giá độc lập, TSR hoặc chất lượng hội thoại được chứng nhận.
+- Chưa có reference event cho callback/handoff, xung đột định danh, yêu cầu xóa dữ liệu/PII masking; không tự gán các ca đó là đã phủ. Chưa tạo audio, ASR hoặc benchmark agent thật cho corpus mới.
+- Pipeline mới không có masker; dùng ID khách tổng hợp `SYN-C...` và địa chỉ có nhãn kiểm thử từ nguồn, không tạo số liên hệ người thật. Giữ đáp án, review, `ground_truth_facts` và `success_if` ngoài prompt của agent được đánh giá. Biện pháp này không xác nhận đã hoàn tất mọi yêu cầu PII trong đề.
+- Các file `pipeline/output/` bị Git ignore; clone chỉ chứa tài liệu và code sẽ không có bằng chứng local để đếm lại. Khi bàn giao corpus cần kèm archive/checkpoint tương ứng; không sửa sealed artifact chỉ để cập nhật báo cáo.
+
+**Cách tính lại:** đọc hai `generation/manifest.json` đã nêu, xác minh đường dẫn/hash, nhóm transcript theo `journey_id` và đối chiếu đủ phiên với `generation/plan/plans.json`. Đếm duy nhất trên nhóm accepted: persona/ca khó/ngành theo plan gắn nhóm, kênh và kết quả theo transcript. Kế hoạch tổng chỉ gồm 10 hành trình của run đầu cộng `settings.selected_journey_ids` (140 ID) của run bổ sung, không cộng mọi plan có trong cả hai snapshot. Đọc riêng manifest export để đếm file `SC-XXX.json`. Đối chiếu tổng hàng/cột về đúng 60 hành trình hoặc 180 transcript và kiểm tra ID khách/hành trình/phiên không trùng trước khi công bố.
+
+## Phụ lục đối chiếu corpus gốc/M2/audio — 16/11/2026
 
 ### Phạm vi và đơn vị đếm
 

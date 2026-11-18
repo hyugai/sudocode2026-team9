@@ -32,6 +32,8 @@ def validate_config(config: dict) -> None:
         raise ValueError("multichannel_customers must be within customer count")
     if any(x not in HARD_CASES for x in p.get("hard_cases", [])):
         raise ValueError("unknown hard case")
+    if p.get("coverage_strategy", "legacy") not in {"legacy", "balanced"}:
+        raise ValueError("unknown coverage strategy")
     date.fromisoformat(p["start_date"])
     if type(config["generation"]["max_attempts"]) is not int or not 1 <= config["generation"]["max_attempts"] <= 10:
         raise ValueError("max_attempts must be between 1 and 10")
@@ -68,7 +70,8 @@ def build_plans(config: dict, domain: Domain) -> list[dict]:
         domain.reset()
         cid, jid = f"SYN-C{i+1:04d}", f"J{i+1:04d}"
         persona = cfg["personas"][i % len(cfg["personas"])]
-        category = categories[i % len(categories)]
+        diversified = cfg.get("coverage_strategy") == "balanced"
+        category = categories[(i // len(cfg["personas"]) if diversified else i) % len(categories)]
         pool = [p for p in catalog if p["category"].split("/")[0] == category]
         if persona == "exchange":
             # An exchange journey needs a product variant when supported by BTC.
@@ -76,6 +79,9 @@ def build_plans(config: dict, domain: Domain) -> list[dict]:
             pool = variants or pool
         start = date.fromisoformat(cfg["start_date"]) + timedelta(days=rng.randrange(10))
         hard = cfg.get("hard_cases", [])[i % len(cfg["hard_cases"])] if cfg.get("hard_cases") and i % 3 == 0 else None
+        if diversified:
+            cases = [None] + cfg.get("hard_cases", [])
+            hard = cases[(i // len(cfg["personas"])) % len(cases)] if persona != "exchange" else None
         rng.shuffle(pool)
         first = None
         for product in pool:
@@ -109,6 +115,20 @@ def build_plans(config: dict, domain: Domain) -> list[dict]:
                 goals += ["Đây là lần liên hệ thứ ba; khách mất kiên nhẫn, agent dùng ngữ cảnh cũ và hạn chế hỏi lại."]
             if index:
                 goals += ["Dùng đúng dữ kiện đã xác nhận của phiên trước; kiểm tra lại giá/tồn kho theo ngày mới."]
+            if diversified:
+                topics = [
+                    "Làm rõ khoản chi và tổng chi phí, không tự cho giảm giá ngoài nguồn.",
+                    "Hỏi phương thức thanh toán; phân biệt COD, chuyển khoản và trả góp chưa hỗ trợ.",
+                    "Hỏi thời gian giao và phí giao theo địa chỉ; không hứa giờ giao chắc chắn.",
+                    "Hỏi bảo hành và ngoại lệ; ưu tiên thuộc tính catalog nếu khác tài liệu chung.",
+                    "Làm rõ đổi trả, nguyên tem/nhãn/hộp và giới hạn sau sử dụng theo đúng nhóm hàng.",
+                    "Hỏi điều kiện khuyến mãi; chỉ áp ưu đãi được quote xác nhận, không tiết lộ chương trình tương lai.",
+                    "Khách yêu cầu chắc chắn về chi tiết chưa có nguồn; không suy đoán, không cam kết quá mức.",
+                    "Khách quan tâm thông số phù hợp nhu cầu; chỉ mô tả thuộc tính có trong catalog.",
+                    "Phân biệt giá báo và tổng đơn, lịch dự kiến và giao thành công, đồng ý trả và đã thanh toán.",
+                    "Khách không muốn cung cấp thông tin nhận hàng khi chưa mua; không gây áp lực hoặc bịa thông tin cá nhân.",
+                ]
+                goals += ["Trọng tâm bổ sung nếu phù hợp với sản phẩm/sự kiện phiên: " + topics[(i // 3 + index) % len(topics)]]
             anchors = []
             if hard == "unknown_information":
                 goals += ["Khách hỏi chi tiết chưa có nguồn (ví dụ số serial máy sẽ nhận); agent thừa nhận chưa có thông tin, không đoán."]

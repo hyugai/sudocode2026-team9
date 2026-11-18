@@ -8,7 +8,7 @@ import copy
 import hashlib
 import json
 
-from .checks import validate_transcript
+from .checks import validate_schema, validate_transcript
 from .common import HERE, fingerprint, read
 from .duplicates import DuplicateIndex
 from .review import review_record, validate_review
@@ -29,6 +29,15 @@ def initial_state() -> dict:
 
 def current_request(state: dict, plans: list[dict], config: dict) -> dict:
     plan = plans[state["position"]]
+    if state["phase"] == "generate" and state.get("generation_unit") == "journey":
+        schema = {"type": "object", "additionalProperties": False, "required": ["transcripts"],
+                  "properties": {"transcripts": {"type": "array", "minItems": len(plan["sessions"]),
+                                  "maxItems": len(plan["sessions"]), "items": read(HERE / "response.schema.json")}}}
+        req = request("generate", {"journey_plan": plan, "validation_feedback": state["feedback"],
+                                  "limits": config["validation"]}, schema)
+        req.update(kind="generate_journey", schema_name="journey_transcripts")
+        req["messages"][0]["content"] += "\nViết toàn bộ hành trình trong transcripts, đúng thứ tự phiên. Kế hoạch có cả phiên tương lai để tổ chức mạch truyện; từng lượt chỉ được dùng facts phiên hiện tại và thông tin đã được nói ở phiên trước. Không tiết lộ quyết định/ngân sách/mã đơn của phiên sau sớm hơn."
+        return req
     if state["phase"] == "generate":
         return request("generate", {"session_plan": plan["sessions"][len(state["history"])],
                                    "previous_sessions": state["history"], "validation_feedback": state["feedback"],
@@ -42,7 +51,7 @@ def current_request(state: dict, plans: list[dict], config: dict) -> dict:
 
 
 def build_index(state: dict, plans: list[dict], catalog: list[dict], references: list[dict]) -> DuplicateIndex:
-    index = DuplicateIndex()
+    index = DuplicateIndex(state.setdefault("duplicate_features", {}))
     entities = [p["name"] for p in catalog] + [p["sku"] for p in catalog]
     for i, reference in enumerate(references):
         index.add(reference, entities, f"reference:{i:06d}.json")
@@ -59,7 +68,7 @@ def build_index(state: dict, plans: list[dict], catalog: list[dict], references:
 
 def clear_attempt(state: dict) -> None:
     state.update(phase="generate", history=[], decisions=[], candidate=None, similarity=None,
-                 duplicate_cursor=0, generation_request_sha256=None)
+                 duplicate_cursor=0, generation_request_sha256=None, pending_candidates=[])
 
 
 def advance(state: dict, plans: list[dict]) -> None:
@@ -95,6 +104,28 @@ def finish_session(state: dict, plans: list[dict], config: dict, errors: list[st
                      phase="quality_review" if len(state["history"]) == len(plan["sessions"]) else "generate")
 
 
+def consume_candidates(state: dict, plans: list[dict], catalog: list[dict], references: list[dict], config: dict) -> None:
+    """Validate a batch in order; pause only when a duplicate judge is needed."""
+    while state.get("pending_candidates"):
+        candidate = state["pending_candidates"].pop(0)
+        session = plans[state["position"]]["sessions"][len(state["history"])]
+        errors = validate_transcript(candidate, session, state["history"], config["validation"])
+        state.update(candidate=candidate, similarity=None)
+        if not errors:
+            result = build_index(state, plans, catalog, references).compare(candidate, entity_values(session), config["duplicates"])
+            state["similarity"] = result
+            if result["decision"] == "reject":
+                errors = ["duplicate: wording/structure too close to " + result["matches"][0]["transcript_id"]]
+            elif result["decision"] == "review":
+                if config["duplicates"]["judge_ambiguous"]:
+                    state.update(phase="duplicate", duplicate_cursor=0)
+                    return
+                errors = ["duplicate: ambiguous similarity requires a judge or rewrite"]
+        finish_session(state, plans, config, errors)
+        if errors:
+            return
+
+
 def consume(state: dict, plans: list[dict], catalog: list[dict], references: list[dict],
             config: dict, req: dict, response: dict) -> dict:
     """Apply exactly one response; caller owns atomic journaling/checkpointing."""
@@ -103,7 +134,19 @@ def consume(state: dict, plans: list[dict], catalog: list[dict], references: lis
         raise ValueError("submitted request differs from the expected task")
     state["calls"] += 1
     plan = plans[state["position"]]
-    if state["phase"] == "generate":
+    if state["phase"] == "generate" and state.get("generation_unit") == "journey":
+        state["generation_request_sha256"] = fingerprint(req)
+        try:
+            body = parse_response(response)
+            errors = validate_schema(body, req["schema"])
+        except (ValueError, TypeError, KeyError):
+            errors = ["format: incomplete or invalid journey JSON"]
+        if errors:
+            fail_attempt(state, plans, config, errors)
+        else:
+            state["pending_candidates"] = body["transcripts"]
+            consume_candidates(state, plans, catalog, references, config)
+    elif state["phase"] == "generate":
         state["generation_request_sha256"] = fingerprint(req)
         state["similarity"] = None
         session = plan["sessions"][len(state["history"])]
@@ -138,6 +181,8 @@ def consume(state: dict, plans: list[dict], catalog: list[dict], references: lis
         state["duplicate_cursor"] += 1
         if errors or state["duplicate_cursor"] == len(state["similarity"]["matches"]):
             finish_session(state, plans, config, errors)
+            if not errors and state.get("generation_unit") == "journey":
+                consume_candidates(state, plans, catalog, references, config)
     else:
         decision = None
         try:
