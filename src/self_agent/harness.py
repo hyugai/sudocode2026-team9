@@ -7,17 +7,19 @@ from .models import LearningJob, digest, snapshot, sanitize
 
 
 class SelfAgentHarness:
-    def __init__(self, base, *, config=None, learner_factory=None, lessons=(), validation_model=None):
+    def __init__(self, base, *, config=None, learner_factory=None, lessons=None, validation_model=None, routing_model=None):
         self.base = base
         self.config = config if config is not None else LearningConfig.from_env()
         self.learner_factory = learner_factory
         self.memory = self.learner = self.worker = None
         self.lock = asyncio.Lock()
-        from .lessons import LessonRouter
-        self.lesson_router = LessonRouter(lessons if self.config.enabled else ())
-        self.validation_model = validation_model
+        from .lessons import LessonRouter, load_bank
+        self.auto_memory=lessons is None and self.config.enabled
+        self.lesson_router = LessonRouter((load_bank(self.config.root) if self.auto_memory else lessons or ()) if self.config.enabled else ())
+        self.validation_model = routing_model or validation_model
         self.lesson_traces = {}
-        self.evidence_bridge = None
+        self.started_sessions=set()
+        self.wrapper_installed=False
         self.original_agent = None
 
     async def __aenter__(self):
@@ -25,16 +27,18 @@ class SelfAgentHarness:
         if self.lesson_router.lessons and os.getenv('DEEPAGENT_CHECKPOINT_SCOPE', 'turn') == 'conversation':
             raise ValueError('Scoped lesson routing requires per-turn checkpoints, not conversation checkpoints')
         await self.base.__aenter__()
-        if self.lesson_router.lessons:
-            from .lesson_runtime import LessonAgent, TurnEvidenceBridge
-            from .adapters.llm import LearningModel
-            self.validation_model = self.validation_model or LearningModel()
+        if self.lesson_router.lessons or self.auto_memory and hasattr(self.base,'agent'):
+            from .lesson_runtime import LessonAgent
             self.original_agent = self.base.agent
-            self.evidence_bridge = TurnEvidenceBridge(self.base).install()
-            self.base.agent = LessonAgent(self.base.agent, self.validation_model)
+            self.base.agent = LessonAgent(self.base.agent)
+            self.wrapper_installed=True
         return self
 
     async def run_turn(self, turn_input, state=None, *, on_text=None, on_status=None):
+        if self.auto_memory and turn_input.conversation_id not in self.started_sessions:
+            from .lessons import LessonRouter,load_bank
+            self.lesson_router=LessonRouter(load_bank(self.config.root))
+            self.started_sessions.add(turn_input.conversation_id)
         if not self.lesson_router.lessons:
             return await self.base.run_turn(turn_input, state, on_text=on_text, on_status=on_status)
         from .lesson_runtime import CURRENT_LESSONS
@@ -43,7 +47,7 @@ class SelfAgentHarness:
             from .adapters.llm import LearningModel
             self.validation_model = LearningModel()
         trace = {'lessons_loaded': len(self.lesson_router.lessons), 'selected_lessons': [],
-                 'injected': False, 'validation': 'not_invoked', 'routing': 'no_match'}
+                 'injected': False, 'mode':'memory_only','response_modified':False,'routing': 'no_match'}
         started = time.perf_counter()
         usage_before = dict(getattr(self.validation_model, 'usage', {}))
         history = [{'role': m.role, 'content': m.content}
@@ -62,16 +66,13 @@ class SelfAgentHarness:
         trace.update(routing_ms=round((time.perf_counter() - started) * 1000, 3),
                      routing_usage={k: v - usage_before.get(k, 0)
                                     for k, v in getattr(self.validation_model, 'usage', {}).items()},
-                     selected_lessons=[{'id': l['id'], 'hash': digest(l)} for l in lessons])
-        trace['evidence_adapter_stages'] = sorted(self.evidence_bridge.originals) if self.evidence_bridge else []
+                     selected_lessons=[{'id': l['id'], 'hash': digest(l), 'mechanism': l.get('mechanism','knowledge_gap')} for l in lessons])
         token = CURRENT_LESSONS.set({'lessons': lessons, 'question': sanitize(turn_input.text, secrets),
-                                    'secrets': secrets, 'evidence': [], 'trace': trace})
+                                    'trace': trace})
         try:
             result = await self.base.run_turn(turn_input, state, on_text=on_text, on_status=on_status)
             trace['wrapper_total_ms'] = round((time.perf_counter() - started) * 1000, 3)
             self.lesson_traces.setdefault(result.conversation_id, []).append(trace)
-            if on_text and lessons:
-                await on_text(result.response_text or '')
             return result
         finally:
             CURRENT_LESSONS.reset(token)
@@ -155,7 +156,6 @@ class SelfAgentHarness:
                 await self.worker
             except asyncio.CancelledError:
                 pass
-        if self.evidence_bridge:
-            self.evidence_bridge.restore()
+        if self.wrapper_installed:
             self.base.agent = self.original_agent
         return await self.base.__aexit__(exc_type, exc_value, traceback)

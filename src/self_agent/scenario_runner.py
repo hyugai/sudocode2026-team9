@@ -28,6 +28,15 @@ def load_scenarios(directory, ids=(), limit=1):
     return scenarios
 
 
+def first_call_only(scenarios):
+    """One real session for smoke testing; never substitute this for full rounds."""
+    if len(scenarios) != 1:
+        raise ValueError('First-call smoke test requires exactly one scenario')
+    scenario=scenarios[0]
+    key=min(scenario['calls'],key=lambda name:int(name.split('_')[-1]))
+    return [{**scenario,'calls':{key:scenario['calls'][key]}}]
+
+
 def artifacts(root, runtime_root):
     result = {}
     for group in ("gaps", "knowledge", "patterns", "regression_cases", "releases"):
@@ -110,6 +119,11 @@ async def replay(scenarios, agent, output, *, state_factory, input_factory, clea
                 target = output / f"{scenario['scenario_id']}-{call}.json"
                 report = sanitize(report, [scenario.get("customer_name"), scenario.get("customer_phone")])
                 target.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
+                from .evaluation.review import write_session_review
+                try:
+                    write_session_review(report, output/'reviews'/f"{scenario['scenario_id']}-{call}.html")
+                except (OSError, ValueError, KeyError, TypeError) as review_error:
+                    print(f"Review unavailable: {type(review_error).__name__}; original session JSON is preserved")
                 reports.append(report)
                 print(f"{scenario['scenario_id']}/{call}: job={report.get('job', {}).get('status', 'error')}, "
                       f"changed={len(report['artifact_changes'])}; {target}")
@@ -138,13 +152,18 @@ async def run(args, scenarios):
     from telesale_agent.adapters.db.client import db_client
     round_number = getattr(args, 'round', None)
     if round_number is not None:
-        from .evaluation.round_config import prepare_round
+        from .evaluation.round_config import prepare_round, load_prepared_round
         original = os.getenv('AGENT_INSTRUCTIONS_ROOT') or Path(__file__).resolve().parents[2] / 'data/memory-root/agents/telesales_agent'
         settings = {k: os.getenv(k, '') for k in ('LLM_PROVIDER', 'LLM_MODEL', 'GROQ_MODEL', 'GEMINI_MODEL',
                     'DEEPAGENT_THINKING_LEVEL', 'DEEPAGENT_CHECKPOINT_SCOPE', 'KNOWLEDGE_BACKEND', 'PINECONE_INDEX_NAME', 'PINECONE_NAMESPACE')}
-        instructions = prepare_round(scenarios, args.output, original,
-            getattr(args, 'pattern_root', None) or config.root, round_number=round_number,
-            settings=settings, baseline=getattr(args, 'baseline', None))
+        prepared = getattr(args, 'prepared_round', None)
+        if prepared:
+            instructions = load_prepared_round(prepared, scenarios, round_number=round_number,
+                                               settings=settings, instruction_root=original)
+        else:
+            instructions = prepare_round(scenarios, args.output, original,
+                getattr(args, 'pattern_root', None) or config.root, round_number=round_number,
+                settings=settings, baseline=getattr(args, 'baseline', None))
         # This CLI is a dedicated process; benchmark and original instruction files are unchanged.
         os.environ['AGENT_INSTRUCTIONS_ROOT'] = str(instructions)
     # In-memory customer repository: no writes to durable customer memory.
@@ -157,10 +176,10 @@ async def run(args, scenarios):
     lessons = []
     if round_number == 1:
         from .lessons import load_lesson
-        lessons = [load_lesson(path) for path in sorted((Path(args.output) / 'lessons/approved').glob('*.md'))]
+        lessons = [load_lesson(path) for path in sorted((Path(getattr(args,'prepared_round',None) or args.output) / 'lessons/approved').glob('*.md'))]
     async with SelfAgentHarness(base, config=config, lessons=lessons) as agent:
         if round_number is not None:
-            manifest = json.loads((Path(args.output) / 'round_manifest.json').read_text(encoding='utf-8'))
+            manifest = json.loads((Path(getattr(args,'prepared_round',None) or args.output) / 'round_manifest.json').read_text(encoding='utf-8'))
             agent.generation_context = {k: manifest[k] for k in
                 ('round', 'instruction_hash', 'applied_patterns', 'lessons_loaded', 'lesson_sources', 'lesson_files')}
             agent.generation_context['instruction_root'] = str(instructions)
@@ -181,11 +200,19 @@ def main():
     parser.add_argument("--runtime-root", type=Path, help="Private job/report root for this worker")
     parser.add_argument('--round', type=int, choices=(0, 1), help='Frozen M1 baseline or applied-pattern round')
     parser.add_argument('--baseline', type=Path, help='Round 0 output directory required by round 1')
+    parser.add_argument('--prepared-round', type=Path, help='Read-only batch manifest prepared by the parallel two-round runner')
     parser.add_argument('--pattern-root', type=Path, help='Root containing approved patterns (including parallel runs)')
+    parser.add_argument('--first-call-only',action='store_true',help='Smoke test one session of exactly one SC; not a round comparison')
     args = parser.parse_args()
     if args.limit < 0:
         parser.error("--limit must be nonnegative")
+    if args.prepared_round and args.round is None:
+        parser.error('--prepared-round requires --round')
     scenarios = load_scenarios(args.scenarios, args.scenario_id, args.limit)
+    if args.first_call_only:
+        if args.round is not None:
+            parser.error('--first-call-only is for smoke testing, not fixed-round evaluation')
+        scenarios=first_call_only(scenarios)
     if args.list:
         for scenario in scenarios:
             print(scenario["scenario_id"], {k: len(v.get("customer_turns", [])) for k, v in scenario["calls"].items()})

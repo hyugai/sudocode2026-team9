@@ -2,6 +2,7 @@
 import argparse
 import asyncio
 import json
+import os
 from pathlib import Path
 import sys
 import uuid
@@ -9,6 +10,15 @@ import uuid
 from .scenario_runner import load_scenarios
 
 DEFAULT_SCENARIOS = Path(__file__).resolve().parents[2] / "dataset/main/m2_transcripts/scenarios_complete"
+
+
+def utf8_process_env():
+    """Redirected Windows Python streams otherwise inherit the ANSI code page.
+
+    Set startup encoding for this worker and its MCP children, without changing
+    the caller's environment or swallowing business exceptions.
+    """
+    return {**os.environ, 'PYTHONUTF8':'1', 'PYTHONIOENCODING':'utf-8:backslashreplace'}
 
 
 async def launch_scenario(scenario, directory, output, learning_root):
@@ -22,7 +32,8 @@ async def launch_scenario(scenario, directory, output, learning_root):
                '--learning-root', str((learning_root / sid).resolve()),
                '--runtime-root', str((scenario_output / 'runtime').resolve())]
     with (scenario_output / 'console.log').open('wb') as log:
-        process = await asyncio.create_subprocess_exec(*command, stdout=log, stderr=asyncio.subprocess.STDOUT)
+        process = await asyncio.create_subprocess_exec(*command, stdout=log, stderr=asyncio.subprocess.STDOUT,
+                                                       env=utf8_process_env())
         try:
             return await process.wait()
         except asyncio.CancelledError:

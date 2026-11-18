@@ -36,7 +36,7 @@ def sanitize(value, secrets=()):
     if isinstance(value, str):
         for secret in secrets:
             if isinstance(secret, str) and len(secret) > 2:
-                value = re.sub(re.escape(secret), "[private]", value, flags=re.I)
+                value = re.sub(r'(?<!\w)' + re.escape(secret) + r'(?!\w)', "[private]", value, flags=re.I)
         return redact(value)
     return value if value is None or isinstance(value, (bool, int, float)) else None
 
@@ -77,7 +77,7 @@ def snapshot(state, turn_results=(), feedback=()):
     value = {"session": digest(state.conversation_id), "revision": state.turn_number,
              "messages": messages, "open_questions": [clean(q) for q in questions],
              "feedback": [clean(f) for f in feedback],
-             "evidence_coverage": "transcript_only", "workflow_version": 3}
+             "evidence_coverage": "transcript_only", "workflow_version": 4}
     evidence = []
     for i, result in enumerate(turn_results):
         retrieved = getattr(result, "retrieved", None)
@@ -87,7 +87,8 @@ def snapshot(state, turn_results=(), feedback=()):
                                          "args": clean(tool.get("args", {})),
                                          "result": clean(tool.get("result"))}
                                         for tool in (getattr(result, "tool_calls", []) or [])],
-                         "sources": clean(getattr(retrieved, "knowledge", []) or [])})
+                         "sources": clean(getattr(retrieved, "knowledge", []) or []),
+                         'promotions': clean(getattr(retrieved,'active_promotions',[]) or [])})
     value["turn_evidence"] = evidence
     if evidence:
         value["evidence_coverage"] = "partial_turn_evidence" if len(evidence) != state.turn_number else "per_turn_evidence"
