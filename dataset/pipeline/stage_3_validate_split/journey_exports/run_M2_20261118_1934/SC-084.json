@@ -1,0 +1,123 @@
+{
+  "scenario_id": "TEAM-SC-084",
+  "tier": "M2",
+  "customer_id": "CUST-084",
+  "customer_phone": "000-000-0084",
+  "customer_identities": {
+    "phone": "000-000-0084",
+    "fb_id": "fb_synthetic_084",
+    "zalo_id": "zalo_synthetic_084"
+  },
+  "persona": "khach_da_kenh_fb_hotline",
+  "archetype": "omnichannel",
+  "hard_case": false,
+  "edge_case_type": null,
+  "target_sku": "SKU-JK-WND",
+  "simulator_profile": {
+    "persona_system_prompt": "Bạn nhắn qua Fanpage/Zalo bằng teencode ngắn (k, ko, bn, sp, đc…), khi gọi hotline thì nói bình thường. Mục tiêu: call_1: Tìm hiểu Áo khoác gió Windbreak và hẹn trao đổi tiếp | call_2: Chốt mua theo báo giá hiện hành. Đã biết: {facts}. Dàn ý: {turn_outline}. Bạn kỳ vọng hotline biết bạn đã nhắn gì; nếu không, bạn nói 'ủa bên em nhắn Facebook báo … mà'.",
+    "hidden_goal": "call_1: Tìm hiểu Áo khoác gió Windbreak và hẹn trao đổi tiếp | call_2: Chốt mua theo báo giá hiện hành",
+    "patience_level": 4,
+    "patience_max_turns": 4,
+    "patience_by_session": {
+      "call_1": 4,
+      "call_2": 3
+    }
+  },
+  "level": "M2",
+  "calls": {
+    "call_1": {
+      "session_index": 1,
+      "channel": "hotline",
+      "channel_identity": "000-000-0084",
+      "date": "2026-11-07",
+      "customer_goal": "Tìm hiểu Áo khoác gió Windbreak và hẹn trao đổi tiếp",
+      "facts_established": {
+        "product_advised": "SKU-JK-WND",
+        "price_quoted_vnd": 690000
+      },
+      "entities_multi": [],
+      "ground_truth_facts": {
+        "sku": "SKU-JK-WND",
+        "price_vnd": 690000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "scheduled_callback_at": "2026-11-11T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "000-000-0084",
+          "callback_at": "2026-11-11T10:00"
+        }
+      },
+      "customer_turns": [
+        "Áo khoác gió windbreak bên em còn hàng không?",
+        "Vậy Áo khoác gió Windbreak bên em báo sáu trăm chín mươi nghìn đồng đúng hông?",
+        "ờ mình nói là cho mình xem lại đã. Em gọi lại lúc mười giờ ngày mười một tháng mười một giúp mình nhé."
+      ],
+      "call_date": "2026-11-07"
+    },
+    "call_2": {
+      "session_index": 2,
+      "channel": "zalo_oa",
+      "channel_identity": "zalo_synthetic_084",
+      "date": "2026-11-11",
+      "customer_goal": "Chốt mua theo báo giá hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-JK-WND",
+        "price_quoted_vnd": 690000,
+        "payment": "COD",
+        "delivery_address": "căn 84, lô A, khu giao nhận mô phỏng Sao Mai",
+        "order_status": "created"
+      },
+      "entities_multi": [],
+      "ground_truth_facts": {
+        "sku": "SKU-JK-WND",
+        "price_vnd": 690000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "estimated_delivery": "2026-11-13"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "customer_phone": "000-000-0084",
+          "sku": "SKU-JK-WND",
+          "price_vnd": 690000,
+          "payment": "COD"
+        }
+      },
+      "days_later": 4,
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "customer_turns": [
+        "mình liên hệ lại về Áo khoác gió Windbreak đây, lần trước có gọi hỏi giá rồi",
+        "vậy Áo khoác gió Windbreak hiện là 690.000đ nhé, lên đơn giúp m với",
+        "cho mình trả tiền lúc nhận hàng, giao về căn 84, lô A, khu giao nhận mô phỏng Sao Mai giúp nhé"
+      ],
+      "call_date": "2026-11-11"
+    }
+  }
+}

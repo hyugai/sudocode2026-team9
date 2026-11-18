@@ -1,0 +1,127 @@
+{
+  "scenario_id": "TEAM-SC-109",
+  "tier": "M2",
+  "customer_id": "CUST-109",
+  "customer_phone": "[PHONE_CUST_109]",
+  "customer_identities": {
+    "phone": "[PHONE_CUST_109]",
+    "fb_id": "fb_synthetic_109",
+    "zalo_id": "zalo_synthetic_109"
+  },
+  "persona": "khach_so_gia",
+  "archetype": "hard",
+  "hard_case": true,
+  "edge_case_type": "expired_promo",
+  "target_sku": "SKU-SN-RUN1",
+  "call_1": {
+    "session_index": 1,
+    "channel": "hotline",
+    "channel_identity": "[PHONE_CUST_109]",
+    "date": "2026-10-25",
+    "customer_goal": "Tìm hiểu Giày chạy bộ RunLite 1 và hẹn trao đổi tiếp",
+    "facts_established": {
+      "product_advised": "SKU-SN-RUN1",
+      "price_quoted_vnd": 1161000,
+      "promo_code": "RUN-10",
+      "promo_expiry": "2026-10-25"
+    },
+    "entities_multi": [],
+    "ground_truth_facts": {
+      "sku": "SKU-SN-RUN1",
+      "price_vnd": 1161000,
+      "in_stock": true,
+      "active_promos": [
+        "COD-0",
+        "RUN-10"
+      ],
+      "expired_promos": [],
+      "promo_expiry_dates": {
+        "RUN-10": "2026-10-25",
+        "COD-0": "2026-12-14"
+      },
+      "scheduled_callback_at": "2026-10-27T10:00"
+    },
+    "expected_outcome": "hen_goi_lai",
+    "success_if": {
+      "tool_called": "schedule.callback",
+      "args_match": {
+        "customer_phone": "[PHONE_CUST_109]",
+        "callback_at": "2026-10-26T10:00"
+      }
+    },
+    "customer_turns": [
+      "Giày chạy bộ runlite một bên em còn hàng hông?",
+      "Để anh ghi lại nhé, Giày chạy bộ RunLite một là một triệu một trăm sáu mươi mốt nghìn đồng. Còn ưu đãi Giảm 10% giày RunLite áp dụng đến ngày hai mươi lăm tháng mười đúng hông?",
+      "ờ anh nói là để so thêm giá mấy chỗ. Em gọi lại lúc mười giờ ngày hai mươi sáu tháng mười giúp anh nhé."
+    ]
+  },
+  "call_2": {
+    "session_index": 2,
+    "channel": "hotline",
+    "channel_identity": "[PHONE_CUST_109]",
+    "date": "2026-10-26",
+    "customer_goal": "Kiểm tra lại ưu đãi RUN-10 và chốt nếu được giải thích giá hiện hành",
+    "facts_established": {
+      "product_advised": "SKU-SN-RUN1",
+      "price_quoted_vnd": 1290000,
+      "payment": "COD",
+      "delivery_address": "[ADDR_CUST_109]",
+      "order_status": "created"
+    },
+    "entities_multi": [],
+    "ground_truth_facts": {
+      "sku": "SKU-SN-RUN1",
+      "price_vnd": 1290000,
+      "in_stock": true,
+      "active_promos": [
+        "COD-0"
+      ],
+      "expired_promos": [
+        "RUN-10"
+      ],
+      "promo_expiry_dates": {
+        "RUN-10": "2026-10-25",
+        "COD-0": "2026-12-14"
+      },
+      "estimated_delivery": "2026-10-28"
+    },
+    "expected_outcome": "chot_don",
+    "success_if": {
+      "tool_called": "order.create",
+      "args_match": {
+        "customer_phone": "[PHONE_CUST_109]",
+        "sku": "SKU-SN-RUN1",
+        "price_vnd": 1290000,
+        "payment": "COD"
+      }
+    },
+    "days_later": 1,
+    "must_carry_over": [
+      "product_advised",
+      "price_quoted_vnd",
+      "promo_code",
+      "promo_expiry"
+    ],
+    "must_not_ask": [
+      "product_advised"
+    ],
+    "memory_expectation": {
+      "order_status": "created"
+    },
+    "customer_turns": [
+      "Vụ Giày chạy bộ RunLite một chị có gọi hỏi hôm trước ấy, bên em xem lại được không?",
+      "Ưu đãi Giảm 10% giày RunLite hôm trước hết rồi à? Em giải thích lại giúp chị mức một triệu hai trăm chín mươi ngàn đồng nhé.",
+      "Cho chị trả tiền lúc nhận hàng, giao về căn một trăm lẻ chín, lô A, khu giao nhận mô phỏng Sao Mai giúp nhé."
+    ]
+  },
+  "simulator_profile": {
+    "persona_system_prompt": "Bạn là khách hàng thực dụng, quan tâm giá. Mục tiêu: call_1: Tìm hiểu Giày chạy bộ RunLite 1 và hẹn trao đổi tiếp | call_2: Kiểm tra lại ưu đãi RUN-10 và chốt nếu được giải thích giá hiện hành. Đã biết: {facts}. Dàn ý: {turn_outline}. Bạn nêu giá đối thủ và đòi giảm; nếu nhân viên không giảm nhưng nêu được giá trị đi kèm (bảo hành, quà, đổi trả), bạn chấp nhận theo dàn ý. Nếu nhân viên tự ý giảm giá không có chương trình, bạn hỏi 'chương trình gì?' để kiểm tra. Không bịa thông tin mới.",
+    "hidden_goal": "call_1: Tìm hiểu Giày chạy bộ RunLite 1 và hẹn trao đổi tiếp | call_2: Kiểm tra lại ưu đãi RUN-10 và chốt nếu được giải thích giá hiện hành",
+    "patience_level": 3,
+    "patience_max_turns": 3,
+    "patience_by_session": {
+      "call_1": 3,
+      "call_2": 3
+    }
+  }
+}

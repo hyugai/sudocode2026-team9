@@ -1,0 +1,128 @@
+{
+  "scenario_id": "TEAM-SC-063",
+  "tier": "M2",
+  "customer_id": "CUST-063",
+  "customer_phone": "000-000-0063",
+  "customer_identities": {
+    "phone": "000-000-0063",
+    "fb_id": "fb_synthetic_063",
+    "zalo_id": "zalo_synthetic_063"
+  },
+  "persona": "khach_da_kenh_fb_hotline",
+  "archetype": "omnichannel",
+  "hard_case": false,
+  "edge_case_type": null,
+  "target_sku": "SKU-XM-FLT",
+  "simulator_profile": {
+    "persona_system_prompt": "Bạn nhắn qua Fanpage/Zalo bằng teencode ngắn (k, ko, bn, sp, đc…), khi gọi hotline thì nói bình thường. Mục tiêu: call_1: Tìm hiểu Màng lọc thay thế Xiaomi Smart 4 và hẹn trao đổi tiếp | call_2: Chốt mua theo báo giá hiện hành. Đã biết: {facts}. Dàn ý: {turn_outline}. Bạn kỳ vọng hotline biết bạn đã nhắn gì; nếu không, bạn nói 'ủa bên em nhắn Facebook báo … mà'.",
+    "hidden_goal": "call_1: Tìm hiểu Màng lọc thay thế Xiaomi Smart 4 và hẹn trao đổi tiếp | call_2: Chốt mua theo báo giá hiện hành",
+    "patience_level": 4,
+    "patience_max_turns": 4,
+    "patience_by_session": {
+      "call_1": 4,
+      "call_2": 3
+    }
+  },
+  "level": "M2",
+  "calls": {
+    "call_1": {
+      "session_index": 1,
+      "channel": "hotline",
+      "channel_identity": "000-000-0063",
+      "date": "2026-11-05",
+      "customer_goal": "Tìm hiểu Màng lọc thay thế Xiaomi Smart 4 và hẹn trao đổi tiếp",
+      "facts_established": {
+        "product_advised": "SKU-XM-FLT",
+        "price_quoted_vnd": 590000
+      },
+      "entities_multi": [],
+      "ground_truth_facts": {
+        "sku": "SKU-XM-FLT",
+        "price_vnd": 590000,
+        "in_stock": true,
+        "active_promos": [
+          "NAM-SHIP0",
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "NAM-SHIP0": "2026-11-05",
+          "COD-0": "2026-12-14"
+        },
+        "scheduled_callback_at": "2026-11-06T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "000-000-0063",
+          "callback_at": "2026-11-06T10:00"
+        }
+      },
+      "customer_turns": [
+        "Ừm, anh đang xem Màng lọc thay thế Xiaomi Smart bốn, em tư vấn giúp anh với.",
+        "Để anh ghi lại nhé, Màng lọc thay thế Xiaomi Smart bốn là năm trăm chín mươi ngàn đồng.",
+        "Cho mình xem lại đã. Em gọi lại lúc mười giờ ngày sáu tháng mười một giúp anh nhé."
+      ],
+      "call_date": "2026-11-05"
+    },
+    "call_2": {
+      "session_index": 2,
+      "channel": "zalo_oa",
+      "channel_identity": "zalo_synthetic_063",
+      "date": "2026-11-06",
+      "customer_goal": "Chốt mua theo báo giá hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-XM-FLT",
+        "price_quoted_vnd": 590000,
+        "payment": "COD",
+        "delivery_address": "căn 63, lô A, khu giao nhận mô phỏng Sao Mai",
+        "order_status": "created"
+      },
+      "entities_multi": [],
+      "ground_truth_facts": {
+        "sku": "SKU-XM-FLT",
+        "price_vnd": 590000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [
+          "NAM-SHIP0"
+        ],
+        "promo_expiry_dates": {
+          "NAM-SHIP0": "2026-11-05",
+          "COD-0": "2026-12-14"
+        },
+        "estimated_delivery": "2026-11-09"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "customer_phone": "000-000-0063",
+          "sku": "SKU-XM-FLT",
+          "price_vnd": 590000,
+          "payment": "COD"
+        }
+      },
+      "days_later": 1,
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "customer_turns": [
+        "vụ Màng lọc thay thế Xiaomi Smart 4 mình có gọi hỏi hôm trước ấy, bên em xem lại được ko?",
+        "minh lay Mang loc thay the Xiaomi Smart 4 voi gia 590.000d nhe, em tao don giup",
+        "cho minh tra tien luc nhan hang, giao ve can 63, lo A, khu giao nhan mo phong Sao Mai giup nhe"
+      ],
+      "call_date": "2026-11-06"
+    }
+  }
+}

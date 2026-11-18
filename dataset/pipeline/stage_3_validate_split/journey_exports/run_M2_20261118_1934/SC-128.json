@@ -1,0 +1,183 @@
+{
+  "scenario_id": "TEAM-SC-128",
+  "tier": "M2",
+  "customer_id": "CUST-128",
+  "customer_phone": "000-000-0128",
+  "customer_identities": {
+    "phone": "000-000-0128",
+    "fb_id": "fb_synthetic_128",
+    "zalo_id": "zalo_synthetic_128"
+  },
+  "persona": "khach_goi_lan_3_het_kien_nhan",
+  "archetype": "extended",
+  "hard_case": false,
+  "edge_case_type": null,
+  "target_sku": "SKU-WF-CORE",
+  "simulator_profile": {
+    "persona_system_prompt": "Bạn đã gọi nhiều lần, rất mất kiên nhẫn. Mục tiêu: call_1: Tìm hiểu Bộ lõi lọc thay thế RO 1-2-3 và hẹn trao đổi tiếp | call_2: Chốt mua theo báo giá hiện hành | call_3: Cập nhật địa chỉ giao cho đơn đã chốt. Đã biết: {facts}. Dàn ý: {turn_outline}. Nói cộc, ngắn. Ở cuộc thứ 3, nếu nhân viên hỏi lại BẤT KỲ thông tin cũ nào ngoài 1 câu xác nhận địa chỉ, bạn nói 'thôi khỏi' và cúp máy.",
+    "hidden_goal": "call_1: Tìm hiểu Bộ lõi lọc thay thế RO 1-2-3 và hẹn trao đổi tiếp | call_2: Chốt mua theo báo giá hiện hành | call_3: Cập nhật địa chỉ giao cho đơn đã chốt",
+    "patience_level": 3,
+    "patience_max_turns": 3,
+    "patience_by_session": {
+      "call_1": 3,
+      "call_2": 2,
+      "call_3": 1
+    }
+  },
+  "level": "M2",
+  "calls": {
+    "call_1": {
+      "session_index": 1,
+      "channel": "hotline",
+      "channel_identity": "000-000-0128",
+      "date": "2026-10-16",
+      "customer_goal": "Tìm hiểu Bộ lõi lọc thay thế RO 1-2-3 và hẹn trao đổi tiếp",
+      "facts_established": {
+        "product_advised": "SKU-WF-CORE",
+        "price_quoted_vnd": 390000
+      },
+      "entities_multi": [],
+      "ground_truth_facts": {
+        "sku": "SKU-WF-CORE",
+        "price_vnd": 390000,
+        "in_stock": true,
+        "active_promos": [
+          "NAM-SHIP0",
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "NAM-SHIP0": "2026-11-05",
+          "COD-0": "2026-12-14"
+        },
+        "scheduled_callback_at": "2026-10-20T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "000-000-0128",
+          "callback_at": "2026-10-20T10:00"
+        }
+      },
+      "customer_turns": [
+        "Cho mình hỏi về Bộ lõi lọc thay thế RO một-hai-ba một chút được hông?",
+        "Vậy Bộ lõi lọc thay thế RO một-hai-ba bên em báo ba trăm chín mươi ngàn đồng đúng hông?",
+        "ờ mình nói là cho mình xem lại đã. Em gọi lại lúc mười giờ ngày hai mươi tháng mười giúp mình nhé."
+      ],
+      "call_date": "2026-10-16"
+    },
+    "call_2": {
+      "session_index": 2,
+      "channel": "hotline",
+      "channel_identity": "000-000-0128",
+      "date": "2026-10-20",
+      "customer_goal": "Chốt mua theo báo giá hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-WF-CORE",
+        "price_quoted_vnd": 390000,
+        "payment": "COD",
+        "delivery_address": "căn 128, lô A, khu giao nhận mô phỏng Sao Mai",
+        "order_status": "created"
+      },
+      "entities_multi": [],
+      "ground_truth_facts": {
+        "sku": "SKU-WF-CORE",
+        "price_vnd": 390000,
+        "in_stock": true,
+        "active_promos": [
+          "NAM-SHIP0",
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "NAM-SHIP0": "2026-11-05",
+          "COD-0": "2026-12-14"
+        },
+        "estimated_delivery": "2026-10-22"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "customer_phone": "000-000-0128",
+          "sku": "SKU-WF-CORE",
+          "price_vnd": 390000,
+          "payment": "COD"
+        }
+      },
+      "days_later": 4,
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "customer_turns": [
+        "Hôm trước mình có gọi hỏi Bộ lõi lọc thay thế RO một-hai-ba, em xem lại giúp mình nhé.",
+        "Mình lấy Bộ lõi lọc thay thế RO một-hai-ba với giá ba trăm chín mươi ngàn đồng nhé, em tạo đơn giúp.",
+        "Cho mình trả tiền lúc nhận hàng, giao về căn một trăm hai mươi tám, lô A, khu giao nhận mô phỏng Sao Mai giúp nhé."
+      ],
+      "call_date": "2026-10-20"
+    },
+    "call_3": {
+      "session_index": 3,
+      "channel": "hotline",
+      "channel_identity": "000-000-0128",
+      "date": "2026-10-21",
+      "customer_goal": "Cập nhật địa chỉ giao cho đơn đã chốt",
+      "facts_established": {
+        "delivery_address": "căn 128, lô B, khu giao nhận mô phỏng Sao Mai"
+      },
+      "entities_multi": [],
+      "ground_truth_facts": {
+        "sku": "SKU-WF-CORE",
+        "price_vnd": 390000,
+        "in_stock": true,
+        "active_promos": [
+          "NAM-SHIP0",
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "NAM-SHIP0": "2026-11-05",
+          "COD-0": "2026-12-14"
+        },
+        "order_price_vnd": 390000,
+        "update_status": "updated"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.update",
+        "args_match": {
+          "action": "update_address"
+        }
+      },
+      "memory_expectation": {
+        "delivery_address": "căn 128, lô B, khu giao nhận mô phỏng Sao Mai",
+        "supersedes": {
+          "delivery_address": "căn 128, lô A, khu giao nhận mô phỏng Sao Mai"
+        }
+      },
+      "days_later": 1,
+      "must_carry_over": [
+        "order_status",
+        "product_advised",
+        "delivery_address"
+      ],
+      "must_not_ask": [
+        "product_advised",
+        "payment"
+      ],
+      "customer_turns": [
+        "Em xem giúp đơn Bộ lõi lọc thay thế RO một-hai-ba lần trước với, chị cần đổi chỗ nhận.",
+        "Giao về căn một trăm hai mươi tám, lô B, khu giao nhận mô phỏng Sao Mai cho chị, em cập nhật luôn trên đơn giúp nhé."
+      ],
+      "call_date": "2026-10-21"
+    }
+  }
+}

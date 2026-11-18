@@ -1,0 +1,115 @@
+{
+  "scenario_id": "TEAM-SC-094",
+  "tier": "M2",
+  "customer_id": "CUST-094",
+  "customer_phone": "000-000-0094",
+  "customer_identities": {
+    "phone": "000-000-0094",
+    "fb_id": "fb_synthetic_094",
+    "zalo_id": "zalo_synthetic_094"
+  },
+  "persona": "khach_hoi_nhieu_khong_mua",
+  "archetype": "hard",
+  "hard_case": true,
+  "edge_case_type": "out_of_stock",
+  "target_sku": "SKU-SN-RUN2-41-DEN",
+  "call_1": {
+    "session_index": 1,
+    "channel": "hotline",
+    "channel_identity": "000-000-0094",
+    "date": "2026-10-16",
+    "customer_goal": "Tìm hiểu Giày chạy bộ RunLite 2 Pro và hẹn trao đổi tiếp",
+    "facts_established": {
+      "product_advised": "SKU-SN-RUN2-41-DEN",
+      "price_quoted_vnd": 1521000
+    },
+    "entities_multi": [],
+    "ground_truth_facts": {
+      "sku": "SKU-SN-RUN2-41-DEN",
+      "price_vnd": 1521000,
+      "in_stock": true,
+      "active_promos": [
+        "COD-0",
+        "RUN-10"
+      ],
+      "expired_promos": [
+        "RUN2-SALE"
+      ],
+      "promo_expiry_dates": {
+        "RUN-10": "2026-10-25",
+        "COD-0": "2026-12-14",
+        "RUN2-SALE": "2026-10-07"
+      },
+      "scheduled_callback_at": "2026-10-17T10:00"
+    },
+    "expected_outcome": "hen_goi_lai",
+    "success_if": {
+      "tool_called": "schedule.callback",
+      "args_match": {
+        "customer_phone": "000-000-0094",
+        "callback_at": "2026-10-17T10:00"
+      }
+    },
+    "customer_turns": [
+      "Dạ, mình đang xem Giày chạy bộ RunLite hai Pro den bốn mươi mốt, em tư vấn giúp mình với.",
+      "Để mình ghi lại nhé, Giày chạy bộ RunLite hai Pro den bốn mươi mốt là một triệu năm trăm hai mươi mốt ngàn đồng.",
+      "ờ mình nói là để xem kỹ lại thông tin đã. Em gọi lại lúc mười giờ ngày mười bảy tháng mười giúp mình nhé."
+    ]
+  },
+  "call_2": {
+    "session_index": 2,
+    "channel": "hotline",
+    "channel_identity": "000-000-0094",
+    "date": "2026-10-17",
+    "customer_goal": "Kiểm tra tồn kho, từ chối đặt khi đã hết hàng",
+    "facts_established": {
+      "product_advised": "SKU-SN-RUN2-41-DEN"
+    },
+    "entities_multi": [],
+    "ground_truth_facts": {
+      "sku": "SKU-SN-RUN2-41-DEN",
+      "price_vnd": 1521000,
+      "in_stock": false,
+      "active_promos": [
+        "COD-0",
+        "RUN-10"
+      ],
+      "expired_promos": [
+        "RUN2-SALE"
+      ],
+      "promo_expiry_dates": {
+        "RUN-10": "2026-10-25",
+        "COD-0": "2026-12-14",
+        "RUN2-SALE": "2026-10-07"
+      },
+      "restock_expected": "2026-10-24"
+    },
+    "expected_outcome": "tu_choi",
+    "success_if": {
+      "tool_called": null,
+      "args_match": {}
+    },
+    "days_later": 1,
+    "must_carry_over": [
+      "product_advised",
+      "price_quoted_vnd"
+    ],
+    "must_not_ask": [
+      "product_advised"
+    ],
+    "customer_turns": [
+      "Mình liên hệ lại về Giày chạy bộ RunLite hai Pro den bốn mươi mốt đây, lần trước có gọi hỏi giá rồi.",
+      "Nếu Giày chạy bộ RunLite hai Pro den bốn mươi mốt hết hàng rồi thì mình chưa đặt đâu, để khi khác nhé."
+    ]
+  },
+  "simulator_profile": {
+    "persona_system_prompt": "Bạn thích hỏi kỹ nhiều chi tiết kỹ thuật và so sánh, chưa muốn mua. Mục tiêu: call_1: Tìm hiểu Giày chạy bộ RunLite 2 Pro và hẹn trao đổi tiếp | call_2: Kiểm tra tồn kho, từ chối đặt khi đã hết hàng. Đã biết: {facts}. Dàn ý: {turn_outline}. Bạn hỏi tối đa theo dàn ý, kết thúc bằng 'để xem thêm' trừ khi dàn ý nói bạn chốt. Nếu nhân viên bịa thông số, bạn hỏi lại 'em chắc không?'.",
+    "hidden_goal": "call_1: Tìm hiểu Giày chạy bộ RunLite 2 Pro và hẹn trao đổi tiếp | call_2: Kiểm tra tồn kho, từ chối đặt khi đã hết hàng",
+    "patience_level": 5,
+    "patience_max_turns": 5,
+    "patience_by_session": {
+      "call_1": 5,
+      "call_2": 4
+    }
+  }
+}

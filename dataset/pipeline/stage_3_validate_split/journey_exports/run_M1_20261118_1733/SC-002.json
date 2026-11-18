@@ -1,0 +1,113 @@
+{
+  "scenario_id": "TEAM-SC-002",
+  "tier": "M1",
+  "customer_id": "CUST-002",
+  "customer_phone": "[PHONE_CUST_002]",
+  "customer_identities": {
+    "phone": "[PHONE_CUST_002]",
+    "fb_id": "fb_synthetic_002",
+    "zalo_id": "zalo_synthetic_002"
+  },
+  "persona": "khach_hoi_nhieu_khong_mua",
+  "archetype": "standard",
+  "hard_case": false,
+  "edge_case_type": null,
+  "target_sku": "SKU-MB-BAG",
+  "level": "M1",
+  "calls": {
+    "call_1": {
+      "session_index": 1,
+      "channel": "hotline",
+      "channel_identity": "[PHONE_CUST_002]",
+      "date": "2026-10-22",
+      "customer_goal": "Tìm hiểu Túi trữ sữa Sunmum 50 túi và hẹn trao đổi tiếp",
+      "facts_established": {
+        "product_advised": "SKU-MB-BAG",
+        "price_quoted_vnd": 119000
+      },
+      "entities_multi": [],
+      "ground_truth_facts": {
+        "sku": "SKU-MB-BAG",
+        "price_vnd": 119000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "scheduled_callback_at": "2026-10-27T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "[PHONE_CUST_002]",
+          "callback_at": "2026-10-26T10:00"
+        }
+      },
+      "customer_turns": [
+        "Túi trữ sữa sunmum năm mươi túi bên em còn hàng không?",
+        "một trăm mười chín ngàn đồng cho Túi trữ sữa Sunmum năm mươi túi là giá hiện tại phải không em?",
+        "Để xem kỹ lại thông tin đã. Em gọi lại lúc mười giờ ngày hai mươi sáu tháng mười giúp mình nhé."
+      ],
+      "call_date": "2026-10-22"
+    },
+    "call_2": {
+      "session_index": 2,
+      "channel": "hotline",
+      "channel_identity": "[PHONE_CUST_002]",
+      "date": "2026-10-26",
+      "customer_goal": "Chốt mua theo báo giá hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-MB-BAG",
+        "price_quoted_vnd": 119000,
+        "payment": "COD",
+        "delivery_address": "[ADDR_CUST_002]",
+        "order_status": "created"
+      },
+      "entities_multi": [],
+      "ground_truth_facts": {
+        "sku": "SKU-MB-BAG",
+        "price_vnd": 119000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "estimated_delivery": "2026-10-28"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "customer_phone": "[PHONE_CUST_002]",
+          "sku": "SKU-MB-BAG",
+          "price_vnd": 119000,
+          "payment": "COD"
+        }
+      },
+      "days_later": 4,
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "customer_turns": [
+        "Em còn lưu báo giá Túi trữ sữa Sunmum năm mươi túi lần trước mình gọi hỏi không?",
+        "Mình lấy Túi trữ sữa Sunmum năm mươi túi với giá một trăm mười chín ngàn đồng nhé, em tạo đơn giúp.",
+        "Cho mình trả tiền lúc nhận hàng, giao về căn hai, lô A, khu giao nhận mô phỏng Sao Mai giúp nhé."
+      ],
+      "call_date": "2026-10-26"
+    }
+  }
+}

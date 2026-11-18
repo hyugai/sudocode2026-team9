@@ -1,0 +1,99 @@
+{
+  "scenario_id": "TEAM-SC-005",
+  "tier": "M1",
+  "customer_id": "CUST-005",
+  "customer_phone": "[PHONE_CUST_005]",
+  "customer_identities": {
+    "phone": "[PHONE_CUST_005]",
+    "fb_id": "fb_synthetic_005",
+    "zalo_id": "zalo_synthetic_005"
+  },
+  "persona": "khach_hoi_nhieu_khong_mua",
+  "archetype": "standard",
+  "hard_case": false,
+  "edge_case_type": null,
+  "target_sku": "SKU-MB-PUMP2",
+  "call_1": {
+    "session_index": 1,
+    "channel": "hotline",
+    "channel_identity": "[PHONE_CUST_005]",
+    "date": "2026-10-15",
+    "customer_goal": "Tìm hiểu Máy hút sữa điện đôi Medela Swing Maxi và hẹn trao đổi tiếp",
+    "facts_established": {
+      "product_advised": "SKU-MB-PUMP2",
+      "price_quoted_vnd": 5990000
+    },
+    "entities_multi": [],
+    "ground_truth_facts": {
+      "sku": "SKU-MB-PUMP2",
+      "price_vnd": 5990000,
+      "in_stock": true,
+      "active_promos": [
+        "MOM-FREESHIP",
+        "COD-0"
+      ],
+      "expired_promos": [],
+      "promo_expiry_dates": {
+        "MOM-FREESHIP": "2026-11-29",
+        "COD-0": "2026-12-14"
+      },
+      "scheduled_callback_at": "2026-10-19T10:00"
+    },
+    "expected_outcome": "hen_goi_lai",
+    "success_if": {
+      "tool_called": "schedule.callback",
+      "args_match": {
+        "customer_phone": "[PHONE_CUST_005]",
+        "callback_at": "2026-10-19T10:00"
+      }
+    },
+    "customer_turns": [
+      "Cho anh hỏi về Máy hút sữa điện đôi Medela Swing Maxi một chút được không?",
+      "Để anh ghi lại nhé, Máy hút sữa điện đôi Medela Swing Maxi là năm triệu chín trăm chín mươi nghìn đồng.",
+      "Để xem kỹ lại thông tin đã. Em gọi lại lúc mười giờ ngày mười chín tháng mười giúp anh nhé."
+    ]
+  },
+  "call_2": {
+    "session_index": 2,
+    "channel": "hotline",
+    "channel_identity": "[PHONE_CUST_005]",
+    "date": "2026-10-19",
+    "customer_goal": "Xác nhận báo giá rồi từ chối vì chưa có nhu cầu mua",
+    "facts_established": {
+      "product_advised": "SKU-MB-PUMP2",
+      "price_quoted_vnd": 5990000
+    },
+    "entities_multi": [],
+    "ground_truth_facts": {
+      "sku": "SKU-MB-PUMP2",
+      "price_vnd": 5990000,
+      "in_stock": true,
+      "active_promos": [
+        "MOM-FREESHIP",
+        "COD-0"
+      ],
+      "expired_promos": [],
+      "promo_expiry_dates": {
+        "MOM-FREESHIP": "2026-11-29",
+        "COD-0": "2026-12-14"
+      }
+    },
+    "expected_outcome": "tu_choi",
+    "success_if": {
+      "tool_called": null,
+      "args_match": {}
+    },
+    "days_later": 4,
+    "must_carry_over": [
+      "product_advised",
+      "price_quoted_vnd"
+    ],
+    "must_not_ask": [
+      "product_advised"
+    ],
+    "customer_turns": [
+      "Vụ Máy hút sữa điện đôi Medela Swing Maxi anh có gọi hỏi hôm trước ấy, bên em xem lại được không?",
+      "Giá giờ là năm triệu chín trăm chín mươi nghìn đồng đúng không? Anh chưa cần mua nữa, để dịp khác nhé."
+    ]
+  }
+}

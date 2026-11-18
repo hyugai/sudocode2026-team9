@@ -1,0 +1,109 @@
+{
+  "scenario_id": "TEAM-SC-062",
+  "tier": "M2",
+  "customer_id": "CUST-062",
+  "customer_phone": "000-000-0062",
+  "customer_identities": {
+    "phone": "000-000-0062",
+    "fb_id": "fb_synthetic_062",
+    "zalo_id": "zalo_synthetic_062"
+  },
+  "persona": "khach_da_kenh_fb_hotline",
+  "archetype": "omnichannel",
+  "hard_case": false,
+  "edge_case_type": null,
+  "target_sku": "SKU-BDL-MOM",
+  "call_1": {
+    "session_index": 1,
+    "channel": "zalo",
+    "channel_identity": "zalo_synthetic_062",
+    "date": "2026-10-27",
+    "customer_goal": "Tìm hiểu Combo Spectra S1 + máy hâm sữa Fatz + 50 túi trữ sữa và hẹn trao đổi tiếp",
+    "facts_established": {
+      "product_advised": "SKU-BDL-MOM",
+      "price_quoted_vnd": 4790000
+    },
+    "entities_multi": [],
+    "ground_truth_facts": {
+      "sku": "SKU-BDL-MOM",
+      "price_vnd": 4790000,
+      "in_stock": true,
+      "active_promos": [
+        "MOM-FREESHIP",
+        "COD-0"
+      ],
+      "expired_promos": [],
+      "promo_expiry_dates": {
+        "MOM-FREESHIP": "2026-11-29",
+        "COD-0": "2026-12-14"
+      },
+      "scheduled_callback_at": "2026-10-30T10:00"
+    },
+    "expected_outcome": "hen_goi_lai",
+    "success_if": {
+      "tool_called": "schedule.callback",
+      "args_match": {
+        "customer_phone": "000-000-0062",
+        "callback_at": "2026-10-30T10:00"
+      }
+    },
+    "customer_turns": [
+      "combo spectra s1 + máy hâm sữa fatz + 50 túi trữ sữa bên em còn hàng ko?",
+      "vậy Combo Spectra S1 + máy hâm sữa Fatz + 50 túi trữ sữa bên em báo 4.790.000đ đúng ko?",
+      "cho mình xem lại đã. Em gọi lại lúc 10 giờ ngày 30/10 giúp m nhé"
+    ]
+  },
+  "call_2": {
+    "session_index": 2,
+    "channel": "hotline",
+    "channel_identity": "000-000-0062",
+    "date": "2026-10-30",
+    "customer_goal": "Xác nhận báo giá rồi từ chối vì chưa có nhu cầu mua",
+    "facts_established": {
+      "product_advised": "SKU-BDL-MOM",
+      "price_quoted_vnd": 4790000
+    },
+    "entities_multi": [],
+    "ground_truth_facts": {
+      "sku": "SKU-BDL-MOM",
+      "price_vnd": 4790000,
+      "in_stock": true,
+      "active_promos": [
+        "MOM-FREESHIP",
+        "COD-0"
+      ],
+      "expired_promos": [],
+      "promo_expiry_dates": {
+        "MOM-FREESHIP": "2026-11-29",
+        "COD-0": "2026-12-14"
+      }
+    },
+    "expected_outcome": "tu_choi",
+    "success_if": {
+      "tool_called": null,
+      "args_match": {}
+    },
+    "days_later": 3,
+    "must_carry_over": [
+      "product_advised",
+      "price_quoted_vnd"
+    ],
+    "must_not_ask": [
+      "product_advised"
+    ],
+    "customer_turns": [
+      "Vụ Combo Spectra S1 + máy hâm sữa Fatz + năm mươi túi trữ sữa anh có nhắn Zalo hỏi hôm trước ấy, bên em xem lại được không?",
+      "Giá giờ là bốn triệu bảy trăm chín mươi nghìn đồng đúng không? Anh chưa cần mua nữa, để dịp khác nhé."
+    ]
+  },
+  "simulator_profile": {
+    "persona_system_prompt": "Bạn nhắn qua Fanpage/Zalo bằng teencode ngắn (k, ko, bn, sp, đc…), khi gọi hotline thì nói bình thường. Mục tiêu: call_1: Tìm hiểu Combo Spectra S1 + máy hâm sữa Fatz + 50 túi trữ sữa và hẹn trao đổi tiếp | call_2: Xác nhận báo giá rồi từ chối vì chưa có nhu cầu mua. Đã biết: {facts}. Dàn ý: {turn_outline}. Bạn kỳ vọng hotline biết bạn đã nhắn gì; nếu không, bạn nói 'ủa bên em nhắn Facebook báo … mà'.",
+    "hidden_goal": "call_1: Tìm hiểu Combo Spectra S1 + máy hâm sữa Fatz + 50 túi trữ sữa và hẹn trao đổi tiếp | call_2: Xác nhận báo giá rồi từ chối vì chưa có nhu cầu mua",
+    "patience_level": 4,
+    "patience_max_turns": 4,
+    "patience_by_session": {
+      "call_1": 4,
+      "call_2": 3
+    }
+  }
+}

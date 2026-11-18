@@ -1,0 +1,166 @@
+{
+  "scenario_id": "TEAM-SC-065",
+  "tier": "M1",
+  "customer_id": "CUST-065",
+  "customer_phone": "[PHONE_CUST_065]",
+  "customer_identities": {
+    "phone": "[PHONE_CUST_065]",
+    "fb_id": "fb_synthetic_065",
+    "zalo_id": "zalo_synthetic_065"
+  },
+  "persona": "khach_goi_lan_3_het_kien_nhan",
+  "archetype": "extended",
+  "hard_case": false,
+  "edge_case_type": null,
+  "target_sku": "SKU-WF-RO9",
+  "level": "M1",
+  "calls": {
+    "call_1": {
+      "session_index": 1,
+      "channel": "hotline",
+      "channel_identity": "[PHONE_CUST_065]",
+      "date": "2026-10-25",
+      "customer_goal": "Tìm hiểu Máy lọc nước RO Karofi 9 lõi và hẹn trao đổi tiếp",
+      "facts_established": {
+        "product_advised": "SKU-WF-RO9",
+        "price_quoted_vnd": 5990000
+      },
+      "entities_multi": [],
+      "ground_truth_facts": {
+        "sku": "SKU-WF-RO9",
+        "price_vnd": 5990000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "scheduled_callback_at": "2026-10-28T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "[PHONE_CUST_065]",
+          "callback_at": "2026-10-28T10:00"
+        }
+      },
+      "customer_turns": [
+        "Máy lọc nước ro karofi chín lõi bên em còn hàng không?",
+        "năm triệu chín trăm chín mươi nghìn đồng cho Máy lọc nước RO Karofi chín lõi là giá hiện tại phải hông em?",
+        "Cho mình xem lại đã. Em gọi lại lúc mười giờ ngày hai mươi tám tháng mười giúp chị nhé."
+      ],
+      "call_date": "2026-10-25"
+    },
+    "call_2": {
+      "session_index": 2,
+      "channel": "hotline",
+      "channel_identity": "[PHONE_CUST_065]",
+      "date": "2026-10-28",
+      "customer_goal": "Chốt mua theo báo giá hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-WF-RO9",
+        "price_quoted_vnd": 5990000,
+        "payment": "COD",
+        "delivery_address": "[ADDR_CUST_065]",
+        "order_status": "created"
+      },
+      "entities_multi": [],
+      "ground_truth_facts": {
+        "sku": "SKU-WF-RO9",
+        "price_vnd": 5990000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "estimated_delivery": "2026-10-30"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "customer_phone": "[PHONE_CUST_065]",
+          "sku": "SKU-WF-RO9",
+          "price_vnd": 5990000,
+          "payment": "COD"
+        }
+      },
+      "days_later": 3,
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "customer_turns": [
+        "Vụ Máy lọc nước RO Karofi chín lõi chị có gọi hỏi hôm trước ấy, bên em xem lại được không?",
+        "Đúng mẫu Máy lọc nước RO Karofi chín lõi đó rồi. Nếu giá là năm triệu chín trăm chín mươi ngàn đồng thì chị chốt luôn.",
+        "Cho chị trả tiền lúc nhận hàng, giao về căn sáu mươi lăm, lô A, khu giao nhận mô phỏng Sao Mai giúp nhé."
+      ],
+      "call_date": "2026-10-28"
+    },
+    "call_3": {
+      "session_index": 3,
+      "channel": "hotline",
+      "channel_identity": "[PHONE_CUST_065]",
+      "date": "2026-10-29",
+      "customer_goal": "Cập nhật địa chỉ giao cho đơn đã chốt",
+      "facts_established": {
+        "delivery_address": "[ADDR_ALT_CUST_065]"
+      },
+      "entities_multi": [],
+      "ground_truth_facts": {
+        "sku": "SKU-WF-RO9",
+        "price_vnd": 5990000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "order_price_vnd": 5990000,
+        "update_status": "updated"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.update",
+        "args_match": {
+          "action": "update_address"
+        }
+      },
+      "memory_expectation": {
+        "delivery_address": "[ADDR_ALT_CUST_065]",
+        "supersedes": {
+          "delivery_address": "[ADDR_CUST_065]"
+        }
+      },
+      "days_later": 1,
+      "must_carry_over": [
+        "order_status",
+        "product_advised",
+        "delivery_address"
+      ],
+      "must_not_ask": [
+        "product_advised",
+        "payment"
+      ],
+      "customer_turns": [
+        "Em xem giúp đơn Máy lọc nước RO Karofi chín lõi lần trước với, anh cần đổi chỗ nhận.",
+        "Đổi địa chỉ giao sang căn sáu mươi lăm, lô B, khu giao nhận mô phỏng Sao Mai giúp anh nhé."
+      ],
+      "call_date": "2026-10-29"
+    }
+  }
+}

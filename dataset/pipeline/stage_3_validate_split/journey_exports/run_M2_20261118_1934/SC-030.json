@@ -1,0 +1,125 @@
+{
+  "scenario_id": "TEAM-SC-030",
+  "tier": "M2",
+  "customer_id": "CUST-030",
+  "customer_phone": "000-000-0030",
+  "customer_identities": {
+    "phone": "000-000-0030",
+    "fb_id": "fb_synthetic_030",
+    "zalo_id": "zalo_synthetic_030"
+  },
+  "persona": "khach_do_du_hoi_nguoi_nha",
+  "archetype": "standard",
+  "hard_case": false,
+  "edge_case_type": null,
+  "target_sku": "SKU-AP-X",
+  "call_1": {
+    "session_index": 1,
+    "channel": "hotline",
+    "channel_identity": "000-000-0030",
+    "date": "2026-11-08",
+    "customer_goal": "Tìm hiểu Máy lọc không khí AirPure X và hẹn trao đổi tiếp",
+    "facts_established": {
+      "product_advised": "SKU-AP-X",
+      "price_quoted_vnd": 4890000
+    },
+    "entities_multi": [],
+    "ground_truth_facts": {
+      "sku": "SKU-AP-X",
+      "price_vnd": 4890000,
+      "in_stock": true,
+      "active_promos": [
+        "COD-0"
+      ],
+      "expired_promos": [
+        "GIFT-FILTER",
+        "AIR-2ND-50",
+        "NAM-SHIP0",
+        "AP-SEP"
+      ],
+      "promo_expiry_dates": {
+        "GIFT-FILTER": "2026-10-22",
+        "AIR-2ND-50": "2026-11-04",
+        "NAM-SHIP0": "2026-11-05",
+        "COD-0": "2026-12-14",
+        "AP-SEP": "2026-09-30"
+      },
+      "scheduled_callback_at": "2026-11-11T10:00"
+    },
+    "expected_outcome": "hen_goi_lai",
+    "success_if": {
+      "tool_called": "schedule.callback",
+      "args_match": {
+        "customer_phone": "000-000-0030",
+        "callback_at": "2026-11-11T10:00"
+      }
+    },
+    "customer_turns": [
+      "Cho anh hỏi về Máy lọc không khí AirPure X một chút được không?",
+      "Vậy Máy lọc không khí AirPure X bên em báo bốn triệu tám trăm chín mươi nghìn đồng đúng không?",
+      "Để hỏi người nhà trước. Em gọi lại lúc mười giờ ngày mười một tháng mười một giúp anh nhé."
+    ]
+  },
+  "call_2": {
+    "session_index": 2,
+    "channel": "hotline",
+    "channel_identity": "000-000-0030",
+    "date": "2026-11-11",
+    "customer_goal": "Xác nhận báo giá rồi từ chối vì chưa có nhu cầu mua",
+    "facts_established": {
+      "product_advised": "SKU-AP-X",
+      "price_quoted_vnd": 4156500
+    },
+    "entities_multi": [],
+    "ground_truth_facts": {
+      "sku": "SKU-AP-X",
+      "price_vnd": 4156500,
+      "in_stock": true,
+      "active_promos": [
+        "COD-0",
+        "11-11"
+      ],
+      "expired_promos": [
+        "GIFT-FILTER",
+        "AIR-2ND-50",
+        "NAM-SHIP0",
+        "AP-SEP"
+      ],
+      "promo_expiry_dates": {
+        "GIFT-FILTER": "2026-10-22",
+        "AIR-2ND-50": "2026-11-04",
+        "NAM-SHIP0": "2026-11-05",
+        "COD-0": "2026-12-14",
+        "AP-SEP": "2026-09-30",
+        "11-11": "2026-11-12"
+      }
+    },
+    "expected_outcome": "tu_choi",
+    "success_if": {
+      "tool_called": null,
+      "args_match": {}
+    },
+    "days_later": 3,
+    "must_carry_over": [
+      "product_advised",
+      "price_quoted_vnd"
+    ],
+    "must_not_ask": [
+      "product_advised"
+    ],
+    "customer_turns": [
+      "Vụ Máy lọc hông khí AirPure X mình có gọi hỏi hôm trước ấy, bên em xem lại được không?",
+      "Giá giờ là bốn triệu một trăm năm mươi sáu nghìn năm trăm đồng đúng không? Mình chưa cần mua nữa, để dịp khác nhé."
+    ]
+  },
+  "simulator_profile": {
+    "persona_system_prompt": "Bạn là khách hàng Việt Nam đang gọi/nhắn cho shop. Mục tiêu: call_1: Tìm hiểu Máy lọc không khí AirPure X và hẹn trao đổi tiếp | call_2: Xác nhận báo giá rồi từ chối vì chưa có nhu cầu mua. Những điều bạn đã biết/đã nói ở phiên trước: {facts}. Dàn ý những điều bạn sẽ nói theo thứ tự: {turn_outline}. Nói tự nhiên, ngắn (1–2 câu/lượt), xưng hô theo giới tính đã cho. Bạn CHƯA quyết mua, cần hỏi người nhà; chỉ đồng ý mua nếu kịch bản cho phép. Nếu nhân viên hỏi lại điều bạn đã nói ở phiên trước, hãy trả lời nhưng tỏ ra hơi khó chịu ('hôm trước chị nói rồi mà'). Không bịa thêm thông tin ngoài những gì đã cho; nếu bị hỏi điều không có, nói 'chị không rõ'. Không bao giờ nhắc đến việc bạn là AI hay đang mô phỏng.",
+    "hidden_goal": "call_1: Tìm hiểu Máy lọc không khí AirPure X và hẹn trao đổi tiếp | call_2: Xác nhận báo giá rồi từ chối vì chưa có nhu cầu mua",
+    "patience_level": 4,
+    "patience_max_turns": 4,
+    "patience_by_session": {
+      "call_1": 4,
+      "call_2": 3
+    }
+  }
+}

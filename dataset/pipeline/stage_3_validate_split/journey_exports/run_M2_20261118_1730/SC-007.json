@@ -1,0 +1,149 @@
+{
+  "scenario_id": "TEAM-SC-007",
+  "tier": "M2",
+  "customer_id": "CUST-007",
+  "customer_phone": "[PHONE_CUST_007]",
+  "customer_identities": {
+    "phone": "[PHONE_CUST_007]",
+    "fb_id": "fb_synthetic_007",
+    "zalo_id": "zalo_synthetic_007"
+  },
+  "persona": "khach_hoi_nhieu_khong_mua",
+  "archetype": "standard",
+  "hard_case": false,
+  "edge_case_type": null,
+  "target_sku": "SKU-MB-PUMP1",
+  "call_1": {
+    "session_index": 1,
+    "channel": "hotline",
+    "channel_identity": "[PHONE_CUST_007]",
+    "date": "2026-11-07",
+    "customer_goal": "Tìm hiểu Máy hút sữa điện đôi Spectra S1 và hẹn trao đổi tiếp",
+    "facts_established": {
+      "product_advised": [
+        "SKU-MB-BOT",
+        "SKU-MB-PUMP1"
+      ],
+      "price_quoted_vnd": [
+        289000,
+        4290000
+      ]
+    },
+    "entities_multi": [
+      "product_advised",
+      "price_quoted_vnd"
+    ],
+    "ground_truth_facts": {
+      "sku": "SKU-MB-PUMP1",
+      "price_vnd": 4290000,
+      "in_stock": true,
+      "active_promos": [
+        "MOM-FREESHIP",
+        "COD-0"
+      ],
+      "expired_promos": [
+        "PUMP-GIFT"
+      ],
+      "promo_expiry_dates": {
+        "MOM-FREESHIP": "2026-11-29",
+        "COD-0": "2026-12-14",
+        "PUMP-GIFT": "2026-10-13"
+      },
+      "comparison_quote": {
+        "sku": "SKU-MB-BOT",
+        "price_vnd": 289000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        }
+      },
+      "scheduled_callback_at": "2026-11-08T10:00"
+    },
+    "expected_outcome": "hen_goi_lai",
+    "success_if": {
+      "tool_called": "schedule.callback",
+      "args_match": {
+        "customer_phone": "[PHONE_CUST_007]",
+        "callback_at": "2026-11-08T10:00"
+      }
+    },
+    "customer_turns": [
+      "Ừm, anh đang xem Máy hút sữa điện đôi Spectra S1, em tư vấn giúp anh với.",
+      "Em báo Bình sữa Pigeon PPSU 240ml giá hai trăm tám mươi chín nghìn đồng còn Máy hút sữa điện đôi Spectra S1 giá bốn triệu hai trăm chín mươi nghìn đồng đúng không? Anh đang cân nhắc hai mẫu đó.",
+      "Để xem kỹ lại thông tin đã. Em gọi lại lúc mười giờ ngày tám tháng mười một giúp anh nhé."
+    ]
+  },
+  "call_2": {
+    "session_index": 2,
+    "channel": "hotline",
+    "channel_identity": "[PHONE_CUST_007]",
+    "date": "2026-11-08",
+    "customer_goal": "Chốt mua theo báo giá hiện hành",
+    "facts_established": {
+      "product_advised": "SKU-MB-PUMP1",
+      "price_quoted_vnd": 4290000,
+      "payment": "COD",
+      "delivery_address": "[ADDR_CUST_007]",
+      "order_status": "created"
+    },
+    "entities_multi": [],
+    "ground_truth_facts": {
+      "sku": "SKU-MB-PUMP1",
+      "price_vnd": 4290000,
+      "in_stock": true,
+      "active_promos": [
+        "MOM-FREESHIP",
+        "COD-0"
+      ],
+      "expired_promos": [
+        "PUMP-GIFT"
+      ],
+      "promo_expiry_dates": {
+        "MOM-FREESHIP": "2026-11-29",
+        "COD-0": "2026-12-14",
+        "PUMP-GIFT": "2026-10-13"
+      },
+      "estimated_delivery": "2026-11-10"
+    },
+    "expected_outcome": "chot_don",
+    "success_if": {
+      "tool_called": "order.create",
+      "args_match": {
+        "customer_phone": "[PHONE_CUST_007]",
+        "sku": "SKU-MB-PUMP1",
+        "price_vnd": 4290000,
+        "payment": "COD"
+      }
+    },
+    "days_later": 1,
+    "must_carry_over": [
+      "product_advised",
+      "price_quoted_vnd"
+    ],
+    "must_not_ask": [
+      "product_advised"
+    ],
+    "memory_expectation": {
+      "order_status": "created"
+    },
+    "customer_turns": [
+      "Em còn lưu báo giá Máy hút sữa điện đôi Spectra S1 lần trước anh gọi hỏi không?",
+      "Vậy Máy hút sữa điện đôi Spectra S1 hiện là bốn triệu hai trăm chín mươi nghìn đồng nhé, lên đơn giúp anh với.",
+      "Cho anh trả tiền lúc nhận hàng, giao về căn bảy, lô A, khu giao nhận mô phỏng Sao Mai giúp nhé."
+    ]
+  },
+  "simulator_profile": {
+    "persona_system_prompt": "Bạn thích hỏi kỹ nhiều chi tiết kỹ thuật và so sánh, chưa muốn mua. Mục tiêu: call_1: Tìm hiểu Máy hút sữa điện đôi Spectra S1 và hẹn trao đổi tiếp | call_2: Chốt mua theo báo giá hiện hành. Đã biết: {facts}. Dàn ý: {turn_outline}. Bạn hỏi tối đa theo dàn ý, kết thúc bằng 'để xem thêm' trừ khi dàn ý nói bạn chốt. Nếu nhân viên bịa thông số, bạn hỏi lại 'em chắc không?'.",
+    "hidden_goal": "call_1: Tìm hiểu Máy hút sữa điện đôi Spectra S1 và hẹn trao đổi tiếp | call_2: Chốt mua theo báo giá hiện hành",
+    "patience_level": 5,
+    "patience_max_turns": 5,
+    "patience_by_session": {
+      "call_1": 5,
+      "call_2": 4
+    }
+  }
+}

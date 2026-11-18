@@ -1,0 +1,25 @@
+{
+  "tier": "M2",
+  "seed": 2026,
+  "input_run": "run_M2_20261118_1713",
+  "timestamp": "2026-11-18T17:15:12+07:00",
+  "generation_method": "Codex-authored deterministic Vietnamese renderer",
+  "model": null,
+  "temperature": null,
+  "token_counts": null,
+  "retry_count": 0,
+  "scenario_count": 130,
+  "session_count": 280,
+  "sessions_by_channel": {
+    "hotline": 245,
+    "facebook": 17,
+    "zalo": 18
+  },
+  "style_counts": {
+    "hotline_turns": 694,
+    "hotline_asr_varied": 191,
+    "chat_turns": 103,
+    "chat_accentless": 36
+  },
+  "targeted_scenario_ids": []
+}

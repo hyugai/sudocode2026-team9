@@ -1,0 +1,122 @@
+{
+  "scenario_id": "TEAM-SC-053",
+  "tier": "M1",
+  "customer_id": "CUST-053",
+  "customer_phone": "000-000-0053",
+  "customer_identities": {
+    "phone": "000-000-0053",
+    "fb_id": "fb_synthetic_053",
+    "zalo_id": "zalo_synthetic_053"
+  },
+  "persona": "khach_hoi_nhieu_khong_mua",
+  "archetype": "hard",
+  "hard_case": true,
+  "edge_case_type": "expired_promo",
+  "target_sku": "SKU-AP-X",
+  "call_1": {
+    "session_index": 1,
+    "channel": "hotline",
+    "channel_identity": "000-000-0053",
+    "date": "2026-10-22",
+    "customer_goal": "Tìm hiểu Máy lọc không khí AirPure X và hẹn trao đổi tiếp",
+    "facts_established": {
+      "product_advised": "SKU-AP-X",
+      "price_quoted_vnd": 4890000,
+      "promo_code": "GIFT-FILTER",
+      "promo_expiry": "2026-10-22"
+    },
+    "entities_multi": [],
+    "ground_truth_facts": {
+      "sku": "SKU-AP-X",
+      "price_vnd": 4890000,
+      "in_stock": true,
+      "active_promos": [
+        "COD-0",
+        "GIFT-FILTER"
+      ],
+      "expired_promos": [
+        "AP-SEP"
+      ],
+      "promo_expiry_dates": {
+        "GIFT-FILTER": "2026-10-22",
+        "COD-0": "2026-12-14",
+        "AP-SEP": "2026-09-30"
+      },
+      "scheduled_callback_at": "2026-10-23T10:00"
+    },
+    "expected_outcome": "hen_goi_lai",
+    "success_if": {
+      "tool_called": "schedule.callback",
+      "args_match": {
+        "customer_phone": "000-000-0053",
+        "callback_at": "2026-10-23T10:00"
+      }
+    },
+    "customer_turns": [
+      "anh đang xem Máy lọc hông khí AirPure X, em tư vấn giúp anh với.",
+      "Vậy Máy lọc không khí AirPure X bên em báo bốn triệu tám trăm chín mươi nghìn đồng đúng không? Còn ưu đãi Tặng 1 màng lọc khi mua AirPure X/Y áp dụng đến ngày hai mươi hai tháng mười đúng không?",
+      "Để xem kỹ lại thông tin đã. Em gọi lại lúc mười giờ ngày hai mươi ba tháng mười giúp anh nhé."
+    ]
+  },
+  "call_2": {
+    "session_index": 2,
+    "channel": "hotline",
+    "channel_identity": "000-000-0053",
+    "date": "2026-10-23",
+    "customer_goal": "Kiểm tra lại ưu đãi GIFT-FILTER và chốt nếu được giải thích giá hiện hành",
+    "facts_established": {
+      "product_advised": "SKU-AP-X",
+      "price_quoted_vnd": 4890000,
+      "payment": "COD",
+      "delivery_address": "căn 53, lô A, khu giao nhận mô phỏng Sao Mai",
+      "order_status": "created"
+    },
+    "entities_multi": [],
+    "ground_truth_facts": {
+      "sku": "SKU-AP-X",
+      "price_vnd": 4890000,
+      "in_stock": true,
+      "active_promos": [
+        "COD-0"
+      ],
+      "expired_promos": [
+        "GIFT-FILTER",
+        "AP-SEP"
+      ],
+      "promo_expiry_dates": {
+        "GIFT-FILTER": "2026-10-22",
+        "COD-0": "2026-12-14",
+        "AP-SEP": "2026-09-30"
+      },
+      "estimated_delivery": "2026-10-27"
+    },
+    "expected_outcome": "chot_don",
+    "success_if": {
+      "tool_called": "order.create",
+      "args_match": {
+        "customer_phone": "000-000-0053",
+        "sku": "SKU-AP-X",
+        "price_vnd": 4890000,
+        "payment": "COD"
+      }
+    },
+    "days_later": 1,
+    "must_carry_over": [
+      "product_advised",
+      "price_quoted_vnd",
+      "promo_code",
+      "promo_expiry"
+    ],
+    "must_not_ask": [
+      "product_advised"
+    ],
+    "memory_expectation": {
+      "order_status": "created"
+    },
+    "customer_turns": [
+      "Hôm trước chị có gọi hỏi Máy lọc không khí AirPure X, em xem lại giúp chị nhé.",
+      "Ưu đãi Tặng 1 màng lọc khi mua AirPure X/Y hôm trước hết rồi à? Em giải thích lại giúp chị mức bốn triệu tám trăm chín mươi nghìn đồng nhé.",
+      "Cho chị trả tiền lúc nhận hàng, giao về căn năm mươi ba, lô A, khu giao nhận mô phỏng Sao Mai giúp nhé."
+    ]
+  }
+}

@@ -1,0 +1,98 @@
+{
+  "scenario_id": "TEAM-SC-185",
+  "tier": "M1",
+  "customer_id": "CUST-185",
+  "customer_phone": "000-000-0185",
+  "customer_identities": {
+    "phone": "000-000-0185",
+    "fb_id": "fb_synthetic_185",
+    "zalo_id": "zalo_synthetic_185"
+  },
+  "persona": "khach_hoi_nhieu_khong_mua",
+  "archetype": "hard",
+  "hard_case": true,
+  "edge_case_type": "out_of_stock",
+  "target_sku": "SKU-MB-STR1",
+  "call_1": {
+    "session_index": 1,
+    "channel": "hotline",
+    "channel_identity": "000-000-0185",
+    "date": "2026-10-24",
+    "customer_goal": "Tìm hiểu Xe đẩy gấp gọn Joie Pact và hẹn trao đổi tiếp",
+    "facts_established": {
+      "product_advised": "SKU-MB-STR1",
+      "price_quoted_vnd": 3490000
+    },
+    "entities_multi": [],
+    "ground_truth_facts": {
+      "sku": "SKU-MB-STR1",
+      "price_vnd": 3490000,
+      "in_stock": true,
+      "active_promos": [
+        "MOM-FREESHIP",
+        "COD-0"
+      ],
+      "expired_promos": [],
+      "promo_expiry_dates": {
+        "MOM-FREESHIP": "2026-11-29",
+        "COD-0": "2026-12-14"
+      },
+      "scheduled_callback_at": "2026-10-25T10:00"
+    },
+    "expected_outcome": "hen_goi_lai",
+    "success_if": {
+      "tool_called": "schedule.callback",
+      "args_match": {
+        "customer_phone": "000-000-0185",
+        "callback_at": "2026-10-25T10:00"
+      }
+    },
+    "customer_turns": [
+      "Bên em bán Xe đẩy gấp gọn Joie Pact đúng không? Chị đang tìm mẫu này.",
+      "ba triệu bốn trăm chín mươi nghìn đồng cho Xe đẩy gấp gọn Joie Pact là giá hiện tại phải hông em?",
+      "ờ chị nói là để xem kỹ lại thông tin đã. Em gọi lại lúc mười giờ ngày hai mươi lăm tháng mười giúp chị nhé."
+    ]
+  },
+  "call_2": {
+    "session_index": 2,
+    "channel": "hotline",
+    "channel_identity": "000-000-0185",
+    "date": "2026-10-25",
+    "customer_goal": "Kiểm tra tồn kho, từ chối đặt khi đã hết hàng",
+    "facts_established": {
+      "product_advised": "SKU-MB-STR1"
+    },
+    "entities_multi": [],
+    "ground_truth_facts": {
+      "sku": "SKU-MB-STR1",
+      "price_vnd": 3490000,
+      "in_stock": false,
+      "active_promos": [
+        "MOM-FREESHIP",
+        "COD-0"
+      ],
+      "expired_promos": [],
+      "promo_expiry_dates": {
+        "MOM-FREESHIP": "2026-11-29",
+        "COD-0": "2026-12-14"
+      }
+    },
+    "expected_outcome": "tu_choi",
+    "success_if": {
+      "tool_called": null,
+      "args_match": {}
+    },
+    "days_later": 1,
+    "must_carry_over": [
+      "product_advised",
+      "price_quoted_vnd"
+    ],
+    "must_not_ask": [
+      "product_advised"
+    ],
+    "customer_turns": [
+      "Mình liên hệ lại về Xe đẩy gấp gọn Joie Pact đây, lần trước có gọi hỏi giá rồi.",
+      "Nếu Xe đẩy gấp gọn Joie Pact hết hàng rồi thì mình chưa đặt đâu, để khi khác nhé."
+    ]
+  }
+}

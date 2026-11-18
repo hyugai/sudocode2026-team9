@@ -1,0 +1,108 @@
+{
+  "scenario_id": "TEAM-SC-017",
+  "tier": "M1",
+  "customer_id": "CUST-017",
+  "customer_phone": "000-000-0017",
+  "customer_identities": {
+    "phone": "000-000-0017",
+    "fb_id": "fb_synthetic_017",
+    "zalo_id": "zalo_synthetic_017"
+  },
+  "persona": "khach_hoi_nhieu_khong_mua",
+  "archetype": "standard",
+  "hard_case": false,
+  "edge_case_type": null,
+  "target_sku": "SKU-JK-WND",
+  "call_1": {
+    "session_index": 1,
+    "channel": "hotline",
+    "channel_identity": "000-000-0017",
+    "date": "2026-10-23",
+    "customer_goal": "Tìm hiểu Áo khoác gió Windbreak và hẹn trao đổi tiếp",
+    "facts_established": {
+      "product_advised": "SKU-JK-WND",
+      "price_quoted_vnd": 690000
+    },
+    "entities_multi": [],
+    "ground_truth_facts": {
+      "sku": "SKU-JK-WND",
+      "price_vnd": 690000,
+      "in_stock": true,
+      "active_promos": [
+        "COD-0"
+      ],
+      "expired_promos": [],
+      "promo_expiry_dates": {
+        "COD-0": "2026-12-14"
+      },
+      "scheduled_callback_at": "2026-10-27T10:00"
+    },
+    "expected_outcome": "hen_goi_lai",
+    "success_if": {
+      "tool_called": "schedule.callback",
+      "args_match": {
+        "customer_phone": "000-000-0017",
+        "callback_at": "2026-10-27T10:00"
+      }
+    },
+    "customer_turns": [
+      "Dạ, chị đang xem Áo khoác gió Windbreak, em tư vấn giúp chị với.",
+      "sáu trăm chín mươi ngàn đồng cho Áo khoác gió Windbreak là giá hiện tại phải không em?",
+      "Để xem kỹ lại thông tin đã. Em gọi lại lúc mười giờ ngày hai mươi bảy tháng mười giúp chị nhé."
+    ]
+  },
+  "call_2": {
+    "session_index": 2,
+    "channel": "hotline",
+    "channel_identity": "000-000-0017",
+    "date": "2026-10-27",
+    "customer_goal": "Chốt mua theo báo giá hiện hành",
+    "facts_established": {
+      "product_advised": "SKU-JK-WND",
+      "price_quoted_vnd": 690000,
+      "payment": "COD",
+      "delivery_address": "căn 17, lô A, khu giao nhận mô phỏng Sao Mai",
+      "order_status": "created"
+    },
+    "entities_multi": [],
+    "ground_truth_facts": {
+      "sku": "SKU-JK-WND",
+      "price_vnd": 690000,
+      "in_stock": true,
+      "active_promos": [
+        "COD-0"
+      ],
+      "expired_promos": [],
+      "promo_expiry_dates": {
+        "COD-0": "2026-12-14"
+      },
+      "estimated_delivery": "2026-10-29"
+    },
+    "expected_outcome": "chot_don",
+    "success_if": {
+      "tool_called": "order.create",
+      "args_match": {
+        "customer_phone": "000-000-0017",
+        "sku": "SKU-JK-WND",
+        "price_vnd": 690000,
+        "payment": "COD"
+      }
+    },
+    "days_later": 4,
+    "must_carry_over": [
+      "product_advised",
+      "price_quoted_vnd"
+    ],
+    "must_not_ask": [
+      "product_advised"
+    ],
+    "memory_expectation": {
+      "order_status": "created"
+    },
+    "customer_turns": [
+      "Em còn lưu báo giá Áo khoác gió Windbreak lần trước mình gọi hỏi không?",
+      "Mình lấy Áo khoác gió Windbreak với giá sáu trăm chín mươi ngàn đồng nhé, em tạo đơn giúp.",
+      "Cho mình trả tiền lúc nhận hàng, giao về căn mười bảy, lô A, khu giao nhận mô phỏng Sao Mai giúp nhé."
+    ]
+  }
+}

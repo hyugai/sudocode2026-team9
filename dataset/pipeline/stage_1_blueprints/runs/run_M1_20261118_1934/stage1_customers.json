@@ -1,0 +1,1232 @@
+[
+  {
+    "customer_id": "CUST-001",
+    "phone": "000-000-0001",
+    "address": "căn 1, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-001",
+    "fb_id": "fb_synthetic_001",
+    "zalo_id": "zalo_synthetic_001",
+    "dialect": "South",
+    "persona": "khach_hoi_nhieu_khong_mua"
+  },
+  {
+    "customer_id": "CUST-002",
+    "phone": "000-000-0002",
+    "address": "căn 2, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-002",
+    "fb_id": "fb_synthetic_002",
+    "zalo_id": "zalo_synthetic_002",
+    "dialect": "South",
+    "persona": "khach_hoi_nhieu_khong_mua"
+  },
+  {
+    "customer_id": "CUST-003",
+    "phone": "000-000-0003",
+    "address": "căn 3, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-003",
+    "fb_id": "fb_synthetic_003",
+    "zalo_id": "zalo_synthetic_003",
+    "dialect": "North",
+    "persona": "khach_hoi_nhieu_khong_mua"
+  },
+  {
+    "customer_id": "CUST-004",
+    "phone": "000-000-0004",
+    "address": "căn 4, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-004",
+    "fb_id": "fb_synthetic_004",
+    "zalo_id": "zalo_synthetic_004",
+    "dialect": "North",
+    "persona": "khach_do_du_hoi_nguoi_nha"
+  },
+  {
+    "customer_id": "CUST-005",
+    "phone": "000-000-0005",
+    "address": "căn 5, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-005",
+    "fb_id": "fb_synthetic_005",
+    "zalo_id": "zalo_synthetic_005",
+    "dialect": "North",
+    "persona": "khach_hoi_nhieu_khong_mua"
+  },
+  {
+    "customer_id": "CUST-006",
+    "phone": "000-000-0006",
+    "address": "căn 6, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-006",
+    "fb_id": "fb_synthetic_006",
+    "zalo_id": "zalo_synthetic_006",
+    "dialect": "Central",
+    "persona": "khach_so_gia"
+  },
+  {
+    "customer_id": "CUST-007",
+    "phone": "000-000-0007",
+    "address": "căn 7, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-007",
+    "fb_id": "fb_synthetic_007",
+    "zalo_id": "zalo_synthetic_007",
+    "dialect": "North",
+    "persona": "khach_hoi_nhieu_khong_mua"
+  },
+  {
+    "customer_id": "CUST-008",
+    "phone": "000-000-0008",
+    "address": "căn 8, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-008",
+    "fb_id": "fb_synthetic_008",
+    "zalo_id": "zalo_synthetic_008",
+    "dialect": "North",
+    "persona": "khach_do_du_hoi_nguoi_nha"
+  },
+  {
+    "customer_id": "CUST-009",
+    "phone": "000-000-0009",
+    "address": "căn 9, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-009",
+    "fb_id": "fb_synthetic_009",
+    "zalo_id": "zalo_synthetic_009",
+    "dialect": "Central",
+    "persona": "khach_so_gia"
+  },
+  {
+    "customer_id": "CUST-010",
+    "phone": "000-000-0010",
+    "address": "căn 10, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-010",
+    "fb_id": "fb_synthetic_010",
+    "zalo_id": "zalo_synthetic_010",
+    "dialect": "Central",
+    "persona": "khach_hoi_nhieu_khong_mua"
+  },
+  {
+    "customer_id": "CUST-011",
+    "phone": "000-000-0011",
+    "address": "căn 11, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-011",
+    "fb_id": "fb_synthetic_011",
+    "zalo_id": "zalo_synthetic_011",
+    "dialect": "Central",
+    "persona": "khach_so_gia"
+  },
+  {
+    "customer_id": "CUST-012",
+    "phone": "000-000-0012",
+    "address": "căn 12, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-012",
+    "fb_id": "fb_synthetic_012",
+    "zalo_id": "zalo_synthetic_012",
+    "dialect": "South",
+    "persona": "khach_hoi_nhieu_khong_mua"
+  },
+  {
+    "customer_id": "CUST-013",
+    "phone": "000-000-0013",
+    "address": "căn 13, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-013",
+    "fb_id": "fb_synthetic_013",
+    "zalo_id": "zalo_synthetic_013",
+    "dialect": "North",
+    "persona": "khach_hoi_nhieu_khong_mua"
+  },
+  {
+    "customer_id": "CUST-014",
+    "phone": "000-000-0014",
+    "address": "căn 14, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-014",
+    "fb_id": "fb_synthetic_014",
+    "zalo_id": "zalo_synthetic_014",
+    "dialect": "Central",
+    "persona": "khach_hoi_nhieu_khong_mua"
+  },
+  {
+    "customer_id": "CUST-015",
+    "phone": "000-000-0015",
+    "address": "căn 15, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-015",
+    "fb_id": "fb_synthetic_015",
+    "zalo_id": "zalo_synthetic_015",
+    "dialect": "South",
+    "persona": "khach_do_du_hoi_nguoi_nha"
+  },
+  {
+    "customer_id": "CUST-016",
+    "phone": "000-000-0016",
+    "address": "căn 16, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-016",
+    "fb_id": "fb_synthetic_016",
+    "zalo_id": "zalo_synthetic_016",
+    "dialect": "South",
+    "persona": "khach_hoi_nhieu_khong_mua"
+  },
+  {
+    "customer_id": "CUST-017",
+    "phone": "000-000-0017",
+    "address": "căn 17, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-017",
+    "fb_id": "fb_synthetic_017",
+    "zalo_id": "zalo_synthetic_017",
+    "dialect": "South",
+    "persona": "khach_hoi_nhieu_khong_mua"
+  },
+  {
+    "customer_id": "CUST-018",
+    "phone": "000-000-0018",
+    "address": "căn 18, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-018",
+    "fb_id": "fb_synthetic_018",
+    "zalo_id": "zalo_synthetic_018",
+    "dialect": "North",
+    "persona": "khach_so_gia"
+  },
+  {
+    "customer_id": "CUST-019",
+    "phone": "000-000-0019",
+    "address": "căn 19, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-019",
+    "fb_id": "fb_synthetic_019",
+    "zalo_id": "zalo_synthetic_019",
+    "dialect": "North",
+    "persona": "khach_do_du_hoi_nguoi_nha"
+  },
+  {
+    "customer_id": "CUST-020",
+    "phone": "000-000-0020",
+    "address": "căn 20, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-020",
+    "fb_id": "fb_synthetic_020",
+    "zalo_id": "zalo_synthetic_020",
+    "dialect": "Central",
+    "persona": "khach_hoi_nhieu_khong_mua"
+  },
+  {
+    "customer_id": "CUST-021",
+    "phone": "000-000-0021",
+    "address": "căn 21, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-021",
+    "fb_id": "fb_synthetic_021",
+    "zalo_id": "zalo_synthetic_021",
+    "dialect": "Central",
+    "persona": "khach_hoi_nhieu_khong_mua"
+  },
+  {
+    "customer_id": "CUST-022",
+    "phone": "000-000-0022",
+    "address": "căn 22, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-022",
+    "fb_id": "fb_synthetic_022",
+    "zalo_id": "zalo_synthetic_022",
+    "dialect": "South",
+    "persona": "khach_so_gia"
+  },
+  {
+    "customer_id": "CUST-023",
+    "phone": "000-000-0023",
+    "address": "căn 23, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-023",
+    "fb_id": "fb_synthetic_023",
+    "zalo_id": "zalo_synthetic_023",
+    "dialect": "North",
+    "persona": "khach_so_gia"
+  },
+  {
+    "customer_id": "CUST-024",
+    "phone": "000-000-0024",
+    "address": "căn 24, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-024",
+    "fb_id": "fb_synthetic_024",
+    "zalo_id": "zalo_synthetic_024",
+    "dialect": "Central",
+    "persona": "khach_so_gia"
+  },
+  {
+    "customer_id": "CUST-025",
+    "phone": "000-000-0025",
+    "address": "căn 25, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-025",
+    "fb_id": "fb_synthetic_025",
+    "zalo_id": "zalo_synthetic_025",
+    "dialect": "Central",
+    "persona": "khach_do_du_hoi_nguoi_nha"
+  },
+  {
+    "customer_id": "CUST-026",
+    "phone": "000-000-0026",
+    "address": "căn 26, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-026",
+    "fb_id": "fb_synthetic_026",
+    "zalo_id": "zalo_synthetic_026",
+    "dialect": "North",
+    "persona": "khach_hoi_nhieu_khong_mua"
+  },
+  {
+    "customer_id": "CUST-027",
+    "phone": "000-000-0027",
+    "address": "căn 27, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-027",
+    "fb_id": "fb_synthetic_027",
+    "zalo_id": "zalo_synthetic_027",
+    "dialect": "Central",
+    "persona": "khach_do_du_hoi_nguoi_nha"
+  },
+  {
+    "customer_id": "CUST-028",
+    "phone": "000-000-0028",
+    "address": "căn 28, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-028",
+    "fb_id": "fb_synthetic_028",
+    "zalo_id": "zalo_synthetic_028",
+    "dialect": "North",
+    "persona": "khach_hoi_nhieu_khong_mua"
+  },
+  {
+    "customer_id": "CUST-029",
+    "phone": "000-000-0029",
+    "address": "căn 29, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-029",
+    "fb_id": "fb_synthetic_029",
+    "zalo_id": "zalo_synthetic_029",
+    "dialect": "South",
+    "persona": "khach_hoi_nhieu_khong_mua"
+  },
+  {
+    "customer_id": "CUST-030",
+    "phone": "000-000-0030",
+    "address": "căn 30, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-030",
+    "fb_id": "fb_synthetic_030",
+    "zalo_id": "zalo_synthetic_030",
+    "dialect": "Central",
+    "persona": "khach_do_du_hoi_nguoi_nha"
+  },
+  {
+    "customer_id": "CUST-031",
+    "phone": "000-000-0031",
+    "address": "căn 31, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-031",
+    "fb_id": "fb_synthetic_031",
+    "zalo_id": "zalo_synthetic_031",
+    "dialect": "South",
+    "persona": "khach_hoi_nhieu_khong_mua"
+  },
+  {
+    "customer_id": "CUST-032",
+    "phone": "000-000-0032",
+    "address": "căn 32, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-032",
+    "fb_id": "fb_synthetic_032",
+    "zalo_id": "zalo_synthetic_032",
+    "dialect": "Central",
+    "persona": "khach_hoi_nhieu_khong_mua"
+  },
+  {
+    "customer_id": "CUST-033",
+    "phone": "000-000-0033",
+    "address": "căn 33, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-033",
+    "fb_id": "fb_synthetic_033",
+    "zalo_id": "zalo_synthetic_033",
+    "dialect": "North",
+    "persona": "khach_hoi_nhieu_khong_mua"
+  },
+  {
+    "customer_id": "CUST-034",
+    "phone": "000-000-0034",
+    "address": "căn 34, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-034",
+    "fb_id": "fb_synthetic_034",
+    "zalo_id": "zalo_synthetic_034",
+    "dialect": "Central",
+    "persona": "khach_hoi_nhieu_khong_mua"
+  },
+  {
+    "customer_id": "CUST-035",
+    "phone": "000-000-0035",
+    "address": "căn 35, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-035",
+    "fb_id": "fb_synthetic_035",
+    "zalo_id": "zalo_synthetic_035",
+    "dialect": "North",
+    "persona": "khach_so_gia"
+  },
+  {
+    "customer_id": "CUST-036",
+    "phone": "000-000-0036",
+    "address": "căn 36, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-036",
+    "fb_id": "fb_synthetic_036",
+    "zalo_id": "zalo_synthetic_036",
+    "dialect": "South",
+    "persona": "khach_do_du_hoi_nguoi_nha"
+  },
+  {
+    "customer_id": "CUST-037",
+    "phone": "000-000-0037",
+    "address": "căn 37, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-037",
+    "fb_id": "fb_synthetic_037",
+    "zalo_id": "zalo_synthetic_037",
+    "dialect": "Central",
+    "persona": "khach_do_du_hoi_nguoi_nha"
+  },
+  {
+    "customer_id": "CUST-038",
+    "phone": "000-000-0038",
+    "address": "căn 38, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-038",
+    "fb_id": "fb_synthetic_038",
+    "zalo_id": "zalo_synthetic_038",
+    "dialect": "North",
+    "persona": "khach_so_gia"
+  },
+  {
+    "customer_id": "CUST-039",
+    "phone": "000-000-0039",
+    "address": "căn 39, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-039",
+    "fb_id": "fb_synthetic_039",
+    "zalo_id": "zalo_synthetic_039",
+    "dialect": "North",
+    "persona": "khach_hoi_nhieu_khong_mua"
+  },
+  {
+    "customer_id": "CUST-040",
+    "phone": "000-000-0040",
+    "address": "căn 40, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-040",
+    "fb_id": "fb_synthetic_040",
+    "zalo_id": "zalo_synthetic_040",
+    "dialect": "Central",
+    "persona": "khach_so_gia"
+  },
+  {
+    "customer_id": "CUST-041",
+    "phone": "000-000-0041",
+    "address": "căn 41, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-041",
+    "fb_id": "fb_synthetic_041",
+    "zalo_id": "zalo_synthetic_041",
+    "dialect": "North",
+    "persona": "khach_da_kenh_fb_hotline"
+  },
+  {
+    "customer_id": "CUST-042",
+    "phone": "000-000-0042",
+    "address": "căn 42, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-042",
+    "fb_id": "fb_synthetic_042",
+    "zalo_id": "zalo_synthetic_042",
+    "dialect": "South",
+    "persona": "khach_da_kenh_fb_hotline"
+  },
+  {
+    "customer_id": "CUST-043",
+    "phone": "000-000-0043",
+    "address": "căn 43, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-043",
+    "fb_id": "fb_synthetic_043",
+    "zalo_id": "zalo_synthetic_043",
+    "dialect": "South",
+    "persona": "khach_da_kenh_fb_hotline"
+  },
+  {
+    "customer_id": "CUST-044",
+    "phone": "000-000-0044",
+    "address": "căn 44, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-044",
+    "fb_id": "fb_synthetic_044",
+    "zalo_id": "zalo_synthetic_044",
+    "dialect": "South",
+    "persona": "khach_da_kenh_fb_hotline"
+  },
+  {
+    "customer_id": "CUST-045",
+    "phone": "000-000-0045",
+    "address": "căn 45, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-045",
+    "fb_id": "fb_synthetic_045",
+    "zalo_id": "zalo_synthetic_045",
+    "dialect": "Central",
+    "persona": "khach_da_kenh_fb_hotline"
+  },
+  {
+    "customer_id": "CUST-046",
+    "phone": "000-000-0046",
+    "address": "căn 46, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-046",
+    "fb_id": "fb_synthetic_046",
+    "zalo_id": "zalo_synthetic_046",
+    "dialect": "Central",
+    "persona": "khach_da_kenh_fb_hotline"
+  },
+  {
+    "customer_id": "CUST-047",
+    "phone": "000-000-0047",
+    "address": "căn 47, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-047",
+    "fb_id": "fb_synthetic_047",
+    "zalo_id": "zalo_synthetic_047",
+    "dialect": "Central",
+    "persona": "khach_da_kenh_fb_hotline"
+  },
+  {
+    "customer_id": "CUST-048",
+    "phone": "000-000-0048",
+    "address": "căn 48, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-048",
+    "fb_id": "fb_synthetic_048",
+    "zalo_id": "zalo_synthetic_048",
+    "dialect": "North",
+    "persona": "khach_da_kenh_fb_hotline"
+  },
+  {
+    "customer_id": "CUST-049",
+    "phone": "000-000-0049",
+    "address": "căn 49, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-049",
+    "fb_id": "fb_synthetic_049",
+    "zalo_id": "zalo_synthetic_049",
+    "dialect": "Central",
+    "persona": "khach_da_kenh_fb_hotline"
+  },
+  {
+    "customer_id": "CUST-050",
+    "phone": "000-000-0050",
+    "address": "căn 50, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-050",
+    "fb_id": "fb_synthetic_050",
+    "zalo_id": "zalo_synthetic_050",
+    "dialect": "Central",
+    "persona": "khach_da_kenh_fb_hotline"
+  },
+  {
+    "customer_id": "CUST-051",
+    "phone": "000-000-0051",
+    "address": "căn 51, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-051",
+    "fb_id": "fb_synthetic_051",
+    "zalo_id": "zalo_synthetic_051",
+    "dialect": "South",
+    "persona": "khach_da_kenh_fb_hotline"
+  },
+  {
+    "customer_id": "CUST-052",
+    "phone": "000-000-0052",
+    "address": "căn 52, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-052",
+    "fb_id": "fb_synthetic_052",
+    "zalo_id": "zalo_synthetic_052",
+    "dialect": "Central",
+    "persona": "khach_da_kenh_fb_hotline"
+  },
+  {
+    "customer_id": "CUST-053",
+    "phone": "000-000-0053",
+    "address": "căn 53, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-053",
+    "fb_id": "fb_synthetic_053",
+    "zalo_id": "zalo_synthetic_053",
+    "dialect": "Central",
+    "persona": "khach_hoi_nhieu_khong_mua"
+  },
+  {
+    "customer_id": "CUST-054",
+    "phone": "000-000-0054",
+    "address": "căn 54, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-054",
+    "fb_id": "fb_synthetic_054",
+    "zalo_id": "zalo_synthetic_054",
+    "dialect": "South",
+    "persona": "khach_hoi_nhieu_khong_mua"
+  },
+  {
+    "customer_id": "CUST-055",
+    "phone": "000-000-0055",
+    "address": "căn 55, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-055",
+    "fb_id": "fb_synthetic_055",
+    "zalo_id": "zalo_synthetic_055",
+    "dialect": "North",
+    "persona": "khach_hoi_ngoai_tai_lieu"
+  },
+  {
+    "customer_id": "CUST-056",
+    "phone": "000-000-0056",
+    "address": "căn 56, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-056",
+    "fb_id": "fb_synthetic_056",
+    "zalo_id": "zalo_synthetic_056",
+    "dialect": "Central",
+    "persona": "khach_ngoai_pham_vi_chuyen_may"
+  },
+  {
+    "customer_id": "CUST-057",
+    "phone": "000-000-0057",
+    "address": "căn 57, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-057",
+    "fb_id": "fb_synthetic_057",
+    "zalo_id": "zalo_synthetic_057",
+    "dialect": "Central",
+    "persona": "khach_so_gia"
+  },
+  {
+    "customer_id": "CUST-058",
+    "phone": "000-000-0058",
+    "address": "căn 58, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-058",
+    "fb_id": "fb_synthetic_058",
+    "zalo_id": "zalo_synthetic_058",
+    "dialect": "North",
+    "persona": "khach_do_du_hoi_nguoi_nha"
+  },
+  {
+    "customer_id": "CUST-059",
+    "phone": "000-000-0059",
+    "address": "căn 59, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-059",
+    "fb_id": "fb_synthetic_059",
+    "zalo_id": "zalo_synthetic_059",
+    "dialect": "South",
+    "persona": "khach_hoi_ngoai_tai_lieu"
+  },
+  {
+    "customer_id": "CUST-060",
+    "phone": "000-000-0060",
+    "address": "căn 60, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-060",
+    "fb_id": "fb_synthetic_060",
+    "zalo_id": "zalo_synthetic_060",
+    "dialect": "South",
+    "persona": "khach_ngoai_pham_vi_chuyen_may"
+  },
+  {
+    "customer_id": "CUST-061",
+    "phone": "000-000-0061",
+    "address": "căn 61, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-061",
+    "fb_id": "fb_synthetic_061",
+    "zalo_id": "zalo_synthetic_061",
+    "dialect": "South",
+    "persona": "khach_goi_lan_3_het_kien_nhan"
+  },
+  {
+    "customer_id": "CUST-062",
+    "phone": "000-000-0062",
+    "address": "căn 62, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-062",
+    "fb_id": "fb_synthetic_062",
+    "zalo_id": "zalo_synthetic_062",
+    "dialect": "South",
+    "persona": "khach_goi_lan_3_het_kien_nhan"
+  },
+  {
+    "customer_id": "CUST-063",
+    "phone": "000-000-0063",
+    "address": "căn 63, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-063",
+    "fb_id": "fb_synthetic_063",
+    "zalo_id": "zalo_synthetic_063",
+    "dialect": "Central",
+    "persona": "khach_goi_lan_3_het_kien_nhan"
+  },
+  {
+    "customer_id": "CUST-064",
+    "phone": "000-000-0064",
+    "address": "căn 64, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-064",
+    "fb_id": "fb_synthetic_064",
+    "zalo_id": "zalo_synthetic_064",
+    "dialect": "South",
+    "persona": "khach_goi_lan_3_het_kien_nhan"
+  },
+  {
+    "customer_id": "CUST-065",
+    "phone": "000-000-0065",
+    "address": "căn 65, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-065",
+    "fb_id": "fb_synthetic_065",
+    "zalo_id": "zalo_synthetic_065",
+    "dialect": "Central",
+    "persona": "khach_goi_lan_3_het_kien_nhan"
+  },
+  {
+    "customer_id": "CUST-066",
+    "phone": "000-000-0066",
+    "address": "căn 66, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-066",
+    "fb_id": "fb_synthetic_066",
+    "zalo_id": "zalo_synthetic_066",
+    "dialect": "North",
+    "persona": "khach_so_gia"
+  },
+  {
+    "customer_id": "CUST-067",
+    "phone": "000-000-0067",
+    "address": "căn 67, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-067",
+    "fb_id": "fb_synthetic_067",
+    "zalo_id": "zalo_synthetic_067",
+    "dialect": "South",
+    "persona": "khach_so_gia"
+  },
+  {
+    "customer_id": "CUST-068",
+    "phone": "000-000-0068",
+    "address": "căn 68, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-068",
+    "fb_id": "fb_synthetic_068",
+    "zalo_id": "zalo_synthetic_068",
+    "dialect": "North",
+    "persona": "khach_do_du_hoi_nguoi_nha"
+  },
+  {
+    "customer_id": "CUST-070",
+    "phone": "000-000-0070",
+    "address": "căn 70, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-070",
+    "fb_id": "fb_synthetic_070",
+    "zalo_id": "zalo_synthetic_070",
+    "dialect": "North",
+    "persona": "khach_hoi_nhieu_khong_mua"
+  },
+  {
+    "customer_id": "CUST-074",
+    "phone": "000-000-0074",
+    "address": "căn 74, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-074",
+    "fb_id": "fb_synthetic_074",
+    "zalo_id": "zalo_synthetic_074",
+    "dialect": "North",
+    "persona": "khach_hoi_nhieu_khong_mua"
+  },
+  {
+    "customer_id": "CUST-081",
+    "phone": "000-000-0081",
+    "address": "căn 81, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-081",
+    "fb_id": "fb_synthetic_081",
+    "zalo_id": "zalo_synthetic_081",
+    "dialect": "North",
+    "persona": "khach_do_du_hoi_nguoi_nha"
+  },
+  {
+    "customer_id": "CUST-085",
+    "phone": "000-000-0085",
+    "address": "căn 85, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-085",
+    "fb_id": "fb_synthetic_085",
+    "zalo_id": "zalo_synthetic_085",
+    "dialect": "Central",
+    "persona": "khach_hoi_nhieu_khong_mua"
+  },
+  {
+    "customer_id": "CUST-090",
+    "phone": "000-000-0090",
+    "address": "căn 90, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-090",
+    "fb_id": "fb_synthetic_090",
+    "zalo_id": "zalo_synthetic_090",
+    "dialect": "North",
+    "persona": "khach_hoi_nhieu_khong_mua"
+  },
+  {
+    "customer_id": "CUST-095",
+    "phone": "000-000-0095",
+    "address": "căn 95, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-095",
+    "fb_id": "fb_synthetic_095",
+    "zalo_id": "zalo_synthetic_095",
+    "dialect": "North",
+    "persona": "khach_hoi_nhieu_khong_mua"
+  },
+  {
+    "customer_id": "CUST-097",
+    "phone": "000-000-0097",
+    "address": "căn 97, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-097",
+    "fb_id": "fb_synthetic_097",
+    "zalo_id": "zalo_synthetic_097",
+    "dialect": "Central",
+    "persona": "khach_hoi_nhieu_khong_mua"
+  },
+  {
+    "customer_id": "CUST-098",
+    "phone": "000-000-0098",
+    "address": "căn 98, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-098",
+    "fb_id": "fb_synthetic_098",
+    "zalo_id": "zalo_synthetic_098",
+    "dialect": "North",
+    "persona": "khach_do_du_hoi_nguoi_nha"
+  },
+  {
+    "customer_id": "CUST-101",
+    "phone": "000-000-0101",
+    "address": "căn 101, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-101",
+    "fb_id": "fb_synthetic_101",
+    "zalo_id": "zalo_synthetic_101",
+    "dialect": "South",
+    "persona": "khach_do_du_hoi_nguoi_nha"
+  },
+  {
+    "customer_id": "CUST-102",
+    "phone": "000-000-0102",
+    "address": "căn 102, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-102",
+    "fb_id": "fb_synthetic_102",
+    "zalo_id": "zalo_synthetic_102",
+    "dialect": "North",
+    "persona": "khach_so_gia"
+  },
+  {
+    "customer_id": "CUST-103",
+    "phone": "000-000-0103",
+    "address": "căn 103, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-103",
+    "fb_id": "fb_synthetic_103",
+    "zalo_id": "zalo_synthetic_103",
+    "dialect": "North",
+    "persona": "khach_so_gia"
+  },
+  {
+    "customer_id": "CUST-110",
+    "phone": "000-000-0110",
+    "address": "căn 110, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-110",
+    "fb_id": "fb_synthetic_110",
+    "zalo_id": "zalo_synthetic_110",
+    "dialect": "North",
+    "persona": "khach_so_gia"
+  },
+  {
+    "customer_id": "CUST-115",
+    "phone": "000-000-0115",
+    "address": "căn 115, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-115",
+    "fb_id": "fb_synthetic_115",
+    "zalo_id": "zalo_synthetic_115",
+    "dialect": "North",
+    "persona": "khach_so_gia"
+  },
+  {
+    "customer_id": "CUST-117",
+    "phone": "000-000-0117",
+    "address": "căn 117, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-117",
+    "fb_id": "fb_synthetic_117",
+    "zalo_id": "zalo_synthetic_117",
+    "dialect": "North",
+    "persona": "khach_do_du_hoi_nguoi_nha"
+  },
+  {
+    "customer_id": "CUST-121",
+    "phone": "000-000-0121",
+    "address": "căn 121, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-121",
+    "fb_id": "fb_synthetic_121",
+    "zalo_id": "zalo_synthetic_121",
+    "dialect": "Central",
+    "persona": "khach_hoi_nhieu_khong_mua"
+  },
+  {
+    "customer_id": "CUST-122",
+    "phone": "000-000-0122",
+    "address": "căn 122, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-122",
+    "fb_id": "fb_synthetic_122",
+    "zalo_id": "zalo_synthetic_122",
+    "dialect": "Central",
+    "persona": "khach_do_du_hoi_nguoi_nha"
+  },
+  {
+    "customer_id": "CUST-130",
+    "phone": "000-000-0130",
+    "address": "căn 130, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-130",
+    "fb_id": "fb_synthetic_130",
+    "zalo_id": "zalo_synthetic_130",
+    "dialect": "North",
+    "persona": "khach_so_gia"
+  },
+  {
+    "customer_id": "CUST-131",
+    "phone": "000-000-0131",
+    "address": "căn 131, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-131",
+    "fb_id": "fb_synthetic_131",
+    "zalo_id": "zalo_synthetic_131",
+    "dialect": "Central",
+    "persona": "khach_do_du_hoi_nguoi_nha"
+  },
+  {
+    "customer_id": "CUST-134",
+    "phone": "000-000-0134",
+    "address": "căn 134, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-134",
+    "fb_id": "fb_synthetic_134",
+    "zalo_id": "zalo_synthetic_134",
+    "dialect": "Central",
+    "persona": "khach_hoi_nhieu_khong_mua"
+  },
+  {
+    "customer_id": "CUST-136",
+    "phone": "000-000-0136",
+    "address": "căn 136, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-136",
+    "fb_id": "fb_synthetic_136",
+    "zalo_id": "zalo_synthetic_136",
+    "dialect": "South",
+    "persona": "khach_da_kenh_fb_hotline"
+  },
+  {
+    "customer_id": "CUST-137",
+    "phone": "000-000-0137",
+    "address": "căn 137, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-137",
+    "fb_id": "fb_synthetic_137",
+    "zalo_id": "zalo_synthetic_137",
+    "dialect": "South",
+    "persona": "khach_da_kenh_fb_hotline"
+  },
+  {
+    "customer_id": "CUST-138",
+    "phone": "000-000-0138",
+    "address": "căn 138, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-138",
+    "fb_id": "fb_synthetic_138",
+    "zalo_id": "zalo_synthetic_138",
+    "dialect": "Central",
+    "persona": "khach_da_kenh_fb_hotline"
+  },
+  {
+    "customer_id": "CUST-139",
+    "phone": "000-000-0139",
+    "address": "căn 139, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-139",
+    "fb_id": "fb_synthetic_139",
+    "zalo_id": "zalo_synthetic_139",
+    "dialect": "South",
+    "persona": "khach_da_kenh_fb_hotline"
+  },
+  {
+    "customer_id": "CUST-141",
+    "phone": "000-000-0141",
+    "address": "căn 141, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-141",
+    "fb_id": "fb_synthetic_141",
+    "zalo_id": "zalo_synthetic_141",
+    "dialect": "Central",
+    "persona": "khach_da_kenh_fb_hotline"
+  },
+  {
+    "customer_id": "CUST-142",
+    "phone": "000-000-0142",
+    "address": "căn 142, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-142",
+    "fb_id": "fb_synthetic_142",
+    "zalo_id": "zalo_synthetic_142",
+    "dialect": "Central",
+    "persona": "khach_da_kenh_fb_hotline"
+  },
+  {
+    "customer_id": "CUST-143",
+    "phone": "000-000-0143",
+    "address": "căn 143, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-143",
+    "fb_id": "fb_synthetic_143",
+    "zalo_id": "zalo_synthetic_143",
+    "dialect": "South",
+    "persona": "khach_da_kenh_fb_hotline"
+  },
+  {
+    "customer_id": "CUST-145",
+    "phone": "000-000-0145",
+    "address": "căn 145, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-145",
+    "fb_id": "fb_synthetic_145",
+    "zalo_id": "zalo_synthetic_145",
+    "dialect": "South",
+    "persona": "khach_da_kenh_fb_hotline"
+  },
+  {
+    "customer_id": "CUST-148",
+    "phone": "000-000-0148",
+    "address": "căn 148, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-148",
+    "fb_id": "fb_synthetic_148",
+    "zalo_id": "zalo_synthetic_148",
+    "dialect": "Central",
+    "persona": "khach_da_kenh_fb_hotline"
+  },
+  {
+    "customer_id": "CUST-149",
+    "phone": "000-000-0149",
+    "address": "căn 149, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-149",
+    "fb_id": "fb_synthetic_149",
+    "zalo_id": "zalo_synthetic_149",
+    "dialect": "Central",
+    "persona": "khach_da_kenh_fb_hotline"
+  },
+  {
+    "customer_id": "CUST-150",
+    "phone": "000-000-0150",
+    "address": "căn 150, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-150",
+    "fb_id": "fb_synthetic_150",
+    "zalo_id": "zalo_synthetic_150",
+    "dialect": "Central",
+    "persona": "khach_da_kenh_fb_hotline"
+  },
+  {
+    "customer_id": "CUST-153",
+    "phone": "000-000-0153",
+    "address": "căn 153, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-153",
+    "fb_id": "fb_synthetic_153",
+    "zalo_id": "zalo_synthetic_153",
+    "dialect": "North",
+    "persona": "khach_da_kenh_fb_hotline"
+  },
+  {
+    "customer_id": "CUST-154",
+    "phone": "000-000-0154",
+    "address": "căn 154, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-154",
+    "fb_id": "fb_synthetic_154",
+    "zalo_id": "zalo_synthetic_154",
+    "dialect": "South",
+    "persona": "khach_da_kenh_fb_hotline"
+  },
+  {
+    "customer_id": "CUST-156",
+    "phone": "000-000-0156",
+    "address": "căn 156, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-156",
+    "fb_id": "fb_synthetic_156",
+    "zalo_id": "zalo_synthetic_156",
+    "dialect": "Central",
+    "persona": "khach_da_kenh_fb_hotline"
+  },
+  {
+    "customer_id": "CUST-159",
+    "phone": "000-000-0159",
+    "address": "căn 159, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-159",
+    "fb_id": "fb_synthetic_159",
+    "zalo_id": "zalo_synthetic_159",
+    "dialect": "South",
+    "persona": "khach_da_kenh_fb_hotline"
+  },
+  {
+    "customer_id": "CUST-160",
+    "phone": "000-000-0160",
+    "address": "căn 160, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-160",
+    "fb_id": "fb_synthetic_160",
+    "zalo_id": "zalo_synthetic_160",
+    "dialect": "Central",
+    "persona": "khach_da_kenh_fb_hotline"
+  },
+  {
+    "customer_id": "CUST-162",
+    "phone": "000-000-0162",
+    "address": "căn 162, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-162",
+    "fb_id": "fb_synthetic_162",
+    "zalo_id": "zalo_synthetic_162",
+    "dialect": "North",
+    "persona": "khach_da_kenh_fb_hotline"
+  },
+  {
+    "customer_id": "CUST-163",
+    "phone": "000-000-0163",
+    "address": "căn 163, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-163",
+    "fb_id": "fb_synthetic_163",
+    "zalo_id": "zalo_synthetic_163",
+    "dialect": "Central",
+    "persona": "khach_da_kenh_fb_hotline"
+  },
+  {
+    "customer_id": "CUST-164",
+    "phone": "000-000-0164",
+    "address": "căn 164, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-164",
+    "fb_id": "fb_synthetic_164",
+    "zalo_id": "zalo_synthetic_164",
+    "dialect": "North",
+    "persona": "khach_da_kenh_fb_hotline"
+  },
+  {
+    "customer_id": "CUST-167",
+    "phone": "000-000-0167",
+    "address": "căn 167, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-167",
+    "fb_id": "fb_synthetic_167",
+    "zalo_id": "zalo_synthetic_167",
+    "dialect": "South",
+    "persona": "khach_da_kenh_fb_hotline"
+  },
+  {
+    "customer_id": "CUST-174",
+    "phone": "000-000-0174",
+    "address": "căn 174, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-174",
+    "fb_id": "fb_synthetic_174",
+    "zalo_id": "zalo_synthetic_174",
+    "dialect": "North",
+    "persona": "khach_da_kenh_fb_hotline"
+  },
+  {
+    "customer_id": "CUST-175",
+    "phone": "000-000-0175",
+    "address": "căn 175, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-175",
+    "fb_id": "fb_synthetic_175",
+    "zalo_id": "zalo_synthetic_175",
+    "dialect": "Central",
+    "persona": "khach_da_kenh_fb_hotline"
+  },
+  {
+    "customer_id": "CUST-184",
+    "phone": "000-000-0184",
+    "address": "căn 184, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-184",
+    "fb_id": "fb_synthetic_184",
+    "zalo_id": "zalo_synthetic_184",
+    "dialect": "North",
+    "persona": "khach_do_du_hoi_nguoi_nha"
+  },
+  {
+    "customer_id": "CUST-185",
+    "phone": "000-000-0185",
+    "address": "căn 185, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-185",
+    "fb_id": "fb_synthetic_185",
+    "zalo_id": "zalo_synthetic_185",
+    "dialect": "Central",
+    "persona": "khach_hoi_nhieu_khong_mua"
+  },
+  {
+    "customer_id": "CUST-186",
+    "phone": "000-000-0186",
+    "address": "căn 186, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-186",
+    "fb_id": "fb_synthetic_186",
+    "zalo_id": "zalo_synthetic_186",
+    "dialect": "Central",
+    "persona": "khach_hoi_ngoai_tai_lieu"
+  },
+  {
+    "customer_id": "CUST-188",
+    "phone": "000-000-0188",
+    "address": "căn 188, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-188",
+    "fb_id": "fb_synthetic_188",
+    "zalo_id": "zalo_synthetic_188",
+    "dialect": "Central",
+    "persona": "khach_goi_lan_3_het_kien_nhan"
+  },
+  {
+    "customer_id": "CUST-192",
+    "phone": "000-000-0192",
+    "address": "căn 192, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-192",
+    "fb_id": "fb_synthetic_192",
+    "zalo_id": "zalo_synthetic_192",
+    "dialect": "Central",
+    "persona": "khach_goi_lan_3_het_kien_nhan"
+  },
+  {
+    "customer_id": "CUST-193",
+    "phone": "000-000-0193",
+    "address": "căn 193, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-193",
+    "fb_id": "fb_synthetic_193",
+    "zalo_id": "zalo_synthetic_193",
+    "dialect": "South",
+    "persona": "khach_goi_lan_3_het_kien_nhan"
+  },
+  {
+    "customer_id": "CUST-194",
+    "phone": "000-000-0194",
+    "address": "căn 194, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-194",
+    "fb_id": "fb_synthetic_194",
+    "zalo_id": "zalo_synthetic_194",
+    "dialect": "South",
+    "persona": "khach_goi_lan_3_het_kien_nhan"
+  },
+  {
+    "customer_id": "CUST-195",
+    "phone": "000-000-0195",
+    "address": "căn 195, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-195",
+    "fb_id": "fb_synthetic_195",
+    "zalo_id": "zalo_synthetic_195",
+    "dialect": "Central",
+    "persona": "khach_goi_lan_3_het_kien_nhan"
+  },
+  {
+    "customer_id": "CUST-198",
+    "phone": "000-000-0198",
+    "address": "căn 198, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-198",
+    "fb_id": "fb_synthetic_198",
+    "zalo_id": "zalo_synthetic_198",
+    "dialect": "Central",
+    "persona": "khach_goi_lan_3_het_kien_nhan"
+  },
+  {
+    "customer_id": "CUST-200",
+    "phone": "000-000-0200",
+    "address": "căn 200, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-200",
+    "fb_id": "fb_synthetic_200",
+    "zalo_id": "zalo_synthetic_200",
+    "dialect": "Central",
+    "persona": "khach_goi_lan_3_het_kien_nhan"
+  },
+  {
+    "customer_id": "CUST-201",
+    "phone": "000-000-0201",
+    "address": "căn 201, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-201",
+    "fb_id": "fb_synthetic_201",
+    "zalo_id": "zalo_synthetic_201",
+    "dialect": "North",
+    "persona": "khach_goi_lan_3_het_kien_nhan"
+  },
+  {
+    "customer_id": "CUST-204",
+    "phone": "000-000-0204",
+    "address": "căn 204, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-204",
+    "fb_id": "fb_synthetic_204",
+    "zalo_id": "zalo_synthetic_204",
+    "dialect": "South",
+    "persona": "khach_goi_lan_3_het_kien_nhan"
+  },
+  {
+    "customer_id": "CUST-205",
+    "phone": "000-000-0205",
+    "address": "căn 205, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-205",
+    "fb_id": "fb_synthetic_205",
+    "zalo_id": "zalo_synthetic_205",
+    "dialect": "Central",
+    "persona": "khach_goi_lan_3_het_kien_nhan"
+  },
+  {
+    "customer_id": "CUST-207",
+    "phone": "000-000-0207",
+    "address": "căn 207, lô A, khu giao nhận mô phỏng Sao Mai",
+    "cccd": "TEST-ID-207",
+    "fb_id": "fb_synthetic_207",
+    "zalo_id": "zalo_synthetic_207",
+    "dialect": "Central",
+    "persona": "khach_goi_lan_3_het_kien_nhan"
+  }
+]

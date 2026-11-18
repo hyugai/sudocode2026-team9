@@ -1,0 +1,121 @@
+{
+  "scenario_id": "TEAM-SC-003",
+  "tier": "M1",
+  "customer_id": "CUST-003",
+  "customer_phone": "[PHONE_CUST_003]",
+  "customer_identities": {
+    "phone": "[PHONE_CUST_003]",
+    "fb_id": "fb_synthetic_003",
+    "zalo_id": "zalo_synthetic_003"
+  },
+  "persona": "khach_hoi_nhieu_khong_mua",
+  "archetype": "standard",
+  "hard_case": false,
+  "edge_case_type": null,
+  "target_sku": "SKU-BDL-AIR",
+  "level": "M1",
+  "calls": {
+    "call_1": {
+      "session_index": 1,
+      "channel": "hotline",
+      "channel_identity": "[PHONE_CUST_003]",
+      "date": "2026-11-08",
+      "customer_goal": "Tìm hiểu Combo AirPure Y + 2 màng lọc và hẹn trao đổi tiếp",
+      "facts_established": {
+        "product_advised": "SKU-BDL-AIR",
+        "price_quoted_vnd": 6390000
+      },
+      "entities_multi": [],
+      "ground_truth_facts": {
+        "sku": "SKU-BDL-AIR",
+        "price_vnd": 6390000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [
+          "NAM-SHIP0"
+        ],
+        "promo_expiry_dates": {
+          "NAM-SHIP0": "2026-11-05",
+          "COD-0": "2026-12-14"
+        },
+        "scheduled_callback_at": "2026-11-12T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "[PHONE_CUST_003]",
+          "callback_at": "2026-11-12T10:00"
+        }
+      },
+      "customer_turns": [
+        "Cho anh hỏi về Combo AirPure Y + hai màng lọc một chút được hông?",
+        "Vậy Combo AirPure Y + hai màng lọc bên em báo sáu triệu ba trăm chín mươi nghìn đồng đúng không?",
+        "Để xem kỹ lại thông tin đã. Em gọi lại lúc mười giờ ngày mười hai tháng mười một giúp anh nhé."
+      ],
+      "call_date": "2026-11-08"
+    },
+    "call_2": {
+      "session_index": 2,
+      "channel": "hotline",
+      "channel_identity": "[PHONE_CUST_003]",
+      "date": "2026-11-12",
+      "customer_goal": "Chốt mua theo báo giá hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-BDL-AIR",
+        "price_quoted_vnd": 5431500,
+        "payment": "COD",
+        "delivery_address": "[ADDR_CUST_003]",
+        "order_status": "created"
+      },
+      "entities_multi": [],
+      "ground_truth_facts": {
+        "sku": "SKU-BDL-AIR",
+        "price_vnd": 5431500,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0",
+          "11-11"
+        ],
+        "expired_promos": [
+          "NAM-SHIP0"
+        ],
+        "promo_expiry_dates": {
+          "NAM-SHIP0": "2026-11-05",
+          "COD-0": "2026-12-14",
+          "11-11": "2026-11-12"
+        },
+        "estimated_delivery": "2026-11-14"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "customer_phone": "[PHONE_CUST_003]",
+          "sku": "SKU-BDL-AIR",
+          "price_vnd": 5431500,
+          "payment": "COD"
+        }
+      },
+      "days_later": 4,
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "customer_turns": [
+        "Hôm trước mình có gọi hỏi Combo AirPure Y + hai màng lọc, em xem lại giúp mình nhé.",
+        "Vậy Combo AirPure Y + hai màng lọc hiện là năm triệu bốn trăm ba mươi mốt nghìn năm trăm đồng nhé, lên đơn giúp mình với.",
+        "Cho mình trả tiền lúc nhận hàng, giao về căn ba, lô A, khu giao nhận mô phỏng Sao Mai giúp nhé."
+      ],
+      "call_date": "2026-11-12"
+    }
+  }
+}

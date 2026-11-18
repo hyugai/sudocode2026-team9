@@ -1,0 +1,118 @@
+{
+  "scenario_id": "TEAM-SC-042",
+  "tier": "M2",
+  "customer_id": "CUST-042",
+  "customer_phone": "000-000-0042",
+  "customer_identities": {
+    "phone": "000-000-0042",
+    "fb_id": "fb_synthetic_042",
+    "zalo_id": "zalo_synthetic_042"
+  },
+  "persona": "khach_do_du_hoi_nguoi_nha",
+  "archetype": "standard",
+  "hard_case": false,
+  "edge_case_type": null,
+  "target_sku": "SKU-WF-CORE",
+  "call_1": {
+    "session_index": 1,
+    "channel": "hotline",
+    "channel_identity": "000-000-0042",
+    "date": "2026-10-21",
+    "customer_goal": "Tìm hiểu Bộ lõi lọc thay thế RO 1-2-3 và hẹn trao đổi tiếp",
+    "facts_established": {
+      "product_advised": "SKU-WF-CORE",
+      "price_quoted_vnd": 390000
+    },
+    "entities_multi": [],
+    "ground_truth_facts": {
+      "sku": "SKU-WF-CORE",
+      "price_vnd": 390000,
+      "in_stock": true,
+      "active_promos": [
+        "COD-0"
+      ],
+      "expired_promos": [],
+      "promo_expiry_dates": {
+        "COD-0": "2026-12-14"
+      },
+      "scheduled_callback_at": "2026-10-23T10:00"
+    },
+    "expected_outcome": "hen_goi_lai",
+    "success_if": {
+      "tool_called": "schedule.callback",
+      "args_match": {
+        "customer_phone": "000-000-0042",
+        "callback_at": "2026-10-23T10:00"
+      }
+    },
+    "customer_turns": [
+      "Ừm, anh đang xem Bộ lõi lọc thay thế RO một-hai-ba, em tư vấn giúp anh với.",
+      "Để anh ghi lại nhé, Bộ lõi lọc thay thế RO một-hai-ba là ba trăm chín mươi nghìn đồng.",
+      "ờ anh nói là để hỏi người nhà trước. Em gọi lại lúc mười giờ ngày hai mươi ba tháng mười giúp anh nhé."
+    ]
+  },
+  "call_2": {
+    "session_index": 2,
+    "channel": "hotline",
+    "channel_identity": "000-000-0042",
+    "date": "2026-10-23",
+    "customer_goal": "Chốt mua theo báo giá hiện hành",
+    "facts_established": {
+      "product_advised": "SKU-WF-CORE",
+      "price_quoted_vnd": 390000,
+      "payment": "COD",
+      "delivery_address": "căn 42, lô A, khu giao nhận mô phỏng Sao Mai",
+      "order_status": "created"
+    },
+    "entities_multi": [],
+    "ground_truth_facts": {
+      "sku": "SKU-WF-CORE",
+      "price_vnd": 390000,
+      "in_stock": true,
+      "active_promos": [
+        "COD-0"
+      ],
+      "expired_promos": [],
+      "promo_expiry_dates": {
+        "COD-0": "2026-12-14"
+      },
+      "estimated_delivery": "2026-10-27"
+    },
+    "expected_outcome": "chot_don",
+    "success_if": {
+      "tool_called": "order.create",
+      "args_match": {
+        "customer_phone": "000-000-0042",
+        "sku": "SKU-WF-CORE",
+        "price_vnd": 390000,
+        "payment": "COD"
+      }
+    },
+    "days_later": 2,
+    "must_carry_over": [
+      "product_advised",
+      "price_quoted_vnd"
+    ],
+    "must_not_ask": [
+      "product_advised"
+    ],
+    "memory_expectation": {
+      "order_status": "created"
+    },
+    "customer_turns": [
+      "Hôm trước chị có gọi hỏi Bộ lõi lọc thay thế RO một-hai-ba, em xem lại giúp chị nhé.",
+      "Đúng mẫu Bộ lõi lọc thay thế RO một-hai-ba đó rồi. Nếu giá là ba trăm chín mươi ngàn đồng thì chị chốt luôn.",
+      "Cho chị trả tiền lúc nhận hàng, giao về căn bốn mươi hai, lô A, khu giao nhận mô phỏng Sao Mai giúp nhé."
+    ]
+  },
+  "simulator_profile": {
+    "persona_system_prompt": "Bạn là khách hàng Việt Nam đang gọi/nhắn cho shop. Mục tiêu: call_1: Tìm hiểu Bộ lõi lọc thay thế RO 1-2-3 và hẹn trao đổi tiếp | call_2: Chốt mua theo báo giá hiện hành. Những điều bạn đã biết/đã nói ở phiên trước: {facts}. Dàn ý những điều bạn sẽ nói theo thứ tự: {turn_outline}. Nói tự nhiên, ngắn (1–2 câu/lượt), xưng hô theo giới tính đã cho. Bạn CHƯA quyết mua, cần hỏi người nhà; chỉ đồng ý mua nếu kịch bản cho phép. Nếu nhân viên hỏi lại điều bạn đã nói ở phiên trước, hãy trả lời nhưng tỏ ra hơi khó chịu ('hôm trước chị nói rồi mà'). Không bịa thêm thông tin ngoài những gì đã cho; nếu bị hỏi điều không có, nói 'chị không rõ'. Không bao giờ nhắc đến việc bạn là AI hay đang mô phỏng.",
+    "hidden_goal": "call_1: Tìm hiểu Bộ lõi lọc thay thế RO 1-2-3 và hẹn trao đổi tiếp | call_2: Chốt mua theo báo giá hiện hành",
+    "patience_level": 4,
+    "patience_max_turns": 4,
+    "patience_by_session": {
+      "call_1": 4,
+      "call_2": 3
+    }
+  }
+}

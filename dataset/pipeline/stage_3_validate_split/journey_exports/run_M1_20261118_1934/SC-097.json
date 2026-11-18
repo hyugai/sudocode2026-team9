@@ -1,0 +1,108 @@
+{
+  "scenario_id": "TEAM-SC-097",
+  "tier": "M1",
+  "customer_id": "CUST-097",
+  "customer_phone": "000-000-0097",
+  "customer_identities": {
+    "phone": "000-000-0097",
+    "fb_id": "fb_synthetic_097",
+    "zalo_id": "zalo_synthetic_097"
+  },
+  "persona": "khach_hoi_nhieu_khong_mua",
+  "archetype": "standard",
+  "hard_case": false,
+  "edge_case_type": null,
+  "target_sku": "SKU-AP-FLT-P",
+  "call_1": {
+    "session_index": 1,
+    "channel": "hotline",
+    "channel_identity": "000-000-0097",
+    "date": "2026-11-01",
+    "customer_goal": "Tìm hiểu Màng lọc thay thế AirPure Pro và hẹn trao đổi tiếp",
+    "facts_established": {
+      "product_advised": "SKU-AP-FLT-P",
+      "price_quoted_vnd": 990000
+    },
+    "entities_multi": [],
+    "ground_truth_facts": {
+      "sku": "SKU-AP-FLT-P",
+      "price_vnd": 990000,
+      "in_stock": true,
+      "active_promos": [
+        "COD-0"
+      ],
+      "expired_promos": [],
+      "promo_expiry_dates": {
+        "COD-0": "2026-12-14"
+      },
+      "scheduled_callback_at": "2026-11-03T10:00"
+    },
+    "expected_outcome": "hen_goi_lai",
+    "success_if": {
+      "tool_called": "schedule.callback",
+      "args_match": {
+        "customer_phone": "000-000-0097",
+        "callback_at": "2026-11-03T10:00"
+      }
+    },
+    "customer_turns": [
+      "Cho anh hỏi về Màng lọc thay thế AirPure Pro một chút được không?",
+      "Để anh ghi lại nhé, Màng lọc thay thế AirPure Pro là chín trăm chín mươi nghìn đồng.",
+      "ờ anh nói là để xem kỹ lại thông tin đã. Em gọi lại lúc mười giờ ngày ba tháng mười một giúp anh nhé."
+    ]
+  },
+  "call_2": {
+    "session_index": 2,
+    "channel": "hotline",
+    "channel_identity": "000-000-0097",
+    "date": "2026-11-03",
+    "customer_goal": "Chốt mua theo báo giá hiện hành",
+    "facts_established": {
+      "product_advised": "SKU-AP-FLT-P",
+      "price_quoted_vnd": 990000,
+      "payment": "COD",
+      "delivery_address": "căn 97, lô A, khu giao nhận mô phỏng Sao Mai",
+      "order_status": "created"
+    },
+    "entities_multi": [],
+    "ground_truth_facts": {
+      "sku": "SKU-AP-FLT-P",
+      "price_vnd": 990000,
+      "in_stock": true,
+      "active_promos": [
+        "COD-0"
+      ],
+      "expired_promos": [],
+      "promo_expiry_dates": {
+        "COD-0": "2026-12-14"
+      },
+      "estimated_delivery": "2026-11-05"
+    },
+    "expected_outcome": "chot_don",
+    "success_if": {
+      "tool_called": "order.create",
+      "args_match": {
+        "customer_phone": "000-000-0097",
+        "sku": "SKU-AP-FLT-P",
+        "price_vnd": 990000,
+        "payment": "COD"
+      }
+    },
+    "days_later": 2,
+    "must_carry_over": [
+      "product_advised",
+      "price_quoted_vnd"
+    ],
+    "must_not_ask": [
+      "product_advised"
+    ],
+    "memory_expectation": {
+      "order_status": "created"
+    },
+    "customer_turns": [
+      "Vụ Màng lọc thay thế AirPure Pro mình có gọi hỏi hôm trước ấy, bên em xem lại được không?",
+      "Mình lấy Màng lọc thay thế AirPure Pro với giá chín trăm chín mươi ngàn đồng nhé, em tạo đơn giúp.",
+      "Cho mình trả tiền lúc nhận hàng, giao về căn chín mươi bảy, lô A, khu giao nhận mô phỏng Sao Mai giúp nhé."
+    ]
+  }
+}

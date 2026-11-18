@@ -1,0 +1,123 @@
+{
+  "scenario_id": "TEAM-SC-054",
+  "tier": "M2",
+  "customer_id": "CUST-054",
+  "customer_phone": "000-000-0054",
+  "customer_identities": {
+    "phone": "000-000-0054",
+    "fb_id": "fb_synthetic_054",
+    "zalo_id": "zalo_synthetic_054"
+  },
+  "persona": "khach_hoi_nhieu_khong_mua",
+  "archetype": "standard",
+  "hard_case": false,
+  "edge_case_type": null,
+  "target_sku": "SKU-SN-TRK",
+  "simulator_profile": {
+    "persona_system_prompt": "Bạn thích hỏi kỹ nhiều chi tiết kỹ thuật và so sánh, chưa muốn mua. Mục tiêu: call_1: Tìm hiểu Giày trekking HikePro và hẹn trao đổi tiếp | call_2: Chốt mua theo báo giá hiện hành. Đã biết: {facts}. Dàn ý: {turn_outline}. Bạn hỏi tối đa theo dàn ý, kết thúc bằng 'để xem thêm' trừ khi dàn ý nói bạn chốt. Nếu nhân viên bịa thông số, bạn hỏi lại 'em chắc không?'.",
+    "hidden_goal": "call_1: Tìm hiểu Giày trekking HikePro và hẹn trao đổi tiếp | call_2: Chốt mua theo báo giá hiện hành",
+    "patience_level": 5,
+    "patience_max_turns": 5,
+    "patience_by_session": {
+      "call_1": 5,
+      "call_2": 4
+    }
+  },
+  "level": "M2",
+  "calls": {
+    "call_1": {
+      "session_index": 1,
+      "channel": "hotline",
+      "channel_identity": "000-000-0054",
+      "date": "2026-11-08",
+      "customer_goal": "Tìm hiểu Giày trekking HikePro và hẹn trao đổi tiếp",
+      "facts_established": {
+        "product_advised": "SKU-SN-TRK",
+        "price_quoted_vnd": 1990000
+      },
+      "entities_multi": [],
+      "ground_truth_facts": {
+        "sku": "SKU-SN-TRK",
+        "price_vnd": 1990000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "scheduled_callback_at": "2026-11-10T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "000-000-0054",
+          "callback_at": "2026-11-10T10:00"
+        }
+      },
+      "customer_turns": [
+        "Cho anh hỏi về Giày trekking HikePro một chút được không?",
+        "Để anh ghi lại nhé, Giày trekking HikePro là một triệu chín trăm chín mươi ngàn đồng.",
+        "ờ anh nói là để xem kỹ lại thông tin đã. Em gọi lại lúc mười giờ ngày mười tháng mười một giúp anh nhé."
+      ],
+      "call_date": "2026-11-08"
+    },
+    "call_2": {
+      "session_index": 2,
+      "channel": "hotline",
+      "channel_identity": "000-000-0054",
+      "date": "2026-11-10",
+      "customer_goal": "Chốt mua theo báo giá hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-SN-TRK",
+        "price_quoted_vnd": 1990000,
+        "payment": "COD",
+        "delivery_address": "căn 54, lô A, khu giao nhận mô phỏng Sao Mai",
+        "order_status": "created"
+      },
+      "entities_multi": [],
+      "ground_truth_facts": {
+        "sku": "SKU-SN-TRK",
+        "price_vnd": 1990000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "estimated_delivery": "2026-11-12"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "customer_phone": "000-000-0054",
+          "sku": "SKU-SN-TRK",
+          "price_vnd": 1990000,
+          "payment": "COD"
+        }
+      },
+      "days_later": 2,
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "customer_turns": [
+        "Hôm trước anh có gọi hỏi Giày trekking HikePro, em xem lại giúp anh nhé.",
+        "Vậy Giày trekking HikePro hiện là một triệu chín trăm chín mươi ngàn đồng nhé, lên đơn giúp anh với.",
+        "ờ anh nói là cho anh trả tiền lúc nhận hàng, giao về căn năm mươi bốn, lô A, khu giao nhận mô phỏng Sao Mai giúp nhé."
+      ],
+      "call_date": "2026-11-10"
+    }
+  }
+}

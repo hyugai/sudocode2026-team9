@@ -1,0 +1,125 @@
+{
+  "scenario_id": "TEAM-SC-160",
+  "tier": "M1",
+  "customer_id": "CUST-160",
+  "customer_phone": "000-000-0160",
+  "customer_identities": {
+    "phone": "000-000-0160",
+    "fb_id": "fb_synthetic_160",
+    "zalo_id": "zalo_synthetic_160"
+  },
+  "persona": "khach_da_kenh_fb_hotline",
+  "archetype": "omnichannel",
+  "hard_case": false,
+  "edge_case_type": null,
+  "target_sku": "SKU-AF-XM",
+  "call_1": {
+    "session_index": 1,
+    "channel": "hotline",
+    "channel_identity": "000-000-0160",
+    "date": "2026-11-08",
+    "customer_goal": "Tìm hiểu Nồi chiên không dầu Xiaomi 4.5L và hẹn trao đổi tiếp",
+    "facts_established": {
+      "product_advised": [
+        "SKU-AF-4L",
+        "SKU-AF-XM"
+      ],
+      "price_quoted_vnd": [
+        1890000,
+        1590000
+      ]
+    },
+    "entities_multi": [
+      "product_advised",
+      "price_quoted_vnd"
+    ],
+    "ground_truth_facts": {
+      "sku": "SKU-AF-XM",
+      "price_vnd": 1590000,
+      "in_stock": true,
+      "active_promos": [
+        "COD-0"
+      ],
+      "expired_promos": [
+        "NAM-SHIP0"
+      ],
+      "promo_expiry_dates": {
+        "NAM-SHIP0": "2026-11-05",
+        "COD-0": "2026-12-14"
+      },
+      "comparison_quote": {
+        "sku": "SKU-AF-4L",
+        "price_vnd": 1890000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [
+          "NAM-SHIP0"
+        ],
+        "promo_expiry_dates": {
+          "NAM-SHIP0": "2026-11-05",
+          "COD-0": "2026-12-14"
+        }
+      },
+      "scheduled_callback_at": "2026-11-09T10:00"
+    },
+    "expected_outcome": "hen_goi_lai",
+    "success_if": {
+      "tool_called": "schedule.callback",
+      "args_match": {
+        "customer_phone": "000-000-0160",
+        "callback_at": "2026-11-09T10:00"
+      }
+    },
+    "customer_turns": [
+      "Bên em bán Nồi chiên không dầu Xiaomi 4.5L đúng không? Mình đang tìm mẫu này.",
+      "Em báo Nồi chiên không dầu Lock&Lock 4L giá một triệu tám trăm chín mươi nghìn đồng còn Nồi chiên không dầu Xiaomi 4.5L giá một triệu năm trăm chín mươi nghìn đồng đúng không? Mình đang cân nhắc hai mẫu đó.",
+      "ờ mình nói là cho mình xem lại đã. Em gọi lại lúc mười giờ ngày chín tháng mười một giúp mình nhé."
+    ]
+  },
+  "call_2": {
+    "session_index": 2,
+    "channel": "facebook",
+    "channel_identity": "fb_synthetic_160",
+    "date": "2026-11-09",
+    "customer_goal": "Xác nhận báo giá rồi từ chối vì chưa có nhu cầu mua",
+    "facts_established": {
+      "product_advised": "SKU-AF-XM",
+      "price_quoted_vnd": 1590000
+    },
+    "entities_multi": [],
+    "ground_truth_facts": {
+      "sku": "SKU-AF-XM",
+      "price_vnd": 1590000,
+      "in_stock": true,
+      "active_promos": [
+        "COD-0"
+      ],
+      "expired_promos": [
+        "NAM-SHIP0"
+      ],
+      "promo_expiry_dates": {
+        "NAM-SHIP0": "2026-11-05",
+        "COD-0": "2026-12-14"
+      }
+    },
+    "expected_outcome": "tu_choi",
+    "success_if": {
+      "tool_called": null,
+      "args_match": {}
+    },
+    "days_later": 1,
+    "must_carry_over": [
+      "product_advised",
+      "price_quoted_vnd"
+    ],
+    "must_not_ask": [
+      "product_advised"
+    ],
+    "customer_turns": [
+      "em con luu bao gia Noi chien khong dau Xiaomi 4.5L lan truoc minh goi hoi ko?",
+      "giá giờ là 1.590.000đ đúng ko? Mình chưa cần mua nữa, để dịp khác nhé"
+    ]
+  }
+}

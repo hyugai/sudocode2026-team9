@@ -1,0 +1,129 @@
+{
+  "scenario_id": "TEAM-SC-019",
+  "tier": "M1",
+  "customer_id": "CUST-019",
+  "customer_phone": "[PHONE_CUST_019]",
+  "customer_identities": {
+    "phone": "[PHONE_CUST_019]",
+    "fb_id": "fb_synthetic_019",
+    "zalo_id": "zalo_synthetic_019"
+  },
+  "persona": "khach_do_du_hoi_nguoi_nha",
+  "archetype": "standard",
+  "hard_case": false,
+  "edge_case_type": null,
+  "target_sku": "SKU-AP-MINI",
+  "call_1": {
+    "session_index": 1,
+    "channel": "hotline",
+    "channel_identity": "[PHONE_CUST_019]",
+    "date": "2026-10-24",
+    "customer_goal": "Tìm hiểu Máy lọc không khí AirPure Mini và hẹn trao đổi tiếp",
+    "facts_established": {
+      "product_advised": [
+        "SKU-SS-AX40",
+        "SKU-AP-MINI"
+      ],
+      "price_quoted_vnd": [
+        6490000,
+        2190000
+      ]
+    },
+    "entities_multi": [
+      "product_advised",
+      "price_quoted_vnd"
+    ],
+    "ground_truth_facts": {
+      "sku": "SKU-AP-MINI",
+      "price_vnd": 2190000,
+      "in_stock": true,
+      "active_promos": [
+        "COD-0"
+      ],
+      "expired_promos": [],
+      "promo_expiry_dates": {
+        "COD-0": "2026-12-14"
+      },
+      "comparison_quote": {
+        "sku": "SKU-SS-AX40",
+        "price_vnd": 6490000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        }
+      },
+      "scheduled_callback_at": "2026-10-27T10:00"
+    },
+    "expected_outcome": "hen_goi_lai",
+    "success_if": {
+      "tool_called": "schedule.callback",
+      "args_match": {
+        "customer_phone": "[PHONE_CUST_019]",
+        "callback_at": "2026-10-27T10:00"
+      }
+    },
+    "customer_turns": [
+      "Máy lọc không khí airpure mini bên em còn hàng không?",
+      "Em báo Máy lọc không khí Samsung AX40 giá sáu triệu bốn trăm chín mươi nghìn đồng còn Máy lọc không khí AirPure Mini giá hai triệu một trăm chín mươi nghìn đồng đúng không? Mình đang cân nhắc hai mẫu đó.",
+      "ờ mình nói là để hỏi người nhà trước. Em gọi lại lúc mười giờ ngày hai mươi bảy tháng mười giúp mình nhé."
+    ]
+  },
+  "call_2": {
+    "session_index": 2,
+    "channel": "hotline",
+    "channel_identity": "[PHONE_CUST_019]",
+    "date": "2026-10-27",
+    "customer_goal": "Chốt mua theo báo giá hiện hành",
+    "facts_established": {
+      "product_advised": "SKU-AP-MINI",
+      "price_quoted_vnd": 2190000,
+      "payment": "COD",
+      "delivery_address": "[ADDR_CUST_019]",
+      "order_status": "created"
+    },
+    "entities_multi": [],
+    "ground_truth_facts": {
+      "sku": "SKU-AP-MINI",
+      "price_vnd": 2190000,
+      "in_stock": true,
+      "active_promos": [
+        "COD-0"
+      ],
+      "expired_promos": [],
+      "promo_expiry_dates": {
+        "COD-0": "2026-12-14"
+      },
+      "estimated_delivery": "2026-10-29"
+    },
+    "expected_outcome": "chot_don",
+    "success_if": {
+      "tool_called": "order.create",
+      "args_match": {
+        "customer_phone": "[PHONE_CUST_019]",
+        "sku": "SKU-AP-MINI",
+        "price_vnd": 2190000,
+        "payment": "COD"
+      }
+    },
+    "days_later": 3,
+    "must_carry_over": [
+      "product_advised",
+      "price_quoted_vnd"
+    ],
+    "must_not_ask": [
+      "product_advised"
+    ],
+    "memory_expectation": {
+      "order_status": "created"
+    },
+    "customer_turns": [
+      "Hôm trước anh có gọi hỏi Máy lọc không khí AirPure Mini, em xem lại giúp anh nhé.",
+      "Đúng mẫu Máy lọc không khí AirPure Mini đó rồi. Nếu giá là hai triệu một trăm chín mươi nghìn đồng thì anh chốt luôn.",
+      "Cho anh trả tiền lúc nhận hàng, giao về căn mười chín, lô A, khu giao nhận mô phỏng Sao Mai giúp nhé."
+    ]
+  }
+}

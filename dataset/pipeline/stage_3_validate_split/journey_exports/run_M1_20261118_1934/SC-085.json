@@ -1,0 +1,95 @@
+{
+  "scenario_id": "TEAM-SC-085",
+  "tier": "M1",
+  "customer_id": "CUST-085",
+  "customer_phone": "000-000-0085",
+  "customer_identities": {
+    "phone": "000-000-0085",
+    "fb_id": "fb_synthetic_085",
+    "zalo_id": "zalo_synthetic_085"
+  },
+  "persona": "khach_hoi_nhieu_khong_mua",
+  "archetype": "standard",
+  "hard_case": false,
+  "edge_case_type": null,
+  "target_sku": "SKU-FAN-DC1",
+  "call_1": {
+    "session_index": 1,
+    "channel": "hotline",
+    "channel_identity": "000-000-0085",
+    "date": "2026-10-20",
+    "customer_goal": "Tìm hiểu Quạt đứng DC inverter Panasonic F-409 và hẹn trao đổi tiếp",
+    "facts_established": {
+      "product_advised": "SKU-FAN-DC1",
+      "price_quoted_vnd": 2450000
+    },
+    "entities_multi": [],
+    "ground_truth_facts": {
+      "sku": "SKU-FAN-DC1",
+      "price_vnd": 2450000,
+      "in_stock": true,
+      "active_promos": [
+        "COD-0"
+      ],
+      "expired_promos": [],
+      "promo_expiry_dates": {
+        "COD-0": "2026-12-14"
+      },
+      "scheduled_callback_at": "2026-10-24T10:00"
+    },
+    "expected_outcome": "hen_goi_lai",
+    "success_if": {
+      "tool_called": "schedule.callback",
+      "args_match": {
+        "customer_phone": "000-000-0085",
+        "callback_at": "2026-10-24T10:00"
+      }
+    },
+    "customer_turns": [
+      "Ừm, anh đang xem Quạt đứng DC inverter Panasonic F-bốn trăm lẻ chín, em tư vấn giúp anh với.",
+      "hai triệu bốn trăm năm mươi nghìn đồng cho Quạt đứng DC inverter Panasonic F-bốn trăm lẻ chín là giá hiện tại phải không em?",
+      "ờ anh nói là để xem kỹ lại thông tin đã. Em gọi lại lúc mười giờ ngày hai mươi bốn tháng mười giúp anh nhé."
+    ]
+  },
+  "call_2": {
+    "session_index": 2,
+    "channel": "hotline",
+    "channel_identity": "000-000-0085",
+    "date": "2026-10-24",
+    "customer_goal": "Xác nhận báo giá rồi từ chối vì chưa có nhu cầu mua",
+    "facts_established": {
+      "product_advised": "SKU-FAN-DC1",
+      "price_quoted_vnd": 2450000
+    },
+    "entities_multi": [],
+    "ground_truth_facts": {
+      "sku": "SKU-FAN-DC1",
+      "price_vnd": 2450000,
+      "in_stock": true,
+      "active_promos": [
+        "COD-0"
+      ],
+      "expired_promos": [],
+      "promo_expiry_dates": {
+        "COD-0": "2026-12-14"
+      }
+    },
+    "expected_outcome": "tu_choi",
+    "success_if": {
+      "tool_called": null,
+      "args_match": {}
+    },
+    "days_later": 4,
+    "must_carry_over": [
+      "product_advised",
+      "price_quoted_vnd"
+    ],
+    "must_not_ask": [
+      "product_advised"
+    ],
+    "customer_turns": [
+      "Em còn lưu báo giá Quạt đứng DC inverter Panasonic F-bốn trăm lẻ chín lần trước mình gọi hỏi không?",
+      "Giá giờ là hai triệu bốn trăm năm mươi nghìn đồng đúng không? Mình chưa cần mua nữa, để dịp khác nhé."
+    ]
+  }
+}

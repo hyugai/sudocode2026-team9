@@ -1,0 +1,122 @@
+{
+  "scenario_id": "TEAM-SC-006",
+  "tier": "M2",
+  "customer_id": "CUST-006",
+  "customer_phone": "000-000-0006",
+  "customer_identities": {
+    "phone": "000-000-0006",
+    "fb_id": "fb_synthetic_006",
+    "zalo_id": "zalo_synthetic_006"
+  },
+  "persona": "khach_so_gia",
+  "archetype": "standard",
+  "hard_case": false,
+  "edge_case_type": null,
+  "target_sku": "SKU-MB-PUMP2",
+  "call_1": {
+    "session_index": 1,
+    "channel": "hotline",
+    "channel_identity": "000-000-0006",
+    "date": "2026-10-27",
+    "customer_goal": "Tìm hiểu Máy hút sữa điện đôi Medela Swing Maxi và hẹn trao đổi tiếp",
+    "facts_established": {
+      "product_advised": "SKU-MB-PUMP2",
+      "price_quoted_vnd": 5990000
+    },
+    "entities_multi": [],
+    "ground_truth_facts": {
+      "sku": "SKU-MB-PUMP2",
+      "price_vnd": 5990000,
+      "in_stock": true,
+      "active_promos": [
+        "MOM-FREESHIP",
+        "COD-0"
+      ],
+      "expired_promos": [],
+      "promo_expiry_dates": {
+        "MOM-FREESHIP": "2026-11-29",
+        "COD-0": "2026-12-14"
+      },
+      "scheduled_callback_at": "2026-10-30T10:00"
+    },
+    "expected_outcome": "hen_goi_lai",
+    "success_if": {
+      "tool_called": "schedule.callback",
+      "args_match": {
+        "customer_phone": "000-000-0006",
+        "callback_at": "2026-10-30T10:00"
+      }
+    },
+    "customer_turns": [
+      "Máy hút sữa điện đôi medela swing maxi bên em còn hàng không?",
+      "năm triệu chín trăm chín mươi nghìn đồng cho Máy hút sữa điện đôi Medela Swing Maxi là giá hiện tại phải không em?",
+      "Để so thêm giá mấy chỗ. Em gọi lại lúc mười giờ ngày ba mươi tháng mười giúp anh nhé."
+    ]
+  },
+  "call_2": {
+    "session_index": 2,
+    "channel": "hotline",
+    "channel_identity": "000-000-0006",
+    "date": "2026-10-30",
+    "customer_goal": "Chốt mua theo báo giá hiện hành",
+    "facts_established": {
+      "product_advised": "SKU-MB-PUMP2",
+      "price_quoted_vnd": 5990000,
+      "payment": "COD",
+      "delivery_address": "căn 6, lô A, khu giao nhận mô phỏng Sao Mai",
+      "order_status": "created"
+    },
+    "entities_multi": [],
+    "ground_truth_facts": {
+      "sku": "SKU-MB-PUMP2",
+      "price_vnd": 5990000,
+      "in_stock": true,
+      "active_promos": [
+        "MOM-FREESHIP",
+        "COD-0"
+      ],
+      "expired_promos": [],
+      "promo_expiry_dates": {
+        "MOM-FREESHIP": "2026-11-29",
+        "COD-0": "2026-12-14"
+      },
+      "estimated_delivery": "2026-11-02"
+    },
+    "expected_outcome": "chot_don",
+    "success_if": {
+      "tool_called": "order.create",
+      "args_match": {
+        "customer_phone": "000-000-0006",
+        "sku": "SKU-MB-PUMP2",
+        "price_vnd": 5990000,
+        "payment": "COD"
+      }
+    },
+    "days_later": 3,
+    "must_carry_over": [
+      "product_advised",
+      "price_quoted_vnd"
+    ],
+    "must_not_ask": [
+      "product_advised"
+    ],
+    "memory_expectation": {
+      "order_status": "created"
+    },
+    "customer_turns": [
+      "Hôm trước mình có gọi hỏi Máy hút sữa điện đôi Medela Swing Maxi, em xem lại giúp mình nhé.",
+      "Mình lấy Máy hút sữa điện đôi Medela Swing Maxi với giá năm triệu chín trăm chín mươi ngàn đồng nhé, em tạo đơn giúp.",
+      "ờ mình nói là cho mình trả tiền lúc nhận hàng, giao về căn sáu, lô A, khu giao nhận mô phỏng Sao Mai giúp nhé."
+    ]
+  },
+  "simulator_profile": {
+    "persona_system_prompt": "Bạn là khách hàng thực dụng, quan tâm giá. Mục tiêu: call_1: Tìm hiểu Máy hút sữa điện đôi Medela Swing Maxi và hẹn trao đổi tiếp | call_2: Chốt mua theo báo giá hiện hành. Đã biết: {facts}. Dàn ý: {turn_outline}. Bạn nêu giá đối thủ và đòi giảm; nếu nhân viên không giảm nhưng nêu được giá trị đi kèm (bảo hành, quà, đổi trả), bạn chấp nhận theo dàn ý. Nếu nhân viên tự ý giảm giá không có chương trình, bạn hỏi 'chương trình gì?' để kiểm tra. Không bịa thông tin mới.",
+    "hidden_goal": "call_1: Tìm hiểu Máy hút sữa điện đôi Medela Swing Maxi và hẹn trao đổi tiếp | call_2: Chốt mua theo báo giá hiện hành",
+    "patience_level": 3,
+    "patience_max_turns": 3,
+    "patience_by_session": {
+      "call_1": 3,
+      "call_2": 3
+    }
+  }
+}

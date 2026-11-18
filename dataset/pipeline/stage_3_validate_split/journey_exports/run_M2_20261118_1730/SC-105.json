@@ -1,0 +1,140 @@
+{
+  "scenario_id": "TEAM-SC-105",
+  "tier": "M2",
+  "customer_id": "CUST-105",
+  "customer_phone": "[PHONE_CUST_105]",
+  "customer_identities": {
+    "phone": "[PHONE_CUST_105]",
+    "fb_id": "fb_synthetic_105",
+    "zalo_id": "zalo_synthetic_105"
+  },
+  "persona": "khach_hoi_nhieu_khong_mua",
+  "archetype": "hard",
+  "hard_case": true,
+  "edge_case_type": "expired_promo",
+  "target_sku": "SKU-XM-4P",
+  "call_1": {
+    "session_index": 1,
+    "channel": "hotline",
+    "channel_identity": "[PHONE_CUST_105]",
+    "date": "2026-11-14",
+    "customer_goal": "Tìm hiểu Máy lọc không khí Xiaomi Smart 4 Pro và hẹn trao đổi tiếp",
+    "facts_established": {
+      "product_advised": "SKU-XM-4P",
+      "price_quoted_vnd": 5490000,
+      "promo_code": "XM-COMBO",
+      "promo_expiry": "2026-11-14"
+    },
+    "entities_multi": [],
+    "ground_truth_facts": {
+      "sku": "SKU-XM-4P",
+      "price_vnd": 5490000,
+      "in_stock": true,
+      "active_promos": [
+        "COD-0",
+        "XM-COMBO"
+      ],
+      "expired_promos": [
+        "AIR-2ND-50",
+        "NAM-SHIP0",
+        "11-11"
+      ],
+      "promo_expiry_dates": {
+        "XM-COMBO": "2026-11-14",
+        "AIR-2ND-50": "2026-11-04",
+        "NAM-SHIP0": "2026-11-05",
+        "COD-0": "2026-12-14",
+        "11-11": "2026-11-12"
+      },
+      "scheduled_callback_at": "2026-11-15T10:00"
+    },
+    "expected_outcome": "hen_goi_lai",
+    "success_if": {
+      "tool_called": "schedule.callback",
+      "args_match": {
+        "customer_phone": "[PHONE_CUST_105]",
+        "callback_at": "2026-11-15T10:00"
+      }
+    },
+    "customer_turns": [
+      "Máy lọc không khí xiaomi smart bốn pro bên em còn hàng không?",
+      "Vậy Máy lọc hông khí Xiaomi Smart bốn Pro bên em báo năm triệu bốn trăm chín mươi nghìn đồng đúng không? Còn ưu đãi Mua Xiaomi Smart 4 Pro tặng màng lọc áp dụng đến ngày mười bốn tháng mười một đúng không?",
+      "ờ chị nói là để xem kỹ lại thông tin đã. Em gọi lại lúc mười giờ ngày mười lăm tháng mười một giúp chị nhé."
+    ]
+  },
+  "call_2": {
+    "session_index": 2,
+    "channel": "hotline",
+    "channel_identity": "[PHONE_CUST_105]",
+    "date": "2026-11-15",
+    "customer_goal": "Kiểm tra lại ưu đãi XM-COMBO và chốt nếu được giải thích giá hiện hành",
+    "facts_established": {
+      "product_advised": "SKU-XM-4P",
+      "price_quoted_vnd": 5490000,
+      "payment": "COD",
+      "delivery_address": "[ADDR_CUST_105]",
+      "order_status": "created"
+    },
+    "entities_multi": [],
+    "ground_truth_facts": {
+      "sku": "SKU-XM-4P",
+      "price_vnd": 5490000,
+      "in_stock": true,
+      "active_promos": [
+        "COD-0"
+      ],
+      "expired_promos": [
+        "XM-COMBO",
+        "AIR-2ND-50",
+        "NAM-SHIP0",
+        "11-11"
+      ],
+      "promo_expiry_dates": {
+        "XM-COMBO": "2026-11-14",
+        "AIR-2ND-50": "2026-11-04",
+        "NAM-SHIP0": "2026-11-05",
+        "COD-0": "2026-12-14",
+        "11-11": "2026-11-12"
+      },
+      "estimated_delivery": "2026-11-17"
+    },
+    "expected_outcome": "chot_don",
+    "success_if": {
+      "tool_called": "order.create",
+      "args_match": {
+        "customer_phone": "[PHONE_CUST_105]",
+        "sku": "SKU-XM-4P",
+        "price_vnd": 5490000,
+        "payment": "COD"
+      }
+    },
+    "days_later": 1,
+    "must_carry_over": [
+      "product_advised",
+      "price_quoted_vnd",
+      "promo_code",
+      "promo_expiry"
+    ],
+    "must_not_ask": [
+      "product_advised"
+    ],
+    "memory_expectation": {
+      "order_status": "created"
+    },
+    "customer_turns": [
+      "Vụ Máy lọc hông khí Xiaomi Smart bốn Pro mình có gọi hỏi hôm trước ấy, bên em xem lại được không?",
+      "Ưu đãi Mua Xiaomi Smart 4 Pro tặng màng lọc hôm trước hết rồi à? Em giải thích lại giúp mình mức năm triệu bốn trăm chín mươi nghìn đồng nhé.",
+      "Cho mình trả tiền lúc nhận hàng, giao về căn một trăm lẻ năm, lô A, khu giao nhận mô phỏng Sao Mai giúp nhé."
+    ]
+  },
+  "simulator_profile": {
+    "persona_system_prompt": "Bạn thích hỏi kỹ nhiều chi tiết kỹ thuật và so sánh, chưa muốn mua. Mục tiêu: call_1: Tìm hiểu Máy lọc không khí Xiaomi Smart 4 Pro và hẹn trao đổi tiếp | call_2: Kiểm tra lại ưu đãi XM-COMBO và chốt nếu được giải thích giá hiện hành. Đã biết: {facts}. Dàn ý: {turn_outline}. Bạn hỏi tối đa theo dàn ý, kết thúc bằng 'để xem thêm' trừ khi dàn ý nói bạn chốt. Nếu nhân viên bịa thông số, bạn hỏi lại 'em chắc không?'.",
+    "hidden_goal": "call_1: Tìm hiểu Máy lọc không khí Xiaomi Smart 4 Pro và hẹn trao đổi tiếp | call_2: Kiểm tra lại ưu đãi XM-COMBO và chốt nếu được giải thích giá hiện hành",
+    "patience_level": 5,
+    "patience_max_turns": 5,
+    "patience_by_session": {
+      "call_1": 5,
+      "call_2": 4
+    }
+  }
+}

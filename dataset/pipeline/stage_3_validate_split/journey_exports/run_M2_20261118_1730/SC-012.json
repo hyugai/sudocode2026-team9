@@ -1,0 +1,133 @@
+{
+  "scenario_id": "TEAM-SC-012",
+  "tier": "M2",
+  "customer_id": "CUST-012",
+  "customer_phone": "[PHONE_CUST_012]",
+  "customer_identities": {
+    "phone": "[PHONE_CUST_012]",
+    "fb_id": "fb_synthetic_012",
+    "zalo_id": "zalo_synthetic_012"
+  },
+  "persona": "khach_hoi_nhieu_khong_mua",
+  "archetype": "standard",
+  "hard_case": false,
+  "edge_case_type": null,
+  "target_sku": "SKU-AP-FLT-X",
+  "simulator_profile": {
+    "persona_system_prompt": "Bạn thích hỏi kỹ nhiều chi tiết kỹ thuật và so sánh, chưa muốn mua. Mục tiêu: call_1: Tìm hiểu Màng lọc thay thế AirPure X/Y và hẹn trao đổi tiếp | call_2: Chốt mua theo báo giá hiện hành. Đã biết: {facts}. Dàn ý: {turn_outline}. Bạn hỏi tối đa theo dàn ý, kết thúc bằng 'để xem thêm' trừ khi dàn ý nói bạn chốt. Nếu nhân viên bịa thông số, bạn hỏi lại 'em chắc không?'.",
+    "hidden_goal": "call_1: Tìm hiểu Màng lọc thay thế AirPure X/Y và hẹn trao đổi tiếp | call_2: Chốt mua theo báo giá hiện hành",
+    "patience_level": 5,
+    "patience_max_turns": 5,
+    "patience_by_session": {
+      "call_1": 5,
+      "call_2": 4
+    }
+  },
+  "level": "M2",
+  "calls": {
+    "call_1": {
+      "session_index": 1,
+      "channel": "hotline",
+      "channel_identity": "[PHONE_CUST_012]",
+      "date": "2026-11-11",
+      "customer_goal": "Tìm hiểu Màng lọc thay thế AirPure X/Y và hẹn trao đổi tiếp",
+      "facts_established": {
+        "product_advised": "SKU-AP-FLT-X",
+        "price_quoted_vnd": 586500
+      },
+      "entities_multi": [],
+      "ground_truth_facts": {
+        "sku": "SKU-AP-FLT-X",
+        "price_vnd": 586500,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0",
+          "11-11"
+        ],
+        "expired_promos": [
+          "NAM-SHIP0"
+        ],
+        "promo_expiry_dates": {
+          "NAM-SHIP0": "2026-11-05",
+          "COD-0": "2026-12-14",
+          "11-11": "2026-11-12"
+        },
+        "scheduled_callback_at": "2026-11-15T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "[PHONE_CUST_012]",
+          "callback_at": "2026-11-15T10:00"
+        }
+      },
+      "customer_turns": [
+        "Cho chị hỏi về Màng lọc thay thế AirPure X/Y một chút được không?",
+        "Vậy Màng lọc thay thế AirPure X/Y bên em báo năm trăm tám mươi sáu ngàn năm trăm đồng đúng hông?",
+        "Để xem kỹ lại thông tin đã. Em gọi lại lúc mười giờ ngày mười lăm tháng mười một giúp chị nhé."
+      ],
+      "call_date": "2026-11-11"
+    },
+    "call_2": {
+      "session_index": 2,
+      "channel": "hotline",
+      "channel_identity": "[PHONE_CUST_012]",
+      "date": "2026-11-15",
+      "customer_goal": "Chốt mua theo báo giá hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-AP-FLT-X",
+        "price_quoted_vnd": 690000,
+        "payment": "COD",
+        "delivery_address": "[ADDR_CUST_012]",
+        "order_status": "created"
+      },
+      "entities_multi": [],
+      "ground_truth_facts": {
+        "sku": "SKU-AP-FLT-X",
+        "price_vnd": 690000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [
+          "NAM-SHIP0",
+          "11-11"
+        ],
+        "promo_expiry_dates": {
+          "NAM-SHIP0": "2026-11-05",
+          "COD-0": "2026-12-14",
+          "11-11": "2026-11-12"
+        },
+        "estimated_delivery": "2026-11-17"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "customer_phone": "[PHONE_CUST_012]",
+          "sku": "SKU-AP-FLT-X",
+          "price_vnd": 690000,
+          "payment": "COD"
+        }
+      },
+      "days_later": 4,
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "customer_turns": [
+        "Hôm trước mình có gọi hỏi Màng lọc thay thế AirPure X/Y, em xem lại giúp mình nhé.",
+        "Mình lấy Màng lọc thay thế AirPure X/Y với giá sáu trăm chín mươi ngàn đồng nhé, em tạo đơn giúp.",
+        "Cho mình trả tiền lúc nhận hàng, giao về căn mười hai, lô A, khu giao nhận mô phỏng Sao Mai giúp nhé."
+      ],
+      "call_date": "2026-11-15"
+    }
+  }
+}

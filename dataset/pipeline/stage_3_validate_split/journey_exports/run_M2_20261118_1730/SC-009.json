@@ -1,0 +1,127 @@
+{
+  "scenario_id": "TEAM-SC-009",
+  "tier": "M2",
+  "customer_id": "CUST-009",
+  "customer_phone": "[PHONE_CUST_009]",
+  "customer_identities": {
+    "phone": "[PHONE_CUST_009]",
+    "fb_id": "fb_synthetic_009",
+    "zalo_id": "zalo_synthetic_009"
+  },
+  "persona": "khach_so_gia",
+  "archetype": "standard",
+  "hard_case": false,
+  "edge_case_type": null,
+  "target_sku": "SKU-BDL-MOM",
+  "simulator_profile": {
+    "persona_system_prompt": "Bạn là khách hàng thực dụng, quan tâm giá. Mục tiêu: call_1: Tìm hiểu Combo Spectra S1 + máy hâm sữa Fatz + 50 túi trữ sữa và hẹn trao đổi tiếp | call_2: Chốt mua theo báo giá hiện hành. Đã biết: {facts}. Dàn ý: {turn_outline}. Bạn nêu giá đối thủ và đòi giảm; nếu nhân viên không giảm nhưng nêu được giá trị đi kèm (bảo hành, quà, đổi trả), bạn chấp nhận theo dàn ý. Nếu nhân viên tự ý giảm giá không có chương trình, bạn hỏi 'chương trình gì?' để kiểm tra. Không bịa thông tin mới.",
+    "hidden_goal": "call_1: Tìm hiểu Combo Spectra S1 + máy hâm sữa Fatz + 50 túi trữ sữa và hẹn trao đổi tiếp | call_2: Chốt mua theo báo giá hiện hành",
+    "patience_level": 3,
+    "patience_max_turns": 3,
+    "patience_by_session": {
+      "call_1": 3,
+      "call_2": 3
+    }
+  },
+  "level": "M2",
+  "calls": {
+    "call_1": {
+      "session_index": 1,
+      "channel": "hotline",
+      "channel_identity": "[PHONE_CUST_009]",
+      "date": "2026-11-11",
+      "customer_goal": "Tìm hiểu Combo Spectra S1 + máy hâm sữa Fatz + 50 túi trữ sữa và hẹn trao đổi tiếp",
+      "facts_established": {
+        "product_advised": "SKU-BDL-MOM",
+        "price_quoted_vnd": 4790000
+      },
+      "entities_multi": [],
+      "ground_truth_facts": {
+        "sku": "SKU-BDL-MOM",
+        "price_vnd": 4790000,
+        "in_stock": true,
+        "active_promos": [
+          "MOM-FREESHIP",
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "MOM-FREESHIP": "2026-11-29",
+          "COD-0": "2026-12-14"
+        },
+        "scheduled_callback_at": "2026-11-14T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "[PHONE_CUST_009]",
+          "callback_at": "2026-11-14T10:00"
+        }
+      },
+      "customer_turns": [
+        "Combo spectra s1 + máy hâm sữa fatz + năm mươi túi trữ sữa bên em còn hàng không?",
+        "Vậy Combo Spectra S1 + máy hâm sữa Fatz + năm mươi túi trữ sữa bên em báo bốn triệu bảy trăm chín mươi nghìn đồng đúng không?",
+        "Để so thêm giá mấy chỗ. Em gọi lại lúc mười giờ ngày mười bốn tháng mười một giúp anh nhé."
+      ],
+      "call_date": "2026-11-11"
+    },
+    "call_2": {
+      "session_index": 2,
+      "channel": "hotline",
+      "channel_identity": "[PHONE_CUST_009]",
+      "date": "2026-11-14",
+      "customer_goal": "Chốt mua theo báo giá hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-BDL-MOM",
+        "price_quoted_vnd": 4790000,
+        "payment": "COD",
+        "delivery_address": "[ADDR_CUST_009]",
+        "order_status": "created"
+      },
+      "entities_multi": [],
+      "ground_truth_facts": {
+        "sku": "SKU-BDL-MOM",
+        "price_vnd": 4790000,
+        "in_stock": true,
+        "active_promos": [
+          "MOM-FREESHIP",
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "MOM-FREESHIP": "2026-11-29",
+          "COD-0": "2026-12-14"
+        },
+        "estimated_delivery": "2026-11-17"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "customer_phone": "[PHONE_CUST_009]",
+          "sku": "SKU-BDL-MOM",
+          "price_vnd": 4790000,
+          "payment": "COD"
+        }
+      },
+      "days_later": 3,
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "customer_turns": [
+        "Em còn lưu báo giá Combo Spectra S1 + máy hâm sữa Fatz + năm mươi túi trữ sữa lần trước anh gọi hỏi hông?",
+        "Vậy Combo Spectra S1 + máy hâm sữa Fatz + năm mươi túi trữ sữa hiện là bốn triệu bảy trăm chín mươi nghìn đồng nhé, lên đơn giúp anh với.",
+        "ờ anh nói là cho anh trả tiền lúc nhận hàng, giao về căn chín, lô A, khu giao nhận mô phỏng Sao Mai giúp nhé."
+      ],
+      "call_date": "2026-11-14"
+    }
+  }
+}

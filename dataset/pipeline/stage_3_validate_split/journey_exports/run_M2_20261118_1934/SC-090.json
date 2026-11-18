@@ -1,0 +1,124 @@
+{
+  "scenario_id": "TEAM-SC-090",
+  "tier": "M2",
+  "customer_id": "CUST-090",
+  "customer_phone": "000-000-0090",
+  "customer_identities": {
+    "phone": "000-000-0090",
+    "fb_id": "fb_synthetic_090",
+    "zalo_id": "zalo_synthetic_090"
+  },
+  "persona": "khach_da_kenh_fb_hotline",
+  "archetype": "omnichannel",
+  "hard_case": false,
+  "edge_case_type": null,
+  "target_sku": "SKU-SN-RUN1",
+  "call_1": {
+    "session_index": 1,
+    "channel": "zalo",
+    "channel_identity": "zalo_synthetic_090",
+    "date": "2026-10-26",
+    "customer_goal": "Tìm hiểu Giày chạy bộ RunLite 1 và hẹn trao đổi tiếp",
+    "facts_established": {
+      "product_advised": "SKU-SN-RUN1",
+      "price_quoted_vnd": 1290000
+    },
+    "entities_multi": [],
+    "ground_truth_facts": {
+      "sku": "SKU-SN-RUN1",
+      "price_vnd": 1290000,
+      "in_stock": true,
+      "active_promos": [
+        "COD-0"
+      ],
+      "expired_promos": [
+        "RUN-10"
+      ],
+      "promo_expiry_dates": {
+        "RUN-10": "2026-10-25",
+        "COD-0": "2026-12-14"
+      },
+      "scheduled_callback_at": "2026-10-29T10:00"
+    },
+    "expected_outcome": "hen_goi_lai",
+    "success_if": {
+      "tool_called": "schedule.callback",
+      "args_match": {
+        "customer_phone": "000-000-0090",
+        "callback_at": "2026-10-29T10:00"
+      }
+    },
+    "customer_turns": [
+      "bên em bán Giày chạy bộ RunLite 1 đúng ko? Mình đang tìm mẫu này",
+      "để mình ghi lại nhé, Giày chạy bộ RunLite 1 là 1.290.000đ",
+      "cho mình xem lại đã. Em gọi lại lúc 10 giờ ngày 29/10 giúp m nhé"
+    ]
+  },
+  "call_2": {
+    "session_index": 2,
+    "channel": "hotline",
+    "channel_identity": "000-000-0090",
+    "date": "2026-10-29",
+    "customer_goal": "Chốt mua theo báo giá hiện hành",
+    "facts_established": {
+      "product_advised": "SKU-SN-RUN1",
+      "price_quoted_vnd": 1290000,
+      "payment": "COD",
+      "delivery_address": "căn 90, lô A, khu giao nhận mô phỏng Sao Mai",
+      "order_status": "created"
+    },
+    "entities_multi": [],
+    "ground_truth_facts": {
+      "sku": "SKU-SN-RUN1",
+      "price_vnd": 1290000,
+      "in_stock": true,
+      "active_promos": [
+        "COD-0"
+      ],
+      "expired_promos": [
+        "RUN-10"
+      ],
+      "promo_expiry_dates": {
+        "RUN-10": "2026-10-25",
+        "COD-0": "2026-12-14"
+      },
+      "estimated_delivery": "2026-10-31"
+    },
+    "expected_outcome": "chot_don",
+    "success_if": {
+      "tool_called": "order.create",
+      "args_match": {
+        "customer_phone": "000-000-0090",
+        "sku": "SKU-SN-RUN1",
+        "price_vnd": 1290000,
+        "payment": "COD"
+      }
+    },
+    "days_later": 3,
+    "must_carry_over": [
+      "product_advised",
+      "price_quoted_vnd"
+    ],
+    "must_not_ask": [
+      "product_advised"
+    ],
+    "memory_expectation": {
+      "order_status": "created"
+    },
+    "customer_turns": [
+      "Chị liên hệ lại về Giày chạy bộ RunLite một đây, lần trước có nhắn Zalo hỏi giá rồi.",
+      "Vậy Giày chạy bộ RunLite một hiện là một triệu hai trăm chín mươi nghìn đồng nhé, lên đơn giúp chị với.",
+      "Cho chị trả tiền lúc nhận hàng, giao về căn chín mươi, lô A, khu giao nhận mô phỏng Sao Mai giúp nhé."
+    ]
+  },
+  "simulator_profile": {
+    "persona_system_prompt": "Bạn nhắn qua Fanpage/Zalo bằng teencode ngắn (k, ko, bn, sp, đc…), khi gọi hotline thì nói bình thường. Mục tiêu: call_1: Tìm hiểu Giày chạy bộ RunLite 1 và hẹn trao đổi tiếp | call_2: Chốt mua theo báo giá hiện hành. Đã biết: {facts}. Dàn ý: {turn_outline}. Bạn kỳ vọng hotline biết bạn đã nhắn gì; nếu không, bạn nói 'ủa bên em nhắn Facebook báo … mà'.",
+    "hidden_goal": "call_1: Tìm hiểu Giày chạy bộ RunLite 1 và hẹn trao đổi tiếp | call_2: Chốt mua theo báo giá hiện hành",
+    "patience_level": 4,
+    "patience_max_turns": 4,
+    "patience_by_session": {
+      "call_1": 4,
+      "call_2": 3
+    }
+  }
+}

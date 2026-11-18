@@ -1,0 +1,131 @@
+{
+  "scenario_id": "TEAM-SC-082",
+  "tier": "M2",
+  "customer_id": "CUST-082",
+  "customer_phone": "[PHONE_CUST_082]",
+  "customer_identities": {
+    "phone": "[PHONE_CUST_082]",
+    "fb_id": "fb_synthetic_082",
+    "zalo_id": "zalo_synthetic_082"
+  },
+  "persona": "khach_da_kenh_fb_hotline",
+  "archetype": "omnichannel",
+  "hard_case": false,
+  "edge_case_type": null,
+  "target_sku": "SKU-MB-MON",
+  "simulator_profile": {
+    "persona_system_prompt": "Bạn nhắn qua Fanpage/Zalo bằng teencode ngắn (k, ko, bn, sp, đc…), khi gọi hotline thì nói bình thường. Mục tiêu: call_1: Tìm hiểu Máy hâm sữa Fatz 4 chức năng và hẹn trao đổi tiếp | call_2: Xác nhận báo giá rồi từ chối vì chưa có nhu cầu mua. Đã biết: {facts}. Dàn ý: {turn_outline}. Bạn kỳ vọng hotline biết bạn đã nhắn gì; nếu không, bạn nói 'ủa bên em nhắn Facebook báo … mà'.",
+    "hidden_goal": "call_1: Tìm hiểu Máy hâm sữa Fatz 4 chức năng và hẹn trao đổi tiếp | call_2: Xác nhận báo giá rồi từ chối vì chưa có nhu cầu mua",
+    "patience_level": 4,
+    "patience_max_turns": 4,
+    "patience_by_session": {
+      "call_1": 4,
+      "call_2": 3
+    }
+  },
+  "level": "M2",
+  "calls": {
+    "call_1": {
+      "session_index": 1,
+      "channel": "chat_fanpage",
+      "channel_identity": "fb_synthetic_082",
+      "date": "2026-10-21",
+      "customer_goal": "Tìm hiểu Máy hâm sữa Fatz 4 chức năng và hẹn trao đổi tiếp",
+      "facts_established": {
+        "product_advised": [
+          "SKU-MB-BAG",
+          "SKU-MB-MON"
+        ],
+        "price_quoted_vnd": [
+          119000,
+          490000
+        ]
+      },
+      "entities_multi": [
+        "product_advised",
+        "price_quoted_vnd"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-MB-MON",
+        "price_vnd": 490000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "comparison_quote": {
+          "sku": "SKU-MB-BAG",
+          "price_vnd": 119000,
+          "in_stock": true,
+          "active_promos": [
+            "COD-0"
+          ],
+          "expired_promos": [],
+          "promo_expiry_dates": {
+            "COD-0": "2026-12-14"
+          }
+        },
+        "scheduled_callback_at": "2026-10-24T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "[PHONE_CUST_082]",
+          "callback_at": "2026-10-24T10:00"
+        }
+      },
+      "customer_turns": [
+        "cho mình hỏi về Máy hâm sữa Fatz 4 chức năng một chút được ko?",
+        "em báo Túi trữ sữa Sunmum 50 túi giá 119.000đ còn Máy hâm sữa Fatz 4 chức năng giá 490.000đ đúng ko? Mình đang cân nhắc hai mẫu đó",
+        "cho mình xem lại đã. Em gọi lại lúc 10 giờ ngày 24/10 giúp m nhé"
+      ],
+      "call_date": "2026-10-21"
+    },
+    "call_2": {
+      "session_index": 2,
+      "channel": "hotline",
+      "channel_identity": "[PHONE_CUST_082]",
+      "date": "2026-10-24",
+      "customer_goal": "Xác nhận báo giá rồi từ chối vì chưa có nhu cầu mua",
+      "facts_established": {
+        "product_advised": "SKU-MB-MON",
+        "price_quoted_vnd": 490000
+      },
+      "entities_multi": [],
+      "ground_truth_facts": {
+        "sku": "SKU-MB-MON",
+        "price_vnd": 490000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        }
+      },
+      "expected_outcome": "tu_choi",
+      "success_if": {
+        "tool_called": null,
+        "args_match": {}
+      },
+      "days_later": 3,
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "customer_turns": [
+        "Em còn lưu báo giá Máy hâm sữa Fatz bốn chức năng lần trước mình nhắn trên Facebook hỏi không?",
+        "Giá giờ là bốn trăm chín mươi nghìn đồng đúng không? Mình chưa cần mua nữa, để dịp khác nhé."
+      ],
+      "call_date": "2026-10-24"
+    }
+  }
+}

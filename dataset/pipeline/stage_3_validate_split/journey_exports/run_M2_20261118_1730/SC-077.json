@@ -1,0 +1,109 @@
+{
+  "scenario_id": "TEAM-SC-077",
+  "tier": "M2",
+  "customer_id": "CUST-077",
+  "customer_phone": "[PHONE_CUST_077]",
+  "customer_identities": {
+    "phone": "[PHONE_CUST_077]",
+    "fb_id": "fb_synthetic_077",
+    "zalo_id": "zalo_synthetic_077"
+  },
+  "persona": "khach_da_kenh_fb_hotline",
+  "archetype": "omnichannel",
+  "hard_case": false,
+  "edge_case_type": null,
+  "target_sku": "SKU-MB-STR2",
+  "call_1": {
+    "session_index": 1,
+    "channel": "zalo",
+    "channel_identity": "zalo_synthetic_077",
+    "date": "2026-11-10",
+    "customer_goal": "Tìm hiểu Xe đẩy 2 chiều Combi Sugocal và hẹn trao đổi tiếp",
+    "facts_established": {
+      "product_advised": "SKU-MB-STR2",
+      "price_quoted_vnd": 6790000
+    },
+    "entities_multi": [],
+    "ground_truth_facts": {
+      "sku": "SKU-MB-STR2",
+      "price_vnd": 6790000,
+      "in_stock": true,
+      "active_promos": [
+        "MOM-FREESHIP",
+        "COD-0"
+      ],
+      "expired_promos": [],
+      "promo_expiry_dates": {
+        "MOM-FREESHIP": "2026-11-29",
+        "COD-0": "2026-12-14"
+      },
+      "scheduled_callback_at": "2026-11-13T10:00"
+    },
+    "expected_outcome": "hen_goi_lai",
+    "success_if": {
+      "tool_called": "schedule.callback",
+      "args_match": {
+        "customer_phone": "[PHONE_CUST_077]",
+        "callback_at": "2026-11-13T10:00"
+      }
+    },
+    "customer_turns": [
+      "cho mình hỏi về Xe đẩy 2 chiều Combi Sugocal một chút được ko?",
+      "6.790.000d cho Xe day 2 chieu Combi Sugocal la gia hien tai phai khong em?",
+      "cho mình xem lại đã. Em gọi lại lúc 10 giờ ngày 13/11 giúp m nhé"
+    ]
+  },
+  "call_2": {
+    "session_index": 2,
+    "channel": "hotline",
+    "channel_identity": "[PHONE_CUST_077]",
+    "date": "2026-11-13",
+    "customer_goal": "Xác nhận báo giá rồi từ chối vì chưa có nhu cầu mua",
+    "facts_established": {
+      "product_advised": "SKU-MB-STR2",
+      "price_quoted_vnd": 6790000
+    },
+    "entities_multi": [],
+    "ground_truth_facts": {
+      "sku": "SKU-MB-STR2",
+      "price_vnd": 6790000,
+      "in_stock": true,
+      "active_promos": [
+        "MOM-FREESHIP",
+        "COD-0"
+      ],
+      "expired_promos": [],
+      "promo_expiry_dates": {
+        "MOM-FREESHIP": "2026-11-29",
+        "COD-0": "2026-12-14"
+      }
+    },
+    "expected_outcome": "tu_choi",
+    "success_if": {
+      "tool_called": null,
+      "args_match": {}
+    },
+    "days_later": 3,
+    "must_carry_over": [
+      "product_advised",
+      "price_quoted_vnd"
+    ],
+    "must_not_ask": [
+      "product_advised"
+    ],
+    "customer_turns": [
+      "Mình liên hệ lại về Xe đẩy hai chiều Combi Sugocal đây, lần trước có nhắn Zalo hỏi giá rồi.",
+      "Giá giờ là sáu triệu bảy trăm chín mươi nghìn đồng đúng không? Mình chưa cần mua nữa, để dịp khác nhé."
+    ]
+  },
+  "simulator_profile": {
+    "persona_system_prompt": "Bạn nhắn qua Fanpage/Zalo bằng teencode ngắn (k, ko, bn, sp, đc…), khi gọi hotline thì nói bình thường. Mục tiêu: call_1: Tìm hiểu Xe đẩy 2 chiều Combi Sugocal và hẹn trao đổi tiếp | call_2: Xác nhận báo giá rồi từ chối vì chưa có nhu cầu mua. Đã biết: {facts}. Dàn ý: {turn_outline}. Bạn kỳ vọng hotline biết bạn đã nhắn gì; nếu không, bạn nói 'ủa bên em nhắn Facebook báo … mà'.",
+    "hidden_goal": "call_1: Tìm hiểu Xe đẩy 2 chiều Combi Sugocal và hẹn trao đổi tiếp | call_2: Xác nhận báo giá rồi từ chối vì chưa có nhu cầu mua",
+    "patience_level": 4,
+    "patience_max_turns": 4,
+    "patience_by_session": {
+      "call_1": 4,
+      "call_2": 3
+    }
+  }
+}

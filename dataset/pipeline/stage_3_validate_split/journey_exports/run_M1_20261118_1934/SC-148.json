@@ -1,0 +1,141 @@
+{
+  "scenario_id": "TEAM-SC-148",
+  "tier": "M1",
+  "customer_id": "CUST-148",
+  "customer_phone": "000-000-0148",
+  "customer_identities": {
+    "phone": "000-000-0148",
+    "fb_id": "fb_synthetic_148",
+    "zalo_id": "zalo_synthetic_148"
+  },
+  "persona": "khach_da_kenh_fb_hotline",
+  "archetype": "omnichannel",
+  "hard_case": false,
+  "edge_case_type": null,
+  "target_sku": "SKU-AP-Y",
+  "call_1": {
+    "session_index": 1,
+    "channel": "facebook",
+    "channel_identity": "fb_synthetic_148",
+    "date": "2026-11-04",
+    "customer_goal": "Tìm hiểu Máy lọc không khí AirPure Y và hẹn trao đổi tiếp",
+    "facts_established": {
+      "product_advised": [
+        "SKU-XM-4P",
+        "SKU-AP-Y"
+      ],
+      "price_quoted_vnd": [
+        5490000,
+        5200000
+      ]
+    },
+    "entities_multi": [
+      "product_advised",
+      "price_quoted_vnd"
+    ],
+    "ground_truth_facts": {
+      "sku": "SKU-AP-Y",
+      "price_vnd": 5200000,
+      "in_stock": true,
+      "active_promos": [
+        "COD-0"
+      ],
+      "expired_promos": [
+        "GIFT-FILTER"
+      ],
+      "promo_expiry_dates": {
+        "GIFT-FILTER": "2026-10-22",
+        "COD-0": "2026-12-14"
+      },
+      "comparison_quote": {
+        "sku": "SKU-XM-4P",
+        "price_vnd": 5490000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0",
+          "XM-COMBO"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "XM-COMBO": "2026-11-14",
+          "COD-0": "2026-12-14"
+        }
+      },
+      "scheduled_callback_at": "2026-11-07T10:00"
+    },
+    "expected_outcome": "hen_goi_lai",
+    "success_if": {
+      "tool_called": "schedule.callback",
+      "args_match": {
+        "customer_phone": "000-000-0148",
+        "callback_at": "2026-11-07T10:00"
+      }
+    },
+    "customer_turns": [
+      "bên em bán Máy lọc không khí AirPure Y đúng ko? Mình đang tìm mẫu này",
+      "em báo Máy lọc không khí Xiaomi Smart 4 Pro giá 5.490.000đ còn Máy lọc không khí AirPure Y giá 5.200.000đ đúng ko? Mình đang cân nhắc hai mẫu đó",
+      "cho mình xem lại đã. Em gọi lại lúc 10 giờ ngày 7/11 giúp m nhé"
+    ]
+  },
+  "call_2": {
+    "session_index": 2,
+    "channel": "hotline",
+    "channel_identity": "000-000-0148",
+    "date": "2026-11-07",
+    "customer_goal": "Chốt mua theo báo giá hiện hành",
+    "facts_established": {
+      "product_advised": "SKU-AP-Y",
+      "price_quoted_vnd": 5200000,
+      "payment": "COD",
+      "delivery_address": "căn 148, lô A, khu giao nhận mô phỏng Sao Mai",
+      "order_status": "created"
+    },
+    "entities_multi": [],
+    "ground_truth_facts": {
+      "sku": "SKU-AP-Y",
+      "price_vnd": 5200000,
+      "in_stock": true,
+      "active_promos": [
+        "COD-0"
+      ],
+      "expired_promos": [
+        "GIFT-FILTER",
+        "AIR-2ND-50",
+        "NAM-SHIP0"
+      ],
+      "promo_expiry_dates": {
+        "GIFT-FILTER": "2026-10-22",
+        "AIR-2ND-50": "2026-11-04",
+        "NAM-SHIP0": "2026-11-05",
+        "COD-0": "2026-12-14"
+      },
+      "estimated_delivery": "2026-11-10"
+    },
+    "expected_outcome": "chot_don",
+    "success_if": {
+      "tool_called": "order.create",
+      "args_match": {
+        "customer_phone": "000-000-0148",
+        "sku": "SKU-AP-Y",
+        "price_vnd": 5200000,
+        "payment": "COD"
+      }
+    },
+    "days_later": 3,
+    "must_carry_over": [
+      "product_advised",
+      "price_quoted_vnd"
+    ],
+    "must_not_ask": [
+      "product_advised"
+    ],
+    "memory_expectation": {
+      "order_status": "created"
+    },
+    "customer_turns": [
+      "Hôm trước mình có nhắn trên Facebook hỏi Máy lọc không khí AirPure Y, em xem lại giúp mình nhé.",
+      "Vậy Máy lọc không khí AirPure Y hiện là năm triệu hai trăm nghìn đồng nhé, lên đơn giúp mình với.",
+      "Cho mình trả tiền lúc nhận hàng, giao về căn một trăm bốn mươi tám, lô A, khu giao nhận mô phỏng Sao Mai giúp nhé."
+    ]
+  }
+}

@@ -1,0 +1,114 @@
+{
+  "scenario_id": "TEAM-SC-121",
+  "tier": "M1",
+  "customer_id": "CUST-121",
+  "customer_phone": "000-000-0121",
+  "customer_identities": {
+    "phone": "000-000-0121",
+    "fb_id": "fb_synthetic_121",
+    "zalo_id": "zalo_synthetic_121"
+  },
+  "persona": "khach_hoi_nhieu_khong_mua",
+  "archetype": "standard",
+  "hard_case": false,
+  "edge_case_type": null,
+  "target_sku": "SKU-SN-RUN1",
+  "call_1": {
+    "session_index": 1,
+    "channel": "hotline",
+    "channel_identity": "000-000-0121",
+    "date": "2026-11-06",
+    "customer_goal": "Tìm hiểu Giày chạy bộ RunLite 1 và hẹn trao đổi tiếp",
+    "facts_established": {
+      "product_advised": "SKU-SN-RUN1",
+      "price_quoted_vnd": 1290000
+    },
+    "entities_multi": [],
+    "ground_truth_facts": {
+      "sku": "SKU-SN-RUN1",
+      "price_vnd": 1290000,
+      "in_stock": true,
+      "active_promos": [
+        "COD-0"
+      ],
+      "expired_promos": [
+        "RUN-10"
+      ],
+      "promo_expiry_dates": {
+        "RUN-10": "2026-10-25",
+        "COD-0": "2026-12-14"
+      },
+      "scheduled_callback_at": "2026-11-08T10:00"
+    },
+    "expected_outcome": "hen_goi_lai",
+    "success_if": {
+      "tool_called": "schedule.callback",
+      "args_match": {
+        "customer_phone": "000-000-0121",
+        "callback_at": "2026-11-08T10:00"
+      }
+    },
+    "customer_turns": [
+      "Cho chị hỏi về Giày chạy bộ RunLite một một chút được không?",
+      "Để chị ghi lại nhé, Giày chạy bộ RunLite một là một triệu hai trăm chín mươi nghìn đồng.",
+      "Để xem kỹ lại thông tin đã. Em gọi lại lúc mười giờ ngày tám tháng mười một giúp chị nhé."
+    ]
+  },
+  "call_2": {
+    "session_index": 2,
+    "channel": "hotline",
+    "channel_identity": "000-000-0121",
+    "date": "2026-11-08",
+    "customer_goal": "Chốt mua theo báo giá hiện hành",
+    "facts_established": {
+      "product_advised": "SKU-SN-RUN1",
+      "price_quoted_vnd": 1290000,
+      "payment": "COD",
+      "delivery_address": "căn 121, lô A, khu giao nhận mô phỏng Sao Mai",
+      "order_status": "created"
+    },
+    "entities_multi": [],
+    "ground_truth_facts": {
+      "sku": "SKU-SN-RUN1",
+      "price_vnd": 1290000,
+      "in_stock": true,
+      "active_promos": [
+        "COD-0"
+      ],
+      "expired_promos": [
+        "RUN-10"
+      ],
+      "promo_expiry_dates": {
+        "RUN-10": "2026-10-25",
+        "COD-0": "2026-12-14"
+      },
+      "estimated_delivery": "2026-11-10"
+    },
+    "expected_outcome": "chot_don",
+    "success_if": {
+      "tool_called": "order.create",
+      "args_match": {
+        "customer_phone": "000-000-0121",
+        "sku": "SKU-SN-RUN1",
+        "price_vnd": 1290000,
+        "payment": "COD"
+      }
+    },
+    "days_later": 2,
+    "must_carry_over": [
+      "product_advised",
+      "price_quoted_vnd"
+    ],
+    "must_not_ask": [
+      "product_advised"
+    ],
+    "memory_expectation": {
+      "order_status": "created"
+    },
+    "customer_turns": [
+      "Vụ Giày chạy bộ RunLite một mình có gọi hỏi hôm trước ấy, bên em xem lại được không?",
+      "Mình lấy Giày chạy bộ RunLite một với giá một triệu hai trăm chín mươi ngàn đồng nhé, em tạo đơn giúp.",
+      "Cho mình trả tiền lúc nhận hàng, giao về căn một trăm hai mươi mốt, lô A, khu giao nhận mô phỏng Sao Mai giúp nhé."
+    ]
+  }
+}

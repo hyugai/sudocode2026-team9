@@ -1,0 +1,132 @@
+{
+  "scenario_id": "TEAM-SC-080",
+  "tier": "M2",
+  "customer_id": "CUST-080",
+  "customer_phone": "000-000-0080",
+  "customer_identities": {
+    "phone": "000-000-0080",
+    "fb_id": "fb_synthetic_080",
+    "zalo_id": "zalo_synthetic_080"
+  },
+  "persona": "khach_da_kenh_fb_hotline",
+  "archetype": "omnichannel",
+  "hard_case": false,
+  "edge_case_type": null,
+  "target_sku": "SKU-XM-4P",
+  "call_1": {
+    "session_index": 1,
+    "channel": "zalo",
+    "channel_identity": "zalo_synthetic_080",
+    "date": "2026-11-06",
+    "customer_goal": "Tìm hiểu Máy lọc không khí Xiaomi Smart 4 Pro và hẹn trao đổi tiếp",
+    "facts_established": {
+      "product_advised": "SKU-XM-4P",
+      "price_quoted_vnd": 5490000
+    },
+    "entities_multi": [],
+    "ground_truth_facts": {
+      "sku": "SKU-XM-4P",
+      "price_vnd": 5490000,
+      "in_stock": true,
+      "active_promos": [
+        "COD-0",
+        "XM-COMBO"
+      ],
+      "expired_promos": [
+        "AIR-2ND-50",
+        "NAM-SHIP0"
+      ],
+      "promo_expiry_dates": {
+        "XM-COMBO": "2026-11-14",
+        "AIR-2ND-50": "2026-11-04",
+        "NAM-SHIP0": "2026-11-05",
+        "COD-0": "2026-12-14"
+      },
+      "scheduled_callback_at": "2026-11-10T10:00"
+    },
+    "expected_outcome": "hen_goi_lai",
+    "success_if": {
+      "tool_called": "schedule.callback",
+      "args_match": {
+        "customer_phone": "000-000-0080",
+        "callback_at": "2026-11-10T10:00"
+      }
+    },
+    "customer_turns": [
+      "bên em bán Máy lọc không khí Xiaomi Smart 4 Pro đúng ko? Mình đang tìm mẫu này",
+      "de minh ghi lai nhe, May loc khong khi Xiaomi Smart 4 Pro la 5.490.000d",
+      "cho minh xem lai da. Em goi lai luc 10 gio ngay 10/11 giup m nhe"
+    ]
+  },
+  "call_2": {
+    "session_index": 2,
+    "channel": "hotline",
+    "channel_identity": "000-000-0080",
+    "date": "2026-11-10",
+    "customer_goal": "Chốt mua theo báo giá hiện hành",
+    "facts_established": {
+      "product_advised": "SKU-XM-4P",
+      "price_quoted_vnd": 5490000,
+      "payment": "COD",
+      "delivery_address": "căn 80, lô A, khu giao nhận mô phỏng Sao Mai",
+      "order_status": "created"
+    },
+    "entities_multi": [],
+    "ground_truth_facts": {
+      "sku": "SKU-XM-4P",
+      "price_vnd": 5490000,
+      "in_stock": true,
+      "active_promos": [
+        "COD-0",
+        "XM-COMBO"
+      ],
+      "expired_promos": [
+        "AIR-2ND-50",
+        "NAM-SHIP0"
+      ],
+      "promo_expiry_dates": {
+        "XM-COMBO": "2026-11-14",
+        "AIR-2ND-50": "2026-11-04",
+        "NAM-SHIP0": "2026-11-05",
+        "COD-0": "2026-12-14"
+      },
+      "estimated_delivery": "2026-11-12"
+    },
+    "expected_outcome": "chot_don",
+    "success_if": {
+      "tool_called": "order.create",
+      "args_match": {
+        "customer_phone": "000-000-0080",
+        "sku": "SKU-XM-4P",
+        "price_vnd": 5490000,
+        "payment": "COD"
+      }
+    },
+    "days_later": 4,
+    "must_carry_over": [
+      "product_advised",
+      "price_quoted_vnd"
+    ],
+    "must_not_ask": [
+      "product_advised"
+    ],
+    "memory_expectation": {
+      "order_status": "created"
+    },
+    "customer_turns": [
+      "Em còn lưu báo giá Máy lọc không khí Xiaomi Smart bốn Pro lần trước anh nhắn Zalo hỏi không?",
+      "Anh lấy Máy lọc không khí Xiaomi Smart bốn Pro với giá năm triệu bốn trăm chín mươi nghìn đồng nhé, em tạo đơn giúp.",
+      "Cho anh trả tiền lúc nhận hàng, giao về căn tám mươi, lô A, khu giao nhận mô phỏng Sao Mai giúp nhé."
+    ]
+  },
+  "simulator_profile": {
+    "persona_system_prompt": "Bạn nhắn qua Fanpage/Zalo bằng teencode ngắn (k, ko, bn, sp, đc…), khi gọi hotline thì nói bình thường. Mục tiêu: call_1: Tìm hiểu Máy lọc không khí Xiaomi Smart 4 Pro và hẹn trao đổi tiếp | call_2: Chốt mua theo báo giá hiện hành. Đã biết: {facts}. Dàn ý: {turn_outline}. Bạn kỳ vọng hotline biết bạn đã nhắn gì; nếu không, bạn nói 'ủa bên em nhắn Facebook báo … mà'.",
+    "hidden_goal": "call_1: Tìm hiểu Máy lọc không khí Xiaomi Smart 4 Pro và hẹn trao đổi tiếp | call_2: Chốt mua theo báo giá hiện hành",
+    "patience_level": 4,
+    "patience_max_turns": 4,
+    "patience_by_session": {
+      "call_1": 4,
+      "call_2": 3
+    }
+  }
+}

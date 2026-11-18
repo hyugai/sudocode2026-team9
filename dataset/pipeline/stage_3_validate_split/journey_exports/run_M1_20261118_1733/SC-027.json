@@ -1,0 +1,118 @@
+{
+  "scenario_id": "TEAM-SC-027",
+  "tier": "M1",
+  "customer_id": "CUST-027",
+  "customer_phone": "[PHONE_CUST_027]",
+  "customer_identities": {
+    "phone": "[PHONE_CUST_027]",
+    "fb_id": "fb_synthetic_027",
+    "zalo_id": "zalo_synthetic_027"
+  },
+  "persona": "khach_do_du_hoi_nguoi_nha",
+  "archetype": "standard",
+  "hard_case": false,
+  "edge_case_type": null,
+  "target_sku": "SKU-AP-X",
+  "call_1": {
+    "session_index": 1,
+    "channel": "hotline",
+    "channel_identity": "[PHONE_CUST_027]",
+    "date": "2026-10-29",
+    "customer_goal": "Tìm hiểu Máy lọc không khí AirPure X và hẹn trao đổi tiếp",
+    "facts_established": {
+      "product_advised": "SKU-AP-X",
+      "price_quoted_vnd": 4890000
+    },
+    "entities_multi": [],
+    "ground_truth_facts": {
+      "sku": "SKU-AP-X",
+      "price_vnd": 4890000,
+      "in_stock": true,
+      "active_promos": [
+        "COD-0"
+      ],
+      "expired_promos": [
+        "GIFT-FILTER",
+        "AP-SEP"
+      ],
+      "promo_expiry_dates": {
+        "GIFT-FILTER": "2026-10-22",
+        "COD-0": "2026-12-14",
+        "AP-SEP": "2026-09-30"
+      },
+      "scheduled_callback_at": "2026-10-30T10:00"
+    },
+    "expected_outcome": "hen_goi_lai",
+    "success_if": {
+      "tool_called": "schedule.callback",
+      "args_match": {
+        "customer_phone": "[PHONE_CUST_027]",
+        "callback_at": "2026-10-30T10:00"
+      }
+    },
+    "customer_turns": [
+      "Bên em bán Máy lọc không khí AirPure X đúng không? Chị đang tìm mẫu này.",
+      "bốn triệu tám trăm chín mươi nghìn đồng cho Máy lọc không khí AirPure X là giá hiện tại phải không em?",
+      "Để hỏi người nhà trước. Em gọi lại lúc mười giờ ngày ba mươi tháng mười giúp chị nhé."
+    ]
+  },
+  "call_2": {
+    "session_index": 2,
+    "channel": "hotline",
+    "channel_identity": "[PHONE_CUST_027]",
+    "date": "2026-10-30",
+    "customer_goal": "Chốt mua theo báo giá hiện hành",
+    "facts_established": {
+      "product_advised": "SKU-AP-X",
+      "price_quoted_vnd": 4890000,
+      "payment": "COD",
+      "delivery_address": "[ADDR_CUST_027]",
+      "order_status": "created"
+    },
+    "entities_multi": [],
+    "ground_truth_facts": {
+      "sku": "SKU-AP-X",
+      "price_vnd": 4890000,
+      "in_stock": true,
+      "active_promos": [
+        "COD-0"
+      ],
+      "expired_promos": [
+        "GIFT-FILTER",
+        "AP-SEP"
+      ],
+      "promo_expiry_dates": {
+        "GIFT-FILTER": "2026-10-22",
+        "COD-0": "2026-12-14",
+        "AP-SEP": "2026-09-30"
+      },
+      "estimated_delivery": "2026-11-02"
+    },
+    "expected_outcome": "chot_don",
+    "success_if": {
+      "tool_called": "order.create",
+      "args_match": {
+        "customer_phone": "[PHONE_CUST_027]",
+        "sku": "SKU-AP-X",
+        "price_vnd": 4890000,
+        "payment": "COD"
+      }
+    },
+    "days_later": 1,
+    "must_carry_over": [
+      "product_advised",
+      "price_quoted_vnd"
+    ],
+    "must_not_ask": [
+      "product_advised"
+    ],
+    "memory_expectation": {
+      "order_status": "created"
+    },
+    "customer_turns": [
+      "Em còn lưu báo giá Máy lọc không khí AirPure X lần trước mình gọi hỏi không?",
+      "Mình lấy Máy lọc không khí AirPure X với giá bốn triệu tám trăm chín mươi nghìn đồng nhé, em tạo đơn giúp.",
+      "Cho mình trả tiền lúc nhận hàng, giao về căn hai mươi bảy, lô A, khu giao nhận mô phỏng Sao Mai giúp nhé."
+    ]
+  }
+}

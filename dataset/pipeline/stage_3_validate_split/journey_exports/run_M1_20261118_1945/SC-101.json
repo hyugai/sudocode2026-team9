@@ -1,0 +1,118 @@
+{
+  "scenario_id": "TEAM-SC-162",
+  "tier": "M1",
+  "customer_id": "CUST-162",
+  "customer_phone": "000-000-0162",
+  "customer_identities": {
+    "phone": "000-000-0162",
+    "fb_id": "fb_synthetic_162",
+    "zalo_id": "zalo_synthetic_162"
+  },
+  "persona": "khach_da_kenh_fb_hotline",
+  "archetype": "omnichannel",
+  "hard_case": false,
+  "edge_case_type": null,
+  "target_sku": "SKU-MB-PUMP1",
+  "call_1": {
+    "session_index": 1,
+    "channel": "facebook",
+    "channel_identity": "fb_synthetic_162",
+    "date": "2026-10-27",
+    "customer_goal": "Tìm hiểu Máy hút sữa điện đôi Spectra S1 và hẹn trao đổi tiếp",
+    "facts_established": {
+      "product_advised": "SKU-MB-PUMP1",
+      "price_quoted_vnd": 4290000
+    },
+    "entities_multi": [],
+    "ground_truth_facts": {
+      "sku": "SKU-MB-PUMP1",
+      "price_vnd": 4290000,
+      "in_stock": true,
+      "active_promos": [
+        "MOM-FREESHIP",
+        "COD-0"
+      ],
+      "expired_promos": [
+        "PUMP-GIFT"
+      ],
+      "promo_expiry_dates": {
+        "MOM-FREESHIP": "2026-11-29",
+        "COD-0": "2026-12-14",
+        "PUMP-GIFT": "2026-10-13"
+      },
+      "scheduled_callback_at": "2026-10-31T10:00"
+    },
+    "expected_outcome": "hen_goi_lai",
+    "success_if": {
+      "tool_called": "schedule.callback",
+      "args_match": {
+        "customer_phone": "000-000-0162",
+        "callback_at": "2026-10-31T10:00"
+      }
+    },
+    "customer_turns": [
+      "máy hút sữa điện đôi spectra s1 bên em còn hàng ko?",
+      "vay May hut sua dien doi Spectra S1 ben em bao 4.290.000d dung ko?",
+      "cho mình xem lại đã. Em gọi lại lúc 10 giờ ngày 31/10 giúp m nhé"
+    ]
+  },
+  "call_2": {
+    "session_index": 2,
+    "channel": "hotline",
+    "channel_identity": "000-000-0162",
+    "date": "2026-10-31",
+    "customer_goal": "Chốt mua theo báo giá hiện hành",
+    "facts_established": {
+      "product_advised": "SKU-MB-PUMP1",
+      "price_quoted_vnd": 4290000,
+      "payment": "COD",
+      "delivery_address": "căn 162, lô A, khu giao nhận mô phỏng Sao Mai",
+      "order_status": "created"
+    },
+    "entities_multi": [],
+    "ground_truth_facts": {
+      "sku": "SKU-MB-PUMP1",
+      "price_vnd": 4290000,
+      "in_stock": true,
+      "active_promos": [
+        "MOM-FREESHIP",
+        "COD-0"
+      ],
+      "expired_promos": [
+        "PUMP-GIFT"
+      ],
+      "promo_expiry_dates": {
+        "MOM-FREESHIP": "2026-11-29",
+        "COD-0": "2026-12-14",
+        "PUMP-GIFT": "2026-10-13"
+      },
+      "estimated_delivery": "2026-11-03"
+    },
+    "expected_outcome": "chot_don",
+    "success_if": {
+      "tool_called": "order.create",
+      "args_match": {
+        "customer_phone": "000-000-0162",
+        "sku": "SKU-MB-PUMP1",
+        "price_vnd": 4290000,
+        "payment": "COD"
+      }
+    },
+    "days_later": 4,
+    "must_carry_over": [
+      "product_advised",
+      "price_quoted_vnd"
+    ],
+    "must_not_ask": [
+      "product_advised"
+    ],
+    "memory_expectation": {
+      "order_status": "created"
+    },
+    "customer_turns": [
+      "Anh liên hệ lại về Máy hút sữa điện đôi Spectra S1 đây, lần trước có nhắn trên Facebook hỏi giá rồi.",
+      "Đúng mẫu Máy hút sữa điện đôi Spectra S1 đó rồi. Nếu giá là bốn triệu hai trăm chín mươi nghìn đồng thì anh chốt luôn.",
+      "ờ anh nói là cho anh trả tiền lúc nhận hàng, giao về căn một trăm sáu mươi hai, lô A, khu giao nhận mô phỏng Sao Mai giúp nhé."
+    ]
+  }
+}

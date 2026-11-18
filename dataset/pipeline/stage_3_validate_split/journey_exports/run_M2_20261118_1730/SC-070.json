@@ -1,0 +1,139 @@
+{
+  "scenario_id": "TEAM-SC-070",
+  "tier": "M2",
+  "customer_id": "CUST-070",
+  "customer_phone": "[PHONE_CUST_070]",
+  "customer_identities": {
+    "phone": "[PHONE_CUST_070]",
+    "fb_id": "fb_synthetic_070",
+    "zalo_id": "zalo_synthetic_070"
+  },
+  "persona": "khach_da_kenh_fb_hotline",
+  "archetype": "omnichannel",
+  "hard_case": false,
+  "edge_case_type": null,
+  "target_sku": "SKU-WF-RO10",
+  "call_1": {
+    "session_index": 1,
+    "channel": "zalo",
+    "channel_identity": "zalo_synthetic_070",
+    "date": "2026-10-22",
+    "customer_goal": "Tìm hiểu Máy lọc nước RO Kangaroo 10 lõi và hẹn trao đổi tiếp",
+    "facts_established": {
+      "product_advised": [
+        "SKU-WF-RO9",
+        "SKU-WF-RO10"
+      ],
+      "price_quoted_vnd": [
+        5990000,
+        6890000
+      ]
+    },
+    "entities_multi": [
+      "product_advised",
+      "price_quoted_vnd"
+    ],
+    "ground_truth_facts": {
+      "sku": "SKU-WF-RO10",
+      "price_vnd": 6890000,
+      "in_stock": true,
+      "active_promos": [
+        "COD-0"
+      ],
+      "expired_promos": [],
+      "promo_expiry_dates": {
+        "COD-0": "2026-12-14"
+      },
+      "comparison_quote": {
+        "sku": "SKU-WF-RO9",
+        "price_vnd": 5990000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        }
+      },
+      "scheduled_callback_at": "2026-10-27T10:00"
+    },
+    "expected_outcome": "hen_goi_lai",
+    "success_if": {
+      "tool_called": "schedule.callback",
+      "args_match": {
+        "customer_phone": "[PHONE_CUST_070]",
+        "callback_at": "2026-10-26T10:00"
+      }
+    },
+    "customer_turns": [
+      "cho mình hỏi về Máy lọc nước RO Kangaroo 10 lõi một chút được ko?",
+      "em báo Máy lọc nước RO Karofi 9 lõi giá 5.990.000đ còn Máy lọc nước RO Kangaroo 10 lõi giá 6.890.000đ đúng ko? Mình đang cân nhắc hai mẫu đó",
+      "cho mình xem lại đã. Em gọi lại lúc 10 giờ ngày 26/10 giúp m nhé"
+    ]
+  },
+  "call_2": {
+    "session_index": 2,
+    "channel": "hotline",
+    "channel_identity": "[PHONE_CUST_070]",
+    "date": "2026-10-26",
+    "customer_goal": "Chốt mua theo báo giá hiện hành",
+    "facts_established": {
+      "product_advised": "SKU-WF-RO10",
+      "price_quoted_vnd": 6890000,
+      "payment": "COD",
+      "delivery_address": "[ADDR_CUST_070]",
+      "order_status": "created"
+    },
+    "entities_multi": [],
+    "ground_truth_facts": {
+      "sku": "SKU-WF-RO10",
+      "price_vnd": 6890000,
+      "in_stock": true,
+      "active_promos": [
+        "COD-0"
+      ],
+      "expired_promos": [],
+      "promo_expiry_dates": {
+        "COD-0": "2026-12-14"
+      },
+      "estimated_delivery": "2026-10-28"
+    },
+    "expected_outcome": "chot_don",
+    "success_if": {
+      "tool_called": "order.create",
+      "args_match": {
+        "customer_phone": "[PHONE_CUST_070]",
+        "sku": "SKU-WF-RO10",
+        "price_vnd": 6890000,
+        "payment": "COD"
+      }
+    },
+    "days_later": 4,
+    "must_carry_over": [
+      "product_advised",
+      "price_quoted_vnd"
+    ],
+    "must_not_ask": [
+      "product_advised"
+    ],
+    "memory_expectation": {
+      "order_status": "created"
+    },
+    "customer_turns": [
+      "ờ mình nói là hôm trước mình có nhắn Zalo hỏi Máy lọc nước RO Kangaroo mười lõi, em xem lại giúp mình nhé.",
+      "Mình lấy Máy lọc nước RO Kangaroo mười lõi với giá sáu triệu tám trăm chín mươi nghìn đồng nhé, em tạo đơn giúp.",
+      "Cho mình trả tiền lúc nhận hàng, giao về căn bảy mươi, lô A, khu giao nhận mô phỏng Sao Mai giúp nhé."
+    ]
+  },
+  "simulator_profile": {
+    "persona_system_prompt": "Bạn nhắn qua Fanpage/Zalo bằng teencode ngắn (k, ko, bn, sp, đc…), khi gọi hotline thì nói bình thường. Mục tiêu: call_1: Tìm hiểu Máy lọc nước RO Kangaroo 10 lõi và hẹn trao đổi tiếp | call_2: Chốt mua theo báo giá hiện hành. Đã biết: {facts}. Dàn ý: {turn_outline}. Bạn kỳ vọng hotline biết bạn đã nhắn gì; nếu không, bạn nói 'ủa bên em nhắn Facebook báo … mà'.",
+    "hidden_goal": "call_1: Tìm hiểu Máy lọc nước RO Kangaroo 10 lõi và hẹn trao đổi tiếp | call_2: Chốt mua theo báo giá hiện hành",
+    "patience_level": 4,
+    "patience_max_turns": 4,
+    "patience_by_session": {
+      "call_1": 4,
+      "call_2": 3
+    }
+  }
+}

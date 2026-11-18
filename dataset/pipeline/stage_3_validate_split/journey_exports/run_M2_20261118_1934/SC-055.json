@@ -1,0 +1,136 @@
+{
+  "scenario_id": "TEAM-SC-055",
+  "tier": "M2",
+  "customer_id": "CUST-055",
+  "customer_phone": "000-000-0055",
+  "customer_identities": {
+    "phone": "000-000-0055",
+    "fb_id": "fb_synthetic_055",
+    "zalo_id": "zalo_synthetic_055"
+  },
+  "persona": "khach_do_du_hoi_nguoi_nha",
+  "archetype": "standard",
+  "hard_case": false,
+  "edge_case_type": null,
+  "target_sku": "SKU-SN-RUN2",
+  "call_1": {
+    "session_index": 1,
+    "channel": "hotline",
+    "channel_identity": "000-000-0055",
+    "date": "2026-10-23",
+    "customer_goal": "Tìm hiểu Giày chạy bộ RunLite 2 Pro và hẹn trao đổi tiếp",
+    "facts_established": {
+      "product_advised": [
+        "SKU-SN-CAS",
+        "SKU-SN-RUN2"
+      ],
+      "price_quoted_vnd": [
+        890000,
+        1521000
+      ]
+    },
+    "entities_multi": [
+      "product_advised",
+      "price_quoted_vnd"
+    ],
+    "ground_truth_facts": {
+      "sku": "SKU-SN-RUN2",
+      "price_vnd": 1521000,
+      "in_stock": true,
+      "active_promos": [
+        "COD-0",
+        "RUN-10"
+      ],
+      "expired_promos": [
+        "RUN2-SALE"
+      ],
+      "promo_expiry_dates": {
+        "RUN-10": "2026-10-25",
+        "COD-0": "2026-12-14",
+        "RUN2-SALE": "2026-10-07"
+      },
+      "comparison_quote": {
+        "sku": "SKU-SN-CAS",
+        "price_vnd": 890000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        }
+      },
+      "scheduled_callback_at": "2026-10-25T10:00"
+    },
+    "expected_outcome": "hen_goi_lai",
+    "success_if": {
+      "tool_called": "schedule.callback",
+      "args_match": {
+        "customer_phone": "000-000-0055",
+        "callback_at": "2026-10-25T10:00"
+      }
+    },
+    "customer_turns": [
+      "Bên em bán Giày chạy bộ RunLite hai Pro đúng không? Anh đang tìm mẫu này.",
+      "Em báo Giày sneaker Urban Classic giá tám trăm chín mươi nghìn đồng còn Giày chạy bộ RunLite hai Pro giá một triệu năm trăm hai mươi mốt nghìn đồng đúng hông? Anh đang cân nhắc hai mẫu đó.",
+      "ờ anh nói là để hỏi người nhà trước. Em gọi lại lúc mười giờ ngày hai mươi lăm tháng mười giúp anh nhé."
+    ]
+  },
+  "call_2": {
+    "session_index": 2,
+    "channel": "hotline",
+    "channel_identity": "000-000-0055",
+    "date": "2026-10-25",
+    "customer_goal": "Xác nhận báo giá rồi từ chối vì chưa có nhu cầu mua",
+    "facts_established": {
+      "product_advised": "SKU-SN-RUN2",
+      "price_quoted_vnd": 1521000
+    },
+    "entities_multi": [],
+    "ground_truth_facts": {
+      "sku": "SKU-SN-RUN2",
+      "price_vnd": 1521000,
+      "in_stock": true,
+      "active_promos": [
+        "COD-0",
+        "RUN-10"
+      ],
+      "expired_promos": [
+        "RUN2-SALE"
+      ],
+      "promo_expiry_dates": {
+        "RUN-10": "2026-10-25",
+        "COD-0": "2026-12-14",
+        "RUN2-SALE": "2026-10-07"
+      }
+    },
+    "expected_outcome": "tu_choi",
+    "success_if": {
+      "tool_called": null,
+      "args_match": {}
+    },
+    "days_later": 2,
+    "must_carry_over": [
+      "product_advised",
+      "price_quoted_vnd"
+    ],
+    "must_not_ask": [
+      "product_advised"
+    ],
+    "customer_turns": [
+      "Hôm trước anh có gọi hỏi Giày chạy bộ RunLite hai Pro, em xem lại giúp anh nhé.",
+      "Giá giờ là một triệu năm trăm hai mươi mốt nghìn đồng đúng không? Anh chưa cần mua nữa, để dịp khác nhé."
+    ]
+  },
+  "simulator_profile": {
+    "persona_system_prompt": "Bạn là khách hàng Việt Nam đang gọi/nhắn cho shop. Mục tiêu: call_1: Tìm hiểu Giày chạy bộ RunLite 2 Pro và hẹn trao đổi tiếp | call_2: Xác nhận báo giá rồi từ chối vì chưa có nhu cầu mua. Những điều bạn đã biết/đã nói ở phiên trước: {facts}. Dàn ý những điều bạn sẽ nói theo thứ tự: {turn_outline}. Nói tự nhiên, ngắn (1–2 câu/lượt), xưng hô theo giới tính đã cho. Bạn CHƯA quyết mua, cần hỏi người nhà; chỉ đồng ý mua nếu kịch bản cho phép. Nếu nhân viên hỏi lại điều bạn đã nói ở phiên trước, hãy trả lời nhưng tỏ ra hơi khó chịu ('hôm trước chị nói rồi mà'). Không bịa thêm thông tin ngoài những gì đã cho; nếu bị hỏi điều không có, nói 'chị không rõ'. Không bao giờ nhắc đến việc bạn là AI hay đang mô phỏng.",
+    "hidden_goal": "call_1: Tìm hiểu Giày chạy bộ RunLite 2 Pro và hẹn trao đổi tiếp | call_2: Xác nhận báo giá rồi từ chối vì chưa có nhu cầu mua",
+    "patience_level": 4,
+    "patience_max_turns": 4,
+    "patience_by_session": {
+      "call_1": 4,
+      "call_2": 3
+    }
+  }
+}

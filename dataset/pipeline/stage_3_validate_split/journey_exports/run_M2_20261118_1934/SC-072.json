@@ -1,0 +1,114 @@
+{
+  "scenario_id": "TEAM-SC-072",
+  "tier": "M2",
+  "customer_id": "CUST-072",
+  "customer_phone": "000-000-0072",
+  "customer_identities": {
+    "phone": "000-000-0072",
+    "fb_id": "fb_synthetic_072",
+    "zalo_id": "zalo_synthetic_072"
+  },
+  "persona": "khach_da_kenh_fb_hotline",
+  "archetype": "omnichannel",
+  "hard_case": false,
+  "edge_case_type": null,
+  "target_sku": "SKU-MB-CAR",
+  "simulator_profile": {
+    "persona_system_prompt": "Bạn nhắn qua Fanpage/Zalo bằng teencode ngắn (k, ko, bn, sp, đc…), khi gọi hotline thì nói bình thường. Mục tiêu: call_1: Tìm hiểu Ghế ngồi ô tô cho bé Chicco và hẹn trao đổi tiếp | call_2: Xác nhận báo giá rồi từ chối vì chưa có nhu cầu mua. Đã biết: {facts}. Dàn ý: {turn_outline}. Bạn kỳ vọng hotline biết bạn đã nhắn gì; nếu không, bạn nói 'ủa bên em nhắn Facebook báo … mà'.",
+    "hidden_goal": "call_1: Tìm hiểu Ghế ngồi ô tô cho bé Chicco và hẹn trao đổi tiếp | call_2: Xác nhận báo giá rồi từ chối vì chưa có nhu cầu mua",
+    "patience_level": 4,
+    "patience_max_turns": 4,
+    "patience_by_session": {
+      "call_1": 4,
+      "call_2": 3
+    }
+  },
+  "level": "M2",
+  "calls": {
+    "call_1": {
+      "session_index": 1,
+      "channel": "hotline",
+      "channel_identity": "000-000-0072",
+      "date": "2026-10-15",
+      "customer_goal": "Tìm hiểu Ghế ngồi ô tô cho bé Chicco và hẹn trao đổi tiếp",
+      "facts_established": {
+        "product_advised": "SKU-MB-CAR",
+        "price_quoted_vnd": 4990000
+      },
+      "entities_multi": [],
+      "ground_truth_facts": {
+        "sku": "SKU-MB-CAR",
+        "price_vnd": 4990000,
+        "in_stock": true,
+        "active_promos": [
+          "MOM-FREESHIP",
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "MOM-FREESHIP": "2026-11-29",
+          "COD-0": "2026-12-14"
+        },
+        "scheduled_callback_at": "2026-10-18T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "000-000-0072",
+          "callback_at": "2026-10-18T10:00"
+        }
+      },
+      "customer_turns": [
+        "Bên em bán Ghế ngồi ô tô cho bé Chicco đúng không? Chị đang tìm mẫu này.",
+        "bốn triệu chín trăm chín mươi nghìn đồng cho Ghế ngồi ô tô cho bé Chicco là giá hiện tại phải hông em?",
+        "Cho mình xem lại đã. Em gọi lại lúc mười giờ ngày mười tám tháng mười giúp chị nhé."
+      ],
+      "call_date": "2026-10-15"
+    },
+    "call_2": {
+      "session_index": 2,
+      "channel": "chat_fanpage",
+      "channel_identity": "fb_synthetic_072",
+      "date": "2026-10-18",
+      "customer_goal": "Xác nhận báo giá rồi từ chối vì chưa có nhu cầu mua",
+      "facts_established": {
+        "product_advised": "SKU-MB-CAR",
+        "price_quoted_vnd": 4990000
+      },
+      "entities_multi": [],
+      "ground_truth_facts": {
+        "sku": "SKU-MB-CAR",
+        "price_vnd": 4990000,
+        "in_stock": true,
+        "active_promos": [
+          "MOM-FREESHIP",
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "MOM-FREESHIP": "2026-11-29",
+          "COD-0": "2026-12-14"
+        }
+      },
+      "expected_outcome": "tu_choi",
+      "success_if": {
+        "tool_called": null,
+        "args_match": {}
+      },
+      "days_later": 3,
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "customer_turns": [
+        "em còn lưu báo giá Ghế ngồi ô tô cho bé Chicco lần trước mình gọi hỏi ko?",
+        "giá giờ là 4.990.000đ đúng ko? Mình chưa cần mua nữa, để dịp khác nhé"
+      ],
+      "call_date": "2026-10-18"
+    }
+  }
+}

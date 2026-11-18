@@ -1,0 +1,129 @@
+{
+  "scenario_id": "TEAM-SC-142",
+  "tier": "M1",
+  "customer_id": "CUST-142",
+  "customer_phone": "000-000-0142",
+  "customer_identities": {
+    "phone": "000-000-0142",
+    "fb_id": "fb_synthetic_142",
+    "zalo_id": "zalo_synthetic_142"
+  },
+  "persona": "khach_da_kenh_fb_hotline",
+  "archetype": "omnichannel",
+  "hard_case": false,
+  "edge_case_type": null,
+  "target_sku": "SKU-WF-CORE",
+  "call_1": {
+    "session_index": 1,
+    "channel": "zalo",
+    "channel_identity": "zalo_synthetic_142",
+    "date": "2026-10-28",
+    "customer_goal": "Tìm hiểu Bộ lõi lọc thay thế RO 1-2-3 và hẹn trao đổi tiếp",
+    "facts_established": {
+      "product_advised": [
+        "SKU-XM-FLT",
+        "SKU-WF-CORE"
+      ],
+      "price_quoted_vnd": [
+        590000,
+        390000
+      ]
+    },
+    "entities_multi": [
+      "product_advised",
+      "price_quoted_vnd"
+    ],
+    "ground_truth_facts": {
+      "sku": "SKU-WF-CORE",
+      "price_vnd": 390000,
+      "in_stock": true,
+      "active_promos": [
+        "COD-0"
+      ],
+      "expired_promos": [],
+      "promo_expiry_dates": {
+        "COD-0": "2026-12-14"
+      },
+      "comparison_quote": {
+        "sku": "SKU-XM-FLT",
+        "price_vnd": 590000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        }
+      },
+      "scheduled_callback_at": "2026-10-30T10:00"
+    },
+    "expected_outcome": "hen_goi_lai",
+    "success_if": {
+      "tool_called": "schedule.callback",
+      "args_match": {
+        "customer_phone": "000-000-0142",
+        "callback_at": "2026-10-30T10:00"
+      }
+    },
+    "customer_turns": [
+      "cho minh hoi ve Bo loi loc thay the RO 1-2-3 mot chut duoc ko?",
+      "em báo Màng lọc thay thế Xiaomi Smart 4 giá 590.000đ còn Bộ lõi lọc thay thế RO 1-2-3 giá 390.000đ đúng ko? Mình đang cân nhắc hai mẫu đó",
+      "cho minh xem lai da. Em goi lai luc 10 gio ngay 30/10 giup m nhe"
+    ]
+  },
+  "call_2": {
+    "session_index": 2,
+    "channel": "hotline",
+    "channel_identity": "000-000-0142",
+    "date": "2026-10-30",
+    "customer_goal": "Chốt mua theo báo giá hiện hành",
+    "facts_established": {
+      "product_advised": "SKU-WF-CORE",
+      "price_quoted_vnd": 390000,
+      "payment": "COD",
+      "delivery_address": "căn 142, lô A, khu giao nhận mô phỏng Sao Mai",
+      "order_status": "created"
+    },
+    "entities_multi": [],
+    "ground_truth_facts": {
+      "sku": "SKU-WF-CORE",
+      "price_vnd": 390000,
+      "in_stock": true,
+      "active_promos": [
+        "COD-0"
+      ],
+      "expired_promos": [],
+      "promo_expiry_dates": {
+        "COD-0": "2026-12-14"
+      },
+      "estimated_delivery": "2026-11-02"
+    },
+    "expected_outcome": "chot_don",
+    "success_if": {
+      "tool_called": "order.create",
+      "args_match": {
+        "customer_phone": "000-000-0142",
+        "sku": "SKU-WF-CORE",
+        "price_vnd": 390000,
+        "payment": "COD"
+      }
+    },
+    "days_later": 2,
+    "must_carry_over": [
+      "product_advised",
+      "price_quoted_vnd"
+    ],
+    "must_not_ask": [
+      "product_advised"
+    ],
+    "memory_expectation": {
+      "order_status": "created"
+    },
+    "customer_turns": [
+      "Em còn lưu báo giá Bộ lõi lọc thay thế RO một-hai-ba lần trước chị nhắn Zalo hỏi hông?",
+      "Vậy Bộ lõi lọc thay thế RO một-hai-ba hiện là ba trăm chín mươi nghìn đồng nhé, lên đơn giúp chị với.",
+      "Cho chị trả tiền lúc nhận hàng, giao về căn một trăm bốn mươi hai, lô A, khu giao nhận mô phỏng Sao Mai giúp nhé."
+    ]
+  }
+}

@@ -1,0 +1,95 @@
+{
+  "scenario_id": "TEAM-SC-115",
+  "tier": "M1",
+  "customer_id": "CUST-115",
+  "customer_phone": "000-000-0115",
+  "customer_identities": {
+    "phone": "000-000-0115",
+    "fb_id": "fb_synthetic_115",
+    "zalo_id": "zalo_synthetic_115"
+  },
+  "persona": "khach_so_gia",
+  "archetype": "standard",
+  "hard_case": false,
+  "edge_case_type": null,
+  "target_sku": "SKU-SN-SOCK",
+  "call_1": {
+    "session_index": 1,
+    "channel": "hotline",
+    "channel_identity": "000-000-0115",
+    "date": "2026-10-29",
+    "customer_goal": "Tìm hiểu Tất thể thao RunLite (3 đôi) và hẹn trao đổi tiếp",
+    "facts_established": {
+      "product_advised": "SKU-SN-SOCK",
+      "price_quoted_vnd": 149000
+    },
+    "entities_multi": [],
+    "ground_truth_facts": {
+      "sku": "SKU-SN-SOCK",
+      "price_vnd": 149000,
+      "in_stock": true,
+      "active_promos": [
+        "COD-0"
+      ],
+      "expired_promos": [],
+      "promo_expiry_dates": {
+        "COD-0": "2026-12-14"
+      },
+      "scheduled_callback_at": "2026-11-02T10:00"
+    },
+    "expected_outcome": "hen_goi_lai",
+    "success_if": {
+      "tool_called": "schedule.callback",
+      "args_match": {
+        "customer_phone": "000-000-0115",
+        "callback_at": "2026-11-02T10:00"
+      }
+    },
+    "customer_turns": [
+      "Tất thể thao runlite (ba đôi) bên em còn hàng không?",
+      "một trăm bốn mươi chín nghìn đồng cho Tất thể thao RunLite (ba đôi) là giá hiện tại phải không em?",
+      "Để so thêm giá mấy chỗ. Em gọi lại lúc mười giờ ngày hai tháng mười một giúp mình nhé."
+    ]
+  },
+  "call_2": {
+    "session_index": 2,
+    "channel": "hotline",
+    "channel_identity": "000-000-0115",
+    "date": "2026-11-02",
+    "customer_goal": "Xác nhận báo giá rồi từ chối vì chưa có nhu cầu mua",
+    "facts_established": {
+      "product_advised": "SKU-SN-SOCK",
+      "price_quoted_vnd": 149000
+    },
+    "entities_multi": [],
+    "ground_truth_facts": {
+      "sku": "SKU-SN-SOCK",
+      "price_vnd": 149000,
+      "in_stock": true,
+      "active_promos": [
+        "COD-0"
+      ],
+      "expired_promos": [],
+      "promo_expiry_dates": {
+        "COD-0": "2026-12-14"
+      }
+    },
+    "expected_outcome": "tu_choi",
+    "success_if": {
+      "tool_called": null,
+      "args_match": {}
+    },
+    "days_later": 4,
+    "must_carry_over": [
+      "product_advised",
+      "price_quoted_vnd"
+    ],
+    "must_not_ask": [
+      "product_advised"
+    ],
+    "customer_turns": [
+      "Em còn lưu báo giá Tất thể thao RunLite (ba đôi) lần trước chị gọi hỏi không?",
+      "Giá giờ là một trăm bốn mươi chín nghìn đồng đúng không? Chị chưa cần mua nữa, để dịp khác nhé."
+    ]
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "tier": "M2",
+  "seed": 2027,
+  "input_run": "run_M2_20261118_1713",
+  "timestamp": "2026-11-18T17:15:24+07:00",
+  "generation_method": "Codex-authored deterministic Vietnamese renderer",
+  "model": null,
+  "temperature": null,
+  "token_counts": null,
+  "retry_count": 0,
+  "scenario_count": 2,
+  "session_count": 5,
+  "sessions_by_channel": {
+    "hotline": 5
+  },
+  "style_counts": {
+    "hotline_turns": 14,
+    "hotline_asr_varied": 4,
+    "chat_turns": 0,
+    "chat_accentless": 0
+  },
+  "targeted_scenario_ids": [
+    "TEAM-SC-001",
+    "TEAM-SC-130"
+  ]
+}

@@ -1,0 +1,177 @@
+{
+  "scenario_id": "TEAM-SC-113",
+  "tier": "M2",
+  "customer_id": "CUST-113",
+  "customer_phone": "[PHONE_CUST_113]",
+  "customer_identities": {
+    "phone": "[PHONE_CUST_113]",
+    "fb_id": "fb_synthetic_113",
+    "zalo_id": "zalo_synthetic_113"
+  },
+  "persona": "khach_goi_lan_3_het_kien_nhan",
+  "archetype": "extended",
+  "hard_case": false,
+  "edge_case_type": null,
+  "target_sku": "SKU-WF-RO10",
+  "call_1": {
+    "session_index": 1,
+    "channel": "hotline",
+    "channel_identity": "[PHONE_CUST_113]",
+    "date": "2026-10-15",
+    "customer_goal": "Tìm hiểu Máy lọc nước RO Kangaroo 10 lõi và hẹn trao đổi tiếp",
+    "facts_established": {
+      "product_advised": "SKU-WF-RO10",
+      "price_quoted_vnd": 6890000
+    },
+    "entities_multi": [],
+    "ground_truth_facts": {
+      "sku": "SKU-WF-RO10",
+      "price_vnd": 6890000,
+      "in_stock": true,
+      "active_promos": [
+        "NAM-SHIP0",
+        "COD-0"
+      ],
+      "expired_promos": [],
+      "promo_expiry_dates": {
+        "NAM-SHIP0": "2026-11-05",
+        "COD-0": "2026-12-14"
+      },
+      "scheduled_callback_at": "2026-10-16T10:00"
+    },
+    "expected_outcome": "hen_goi_lai",
+    "success_if": {
+      "tool_called": "schedule.callback",
+      "args_match": {
+        "customer_phone": "[PHONE_CUST_113]",
+        "callback_at": "2026-10-16T10:00"
+      }
+    },
+    "customer_turns": [
+      "Bên em bán Máy lọc nước RO Kangaroo mười lõi đúng hông? Anh đang tìm mẫu này.",
+      "sáu triệu tám trăm chín mươi ngàn đồng cho Máy lọc nước RO Kangaroo mười lõi là giá hiện tại phải không em?",
+      "Cho mình xem lại đã. Em gọi lại lúc mười giờ ngày mười sáu tháng mười giúp anh nhé."
+    ]
+  },
+  "call_2": {
+    "session_index": 2,
+    "channel": "hotline",
+    "channel_identity": "[PHONE_CUST_113]",
+    "date": "2026-10-16",
+    "customer_goal": "Chốt mua theo báo giá hiện hành",
+    "facts_established": {
+      "product_advised": "SKU-WF-RO10",
+      "price_quoted_vnd": 6890000,
+      "payment": "COD",
+      "delivery_address": "[ADDR_CUST_113]",
+      "order_status": "created"
+    },
+    "entities_multi": [],
+    "ground_truth_facts": {
+      "sku": "SKU-WF-RO10",
+      "price_vnd": 6890000,
+      "in_stock": true,
+      "active_promos": [
+        "NAM-SHIP0",
+        "COD-0"
+      ],
+      "expired_promos": [],
+      "promo_expiry_dates": {
+        "NAM-SHIP0": "2026-11-05",
+        "COD-0": "2026-12-14"
+      },
+      "estimated_delivery": "2026-10-19"
+    },
+    "expected_outcome": "chot_don",
+    "success_if": {
+      "tool_called": "order.create",
+      "args_match": {
+        "customer_phone": "[PHONE_CUST_113]",
+        "sku": "SKU-WF-RO10",
+        "price_vnd": 6890000,
+        "payment": "COD"
+      }
+    },
+    "days_later": 1,
+    "must_carry_over": [
+      "product_advised",
+      "price_quoted_vnd"
+    ],
+    "must_not_ask": [
+      "product_advised"
+    ],
+    "memory_expectation": {
+      "order_status": "created"
+    },
+    "customer_turns": [
+      "Hôm trước anh có gọi hỏi Máy lọc nước RO Kangaroo mười lõi, em xem lại giúp anh nhé.",
+      "Đúng mẫu Máy lọc nước RO Kangaroo mười lõi đó rồi. Nếu giá là sáu triệu tám trăm chín mươi ngàn đồng thì anh chốt luôn.",
+      "Cho anh trả tiền lúc nhận hàng, giao về căn một trăm mười ba, lô A, khu giao nhận mô phỏng Sao Mai giúp nhé."
+    ]
+  },
+  "call_3": {
+    "session_index": 3,
+    "channel": "hotline",
+    "channel_identity": "[PHONE_CUST_113]",
+    "date": "2026-10-17",
+    "customer_goal": "Cập nhật địa chỉ giao cho đơn đã chốt",
+    "facts_established": {
+      "delivery_address": "[ADDR_ALT_CUST_113]"
+    },
+    "entities_multi": [],
+    "ground_truth_facts": {
+      "sku": "SKU-WF-RO10",
+      "price_vnd": 6890000,
+      "in_stock": true,
+      "active_promos": [
+        "NAM-SHIP0",
+        "COD-0"
+      ],
+      "expired_promos": [],
+      "promo_expiry_dates": {
+        "NAM-SHIP0": "2026-11-05",
+        "COD-0": "2026-12-14"
+      },
+      "order_price_vnd": 6890000,
+      "update_status": "updated"
+    },
+    "expected_outcome": "chot_don",
+    "success_if": {
+      "tool_called": "order.update",
+      "args_match": {
+        "action": "update_address"
+      }
+    },
+    "memory_expectation": {
+      "delivery_address": "[ADDR_ALT_CUST_113]",
+      "supersedes": {
+        "delivery_address": "[ADDR_CUST_113]"
+      }
+    },
+    "days_later": 1,
+    "must_carry_over": [
+      "order_status",
+      "product_advised",
+      "delivery_address"
+    ],
+    "must_not_ask": [
+      "product_advised",
+      "payment"
+    ],
+    "customer_turns": [
+      "Alo, đơn Máy lọc nước RO Kangaroo mười lõi mình vừa chốt vẫn đang chờ giao đúng không?",
+      "Đổi địa chỉ giao sang căn một trăm mười ba, lô B, khu giao nhận mô phỏng Sao Mai giúp mình nhé."
+    ]
+  },
+  "simulator_profile": {
+    "persona_system_prompt": "Bạn đã gọi nhiều lần, rất mất kiên nhẫn. Mục tiêu: call_1: Tìm hiểu Máy lọc nước RO Kangaroo 10 lõi và hẹn trao đổi tiếp | call_2: Chốt mua theo báo giá hiện hành | call_3: Cập nhật địa chỉ giao cho đơn đã chốt. Đã biết: {facts}. Dàn ý: {turn_outline}. Nói cộc, ngắn. Ở cuộc thứ 3, nếu nhân viên hỏi lại BẤT KỲ thông tin cũ nào ngoài 1 câu xác nhận địa chỉ, bạn nói 'thôi khỏi' và cúp máy.",
+    "hidden_goal": "call_1: Tìm hiểu Máy lọc nước RO Kangaroo 10 lõi và hẹn trao đổi tiếp | call_2: Chốt mua theo báo giá hiện hành | call_3: Cập nhật địa chỉ giao cho đơn đã chốt",
+    "patience_level": 3,
+    "patience_max_turns": 3,
+    "patience_by_session": {
+      "call_1": 3,
+      "call_2": 2,
+      "call_3": 1
+    }
+  }
+}

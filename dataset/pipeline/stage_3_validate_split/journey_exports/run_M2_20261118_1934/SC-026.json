@@ -1,0 +1,122 @@
+{
+  "scenario_id": "TEAM-SC-026",
+  "tier": "M2",
+  "customer_id": "CUST-026",
+  "customer_phone": "000-000-0026",
+  "customer_identities": {
+    "phone": "000-000-0026",
+    "fb_id": "fb_synthetic_026",
+    "zalo_id": "zalo_synthetic_026"
+  },
+  "persona": "khach_hoi_nhieu_khong_mua",
+  "archetype": "standard",
+  "hard_case": false,
+  "edge_case_type": null,
+  "target_sku": "SKU-MB-CAR",
+  "call_1": {
+    "session_index": 1,
+    "channel": "hotline",
+    "channel_identity": "000-000-0026",
+    "date": "2026-10-18",
+    "customer_goal": "Tìm hiểu Ghế ngồi ô tô cho bé Chicco và hẹn trao đổi tiếp",
+    "facts_established": {
+      "product_advised": "SKU-MB-CAR",
+      "price_quoted_vnd": 4990000
+    },
+    "entities_multi": [],
+    "ground_truth_facts": {
+      "sku": "SKU-MB-CAR",
+      "price_vnd": 4990000,
+      "in_stock": true,
+      "active_promos": [
+        "MOM-FREESHIP",
+        "COD-0"
+      ],
+      "expired_promos": [],
+      "promo_expiry_dates": {
+        "MOM-FREESHIP": "2026-11-29",
+        "COD-0": "2026-12-14"
+      },
+      "scheduled_callback_at": "2026-10-20T10:00"
+    },
+    "expected_outcome": "hen_goi_lai",
+    "success_if": {
+      "tool_called": "schedule.callback",
+      "args_match": {
+        "customer_phone": "000-000-0026",
+        "callback_at": "2026-10-20T10:00"
+      }
+    },
+    "customer_turns": [
+      "Ghế ngồi ô tô cho bé chicco bên em còn hàng hông?",
+      "Vậy Ghế ngồi ô tô cho bé Chicco bên em báo bốn triệu chín trăm chín mươi nghìn đồng đúng không?",
+      "Để xem kỹ lại thông tin đã. Em gọi lại lúc mười giờ ngày hai mươi tháng mười giúp chị nhé."
+    ]
+  },
+  "call_2": {
+    "session_index": 2,
+    "channel": "hotline",
+    "channel_identity": "000-000-0026",
+    "date": "2026-10-20",
+    "customer_goal": "Chốt mua theo báo giá hiện hành",
+    "facts_established": {
+      "product_advised": "SKU-MB-CAR",
+      "price_quoted_vnd": 4990000,
+      "payment": "COD",
+      "delivery_address": "căn 26, lô A, khu giao nhận mô phỏng Sao Mai",
+      "order_status": "created"
+    },
+    "entities_multi": [],
+    "ground_truth_facts": {
+      "sku": "SKU-MB-CAR",
+      "price_vnd": 4990000,
+      "in_stock": true,
+      "active_promos": [
+        "MOM-FREESHIP",
+        "COD-0"
+      ],
+      "expired_promos": [],
+      "promo_expiry_dates": {
+        "MOM-FREESHIP": "2026-11-29",
+        "COD-0": "2026-12-14"
+      },
+      "estimated_delivery": "2026-10-22"
+    },
+    "expected_outcome": "chot_don",
+    "success_if": {
+      "tool_called": "order.create",
+      "args_match": {
+        "customer_phone": "000-000-0026",
+        "sku": "SKU-MB-CAR",
+        "price_vnd": 4990000,
+        "payment": "COD"
+      }
+    },
+    "days_later": 2,
+    "must_carry_over": [
+      "product_advised",
+      "price_quoted_vnd"
+    ],
+    "must_not_ask": [
+      "product_advised"
+    ],
+    "memory_expectation": {
+      "order_status": "created"
+    },
+    "customer_turns": [
+      "Hôm trước chị có gọi hỏi Ghế ngồi ô tô cho bé Chicco, em xem lại giúp chị nhé.",
+      "Đúng mẫu Ghế ngồi ô tô cho bé Chicco đó rồi. Nếu giá là bốn triệu chín trăm chín mươi ngàn đồng thì chị chốt luôn.",
+      "Cho chị trả tiền lúc nhận hàng, giao về căn hai mươi sáu, lô A, khu giao nhận mô phỏng Sao Mai giúp nhé."
+    ]
+  },
+  "simulator_profile": {
+    "persona_system_prompt": "Bạn thích hỏi kỹ nhiều chi tiết kỹ thuật và so sánh, chưa muốn mua. Mục tiêu: call_1: Tìm hiểu Ghế ngồi ô tô cho bé Chicco và hẹn trao đổi tiếp | call_2: Chốt mua theo báo giá hiện hành. Đã biết: {facts}. Dàn ý: {turn_outline}. Bạn hỏi tối đa theo dàn ý, kết thúc bằng 'để xem thêm' trừ khi dàn ý nói bạn chốt. Nếu nhân viên bịa thông số, bạn hỏi lại 'em chắc không?'.",
+    "hidden_goal": "call_1: Tìm hiểu Ghế ngồi ô tô cho bé Chicco và hẹn trao đổi tiếp | call_2: Chốt mua theo báo giá hiện hành",
+    "patience_level": 5,
+    "patience_max_turns": 5,
+    "patience_by_session": {
+      "call_1": 5,
+      "call_2": 4
+    }
+  }
+}

@@ -1,0 +1,105 @@
+{
+  "scenario_id": "TEAM-SC-054",
+  "tier": "M1",
+  "customer_id": "CUST-054",
+  "customer_phone": "[PHONE_CUST_054]",
+  "customer_identities": {
+    "phone": "[PHONE_CUST_054]",
+    "fb_id": "fb_synthetic_054",
+    "zalo_id": "zalo_synthetic_054"
+  },
+  "persona": "khach_hoi_nhieu_khong_mua",
+  "archetype": "hard",
+  "hard_case": true,
+  "edge_case_type": "out_of_stock",
+  "target_sku": "SKU-SN-RUN2-41-DEN",
+  "call_1": {
+    "session_index": 1,
+    "channel": "hotline",
+    "channel_identity": "[PHONE_CUST_054]",
+    "date": "2026-10-16",
+    "customer_goal": "Tìm hiểu Giày chạy bộ RunLite 2 Pro và hẹn trao đổi tiếp",
+    "facts_established": {
+      "product_advised": "SKU-SN-RUN2-41-DEN",
+      "price_quoted_vnd": 1521000
+    },
+    "entities_multi": [],
+    "ground_truth_facts": {
+      "sku": "SKU-SN-RUN2-41-DEN",
+      "price_vnd": 1521000,
+      "in_stock": true,
+      "active_promos": [
+        "COD-0",
+        "RUN-10"
+      ],
+      "expired_promos": [
+        "RUN2-SALE"
+      ],
+      "promo_expiry_dates": {
+        "RUN-10": "2026-10-25",
+        "COD-0": "2026-12-14",
+        "RUN2-SALE": "2026-10-07"
+      },
+      "scheduled_callback_at": "2026-10-17T10:00"
+    },
+    "expected_outcome": "hen_goi_lai",
+    "success_if": {
+      "tool_called": "schedule.callback",
+      "args_match": {
+        "customer_phone": "[PHONE_CUST_054]",
+        "callback_at": "2026-10-17T10:00"
+      }
+    },
+    "customer_turns": [
+      "Cho anh hỏi về Giày chạy bộ RunLite hai Pro den bốn mươi mốt một chút được không?",
+      "một triệu năm trăm hai mươi mốt ngàn đồng cho Giày chạy bộ RunLite hai Pro den bốn mươi mốt là giá hiện tại phải hông em?",
+      "Để xem kỹ lại thông tin đã. Em gọi lại lúc mười giờ ngày mười bảy tháng mười giúp anh nhé."
+    ]
+  },
+  "call_2": {
+    "session_index": 2,
+    "channel": "hotline",
+    "channel_identity": "[PHONE_CUST_054]",
+    "date": "2026-10-17",
+    "customer_goal": "Kiểm tra tồn kho, từ chối đặt khi đã hết hàng",
+    "facts_established": {
+      "product_advised": "SKU-SN-RUN2-41-DEN"
+    },
+    "entities_multi": [],
+    "ground_truth_facts": {
+      "sku": "SKU-SN-RUN2-41-DEN",
+      "price_vnd": 1521000,
+      "in_stock": false,
+      "active_promos": [
+        "COD-0",
+        "RUN-10"
+      ],
+      "expired_promos": [
+        "RUN2-SALE"
+      ],
+      "promo_expiry_dates": {
+        "RUN-10": "2026-10-25",
+        "COD-0": "2026-12-14",
+        "RUN2-SALE": "2026-10-07"
+      },
+      "restock_expected": "2026-10-24"
+    },
+    "expected_outcome": "tu_choi",
+    "success_if": {
+      "tool_called": null,
+      "args_match": {}
+    },
+    "days_later": 1,
+    "must_carry_over": [
+      "product_advised",
+      "price_quoted_vnd"
+    ],
+    "must_not_ask": [
+      "product_advised"
+    ],
+    "customer_turns": [
+      "Hôm trước mình có gọi hỏi Giày chạy bộ RunLite hai Pro den bốn mươi mốt, em xem lại giúp mình nhé.",
+      "Nếu Giày chạy bộ RunLite hai Pro den bốn mươi mốt hết hàng rồi thì mình chưa đặt đâu, để khi khác nhé."
+    ]
+  }
+}

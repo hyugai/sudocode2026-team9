@@ -1,0 +1,118 @@
+{
+  "scenario_id": "TEAM-SC-046",
+  "tier": "M1",
+  "customer_id": "CUST-046",
+  "customer_phone": "[PHONE_CUST_046]",
+  "customer_identities": {
+    "phone": "[PHONE_CUST_046]",
+    "fb_id": "fb_synthetic_046",
+    "zalo_id": "zalo_synthetic_046"
+  },
+  "persona": "khach_da_kenh_fb_hotline",
+  "archetype": "omnichannel",
+  "hard_case": false,
+  "edge_case_type": null,
+  "target_sku": "SKU-SN-RUN2",
+  "call_1": {
+    "session_index": 1,
+    "channel": "zalo",
+    "channel_identity": "zalo_synthetic_046",
+    "date": "2026-10-24",
+    "customer_goal": "Tìm hiểu Giày chạy bộ RunLite 2 Pro và hẹn trao đổi tiếp",
+    "facts_established": {
+      "product_advised": "SKU-SN-RUN2",
+      "price_quoted_vnd": 1521000
+    },
+    "entities_multi": [],
+    "ground_truth_facts": {
+      "sku": "SKU-SN-RUN2",
+      "price_vnd": 1521000,
+      "in_stock": true,
+      "active_promos": [
+        "COD-0",
+        "RUN-10"
+      ],
+      "expired_promos": [
+        "RUN2-SALE"
+      ],
+      "promo_expiry_dates": {
+        "RUN-10": "2026-10-25",
+        "COD-0": "2026-12-14",
+        "RUN2-SALE": "2026-10-07"
+      },
+      "scheduled_callback_at": "2026-10-27T10:00"
+    },
+    "expected_outcome": "hen_goi_lai",
+    "success_if": {
+      "tool_called": "schedule.callback",
+      "args_match": {
+        "customer_phone": "[PHONE_CUST_046]",
+        "callback_at": "2026-10-26T10:00"
+      }
+    },
+    "customer_turns": [
+      "cho mình hỏi về Giày chạy bộ RunLite 2 Pro một chút được ko?",
+      "để mình ghi lại nhé, Giày chạy bộ RunLite 2 Pro là 1.521.000đ",
+      "cho minh xem lai da. Em goi lai luc 10 gio ngay 26/10 giup m nhe"
+    ]
+  },
+  "call_2": {
+    "session_index": 2,
+    "channel": "hotline",
+    "channel_identity": "[PHONE_CUST_046]",
+    "date": "2026-10-26",
+    "customer_goal": "Chốt mua theo báo giá hiện hành",
+    "facts_established": {
+      "product_advised": "SKU-SN-RUN2",
+      "price_quoted_vnd": 1690000,
+      "payment": "COD",
+      "delivery_address": "[ADDR_CUST_046]",
+      "order_status": "created"
+    },
+    "entities_multi": [],
+    "ground_truth_facts": {
+      "sku": "SKU-SN-RUN2",
+      "price_vnd": 1690000,
+      "in_stock": true,
+      "active_promos": [
+        "COD-0"
+      ],
+      "expired_promos": [
+        "RUN-10",
+        "RUN2-SALE"
+      ],
+      "promo_expiry_dates": {
+        "RUN-10": "2026-10-25",
+        "COD-0": "2026-12-14",
+        "RUN2-SALE": "2026-10-07"
+      },
+      "estimated_delivery": "2026-10-28"
+    },
+    "expected_outcome": "chot_don",
+    "success_if": {
+      "tool_called": "order.create",
+      "args_match": {
+        "customer_phone": "[PHONE_CUST_046]",
+        "sku": "SKU-SN-RUN2",
+        "price_vnd": 1690000,
+        "payment": "COD"
+      }
+    },
+    "days_later": 2,
+    "must_carry_over": [
+      "product_advised",
+      "price_quoted_vnd"
+    ],
+    "must_not_ask": [
+      "product_advised"
+    ],
+    "memory_expectation": {
+      "order_status": "created"
+    },
+    "customer_turns": [
+      "Em còn lưu báo giá Giày chạy bộ RunLite hai Pro lần trước mình nhắn Zalo hỏi không?",
+      "Đúng mẫu Giày chạy bộ RunLite hai Pro đó rồi. Nếu giá là một triệu sáu trăm chín mươi nghìn đồng thì mình chốt luôn.",
+      "Cho mình trả tiền lúc nhận hàng, giao về căn bốn mươi sáu, lô A, khu giao nhận mô phỏng Sao Mai giúp nhé."
+    ]
+  }
+}

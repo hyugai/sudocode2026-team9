@@ -1,0 +1,107 @@
+{
+  "scenario_id": "TEAM-SC-150",
+  "tier": "M1",
+  "customer_id": "CUST-150",
+  "customer_phone": "000-000-0150",
+  "customer_identities": {
+    "phone": "000-000-0150",
+    "fb_id": "fb_synthetic_150",
+    "zalo_id": "zalo_synthetic_150"
+  },
+  "persona": "khach_da_kenh_fb_hotline",
+  "archetype": "omnichannel",
+  "hard_case": false,
+  "edge_case_type": null,
+  "target_sku": "SKU-SS-AX40",
+  "call_1": {
+    "session_index": 1,
+    "channel": "facebook",
+    "channel_identity": "fb_synthetic_150",
+    "date": "2026-11-08",
+    "customer_goal": "Tìm hiểu Máy lọc không khí Samsung AX40 và hẹn trao đổi tiếp",
+    "facts_established": {
+      "product_advised": "SKU-SS-AX40",
+      "price_quoted_vnd": 6490000
+    },
+    "entities_multi": [],
+    "ground_truth_facts": {
+      "sku": "SKU-SS-AX40",
+      "price_vnd": 6490000,
+      "in_stock": true,
+      "active_promos": [
+        "COD-0"
+      ],
+      "expired_promos": [
+        "AIR-2ND-50",
+        "NAM-SHIP0"
+      ],
+      "promo_expiry_dates": {
+        "AIR-2ND-50": "2026-11-04",
+        "NAM-SHIP0": "2026-11-05",
+        "COD-0": "2026-12-14"
+      },
+      "scheduled_callback_at": "2026-11-11T10:00"
+    },
+    "expected_outcome": "hen_goi_lai",
+    "success_if": {
+      "tool_called": "schedule.callback",
+      "args_match": {
+        "customer_phone": "000-000-0150",
+        "callback_at": "2026-11-11T10:00"
+      }
+    },
+    "customer_turns": [
+      "cho minh hoi ve May loc khong khi Samsung AX40 mot chut duoc ko?",
+      "vậy Máy lọc không khí Samsung AX40 bên em báo 6.490.000đ đúng ko?",
+      "cho mình xem lại đã. Em gọi lại lúc 10 giờ ngày 11/11 giúp m nhé"
+    ]
+  },
+  "call_2": {
+    "session_index": 2,
+    "channel": "hotline",
+    "channel_identity": "000-000-0150",
+    "date": "2026-11-11",
+    "customer_goal": "Xác nhận báo giá rồi từ chối vì chưa có nhu cầu mua",
+    "facts_established": {
+      "product_advised": "SKU-SS-AX40",
+      "price_quoted_vnd": 5516500
+    },
+    "entities_multi": [],
+    "ground_truth_facts": {
+      "sku": "SKU-SS-AX40",
+      "price_vnd": 5516500,
+      "in_stock": true,
+      "active_promos": [
+        "COD-0",
+        "11-11"
+      ],
+      "expired_promos": [
+        "AIR-2ND-50",
+        "NAM-SHIP0"
+      ],
+      "promo_expiry_dates": {
+        "AIR-2ND-50": "2026-11-04",
+        "NAM-SHIP0": "2026-11-05",
+        "COD-0": "2026-12-14",
+        "11-11": "2026-11-12"
+      }
+    },
+    "expected_outcome": "tu_choi",
+    "success_if": {
+      "tool_called": null,
+      "args_match": {}
+    },
+    "days_later": 3,
+    "must_carry_over": [
+      "product_advised",
+      "price_quoted_vnd"
+    ],
+    "must_not_ask": [
+      "product_advised"
+    ],
+    "customer_turns": [
+      "Em còn lưu báo giá Máy lọc không khí Samsung AX40 lần trước mình nhắn trên Facebook hỏi không?",
+      "Giá giờ là năm triệu năm trăm mười sáu nghìn năm trăm đồng đúng không? Mình chưa cần mua nữa, để dịp khác nhé."
+    ]
+  }
+}

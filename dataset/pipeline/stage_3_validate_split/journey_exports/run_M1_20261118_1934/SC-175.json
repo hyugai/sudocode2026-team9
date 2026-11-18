@@ -1,0 +1,116 @@
+{
+  "scenario_id": "TEAM-SC-175",
+  "tier": "M1",
+  "customer_id": "CUST-175",
+  "customer_phone": "000-000-0175",
+  "customer_identities": {
+    "phone": "000-000-0175",
+    "fb_id": "fb_synthetic_175",
+    "zalo_id": "zalo_synthetic_175"
+  },
+  "persona": "khach_da_kenh_fb_hotline",
+  "archetype": "omnichannel",
+  "hard_case": false,
+  "edge_case_type": null,
+  "target_sku": "SKU-WF-UF",
+  "call_1": {
+    "session_index": 1,
+    "channel": "zalo",
+    "channel_identity": "zalo_synthetic_175",
+    "date": "2026-10-18",
+    "customer_goal": "Tìm hiểu Máy lọc nước UF Sunhouse và hẹn trao đổi tiếp",
+    "facts_established": {
+      "product_advised": [
+        "SKU-WF-RO9",
+        "SKU-WF-UF"
+      ],
+      "price_quoted_vnd": [
+        5990000,
+        3290000
+      ]
+    },
+    "entities_multi": [
+      "product_advised",
+      "price_quoted_vnd"
+    ],
+    "ground_truth_facts": {
+      "sku": "SKU-WF-UF",
+      "price_vnd": 3290000,
+      "in_stock": true,
+      "active_promos": [
+        "COD-0"
+      ],
+      "expired_promos": [],
+      "promo_expiry_dates": {
+        "COD-0": "2026-12-14"
+      },
+      "comparison_quote": {
+        "sku": "SKU-WF-RO9",
+        "price_vnd": 5990000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        }
+      },
+      "scheduled_callback_at": "2026-10-22T10:00"
+    },
+    "expected_outcome": "hen_goi_lai",
+    "success_if": {
+      "tool_called": "schedule.callback",
+      "args_match": {
+        "customer_phone": "000-000-0175",
+        "callback_at": "2026-10-22T10:00"
+      }
+    },
+    "customer_turns": [
+      "ben em ban May loc nuoc UF Sunhouse dung ko? Minh dang tim mau nay",
+      "em báo Máy lọc nước RO Karofi 9 lõi giá 5.990.000đ còn Máy lọc nước UF Sunhouse giá 3.290.000đ đúng ko? Mình đang cân nhắc hai mẫu đó",
+      "cho minh xem lai da. Em goi lai luc 10 gio ngay 22/10 giup m nhe"
+    ]
+  },
+  "call_2": {
+    "session_index": 2,
+    "channel": "hotline",
+    "channel_identity": "000-000-0175",
+    "date": "2026-10-22",
+    "customer_goal": "Xác nhận báo giá rồi từ chối vì chưa có nhu cầu mua",
+    "facts_established": {
+      "product_advised": "SKU-WF-UF",
+      "price_quoted_vnd": 3290000
+    },
+    "entities_multi": [],
+    "ground_truth_facts": {
+      "sku": "SKU-WF-UF",
+      "price_vnd": 3290000,
+      "in_stock": true,
+      "active_promos": [
+        "COD-0"
+      ],
+      "expired_promos": [],
+      "promo_expiry_dates": {
+        "COD-0": "2026-12-14"
+      }
+    },
+    "expected_outcome": "tu_choi",
+    "success_if": {
+      "tool_called": null,
+      "args_match": {}
+    },
+    "days_later": 4,
+    "must_carry_over": [
+      "product_advised",
+      "price_quoted_vnd"
+    ],
+    "must_not_ask": [
+      "product_advised"
+    ],
+    "customer_turns": [
+      "Chị liên hệ lại về Máy lọc nước UF Sunhouse đây, lần trước có nhắn Zalo hỏi giá rồi.",
+      "Giá giờ là ba triệu hai trăm chín mươi nghìn đồng đúng không? Chị chưa cần mua nữa, để dịp khác nhé."
+    ]
+  }
+}

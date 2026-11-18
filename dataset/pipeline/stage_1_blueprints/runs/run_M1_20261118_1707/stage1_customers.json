@@ -1,0 +1,652 @@
+[
+  {
+    "customer_id": "CUST-001",
+    "phone": "[PHONE_CUST_001]",
+    "address": "[ADDR_CUST_001]",
+    "cccd": "[CCCD_CUST_001]",
+    "fb_id": "fb_synthetic_001",
+    "zalo_id": "zalo_synthetic_001",
+    "dialect": "South",
+    "persona": "khach_hoi_nhieu_khong_mua"
+  },
+  {
+    "customer_id": "CUST-002",
+    "phone": "[PHONE_CUST_002]",
+    "address": "[ADDR_CUST_002]",
+    "cccd": "[CCCD_CUST_002]",
+    "fb_id": "fb_synthetic_002",
+    "zalo_id": "zalo_synthetic_002",
+    "dialect": "South",
+    "persona": "khach_hoi_nhieu_khong_mua"
+  },
+  {
+    "customer_id": "CUST-003",
+    "phone": "[PHONE_CUST_003]",
+    "address": "[ADDR_CUST_003]",
+    "cccd": "[CCCD_CUST_003]",
+    "fb_id": "fb_synthetic_003",
+    "zalo_id": "zalo_synthetic_003",
+    "dialect": "North",
+    "persona": "khach_hoi_nhieu_khong_mua"
+  },
+  {
+    "customer_id": "CUST-004",
+    "phone": "[PHONE_CUST_004]",
+    "address": "[ADDR_CUST_004]",
+    "cccd": "[CCCD_CUST_004]",
+    "fb_id": "fb_synthetic_004",
+    "zalo_id": "zalo_synthetic_004",
+    "dialect": "North",
+    "persona": "khach_do_du_hoi_nguoi_nha"
+  },
+  {
+    "customer_id": "CUST-005",
+    "phone": "[PHONE_CUST_005]",
+    "address": "[ADDR_CUST_005]",
+    "cccd": "[CCCD_CUST_005]",
+    "fb_id": "fb_synthetic_005",
+    "zalo_id": "zalo_synthetic_005",
+    "dialect": "North",
+    "persona": "khach_hoi_nhieu_khong_mua"
+  },
+  {
+    "customer_id": "CUST-006",
+    "phone": "[PHONE_CUST_006]",
+    "address": "[ADDR_CUST_006]",
+    "cccd": "[CCCD_CUST_006]",
+    "fb_id": "fb_synthetic_006",
+    "zalo_id": "zalo_synthetic_006",
+    "dialect": "Central",
+    "persona": "khach_so_gia"
+  },
+  {
+    "customer_id": "CUST-007",
+    "phone": "[PHONE_CUST_007]",
+    "address": "[ADDR_CUST_007]",
+    "cccd": "[CCCD_CUST_007]",
+    "fb_id": "fb_synthetic_007",
+    "zalo_id": "zalo_synthetic_007",
+    "dialect": "North",
+    "persona": "khach_hoi_nhieu_khong_mua"
+  },
+  {
+    "customer_id": "CUST-008",
+    "phone": "[PHONE_CUST_008]",
+    "address": "[ADDR_CUST_008]",
+    "cccd": "[CCCD_CUST_008]",
+    "fb_id": "fb_synthetic_008",
+    "zalo_id": "zalo_synthetic_008",
+    "dialect": "North",
+    "persona": "khach_do_du_hoi_nguoi_nha"
+  },
+  {
+    "customer_id": "CUST-009",
+    "phone": "[PHONE_CUST_009]",
+    "address": "[ADDR_CUST_009]",
+    "cccd": "[CCCD_CUST_009]",
+    "fb_id": "fb_synthetic_009",
+    "zalo_id": "zalo_synthetic_009",
+    "dialect": "Central",
+    "persona": "khach_so_gia"
+  },
+  {
+    "customer_id": "CUST-010",
+    "phone": "[PHONE_CUST_010]",
+    "address": "[ADDR_CUST_010]",
+    "cccd": "[CCCD_CUST_010]",
+    "fb_id": "fb_synthetic_010",
+    "zalo_id": "zalo_synthetic_010",
+    "dialect": "Central",
+    "persona": "khach_hoi_nhieu_khong_mua"
+  },
+  {
+    "customer_id": "CUST-011",
+    "phone": "[PHONE_CUST_011]",
+    "address": "[ADDR_CUST_011]",
+    "cccd": "[CCCD_CUST_011]",
+    "fb_id": "fb_synthetic_011",
+    "zalo_id": "zalo_synthetic_011",
+    "dialect": "Central",
+    "persona": "khach_so_gia"
+  },
+  {
+    "customer_id": "CUST-012",
+    "phone": "[PHONE_CUST_012]",
+    "address": "[ADDR_CUST_012]",
+    "cccd": "[CCCD_CUST_012]",
+    "fb_id": "fb_synthetic_012",
+    "zalo_id": "zalo_synthetic_012",
+    "dialect": "South",
+    "persona": "khach_hoi_nhieu_khong_mua"
+  },
+  {
+    "customer_id": "CUST-013",
+    "phone": "[PHONE_CUST_013]",
+    "address": "[ADDR_CUST_013]",
+    "cccd": "[CCCD_CUST_013]",
+    "fb_id": "fb_synthetic_013",
+    "zalo_id": "zalo_synthetic_013",
+    "dialect": "North",
+    "persona": "khach_hoi_nhieu_khong_mua"
+  },
+  {
+    "customer_id": "CUST-014",
+    "phone": "[PHONE_CUST_014]",
+    "address": "[ADDR_CUST_014]",
+    "cccd": "[CCCD_CUST_014]",
+    "fb_id": "fb_synthetic_014",
+    "zalo_id": "zalo_synthetic_014",
+    "dialect": "Central",
+    "persona": "khach_hoi_nhieu_khong_mua"
+  },
+  {
+    "customer_id": "CUST-015",
+    "phone": "[PHONE_CUST_015]",
+    "address": "[ADDR_CUST_015]",
+    "cccd": "[CCCD_CUST_015]",
+    "fb_id": "fb_synthetic_015",
+    "zalo_id": "zalo_synthetic_015",
+    "dialect": "South",
+    "persona": "khach_do_du_hoi_nguoi_nha"
+  },
+  {
+    "customer_id": "CUST-016",
+    "phone": "[PHONE_CUST_016]",
+    "address": "[ADDR_CUST_016]",
+    "cccd": "[CCCD_CUST_016]",
+    "fb_id": "fb_synthetic_016",
+    "zalo_id": "zalo_synthetic_016",
+    "dialect": "South",
+    "persona": "khach_hoi_nhieu_khong_mua"
+  },
+  {
+    "customer_id": "CUST-017",
+    "phone": "[PHONE_CUST_017]",
+    "address": "[ADDR_CUST_017]",
+    "cccd": "[CCCD_CUST_017]",
+    "fb_id": "fb_synthetic_017",
+    "zalo_id": "zalo_synthetic_017",
+    "dialect": "South",
+    "persona": "khach_hoi_nhieu_khong_mua"
+  },
+  {
+    "customer_id": "CUST-018",
+    "phone": "[PHONE_CUST_018]",
+    "address": "[ADDR_CUST_018]",
+    "cccd": "[CCCD_CUST_018]",
+    "fb_id": "fb_synthetic_018",
+    "zalo_id": "zalo_synthetic_018",
+    "dialect": "North",
+    "persona": "khach_so_gia"
+  },
+  {
+    "customer_id": "CUST-019",
+    "phone": "[PHONE_CUST_019]",
+    "address": "[ADDR_CUST_019]",
+    "cccd": "[CCCD_CUST_019]",
+    "fb_id": "fb_synthetic_019",
+    "zalo_id": "zalo_synthetic_019",
+    "dialect": "North",
+    "persona": "khach_do_du_hoi_nguoi_nha"
+  },
+  {
+    "customer_id": "CUST-020",
+    "phone": "[PHONE_CUST_020]",
+    "address": "[ADDR_CUST_020]",
+    "cccd": "[CCCD_CUST_020]",
+    "fb_id": "fb_synthetic_020",
+    "zalo_id": "zalo_synthetic_020",
+    "dialect": "Central",
+    "persona": "khach_hoi_nhieu_khong_mua"
+  },
+  {
+    "customer_id": "CUST-021",
+    "phone": "[PHONE_CUST_021]",
+    "address": "[ADDR_CUST_021]",
+    "cccd": "[CCCD_CUST_021]",
+    "fb_id": "fb_synthetic_021",
+    "zalo_id": "zalo_synthetic_021",
+    "dialect": "Central",
+    "persona": "khach_hoi_nhieu_khong_mua"
+  },
+  {
+    "customer_id": "CUST-022",
+    "phone": "[PHONE_CUST_022]",
+    "address": "[ADDR_CUST_022]",
+    "cccd": "[CCCD_CUST_022]",
+    "fb_id": "fb_synthetic_022",
+    "zalo_id": "zalo_synthetic_022",
+    "dialect": "South",
+    "persona": "khach_so_gia"
+  },
+  {
+    "customer_id": "CUST-023",
+    "phone": "[PHONE_CUST_023]",
+    "address": "[ADDR_CUST_023]",
+    "cccd": "[CCCD_CUST_023]",
+    "fb_id": "fb_synthetic_023",
+    "zalo_id": "zalo_synthetic_023",
+    "dialect": "North",
+    "persona": "khach_so_gia"
+  },
+  {
+    "customer_id": "CUST-024",
+    "phone": "[PHONE_CUST_024]",
+    "address": "[ADDR_CUST_024]",
+    "cccd": "[CCCD_CUST_024]",
+    "fb_id": "fb_synthetic_024",
+    "zalo_id": "zalo_synthetic_024",
+    "dialect": "Central",
+    "persona": "khach_so_gia"
+  },
+  {
+    "customer_id": "CUST-025",
+    "phone": "[PHONE_CUST_025]",
+    "address": "[ADDR_CUST_025]",
+    "cccd": "[CCCD_CUST_025]",
+    "fb_id": "fb_synthetic_025",
+    "zalo_id": "zalo_synthetic_025",
+    "dialect": "Central",
+    "persona": "khach_do_du_hoi_nguoi_nha"
+  },
+  {
+    "customer_id": "CUST-026",
+    "phone": "[PHONE_CUST_026]",
+    "address": "[ADDR_CUST_026]",
+    "cccd": "[CCCD_CUST_026]",
+    "fb_id": "fb_synthetic_026",
+    "zalo_id": "zalo_synthetic_026",
+    "dialect": "North",
+    "persona": "khach_hoi_nhieu_khong_mua"
+  },
+  {
+    "customer_id": "CUST-027",
+    "phone": "[PHONE_CUST_027]",
+    "address": "[ADDR_CUST_027]",
+    "cccd": "[CCCD_CUST_027]",
+    "fb_id": "fb_synthetic_027",
+    "zalo_id": "zalo_synthetic_027",
+    "dialect": "Central",
+    "persona": "khach_do_du_hoi_nguoi_nha"
+  },
+  {
+    "customer_id": "CUST-028",
+    "phone": "[PHONE_CUST_028]",
+    "address": "[ADDR_CUST_028]",
+    "cccd": "[CCCD_CUST_028]",
+    "fb_id": "fb_synthetic_028",
+    "zalo_id": "zalo_synthetic_028",
+    "dialect": "North",
+    "persona": "khach_hoi_nhieu_khong_mua"
+  },
+  {
+    "customer_id": "CUST-029",
+    "phone": "[PHONE_CUST_029]",
+    "address": "[ADDR_CUST_029]",
+    "cccd": "[CCCD_CUST_029]",
+    "fb_id": "fb_synthetic_029",
+    "zalo_id": "zalo_synthetic_029",
+    "dialect": "South",
+    "persona": "khach_hoi_nhieu_khong_mua"
+  },
+  {
+    "customer_id": "CUST-030",
+    "phone": "[PHONE_CUST_030]",
+    "address": "[ADDR_CUST_030]",
+    "cccd": "[CCCD_CUST_030]",
+    "fb_id": "fb_synthetic_030",
+    "zalo_id": "zalo_synthetic_030",
+    "dialect": "Central",
+    "persona": "khach_do_du_hoi_nguoi_nha"
+  },
+  {
+    "customer_id": "CUST-031",
+    "phone": "[PHONE_CUST_031]",
+    "address": "[ADDR_CUST_031]",
+    "cccd": "[CCCD_CUST_031]",
+    "fb_id": "fb_synthetic_031",
+    "zalo_id": "zalo_synthetic_031",
+    "dialect": "South",
+    "persona": "khach_hoi_nhieu_khong_mua"
+  },
+  {
+    "customer_id": "CUST-032",
+    "phone": "[PHONE_CUST_032]",
+    "address": "[ADDR_CUST_032]",
+    "cccd": "[CCCD_CUST_032]",
+    "fb_id": "fb_synthetic_032",
+    "zalo_id": "zalo_synthetic_032",
+    "dialect": "Central",
+    "persona": "khach_hoi_nhieu_khong_mua"
+  },
+  {
+    "customer_id": "CUST-033",
+    "phone": "[PHONE_CUST_033]",
+    "address": "[ADDR_CUST_033]",
+    "cccd": "[CCCD_CUST_033]",
+    "fb_id": "fb_synthetic_033",
+    "zalo_id": "zalo_synthetic_033",
+    "dialect": "North",
+    "persona": "khach_hoi_nhieu_khong_mua"
+  },
+  {
+    "customer_id": "CUST-034",
+    "phone": "[PHONE_CUST_034]",
+    "address": "[ADDR_CUST_034]",
+    "cccd": "[CCCD_CUST_034]",
+    "fb_id": "fb_synthetic_034",
+    "zalo_id": "zalo_synthetic_034",
+    "dialect": "Central",
+    "persona": "khach_hoi_nhieu_khong_mua"
+  },
+  {
+    "customer_id": "CUST-035",
+    "phone": "[PHONE_CUST_035]",
+    "address": "[ADDR_CUST_035]",
+    "cccd": "[CCCD_CUST_035]",
+    "fb_id": "fb_synthetic_035",
+    "zalo_id": "zalo_synthetic_035",
+    "dialect": "North",
+    "persona": "khach_so_gia"
+  },
+  {
+    "customer_id": "CUST-036",
+    "phone": "[PHONE_CUST_036]",
+    "address": "[ADDR_CUST_036]",
+    "cccd": "[CCCD_CUST_036]",
+    "fb_id": "fb_synthetic_036",
+    "zalo_id": "zalo_synthetic_036",
+    "dialect": "South",
+    "persona": "khach_do_du_hoi_nguoi_nha"
+  },
+  {
+    "customer_id": "CUST-037",
+    "phone": "[PHONE_CUST_037]",
+    "address": "[ADDR_CUST_037]",
+    "cccd": "[CCCD_CUST_037]",
+    "fb_id": "fb_synthetic_037",
+    "zalo_id": "zalo_synthetic_037",
+    "dialect": "Central",
+    "persona": "khach_do_du_hoi_nguoi_nha"
+  },
+  {
+    "customer_id": "CUST-038",
+    "phone": "[PHONE_CUST_038]",
+    "address": "[ADDR_CUST_038]",
+    "cccd": "[CCCD_CUST_038]",
+    "fb_id": "fb_synthetic_038",
+    "zalo_id": "zalo_synthetic_038",
+    "dialect": "North",
+    "persona": "khach_so_gia"
+  },
+  {
+    "customer_id": "CUST-039",
+    "phone": "[PHONE_CUST_039]",
+    "address": "[ADDR_CUST_039]",
+    "cccd": "[CCCD_CUST_039]",
+    "fb_id": "fb_synthetic_039",
+    "zalo_id": "zalo_synthetic_039",
+    "dialect": "North",
+    "persona": "khach_hoi_nhieu_khong_mua"
+  },
+  {
+    "customer_id": "CUST-040",
+    "phone": "[PHONE_CUST_040]",
+    "address": "[ADDR_CUST_040]",
+    "cccd": "[CCCD_CUST_040]",
+    "fb_id": "fb_synthetic_040",
+    "zalo_id": "zalo_synthetic_040",
+    "dialect": "Central",
+    "persona": "khach_so_gia"
+  },
+  {
+    "customer_id": "CUST-041",
+    "phone": "[PHONE_CUST_041]",
+    "address": "[ADDR_CUST_041]",
+    "cccd": "[CCCD_CUST_041]",
+    "fb_id": "fb_synthetic_041",
+    "zalo_id": "zalo_synthetic_041",
+    "dialect": "North",
+    "persona": "khach_da_kenh_fb_hotline"
+  },
+  {
+    "customer_id": "CUST-042",
+    "phone": "[PHONE_CUST_042]",
+    "address": "[ADDR_CUST_042]",
+    "cccd": "[CCCD_CUST_042]",
+    "fb_id": "fb_synthetic_042",
+    "zalo_id": "zalo_synthetic_042",
+    "dialect": "South",
+    "persona": "khach_da_kenh_fb_hotline"
+  },
+  {
+    "customer_id": "CUST-043",
+    "phone": "[PHONE_CUST_043]",
+    "address": "[ADDR_CUST_043]",
+    "cccd": "[CCCD_CUST_043]",
+    "fb_id": "fb_synthetic_043",
+    "zalo_id": "zalo_synthetic_043",
+    "dialect": "South",
+    "persona": "khach_da_kenh_fb_hotline"
+  },
+  {
+    "customer_id": "CUST-044",
+    "phone": "[PHONE_CUST_044]",
+    "address": "[ADDR_CUST_044]",
+    "cccd": "[CCCD_CUST_044]",
+    "fb_id": "fb_synthetic_044",
+    "zalo_id": "zalo_synthetic_044",
+    "dialect": "South",
+    "persona": "khach_da_kenh_fb_hotline"
+  },
+  {
+    "customer_id": "CUST-045",
+    "phone": "[PHONE_CUST_045]",
+    "address": "[ADDR_CUST_045]",
+    "cccd": "[CCCD_CUST_045]",
+    "fb_id": "fb_synthetic_045",
+    "zalo_id": "zalo_synthetic_045",
+    "dialect": "Central",
+    "persona": "khach_da_kenh_fb_hotline"
+  },
+  {
+    "customer_id": "CUST-046",
+    "phone": "[PHONE_CUST_046]",
+    "address": "[ADDR_CUST_046]",
+    "cccd": "[CCCD_CUST_046]",
+    "fb_id": "fb_synthetic_046",
+    "zalo_id": "zalo_synthetic_046",
+    "dialect": "Central",
+    "persona": "khach_da_kenh_fb_hotline"
+  },
+  {
+    "customer_id": "CUST-047",
+    "phone": "[PHONE_CUST_047]",
+    "address": "[ADDR_CUST_047]",
+    "cccd": "[CCCD_CUST_047]",
+    "fb_id": "fb_synthetic_047",
+    "zalo_id": "zalo_synthetic_047",
+    "dialect": "Central",
+    "persona": "khach_da_kenh_fb_hotline"
+  },
+  {
+    "customer_id": "CUST-048",
+    "phone": "[PHONE_CUST_048]",
+    "address": "[ADDR_CUST_048]",
+    "cccd": "[CCCD_CUST_048]",
+    "fb_id": "fb_synthetic_048",
+    "zalo_id": "zalo_synthetic_048",
+    "dialect": "North",
+    "persona": "khach_da_kenh_fb_hotline"
+  },
+  {
+    "customer_id": "CUST-049",
+    "phone": "[PHONE_CUST_049]",
+    "address": "[ADDR_CUST_049]",
+    "cccd": "[CCCD_CUST_049]",
+    "fb_id": "fb_synthetic_049",
+    "zalo_id": "zalo_synthetic_049",
+    "dialect": "Central",
+    "persona": "khach_da_kenh_fb_hotline"
+  },
+  {
+    "customer_id": "CUST-050",
+    "phone": "[PHONE_CUST_050]",
+    "address": "[ADDR_CUST_050]",
+    "cccd": "[CCCD_CUST_050]",
+    "fb_id": "fb_synthetic_050",
+    "zalo_id": "zalo_synthetic_050",
+    "dialect": "Central",
+    "persona": "khach_da_kenh_fb_hotline"
+  },
+  {
+    "customer_id": "CUST-051",
+    "phone": "[PHONE_CUST_051]",
+    "address": "[ADDR_CUST_051]",
+    "cccd": "[CCCD_CUST_051]",
+    "fb_id": "fb_synthetic_051",
+    "zalo_id": "zalo_synthetic_051",
+    "dialect": "South",
+    "persona": "khach_da_kenh_fb_hotline"
+  },
+  {
+    "customer_id": "CUST-052",
+    "phone": "[PHONE_CUST_052]",
+    "address": "[ADDR_CUST_052]",
+    "cccd": "[CCCD_CUST_052]",
+    "fb_id": "fb_synthetic_052",
+    "zalo_id": "zalo_synthetic_052",
+    "dialect": "Central",
+    "persona": "khach_da_kenh_fb_hotline"
+  },
+  {
+    "customer_id": "CUST-053",
+    "phone": "[PHONE_CUST_053]",
+    "address": "[ADDR_CUST_053]",
+    "cccd": "[CCCD_CUST_053]",
+    "fb_id": "fb_synthetic_053",
+    "zalo_id": "zalo_synthetic_053",
+    "dialect": "Central",
+    "persona": "khach_hoi_nhieu_khong_mua"
+  },
+  {
+    "customer_id": "CUST-054",
+    "phone": "[PHONE_CUST_054]",
+    "address": "[ADDR_CUST_054]",
+    "cccd": "[CCCD_CUST_054]",
+    "fb_id": "fb_synthetic_054",
+    "zalo_id": "zalo_synthetic_054",
+    "dialect": "South",
+    "persona": "khach_hoi_nhieu_khong_mua"
+  },
+  {
+    "customer_id": "CUST-055",
+    "phone": "[PHONE_CUST_055]",
+    "address": "[ADDR_CUST_055]",
+    "cccd": "[CCCD_CUST_055]",
+    "fb_id": "fb_synthetic_055",
+    "zalo_id": "zalo_synthetic_055",
+    "dialect": "North",
+    "persona": "khach_hoi_ngoai_tai_lieu"
+  },
+  {
+    "customer_id": "CUST-056",
+    "phone": "[PHONE_CUST_056]",
+    "address": "[ADDR_CUST_056]",
+    "cccd": "[CCCD_CUST_056]",
+    "fb_id": "fb_synthetic_056",
+    "zalo_id": "zalo_synthetic_056",
+    "dialect": "Central",
+    "persona": "khach_ngoai_pham_vi_chuyen_may"
+  },
+  {
+    "customer_id": "CUST-057",
+    "phone": "[PHONE_CUST_057]",
+    "address": "[ADDR_CUST_057]",
+    "cccd": "[CCCD_CUST_057]",
+    "fb_id": "fb_synthetic_057",
+    "zalo_id": "zalo_synthetic_057",
+    "dialect": "Central",
+    "persona": "khach_so_gia"
+  },
+  {
+    "customer_id": "CUST-058",
+    "phone": "[PHONE_CUST_058]",
+    "address": "[ADDR_CUST_058]",
+    "cccd": "[CCCD_CUST_058]",
+    "fb_id": "fb_synthetic_058",
+    "zalo_id": "zalo_synthetic_058",
+    "dialect": "North",
+    "persona": "khach_do_du_hoi_nguoi_nha"
+  },
+  {
+    "customer_id": "CUST-059",
+    "phone": "[PHONE_CUST_059]",
+    "address": "[ADDR_CUST_059]",
+    "cccd": "[CCCD_CUST_059]",
+    "fb_id": "fb_synthetic_059",
+    "zalo_id": "zalo_synthetic_059",
+    "dialect": "South",
+    "persona": "khach_hoi_ngoai_tai_lieu"
+  },
+  {
+    "customer_id": "CUST-060",
+    "phone": "[PHONE_CUST_060]",
+    "address": "[ADDR_CUST_060]",
+    "cccd": "[CCCD_CUST_060]",
+    "fb_id": "fb_synthetic_060",
+    "zalo_id": "zalo_synthetic_060",
+    "dialect": "South",
+    "persona": "khach_ngoai_pham_vi_chuyen_may"
+  },
+  {
+    "customer_id": "CUST-061",
+    "phone": "[PHONE_CUST_061]",
+    "address": "[ADDR_CUST_061]",
+    "cccd": "[CCCD_CUST_061]",
+    "fb_id": "fb_synthetic_061",
+    "zalo_id": "zalo_synthetic_061",
+    "dialect": "South",
+    "persona": "khach_goi_lan_3_het_kien_nhan"
+  },
+  {
+    "customer_id": "CUST-062",
+    "phone": "[PHONE_CUST_062]",
+    "address": "[ADDR_CUST_062]",
+    "cccd": "[CCCD_CUST_062]",
+    "fb_id": "fb_synthetic_062",
+    "zalo_id": "zalo_synthetic_062",
+    "dialect": "South",
+    "persona": "khach_goi_lan_3_het_kien_nhan"
+  },
+  {
+    "customer_id": "CUST-063",
+    "phone": "[PHONE_CUST_063]",
+    "address": "[ADDR_CUST_063]",
+    "cccd": "[CCCD_CUST_063]",
+    "fb_id": "fb_synthetic_063",
+    "zalo_id": "zalo_synthetic_063",
+    "dialect": "Central",
+    "persona": "khach_goi_lan_3_het_kien_nhan"
+  },
+  {
+    "customer_id": "CUST-064",
+    "phone": "[PHONE_CUST_064]",
+    "address": "[ADDR_CUST_064]",
+    "cccd": "[CCCD_CUST_064]",
+    "fb_id": "fb_synthetic_064",
+    "zalo_id": "zalo_synthetic_064",
+    "dialect": "South",
+    "persona": "khach_goi_lan_3_het_kien_nhan"
+  },
+  {
+    "customer_id": "CUST-065",
+    "phone": "[PHONE_CUST_065]",
+    "address": "[ADDR_CUST_065]",
+    "cccd": "[CCCD_CUST_065]",
+    "fb_id": "fb_synthetic_065",
+    "zalo_id": "zalo_synthetic_065",
+    "dialect": "Central",
+    "persona": "khach_goi_lan_3_het_kien_nhan"
+  }
+]

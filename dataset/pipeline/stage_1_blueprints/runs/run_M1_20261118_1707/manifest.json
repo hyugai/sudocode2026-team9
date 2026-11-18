@@ -1,0 +1,13 @@
+{
+  "tier": "M1",
+  "seed": 2026,
+  "total_blueprints": 65,
+  "total_planned_sessions": 135,
+  "archetype_counts": {
+    "standard": 40,
+    "omnichannel": 12,
+    "hard": 8,
+    "extended": 5
+  },
+  "timestamp": "2026-11-18T17:07:12+07:00"
+}

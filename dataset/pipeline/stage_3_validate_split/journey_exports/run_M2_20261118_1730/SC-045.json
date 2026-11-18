@@ -1,0 +1,105 @@
+{
+  "scenario_id": "TEAM-SC-045",
+  "tier": "M2",
+  "customer_id": "CUST-045",
+  "customer_phone": "[PHONE_CUST_045]",
+  "customer_identities": {
+    "phone": "[PHONE_CUST_045]",
+    "fb_id": "fb_synthetic_045",
+    "zalo_id": "zalo_synthetic_045"
+  },
+  "persona": "khach_so_gia",
+  "archetype": "standard",
+  "hard_case": false,
+  "edge_case_type": null,
+  "target_sku": "SKU-SN-CAS",
+  "call_1": {
+    "session_index": 1,
+    "channel": "hotline",
+    "channel_identity": "[PHONE_CUST_045]",
+    "date": "2026-11-05",
+    "customer_goal": "Tìm hiểu Giày sneaker Urban Classic và hẹn trao đổi tiếp",
+    "facts_established": {
+      "product_advised": "SKU-SN-CAS",
+      "price_quoted_vnd": 890000
+    },
+    "entities_multi": [],
+    "ground_truth_facts": {
+      "sku": "SKU-SN-CAS",
+      "price_vnd": 890000,
+      "in_stock": true,
+      "active_promos": [
+        "COD-0"
+      ],
+      "expired_promos": [],
+      "promo_expiry_dates": {
+        "COD-0": "2026-12-14"
+      },
+      "scheduled_callback_at": "2026-11-07T10:00"
+    },
+    "expected_outcome": "hen_goi_lai",
+    "success_if": {
+      "tool_called": "schedule.callback",
+      "args_match": {
+        "customer_phone": "[PHONE_CUST_045]",
+        "callback_at": "2026-11-07T10:00"
+      }
+    },
+    "customer_turns": [
+      "Giày sneaker urban classic bên em còn hàng không?",
+      "Để anh ghi lại nhé, Giày sneaker Urban Classic là tám trăm chín mươi ngàn đồng.",
+      "Để so thêm giá mấy chỗ. Em gọi lại lúc mười giờ ngày bảy tháng mười một giúp anh nhé."
+    ]
+  },
+  "call_2": {
+    "session_index": 2,
+    "channel": "hotline",
+    "channel_identity": "[PHONE_CUST_045]",
+    "date": "2026-11-07",
+    "customer_goal": "Xác nhận báo giá rồi từ chối vì chưa có nhu cầu mua",
+    "facts_established": {
+      "product_advised": "SKU-SN-CAS",
+      "price_quoted_vnd": 890000
+    },
+    "entities_multi": [],
+    "ground_truth_facts": {
+      "sku": "SKU-SN-CAS",
+      "price_vnd": 890000,
+      "in_stock": true,
+      "active_promos": [
+        "COD-0"
+      ],
+      "expired_promos": [],
+      "promo_expiry_dates": {
+        "COD-0": "2026-12-14"
+      }
+    },
+    "expected_outcome": "tu_choi",
+    "success_if": {
+      "tool_called": null,
+      "args_match": {}
+    },
+    "days_later": 2,
+    "must_carry_over": [
+      "product_advised",
+      "price_quoted_vnd"
+    ],
+    "must_not_ask": [
+      "product_advised"
+    ],
+    "customer_turns": [
+      "Vụ Giày sneaker Urban Classic chị có gọi hỏi hôm trước ấy, bên em xem lại được không?",
+      "Giá giờ là tám trăm chín mươi nghìn đồng đúng không? Chị chưa cần mua nữa, để dịp khác nhé."
+    ]
+  },
+  "simulator_profile": {
+    "persona_system_prompt": "Bạn là khách hàng thực dụng, quan tâm giá. Mục tiêu: call_1: Tìm hiểu Giày sneaker Urban Classic và hẹn trao đổi tiếp | call_2: Xác nhận báo giá rồi từ chối vì chưa có nhu cầu mua. Đã biết: {facts}. Dàn ý: {turn_outline}. Bạn nêu giá đối thủ và đòi giảm; nếu nhân viên không giảm nhưng nêu được giá trị đi kèm (bảo hành, quà, đổi trả), bạn chấp nhận theo dàn ý. Nếu nhân viên tự ý giảm giá không có chương trình, bạn hỏi 'chương trình gì?' để kiểm tra. Không bịa thông tin mới.",
+    "hidden_goal": "call_1: Tìm hiểu Giày sneaker Urban Classic và hẹn trao đổi tiếp | call_2: Xác nhận báo giá rồi từ chối vì chưa có nhu cầu mua",
+    "patience_level": 3,
+    "patience_max_turns": 3,
+    "patience_by_session": {
+      "call_1": 3,
+      "call_2": 3
+    }
+  }
+}

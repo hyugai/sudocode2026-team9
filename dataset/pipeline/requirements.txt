@@ -1,3 +1,0 @@
-# Live generation only. Offline planning/replay/tests use the standard library.
-# Each live run records its exact installed SDK version in run.json.
-openai>=2,<3

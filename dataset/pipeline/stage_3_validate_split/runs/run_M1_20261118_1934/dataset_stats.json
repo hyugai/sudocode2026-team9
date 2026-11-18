@@ -1,0 +1,42 @@
+{
+  "tier": "M1",
+  "timestamp": "2026-11-18T19:34:55+07:00",
+  "input_run": "run_M1_20261118_1934",
+  "total_journeys": 120,
+  "total_transcripts": 120,
+  "multi_session_customers": 120,
+  "three_session_customers": 16,
+  "omnichannel_customers": 34,
+  "hard_edge_case_scenarios": 10,
+  "persona_distribution": {
+    "khach_do_du_hoi_nguoi_nha": 18,
+    "khach_hoi_nhieu_khong_mua": 31,
+    "khach_so_gia": 16,
+    "khach_da_kenh_fb_hotline": 34,
+    "khach_hoi_ngoai_tai_lieu": 3,
+    "khach_ngoai_pham_vi_chuyen_may": 2,
+    "khach_goi_lan_3_het_kien_nhan": 16
+  },
+  "channel_distribution": {
+    "hotline": 222,
+    "facebook": 17,
+    "zalo": 17
+  },
+  "outcome_distribution": {
+    "hen_goi_lai": 120,
+    "chot_don": 107,
+    "tu_choi": 27,
+    "chuyen_may": 2
+  },
+  "memory_seed_journeys": 100,
+  "golden_test_scenarios": 20,
+  "btc_public_scenarios": 7,
+  "combined_golden_scenarios": 27,
+  "guardrail_violations": 0,
+  "duplicate_candidates": 3,
+  "regeneration_attempts": 0,
+  "cosine_threshold": 0.9,
+  "reference_eval_smoke_check": "passed",
+  "total_sessions": 256,
+  "migrated_from": "run_M1_20261118_1733"
+}

@@ -1,0 +1,144 @@
+{
+  "scenario_id": "TEAM-SC-085",
+  "tier": "M2",
+  "customer_id": "CUST-085",
+  "customer_phone": "000-000-0085",
+  "customer_identities": {
+    "phone": "000-000-0085",
+    "fb_id": "fb_synthetic_085",
+    "zalo_id": "zalo_synthetic_085"
+  },
+  "persona": "khach_da_kenh_fb_hotline",
+  "archetype": "omnichannel",
+  "hard_case": false,
+  "edge_case_type": null,
+  "target_sku": "SKU-SN-TRK",
+  "call_1": {
+    "session_index": 1,
+    "channel": "hotline",
+    "channel_identity": "000-000-0085",
+    "date": "2026-11-07",
+    "customer_goal": "Tìm hiểu Giày trekking HikePro và hẹn trao đổi tiếp",
+    "facts_established": {
+      "product_advised": [
+        "SKU-SN-RUN2",
+        "SKU-SN-TRK"
+      ],
+      "price_quoted_vnd": [
+        1690000,
+        1990000
+      ]
+    },
+    "entities_multi": [
+      "product_advised",
+      "price_quoted_vnd"
+    ],
+    "ground_truth_facts": {
+      "sku": "SKU-SN-TRK",
+      "price_vnd": 1990000,
+      "in_stock": true,
+      "active_promos": [
+        "COD-0"
+      ],
+      "expired_promos": [],
+      "promo_expiry_dates": {
+        "COD-0": "2026-12-14"
+      },
+      "comparison_quote": {
+        "sku": "SKU-SN-RUN2",
+        "price_vnd": 1690000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [
+          "RUN-10",
+          "RUN2-SALE"
+        ],
+        "promo_expiry_dates": {
+          "RUN-10": "2026-10-25",
+          "COD-0": "2026-12-14",
+          "RUN2-SALE": "2026-10-07"
+        }
+      },
+      "scheduled_callback_at": "2026-11-09T10:00"
+    },
+    "expected_outcome": "hen_goi_lai",
+    "success_if": {
+      "tool_called": "schedule.callback",
+      "args_match": {
+        "customer_phone": "000-000-0085",
+        "callback_at": "2026-11-09T10:00"
+      }
+    },
+    "customer_turns": [
+      "Bên em bán Giày trekking HikePro đúng hông? Anh đang tìm mẫu này.",
+      "Em báo Giày chạy bộ RunLite hai Pro giá một triệu sáu trăm chín mươi ngàn đồng còn Giày trekking HikePro giá một triệu chín trăm chín mươi ngàn đồng đúng không? Anh đang cân nhắc hai mẫu đó.",
+      "Cho mình xem lại đã. Em gọi lại lúc mười giờ ngày chín tháng mười một giúp anh nhé."
+    ]
+  },
+  "call_2": {
+    "session_index": 2,
+    "channel": "zalo",
+    "channel_identity": "zalo_synthetic_085",
+    "date": "2026-11-09",
+    "customer_goal": "Chốt mua theo báo giá hiện hành",
+    "facts_established": {
+      "product_advised": "SKU-SN-TRK",
+      "price_quoted_vnd": 1990000,
+      "payment": "COD",
+      "delivery_address": "căn 85, lô A, khu giao nhận mô phỏng Sao Mai",
+      "order_status": "created"
+    },
+    "entities_multi": [],
+    "ground_truth_facts": {
+      "sku": "SKU-SN-TRK",
+      "price_vnd": 1990000,
+      "in_stock": true,
+      "active_promos": [
+        "COD-0"
+      ],
+      "expired_promos": [],
+      "promo_expiry_dates": {
+        "COD-0": "2026-12-14"
+      },
+      "estimated_delivery": "2026-11-11"
+    },
+    "expected_outcome": "chot_don",
+    "success_if": {
+      "tool_called": "order.create",
+      "args_match": {
+        "customer_phone": "000-000-0085",
+        "sku": "SKU-SN-TRK",
+        "price_vnd": 1990000,
+        "payment": "COD"
+      }
+    },
+    "days_later": 2,
+    "must_carry_over": [
+      "product_advised",
+      "price_quoted_vnd"
+    ],
+    "must_not_ask": [
+      "product_advised"
+    ],
+    "memory_expectation": {
+      "order_status": "created"
+    },
+    "customer_turns": [
+      "vụ Giày trekking HikePro mình có gọi hỏi hôm trước ấy, bên em xem lại được ko?",
+      "vậy Giày trekking HikePro hiện là 1.990.000đ nhé, lên đơn giúp m với",
+      "cho minh tra tien luc nhan hang, giao ve can 85, lo A, khu giao nhan mo phong Sao Mai giup nhe"
+    ]
+  },
+  "simulator_profile": {
+    "persona_system_prompt": "Bạn nhắn qua Fanpage/Zalo bằng teencode ngắn (k, ko, bn, sp, đc…), khi gọi hotline thì nói bình thường. Mục tiêu: call_1: Tìm hiểu Giày trekking HikePro và hẹn trao đổi tiếp | call_2: Chốt mua theo báo giá hiện hành. Đã biết: {facts}. Dàn ý: {turn_outline}. Bạn kỳ vọng hotline biết bạn đã nhắn gì; nếu không, bạn nói 'ủa bên em nhắn Facebook báo … mà'.",
+    "hidden_goal": "call_1: Tìm hiểu Giày trekking HikePro và hẹn trao đổi tiếp | call_2: Chốt mua theo báo giá hiện hành",
+    "patience_level": 4,
+    "patience_max_turns": 4,
+    "patience_by_session": {
+      "call_1": 4,
+      "call_2": 3
+    }
+  }
+}

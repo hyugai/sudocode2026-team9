@@ -1,0 +1,139 @@
+{
+  "scenario_id": "TEAM-SC-037",
+  "tier": "M2",
+  "customer_id": "CUST-037",
+  "customer_phone": "[PHONE_CUST_037]",
+  "customer_identities": {
+    "phone": "[PHONE_CUST_037]",
+    "fb_id": "fb_synthetic_037",
+    "zalo_id": "zalo_synthetic_037"
+  },
+  "persona": "khach_do_du_hoi_nguoi_nha",
+  "archetype": "standard",
+  "hard_case": false,
+  "edge_case_type": null,
+  "target_sku": "SKU-XM-FLT",
+  "call_1": {
+    "session_index": 1,
+    "channel": "hotline",
+    "channel_identity": "[PHONE_CUST_037]",
+    "date": "2026-10-26",
+    "customer_goal": "Tìm hiểu Màng lọc thay thế Xiaomi Smart 4 và hẹn trao đổi tiếp",
+    "facts_established": {
+      "product_advised": [
+        "SKU-AP-FLT-P",
+        "SKU-XM-FLT"
+      ],
+      "price_quoted_vnd": [
+        990000,
+        590000
+      ]
+    },
+    "entities_multi": [
+      "product_advised",
+      "price_quoted_vnd"
+    ],
+    "ground_truth_facts": {
+      "sku": "SKU-XM-FLT",
+      "price_vnd": 590000,
+      "in_stock": true,
+      "active_promos": [
+        "COD-0"
+      ],
+      "expired_promos": [],
+      "promo_expiry_dates": {
+        "COD-0": "2026-12-14"
+      },
+      "comparison_quote": {
+        "sku": "SKU-AP-FLT-P",
+        "price_vnd": 990000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        }
+      },
+      "scheduled_callback_at": "2026-10-27T10:00"
+    },
+    "expected_outcome": "hen_goi_lai",
+    "success_if": {
+      "tool_called": "schedule.callback",
+      "args_match": {
+        "customer_phone": "[PHONE_CUST_037]",
+        "callback_at": "2026-10-27T10:00"
+      }
+    },
+    "customer_turns": [
+      "Cho mình hỏi về Màng lọc thay thế Xiaomi Smart bốn một chút được không?",
+      "Em báo Màng lọc thay thế AirPure Pro giá chín trăm chín mươi nghìn đồng còn Màng lọc thay thế Xiaomi Smart bốn giá năm trăm chín mươi nghìn đồng đúng không? Mình đang cân nhắc hai mẫu đó.",
+      "Để hỏi người nhà trước. Em gọi lại lúc mười giờ ngày hai mươi bảy tháng mười giúp mình nhé."
+    ]
+  },
+  "call_2": {
+    "session_index": 2,
+    "channel": "hotline",
+    "channel_identity": "[PHONE_CUST_037]",
+    "date": "2026-10-27",
+    "customer_goal": "Chốt mua theo báo giá hiện hành",
+    "facts_established": {
+      "product_advised": "SKU-XM-FLT",
+      "price_quoted_vnd": 590000,
+      "payment": "COD",
+      "delivery_address": "[ADDR_CUST_037]",
+      "order_status": "created"
+    },
+    "entities_multi": [],
+    "ground_truth_facts": {
+      "sku": "SKU-XM-FLT",
+      "price_vnd": 590000,
+      "in_stock": true,
+      "active_promos": [
+        "COD-0"
+      ],
+      "expired_promos": [],
+      "promo_expiry_dates": {
+        "COD-0": "2026-12-14"
+      },
+      "estimated_delivery": "2026-10-29"
+    },
+    "expected_outcome": "chot_don",
+    "success_if": {
+      "tool_called": "order.create",
+      "args_match": {
+        "customer_phone": "[PHONE_CUST_037]",
+        "sku": "SKU-XM-FLT",
+        "price_vnd": 590000,
+        "payment": "COD"
+      }
+    },
+    "days_later": 1,
+    "must_carry_over": [
+      "product_advised",
+      "price_quoted_vnd"
+    ],
+    "must_not_ask": [
+      "product_advised"
+    ],
+    "memory_expectation": {
+      "order_status": "created"
+    },
+    "customer_turns": [
+      "Hôm trước mình có gọi hỏi Màng lọc thay thế Xiaomi Smart bốn, em xem lại giúp mình nhé.",
+      "Mình lấy Màng lọc thay thế Xiaomi Smart bốn với giá năm trăm chín mươi nghìn đồng nhé, em tạo đơn giúp.",
+      "Cho mình trả tiền lúc nhận hàng, giao về căn ba mươi bảy, lô A, khu giao nhận mô phỏng Sao Mai giúp nhé."
+    ]
+  },
+  "simulator_profile": {
+    "persona_system_prompt": "Bạn là khách hàng Việt Nam đang gọi/nhắn cho shop. Mục tiêu: call_1: Tìm hiểu Màng lọc thay thế Xiaomi Smart 4 và hẹn trao đổi tiếp | call_2: Chốt mua theo báo giá hiện hành. Những điều bạn đã biết/đã nói ở phiên trước: {facts}. Dàn ý những điều bạn sẽ nói theo thứ tự: {turn_outline}. Nói tự nhiên, ngắn (1–2 câu/lượt), xưng hô theo giới tính đã cho. Bạn CHƯA quyết mua, cần hỏi người nhà; chỉ đồng ý mua nếu kịch bản cho phép. Nếu nhân viên hỏi lại điều bạn đã nói ở phiên trước, hãy trả lời nhưng tỏ ra hơi khó chịu ('hôm trước chị nói rồi mà'). Không bịa thêm thông tin ngoài những gì đã cho; nếu bị hỏi điều không có, nói 'chị không rõ'. Không bao giờ nhắc đến việc bạn là AI hay đang mô phỏng.",
+    "hidden_goal": "call_1: Tìm hiểu Màng lọc thay thế Xiaomi Smart 4 và hẹn trao đổi tiếp | call_2: Chốt mua theo báo giá hiện hành",
+    "patience_level": 4,
+    "patience_max_turns": 4,
+    "patience_by_session": {
+      "call_1": 4,
+      "call_2": 3
+    }
+  }
+}

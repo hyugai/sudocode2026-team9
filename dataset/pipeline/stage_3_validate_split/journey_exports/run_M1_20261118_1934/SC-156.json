@@ -1,0 +1,116 @@
+{
+  "scenario_id": "TEAM-SC-156",
+  "tier": "M1",
+  "customer_id": "CUST-156",
+  "customer_phone": "000-000-0156",
+  "customer_identities": {
+    "phone": "000-000-0156",
+    "fb_id": "fb_synthetic_156",
+    "zalo_id": "zalo_synthetic_156"
+  },
+  "persona": "khach_da_kenh_fb_hotline",
+  "archetype": "omnichannel",
+  "hard_case": false,
+  "edge_case_type": null,
+  "target_sku": "SKU-AP-FLT-X",
+  "call_1": {
+    "session_index": 1,
+    "channel": "hotline",
+    "channel_identity": "000-000-0156",
+    "date": "2026-11-10",
+    "customer_goal": "Tìm hiểu Màng lọc thay thế AirPure X/Y và hẹn trao đổi tiếp",
+    "facts_established": {
+      "product_advised": "SKU-AP-FLT-X",
+      "price_quoted_vnd": 690000
+    },
+    "entities_multi": [],
+    "ground_truth_facts": {
+      "sku": "SKU-AP-FLT-X",
+      "price_vnd": 690000,
+      "in_stock": true,
+      "active_promos": [
+        "COD-0"
+      ],
+      "expired_promos": [
+        "NAM-SHIP0"
+      ],
+      "promo_expiry_dates": {
+        "NAM-SHIP0": "2026-11-05",
+        "COD-0": "2026-12-14"
+      },
+      "scheduled_callback_at": "2026-11-12T10:00"
+    },
+    "expected_outcome": "hen_goi_lai",
+    "success_if": {
+      "tool_called": "schedule.callback",
+      "args_match": {
+        "customer_phone": "000-000-0156",
+        "callback_at": "2026-11-12T10:00"
+      }
+    },
+    "customer_turns": [
+      "Cho mình hỏi về Màng lọc thay thế AirPure X/Y một chút được không?",
+      "sáu trăm chín mươi nghìn đồng cho Màng lọc thay thế AirPure X/Y là giá hiện tại phải không em?",
+      "Cho mình xem lại đã. Em gọi lại lúc mười giờ ngày mười hai tháng mười một giúp mình nhé."
+    ]
+  },
+  "call_2": {
+    "session_index": 2,
+    "channel": "zalo",
+    "channel_identity": "zalo_synthetic_156",
+    "date": "2026-11-12",
+    "customer_goal": "Chốt mua theo báo giá hiện hành",
+    "facts_established": {
+      "product_advised": "SKU-AP-FLT-X",
+      "price_quoted_vnd": 586500,
+      "payment": "COD",
+      "delivery_address": "căn 156, lô A, khu giao nhận mô phỏng Sao Mai",
+      "order_status": "created"
+    },
+    "entities_multi": [],
+    "ground_truth_facts": {
+      "sku": "SKU-AP-FLT-X",
+      "price_vnd": 586500,
+      "in_stock": true,
+      "active_promos": [
+        "COD-0",
+        "11-11"
+      ],
+      "expired_promos": [
+        "NAM-SHIP0"
+      ],
+      "promo_expiry_dates": {
+        "NAM-SHIP0": "2026-11-05",
+        "COD-0": "2026-12-14",
+        "11-11": "2026-11-12"
+      },
+      "estimated_delivery": "2026-11-14"
+    },
+    "expected_outcome": "chot_don",
+    "success_if": {
+      "tool_called": "order.create",
+      "args_match": {
+        "customer_phone": "000-000-0156",
+        "sku": "SKU-AP-FLT-X",
+        "price_vnd": 586500,
+        "payment": "COD"
+      }
+    },
+    "days_later": 2,
+    "must_carry_over": [
+      "product_advised",
+      "price_quoted_vnd"
+    ],
+    "must_not_ask": [
+      "product_advised"
+    ],
+    "memory_expectation": {
+      "order_status": "created"
+    },
+    "customer_turns": [
+      "vu Mang loc thay the AirPure X/Y minh co goi hoi hom truoc ay, ben em xem lai duoc ko?",
+      "mình lấy Màng lọc thay thế AirPure X/Y với giá 586.500đ nhé, em tạo đơn giúp",
+      "cho mình trả tiền lúc nhận hàng, giao về căn 156, lô A, khu giao nhận mô phỏng Sao Mai giúp nhé"
+    ]
+  }
+}

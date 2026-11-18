@@ -1,0 +1,108 @@
+{
+  "scenario_id": "TEAM-SC-029",
+  "tier": "M1",
+  "customer_id": "CUST-029",
+  "customer_phone": "[PHONE_CUST_029]",
+  "customer_identities": {
+    "phone": "[PHONE_CUST_029]",
+    "fb_id": "fb_synthetic_029",
+    "zalo_id": "zalo_synthetic_029"
+  },
+  "persona": "khach_hoi_nhieu_khong_mua",
+  "archetype": "standard",
+  "hard_case": false,
+  "edge_case_type": null,
+  "target_sku": "SKU-SN-CAS",
+  "call_1": {
+    "session_index": 1,
+    "channel": "hotline",
+    "channel_identity": "[PHONE_CUST_029]",
+    "date": "2026-11-03",
+    "customer_goal": "Tìm hiểu Giày sneaker Urban Classic và hẹn trao đổi tiếp",
+    "facts_established": {
+      "product_advised": "SKU-SN-CAS",
+      "price_quoted_vnd": 890000
+    },
+    "entities_multi": [],
+    "ground_truth_facts": {
+      "sku": "SKU-SN-CAS",
+      "price_vnd": 890000,
+      "in_stock": true,
+      "active_promos": [
+        "COD-0"
+      ],
+      "expired_promos": [],
+      "promo_expiry_dates": {
+        "COD-0": "2026-12-14"
+      },
+      "scheduled_callback_at": "2026-11-04T10:00"
+    },
+    "expected_outcome": "hen_goi_lai",
+    "success_if": {
+      "tool_called": "schedule.callback",
+      "args_match": {
+        "customer_phone": "[PHONE_CUST_029]",
+        "callback_at": "2026-11-04T10:00"
+      }
+    },
+    "customer_turns": [
+      "Cho mình hỏi về Giày sneaker Urban Classic một chút được hông?",
+      "tám trăm chín mươi ngàn đồng cho Giày sneaker Urban Classic là giá hiện tại phải không em?",
+      "Để xem kỹ lại thông tin đã. Em gọi lại lúc mười giờ ngày bốn tháng mười một giúp mình nhé."
+    ]
+  },
+  "call_2": {
+    "session_index": 2,
+    "channel": "hotline",
+    "channel_identity": "[PHONE_CUST_029]",
+    "date": "2026-11-04",
+    "customer_goal": "Chốt mua theo báo giá hiện hành",
+    "facts_established": {
+      "product_advised": "SKU-SN-CAS",
+      "price_quoted_vnd": 890000,
+      "payment": "COD",
+      "delivery_address": "[ADDR_CUST_029]",
+      "order_status": "created"
+    },
+    "entities_multi": [],
+    "ground_truth_facts": {
+      "sku": "SKU-SN-CAS",
+      "price_vnd": 890000,
+      "in_stock": true,
+      "active_promos": [
+        "COD-0"
+      ],
+      "expired_promos": [],
+      "promo_expiry_dates": {
+        "COD-0": "2026-12-14"
+      },
+      "estimated_delivery": "2026-11-06"
+    },
+    "expected_outcome": "chot_don",
+    "success_if": {
+      "tool_called": "order.create",
+      "args_match": {
+        "customer_phone": "[PHONE_CUST_029]",
+        "sku": "SKU-SN-CAS",
+        "price_vnd": 890000,
+        "payment": "COD"
+      }
+    },
+    "days_later": 1,
+    "must_carry_over": [
+      "product_advised",
+      "price_quoted_vnd"
+    ],
+    "must_not_ask": [
+      "product_advised"
+    ],
+    "memory_expectation": {
+      "order_status": "created"
+    },
+    "customer_turns": [
+      "Vụ Giày sneaker Urban Classic mình có gọi hỏi hôm trước ấy, bên em xem lại được không?",
+      "Vậy Giày sneaker Urban Classic hiện là tám trăm chín mươi ngàn đồng nhé, lên đơn giúp mình với.",
+      "Cho mình trả tiền lúc nhận hàng, giao về căn hai mươi chín, lô A, khu giao nhận mô phỏng Sao Mai giúp nhé."
+    ]
+  }
+}

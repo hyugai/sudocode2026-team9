@@ -1,0 +1,122 @@
+{
+  "scenario_id": "TEAM-SC-041",
+  "tier": "M2",
+  "customer_id": "CUST-041",
+  "customer_phone": "[PHONE_CUST_041]",
+  "customer_identities": {
+    "phone": "[PHONE_CUST_041]",
+    "fb_id": "fb_synthetic_041",
+    "zalo_id": "zalo_synthetic_041"
+  },
+  "persona": "khach_hoi_nhieu_khong_mua",
+  "archetype": "standard",
+  "hard_case": false,
+  "edge_case_type": null,
+  "target_sku": "SKU-MB-STER",
+  "call_1": {
+    "session_index": 1,
+    "channel": "hotline",
+    "channel_identity": "[PHONE_CUST_041]",
+    "date": "2026-11-05",
+    "customer_goal": "Tìm hiểu Máy tiệt trùng sấy khô Moaz Bebe và hẹn trao đổi tiếp",
+    "facts_established": {
+      "product_advised": "SKU-MB-STER",
+      "price_quoted_vnd": 1890000
+    },
+    "entities_multi": [],
+    "ground_truth_facts": {
+      "sku": "SKU-MB-STER",
+      "price_vnd": 1890000,
+      "in_stock": true,
+      "active_promos": [
+        "MOM-FREESHIP",
+        "COD-0"
+      ],
+      "expired_promos": [],
+      "promo_expiry_dates": {
+        "MOM-FREESHIP": "2026-11-29",
+        "COD-0": "2026-12-14"
+      },
+      "scheduled_callback_at": "2026-11-06T10:00"
+    },
+    "expected_outcome": "hen_goi_lai",
+    "success_if": {
+      "tool_called": "schedule.callback",
+      "args_match": {
+        "customer_phone": "[PHONE_CUST_041]",
+        "callback_at": "2026-11-06T10:00"
+      }
+    },
+    "customer_turns": [
+      "Cho mình hỏi về Máy tiệt trùng sấy khô Moaz Bebe một chút được không?",
+      "Vậy Máy tiệt trùng sấy khô Moaz Bebe bên em báo một triệu tám trăm chín mươi nghìn đồng đúng không?",
+      "ờ mình nói là để xem kỹ lại thông tin đã. Em gọi lại lúc mười giờ ngày sáu tháng mười một giúp mình nhé."
+    ]
+  },
+  "call_2": {
+    "session_index": 2,
+    "channel": "hotline",
+    "channel_identity": "[PHONE_CUST_041]",
+    "date": "2026-11-06",
+    "customer_goal": "Chốt mua theo báo giá hiện hành",
+    "facts_established": {
+      "product_advised": "SKU-MB-STER",
+      "price_quoted_vnd": 1890000,
+      "payment": "COD",
+      "delivery_address": "[ADDR_CUST_041]",
+      "order_status": "created"
+    },
+    "entities_multi": [],
+    "ground_truth_facts": {
+      "sku": "SKU-MB-STER",
+      "price_vnd": 1890000,
+      "in_stock": true,
+      "active_promos": [
+        "MOM-FREESHIP",
+        "COD-0"
+      ],
+      "expired_promos": [],
+      "promo_expiry_dates": {
+        "MOM-FREESHIP": "2026-11-29",
+        "COD-0": "2026-12-14"
+      },
+      "estimated_delivery": "2026-11-09"
+    },
+    "expected_outcome": "chot_don",
+    "success_if": {
+      "tool_called": "order.create",
+      "args_match": {
+        "customer_phone": "[PHONE_CUST_041]",
+        "sku": "SKU-MB-STER",
+        "price_vnd": 1890000,
+        "payment": "COD"
+      }
+    },
+    "days_later": 1,
+    "must_carry_over": [
+      "product_advised",
+      "price_quoted_vnd"
+    ],
+    "must_not_ask": [
+      "product_advised"
+    ],
+    "memory_expectation": {
+      "order_status": "created"
+    },
+    "customer_turns": [
+      "Mình liên hệ lại về Máy tiệt trùng sấy khô Moaz Bebe đây, lần trước có gọi hỏi giá rồi.",
+      "Đúng mẫu Máy tiệt trùng sấy khô Moaz Bebe đó rồi. Nếu giá là một triệu tám trăm chín mươi nghìn đồng thì mình chốt luôn.",
+      "Cho mình trả tiền lúc nhận hàng, giao về căn bốn mươi mốt, lô A, khu giao nhận mô phỏng Sao Mai giúp nhé."
+    ]
+  },
+  "simulator_profile": {
+    "persona_system_prompt": "Bạn thích hỏi kỹ nhiều chi tiết kỹ thuật và so sánh, chưa muốn mua. Mục tiêu: call_1: Tìm hiểu Máy tiệt trùng sấy khô Moaz Bebe và hẹn trao đổi tiếp | call_2: Chốt mua theo báo giá hiện hành. Đã biết: {facts}. Dàn ý: {turn_outline}. Bạn hỏi tối đa theo dàn ý, kết thúc bằng 'để xem thêm' trừ khi dàn ý nói bạn chốt. Nếu nhân viên bịa thông số, bạn hỏi lại 'em chắc không?'.",
+    "hidden_goal": "call_1: Tìm hiểu Máy tiệt trùng sấy khô Moaz Bebe và hẹn trao đổi tiếp | call_2: Chốt mua theo báo giá hiện hành",
+    "patience_level": 5,
+    "patience_max_turns": 5,
+    "patience_by_session": {
+      "call_1": 5,
+      "call_2": 4
+    }
+  }
+}
