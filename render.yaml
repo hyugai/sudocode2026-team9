@@ -67,6 +67,15 @@ services:
         value: object_storage
       - key: CUSTOMER_MEMORY_PREFIX
         value: users
+      # Run the learning migration separately on Neon before enabling/deploying.
+      # DB jobs + agent lessons on the existing object-storage bucket.
+      - key: KNOWLEDGE_GAP_LOOP_ENABLED
+        value: "true"
+      - key: AGENT_MEMORY_PREFIX
+        value: agents/telesales_agent/knowledge_gap_loop
+      - key: AGENT_LEARNING_RUNTIME_PREFIX
+        value: learning-runtime/telesales_agent
+      # AGENT_MEMORY_BUCKET is optional; defaults to CUSTOMER_MEMORY_BUCKET below.
       # For an existing Blueprint, add these values in Render Environment before syncing.
       # Keep credentials out of this file.
       - key: CUSTOMER_MEMORY_BUCKET

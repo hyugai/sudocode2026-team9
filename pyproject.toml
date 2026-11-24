@@ -33,6 +33,7 @@ dependencies = [
 
 [project.optional-dependencies]
 realtime = ["google-genai==2.30.1"]
+learning = ["boto3>=1.35,<2"]
 voice = [
     "sherpa-onnx>=1.12.25,<2",
     "imageio-ffmpeg>=0.6,<0.7",
