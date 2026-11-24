@@ -1,126 +1,96 @@
-# Thiết kế bộ nhớ
+# Thiết kế bộ nhớ của agent
 
-> Đối chiếu mã nguồn ngày 18/11/2026. Liên quan: [hệ thống](system-architecture.md), [harness](agent-harness-loop.md), [tool](tool-catalog.md), [quyết định thiết kế](design-decisions.md).
+Backend giữ dữ kiện và lịch sử theo từng `customer_id` từ CRM. Mỗi lượt lấy phần liên quan để dựng `CallBrief`. Ví dụ, khi khách đổi ngân sách từ 5 lên 6 triệu, `facts.md` giữ giá trị 6 triệu, còn nhật ký thay đổi có thể giữ dấu vết của cả hai lượt.
 
-## 1. Mục tiêu và các scope
+## Các tầng memory
 
-Memory giữ thông tin có ích qua nhiều cuộc gọi mà không replay toàn bộ transcript vào model. Application sở hữu việc ghi; agent tư vấn không được tự sửa instruction hay gọi tool ghi customer memory.
-
-| Loại dữ liệu | Phạm vi/lưu trữ | Vai trò |
+| Tầng | Format và nơi lưu | Khi nào dùng |
 | --- | --- | --- |
-| Turn context/deltas | Một lượt, RAM | Intent, entities, memory candidate và tool evidence chưa persist |
-| `ConversationState` | Một cuộc gọi | Identity, messages, pending order, read cache, brief và số turn; account có checkpoint lưu DB |
-| DeepAgent checkpoint | `MemorySaver` trong process; thread mặc định theo turn | Tiếp tục model/tool loop; không thay customer memory |
-| Customer memory | Theo canonical `customer_id`; file hoặc object storage | Facts, profile, behaviors, episodes và foresights qua nhiều cuộc gọi |
-| Agent instructions | `agents/telesales_agent/{soul,agent,tools}.md` | Quy tắc/persona đọc một lần lúc startup, đưa vào system prompt |
-| Conversation history / Voice journal | PostgreSQL | Transcript, feedback, snapshot và job memory phục vụ xem lại/phục hồi |
+| **Ngữ cảnh đang chạy** | `ConversationState` trong RAM gồm danh tính, tin nhắn gần nhất, `CallBrief` và dữ kiện mới của lượt. DeepAgent giữ checkpoint của message/tool loop, mặc định theo lượt. | Backend dựng prompt cho lượt hiện tại. Chat tài khoản lưu thêm checkpoint phiên trong PostgreSQL. |
+| **Customer memory** | Markdown theo `users/<customer_id>/`. Bản filesystem gồm các file riêng. Object storage có thêm `current.md` chứa snapshot tổng hợp. | Đọc ở các lượt sau và khi khách quay lại. |
+| **Agent instructions** | `agents/telesales_agent/{soul,agent,tools}.md` chứa persona, playbook và quy tắc dùng tool. | Harness đọc khi khởi động để dựng system prompt. |
+| **Agent lessons** | Lesson Markdown có metadata cùng các mục `When`, `Do`, `Otherwise`. PostgreSQL giữ job học và object storage giữ lesson đã duyệt. | Chat chọn bài học phù hợp ở phiên sau. [Luồng self-learning](self-learning.md) |
 
-Phone và hồ sơ xác minh thuộc CRM; dùng `customer_id` làm khóa memory và kiểm tra đường dẫn an toàn. Giá, tồn kho, ưu đãi và trạng thái đơn hiện tại phải tra tool; giá từng tư vấn trong memory chỉ là lịch sử.
+PostgreSQL cũng giữ hồ sơ CRM, dữ liệu nghiệp vụ, lịch sử Chat tài khoản và Voice journal. Giá, tồn kho, trạng thái đơn và chính sách hiện tại được xác minh qua tool nghiệp vụ.
 
-## 2. Mô hình customer memory
-
-Backend file mặc định dùng `data/memory-root/users`; có thể đổi qua `CUSTOMER_MEMORY_ROOT`.
+## Cấu trúc customer memory
 
 ```text
-<root>/<customer_id>/
-├── facts.md
-├── user.md
-├── behaviors.md
-├── atomic_facts/fact-YYYY-MM-DD.md
-├── episodes/episode-YYYY-MM-DD.md
-└── foresights/foresight-YYYY-MM-DD.md
+users/<customer_id>/
+├── facts.md                          # Dữ kiện hiện tại theo key
+├── user.md                           # Mô tả hồ sơ
+├── behaviors.md                      # Hành vi hoặc sở thích ghi nhận được
+├── atomic_facts/fact-YYYY-MM-DD.md    # Nhật ký thay đổi dữ kiện
+├── episodes/episode-YYYY-MM-DD.md     # Tóm tắt từng tương tác
+└── foresights/foresight-YYYY-MM-DD.md # Gợi ý cho lượt tư vấn sau
 ```
 
-| Thành phần | Ý nghĩa và cách cập nhật |
+Với filesystem, cây này nằm dưới `data/memory-root/` theo mặc định. Các file và thư mục được tạo khi có dữ liệu cần ghi.
+
+| File | Format và cách cập nhật |
 | --- | --- |
-| `facts.md` | Map key/value hiện tại, upsert theo key; JSON value giữ kiểu số, boolean, list/object |
-| `user.md` | Ghi chú profile dạng văn bản; append qua repository |
-| `behaviors.md` | Pattern hành vi; append, không có cơ chế supersede chung như facts |
-| `atomic_facts/` | Audit fact theo ngày khi dùng LLM persister; đồng thời tương thích dữ liệu cũ |
-| `episodes/` | Tóm tắt tương tác; append, có source marker cho episode |
-| `foresights/` | Gợi ý cụ thể cho lần gọi sau; LLM persister giới hạn và lọc trùng |
+| `facts.md` | Mỗi dòng là `- key: <JSON value>`. Ghi mới hoặc thay giá trị theo key để giữ đúng kiểu số, chuỗi, boolean và danh sách. Bỏ qua giá trị giống bản hiện tại. |
+| `user.md`, `behaviors.md` | Danh sách Markdown, mỗi dòng là một mô tả ngắn về hồ sơ hoặc hành vi của khách. |
+| `atomic_facts/` | Nối bản ghi theo ngày, dạng `- key: <JSON value> \| source: <lượt>` để truy nguồn thay đổi. |
+| `episodes/` | Mỗi đoạn bắt đầu bằng `### Session at HH:MM:SS`, sau đó là tóm tắt ngắn. Có marker `source_id` khi lượt cung cấp ID để tránh ghi trùng khi chạy lại. |
+| `foresights/` | Danh sách gợi ý có căn cứ cho lần tư vấn sau. Ghi bổ sung theo ngày và lọc gợi ý trùng. |
 
-Ví dụ `budget_vnd: 5000000` được thay bằng `6000000` khi khách sửa ngân sách; canonical map chỉ giữ giá trị mới. Episode/audit có thể giữ lịch sử thay đổi. Loader ưu tiên `.md`, vẫn đọc `.mmd` cũ; khi chưa có canonical facts có thể fold atomic-fact legacy thành map.
+Ví dụ `facts.md` sau khi khách đổi ngân sách và đã được tư vấn AirPure X:
 
-## 3. Vòng đọc/ghi qua các lượt
+```markdown
+# Customer Facts
+
+- budget_vnd: 6000000
+- room_area_m2: 25
+- product_advised: "SKU-AP-X"
+```
+
+Với object storage, `users/<customer_id>/current.md` có tiêu đề `# Customer Memory` và một khối JSON. `facts` là JSON object, `profile` và `behaviors` là chuỗi Markdown, còn mỗi mục trong ba danh sách theo ngày có `source` và `content`. Snapshot rút gọn của ví dụ trên:
+
+```json
+{
+  "customer_id": "C031",
+  "profile": "",
+  "behaviors": "",
+  "facts": {"budget_vnd": 6000000, "room_area_m2": 25, "product_advised": "SKU-AP-X"},
+  "atomic_facts": [],
+  "episodes": [],
+  "foresights": []
+}
+```
+
+### Ba nhóm memory theo ngày
+
+Trong chế độ `llm_learning`, `LLMPersister` cập nhật các nhóm này sau mỗi lượt đã xác định được khách. Ví dụ xuyên suốt là khách đổi ngân sách từ 5 lên 6 triệu, đang cân nhắc AirPure X cho phòng ngủ và còn băn khoăn về độ ồn.
+
+| Nhóm | Ghi và cập nhật thế nào | Dùng ở lượt hoặc phiên sau |
+| --- | --- | --- |
+| **`atomic_facts/`** | Khi persister thực sự thêm hoặc đổi một fact, nó ghi thêm một dòng có giá trị và nguồn lượt vào file của ngày đó. Ví dụ `- budget_vnd: 6000000 \| source: call_1#turn2`. Dòng 5 triệu cũ vẫn nằm trong nhật ký nếu đã được ghi trước đó. | Tra lại **dữ kiện đã đổi khi nào và từ lượt nào**. Chat ưu tiên giá trị mới nhất trong `facts.md`. Khi brief thiếu facts, prompt Chat có thể lấy tối đa 5 mục atomic gần nhất làm dữ kiện dự phòng. Chi tiết cũ có thể tra qua tool archive. |
+| **`episodes/`** | LLM tóm tắt lời khách đã che thông tin cá nhân và các cập nhật fact đã xác minh. Nếu có nội dung đáng lưu, persister nối một đoạn theo lượt, gồm thông tin xác lập, sản phẩm có căn cứ hoặc điều khách còn băn khoăn. Ví dụ “Khách cân nhắc AirPure X cho phòng ngủ, còn lo về độ ồn”. `source_id` giúp tránh ghi trùng khi xử lý lại cùng lượt. | Giúp hiểu **lần tư vấn trước đã nói gì và đang dừng ở đâu**. `CallBrief` giữ nhóm `relevant_episodes` và có thể dùng episode gần đây làm tóm tắt dự phòng. Khi khách hỏi “Lần trước mình đang cân nhắc gì?”, Chat có thể tra episode qua tool archive. |
+| **`foresights/`** | LLM đề xuất việc nên làm ở lần sau dựa trên lời khách. Persister xem tối đa 3 gợi ý mỗi lượt, lọc gợi ý rỗng hoặc trùng và nối phần còn lại vào file theo ngày. Ví dụ “Khi khách hỏi tiếp về AirPure X, tra thông số độ ồn trước khi so sánh”. | Gợi ý **nên tiếp tục tư vấn theo hướng nào**. Backend đưa foresight vào `CallBrief.remembered_preferences`. Realtime Voice có thể nhận qua brief đã che thông tin cá nhân. Prompt Chat thông thường tập trung vào facts và câu hỏi còn mở. Chat có thể tra foresight qua tool archive khi cần. |
+
+Trong ví dụ trên, `facts.md` cho biết ngân sách hiện tại là 6 triệu, `atomic_facts` giải thích thay đổi đó, `episodes` nhắc lại mối quan tâm về độ ồn và `foresights` gợi ý tra thông số trước khi tư vấn tiếp. Agent dùng kết quả tra cứu hiện tại để trả lời về thông số sản phẩm.
+
+## Luồng đọc và ghi
 
 ```mermaid
-flowchart LR
-    Customer["Customer utterance"] --> Delta["Perception deltas"]
-    Tools["Verified tool results"] --> Candidates["Chuẩn hóa / merge candidates"]
-    Delta --> Candidates
-    Candidates --> Facts["Upsert facts + memory_writes"]
-    Facts --> Learning["Tùy persister: audit, episode, foresight"]
-    Learning --> Store["File hoặc RAM snapshot buffer"]
-    Store --> Refresh["Lượt sau: reload repository"]
-    Refresh --> Brief["Compact CallBrief + chọn facts"]
-    Brief --> Agent["Agent trả lời / dùng tool"]
-    Agent --> Tools
+flowchart TD
+    identity["Xác định customer_id"] --> read["Đọc CRM và customer memory"]
+    read --> brief["Dựng CallBrief từ dữ kiện cũ và lời khách vừa nói"]
+    brief --> answer["Tư vấn và gọi tool để xác minh khi cần"]
+    answer --> filter["Lọc dữ kiện từ lời khách và kết quả tool"]
+    filter --> persist["Cập nhật facts và lưu lịch sử tương tác"]
+    persist -->|"Lượt sau"| read
 ```
 
-1. Đầu lượt, hydrate hoặc refresh snapshot đã có; CallBrief kết hợp CRM, memory và perception hiện tại. Delta mới chưa cần ghi ngay để được dùng trong lượt hiện tại.
-2. Application và model chạy tool. Evidence được chuẩn hóa từ kết quả thực tế, không lấy câu agent tự nói làm bằng chứng giao dịch thành công.
-3. Cuối lượt Chat, `persist_shared()` lấy khóa theo customer và refresh lại memory trong khóa. Persister chuẩn hóa customer candidates, lấy thêm fact từ tool rồi upsert.
-4. Giá trị không đổi được bỏ qua. Giá trị mới tạo `set`; thay giá trị cũ tạo `supersede`. `memory_writes` có `key`, `value`, `previous_value`, `customer_id`, `source`, `provenance` để trace.
-5. Persister clear deltas, cập nhật snapshot state; lượt kế tiếp đọc lại repository và dựng brief mới. Memory chưa có identity hợp lệ không được ghi.
+1. **Đọc.** Backend nạp dữ kiện của đúng khách và làm mới trước khi dựng `CallBrief`. Lời khách vừa nói có thể cập nhật ngữ cảnh ngay trong lượt hiện tại. Agent nhận brief gọn cùng các tin nhắn gần nhất. Gemini Live nhận brief đã che thông tin cá nhân và có thể lấy thêm context qua tool.
+2. **Ghi.** Sau khi xử lý lượt, persister lọc dữ kiện từ lời khách và kết quả tool đã kiểm chứng rồi cập nhật memory theo `customer_id`. Chế độ `llm_learning` còn ghi nhật ký thay đổi và có thể tạo episode hoặc foresight. Nếu bước tóm tắt lỗi, các facts đã xác minh vẫn được lưu.
+3. **Đọc lại.** Lượt sau dùng snapshot mới khi dựng brief. Khi khách hỏi chi tiết cũ, tool archive có thể tra bổ sung trong phạm vi `customer_id` của phiên.
 
-Trong `persist_turn_memory()`, merge hiện là `{**tool_candidates, **customer_candidates}`: customer candidate thắng khi trùng key sau các bước lọc. Không có quy tắc tổng quát “mọi tool fact luôn ghi đè delta”. Một số field có kiểm soát riêng: mapping order ID chỉ nhận từ tool; lịch callback đã điều chỉnh cần kết quả scheduler; địa chỉ xác nhận được giữ dưới `delivery_address`, còn phone giữ ở CRM. Giá quote trước đó được giữ riêng khi giá đổi.
+## Khi nào dữ liệu được lưu bền vững
 
-## 4. Persister và chế độ chạy
-
-| Cấu hình bootstrap | Repository | Cách ghi |
-| --- | --- | --- |
-| `durable`, backend `file` mặc định | `FileCustomerMemoryRepository` | Ghi Markdown local |
-| `durable`, backend `object_storage` hoặc `s3` | `BufferedCustomerMemoryStore` bọc object repository | Cập nhật snapshot RAM, flush remote sau |
-| `evaluation` | In-memory, seed từ file | `TurnMemoryPersister`; write không làm đổi file seed |
-| `disabled` | In-memory rỗng | Không có persister |
-
-Trong durable mode, `MEMORY_PERSISTER_MODE` mặc định là **`llm_learning`**; `llm_learning` và `llm_episode` đều chọn `LLMPersister`. Giá trị khác, ví dụ `turn`, chọn `TurnMemoryPersister` deterministic.
-
-`TurnMemoryPersister` chỉ ghi canonical facts. `LLMPersister` ghi facts và atomic audit, rồi gọi structured LLM để tạo episode/foresight từ customer text đã mask và fact updates. Prompt học memory không dùng agent statement làm bằng chứng; loại phone/địa chỉ khỏi phần updates gửi học. Lỗi bước LLM summary không xóa facts đã xử lý; lỗi commit snapshot vẫn được truyền lên. Chế độ bootstrap `evaluation` khác nhánh `full` của bộ benchmark, vốn có thể dùng durable memory trong vùng đánh giá riêng.
-
-## 5. Projection và dung lượng context
-
-`CallBriefProjector` dựng brief cục bộ, tách verified CRM data khỏi remembered preferences. Prompt DeepAgent chọn mặc định tối đa **6 facts** theo ưu tiên intent/loại câu hỏi rồi bổ sung fact còn lại, giới hạn độ dài value và recent messages. Đây là selector theo quy tắc, chưa phải semantic retrieval toàn bộ memory.
-
-Episode/foresight không bị dump nguyên kho vào từng prompt. Archive chỉ được tra theo nhu cầu khi repository có `search_archive()`, với customer ID do backend bind. Memory có thể tăng trên storage dù prompt vẫn nhỏ; giới hạn context không thay thế retention policy.
-
-## 6. File và object storage: ranh giới bền vững
-
-**File:** repository có khóa `threading.RLock` theo customer trong process và atomic replacement cho file. Nhiều file của một lượt không nằm trong một transaction nguyên tử; chưa có lock liên process.
-
-**Object storage:** canonical object là `<prefix>/<customer_id>/current.md`, prefix mặc định `users`. Remote snapshot giữ daily collections của hai ngày hoạt động gần nhất; chi tiết cũ được export thành archive để tra khi cần. Static/daily files được đồng bộ trước khi publish snapshot theo logic adapter.
-
-Bootstrap bọc remote adapter bằng **RAM buffer**. `TurnMemoryWriteSession` xử lý trên workspace RAM rồi publish snapshot vào buffer; các session cùng process đọc được bản mới ngay. Worker kiểm tra mỗi 5 giây, flush sau 120 giây không có truy cập/cập nhật customer theo mặc định; shutdown cũng thử flush. Upload có retry và version để không đánh dấu nhầm cập nhật mới là đã lưu.
-
-Vì vậy, “persister hoàn tất” chưa đồng nghĩa “S3 đã lưu”. Buffer không bền vững khi crash; Chat chưa có durable write journal tương đương Voice. Không có distributed CAS để hòa giải nhiều backend writer.
-
-## 7. Voice journal và phục hồi
-
-Voice lưu transcript, evidence, interruption, playback progress và prepared batch trong `voice_turn_journal`; không lưu raw audio. `source_id` dạng `voice:{conversation_id}:{turn_id}` gắn lượt với job.
-
-```text
-Input chưa chốt → incomplete
-Input đã chốt  → pending → chuẩn bị operations trong RAM → prepared
-              → apply operations → committed sau khi dữ liệu đã lưu
-```
-
-`commit_voice()` dùng cùng khóa customer writer và persister với Chat. Prepared batch ghi lại hiệu ứng của persister; retry batch đã chuẩn bị không gọi lại LLM learning. Append có marker chống lặp; upsert kiểm tra previous/current value để tránh batch cũ ghi đè fact đã đổi.
-
-Khi dùng remote buffer, journal được giữ replayable và chỉ chuyển `committed` qua acknowledgement sau upload. Event memory phía client và snapshot trong state cần được phân biệt với trạng thái durable này.
-
-`recover_memory()` thử tối đa 30 job khi Voice manager initialize lần đầu; chưa có worker định kỳ quét toàn bộ journal. Worker flush RAM buffer là cơ chế khác. Journal chưa ghi thành công hoặc input còn trong RAM trước finalize có thể mất khi crash; PostgreSQL và memory store không có transaction chung.
-
-## 8. Giới hạn cần tính đến
-
-- Khóa chỉ trong process; chưa hỗ trợ nhiều writer phân tán an toàn.
-- Canonical facts chưa có metadata timestamp/confidence/TTL đầy đủ; provenance nằm trong trace/audit, không phải mọi value đều có metadata riêng trong `facts.md`.
-- Chưa có schema registry chung cho toàn bộ memory key hoặc retention job cho mọi collection/journal.
-- Mask dữ liệu gửi model không đồng nghĩa transcript, journal và toàn bộ storage đã được ẩn PII.
-
-## 9. Căn cứ triển khai
-
-- [Bootstrap](../../src/telesale_agent/bootstrap.py), [CallBrief](../../src/telesale_agent/application/memory/call_brief.py), [fact selector](../../src/telesale_agent/application/deepagent/context/facts.py).
-- [Fact persistence](../../src/telesale_agent/application/memory/persist.py), [LLM persister](../../src/telesale_agent/adapters/llm/llm_persist.py), [coordinator](../../src/telesale_agent/application/memory/coordinator.py).
-- [File repository](../../src/telesale_agent/adapters/memory/file_memory.py), [write session](../../src/telesale_agent/adapters/memory/write_session.py), [RAM buffer](../../src/telesale_agent/adapters/memory/buffered.py), [object storage](../../src/telesale_agent/adapters/memory/object_storage.py).
-- Tài liệu nền: [customer memory flow](../agent/deepagent_context_memory_flow.md); bản tổng hợp này cập nhật các điểm đã thay đổi trong code.
+| Cơ chế | Cách lưu và phục hồi |
+| --- | --- |
+| **Filesystem** | Mỗi file được thay thế nguyên tử. Backend khóa ghi theo khách trong cùng process. |
+| **Object storage** | Bản mới hiện trong RAM để lượt sau đọc ngay. Backend thử đồng bộ khi kết thúc phiên, lúc shutdown hoặc sau 120 giây không hoạt động theo mặc định. Upload các file thay đổi và archive trước, rồi ghi `current.md` cuối cùng. Snapshot giữ dữ liệu của hai ngày có hoạt động gần nhất trong các nhóm lưu theo ngày. |
+| **Voice journal** | PostgreSQL giữ transcript, evidence và batch ghi đã chuẩn bị. Input đã chốt đi qua `pending` → `prepared` → `committed`. Nếu upload gián đoạn, batch đã chuẩn bị có thể chạy lại. `committed` được ghi sau khi kho xác nhận dữ liệu đã lưu. |
