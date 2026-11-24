@@ -41,11 +41,11 @@ async def probe():
     namespace = dict(os=os, secrets=secrets, asyncio=asyncio, UUID=UUID,
         Depends=lambda factory:factory(), get_auth_repository=lambda:GuestRepository(),
         Header=lambda **kw:None, HTTPException=HTTPError,
-        harness=NS(run_turn=run_turn), sessions={sid:state}, session_locks={},
+        harness=NS(run_turn=run_turn), learning_service=None, sessions={sid:state}, session_locks={},
         provider_cooldown=NS(remaining=lambda:0), Channel=NS(VOICE='voice'),
         flush_customer_memory=flush_memory,
         AudioTooLargeError=InputError, AudioInputError=InputError, ASRUnavailableError=InputError,
-        CustomerContactError=InputError)
+        CustomerContactError=InputError, LearningSnapshotTooLarge=InputError)
     load(source, {'require_api_key','run_chat_turn','_call_brief_preview','turn_payload','guard_guest_id','clear_session'}, namespace)
     with patch.dict(os.environ, {'API_KEY':'', 'ENABLE_DEBUG_RESPONSE':'false'}, clear=True):
         namespace['require_api_key']()

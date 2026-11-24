@@ -72,6 +72,32 @@ def functions_namespace():
 
 
 class ContinuationTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        # Continuation starts with SC-001..SC-040 already generated. The live
+        # dataset may also contain later WAVs whose generation manifest has
+        # not been imported yet; those belong to a different audit input.
+        cls.baseline_temporary = tempfile.TemporaryDirectory()
+        cls.addClassCleanup(cls.baseline_temporary.cleanup)
+        cls.baseline = Path(cls.baseline_temporary.name)
+        source = ROOT / "dataset/main"
+        manifest = json.loads((source / "manifest.json").read_text(encoding="utf-8"))
+        protected = {f"SC-{number:03d}" for number in range(1, 41)}
+        retained = {key: row for key, row in manifest["results"].items()
+                    if row["scenario_id"] in protected}
+        baseline_manifest = {**manifest, "scenario_ids": sorted(protected),
+                             "expected_turns": len(retained), "results": retained}
+        (cls.baseline / "manifest.json").write_text(
+            json.dumps(baseline_manifest, ensure_ascii=False), encoding="utf-8")
+        (cls.baseline / "scenarios_complete").mkdir()
+        for number in range(1, 101):
+            name = f"SC-{number:03d}.json"
+            shutil.copy2(source / "scenarios_complete" / name, cls.baseline / "scenarios_complete" / name)
+        for row in retained.values():
+            destination = cls.baseline / row["output_relative"]
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(source / row["output_relative"], destination)
+
     def setUp(self):
         self.ns = functions_namespace()
         self.temporary = tempfile.TemporaryDirectory()
@@ -142,14 +168,14 @@ class ContinuationTests(unittest.TestCase):
         working_dir = self.output / "working"
         input_dir.mkdir()
         working_dir.mkdir()
-        report, manifest, _ = PREPARE.audit_dataset(ROOT / "dataset/main")
+        report, manifest, _ = PREPARE.audit_dataset(self.baseline)
         with zipfile.ZipFile(input_dir / "input.zip", "w") as archive:
             archive.writestr("manifest.json", json.dumps(manifest, ensure_ascii=False))
             for number in range(1, 101):
                 name = f"SC-{number:03d}.json"
-                archive.write(ROOT / "dataset/main/scenarios_complete" / name, f"scenarios_complete/{name}")
+                archive.write(self.baseline / "scenarios_complete" / name, f"scenarios_complete/{name}")
             for row in manifest["results"].values():
-                archive.write(ROOT / "dataset/main" / row["output_relative"], row["output_relative"])
+                archive.write(self.baseline / row["output_relative"], row["output_relative"])
         self.ns.update(RUNTIME_DIR=self.output / "runtime", OMNIVOICE_PACKAGE_VERSION="0.2.1",
                        TRANSFORMERS_VERSION="5.3.0", display=lambda *args: None)
         for index in [4, 6, 8, 10]:
@@ -169,8 +195,8 @@ class ContinuationTests(unittest.TestCase):
                              "Nữ" if scenario["honorific"] == "chị" else "Nam")
         self.assertEqual(len(list(self.ns["OUTPUT_DIR"].rglob("*.wav"))), 250)
 
-    def test_real_dataset_counts_checksums_and_gender_plan(self):
-        report, manifest, plan = PREPARE.audit_dataset(ROOT / "dataset/main")
+    def test_partial_dataset_counts_checksums_and_gender_plan(self):
+        report, manifest, plan = PREPARE.audit_dataset(self.baseline)
         self.assertEqual((report["expected_calls"], report["expected_turns"],
                           report["existing_verified"], report["missing_turns"]), (210, 652, 250, 402))
         self.assertEqual(len(manifest["results"]), 250)
@@ -185,9 +211,9 @@ class ContinuationTests(unittest.TestCase):
             self.assertEqual(row["speaker_id"], "")
             self.assertEqual(row["status"], "planned")
 
-    def test_real_250_wavs_resume_without_old_references(self):
-        report, manifest, plan = PREPARE.audit_dataset(ROOT / "dataset/main")
-        self.ns.update(OUTPUT_DIR=ROOT / "dataset/main", MANIFEST_FILE=ROOT / "dataset/main/manifest.json",
+    def test_partial_250_wavs_resume_without_old_references(self):
+        report, manifest, plan = PREPARE.audit_dataset(self.baseline)
+        self.ns.update(OUTPUT_DIR=self.baseline, MANIFEST_FILE=self.baseline / "manifest.json",
                        INFERENCE_CONFIG=manifest["inference_config"], BASE_SEED=manifest["inference_config"]["base_seed"],
                        PROTECTED_SCENARIO_IDS={f"SC-{number:03d}" for number in range(1, 41)})
         specs = {}
@@ -197,12 +223,24 @@ class ContinuationTests(unittest.TestCase):
                           "province_requested": row["province_requested"], "province_key": self.ns["province_key"](row["province_requested"]),
                           "region_requested": row["region_requested"]}
         self.ns["VOICE_SPECS"] = specs
-        tasks = self.ns["build_tasks"](ROOT / "dataset/main/scenarios_complete", list(specs))
+        tasks = self.ns["build_tasks"](self.baseline / "scenarios_complete", list(specs))
         self.assertEqual(len(tasks), 652)
         _, verified = self.ns["scan_existing_results"](tasks)
         self.assertEqual(len(verified), 250)
         self.assertTrue(all(row["status"] == "resumed" for row in verified.values()))
-        self.assertFalse((ROOT / "dataset/main/references").exists())
+        self.assertFalse((self.baseline / "references").exists())
+
+    def test_audit_rejects_new_audio_without_manifest_metadata(self):
+        # Do not silently accept or invent provenance for the additional WAVs
+        # that exposed the old tests' dependency on the live dataset state.
+        source = self.output / "untracked-audio"
+        shutil.copytree(self.baseline / "scenarios_complete", source / "scenarios_complete")
+        shutil.copy2(self.baseline / "manifest.json", source / "manifest.json")
+        wav = source / "audio/SC-041/call_1/SC-041_call_1_turn_001.wav"
+        wav.parent.mkdir(parents=True)
+        write_wav(wav, [0.2] * 240)
+        with self.assertRaisesRegex(ValueError, "SC-041/call_1/0: existing audio has missing or stale manifest metadata"):
+            PREPARE.audit_dataset(source)
 
     def test_smoke_then_full_keeps_old_wav_and_pending_rows(self):
         tasks, old_path, inference = self.synthetic_run()

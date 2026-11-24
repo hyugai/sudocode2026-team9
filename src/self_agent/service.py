@@ -5,7 +5,6 @@ import logging
 import time
 import traceback
 from types import SimpleNamespace
-from uuid import uuid4
 
 from self_agent.adapters.agent_memory import AgentMemory
 from self_agent.config import LearningConfig
@@ -27,43 +26,6 @@ class SelfLearningService:
         self.lease = None
         self.pending_guest = {}
         self.next_voice_recovery = 0
-        self.instance_id = uuid4().hex
-        self.owner_ready = False
-
-    def _try_acquire_lease(self):
-        if self.repository.engine.dialect.name != "postgresql" or self.lease is not None:
-            return True
-        from sqlalchemy import text
-        connection = self.repository.engine.connect().execution_options(isolation_level="AUTOCOMMIT")
-        try:
-            if not connection.execute(text("SELECT pg_try_advisory_lock(1826417822)")).scalar():
-                connection.close()
-                return False
-            self.lease = connection
-            return True
-        except BaseException:
-            connection.close()
-            raise
-
-    async def _activate_owner(self):
-        if self.owner_ready:
-            return True
-        if not await asyncio.to_thread(self._try_acquire_lease):
-            return False
-        await asyncio.to_thread(self.repository.recover_jobs)
-        from sqlalchemy import or_, update
-        from telesale_agent.adapters.db.learning import sessions, now
-        def recover_voice():
-            with self.repository.engine.begin() as connection:
-                owner = sessions.c.context["instance_id"].as_string()
-                connection.execute(update(sessions).where(
-                    sessions.c.channel == "voice", sessions.c.status == "active",
-                    or_(owner.is_(None), owner != self.instance_id)).values(
-                        status="finalizing", updated_at=now()))
-        await asyncio.to_thread(recover_voice)
-        self.owner_ready = True
-        logger.info("Learning worker acquired ownership")
-        return True
 
     def _memory(self):
         if self.memory is None:
@@ -74,11 +36,30 @@ class SelfLearningService:
         if not self.config.enabled or self.repository is None:
             return
         await asyncio.to_thread(self.repository.ready)
+        if self.repository.engine.dialect.name == "postgresql":
+            from sqlalchemy import text
+            def acquire():
+                connection = self.repository.engine.connect().execution_options(isolation_level="AUTOCOMMIT")
+                try:
+                    if not connection.execute(text("SELECT pg_try_advisory_lock(1826417822)")).scalar():
+                        raise RuntimeError("Self-learning yêu cầu một backend worker")
+                    return connection
+                except BaseException:
+                    connection.close()
+                    raise
+            self.lease = await asyncio.to_thread(acquire)
         try:
-            if not await self._activate_owner():
-                # Render starts the replacement before stopping the old process.
-                # Standby must pass readiness without recovering an owner's jobs.
-                logger.info("Learning worker standby: waiting for previous deployment")
+            await asyncio.to_thread(self.repository.recover_jobs)
+            # Active voice sessions cannot reconnect across backend processes.
+            # Their persisted journal is recovered before their learning job.
+            from sqlalchemy import update
+            from telesale_agent.adapters.db.learning import sessions, now
+            def recover_voice():
+                with self.repository.engine.begin() as connection:
+                    connection.execute(update(sessions).where(
+                        sessions.c.channel == "voice", sessions.c.status == "active").values(
+                            status="finalizing", updated_at=now()))
+            await asyncio.to_thread(recover_voice)
             self.worker = asyncio.create_task(self._work(), name="self-learning")
         except BaseException:
             await self.close()
@@ -211,7 +192,6 @@ class SelfLearningService:
         data = snapshot(SimpleNamespace(conversation_id=state.conversation_id, turn_number=0,
                                        identity=state.identity, customer_profile=getattr(state, "customer_profile", {}),
                                        call_brief=state.call_brief, messages=[]))
-        data["instance_id"] = self.instance_id
         def register():
             with self.repository.engine.begin() as connection:
                 self.repository.ensure(connection, "voice", state.conversation_id, data)
@@ -223,7 +203,6 @@ class SelfLearningService:
         context = snapshot(SimpleNamespace(conversation_id=state.conversation_id, identity=state.identity,
                                             customer_profile=getattr(state, "customer_profile", {}),
                                             turn_number=state.turn_number, call_brief=state.call_brief, messages=[]))
-        context["instance_id"] = self.instance_id
         def mark():
             with self.repository.engine.begin() as connection:
                 connection.execute(update(sessions).where(
@@ -298,14 +277,13 @@ class SelfLearningService:
                 continue
             try:
                 self.wakeup.clear()
-                if await self._activate_owner():
-                    if self.voice_recovery and time.monotonic() >= self.next_voice_recovery:
-                        self.next_voice_recovery = time.monotonic() + 30
-                        await self.voice_recovery()
-                    job = await asyncio.to_thread(self.repository.claim, self.config.max_attempts)
-                    if job:
-                        await self._process(job)
-                        continue
+                if self.voice_recovery and time.monotonic() >= self.next_voice_recovery:
+                    self.next_voice_recovery = time.monotonic() + 30
+                    await self.voice_recovery()
+                job = await asyncio.to_thread(self.repository.claim, self.config.max_attempts)
+                if job:
+                    await self._process(job)
+                    continue
             except asyncio.CancelledError:
                 raise
             except Exception as exc:
