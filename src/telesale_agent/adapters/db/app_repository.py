@@ -199,7 +199,7 @@ class AppDataRepository:
         return await asyncio.to_thread(read)
 
     async def save_turn(self, user_id: str, state: ConversationState, user_text: str,
-                        response_text: str, call_brief: dict[str, Any] | None) -> dict[str, Any]:
+                        response_text: str, call_brief: dict[str, Any] | None, *, learning_hook=None) -> dict[str, Any]:
         """Only call after the harness; all four changes commit or roll back together."""
         def write():
             _text(user_text, 10000)
@@ -228,14 +228,26 @@ class AppDataRepository:
                 row.checkpoint, row.call_brief = checkpoint, preview
                 row.turn_number, row.updated_at = state.turn_number, utc_now()
                 session.flush()
+                if learning_hook is not None:
+                    learning_hook(session.connection())
                 return {"conversation_id": row.id, "turn_number": row.turn_number,
                         "user_message_id": user_message.id, "message_id": agent_message.id}
         return await asyncio.to_thread(write)
 
-    async def end_conversation(self, user_id: str, conversation_id: str) -> None:
+    async def end_conversation(self, user_id: str, conversation_id: str, *, learning_hook=None) -> None:
         def write():
             with self.sessions.begin() as session:
                 row = _owned(session, user_id, conversation_id, lock=True)
+                if learning_hook is not None:
+                    history = list(session.scalars(select(ChatMessage).where(
+                        ChatMessage.conversation_id == row.id).order_by(
+                            ChatMessage.turn_number, case((ChatMessage.role == "user", 0), else_=1))))
+                    feedback = list(session.execute(select(ChatMessage.turn_number, MessageFeedback.rating,
+                                                          MessageFeedback.comment).join(
+                        MessageFeedback, MessageFeedback.message_id == ChatMessage.id).where(
+                            ChatMessage.conversation_id == row.id)).mappings())
+                    learning_hook(session.connection(), [{"role": m.role, "content": m.content} for m in history],
+                                  [dict(item) for item in feedback])
                 if row.status != "ended":
                     row.status, row.ended_at = "ended", utc_now()
                     row.updated_at = row.ended_at

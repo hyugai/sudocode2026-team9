@@ -62,9 +62,12 @@ async def turn_context(services, state, record, phone, source):
     return context
 
 
-async def recover_memory(services, store):
+async def recover_memory(services, store, *, conversation_id=None):
     """Replay prepared batches or finish pending final turns on the next connection."""
-    for job in (await store.pending())[:30]:
+    pending = await store.pending()
+    if conversation_id is not None:
+        pending = [job for job in pending if job["payload"].get("conversation_id") == conversation_id]
+    for job in pending[:30]:
         payload = job["payload"]
         if not payload.get("input_finished") or not payload.get("input_text"):
             await store._update(job["source_id"], status="incomplete")
@@ -81,10 +84,11 @@ async def recover_memory(services, store):
 
 
 class VoiceSessionController:
-    def __init__(self, services, settings, model, store, state, initial_context, phone, *, user_id=None):
+    def __init__(self, services, settings, model, store, state, initial_context, phone, *, user_id=None, learning=None):
         self.services, self.settings, self.model, self.store = services, settings, model, store
         self.state, self.initial_context, self.phone = state, initial_context, phone
         self.user_id = user_id
+        self.learning = learning
         self.turn_sequence = 0
         self.outbox = asyncio.Queue(maxsize=settings.queue_limit)
         self.generation = 0
@@ -271,8 +275,11 @@ class VoiceSessionController:
             "user_id": self.user_id, "turn_number": record.sequence, "created_at": record.created_at,
             "input_text": record.input_text, "input_finished": record.input_finished,
             "output_text": record.output_text, "interrupted": record.interrupted,
+            "output_complete": record.model_complete and not record.interrupted,
             "played_samples": record.played_samples, "tools": record.tools,
         }
+        if self.learning:
+            payload["learning"] = self.learning.capture_voice_turn(self.state, payload)
         customer = self.state.identity.customer_id if self.state.identity else None
         source = self.source(record)
         try:
@@ -401,4 +408,8 @@ class VoiceSessionController:
             try:
                 await flush_customer_memory(self.services, self.state)
             finally:
-                await self.model.close()
+                try:
+                    if self.learning:
+                        await self.learning.finalize_voice(self.state)
+                finally:
+                    await self.model.close()

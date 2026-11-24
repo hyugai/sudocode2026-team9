@@ -76,7 +76,11 @@ def markdown(lesson):
 
 
 def load_lesson(path):
-    text = path.read_text(encoding='utf-8')
+    return parse_lesson(path.read_text(encoding='utf-8'))
+
+
+def parse_lesson(text):
+    """Validate the same canonical document for local files and object storage."""
     if not text.startswith('---\n'):
         raise ValueError('Missing lesson metadata')
     lesson = json.loads(text.split('\n---\n', 1)[0][4:])

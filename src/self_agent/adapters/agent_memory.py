@@ -6,6 +6,10 @@ from pathlib import Path
 
 
 class AgentMemory:
+    def load_lessons(self):
+        from self_agent.lessons import load_bank
+        return load_bank(self.root)
+
     def write_lesson(self, lesson):
         from self_agent.lessons import markdown
         key = lesson['id']

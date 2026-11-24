@@ -6,7 +6,10 @@ from dataclasses import dataclass
 
 
 def redact(text):
-    text = re.sub(r"[\w.+-]+@[\w.-]+\.[A-Za-z]{2,}", "[email]", str(text))
+    text = str(text)
+    # Avoid retrying a greedy email match at every character in a long token.
+    if "@" in text:
+        text = re.sub(r"(?<![\w.+-])[\w.+-]+@[\w.-]+\.[A-Za-z]{2,}", "[email]", text)
     # Phone/account numbers, not money such as 4.890.000 or dates 2026-10-17.
     text = re.sub(r"(?<!\w)(?:\+84|0)(?:[ .()-]?\d){9,10}(?!\d)", "[phone]", text)
     text = re.sub(r"(?<!\w)\d{12,19}(?!\w)", "[account_number]", text)
@@ -68,8 +71,9 @@ class LearningJob:
 def snapshot(state, turn_results=(), feedback=()):
     # Names/addresses are not copied from identity/profile/customer memory.
     identity = getattr(state, "identity", None)
-    profile = getattr(identity, "profile", None) or {}
-    secrets = [getattr(identity, "phone", None), *[profile.get(k) for k in ("name", "address", "phone", "email")]]
+    profiles = [getattr(identity, "profile", None) or {}, getattr(state, "customer_profile", None) or {}]
+    secrets = [getattr(identity, "phone", None),
+               *[profile.get(k) for profile in profiles for k in ("name", "address", "phone", "email")]]
     def clean(value):
         return sanitize(value, secrets)
     messages = [{"message_id": i, "role": m.role, "content": clean(m.content)} for i, m in enumerate(state.messages)]

@@ -28,20 +28,26 @@ from telesale_agent.adapters.rules.pii_utils import mask_pii
 from contextlib import asynccontextmanager
 from telesale_agent.adapters.db.app_repository import AppDataNotFound, AppDataRepository, ConversationConflict
 from telesale_agent.adapters.db.checkpoint import CheckpointError
+from telesale_agent.adapters.db.learning import LearningSnapshotTooLarge
 from telesale_agent.adapters.db.customer_identity import CustomerContactError
 from telesale_agent.application.memory.lifecycle import flush_customer_memory
 from telesale_agent.entrypoints.api.auth import COOKIE_NAME, auth_error, get_auth_repository, require_origin, require_user, require_customer
 
 # Global harness reference
 harness = None
+learning_service = None
 logger = logging.getLogger(__name__)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    global harness
+    global harness, learning_service
     print("🚀 Khởi tạo kết nối MCP Servers cho API Backend...")
     harness = await build_deepagent_harness_async()
     try:
+        from self_agent.config import LearningConfig
+        if LearningConfig.from_env().enabled:
+            from self_agent.backend import build_backend_learning
+            learning_service = await build_backend_learning(harness, get_auth_repository().engine)
         yield
     finally:
         try:
@@ -49,10 +55,17 @@ async def lifespan(app: FastAPI):
                 await asyncio.gather(*stream_tasks, return_exceptions=True)
             await shutdown_voice()
         finally:
-            print("🛑 Đóng kết nối MCP Servers...")
-            if harness:
-                await harness.__aexit__(None, None, None)
-            harness = None
+            try:
+                if learning_service:
+                    await learning_service.close()
+            finally:
+                learning_service = None
+                print("🛑 Đóng kết nối MCP Servers...")
+                try:
+                    if harness:
+                        await harness.__aexit__(None, None, None)
+                finally:
+                    harness = None
 
 app = FastAPI(title="Telesale Agent API", lifespan=lifespan)
 
@@ -65,7 +78,7 @@ app.include_router(catalog_router)
 app.include_router(auth_router)
 app.include_router(conversations_router)
 app.include_router(salesman_router)
-voice_router, shutdown_voice = create_voice_router(lambda: harness)
+voice_router, shutdown_voice = create_voice_router(lambda: harness, get_learning=lambda: learning_service)
 app.include_router(voice_router)
 
 
@@ -335,9 +348,24 @@ async def run_chat_turn(turn_input: TurnInput, *, repository: AppDataRepository 
                 raise auth_error(503, "Chưa đọc được hội thoại. Hãy thử lại.") from exc
         else:
             state = sessions.get(conversation_id) or ConversationState(conversation_id=conversation_id)
+            if learning_service:
+                try:
+                    await learning_service.flush_guest(conversation_id)
+                except Exception as exc:
+                    raise auth_error(503, "Chưa lưu được lượt trước. Hãy thử lại sau.") from exc
+            if learning_service and conversation_id not in sessions:
+                try:
+                    state = await learning_service.restore_guest(conversation_id) or state
+                except ValueError as exc:
+                    raise auth_error(409, str(exc)) from exc
+                except Exception as exc:
+                    raise auth_error(503, "Chưa khôi phục được phiên. Hãy thử lại.") from exc
+        lesson_token = None
         try:
             if repository is not None and (not state.identity or not state.identity.customer_id):
                 turn_input.metadata.update(await repository.identity_contact(user_id))
+            if learning_service:
+                lesson_token = await learning_service.begin_chat("account" if repository else "guest", turn_input, state)
             result = (await harness.run_turn(turn_input, state, on_text=on_text, on_status=on_status)
                       if on_text is not None else await harness.run_turn(turn_input, state))
         except AudioTooLargeError as exc:
@@ -362,16 +390,30 @@ async def run_chat_turn(turn_input: TurnInput, *, repository: AppDataRepository 
                 status_code=502,
                 detail="Không thể xử lý lượt hội thoại lúc này. Vui lòng thử lại sau.",
             ) from exc
+        finally:
+            if lesson_token is not None:
+                learning_service.reset_chat(lesson_token)
         payload = turn_payload(turn_input, result)
         if repository is not None:
             try:
                 if on_status:
                     await on_status("saving")
+                extra = {"learning_hook": learning_service.save_hook("account", result.state, result)} if learning_service else {}
                 payload.update(await repository.save_turn(user_id, result.state, turn_input.text,
-                                                         result.response_text, payload["call_brief"]))
+                                                         result.response_text, payload["call_brief"], **extra))
             except Exception:
                 logger.exception("Could not persist account conversation %s", conversation_id)
                 sessions.pop(conversation_id, None)
+                return JSONResponse(status_code=502, headers={"Cache-Control": "no-store"}, content={
+                    "detail": "Chưa xác nhận lưu được kết quả. Hãy kiểm tra lịch sử trước khi gửi lại.",
+                    "code": "turn_outcome_unknown",
+                })
+        elif learning_service:
+            try:
+                await learning_service.save_guest(result.state, result)
+            except Exception:
+                logger.warning("Could not persist guest learning turn")
+                sessions[conversation_id] = result.state
                 return JSONResponse(status_code=502, headers={"Cache-Control": "no-store"}, content={
                     "detail": "Chưa xác nhận lưu được kết quả. Hãy kiểm tra lịch sử trước khi gửi lại.",
                     "code": "turn_outcome_unknown",
@@ -458,9 +500,22 @@ async def clear_session(conversation_id: str, request: Request, repository: AppD
     await guard_guest_id(conversation_id, repository)
     async with session_locks.setdefault(conversation_id, asyncio.Lock()):
         try:
-            await flush_customer_memory(harness, sessions.get(conversation_id))
+            state = sessions.get(conversation_id)
+            if learning_service:
+                await learning_service.flush_guest(conversation_id)
+            if state is None and learning_service:
+                try:
+                    state = await learning_service.restore_guest(conversation_id)
+                except ValueError:
+                    # An already-ended guest session is an idempotent clear.
+                    return {"status": "cleared", "conversation_id": conversation_id}
+            await flush_customer_memory(harness, state)
+            if learning_service and state:
+                await learning_service.end_guest(state)
+        except LearningSnapshotTooLarge as exc:
+            raise auth_error(413, str(exc)) from exc
         except Exception as exc:
-            logger.exception("Could not flush guest memory before ending session")
+            logger.warning("Could not finalize guest memory error=%s", type(exc).__name__)
             raise HTTPException(503, "Chưa đồng bộ được bộ nhớ. Phiên vẫn được giữ, hãy thử kết thúc lại.") from exc
         sessions.pop(conversation_id, None)
     return {"status": "cleared", "conversation_id": conversation_id}

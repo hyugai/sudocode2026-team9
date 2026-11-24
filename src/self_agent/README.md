@@ -14,7 +14,8 @@ chỉ chạy riêng khi đánh giá, không can thiệp lời đáp.
 ## Bật/tắt và memory
 
 `KNOWLEDGE_GAP_LOOP_ENABLED=false` mặc định. Khi tắt không học/inject lesson.
-Core, API/web và benchmark cũ không tự bật wrapper.
+Benchmark cũ không tự bật wrapper. API có thể bật service backend bằng cùng
+switch; xem hướng dẫn tích hợp bên dưới.
 
 `SelfAgentHarness(base)` khi bật đọc `lessons/approved/*.md` từ learning root,
 refresh ở đầu session mới. Lesson vừa học chỉ dùng ở session sau. Truyền
@@ -22,9 +23,56 @@ refresh ở đầu session mới. Lesson vừa học chỉ dùng ở session sau
 
 Memory mặc định:
 `data/memory-root/agents/telesales_agent/knowledge_gap_loop/lessons/approved/`.
-Snapshot, gap, FAQ ứng viên, test, job và report ở `outputs/self-agent/learning-runtime/`.
+Trong runner local, snapshot, gap, FAQ ứng viên, test, job và report ở `outputs/self-agent/learning-runtime/`.
 Thí nghiệm dùng memory riêng trong output. Tái sử dụng DB/Pinecone hiện có;
 không tự publish FAQ hoặc tạo database mới.
+
+## Tích hợp Backend
+
+```powershell
+python -m pip install -e ".[learning]"
+python scripts/migrate_learning.py
+# Cấu hình bucket/S3 credentials trước, sau đó bật và restart BE:
+# KNOWLEDGE_GAP_LOOP_ENABLED=true
+```
+
+`BackendLearning` dùng `SelfLearningService`, PostgreSQL inbox và object storage.
+Migration chỉ thêm `learning_sessions`, `learning_turns`, `learning_jobs`, không
+reset bảng hiện có. Khi bật, thiếu bảng/bucket hoặc dùng conversation checkpoint
+thay cho per-turn checkpoint sẽ làm startup thất bại với lỗi cấu hình.
+
+- Chat account lưu evidence cùng transaction lưu messages; kết thúc và enqueue
+  job cũng chung transaction. Guest lưu evidence/checkpoint riêng và enqueue
+  trước khi xóa state RAM. Đóng tab Chat chưa tự kết thúc phiên.
+- Voice lưu redacted learning evidence cùng journal; sau khi controller dừng
+  và finalizer hoàn tất, service đánh dấu finalizing, phục hồi journal pending
+  rồi enqueue. Lượt input chưa hoàn chỉnh bị bỏ khỏi dữ liệu học; output bị
+  ngắt được gắn nhãn, không coi là lời đáp hoàn tất. Startup phục hồi phiên Voice
+  còn mở từ process trước; retry consolidation tối đa mỗi 30 giây.
+- Worker một process claim job DB, tối đa ba attempts, retry sau 5/30 giây;
+  job running bị gián đoạn được requeue lúc startup. Shutdown dừng learner trước
+  khi đóng MCP. Advisory lock ngăn hai backend learning worker chạy cùng DB.
+- Chat đóng băng bank ở lần xử lý đầu của mỗi session, lưu bank trong DB để
+  giữ qua restart, chọn tối đa ba lesson/2400 ký tự mỗi turn và inject trước
+  generate. Lesson được thêm sau đó chỉ dùng cho session mới. Realtime Voice
+  chỉ tạo lesson, chưa inject. Lỗi đọc bank/router không chặn tư vấn.
+- Snapshot học tối đa 512 KB; vượt giới hạn sẽ báo lỗi, giữ dữ liệu để retry,
+  không âm thầm cắt transcript. Feedback được chụp khi kết thúc; feedback muộn
+  chưa tạo job mới. Job không tìm được lesson vẫn có thể hoàn tất bình thường.
+
+Memory approved dùng `AGENT_MEMORY_BUCKET` (fallback `CUSTOMER_MEMORY_BUCKET`)
+và `AGENT_MEMORY_PREFIX=agents/telesales_agent/knowledge_gap_loop`.
+Artifact dùng `AGENT_LEARNING_RUNTIME_PREFIX=learning-runtime/telesales_agent`.
+Hai prefix phải độc lập và không chồng lên customer prefix `users/`.
+S3 endpoint/region/credentials dùng chung cấu hình customer memory. Transcript,
+checkpoint guest và Voice journal trong DB vẫn là dữ liệu cần bảo vệ; dữ liệu
+đưa vào learner được che PII. Không chuyển customer memory sang DB.
+
+Không thêm public endpoint xem job hay UI mới. Theo dõi `learning_jobs` và log
+`Learning job=<id> attempt=<n> error=<class> duration_ms=<n>`; không log provider
+payload. Không tự publish FAQ vào Pinecone hoặc sửa instruction nền.
+
+Kiểm thử offline: `python -m unittest discover -s tests -p test_backend_learning.py -v`.
 
 ## Lesson compact
 

@@ -10,6 +10,12 @@ class LessonAgent:
     def __init__(self, agent, model=None):
         self.agent = agent
 
+    async def prepare(self):
+        context = CURRENT_LESSONS.get()
+        if context and context.get('prepare') and not context.get('prepared'):
+            context['prepared'] = True
+            await context['prepare'](context)
+
     def augment(self, payload):
         context=CURRENT_LESSONS.get()
         if not context or not context['lessons']:
@@ -36,8 +42,10 @@ class LessonAgent:
         return {**payload,'messages':[{'role':'system','content':content},*payload.get('messages',[])]}
 
     async def ainvoke(self, payload, **kwargs):
+        await self.prepare()
         return await self.agent.ainvoke(self.augment(payload),**kwargs)
 
     async def astream(self, payload, **kwargs):
+        await self.prepare()
         async for part in self.agent.astream(self.augment(payload),**kwargs):
             yield part

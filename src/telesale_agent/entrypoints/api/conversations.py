@@ -10,6 +10,7 @@ from sqlalchemy.exc import SQLAlchemyError
 
 from telesale_agent.adapters.db.app_repository import AppDataNotFound, AppDataRepository, ConversationConflict
 from telesale_agent.adapters.db.checkpoint import CheckpointError, CheckpointTooLargeError
+from telesale_agent.adapters.db.learning import LearningSnapshotTooLarge
 from .auth import NO_STORE, auth_error, get_auth_repository, require_origin, require_customer
 from telesale_agent.application.memory.lifecycle import flush_customer_memory
 
@@ -24,6 +25,8 @@ async def repository_dependency(repository: AppDataRepository = Depends(get_auth
     except AppDataNotFound as exc:
         raise auth_error(404, "Không tìm thấy hội thoại hoặc câu trả lời.") from exc
     except CheckpointTooLargeError as exc:
+        raise auth_error(413, str(exc)) from exc
+    except LearningSnapshotTooLarge as exc:
         raise auth_error(413, str(exc)) from exc
     except (ConversationConflict, CheckpointError) as exc:
         raise auth_error(409, str(exc)) from exc
@@ -78,7 +81,14 @@ async def end_conversation(conversation_id: UUID, user: dict = Depends(require_c
             await flush_customer_memory(chat.harness, state)
         except Exception as exc:
             raise auth_error(503, "Chưa đồng bộ được bộ nhớ. Phiên vẫn được giữ, hãy thử kết thúc lại.") from exc
-        await repository.end_conversation(user["id"], key)
+        if chat.learning_service:
+            def enqueue(connection, messages, feedback):
+                chat.learning_service.queue_in_transaction(connection, "account", state,
+                                                           messages=messages, feedback=feedback)
+            await repository.end_conversation(user["id"], key, learning_hook=enqueue)
+            chat.learning_service.wakeup.set()
+        else:
+            await repository.end_conversation(user["id"], key)
         chat.sessions.pop(key, None)
     return {"status": "ended"}
 

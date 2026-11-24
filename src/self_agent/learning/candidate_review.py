@@ -71,6 +71,8 @@ async def discover(model, snapshot):
                 'conditions, availability, commitments and the evidence needed for each. Do not stop '
                 'after the first issue. Include honest unanswered questions as missing_knowledge. '
                 'Also detect demonstrated context/reasoning/action failures as reflection, not knowledge. '
+                'If evidence marks the answer interrupted or output_complete=false, audit only explicit claims in the available output; '
+                'do not infer a failure or a completed commitment from the missing continuation. '
                 'Return {"gaps":[{"reason":"missing_knowledge|retrieval_failure|unsupported_claim|'
                 'reasoning_failure|tool_failure|context_mismatch","claim":"exact atomic answer span or null",'
                 '"required_fact":"what needs verification"}]}. For transcript-only input include real '

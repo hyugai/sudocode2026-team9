@@ -1067,6 +1067,10 @@ class Tests(unittest.IsolatedAsyncioTestCase):
         root = Path(__file__).resolve().parents[1]
         for folder in ("telesale_agent", "eval", "mcp_servers"):
             for source in (root / "src" / folder).rglob("*.py"):
+                # Only the HTTP composition root may opt into learning.
+                # Base harness, bootstrap and benchmarks remain independent.
+                if source == root / "src/telesale_agent/entrypoints/api/chat.py":
+                    continue
                 self.assertNotIn("import self_agent", source.read_text(encoding="utf-8"))
                 self.assertNotIn("from self_agent", source.read_text(encoding="utf-8"))
 

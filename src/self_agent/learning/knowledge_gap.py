@@ -1,5 +1,6 @@
 """Extractive, source-backed knowledge repair. No business mutations."""
 import time
+import asyncio
 from self_agent.models import digest, redact, sanitize, shared_question
 from .candidate_review import (KNOWLEDGE_REASONS, REFLECTION_REASONS, GAP_CRITERION,
     discover, aligned_turns, prior_evidence, evidence_inventory, path_allowed, inventory_audit_valid)
@@ -128,7 +129,7 @@ class KnowledgeGapLoop:
                 continue
             seen.add(occurrence)
             try:
-                gap = self.memory.read("gaps", key)
+                gap = await asyncio.to_thread(self.memory.read, "gaps", key)
             except FileNotFoundError:
                 gap = {"id": key, "question": generic_question, "occurrences": []}
             if job_id not in gap["occurrences"]:
@@ -252,19 +253,19 @@ class KnowledgeGapLoop:
                                     'reasoning_failure': 'Check the answer against evidence and preserve all applicable conditions.',
                                     'tool_failure': 'Confirm an action only after its tool reports success.',
                                     'context_mismatch': 'Check the current product and customer intent before reusing remembered information.'}
-                        from self_agent.lessons import generate_lesson,load_bank
+                        from self_agent.lessons import generate_lesson
                         lesson = await generate_lesson(self.model, {**payload, 'verified_issue': checked}, reference, key,
-                                                       mechanism=mechanism,existing=load_bank(self.memory.root),
+                                                       mechanism=mechanism,existing=await asyncio.to_thread(self.memory.load_lessons),
                                                        security_audit=guardrails['blocked_lessons'])
                         pattern = {"id": key, "reason": reason, "pattern": patterns[reason],
                                    "status": "approved" if lesson else "pending_lesson", "scope": "general", 'mechanism': mechanism,
                                    "criterion": patterns[reason], "evidence_refs": gap["evidence_refs"],
                                    "assessment": assessment, "report_ref": job_id}
                         if lesson:
-                            pattern.update(lesson=lesson, lesson_path=self.memory.write_lesson(lesson), lesson_hash=digest(lesson))
+                            pattern.update(lesson=lesson, lesson_path=await asyncio.to_thread(self.memory.write_lesson, lesson), lesson_hash=digest(lesson))
                         reviews[-1]['lesson_status'] = pattern['status']
-                        self.memory.write("patterns", key, pattern)
-                        self.memory.write("regression_cases", key, pattern)
+                        await asyncio.to_thread(self.memory.write, "patterns", key, pattern)
+                        await asyncio.to_thread(self.memory.write, "regression_cases", key, pattern)
                         gap.update(status="pending_remediation", pattern_ref=key, test_refs=[key])
             elif any(term in question.casefold() for term in ("sê-ri", "serial", "từng chiếc", "chiếc sẽ giao")):
                 gap["required_source"] = "unit_specific_evidence"
@@ -301,11 +302,11 @@ class KnowledgeGapLoop:
                         from .regression import check_case
                         if not check_case(case, chunk):
                             raise ValueError("Generated regression source contract failed")
-                        self.memory.write("knowledge", key, case)
-                        self.memory.write("regression_cases", key, {**case, "criterion": "answer supported by full source"})
-                        self.memory.write("releases", key, {"id": key, "knowledge_id": key, "source_hash": digest(chunk)})
+                        await asyncio.to_thread(self.memory.write, "knowledge", key, case)
+                        await asyncio.to_thread(self.memory.write, "regression_cases", key, {**case, "criterion": "answer supported by full source"})
+                        await asyncio.to_thread(self.memory.write, "releases", key, {"id": key, "knowledge_id": key, "source_hash": digest(chunk)})
                         gap.update(status="pending_application", resolution_ref=key, test_refs=[key])
-            self.memory.write("gaps", key, gap)
+            await asyncio.to_thread(self.memory.write, "gaps", key, gap)
             results.append({"id": key, "status": gap["status"]})
         report = {"job_id": job_id, "gaps": results, 'scope': 'knowledge_gap_and_reflection_v1',
                   'evaluation_cases': evaluation_cases, 'out_of_scope': out_of_scope,
@@ -320,5 +321,5 @@ class KnowledgeGapLoop:
                               "all_candidates_filtered" if not results else "gaps_processed"),
                   "learning_duration_ms": round((time.perf_counter() - started) * 1000),
                   "learning_usage": {k: v - before.get(k, 0) for k, v in getattr(self.model, "usage", {}).items()}}
-        self.memory.write("reports", job_id, report)
+        await asyncio.to_thread(self.memory.write, "reports", job_id, report)
         return report

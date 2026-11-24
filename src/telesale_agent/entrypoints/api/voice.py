@@ -18,7 +18,7 @@ class VoiceRequest(BaseModel):
     customer_phone: str | None = Field(default=None, max_length=30)
 
 
-def create_voice_router(get_harness, *, manager_factory=None):
+def create_voice_router(get_harness, *, manager_factory=None, get_learning=lambda: None):
     router = APIRouter(prefix="/api/voice", tags=["voice"])
     manager = None
 
@@ -35,8 +35,10 @@ def create_voice_router(get_harness, *, manager_factory=None):
                 manager = manager_factory(ConversationServices.from_harness(harness), settings)
             else:
                 from telesale_agent.adapters.db.client import db_client
+                learning = get_learning()
                 manager = VoiceSessionManager(
-                    ConversationServices.from_harness(harness), settings, VoiceStore(db_client.engine))
+                    ConversationServices.from_harness(harness), settings,
+                    VoiceStore(learning.repository.engine if learning else db_client.engine), learning=learning)
         return manager
 
     @router.get("/capabilities")
@@ -93,6 +95,9 @@ def create_voice_router(get_harness, *, manager_factory=None):
         session = authorize(voice, session_id, authorization)
         session.controller.closed = True
         session.controller.stop.set()
+        if getattr(voice, "learning", None) and session.runner is None:
+            await voice.learning.finalize_voice(session.controller.state)
+            session.finished = True
         return {"status": "closing"}
 
     @router.websocket("/sessions/{session_id}/stream")
