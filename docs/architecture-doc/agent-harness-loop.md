@@ -1,114 +1,134 @@
-# Vòng lặp agent harness
+# Vòng lặp Agent Harness và Realtime Voice
 
-> Đối chiếu mã nguồn ngày 18/11/2026. Xem [tổng quan hệ thống](system-architecture.md), [bộ nhớ](memory-design.md), [tool](tool-catalog.md) và [quyết định thiết kế](design-decisions.md).
+Agent Harness điều phối một lượt tư vấn từ lúc nhận lời khách đến lúc trả lời và ghi nhớ. Nó xác định khách, nạp dữ liệu, chuẩn bị context, kiểm soát công cụ và lưu thông tin có ích cho lần sau. Với chat và file ghi âm, DeepAgent chạy vòng lặp suy luận và gọi tool. Với microphone trực tiếp, Gemini Live nghe và nói theo luồng, còn Realtime Voice dùng lại Agent Harness để chuẩn bị context, kiểm tra quyền tra cứu và ghi memory.
 
-## 1. Harness kiểm soát những gì?
+## A. Agent Harness cho chat và file ghi âm
 
-Harness là lớp điều phối bao quanh model: chuẩn hóa đầu vào, xác định khách, cung cấp context, giới hạn tool, thu thập bằng chứng, kiểm tra câu trả lời và ghi memory. Hệ thống dùng cách điều phối hybrid: application chủ động chuẩn bị dữ liệu và xử lý mutation đã xác nhận; model quyết định các lời gọi còn được phép và diễn đạt câu trả lời.
-
-FastAPI lifespan khởi tạo harness, mở ba MCP server và nạp instruction một lần. Voice tái sử dụng dependency qua `ConversationServices.from_harness()`. Khi shutdown, ứng dụng đợi các lượt Chat đang chạy, dừng Voice rồi đóng harness, memory buffer và MCP.
-
-## 2. Vòng xử lý Chat/file ghi âm
+### Luồng xử lý một lượt
 
 ```mermaid
 flowchart TD
-    Input["TurnInput + ConversationState"] --> Normalize["ASR nếu có file; chuẩn hóa text"]
-    Normalize --> Identity["Resolve identity; hydrate CRM và memory khi cần"]
-    Identity --> Perceive["Perception: intent, entities, memory_deltas"]
-    Perceive --> Retrieve["Retrieval theo intent"]
-    Retrieve --> Brief["Refresh memory; dựng CallBrief"]
-    Brief --> Route["Bounded context + tool allowlist"]
-    Route --> Prefetch["Application: read prefetch và cache"]
-    Prefetch --> Mutation["Application: mutation đã xác nhận, đủ dữ liệu"]
-    Mutation --> Model["DeepAgent model"]
-    Model --> Next{"Cần tool và còn budget?"}
-    Next -->|"Có"| Tool["Tool được middleware cho phép"]
-    Tool -->|"Kết quả vào graph"| Model
-    Next -->|"Không / hoàn tất"| Response["Ghép tool trace; grounding và PII guard"]
-    Response --> Persist["Persist memory; cập nhật state và brief"]
-    Persist --> Result["TurnResult; lưu hội thoại account; JSON / SSE done"]
+    Input[TurnInput: text/audio, phone hint, metadata] --> ASR[1. ASR nếu audio và chuẩn hóa text]
+    ASR --> Identity{2. State đã có identity?}
+
+    Identity -->|Chưa có| Resolve[Resolve phone hint thành customer_id]
+    Resolve --> Hydrate[3. Hydrate customer context]
+    CRM[(PostgreSQL CRM)] --> Hydrate
+    DurableMemory[(Customer memory: file .md / object storage)] --> Hydrate
+    Identity -->|Đã có| Perceive
+    Hydrate --> Perceive
+
+    Perceive[4. Perceive intent, entities, memory_deltas] --> RetrievalGate{5. Intent cần knowledge?}
+    RetrievalGate -->|Có| RAG[VectorDB / catalog retrieval]
+    RetrievalGate -->|Không| Refresh
+    RAG --> Refresh[6. Reload canonical customer memory khi cần]
+
+    Refresh --> Brief[7. Build lại compact CallBrief cục bộ]
+    Brief --> Context[8. Ghép bounded turn context và tool allowlist]
+    Context --> Prefetch[8a. Read prefetch và cache]
+    Prefetch --> Mutation[8b. Mutation đã xác nhận và đủ dữ liệu]
+    Mutation --> DeepAgent[9. create_deep_agent / Groq hoặc Gemini]
+
+    DeepAgent --> MCP{Cần thêm business tool?}
+    MCP -->|Có| Tools["MCP: CRM, catalog, inventory, pricing<br/>order, policy, callback, handoff"]
+    Tools --> DeepAgent
+    MCP -->|Không hoặc đã đủ dữ liệu| Response[10. Lấy response và tool results của lượt]
+
+    Response --> Extract[11. Chuẩn hóa tool trace, AgentStep và guard final response]
+    Extract --> Persist[12. Persist memory của turn nếu có persister]
+    Persist --> EvalMemory[(Chế độ evaluation: in-memory repository)]
+    Persist --> DurableMemory
+    Persist --> Result[13. TurnResult + ConversationState]
 ```
 
-1. **Input:** tạo `TurnContext` từ input và state đúng `conversation_id`. Text được chuẩn hóa; file ghi âm chạy ASR local trước khi tiếp tục. Raw input được giữ trong metadata phục vụ debug.
-2. **Identity/context:** phone hint hoặc contact của account được resolve thành `customer_id`. Hydrate nạp CRM, order history và memory riêng biệt khi cần. Chưa có identity hợp lệ thì không ghi memory cá nhân.
-3. **Perception/retrieval:** LLM structured output tạo intent, entities và memory deltas; PII được mask trước perception. Retrieval chạy theo nhu cầu của lượt.
-4. **CallBrief:** reload memory nếu lượt chưa hydrate; dựng projection cục bộ từ CRM, memory và current turn. `FreshCallBrief` còn kiểm tra dữ liệu biến động của sản phẩm đã nhớ ở đầu cuộc gọi. Bản projection không cần thêm LLM call.
-5. **Application tools:** chọn allowlist theo intent, transcript và facts; prefetch read chain có đủ arguments, tái sử dụng cache. Mutation executor kiểm tra xác nhận, identity, pending checkout và dữ liệu bắt buộc trước hành động; thiếu dữ liệu thì yêu cầu làm rõ.
-6. **Model/tool loop:** DeepAgent nhận bounded context và runtime context gồm allowlist/customer ID. Middleware lọc tool; kết quả tool quay lại model để tiếp tục hoặc kết thúc trong budget.
-7. **Hoàn tất:** chuẩn hóa lời gọi thành `AgentStep`, áp dụng grounding/PII cho final response, gọi `persist_shared()`, dựng lại brief cục bộ và tăng turn. API lưu thêm kết quả/checkpoint đối với account trước khi báo thành công.
+| Thành phần | Làm gì trong lượt |
+| --- | --- |
+| Đầu vào và ASR | Chuẩn hóa tin nhắn. Nếu khách gửi file ghi âm, Zipformer nhận dạng tiếng nói trên máy chủ rồi chuyển transcript vào cùng luồng xử lý. |
+| Identity và hồ sơ | Xác định `customer_id` từ thông tin khách cung cấp. Nạp hồ sơ CRM, lịch sử đơn và customer memory theo ID này. |
+| Perception và retrieval | Xác định khách muốn gì, nhận diện các dữ kiện như sản phẩm, size hoặc ngân sách, rồi tra catalog hoặc chính sách khi câu hỏi cần. Dữ kiện mới được giữ tạm dưới dạng `memory_deltas`. |
+| CallBrief | Kết hợp hồ sơ CRM, memory đã lưu và dữ kiện của lượt hiện tại thành bản tóm tắt ngắn. Agent có thể dùng ngay điều khách vừa sửa trong lượt này. |
+| Điều phối công cụ | Chọn tool phù hợp với câu hỏi. Harness chủ động tra cứu khi đủ dữ liệu và xử lý tạo hoặc đổi đơn, hẹn gọi lại hay chuyển tiếp khi khách đã xác nhận và đáp ứng điều kiện. |
+| DeepAgent | Nhận lời khách, CallBrief, vài tin nhắn gần nhất và kết quả tra cứu sẵn có. Model gọi thêm tool được phép nếu cần rồi soạn câu trả lời. |
+| Hoàn tất | Đối chiếu câu trả lời với kết quả tool, kiểm tra thông tin cá nhân, ghi memory và cập nhật hội thoại. API trả JSON sau khi hoàn tất. Với SSE, giao diện có thể hiển thị bản nháp sớm và thay bằng kết quả cuối khi nhận `done`. |
 
-Prefetch và mutation của application vẫn được ghi evidence để persistence/evaluation sử dụng. Kết quả cache không bị ghi thành một execution mới. `AgentStep` là biểu diễn trace của hành động đã chạy, không phải một planner loop riêng.
+CRM cung cấp thông tin khách đã xác minh. Giá, khuyến mãi, tồn kho và trạng thái đơn hiện tại lấy từ tool nghiệp vụ. Customer memory giữ nhu cầu, sở thích và dữ kiện từng tư vấn để agent biết cần hỏi hoặc kiểm tra lại điều gì.
 
-## 3. Context, checkpoint và giới hạn vòng lặp
+### Memory được đọc và ghi ở đâu?
 
-Context mỗi lượt gồm instruction cố định, utterance hiện tại, perception, compact CallBrief, một ít recent messages và kết quả tool cần thiết. Mặc định thread graph là `<conversation_id>__turn_<n>`; continuity qua lượt do application state và memory đảm nhiệm.
+1. **Đọc trước khi dựng CallBrief.** Ở đầu cuộc gọi, Harness nạp memory khi xác định được `customer_id`. Các lượt sau đọc lại snapshot khi cần trước khi dựng brief. Nếu lượt vừa nạp memory thì dùng luôn snapshot đó.
+2. **Dùng trong lượt.** CallBrief chọn dữ kiện liên quan từ snapshot và từ lời khách vừa nói. Ví dụ, khách nâng ngân sách từ 5 lên 6 triệu thì agent có thể tư vấn theo mức 6 triệu ngay trong câu trả lời hiện tại.
+3. **Ghi sau khi có câu trả lời và kết quả tool.** Harness kết hợp dữ kiện đủ điều kiện từ lời khách với kết quả nghiệp vụ đã xác minh, rồi cập nhật memory theo khách. Một key như `budget_vnd` giữ giá trị mới nhất. Tùy cấu hình, cùng bước này có thể lưu thêm tóm tắt tương tác và gợi ý cho lần gọi sau. Lượt sau dùng snapshot mới để dựng lại brief.
 
-| Cấu hình | Mặc định trong code | Phạm vi |
-| --- | --- | --- |
-| `DEEPAGENT_CHECKPOINT_SCOPE` | `turn` | Có thể đổi sang `conversation`; raw graph history khi đó tăng qua lượt |
-| `DEEPAGENT_MAX_MODEL_CALLS` | 3 | Số model call trong DeepAgent run |
-| `DEEPAGENT_MAX_TOOL_CALLS` | 3 | Số tool call trong DeepAgent run |
-| `DEEPAGENT_RECURSION_LIMIT` | 30 | Giới hạn graph |
-| `DEEPAGENT_RECENT_MESSAGE_COUNT` | 2 | Recent messages đưa vào prompt |
-| `DEEPAGENT_RECENT_MESSAGE_CHARS` | 300 | Ký tự mỗi recent message |
-| `DEEPAGENT_RECENT_CONTEXT_CHARS` | 800 | Tổng ký tự recent context |
-| `DEEPAGENT_PREFETCH_CONTEXT_CHARS` | 2.400 | Context kết quả orchestrated tools |
+| Thông số | Mặc định |
+| --- | --- |
+| Vòng lặp DeepAgent mỗi lượt | Tối đa 3 lần gọi model và 3 lần gọi tool bên trong vòng lặp. Phân tích đầu vào, tra cứu do Harness thực hiện và ghi memory có bước xử lý riêng. |
+| Facts gửi vào prompt | Tối đa 6, ưu tiên theo câu hỏi. |
+| Tin nhắn gần nhất | Tối đa 2 tin, 300 ký tự mỗi tin và tổng context tin nhắn gần nhất tối đa 800 ký tự. |
+| Phạm vi checkpoint DeepAgent | Một lượt. Các lượt nối tiếp nhau qua trạng thái hội thoại và CallBrief. |
 
-Các bộ đếm model/tool của graph không tính NLU, LLM memory learning hoặc tool do application executor gọi. Giới hạn prompt không tự dọn toàn bộ messages/checkpoints đã giữ trong RAM. Filesystem/shell tool bị ẩn và general-purpose subagent bị tắt trong harness profile.
+## B. Realtime Voice với Gemini Live
 
-## 4. JSON và SSE của Chat
-
-Không yêu cầu SSE thì harness dùng `ainvoke()` và API trả JSON sau khi xử lý xong. Khi request có `Accept: text/event-stream`, harness dùng `astream()`; API phát `status`, `text`, sau đó `done` hoặc `error`.
-
-`text` là bản nháp tích lũy của model trước bước kiểm tra final response. `done` chứa kết quả cuối sau guardrail, persister và bước lưu hội thoại account; UI cần dùng kết quả này thay bản nháp. Với memory buffer remote, hoàn tất persister chỉ có nghĩa snapshot đã cập nhật trong RAM, chưa bảo đảm đã upload remote.
-
-API khóa theo `conversation_id` để tuần tự hóa các lượt. SSE mất kết nối vẫn để lượt đang chạy hoàn tất/lưu; không tự replay mutation. Nếu lưu account thất bại sau khi agent đã chạy, API trả `turn_outcome_unknown` và yêu cầu kiểm tra lịch sử trước khi gửi lại. Provider rate limit tạo cooldown và thông tin thời gian thử lại.
-
-## 5. Vòng điều phối Voice realtime
-
-Voice có vòng I/O riêng, **không gọi DeepAgent cho từng audio chunk**. Model Live trực tiếp xử lý audio; NLU và memory learning vẫn có thể gọi LLM riêng khi cần.
+### Pipeline từ microphone đến loa
 
 ```mermaid
 flowchart TD
-    Setup["Tạo phiên, xác thực WebSocket<br/>Resolve identity, hydrate, CallBrief"] --> Live["Gemini Live session"]
-    Mic["Microphone PCM16 16 kHz"] -->|"WebSocket qua controller"| Live
-    Live --> Events["Controller nhận provider events"]
-    Events --> Audio["Audio 24 kHz tới playback"]
-    Events --> Transcript["Cập nhật transcript và turn record"]
-    Events --> Function["Function call"]
-    Function --> Context["Chuẩn bị context theo transcript và revision"]
-    Transcript -.->|"Context khi cần"| Context
-    Context --> Read["Read dispatcher kiểm tra quyền và gọi tool"]
-    Read -->|"FunctionResponse"| Live
-    Read --> Evidence["Giữ tool evidence cho memory"]
-    Events -->|"Complete hoặc interrupted"| Finalize["Finalize lượt"]
-    Stop["Đóng phiên"] --> Finalize
-    Transcript --> Finalize
-    Evidence --> Finalize
-    Finalize --> Ready{"Input đã chốt?"}
-    Ready -->|"Chưa"| Incomplete["Journal incomplete"]
-    Ready -->|"Rồi"| Pending["Journal pending và prepared batch"]
-    Pending --> Writer["Shared memory writer<br/>Apply hoặc replay operations"]
-    Writer --> State["Cập nhật memory và state<br/>Remote buffer: chờ upload để journal committed"]
+    Start["Bắt đầu phiên Voice"] --> Controller["Voice Controller"]
+    Controller -->|"Xác định khách, nạp context đầu phiên"| Harness["Agent Harness"]
+    Harness -->|"CallBrief ban đầu"| Controller
+    Controller -->|"Mở phiên với CallBrief"| Live["Gemini Live: nghe, phát hiện lượt nói và tạo phản hồi"]
+
+    Mic["Microphone"] --> Capture["Thu và chia audio PCM16 16 kHz thành khung 20 ms"]
+    Capture -->|"Gửi liên tục qua WebSocket"| Controller
+    Controller -->|"Chuyển audio đầu vào"| Live
+    Live --> Events["Voice Controller nhận các loại kết quả trong luồng Live"]
+
+    Events -->|"Audio PCM16 24 kHz"| Playback["Xếp audio vào bộ đệm rồi phát ra loa"]
+    Events -->|"Transcript khách và agent"| Transcript["Gom text theo từng lượt và cập nhật giao diện"]
+    Events -->|"Function call"| Lookup["Chuẩn bị tra cứu theo transcript hiện tại"]
+    Transcript -->|"Text của khách"| Lookup
+    Lookup -->|"Chuẩn bị context và kiểm tra quyền tool"| Harness
+    Harness -->|"Context và quyền tra cứu"| Read["Voice gọi tool chỉ đọc"]
+    Read -->|"Kết quả tra cứu"| Live
+    Read -->|"Kết quả đã xác minh"| Finish["Chốt lượt khi model hoàn tất, bị ngắt hoặc đóng phiên"]
+    Events -->|"Tín hiệu hoàn tất hoặc ngắt"| Finish
+    Transcript -->|"Transcript tích lũy"| Finish
+    Finish --> Ready{"Đầu vào của khách đã chốt?"}
+    Ready -->|"Đã chốt: gửi transcript và kết quả tool để ghi memory"| Harness
+    Ready -->|"Còn dở"| Incomplete["Ghi lượt chưa hoàn chỉnh vào nhật ký Voice"]
+
+    Capture -.->|"Khách bắt đầu nói khi loa đang phát"| Playback
+    Events -.->|"Gemini xác nhận ngắt, loại audio của lượt cũ"| Playback
 ```
 
-Manager cấp session, `conversation_id`, owner token và ticket kết nối dùng một lần. Controller chạy các vòng nhận client/provider và gửi outbox đồng thời; tool tasks và finalizers chạy riêng để không buộc audio chờ toàn bộ NLU/persist.
+Voice Controller mở phiên với CallBrief của khách, chuyển audio từ trình duyệt tới Gemini Live, rồi tách audio, transcript và yêu cầu tra cứu để xử lý song song. Hai chế độ có trạng thái hội thoại riêng và chia sẻ customer memory theo cùng `customer_id`.
 
-Read dispatcher kiểm tra schema, allowlist theo lượt và bind identity/ngày từ backend. Registry có mutation cho Chat không có nghĩa Voice được dùng. Function result trả model được mask PII và giới hạn kích thước; evidence đầy đủ được giữ cho memory.
+| Luồng | Xử lý realtime |
+| --- | --- |
+| Microphone | Trình duyệt gửi từng khung PCM16 mono 16 kHz qua WebSocket. Gemini Live nhận audio liên tục và phát hiện thời điểm khách bắt đầu hoặc kết thúc lời nói. |
+| Audio trả lời | Gemini sinh audio trực tiếp. Trình duyệt phát PCM16 24 kHz ngay khi có dữ liệu và đệm những đoạn đến nhanh hơn tốc độ phát. |
+| Text của khách | Transcript tạm hiển thị khi khách còn nói. Các đoạn transcript theo lượt được tích lũy để cập nhật giao diện, chuẩn bị tra cứu và chốt đầu vào cho memory. |
+| Text của agent | Gemini trả transcript của lời agent nói. Controller nối các đoạn text rồi cập nhật cùng một dòng hội thoại theo lượt. Loa phát audio Gemini và giao diện hiển thị transcript song song. |
+| Tra cứu | Khi Gemini yêu cầu tool, Controller dùng transcript hiện tại để lấy context và quyền tra cứu từ Agent Harness. Context đã chuẩn bị có thể dùng lại khi transcript còn nguyên và được làm mới khi transcript thay đổi. Voice gọi tool chỉ đọc, chẳng hạn tìm sản phẩm, kiểm tra tồn kho, giá hoặc chính sách, rồi gửi kết quả về Gemini để trả lời tiếp. |
 
-Khi khách bắt đầu nói, client flush playback. Khi provider báo interruption, backend tăng `generation`, hủy read task cũ và đồng bộ generation về client để bỏ audio đến muộn. Hủy read không phải rollback nghiệp vụ.
+### Khi khách ngập ngừng hoặc ngắt lời
 
-## 6. Hoàn tất, lỗi và phục hồi Voice
+- **Khách đang nói rồi ngập ngừng.** Microphone tiếp tục gửi audio. Gemini Live dùng phát hiện hoạt động giọng nói (VAD) để quyết định khi nào tới lượt trả lời. Backend chờ transcript đến muộn trước khi chốt lượt. Khi cần tra cứu, một đoạn transcript đã ổn định khoảng 0,4 giây có thể được dùng làm context đọc trong lúc lượt vẫn đang diễn ra. Quyết định ghi memory có bước kiểm tra đầu vào riêng.
+- **Khách nói chen lúc agent đang phát audio.** Trình duyệt dọn phần audio đang chờ để nhường lời ngay khi phát hiện khách bắt đầu nói. Khi Gemini xác nhận ngắt, Controller đánh dấu lượt cũ bị ngắt, dừng các tra cứu còn chờ của lượt đó và báo trình duyệt bỏ các gói audio cũ đến muộn.
+- **Model báo xong.** Controller đợi khoảng 0,5 giây rồi kiểm tra transcript của khách đã ổn định ít nhất 0,4 giây. Nếu tương tác đã hoàn tất bình thường và có transcript khách, Controller có thể chốt đầu vào dù thiếu tín hiệu transcript hoàn tất riêng. Nếu lượt bị ngắt hoặc đóng giữa câu, trạng thái chốt đã nhận từ trước quyết định đầu vào có đủ điều kiện ghi memory. Model báo xong, loa phát xong và ghi memory xong là ba mốc riêng.
 
-- **Input chưa hoàn chỉnh:** journal đánh dấu `incomplete`; interim transcript không trực tiếp thành canonical memory.
-- **Input đã chốt:** chờ transcript ổn định và tool tasks; chuẩn bị context, lưu/replay prepared operations rồi cập nhật state. Chi tiết ở [thiết kế bộ nhớ](memory-design.md).
-- **Ba mốc riêng:** model complete, playback progress và memory processing/commit không tương đương. Với remote buffer, phải phân biệt memory đã thấy trong process với journal `committed` sau upload.
-- **Provider mất kết nối:** controller có thử reconnect/resume bằng handle trong RAM. Browser mất WebSocket cần mở phiên mới; backend restart mất Live session nhưng có thể phục hồi job memory đã lưu journal.
+### Voice ghi memory giống Agent Harness thế nào?
 
-Native audio được phát trực tiếp; đường guard final text của Chat không duyệt trước từng audio chunk. Recovery dựa trên journal đã ghi thành công, không bảo đảm cứu được audio/turn chỉ còn trong RAM.
+**Voice dùng cùng kho memory, cùng quy tắc trích và cập nhật facts, và cùng persister với Chat.** Khi bắt đầu phiên, Voice lấy CallBrief từ Agent Harness. Khi cần tra cứu hoặc hoàn tất lượt, Voice đưa transcript khách vào luồng chuẩn bị context dùng chung. Khi đầu vào đã chốt, transcript này và kết quả tool đã xác minh đi qua cùng quy tắc ghi memory theo `customer_id`. Lượt chat hoặc voice sau có thể đọc lại dữ kiện đã lưu qua CallBrief.
 
-## 7. Căn cứ triển khai
+Voice có thêm nhật ký để theo dõi lượt đã chốt và phục hồi công việc ghi nếu bị gián đoạn. Lượt còn dở được đánh dấu trong nhật ký. Nếu khách đã nói xong rồi mới ngắt lời agent, đầu vào đã chốt vẫn đủ điều kiện ghi. Transcript lời agent giúp hiển thị và lưu diễn biến, còn dữ kiện về khách được lấy từ lời khách và kết quả tool đã xác minh.
 
-- [Harness](../../src/telesale_agent/application/deepagent/harness.py), [runtime](../../src/telesale_agent/application/deepagent/runtime.py), [turn orchestration](../../src/telesale_agent/application/deepagent/turn.py), [prompt bounds](../../src/telesale_agent/application/deepagent/context/prompt.py).
-- [Chat API/SSE](../../src/telesale_agent/entrypoints/api/chat.py), [Voice controller](../../src/telesale_agent/application/realtime/controller.py), [Voice dispatcher](../../src/telesale_agent/application/realtime/tool_dispatch.py).
-- Bản chi tiết: [DeepAgent](../agent/deep_agent_architecture.md), [Gemini Live](../agent/gemini_live_architecture.md). Khi có khác biệt, mô tả hiện trạng ở đây dựa trên code ngày đối chiếu.
+| Thông số realtime | Mặc định hoặc định dạng |
+| --- | --- |
+| Model hội thoại trực tiếp | `gemini-3.8-live` |
+| Audio vào | PCM16 mono, 16 kHz, mỗi khung 20 ms |
+| Audio ra | PCM16, 24 kHz |
+| Bộ đệm phát | Bắt đầu với dung lượng 2 giây, có thể tăng đến 60 giây. Phát ngay khi có audio. |
+| Tra cứu nghiệp vụ | Chỉ đọc theo mặc định. Thời gian chờ thực thi một tool là 25 giây. |
+| Phiên đồng thời và thời lượng | Tối đa 4 phiên, mỗi phiên tối đa 10 phút. |
+
+Chi tiết cấu trúc kho và đường đọc ghi nằm trong [Thiết kế bộ nhớ](memory-design.md). Tham khảo thêm [Kiến trúc DeepAgent](../agent/deep_agent_architecture.md) và [Kiến trúc Gemini Live](../agent/gemini_live_architecture.md).
