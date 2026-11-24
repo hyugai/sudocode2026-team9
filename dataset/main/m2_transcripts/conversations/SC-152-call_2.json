@@ -1,0 +1,179 @@
+{
+  "transcript_id": "SC-152-call_2",
+  "scenario_id": "SC-152",
+  "source_scenario_id": "SC-032",
+  "customer_id": "C014",
+  "call": "call_2",
+  "channel": "hotline",
+  "channel_identity": "0925877188",
+  "call_date": "2026-10-19",
+  "language": "vi",
+  "origin": "authored_synthetic_reference_dialogue",
+  "is_actual_agent_trace": false,
+  "audio_status": "pending_recording",
+  "voice_region_target": "bac",
+  "noise_target": false,
+  "utterances": [
+    {
+      "speaker": "customer",
+      "text": "Anh liên hệ lại theo lịch, vẫn đang cân nhắc món đã hỏi.",
+      "source_customer_turn_index": 0
+    },
+    {
+      "speaker": "agent",
+      "text": "Dạ anh Huy, em tiếp tục phần Áo khoác gió Windbreak, size M, màu navy đã trao đổi. Em dùng lựa chọn đã lưu và kiểm tra lại giá, tồn kho trước khi chốt.",
+      "source_refs": [
+        "schemas/tools.schema.json",
+        "catalog/products.json"
+      ],
+      "tool_refs": [
+        0
+      ]
+    },
+    {
+      "speaker": "customer",
+      "text": "Khi giao hàng, ngày nghỉ có tính vào thời gian giao không? Anh cần biết đây là thời gian dự kiến hay một giờ giao được bảo đảm."
+    },
+    {
+      "speaker": "agent",
+      "text": "Thời gian giao được tính theo ngày làm việc, không gồm Chủ nhật, ngày lễ và lịch nghỉ nội bộ. Giờ đặt sau 16 giờ cũng ảnh hưởng mốc xử lý. Em chỉ báo dự kiến theo đơn và khu vực, không bảo đảm một giờ giao cụ thể khi chưa có xác nhận từ vận chuyển.",
+      "source_refs": [
+        "policy/chinh-sach-van-chuyen-thanh-toan.md#VC-01"
+      ],
+      "tool_refs": []
+    },
+    {
+      "speaker": "customer",
+      "text": "Nếu cần tra tiến độ sau này, anh xem ở đâu? Em đừng coi vừa tạo đơn là đã giao xong nhé."
+    },
+    {
+      "speaker": "agent",
+      "text": "Mã đơn dùng để tra trạng thái trên hệ thống hoặc liên hệ Zalo OA. Mã vận đơn được gửi khi hàng bàn giao cho đơn vị vận chuyển. Tạo đơn, bàn giao và đã nhận hàng là ba trạng thái khác nhau; em chỉ xác nhận trạng thái có nguồn, không tự coi đơn đã giao.",
+      "source_refs": [
+        "policy/chinh-sach-van-chuyen-thanh-toan.md#VC-06"
+      ],
+      "tool_refs": []
+    },
+    {
+      "speaker": "customer",
+      "text": "Nếu mua mới hôm nay thì được đổi trong 14 ngày và mất phí 20 nghìn phải không? Hình như đó là bài cũ.",
+      "source_customer_turn_index": 1
+    },
+    {
+      "speaker": "agent",
+      "text": "Chính sách hiện hành là 7 ngày kể từ ngày nhận; hàng cần chưa sử dụng, còn tem nhãn và hộp. Đổi size lần đầu miễn phí hai chiều khi size mới còn hàng. Mốc 14 ngày và phí 20 nghìn là bản cũ, không dùng cho đơn mới tháng 10 này.",
+      "source_refs": [
+        "schemas/tools.schema.json",
+        "catalog/products.json"
+      ],
+      "tool_refs": []
+    },
+    {
+      "speaker": "customer",
+      "text": "Nếu hàng chưa dùng, còn tem hộp và đổi size lần đầu thì chính sách hiện tại thế nào?",
+      "source_customer_turn_index": 2
+    },
+    {
+      "speaker": "agent",
+      "text": "Chính sách hiện hành là 7 ngày kể từ ngày nhận; hàng cần chưa sử dụng, còn tem nhãn và hộp. Đổi size lần đầu miễn phí hai chiều khi size mới còn hàng. Mốc 14 ngày và phí 20 nghìn là bản cũ, không dùng cho đơn mới tháng 10 này.",
+      "source_refs": [
+        "schemas/tools.schema.json",
+        "catalog/products.json"
+      ],
+      "tool_refs": []
+    },
+    {
+      "speaker": "customer",
+      "text": "Anh hiểu rồi, để xem thêm; chưa lên đơn và chưa hẹn gọi lại nhé.",
+      "source_customer_turn_index": 3
+    },
+    {
+      "speaker": "agent",
+      "text": "Dạ, em ghi nhận mình chưa mua. Để tránh nhầm bản cũ, em nhắc gọn: đơn mới có thời hạn thông thường 7 ngày, đổi size lần đầu miễn phí khi đủ điều kiện. Em không tạo đơn và không đặt lịch gọi lại khi mình chưa hẹn.",
+      "source_refs": [
+        "policy/chinh-sach-doi-tra.md#DT-01",
+        "policy/chinh-sach-doi-tra.md#DT-03"
+      ],
+      "tool_refs": []
+    }
+  ],
+  "private_annotations": {
+    "persona": "khach_hoi_nhieu_khong_mua",
+    "customer_goal": "Xác minh chính sách đổi size cho đơn mới, chưa mua.",
+    "expected_outcome": "tu_choi",
+    "facts_established": {
+      "purchase_decision": "chưa mua"
+    },
+    "sentiment_target": "trung tính",
+    "objection": "chưa rõ điều kiện đổi size",
+    "fact_provenance_after_call": {
+      "product_advised": {
+        "value": "SKU-JK-WND-M-NAVY",
+        "source_session": "SC-152-call_1",
+        "last_confirmed_session": "SC-152-call_1",
+        "valid_from": "2026-10-16",
+        "supersedes_session": null
+      },
+      "price_quoted_vnd": {
+        "value": 690000,
+        "source_session": "SC-152-call_1",
+        "last_confirmed_session": "SC-152-call_1",
+        "valid_from": "2026-10-16",
+        "supersedes_session": null
+      },
+      "blocker": {
+        "value": "chưa rõ điều kiện đổi size",
+        "source_session": "SC-152-call_1",
+        "last_confirmed_session": "SC-152-call_1",
+        "valid_from": "2026-10-16",
+        "supersedes_session": null
+      },
+      "purchase_decision": {
+        "value": "chưa mua",
+        "source_session": "SC-152-call_2",
+        "last_confirmed_session": "SC-152-call_2",
+        "valid_from": "2026-10-19",
+        "supersedes_session": null
+      }
+    },
+    "memory_expectation": null,
+    "memory_rules": {
+      "price_and_stock": "revalidate with tools every session; historical quote remains episodic",
+      "address_ttl_days": 180,
+      "intent_ttl_days": 30,
+      "shared_phone": "resolve customer_id; never merge profiles solely by phone"
+    },
+    "source_refs": [
+      "catalog/products.json",
+      "policy/chinh-sach-doi-tra.md#DT-01",
+      "policy/chinh-sach-doi-tra.md#DT-03",
+      "policy/chinh-sach-van-chuyen-thanh-toan.md#VC-01",
+      "policy/chinh-sach-van-chuyen-thanh-toan.md#VC-06",
+      "schemas/tools.schema.json"
+    ],
+    "reference_tool_executions": [
+      {
+        "name": "crm.get_customer",
+        "args": {
+          "phone": "0925877188"
+        },
+        "result": {
+          "found": true,
+          "ambiguous": false,
+          "customer_id": "C014",
+          "name": "Huy",
+          "honorific": "anh",
+          "phone": "0925877188",
+          "identities": {
+            "zalo_id": null,
+            "fb_id": null
+          },
+          "orders": [],
+          "sessions": []
+        },
+        "origin": "executed_reference_mock_for_authored_fixture"
+      }
+    ],
+    "review_status": "automated_fixture_checks; human_semantic_review_pending"
+  }
+}

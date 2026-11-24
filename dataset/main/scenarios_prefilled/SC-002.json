@@ -1,0 +1,271 @@
+{
+  "scenario_id": "SC-002",
+  "scenario_seed": {
+    "scenario_id": "SC-002",
+    "level": "M1",
+    "persona": "khach_do_du_hoi_nguoi_nha",
+    "hard_case": null,
+    "customer_phone": "0936270107",
+    "customer_name": "Tuấn",
+    "honorific": "anh",
+    "calls": {
+      "call_1": {
+        "channel": "hotline",
+        "channel_identity": "0936270107",
+        "call_date": "2026-10-16",
+        "input_mode": "clean",
+        "facts_established": {
+          "product_advised": "SKU-AP-Y",
+          "price_quoted_vnd": 5200000,
+          "budget_vnd": 5500000,
+          "blocker": "cần hỏi người nhà",
+          "callback_at": "2026-10-19T10:00"
+        },
+        "expected_outcome": "hen_goi_lai",
+        "success_if": {
+          "tool_called": "schedule.callback",
+          "args_match": {
+            "customer_phone": "0936270107",
+            "callback_at": "2026-10-19T10:00"
+          },
+          "must_not_call_tools": [
+            "order.create"
+          ]
+        },
+        "ground_truth_facts": {
+          "price_vnd": 5200000,
+          "list_price_vnd": 5200000,
+          "in_stock": true,
+          "promo_NAM-SHIP0_active": true,
+          "promo_COD-0_active": true,
+          "promo_GIFT-FILTER_active": true
+        }
+      },
+      "call_2": {
+        "channel": "hotline",
+        "channel_identity": "0936270107",
+        "call_date": "2026-10-19",
+        "input_mode": "clean",
+        "facts_established": {
+          "family_approved": true,
+          "delivery_address": "101 đường Kiểm Thử, TP. Hồ Chí Minh",
+          "payment": "COD"
+        },
+        "expected_outcome": "chot_don",
+        "success_if": {
+          "tool_called": "order.create",
+          "args_match": {
+            "customer_phone": "0936270107",
+            "sku": "SKU-AP-Y",
+            "qty": 1,
+            "price_vnd": 5200000,
+            "payment": "COD",
+            "address": "101 đường Kiểm Thử, TP. Hồ Chí Minh"
+          }
+        },
+        "must_carry_over": [
+          "product_advised",
+          "price_quoted_vnd",
+          "blocker"
+        ],
+        "must_not_ask": [
+          "product_advised",
+          "price_quoted_vnd",
+          "blocker"
+        ],
+        "ground_truth_facts": {
+          "price_vnd": 5200000,
+          "list_price_vnd": 5200000,
+          "in_stock": true,
+          "promo_NAM-SHIP0_active": true,
+          "promo_COD-0_active": true,
+          "promo_GIFT-FILTER_active": true
+        },
+        "days_later": 3
+      }
+    }
+  },
+  "fields_to_generate": [
+    "notes",
+    "calls.call_1.customer_goal",
+    "calls.call_1.customer_turns",
+    "calls.call_2.customer_goal",
+    "calls.call_2.customer_turns"
+  ],
+  "generation_context": {
+    "test_objective": "Nhớ nhu cầu và rào cản chờ hỏi người nhà; hẹn đúng lịch rồi chốt đơn.",
+    "customer": {
+      "customer_id": "C002",
+      "name": "Tuấn",
+      "honorific": "anh",
+      "phone": "0936270107",
+      "zalo_id": null,
+      "fb_id": null,
+      "region": "nam",
+      "orders": []
+    },
+    "persona": {
+      "persona_id": "khach_do_du_hoi_nguoi_nha",
+      "patience_initial": {
+        "call_1": 4,
+        "call_2": 3,
+        "call_3": 2
+      },
+      "style": "lịch sự, hỏi kỹ, hay nói 'để hỏi người nhà'",
+      "system_prompt": "Bạn là khách hàng Việt Nam đang gọi/nhắn cho shop. Mục tiêu: {goal}. Những điều bạn đã biết/đã nói ở phiên trước: {facts}. Dàn ý những điều bạn sẽ nói theo thứ tự: {turn_outline}. Nói tự nhiên, ngắn (1–2 câu/lượt), xưng hô theo giới tính đã cho. Bạn CHƯA quyết mua, cần hỏi người nhà; chỉ đồng ý mua nếu kịch bản cho phép. Nếu nhân viên hỏi lại điều bạn đã nói ở phiên trước, hãy trả lời nhưng tỏ ra hơi khó chịu ('hôm trước chị nói rồi mà'). Không bịa thêm thông tin ngoài những gì đã cho; nếu bị hỏi điều không có, nói 'chị không rõ'. Không bao giờ nhắc đến việc bạn là AI hay đang mô phỏng."
+    },
+    "products": [
+      {
+        "sku": "SKU-AP-Y",
+        "name": "Máy lọc không khí AirPure Y",
+        "category": "gia-dung/may-loc-khong-khi",
+        "brand": "AirPure",
+        "list_price_vnd": 5200000,
+        "attributes": {
+          "room_area_m2": 30,
+          "features": "HEPA H13 + than hoạt tính, app điều khiển",
+          "warranty_months": 24,
+          "child_safe_lock": true
+        },
+        "stock": 15,
+        "variants": []
+      }
+    ],
+    "business_snapshots": [
+      {
+        "call": "call_1",
+        "sku": "SKU-AP-Y",
+        "on": "2026-10-16",
+        "quote": {
+          "sku": "SKU-AP-Y",
+          "list_price_vnd": 5200000,
+          "final_price_vnd": 5200000,
+          "applied_promos": [
+            {
+              "promo_code": "NAM-SHIP0",
+              "type": "freeship",
+              "discount_vnd": 0
+            },
+            {
+              "promo_code": "COD-0",
+              "type": "freecod",
+              "discount_vnd": 0
+            },
+            {
+              "promo_code": "GIFT-FILTER",
+              "type": "gift",
+              "discount_vnd": 0,
+              "gift_sku": "SKU-AP-FLT-X"
+            }
+          ],
+          "expired_promos": [],
+          "ineligible_promos": [
+            {
+              "promo_code": "AIR-2ND-50",
+              "reason": "min_qty"
+            },
+            {
+              "promo_code": "TRADE-IN-AP",
+              "reason": "requires_owned_sku"
+            }
+          ],
+          "not_applied_exclusive": [],
+          "freeship": true
+        },
+        "inventory": {
+          "sku": "SKU-AP-Y",
+          "in_stock": true,
+          "qty": 15
+        }
+      },
+      {
+        "call": "call_2",
+        "sku": "SKU-AP-Y",
+        "on": "2026-10-19",
+        "quote": {
+          "sku": "SKU-AP-Y",
+          "list_price_vnd": 5200000,
+          "final_price_vnd": 5200000,
+          "applied_promos": [
+            {
+              "promo_code": "NAM-SHIP0",
+              "type": "freeship",
+              "discount_vnd": 0
+            },
+            {
+              "promo_code": "COD-0",
+              "type": "freecod",
+              "discount_vnd": 0
+            },
+            {
+              "promo_code": "GIFT-FILTER",
+              "type": "gift",
+              "discount_vnd": 0,
+              "gift_sku": "SKU-AP-FLT-X"
+            }
+          ],
+          "expired_promos": [],
+          "ineligible_promos": [
+            {
+              "promo_code": "AIR-2ND-50",
+              "reason": "min_qty"
+            },
+            {
+              "promo_code": "TRADE-IN-AP",
+              "reason": "requires_owned_sku"
+            }
+          ],
+          "not_applied_exclusive": [],
+          "freeship": true
+        },
+        "inventory": {
+          "sku": "SKU-AP-Y",
+          "in_stock": true,
+          "qty": 15
+        }
+      }
+    ],
+    "planned_goals": {
+      "call_1": "Hỏi giá và đặt lịch gọi lại sau khi trao đổi với người nhà.",
+      "call_2": "Mua sản phẩm đã trao đổi sau khi người nhà đồng ý."
+    },
+    "synthetic_customer_facts": {
+      "delivery_address": "101 đường Kiểm Thử, TP. Hồ Chí Minh",
+      "note": "Synthetic test address supplied in customer dialogue; not copied from CRM."
+    },
+    "runner_contract": {
+      "reset_before_each_scenario": true,
+      "preserve_state_between_calls": true,
+      "reference_tools": "eval/mock_tools.py",
+      "scenario_export": "Write scenario_seed plus generated fields as <scenario_id>.json, preserving the existing scenario_id; remove this wrapper.",
+      "memory_expectation_requires_memory_writes": false
+    },
+    "constraints": [
+      "Preserve every populated seed value.",
+      "Generate only listed missing fields; do not add an agent response.",
+      "Customer dialogue must establish the planned facts before a later call relies on them.",
+      "Earlier quoted prices are historical; do not classify them as current price_vnd.",
+      "Do not invent products, promotions, stock, CRM identity or policy facts.",
+      "Do not expose private success_if, ground_truth_facts or memory labels to the tested agent."
+    ],
+    "fixture_notes": [],
+    "sources_sha256": {
+      "schemas/scenario_format.md": "91acb65f8164cd234e3d2dfc00865d92a9af15830e6841e0e77eb76db7ec4927",
+      "schemas/tools.schema.json": "4cc8935e3e7f1a37b43eab0d68d85e8383037e52423e9f7cc022da916c97d4e0",
+      "schemas/handoff_brief.schema.json": "d57546f15e5d18feece2d270794c99dea9dd74fdab02354cd49b3faabe7f6b8b",
+      "catalog/crm_seed.json": "468c0401ad406c2d1186314eac4afaaf17afe34f1fa654676bc13f818faf18e3",
+      "catalog/products.json": "ba8f86b5bf80d6570d2cc84649c66d12a2a7050c4622458af942b41232adc2cd",
+      "catalog/promotions.json": "e22d9bfa68e3b1d153324fad2de872061d632e518ff4f305a8c8d88e1c5c25be",
+      "catalog/inventory_timeline.json": "aabaf8dc955ab93782a49d6a70526df0db77bd27fd8fbf8f37dbf6181474cf80",
+      "simulator/personas.json": "c86b9d7c9988a12a7be8f01870de3c8c02813ea612df21c3b97bc12c37868857",
+      "eval/mock_tools.py": "e1264037edeec98fb090b851061cc6e653ca8279752f899278e7ab057286f926",
+      "eval/reference_eval.py": "818fc4900a18f9b92c1abb3adebcca997774dfc3da23083c9030bad2f7229ddc",
+      "policy/chinh-sach-doi-tra.md": "8177c41dd7f026623d5fe106cdb0d0cdaa85b1d7cbe2652d6efa07fafcdc2493",
+      "policy/changelog.md": "106960c3777e8995c5dcd84ea8e62c9593c2d74e2eff335e393f436ab71d0dfa",
+      "policy/dieu-khoan-khuyen-mai.md": "46f8b1e14cfd2194d0f5187f6fd8139b2f2290367102191fa87bd1427464c009",
+      "policy/playbook-telesale.md": "ca74b496676a1bf88c7d0caf36cfaada69c9f9003045c98055426f259a0fae0d",
+      "policy/chinh-sach-van-chuyen-thanh-toan.md": "6583a76c6c652a04584016cb5741b795b4f66a1ac6579a76e89cacc2b0af75c6",
+      "policy/thong-bao-lich-nghi.md": "332bbaeb4f235e064d5d2fc5c14b7560e27aaf19127c8740487b49bc13da57e9"
+    }
+  }
+}

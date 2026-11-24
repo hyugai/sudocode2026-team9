@@ -1,0 +1,399 @@
+{
+  "transcript_id": "SC-223-call_2",
+  "scenario_id": "SC-223",
+  "source_scenario_id": "SC-103",
+  "customer_id": "C031",
+  "call": "call_2",
+  "channel": "chat_fanpage",
+  "channel_identity": "fb.oanh.620",
+  "call_date": "2026-10-27",
+  "language": "vi",
+  "origin": "authored_synthetic_reference_dialogue",
+  "is_actual_agent_trace": false,
+  "audio_status": "text_chat",
+  "voice_region_target": null,
+  "noise_target": false,
+  "utterances": [
+    {
+      "speaker": "customer",
+      "text": "Tôi là Oanh, số điện thoại 0985003703, đang nhắn qua Fanpage. Chị quay lại để chốt việc đang hỏi, người nhà đồng ý đổi máy rồi.",
+      "source_customer_turn_index": 0
+    },
+    {
+      "speaker": "agent",
+      "text": "Dạ chị Oanh, em tiếp tục phần Máy lọc không khí AirPure Pro đã trao đổi. Em dùng lựa chọn đã lưu và kiểm tra lại giá, tồn kho trước khi chốt.",
+      "source_refs": [
+        "schemas/tools.schema.json",
+        "catalog/products.json"
+      ],
+      "tool_refs": [
+        0
+      ]
+    },
+    {
+      "speaker": "customer",
+      "text": "Em nhắc lại máy mới, giá sau thu cũ đổi mới và dùng địa chỉ chị đã sửa ở lần vừa rồi nhé.",
+      "source_customer_turn_index": 1
+    },
+    {
+      "speaker": "agent",
+      "text": "Máy lọc không khí AirPure Pro có giá 7.590.000 đồng một sản phẩm, hiện còn hàng. Em dùng địa chỉ mới đã xác nhận ở phiên vừa rồi, không lấy lại địa chỉ tám tháng trước. Em đã ghi nhận người nhà đồng ý; mình chỉ cần xác nhận đơn trước khi tạo.",
+      "source_refs": [
+        "schemas/tools.schema.json",
+        "catalog/products.json"
+      ],
+      "tool_refs": [
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "speaker": "customer",
+      "text": "Khi giao hàng, ngày nghỉ có tính vào thời gian giao không? Chị cần biết đây là thời gian dự kiến hay một giờ giao được bảo đảm."
+    },
+    {
+      "speaker": "agent",
+      "text": "Thời gian giao được tính theo ngày làm việc, không gồm Chủ nhật, ngày lễ và lịch nghỉ nội bộ. Giờ đặt sau 16 giờ cũng ảnh hưởng mốc xử lý. Em chỉ báo dự kiến theo đơn và khu vực, không bảo đảm một giờ giao cụ thể khi chưa có xác nhận từ vận chuyển.",
+      "source_refs": [
+        "policy/chinh-sach-van-chuyen-thanh-toan.md#VC-01"
+      ],
+      "tool_refs": []
+    },
+    {
+      "speaker": "customer",
+      "text": "Nếu cần tra tiến độ sau này, chị xem ở đâu? Em đừng coi vừa tạo đơn là đã giao xong nhé."
+    },
+    {
+      "speaker": "agent",
+      "text": "Mã đơn dùng để tra trạng thái trên hệ thống hoặc liên hệ Zalo OA. Mã vận đơn được gửi khi hàng bàn giao cho đơn vị vận chuyển. Tạo đơn, bàn giao và đã nhận hàng là ba trạng thái khác nhau; em chỉ xác nhận trạng thái có nguồn, không tự coi đơn đã giao.",
+      "source_refs": [
+        "policy/chinh-sach-van-chuyen-thanh-toan.md#VC-06"
+      ],
+      "tool_refs": []
+    },
+    {
+      "speaker": "customer",
+      "text": "Chị đồng ý 7.590.000 đồng, một máy, COD. Khi giao em thu máy cũ theo chương trình.",
+      "source_customer_turn_index": 2
+    },
+    {
+      "speaker": "agent",
+      "text": "Em xác nhận một lần: 1 sản phẩm Máy lọc không khí AirPure Pro, đơn giá 7.590.000 đồng; tổng hàng 7.590.000 đồng, thanh toán khi nhận hàng, giao theo địa chỉ đã xác nhận tại Hà Nội. Dự kiến giao ngày 2026-10-29, có tính ngày nghỉ; đây là dự kiến. Mình xác nhận để em tạo đơn này nhé?",
+      "source_refs": [
+        "policy/playbook-telesale.md#PB-09",
+        "policy/chinh-sach-van-chuyen-thanh-toan.md#VC-01"
+      ],
+      "tool_refs": [
+        4,
+        5,
+        6
+      ]
+    },
+    {
+      "speaker": "customer",
+      "text": "Đúng rồi, chị xác nhận đúng sản phẩm, số lượng, tổng tiền, địa chỉ và cách thanh toán vừa nhắc. Em tạo đơn giúp nhé."
+    },
+    {
+      "speaker": "agent",
+      "text": "Đơn OD600001 đã được tạo, tổng hàng 7.590.000 đồng. Dự kiến giao ngày 2026-10-29. Đơn COD này cần cuộc gọi xác nhận trước khi giao.",
+      "source_refs": [
+        "policy/chinh-sach-van-chuyen-thanh-toan.md#VC-05"
+      ],
+      "tool_refs": [
+        7
+      ]
+    }
+  ],
+  "private_annotations": {
+    "persona": "khach_quay_lai_sau_8_thang",
+    "customer_goal": "Chốt máy mới với TRADE-IN-AP và địa chỉ đã cập nhật. Tiếp tục đúng hồ sơ qua Fanpage.",
+    "expected_outcome": "chot_don",
+    "facts_established": {
+      "payment": "COD"
+    },
+    "sentiment_target": "trung tính",
+    "objection": null,
+    "fact_provenance_after_call": {
+      "product_advised": {
+        "value": "SKU-AP-PRO",
+        "source_session": "SC-223-call_1",
+        "last_confirmed_session": "SC-223-call_1",
+        "valid_from": "2026-10-23",
+        "supersedes_session": null
+      },
+      "price_quoted_vnd": {
+        "value": 7590000,
+        "source_session": "SC-223-call_1",
+        "last_confirmed_session": "SC-223-call_1",
+        "valid_from": "2026-10-23",
+        "supersedes_session": null
+      },
+      "owned_sku": {
+        "value": "SKU-AP-X-2024",
+        "source_session": "SC-223-call_1",
+        "last_confirmed_session": "SC-223-call_1",
+        "valid_from": "2026-10-23",
+        "supersedes_session": null
+      },
+      "promo_code": {
+        "value": "TRADE-IN-AP",
+        "source_session": "SC-223-call_1",
+        "last_confirmed_session": "SC-223-call_1",
+        "valid_from": "2026-10-23",
+        "supersedes_session": null
+      },
+      "delivery_address": {
+        "value": "102 đường Kiểm Thử, Hà Nội",
+        "source_session": "SC-223-call_1",
+        "last_confirmed_session": "SC-223-call_1",
+        "valid_from": "2026-10-23",
+        "supersedes_session": null
+      },
+      "payment": {
+        "value": "COD",
+        "source_session": "SC-223-call_2",
+        "last_confirmed_session": "SC-223-call_2",
+        "valid_from": "2026-10-27",
+        "supersedes_session": null
+      }
+    },
+    "memory_expectation": null,
+    "memory_rules": {
+      "price_and_stock": "revalidate with tools every session; historical quote remains episodic",
+      "address_ttl_days": 180,
+      "intent_ttl_days": 30,
+      "shared_phone": "resolve customer_id; never merge profiles solely by phone"
+    },
+    "source_refs": [
+      "catalog/products.json",
+      "policy/chinh-sach-van-chuyen-thanh-toan.md#VC-01",
+      "policy/chinh-sach-van-chuyen-thanh-toan.md#VC-05",
+      "policy/chinh-sach-van-chuyen-thanh-toan.md#VC-06",
+      "policy/playbook-telesale.md#PB-09",
+      "schemas/tools.schema.json"
+    ],
+    "reference_tool_executions": [
+      {
+        "name": "crm.get_customer",
+        "args": {
+          "phone": "0985003703"
+        },
+        "result": {
+          "found": true,
+          "ambiguous": false,
+          "customer_id": "C031",
+          "name": "Oanh",
+          "honorific": "chị",
+          "phone": "0985003703",
+          "identities": {
+            "zalo_id": "zalo_oanh96",
+            "fb_id": "fb.oanh.620"
+          },
+          "orders": [
+            {
+              "order_id": "OD188213",
+              "sku": "SKU-AP-X-2024",
+              "price_vnd": 4290000,
+              "date": "2026-02-17",
+              "status": "delivered"
+            }
+          ],
+          "sessions": [
+            {
+              "session_id": "S-OLD-1",
+              "date": "2026-02-17",
+              "channel": "hotline",
+              "summary": "Mua AirPure X bản 2024 giá 4.290.000đ, phòng 20m², địa chỉ giao: 12 ngõ 38 Hoàng Cầu, Đống Đa, Hà Nội",
+              "outcome": "chot_don"
+            }
+          ]
+        },
+        "origin": "executed_reference_mock_for_authored_fixture"
+      },
+      {
+        "name": "catalog.search",
+        "args": {
+          "sku": "SKU-AP-PRO"
+        },
+        "result": {
+          "items": [
+            {
+              "sku": "SKU-AP-PRO",
+              "name": "Máy lọc không khí AirPure Pro",
+              "category": "gia-dung/may-loc-khong-khi",
+              "list_price_vnd": 7990000,
+              "attributes": {
+                "room_area_m2": 45,
+                "features": "HEPA H13, UV, diệt khuẩn",
+                "warranty_months": 24,
+                "child_safe_lock": true
+              },
+              "variants": []
+            }
+          ],
+          "total": 1
+        },
+        "origin": "executed_reference_mock_for_authored_fixture"
+      },
+      {
+        "name": "inventory.check",
+        "args": {
+          "sku": "SKU-AP-PRO",
+          "on": "2026-10-27"
+        },
+        "result": {
+          "sku": "SKU-AP-PRO",
+          "in_stock": true,
+          "qty": 8
+        },
+        "origin": "executed_reference_mock_for_authored_fixture"
+      },
+      {
+        "name": "pricing.get_quote",
+        "args": {
+          "sku": "SKU-AP-PRO",
+          "customer_phone": "0985003703",
+          "address": "102 đường Kiểm Thử, Hà Nội",
+          "on": "2026-10-27"
+        },
+        "result": {
+          "sku": "SKU-AP-PRO",
+          "list_price_vnd": 7990000,
+          "final_price_vnd": 7590000,
+          "applied_promos": [
+            {
+              "promo_code": "COD-0",
+              "type": "freecod",
+              "discount_vnd": 0
+            },
+            {
+              "promo_code": "TRADE-IN-AP",
+              "type": "fixed",
+              "discount_vnd": 400000
+            }
+          ],
+          "expired_promos": [],
+          "ineligible_promos": [
+            {
+              "promo_code": "AIR-2ND-50",
+              "reason": "min_qty"
+            },
+            {
+              "promo_code": "NAM-SHIP0",
+              "reason": "region"
+            }
+          ],
+          "not_applied_exclusive": [
+            "AIR-OCT"
+          ],
+          "freeship": true,
+          "_internal_price_floor_vnd": 7191000
+        },
+        "origin": "executed_reference_mock_for_authored_fixture"
+      },
+      {
+        "name": "catalog.search",
+        "args": {
+          "sku": "SKU-AP-PRO"
+        },
+        "result": {
+          "items": [
+            {
+              "sku": "SKU-AP-PRO",
+              "name": "Máy lọc không khí AirPure Pro",
+              "category": "gia-dung/may-loc-khong-khi",
+              "list_price_vnd": 7990000,
+              "attributes": {
+                "room_area_m2": 45,
+                "features": "HEPA H13, UV, diệt khuẩn",
+                "warranty_months": 24,
+                "child_safe_lock": true
+              },
+              "variants": []
+            }
+          ],
+          "total": 1
+        },
+        "origin": "executed_reference_mock_for_authored_fixture"
+      },
+      {
+        "name": "inventory.check",
+        "args": {
+          "sku": "SKU-AP-PRO",
+          "on": "2026-10-27"
+        },
+        "result": {
+          "sku": "SKU-AP-PRO",
+          "in_stock": true,
+          "qty": 8
+        },
+        "origin": "executed_reference_mock_for_authored_fixture"
+      },
+      {
+        "name": "pricing.get_quote",
+        "args": {
+          "sku": "SKU-AP-PRO",
+          "customer_phone": "0985003703",
+          "address": "102 đường Kiểm Thử, Hà Nội",
+          "on": "2026-10-27"
+        },
+        "result": {
+          "sku": "SKU-AP-PRO",
+          "list_price_vnd": 7990000,
+          "final_price_vnd": 7590000,
+          "applied_promos": [
+            {
+              "promo_code": "COD-0",
+              "type": "freecod",
+              "discount_vnd": 0
+            },
+            {
+              "promo_code": "TRADE-IN-AP",
+              "type": "fixed",
+              "discount_vnd": 400000
+            }
+          ],
+          "expired_promos": [],
+          "ineligible_promos": [
+            {
+              "promo_code": "AIR-2ND-50",
+              "reason": "min_qty"
+            },
+            {
+              "promo_code": "NAM-SHIP0",
+              "reason": "region"
+            }
+          ],
+          "not_applied_exclusive": [
+            "AIR-OCT"
+          ],
+          "freeship": true,
+          "_internal_price_floor_vnd": 7191000
+        },
+        "origin": "executed_reference_mock_for_authored_fixture"
+      },
+      {
+        "name": "order.create",
+        "args": {
+          "customer_phone": "0985003703",
+          "sku": "SKU-AP-PRO",
+          "qty": 1,
+          "price_vnd": 7590000,
+          "payment": "COD",
+          "address": "102 đường Kiểm Thử, Hà Nội",
+          "on": "2026-10-27"
+        },
+        "result": {
+          "order_id": "OD600001",
+          "status": "created",
+          "total_vnd": 7590000,
+          "needs_confirmation_call": true,
+          "estimated_delivery": "2026-10-29"
+        },
+        "origin": "executed_reference_mock_for_authored_fixture"
+      }
+    ],
+    "review_status": "automated_fixture_checks; human_semantic_review_pending"
+  }
+}

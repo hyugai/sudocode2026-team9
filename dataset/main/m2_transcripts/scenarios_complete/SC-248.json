@@ -1,0 +1,169 @@
+{
+  "scenario_id": "SC-248",
+  "level": "M2",
+  "persona": "khach_mua_nhieu_mon",
+  "hard_case": "gio_nhieu_may_chi_mot_lan_giam",
+  "customer_phone": "0909000008",
+  "customer_name": "Tuấn Kiệt",
+  "honorific": "anh",
+  "notes": "Khách tổng hợp mới, không phải bản đổi tên của khách BTC. Một phiên chat và hai phiên hotline liên kết qua SĐT khách tự cung cấp; chỉ chốt ở phiên thứ ba. Báo giá theo mock 11/2026; AIR-2ND-50 chỉ một máy, cùng giá chọn máy sau; đơn trên 10 triệu dùng chuyển khoản. Chỉ nạp fixture khách trong môi trường test; không nạp lời agent mẫu vào agent được đánh giá.",
+  "calls": {
+    "call_1": {
+      "channel": "zalo_oa",
+      "channel_identity": "m2.zalo.008",
+      "call_date": "2026-10-22",
+      "input_mode": "clean",
+      "customer_goal": "Hiểu giá từng máy và giới hạn ưu đãi",
+      "customer_turns": [
+        "Tôi là Tuấn Kiệt, số điện thoại 0909000008. Anh cần 3 Máy lọc không khí AirPure Pro, giao tại 207 đường Kiểm Thử, Đà Nẵng.",
+        "Nếu có hai máy bằng giá thì có phải cả hai đều được giảm một nửa không? Em tính từng máy giúp, đừng gộp một giá chung.",
+        "Mình chưa chốt ngay thì giá này tính tại ngày nào? Anh không muốn lần sau hiểu nhầm là shop đã giữ giá.",
+        "Em nói riêng phần bảo hành giúp anh; đừng gộp mọi lỗi sử dụng vào lỗi của hãng nhé.",
+        "Anh sẽ giữ hộp. Em nhắc thời hạn và điều kiện đổi trả của đơn mới giúp, để không lấy nhầm bài chính sách cũ.",
+        "Anh chưa muốn quyết vội. Em ghi nhận nhu cầu được, nhưng đừng tự đặt hàng hoặc gọi dồn khi chưa hẹn nhé.",
+        "Nếu mua ba máy thì được giảm thêm cho máy thứ ba không? Đợt này anh chỉ lấy đúng số lượng vừa nêu.",
+        "Tổng hàng em tính là 19.375.000 đồng. Anh cần trao đổi người nhà, chưa đặt và không hẹn gọi chủ động."
+      ],
+      "facts_established": {
+        "basket_lines": [
+          {
+            "sku": "SKU-AP-PRO",
+            "qty": 3
+          }
+        ],
+        "delivery_address": "207 đường Kiểm Thử, Đà Nẵng",
+        "basket_skus": [
+          "SKU-AP-PRO"
+        ],
+        "quantity_by_sku": {
+          "SKU-AP-PRO": 3
+        }
+      },
+      "expected_outcome": "tu_choi",
+      "success_if": {
+        "tool_called": null,
+        "must_not_call_tools": [
+          "order.create",
+          "schedule.callback"
+        ],
+        "must_say_any": [
+          "19.375.000"
+        ]
+      },
+      "ground_truth_facts": {
+        "total_vnd": 19375000,
+        "discounted_second_item_count": 1
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0909000008",
+      "call_date": "2026-10-24",
+      "input_mode": "clean",
+      "customer_goal": "Giữ giỏ trong lúc chờ người nhà, chưa đặt",
+      "customer_turns": [
+        "Anh Tuấn Kiệt đây, số 0909000008, đã nhắn Zalo OA về giỏ nhiều máy. Giữ đúng số lượng hôm trước nhé.",
+        "Em nhắc lại từng máy được hưởng chương trình nào và tổng hôm nay; đừng cộng hai ưu đãi độc quyền trên cùng một máy.",
+        "Khi giao hàng, ngày nghỉ có tính vào thời gian giao không? Anh cần biết đây là thời gian dự kiến hay một giờ giao được bảo đảm.",
+        "Nếu cần tra tiến độ sau này, anh xem ở đâu? Em đừng coi vừa tạo đơn là đã giao xong nhé.",
+        "Tổng 19.375.000 đồng thì đúng, nhưng anh vẫn cần thống nhất với người nhà. Hôm nay chưa đặt, em chỉ lưu giỏ, đừng tự tạo đơn hoặc hẹn gọi lại."
+      ],
+      "facts_established": {
+        "basket_lines": [
+          {
+            "sku": "SKU-AP-PRO",
+            "qty": 3
+          }
+        ],
+        "delivery_address": "207 đường Kiểm Thử, Đà Nẵng",
+        "basket_skus": [
+          "SKU-AP-PRO"
+        ],
+        "quantity_by_sku": {
+          "SKU-AP-PRO": 3
+        }
+      },
+      "expected_outcome": "tu_choi",
+      "success_if": {
+        "tool_called": null,
+        "must_not_call_tools": [
+          "order.create",
+          "schedule.callback"
+        ],
+        "must_say_any": [
+          "19.375.000"
+        ]
+      },
+      "ground_truth_facts": {
+        "total_vnd": 19375000,
+        "discounted_second_item_count": 1
+      },
+      "days_later": 2,
+      "must_carry_over": [
+        "basket_lines",
+        "delivery_address"
+      ],
+      "must_not_ask": [
+        "basket_lines",
+        "delivery_address"
+      ]
+    },
+    "call_3": {
+      "channel": "hotline",
+      "channel_identity": "0909000008",
+      "call_date": "2026-10-27",
+      "input_mode": "clean",
+      "customer_goal": "Chốt một đơn nhiều dòng đúng giá từng máy",
+      "customer_turns": [
+        "Anh Tuấn Kiệt đây, số 0909000008. Người nhà đã đồng ý giỏ trao đổi ở hai phiên trước. Giữ đúng mẫu và số lượng, kiểm tra giá hôm nay rồi chốt giúp nhé.",
+        "Em nhắc lại từng máy được hưởng chương trình nào và tổng hôm nay; đừng cộng hai ưu đãi độc quyền trên cùng một máy.",
+        "Anh đồng ý tổng 19.375.000 đồng, chuyển khoản, địa chỉ giữ như đã nhắn. Em đọc lại đơn trước khi tạo nhé.",
+        "Đúng, anh xác nhận đúng từng máy, tổng tiền và cách thanh toán. Em tạo một đơn, không tự thêm số lượng."
+      ],
+      "facts_established": {
+        "basket_lines": [
+          {
+            "sku": "SKU-AP-PRO",
+            "qty": 3
+          }
+        ],
+        "delivery_address": "207 đường Kiểm Thử, Đà Nẵng",
+        "basket_skus": [
+          "SKU-AP-PRO"
+        ],
+        "quantity_by_sku": {
+          "SKU-AP-PRO": 3
+        }
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "customer_phone": "0909000008",
+          "sku": "SKU-AP-PRO",
+          "qty": 1,
+          "price_vnd": 7690000,
+          "payment": "bank",
+          "address": "207 đường Kiểm Thử, Đà Nẵng"
+        },
+        "also_ordered": [
+          "SKU-AP-PRO"
+        ],
+        "total_match_vnd": 19375000
+      },
+      "ground_truth_facts": {
+        "total_vnd": 19375000,
+        "discounted_second_item_count": 1
+      },
+      "days_later": 3,
+      "must_carry_over": [
+        "basket_lines",
+        "delivery_address"
+      ],
+      "must_not_ask": [
+        "basket_lines",
+        "delivery_address"
+      ]
+    }
+  }
+}

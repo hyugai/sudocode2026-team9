@@ -117,7 +117,7 @@ try:
                              region="bac", attributes={"e2e_run": RUN, "sessions": []}))
         session.commit()
         created_customer = True
-    spec = importlib.util.spec_from_file_location("btc_live_reference", ROOT / "dataset/BTC-Data-Vong1-TEAMS/eval/mock_tools.py")
+    spec = importlib.util.spec_from_file_location("btc_live_reference", ROOT / "dataset/organizer/eval/mock_tools.py")
     btc = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(btc)
     lines = [{"sku": "SKU-AP-PRO", "qty": 2}, {"sku": "SKU-AP-MINI", "qty": 1}]

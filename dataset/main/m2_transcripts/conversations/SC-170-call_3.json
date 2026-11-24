@@ -1,0 +1,245 @@
+{
+  "transcript_id": "SC-170-call_3",
+  "scenario_id": "SC-170",
+  "source_scenario_id": "SC-050",
+  "customer_id": "C026",
+  "call": "call_3",
+  "channel": "hotline",
+  "channel_identity": "0910285940",
+  "call_date": "2026-10-23",
+  "language": "vi",
+  "origin": "authored_synthetic_reference_dialogue",
+  "is_actual_agent_trace": false,
+  "audio_status": "pending_recording",
+  "voice_region_target": "trung",
+  "noise_target": false,
+  "utterances": [
+    {
+      "speaker": "customer",
+      "text": "Anh gọi lần thứ ba rồi. Chốt một chiếc như đã trao đổi nhé.",
+      "source_customer_turn_index": 0
+    },
+    {
+      "speaker": "agent",
+      "text": "Dạ anh, em tiếp tục đúng yêu cầu lần trước và sẽ xử lý ngắn gọn.",
+      "source_refs": [
+        "schemas/tools.schema.json",
+        "catalog/products.json"
+      ],
+      "tool_refs": [
+        0
+      ]
+    },
+    {
+      "speaker": "customer",
+      "text": "Giá 1.890.000 đồng thì anh đồng ý. Địa chỉ và thanh toán giữ nguyên, đừng hỏi từ đầu nữa.",
+      "source_customer_turn_index": 1
+    },
+    {
+      "speaker": "agent",
+      "text": "Em xác nhận một lần: 1 sản phẩm Máy tiệt trùng sấy khô Moaz Bebe, đơn giá 1.890.000 đồng; tổng hàng 1.890.000 đồng, thanh toán khi nhận hàng, giao theo địa chỉ đã xác nhận tại Đà Nẵng. Dự kiến giao ngày 2026-10-27, có tính ngày nghỉ; đây là dự kiến. Mình xác nhận để em tạo đơn này nhé?",
+      "source_refs": [
+        "policy/playbook-telesale.md#PB-09",
+        "policy/chinh-sach-van-chuyen-thanh-toan.md#VC-01"
+      ],
+      "tool_refs": [
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "speaker": "customer",
+      "text": "Đúng rồi, anh xác nhận đúng sản phẩm, số lượng, tổng tiền, địa chỉ và cách thanh toán vừa nhắc. Em tạo đơn giúp nhé."
+    },
+    {
+      "speaker": "agent",
+      "text": "Đơn OD600001 đã được tạo, tổng hàng 1.890.000 đồng. Dự kiến giao ngày 2026-10-27.",
+      "source_refs": [
+        "policy/chinh-sach-van-chuyen-thanh-toan.md#VC-05"
+      ],
+      "tool_refs": [
+        4
+      ]
+    }
+  ],
+  "private_annotations": {
+    "persona": "khach_goi_lan_3_het_kien_nhan",
+    "customer_goal": "Chốt ngay sản phẩm đã chọn bằng thông tin đã lưu.",
+    "expected_outcome": "chot_don",
+    "facts_established": {
+      "purchase_decision": "đồng ý mua"
+    },
+    "sentiment_target": "mất kiên nhẫn",
+    "objection": null,
+    "fact_provenance_after_call": {
+      "product_advised": {
+        "value": "SKU-MB-STER",
+        "source_session": "SC-170-call_1",
+        "last_confirmed_session": "SC-170-call_1",
+        "valid_from": "2026-10-19",
+        "supersedes_session": null
+      },
+      "price_quoted_vnd": {
+        "value": 1890000,
+        "source_session": "SC-170-call_1",
+        "last_confirmed_session": "SC-170-call_1",
+        "valid_from": "2026-10-19",
+        "supersedes_session": null
+      },
+      "delivery_address": {
+        "value": "109 đường Kiểm Thử, Đà Nẵng",
+        "source_session": "SC-170-call_1",
+        "last_confirmed_session": "SC-170-call_1",
+        "valid_from": "2026-10-19",
+        "supersedes_session": null
+      },
+      "payment": {
+        "value": "COD",
+        "source_session": "SC-170-call_1",
+        "last_confirmed_session": "SC-170-call_1",
+        "valid_from": "2026-10-19",
+        "supersedes_session": null
+      },
+      "quantity": {
+        "value": 1,
+        "source_session": "SC-170-call_1",
+        "last_confirmed_session": "SC-170-call_1",
+        "valid_from": "2026-10-19",
+        "supersedes_session": null
+      },
+      "purchase_decision": {
+        "value": "đồng ý mua",
+        "source_session": "SC-170-call_3",
+        "last_confirmed_session": "SC-170-call_3",
+        "valid_from": "2026-10-23",
+        "supersedes_session": null
+      }
+    },
+    "memory_expectation": null,
+    "memory_rules": {
+      "price_and_stock": "revalidate with tools every session; historical quote remains episodic",
+      "address_ttl_days": 180,
+      "intent_ttl_days": 30,
+      "shared_phone": "resolve customer_id; never merge profiles solely by phone"
+    },
+    "source_refs": [
+      "catalog/products.json",
+      "policy/chinh-sach-van-chuyen-thanh-toan.md#VC-01",
+      "policy/chinh-sach-van-chuyen-thanh-toan.md#VC-05",
+      "policy/playbook-telesale.md#PB-09",
+      "schemas/tools.schema.json"
+    ],
+    "reference_tool_executions": [
+      {
+        "name": "crm.get_customer",
+        "args": {
+          "phone": "0910285940"
+        },
+        "result": {
+          "found": true,
+          "ambiguous": false,
+          "customer_id": "C026",
+          "name": "Dũng",
+          "honorific": "anh",
+          "phone": "0910285940",
+          "identities": {
+            "zalo_id": null,
+            "fb_id": null
+          },
+          "orders": [],
+          "sessions": []
+        },
+        "origin": "executed_reference_mock_for_authored_fixture"
+      },
+      {
+        "name": "catalog.search",
+        "args": {
+          "sku": "SKU-MB-STER"
+        },
+        "result": {
+          "items": [
+            {
+              "sku": "SKU-MB-STER",
+              "name": "Máy tiệt trùng sấy khô Moaz Bebe",
+              "category": "me-be",
+              "list_price_vnd": 1890000,
+              "attributes": {
+                "warranty_months": 12
+              },
+              "variants": []
+            }
+          ],
+          "total": 1
+        },
+        "origin": "executed_reference_mock_for_authored_fixture"
+      },
+      {
+        "name": "inventory.check",
+        "args": {
+          "sku": "SKU-MB-STER",
+          "on": "2026-10-23"
+        },
+        "result": {
+          "sku": "SKU-MB-STER",
+          "in_stock": true,
+          "qty": 10
+        },
+        "origin": "executed_reference_mock_for_authored_fixture"
+      },
+      {
+        "name": "pricing.get_quote",
+        "args": {
+          "sku": "SKU-MB-STER",
+          "customer_phone": "0910285940",
+          "address": "109 đường Kiểm Thử, Đà Nẵng",
+          "on": "2026-10-23"
+        },
+        "result": {
+          "sku": "SKU-MB-STER",
+          "list_price_vnd": 1890000,
+          "final_price_vnd": 1890000,
+          "applied_promos": [
+            {
+              "promo_code": "MOM-FREESHIP",
+              "type": "freeship",
+              "discount_vnd": 0
+            },
+            {
+              "promo_code": "COD-0",
+              "type": "freecod",
+              "discount_vnd": 0
+            }
+          ],
+          "expired_promos": [],
+          "ineligible_promos": [],
+          "not_applied_exclusive": [],
+          "freeship": true,
+          "_internal_price_floor_vnd": 1738800
+        },
+        "origin": "executed_reference_mock_for_authored_fixture"
+      },
+      {
+        "name": "order.create",
+        "args": {
+          "customer_phone": "0910285940",
+          "sku": "SKU-MB-STER",
+          "qty": 1,
+          "price_vnd": 1890000,
+          "payment": "COD",
+          "address": "109 đường Kiểm Thử, Đà Nẵng",
+          "on": "2026-10-23"
+        },
+        "result": {
+          "order_id": "OD600001",
+          "status": "created",
+          "total_vnd": 1890000,
+          "needs_confirmation_call": false,
+          "estimated_delivery": "2026-10-27"
+        },
+        "origin": "executed_reference_mock_for_authored_fixture"
+      }
+    ],
+    "review_status": "automated_fixture_checks; human_semantic_review_pending"
+  }
+}

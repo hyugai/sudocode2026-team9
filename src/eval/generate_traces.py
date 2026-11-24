@@ -35,8 +35,8 @@ load_dotenv(REPO_ROOT / ".env")
 DEFAULT_SCENARIOS_DIR = (
     REPO_ROOT
     / "dataset"
-    / "iterative-refinement"
-    / "scenarios_complete dataset"
+    / "main"
+    / "scenarios_complete"
 )
 DEFAULT_OUT_DIR = REPO_ROOT / "outputs" / "eval"
 TEAM_EVAL_PATH = HERE / "team_eval.py"
@@ -63,7 +63,7 @@ from eval.trace_extractors import (  # noqa: E402
 from eval.benchmark_support import audio_path, validate_inputs  # noqa: E402
 from eval.model_config import configure_eval_model, permanent_provider_error  # noqa: E402
 
-_SCHEMAS = REPO_ROOT / "dataset" / "BTC-Data-Vong1-TEAMS" / "schemas"
+_SCHEMAS = REPO_ROOT / "dataset" / "organizer" / "schemas"
 _TRACE_VALIDATOR = Draft202012Validator(json.loads(
     (_SCHEMAS / "trace_log.schema.json").read_text(encoding="utf-8")))
 _BRIEF_VALIDATOR = Draft202012Validator(json.loads(
@@ -429,7 +429,7 @@ async def main():
     parser.add_argument("--input-kind", choices=["text","audio"], default="text")
     parser.add_argument("--llm-provider",default=None)
     parser.add_argument("--llm-model",default=None)
-    parser.add_argument("--audio-root", type=Path, default=REPO_ROOT / "dataset/iterative-refinement/audio")
+    parser.add_argument("--audio-root", type=Path, default=REPO_ROOT / "dataset/main/audio")
     parser.add_argument(
         "--scenario-ids",
         nargs="+",

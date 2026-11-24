@@ -89,7 +89,7 @@ docs/                        Kiến trúc, hướng dẫn triển khai và báo 
 
 Database nghiệp vụ và LLM vẫn cần thiết khi chạy text. Chỉ phần nhận dạng file audio được xử lý local; transcript vẫn có thể đi đến nhà cung cấp LLM để agent trả lời.
 
-Một số tài nguyên như `dataset/BTC-Data-Vong1-TEAMS/`, trọng số trong `models/`, Chroma DB và kết quả benchmark nằm trong ignore rules, nên có thể không đi kèm bản clone. Chuẩn bị dữ liệu trước khi seed hoặc đánh giá. Backend cũng cần các file `agent.md`, `soul.md`, `tools.md` trong `data/memory-root/agents/telesales_agent/`.
+Dữ liệu BTC nằm trong `dataset/organizer/`. Một số tài nguyên như trọng số trong `models/`, Chroma DB và kết quả benchmark nằm trong ignore rules, nên có thể không đi kèm bản clone. Chuẩn bị dữ liệu trước khi seed hoặc đánh giá. Backend cũng cần các file `agent.md`, `soul.md`, `tools.md` trong `data/memory-root/agents/telesales_agent/`.
 
 ## Cài đặt và chạy local
 
@@ -168,7 +168,7 @@ Chờ log `database system is ready to accept connections`, sau đó seed databa
 docker exec telesale-postgres psql -U telesale -d telesale -c "SELECT count(*) AS products FROM products; SELECT count(*) AS customers FROM customers;"
 ```
 
-Script đọc `products.json`, `promotions.json`, `inventory_timeline.json`, `crm_seed.json` trong `dataset/BTC-Data-Vong1-TEAMS/catalog/`, tạo schema và nạp cả đơn hàng có sẵn trong seed. Script từ chối seed nếu đã có bảng ứng dụng để tránh ghi đè dữ liệu. Với database đã chuẩn bị sẵn, bỏ qua bước tạo/seed và chỉ cấu hình đúng `DATABASE_URL`.
+Script đọc `products.json`, `promotions.json`, `inventory_timeline.json`, `crm_seed.json` trong `dataset/organizer/catalog/`, tạo schema và nạp cả đơn hàng có sẵn trong seed. Script từ chối seed nếu đã có bảng ứng dụng để tránh ghi đè dữ liệu. Với database đã chuẩn bị sẵn, bỏ qua bước tạo/seed và chỉ cấu hình đúng `DATABASE_URL`.
 
 Những lần mở máy sau dùng `docker start telesale-postgres`, không chạy lại `docker run` hoặc seed. Để dừng database dùng `docker stop telesale-postgres`; dữ liệu được giữ trong volume. Xem [hướng dẫn PostgreSQL](docs/deployment/postgresql_self_hosting.md) để kiểm tra chi tiết.
 
@@ -182,7 +182,7 @@ Những lần mở máy sau dùng `docker start telesale-postgres`, không chạ
 .\.venv\Scripts\python.exe scripts\ingest_policy.py
 ```
 
-Script đọc Markdown trong `dataset/BTC-Data-Vong1-TEAMS/policy/`, chia đoạn, tạo embedding bằng `keepitreal/vietnamese-sbert` và ghi vào `data/chroma_db/`. Lần đầu cần mạng để tải embedding model. Script bỏ hai file bẫy nội bộ/hết hiệu lực được liệt kê trong mã; Knowledge MCP còn lọc nguồn khi truy xuất. Chạy ingest trên kho mới; script không có cơ chế tự loại các chunk trùng do chạy lại.
+Script đọc Markdown trong `dataset/organizer/policy/`, chia đoạn, tạo embedding bằng `keepitreal/vietnamese-sbert` và ghi vào `data/chroma_db/`. Lần đầu cần mạng để tải embedding model. Script bỏ hai file bẫy nội bộ/hết hiệu lực được liệt kê trong mã; Knowledge MCP còn lọc nguồn khi truy xuất. Chạy ingest trên kho mới; script không có cơ chế tự loại các chunk trùng do chạy lại.
 
 **Pinecone**, nếu đã có index policy được nạp sẵn: thay cấu hình Chroma bằng các dòng sau và bỏ qua lệnh ingest local:
 

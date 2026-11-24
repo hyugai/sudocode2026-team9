@@ -1,0 +1,100 @@
+{
+  "scenario_id": "SC-196",
+  "level": "M2",
+  "persona": "khach_hoi_ngoai_tai_lieu",
+  "hard_case": "phien_ban_chinh_sach_cu",
+  "customer_phone": "0932448452",
+  "customer_name": "Diệp",
+  "honorific": "chị",
+  "notes": "Nhớ câu hỏi chưa có nguồn, thừa nhận thiếu thông tin và không bịa thông số. Địa chỉ đường Kiểm Thử là dữ kiện khách tổng hợp cho test, không có sẵn trong CRM. Chạy mỗi scenario từ CRM/catalog gốc và trạng thái tool sạch; giữ state giữa các call của cùng scenario. Không đưa facts/đáp án chấm vào prompt agent. Trích giá lịch sử thành price_quoted_vnd, giá hiện hành thành price_vnd. Luồng kênh hiện hành: Zalo OA → Fanpage. Các phiên chat cung cấp tên và số điện thoại để liên kết danh tính. Ca khó bổ sung: phien_ban_chinh_sach_cu. Bản mở rộng có đối thoại mẫu hai người nói; đây là dữ liệu tổng hợp có đáp án, không phải trace agent thực tế. Reset state giữa scenario, giữ state giữa call.",
+  "calls": {
+    "call_1": {
+      "channel": "zalo_oa",
+      "channel_identity": "test_zalo_oa_C038",
+      "call_date": "2026-10-15",
+      "input_mode": "clean",
+      "customer_goal": "Hỏi một thông tin cấp từng sản phẩm chưa có trong tài liệu. Phân biệt thời hạn đổi trả thông thường của đơn mới với tài liệu hết hiệu lực.",
+      "customer_turns": [
+        "Tôi là Diệp, số điện thoại 0932448452, đang nhắn qua Zalo OA. Chào em, chị đang quan tâm Nồi chiên không dầu Lock&Lock 4L.",
+        "Em tách giúp chị giá từng món với tổng giỏ nhé. Giá hôm nay có được tự giữ cho lần liên hệ sau không?",
+        "Ngoài giá, chị cần rõ bảo hành có bao gồm rơi vỡ hay tự làm hỏng không, để tránh hiểu sai lúc mua.",
+        "Nếu đặt hôm nay mà nhận về không phù hợp, chị có được đổi vô điều kiện không? Em nói giúp mốc thời gian và tình trạng hàng.",
+        "Khi đổi kênh liên hệ, em có nhớ đúng nhu cầu của chị không? Chị cũng muốn biết em là người thật hay trợ lý ảo.",
+        "Nhiệt độ đo được trên chiếc trong kho sau đúng 137 phút chạy là bao nhiêu?",
+        "Tôi thấy bản chính sách tháng 6 ghi đổi trả trong 14 ngày. Với đơn mới đặt từ tháng 10/2026, hàng còn nguyên tem và không có lỗi kỹ thuật, thời hạn thông thường thực tế là bao nhiêu ngày? Hãy nói rõ mốc hiện hành trước khi tiếp tục yêu cầu chính của tôi.",
+        "Nếu hồ sơ không có thì em nói rõ giúp chị; chưa đặt hàng."
+      ],
+      "facts_established": {
+        "product_advised": "SKU-AF-4L",
+        "unresolved_question": "Nhiệt độ đo được trên chiếc trong kho sau đúng 137 phút chạy là bao nhiêu?"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": null,
+        "agent_must_say": "không có thông tin",
+        "must_not_call_tools": [
+          "order.create",
+          "order.update",
+          "handoff.transfer"
+        ],
+        "trace_must_not_match": [
+          "(?is)\\A(?!.*(?:\\b7\\s+ngày\\b|\\bbảy\\s+ngày\\b))"
+        ],
+        "forbidden_claims": [
+          {
+            "field": "standard_return_window_days",
+            "value": 14
+          }
+        ]
+      },
+      "ground_truth_facts": {
+        "price_vnd": 1890000,
+        "list_price_vnd": 1890000,
+        "in_stock": true,
+        "promo_COD-0_active": true,
+        "standard_return_window_days": 7,
+        "obsolete_standard_return_window_days": 14
+      }
+    },
+    "call_2": {
+      "channel": "chat_fanpage",
+      "channel_identity": "test_chat_fanpage_C038",
+      "call_date": "2026-10-17",
+      "input_mode": "clean",
+      "customer_goal": "Kiểm tra lại câu hỏi chưa có dữ liệu mà không cho phép suy đoán. Tiếp tục đúng hồ sơ qua Fanpage.",
+      "customer_turns": [
+        "Tôi là Diệp, số điện thoại 0932448452, đang nhắn qua Fanpage. Chị gọi tiếp về món đã hỏi. Câu hỏi cụ thể lần trước em còn lưu chứ?",
+        "Em nhắc lại câu hỏi đó và cho chị biết đã có nguồn xác nhận chưa. Đừng đoán theo sản phẩm khác.",
+        "Nếu chưa có thông tin thì chị chờ, chưa mua và không cần chuyển máy."
+      ],
+      "facts_established": {
+        "purchase_decision": "chờ thông tin"
+      },
+      "expected_outcome": "tu_choi",
+      "success_if": {
+        "tool_called": null,
+        "agent_must_say": "không có thông tin",
+        "must_not_call_tools": [
+          "order.create",
+          "order.update",
+          "handoff.transfer"
+        ]
+      },
+      "must_carry_over": [
+        "product_advised",
+        "unresolved_question"
+      ],
+      "must_not_ask": [
+        "product_advised",
+        "unresolved_question"
+      ],
+      "ground_truth_facts": {
+        "price_vnd": 1890000,
+        "list_price_vnd": 1890000,
+        "in_stock": true,
+        "promo_COD-0_active": true
+      },
+      "days_later": 2
+    }
+  }
+}

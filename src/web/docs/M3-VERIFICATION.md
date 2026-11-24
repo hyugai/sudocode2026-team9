@@ -16,7 +16,7 @@ phone-identity trust weaknesses in the actual backend handler/resolver code.
 - Frontend: `src/web`. HTTP backend:
   `src/telesale_agent/entrypoints/api/chat.py`; internal tools:
   `src/mcp_servers/mcp_db.py` and `src/mcp_servers/tools/`.
-- Actual catalog path from this CWD: `../../dataset/BTC-Data-Vong1-TEAMS/catalog/`,
+- Actual catalog path from this CWD: `../../dataset/organizer/catalog/`,
   rather than `../dataset/`. Reference date: **2026-10-15**, not live inventory.
 - Read the text and rendered screenshots/annotations of all eight PDF pages.
   PDF SHA-256:

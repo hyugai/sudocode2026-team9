@@ -1,0 +1,445 @@
+{
+  "scenario_id": "SC-120",
+  "scenario_seed": {
+    "scenario_id": "SC-120",
+    "level": "M1",
+    "persona": "khach_mua_nhieu_mon",
+    "hard_case": "phien_ban_chinh_sach_cu",
+    "customer_phone": "0975475177",
+    "customer_name": "Long",
+    "honorific": "anh",
+    "calls": {
+      "call_1": {
+        "channel": "chat_fanpage",
+        "channel_identity": "test_chat_fanpage_C008",
+        "call_date": "2026-10-19",
+        "input_mode": "chat_teencode",
+        "facts_established": {
+          "basket_skus": [
+            "SKU-SS-AX40",
+            "SKU-AF-6L"
+          ],
+          "removed_sku": "SKU-FAN-SEN",
+          "budget_vnd": 10780000,
+          "quantity_each": 1
+        },
+        "expected_outcome": "hen_goi_lai",
+        "success_if": {
+          "tool_called": null,
+          "must_say_any": [
+            "Nồi chiên không dầu Philips 6.2L",
+            "SKU-AF-6L"
+          ],
+          "must_not_call_tools": [
+            "order.create",
+            "order.update"
+          ],
+          "trace_must_not_match": [
+            "(?is)\\A(?!.*(?:\\b7\\s+ngày\\b|\\bbảy\\s+ngày\\b))"
+          ],
+          "forbidden_claims": [
+            {
+              "field": "standard_return_window_days",
+              "value": 14
+            }
+          ]
+        },
+        "ground_truth_facts": {
+          "price_vnd_SKU-SS-AX40": 6490000,
+          "price_vnd_SKU-AF-6L": 3990000,
+          "standard_return_window_days": 7,
+          "obsolete_standard_return_window_days": 14
+        }
+      },
+      "call_2": {
+        "channel": "zalo_oa",
+        "channel_identity": "test_zalo_oa_C008",
+        "call_date": "2026-10-21",
+        "input_mode": "clean",
+        "facts_established": {
+          "payment": "bank",
+          "delivery_address": "109 đường Kiểm Thử, TP. Hồ Chí Minh"
+        },
+        "expected_outcome": "chot_don",
+        "success_if": {
+          "tool_called": "order.create",
+          "args_match": {
+            "customer_phone": "0975475177",
+            "sku": "SKU-SS-AX40",
+            "qty": 1,
+            "price_vnd": 6490000,
+            "payment": "bank",
+            "address": "109 đường Kiểm Thử, TP. Hồ Chí Minh"
+          },
+          "also_ordered": [
+            "SKU-SS-AX40",
+            "SKU-AF-6L"
+          ],
+          "total_match_vnd": 10480000
+        },
+        "must_carry_over": [
+          "basket_skus",
+          "budget_vnd",
+          "quantity_each"
+        ],
+        "must_not_ask": [
+          "basket_skus",
+          "budget_vnd",
+          "quantity_each"
+        ],
+        "ground_truth_facts": {
+          "total_vnd": 10480000,
+          "all_items_in_stock": true,
+          "price_vnd_SKU-SS-AX40": 6490000,
+          "price_vnd_SKU-AF-6L": 3990000
+        },
+        "memory_expectation": {
+          "basket_item_1": "SKU-SS-AX40",
+          "basket_item_2": "SKU-AF-6L",
+          "profile_state": {
+            "basket_skus": [
+              "SKU-SS-AX40",
+              "SKU-AF-6L"
+            ]
+          },
+          "superseded": {
+            "basket_skus": [
+              "SKU-SS-AX40",
+              "SKU-FAN-SEN"
+            ]
+          }
+        },
+        "days_later": 2
+      }
+    }
+  },
+  "fields_to_generate": [
+    "notes",
+    "calls.call_1.customer_goal",
+    "calls.call_1.customer_turns",
+    "calls.call_1.customer_turns_asr",
+    "calls.call_2.customer_goal",
+    "calls.call_2.customer_turns"
+  ],
+  "generation_context": {
+    "test_objective": "Nhớ giỏ nhiều món, xử lý khách đổi lựa chọn, tính đúng tổng và phương thức thanh toán. Luồng kênh: Fanpage → Zalo OA.",
+    "customer": {
+      "customer_id": "C008",
+      "name": "Long",
+      "honorific": "anh",
+      "phone": "0975475177",
+      "zalo_id": null,
+      "fb_id": null,
+      "region": "nam",
+      "orders": []
+    },
+    "persona": {
+      "persona_id": "khach_mua_nhieu_mon",
+      "patience_initial": {
+        "call_1": 5,
+        "call_2": 4,
+        "call_3": 3
+      },
+      "style": "nói nhiều, lan man, nhiều yêu cầu",
+      "system_prompt": "Bạn mua nhiều món cho nhà mới, nói lan man, đổi ý giữa chừng. Mục tiêu: {goal}. Đã biết: {facts}. Dàn ý: {turn_outline}. Bạn kỳ vọng nhân viên tổng kết lại đầy đủ trước khi chốt; nếu tổng tiền vượt ngân sách mà nhân viên không nói, bạn hỏi 'thế là bao nhiêu tất cả?'."
+    },
+    "products": [
+      {
+        "sku": "SKU-SS-AX40",
+        "name": "Máy lọc không khí Samsung AX40",
+        "category": "gia-dung/may-loc-khong-khi",
+        "brand": "Samsung",
+        "list_price_vnd": 6490000,
+        "attributes": {
+          "room_area_m2": 40,
+          "features": "HEPA, lọc khử mùi, cảm biến bụi",
+          "warranty_months": 24,
+          "child_safe_lock": true
+        },
+        "stock": 40,
+        "variants": []
+      },
+      {
+        "sku": "SKU-AF-6L",
+        "name": "Nồi chiên không dầu Philips 6.2L",
+        "category": "gia-dung/noi-chien",
+        "brand": "Philips",
+        "list_price_vnd": 3990000,
+        "attributes": {
+          "warranty_months": 12
+        },
+        "stock": 25,
+        "variants": []
+      },
+      {
+        "sku": "SKU-FAN-SEN",
+        "name": "Quạt đứng Senko TS16",
+        "category": "gia-dung/quat",
+        "brand": "Senko",
+        "list_price_vnd": 590000,
+        "attributes": {
+          "warranty_months": 12
+        },
+        "stock": 30,
+        "variants": []
+      }
+    ],
+    "business_snapshots": [
+      {
+        "call": "call_1",
+        "sku": "SKU-SS-AX40",
+        "on": "2026-10-19",
+        "quote": {
+          "sku": "SKU-SS-AX40",
+          "list_price_vnd": 6490000,
+          "final_price_vnd": 6490000,
+          "applied_promos": [
+            {
+              "promo_code": "NAM-SHIP0",
+              "type": "freeship",
+              "discount_vnd": 0
+            },
+            {
+              "promo_code": "COD-0",
+              "type": "freecod",
+              "discount_vnd": 0
+            }
+          ],
+          "expired_promos": [],
+          "ineligible_promos": [
+            {
+              "promo_code": "AIR-2ND-50",
+              "reason": "min_qty"
+            }
+          ],
+          "not_applied_exclusive": [],
+          "freeship": true
+        },
+        "inventory": {
+          "sku": "SKU-SS-AX40",
+          "in_stock": true,
+          "qty": 40
+        }
+      },
+      {
+        "call": "call_1",
+        "sku": "SKU-AF-6L",
+        "on": "2026-10-19",
+        "quote": {
+          "sku": "SKU-AF-6L",
+          "list_price_vnd": 3990000,
+          "final_price_vnd": 3990000,
+          "applied_promos": [
+            {
+              "promo_code": "NAM-SHIP0",
+              "type": "freeship",
+              "discount_vnd": 0
+            },
+            {
+              "promo_code": "COD-0",
+              "type": "freecod",
+              "discount_vnd": 0
+            }
+          ],
+          "expired_promos": [],
+          "ineligible_promos": [],
+          "not_applied_exclusive": [],
+          "freeship": true
+        },
+        "inventory": {
+          "sku": "SKU-AF-6L",
+          "in_stock": true,
+          "qty": 25
+        }
+      },
+      {
+        "call": "call_1",
+        "sku": "SKU-FAN-SEN",
+        "on": "2026-10-19",
+        "quote": {
+          "sku": "SKU-FAN-SEN",
+          "list_price_vnd": 590000,
+          "final_price_vnd": 590000,
+          "applied_promos": [
+            {
+              "promo_code": "NAM-SHIP0",
+              "type": "freeship",
+              "discount_vnd": 0
+            },
+            {
+              "promo_code": "COD-0",
+              "type": "freecod",
+              "discount_vnd": 0
+            }
+          ],
+          "expired_promos": [],
+          "ineligible_promos": [],
+          "not_applied_exclusive": [],
+          "freeship": true
+        },
+        "inventory": {
+          "sku": "SKU-FAN-SEN",
+          "in_stock": true,
+          "qty": 30
+        }
+      },
+      {
+        "call": "call_2",
+        "sku": "SKU-SS-AX40",
+        "on": "2026-10-21",
+        "quote": {
+          "sku": "SKU-SS-AX40",
+          "list_price_vnd": 6490000,
+          "final_price_vnd": 6490000,
+          "applied_promos": [
+            {
+              "promo_code": "NAM-SHIP0",
+              "type": "freeship",
+              "discount_vnd": 0
+            },
+            {
+              "promo_code": "COD-0",
+              "type": "freecod",
+              "discount_vnd": 0
+            }
+          ],
+          "expired_promos": [],
+          "ineligible_promos": [
+            {
+              "promo_code": "AIR-2ND-50",
+              "reason": "min_qty"
+            }
+          ],
+          "not_applied_exclusive": [],
+          "freeship": true
+        },
+        "inventory": {
+          "sku": "SKU-SS-AX40",
+          "in_stock": true,
+          "qty": 40
+        }
+      },
+      {
+        "call": "call_2",
+        "sku": "SKU-AF-6L",
+        "on": "2026-10-21",
+        "quote": {
+          "sku": "SKU-AF-6L",
+          "list_price_vnd": 3990000,
+          "final_price_vnd": 3990000,
+          "applied_promos": [
+            {
+              "promo_code": "NAM-SHIP0",
+              "type": "freeship",
+              "discount_vnd": 0
+            },
+            {
+              "promo_code": "COD-0",
+              "type": "freecod",
+              "discount_vnd": 0
+            }
+          ],
+          "expired_promos": [],
+          "ineligible_promos": [],
+          "not_applied_exclusive": [],
+          "freeship": true
+        },
+        "inventory": {
+          "sku": "SKU-AF-6L",
+          "in_stock": true,
+          "qty": 25
+        }
+      },
+      {
+        "call": "call_2",
+        "sku": "SKU-FAN-SEN",
+        "on": "2026-10-21",
+        "quote": {
+          "sku": "SKU-FAN-SEN",
+          "list_price_vnd": 590000,
+          "final_price_vnd": 590000,
+          "applied_promos": [
+            {
+              "promo_code": "NAM-SHIP0",
+              "type": "freeship",
+              "discount_vnd": 0
+            },
+            {
+              "promo_code": "COD-0",
+              "type": "freecod",
+              "discount_vnd": 0
+            }
+          ],
+          "expired_promos": [],
+          "ineligible_promos": [],
+          "not_applied_exclusive": [],
+          "freeship": true
+        },
+        "inventory": {
+          "sku": "SKU-FAN-SEN",
+          "in_stock": true,
+          "qty": 30
+        }
+      }
+    ],
+    "planned_goals": {
+      "call_1": "Thảo luận giỏ hai món và sửa lựa chọn thứ hai trước khi đặt. Phân biệt thời hạn đổi trả thông thường của đơn mới với tài liệu hết hiệu lực.",
+      "call_2": "Chốt đúng giỏ sau khi đổi ý và tổng tiền đã xác nhận. Tiếp tục đúng hồ sơ qua Zalo OA."
+    },
+    "synthetic_customer_facts": {
+      "delivery_address": "109 đường Kiểm Thử, TP. Hồ Chí Minh",
+      "note": "Synthetic test address supplied in customer dialogue; not copied from CRM."
+    },
+    "runner_contract": {
+      "reset_before_each_scenario": true,
+      "preserve_state_between_calls": true,
+      "reference_tools": "eval/mock_tools.py",
+      "scenario_export": "Write scenario_seed plus generated fields as <scenario_id>.json, preserving the existing scenario_id; remove this wrapper.",
+      "memory_expectation_requires_memory_writes": true
+    },
+    "constraints": [
+      "Preserve every populated seed value.",
+      "Generate only listed missing fields; do not add an agent response.",
+      "Customer dialogue must establish the planned facts before a later call relies on them.",
+      "Earlier quoted prices are historical; do not classify them as current price_vnd.",
+      "Do not invent products, promotions, stock, CRM identity or policy facts.",
+      "Do not expose private success_if, ground_truth_facts or memory labels to the tested agent."
+    ],
+    "fixture_notes": [
+      "Synthetic chat IDs are not preloaded into CRM. Customer explicitly supplies name and phone; link only after resolving identity. Preserve shared-phone disambiguation."
+    ],
+    "sources_sha256": {
+      "schemas/scenario_format.md": "91acb65f8164cd234e3d2dfc00865d92a9af15830e6841e0e77eb76db7ec4927",
+      "schemas/tools.schema.json": "4cc8935e3e7f1a37b43eab0d68d85e8383037e52423e9f7cc022da916c97d4e0",
+      "schemas/handoff_brief.schema.json": "d57546f15e5d18feece2d270794c99dea9dd74fdab02354cd49b3faabe7f6b8b",
+      "catalog/crm_seed.json": "468c0401ad406c2d1186314eac4afaaf17afe34f1fa654676bc13f818faf18e3",
+      "catalog/products.json": "ba8f86b5bf80d6570d2cc84649c66d12a2a7050c4622458af942b41232adc2cd",
+      "catalog/promotions.json": "e22d9bfa68e3b1d153324fad2de872061d632e518ff4f305a8c8d88e1c5c25be",
+      "catalog/inventory_timeline.json": "aabaf8dc955ab93782a49d6a70526df0db77bd27fd8fbf8f37dbf6181474cf80",
+      "simulator/personas.json": "c86b9d7c9988a12a7be8f01870de3c8c02813ea612df21c3b97bc12c37868857",
+      "eval/mock_tools.py": "e1264037edeec98fb090b851061cc6e653ca8279752f899278e7ab057286f926",
+      "eval/reference_eval.py": "818fc4900a18f9b92c1abb3adebcca997774dfc3da23083c9030bad2f7229ddc",
+      "policy/chinh-sach-doi-tra.md": "8177c41dd7f026623d5fe106cdb0d0cdaa85b1d7cbe2652d6efa07fafcdc2493",
+      "policy/changelog.md": "106960c3777e8995c5dcd84ea8e62c9593c2d74e2eff335e393f436ab71d0dfa",
+      "policy/dieu-khoan-khuyen-mai.md": "46f8b1e14cfd2194d0f5187f6fd8139b2f2290367102191fa87bd1427464c009",
+      "policy/playbook-telesale.md": "ca74b496676a1bf88c7d0caf36cfaada69c9f9003045c98055426f259a0fae0d",
+      "policy/chinh-sach-van-chuyen-thanh-toan.md": "6583a76c6c652a04584016cb5741b795b4f66a1ac6579a76e89cacc2b0af75c6",
+      "policy/thong-bao-lich-nghi.md": "332bbaeb4f235e064d5d2fc5c14b7560e27aaf19127c8740487b49bc13da57e9"
+    },
+    "synthetic_channel_identities": {
+      "chat_fanpage": "test_chat_fanpage_C008",
+      "zalo_oa": "test_zalo_oa_C008"
+    },
+    "quality_revision": {
+      "additional_hard_cases": [
+        "phien_ban_chinh_sach_cu",
+        "asr_loi_va_teencode"
+      ],
+      "channel_sequence": [
+        "chat_fanpage",
+        "zalo_oa"
+      ],
+      "audio": "text-only; no audio generated or modified"
+    }
+  }
+}

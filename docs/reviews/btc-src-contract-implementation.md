@@ -1,6 +1,6 @@
 # Kết quả sửa contract BTC
 
-Bản đồng bộ F01–F12 và sáu bản sửa sau review. Nguồn đối chiếu là các schema cùng `eval/mock_tools.py` / `eval/reference_eval.py` hiện có trong `dataset/BTC-Data-Vong1-TEAMS`.
+Bản đồng bộ F01–F12 và sáu bản sửa sau review. Nguồn đối chiếu là các schema cùng `eval/mock_tools.py` / `eval/reference_eval.py` hiện có trong `dataset/organizer`.
 
 ## Phạm vi đã hoàn tất
 

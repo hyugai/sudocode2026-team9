@@ -1,6 +1,6 @@
 # PostgreSQL local: một quy trình từ JSON đến database
 
-Chạy các lệnh PowerShell dưới đây từ thư mục gốc repository. Cần Docker Desktop đang chạy và môi trường Python của dự án đã cài dependencies. Quy trình này tạo **một database mới trên máy bạn** rồi nạp dữ liệu từ `dataset/BTC-Data-Vong1-TEAMS/catalog/`; không dùng dump hoặc database của teammate.
+Chạy các lệnh PowerShell dưới đây từ thư mục gốc repository. Cần Docker Desktop đang chạy và môi trường Python của dự án đã cài dependencies. Quy trình này tạo **một database mới trên máy bạn** rồi nạp dữ liệu từ `dataset/organizer/catalog/`; không dùng dump hoặc database của teammate.
 
 ## 1. Tạo PostgreSQL
 
@@ -42,7 +42,7 @@ Không commit `.env`. Mật khẩu ở đây chỉ là ví dụ local; nếu đ�
 .\.venv\Scripts\python.exe scripts\migrate_catalog.py
 ```
 
-`scripts/migrate_catalog.py` đọc bốn file `products.json`, `promotions.json`, `inventory_timeline.json`, `crm_seed.json` trong `dataset/BTC-Data-Vong1-TEAMS/catalog/`, tạo schema (kể cả `orders`) và nạp products, variants, promotions, inventory, customers cùng các order có sẵn trong CRM seed. Script **từ chối chạy nếu database đã có bảng ứng dụng**, để không ghi đè dữ liệu. Vì vậy chỉ chạy bước này một lần trên database mới.
+`scripts/migrate_catalog.py` đọc bốn file `products.json`, `promotions.json`, `inventory_timeline.json`, `crm_seed.json` trong `dataset/organizer/catalog/`, tạo schema (kể cả `orders`) và nạp products, variants, promotions, inventory, customers cùng các order có sẵn trong CRM seed. Script **từ chối chạy nếu database đã có bảng ứng dụng**, để không ghi đè dữ liệu. Vì vậy chỉ chạy bước này một lần trên database mới.
 
 ## 4. Kiểm tra
 

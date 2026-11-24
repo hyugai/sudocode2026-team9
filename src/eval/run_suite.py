@@ -235,8 +235,8 @@ def main():
     load_dotenv(ROOT / ".env")
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--version",default="benchmark_v"+datetime.now().strftime("%Y%m%d%H%M%S"))
-    parser.add_argument("--scenarios",type=Path,default=ROOT / "dataset/iterative-refinement/scenarios_complete dataset")
-    parser.add_argument("--audio-root",type=Path,default=ROOT / "dataset/iterative-refinement/audio")
+    parser.add_argument("--scenarios",type=Path,default=ROOT / "dataset/main/scenarios_complete")
+    parser.add_argument("--audio-root",type=Path,default=ROOT / "dataset/main/audio")
     parser.add_argument("--output-root",type=Path,default=ROOT / "outputs/benchmark")
     parser.add_argument("--limit",type=int,default=40)
     parser.add_argument("--input-kinds",nargs="+",choices=["text","audio"],default=["text","audio"])
@@ -318,7 +318,7 @@ def main():
                 "measurement_mode":"non_streaming",
                 "profile":args.profile,"memory_backend":os.environ.get("CUSTOMER_MEMORY_BACKEND","file"),
                 "timing_boundary":"harness entry to complete guarded answer before persistence; TTFT=Total; offline ASR subtracted; request completion reported separately",
-                "latency_guide":"dataset/BTC-Data-Vong1-TEAMS/eval/huong-dan-do-latency.md",
+                "latency_guide":"dataset/organizer/eval/huong-dan-do-latency.md",
                 "precomputed_parts":[],"precomputed_parts_policy":"observed per turn before current-turn persistence",
                 "freshness":"CRM/profile/order history reloaded at call entry; remembered SKU inventory/promotions rechecked; cross-channel interaction source unavailable"}
     source_paths = sorted((ROOT / "src/eval").glob("*.py")) + [

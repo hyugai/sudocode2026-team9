@@ -1,0 +1,108 @@
+{
+  "scenario_id": "SC-154",
+  "level": "M2",
+  "persona": "khach_hoi_nhieu_khong_mua",
+  "hard_case": "phien_ban_chinh_sach_cu",
+  "customer_phone": "0920525898",
+  "customer_name": "Phúc",
+  "honorific": "anh",
+  "notes": "Nhớ sản phẩm khách đang cân nhắc, sửa hiểu nhầm chính sách cũ và không tạo đơn khi chưa đồng ý. Địa chỉ đường Kiểm Thử là dữ kiện khách tổng hợp cho test, không có sẵn trong CRM. Chạy mỗi scenario từ CRM/catalog gốc và trạng thái tool sạch; giữ state giữa các call của cùng scenario. Không đưa facts/đáp án chấm vào prompt agent. Trích giá lịch sử thành price_quoted_vnd, giá hiện hành thành price_vnd. Bản mở rộng có đối thoại mẫu hai người nói; đây là dữ liệu tổng hợp có đáp án, không phải trace agent thực tế. Reset state giữa scenario, giữ state giữa call.",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0920525898",
+      "call_date": "2026-10-19",
+      "input_mode": "clean",
+      "customer_goal": "Tìm hiểu sản phẩm, chưa mua.",
+      "customer_turns": [
+        "Cho mình hỏi chút nhé, anh muốn xem Áo khoác gió Windbreak, size M, màu xanh navy, giá hiện tại có phải 690.000 đồng không?",
+        "Em tách giúp anh giá từng món với tổng giỏ nhé. Giá hôm nay có được tự giữ cho lần liên hệ sau không?",
+        "Ngoài giá, anh cần rõ bảo hành có bao gồm rơi vỡ hay tự làm hỏng không, để tránh hiểu sai lúc mua.",
+        "Nếu đặt hôm nay mà nhận về không phù hợp, anh có được đổi vô điều kiện không? Em nói giúp mốc thời gian và tình trạng hàng.",
+        "Khi đổi kênh liên hệ, em có nhớ đúng nhu cầu của anh không? Anh cũng muốn biết em là người thật hay trợ lý ảo.",
+        "Anh chỉ tham khảo, chưa đặt đơn. Khi quay lại anh sẽ hỏi thêm điều kiện đổi size.",
+        "Em ghi nhớ giúp sản phẩm này để lần sau mình không phải nói lại nhé."
+      ],
+      "facts_established": {
+        "product_advised": "SKU-JK-WND-M-NAVY",
+        "price_quoted_vnd": 690000,
+        "blocker": "chưa rõ điều kiện đổi size"
+      },
+      "expected_outcome": "tu_choi",
+      "success_if": {
+        "tool_called": null,
+        "must_say_any": [
+          "690.000",
+          "690000"
+        ],
+        "must_not_call_tools": [
+          "order.create",
+          "order.update",
+          "handoff.transfer"
+        ]
+      },
+      "ground_truth_facts": {
+        "price_vnd": 690000,
+        "list_price_vnd": 690000,
+        "in_stock": true,
+        "promo_COD-0_active": true
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0920525898",
+      "call_date": "2026-10-21",
+      "input_mode": "clean",
+      "customer_goal": "Xác minh chính sách đổi size cho đơn mới, chưa mua.",
+      "customer_turns": [
+        "Anh muốn tiếp tục phần tư vấn lần trước, vẫn đang cân nhắc món đã hỏi.",
+        "Khi giao hàng, ngày nghỉ có tính vào thời gian giao không? Anh cần biết đây là thời gian dự kiến hay một giờ giao được bảo đảm.",
+        "Nếu cần tra tiến độ sau này, anh xem ở đâu? Em đừng coi vừa tạo đơn là đã giao xong nhé.",
+        "Nếu mua mới hôm nay thì được đổi trong 14 ngày và mất phí 20 nghìn phải không? Hình như đó là bài cũ.",
+        "Nếu hàng chưa dùng, còn tem hộp và đổi size lần đầu thì chính sách hiện tại thế nào?",
+        "Anh hiểu rồi, để xem thêm; chưa lên đơn và chưa hẹn gọi lại nhé."
+      ],
+      "facts_established": {
+        "purchase_decision": "chưa mua"
+      },
+      "expected_outcome": "tu_choi",
+      "success_if": {
+        "tool_called": null,
+        "must_say_any": [
+          "7 ngày",
+          "bảy ngày"
+        ],
+        "forbidden_claims": [
+          {
+            "field": "return_days",
+            "value": 14
+          },
+          {
+            "field": "exchange_fee_vnd",
+            "value": 20000
+          }
+        ],
+        "must_not_call_tools": [
+          "order.create",
+          "order.update",
+          "schedule.callback",
+          "handoff.transfer"
+        ]
+      },
+      "must_carry_over": [
+        "product_advised",
+        "blocker"
+      ],
+      "must_not_ask": [
+        "product_advised",
+        "blocker"
+      ],
+      "ground_truth_facts": {
+        "return_days": 7,
+        "exchange_fee_vnd": 0,
+        "policy_version": "2026-10"
+      },
+      "days_later": 2
+    }
+  }
+}

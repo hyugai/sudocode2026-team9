@@ -12,7 +12,7 @@ from datetime import date, datetime, timezone, timedelta
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
-DATA = ROOT / "dataset/BTC-Data-Vong1-TEAMS"
+DATA = ROOT / "dataset/organizer"
 spec = importlib.util.spec_from_file_location("btc_order_parity", DATA / "eval/mock_tools.py")
 BTC = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(BTC)

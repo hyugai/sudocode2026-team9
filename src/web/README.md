@@ -14,7 +14,7 @@ The storefront list and product detail pages now request `/api/catalog/products`
 
 Each of the 40 current catalog SKUs maps to its own distinct local WebP illustration in `utils/product-illustrations.ts`. Cards and product details use the same image for that product. Mini/Pro models, air fryers, shoes, pumps, strollers and replacement filters have different physical designs. The catalog regression verifies unique image paths and SHA-256 hashes, preventing shared files or renamed duplicates. Images in `public/products/illustrations/` are labelled **Ảnh minh họa** and do not represent official model photographs or exact variant colors. Unknown SKUs and failed image loads retain a text fallback. These display assets never replace API product data. Generation prompts and provenance are recorded in [`docs/design/product-illustrations.json`](../../docs/design/product-illustrations.json).
 
-The `data/*.json` files are retained only for the separate demo cart and checkout flow. After changing the source BTC catalog used by that demo, copy the three JSON files from `dataset/BTC-Data-Vong1-TEAMS/catalog/` into `src/web/data/` and run `node --experimental-strip-types --test tests/catalog.test.mjs` to check they match.
+The `data/*.json` files are retained only for the separate demo cart and checkout flow. After changing the source BTC catalog used by that demo, copy the three JSON files from `dataset/organizer/catalog/` into `src/web/data/` and run `node --experimental-strip-types --test tests/catalog.test.mjs` to check they match.
 
 ```sh
 npm test
