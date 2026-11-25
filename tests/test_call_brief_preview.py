@@ -5,6 +5,7 @@ from unittest.mock import AsyncMock, patch
 from fastapi.testclient import TestClient
 
 from telesale_agent.application.memory.call_brief import CallBriefProjector
+from telesale_agent.adapters.llm.call_brief_summary import GeminiCallBriefSummarizer
 from telesale_agent.adapters.llm.llm_perceive import canonicalize_memory_deltas
 from telesale_agent.core.models import CallBrief, Channel, ConversationState, CustomerIdentity, Perception, TurnContext, TurnInput
 from telesale_agent.entrypoints.api import chat
@@ -76,6 +77,26 @@ class CallBriefPreviewTests(unittest.TestCase):
         self.assertIn("100000000", result["summary"])
         self.assertNotIn("0901234567", result["summary"])
         self.assertEqual(result["needs"], self.brief.needs)
+
+    def test_gemini_failure_preserves_the_chat_reply_and_original_brief(self):
+        model = SimpleNamespace(ainvoke=AsyncMock(side_effect=TimeoutError))
+        with patch.object(chat, "harness", SimpleNamespace(run_turn=AsyncMock(return_value=self.result))), \
+                patch.dict(chat.app.dependency_overrides, {
+                    chat.get_call_brief_summarizer: lambda: GeminiCallBriefSummarizer(model),
+                }), patch.dict(os.environ, {"API_KEY": ""}), \
+                patch.object(chat.provider_cooldown, "remaining", return_value=0), \
+                self.assertLogs("telesale_agent.adapters.llm.call_brief_summary", level="WARNING"):
+            client = TestClient(chat.app)
+            try:
+                response = client.post("/api/chat", json={"conversation_id": "brief-timeout", "message": "Chào bạn"})
+            finally:
+                client.close()
+                chat.sessions.pop("brief-timeout", None)
+                chat.session_locks.pop("brief-timeout", None)
+        model.ainvoke.assert_awaited_once()
+        self.assertEqual(response.status_code, 200, response.text)
+        self.assertEqual(response.json()["response"], self.result.response_text)
+        self.assertEqual(response.json()["call_brief"]["summary"], self.brief.summary)
 
     def test_text_and_audio_routes_return_current_brief_with_debug_disabled(self):
         async def run(item, state):

@@ -3,13 +3,15 @@
 ## Hành vi hiện tại
 
 - `POST /api/chat` và `POST /api/chat/audio` trả `call_brief` ở cấp cao nhất của JSON, không cần bật debug.
-- Call Brief lấy từ pipeline thật. Cuối lượt, hệ thống dựng lại bản tóm tắt cục bộ từ facts hiện tại sau bước lưu memory; không gọi thêm LLM/ASR hoặc chạy lại truy vấn tồn kho chỉ để cập nhật sidebar.
+- Cuối lượt, pipeline cập nhật Call Brief từ thông tin đã ghi nhận. Backend dùng Gemini để diễn đạt mục **Tóm tắt** thành một đoạn tiếng Việt ngắn từ Call Brief và các tin nhắn gần nhất.
 - Sidebar nhận brief cùng phản hồi của Synee và cập nhật ngay khi lượt thành công, không cần refresh hay nút cập nhật riêng.
 - Bản tóm tắt ưu tiên facts đang được khách nói đến. Các mục nhu cầu, băn khoăn và vấn đề chưa giải quyết phản ánh dữ liệu đã được pipeline nhận dạng/lưu, không phải các câu mẫu cố định trên frontend.
 - Với khách chưa nhập số điện thoại, facts được giữ trong brief của đúng phiên backend để cập nhật qua nhiều lượt text/audio. Không cần tạo hồ sơ khách hoặc ghi memory lâu dài cho phiên ẩn danh; phiên mới không kế thừa brief của khách trước.
 - `call_brief` chỉ gồm `summary`, `needs`, `objections`, `unresolved_issues`. Các mẫu số điện thoại/CCCD/STK được xử lý qua bộ che PII hiện có; không đưa `customer_id`, tên khách hoặc toàn bộ CRM/memory object vào trường này. Dữ liệu debug vẫn theo cấu hình riêng.
 
-Tên khóa fact như `budget_vnd`, `room_area_m2`, `has_children` có thể xuất hiện trong nhu cầu/tóm tắt vì đây là phép chiếu xác định từ dữ liệu pipeline, không phải một bản diễn giải mới bằng LLM. Mục Băn khoăn lấy từ `blocker`; mục Cần xử lý tiếp lấy từ `unresolved_question` khi có.
+Tên khóa fact như `budget_vnd`, `room_area_m2`, `has_children` có thể xuất hiện trong mục **Nhu cầu**. Mục **Băn khoăn** lấy từ `blocker` và mục **Cần xử lý tiếp** lấy từ `unresolved_question` khi có. Khi Gemini không trả được đoạn văn, giao diện dùng bản tóm tắt có sẵn của pipeline.
+
+Khách hàng và salesman xem cùng một bản tóm tắt Gemini cho hội thoại Chat đã lưu. Khi mở hội thoại cũ hoặc bản ghi Gemini Live ở giao diện salesman, backend tạo đoạn tóm tắt từ Call Brief đã lưu và nội dung trao đổi gần nhất.
 
 ## 1. Chuẩn bị
 
@@ -27,7 +29,7 @@ $env:ENABLE_DEBUG_RESPONSE = "false"
 .\.venv\Scripts\python.exe -m uvicorn telesale_agent.entrypoints.api.chat:app --app-dir src --host 127.0.0.1 --port 8000 --reload
 ```
 
-Giữ cấu hình kết nối và model trong `.env` theo cách khởi chạy hiện tại của dự án. Việc tắt debug không tắt Call Brief.
+Call Brief dùng `GOOGLE_API_KEY` hoặc `GEMINI_API_KEY` từ `.env`. Đặt `CALL_BRIEF_GEMINI_MODEL` nếu muốn chọn model Gemini riêng cho phần tóm tắt. Việc tắt debug không tắt Call Brief.
 
 ### Terminal 2 — frontend
 
@@ -91,7 +93,7 @@ Mở DevTools → Network, gửi một câu text rồi chọn request `/api/chat
 {
   "response": "... phản hồi của Synee ...",
   "call_brief": {
-    "summary": "... dữ liệu do pipeline dựng ...",
+    "summary": "Khách hàng muốn tìm máy lọc phù hợp cho phòng 25 m² với ngân sách 4 triệu đồng.",
     "needs": ["budget_vnd: 4000000", "room_area_m2: 25"],
     "objections": [],
     "unresolved_issues": []
