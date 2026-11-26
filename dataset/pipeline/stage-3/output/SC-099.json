@@ -1,42 +1,96 @@
 {
-  "scenario_id": "SC-099",
+  "scenario_id": "SC-113",
   "level": "M1",
-  "persona": "khach_da_mua_doi_size",
+  "persona": "khach_goi_lan_3_het_kien_nhan",
   "hard_case": null,
-  "customer_phone": "0991280845",
-  "customer_name": "Việt",
+  "customer_phone": "0928144976",
+  "customer_name": "Trung",
   "honorific": "anh",
   "notes": "return_for_post_purchase_support",
   "calls": {
     "call_1": {
       "channel": "hotline",
-      "channel_identity": "0991280845",
-      "call_date": "2026-10-29",
+      "channel_identity": "0928144976",
+      "call_date": "2026-10-22",
       "customer_turns": [
-        "Anh ơi, em đặt đơn giày sneaker Urban Classic xam ba mươi tám rồi, giá tám trăm chín mươi ngàn đồng, thanh toán khi nhận hàng nhé.",
-        "Giao đến Số 109, đường Nguyễn Trãi, phường Ninh Kiều, Cần Thơ.",
-        "Anh nhớ đơn em nhé, không được hỏi lại mã đơn hay sản phẩm đã mua nữa."
+        "Anh ơi, máy hút sữa điện đôi Spectra S1 bao nhiêu tiền?",
+        "Bốn triệu hai trăm chín mươi ngàn, đúng không?",
+        "Được, anh gọi lại cho em lúc mười giờ ngày hai mươi bốn tháng mười."
       ],
-      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "customer_goal": "Hỏi về sản phẩm và hẹn xem lại",
       "facts_established": {
-        "product_advised": "SKU-SN-CAS-38-XAM",
-        "price_quoted_vnd": 890000,
-        "payment": "COD",
-        "delivery_address": "Số 109, đường Nguyễn Trãi, phường Ninh Kiều, Cần Thơ",
-        "order_status": "created"
+        "product_advised": "SKU-MB-PUMP1",
+        "price_quoted_vnd": 4290000
       },
       "ground_truth_facts": {
-        "sku": "SKU-SN-CAS-38-XAM",
-        "price_vnd": 890000,
+        "sku": "SKU-MB-PUMP1",
+        "price_vnd": 4290000,
         "in_stock": true,
         "active_promos": [
+          "MOM-FREESHIP",
           "COD-0"
         ],
-        "expired_promos": [],
+        "expired_promos": [
+          "PUMP-GIFT"
+        ],
         "promo_expiry_dates": {
-          "COD-0": "2026-12-14"
+          "MOM-FREESHIP": "2026-11-29",
+          "COD-0": "2026-12-14",
+          "PUMP-GIFT": "2026-10-13"
         },
-        "estimated_delivery": "2026-10-31"
+        "scheduled_callback_at": "2026-10-24T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0928144976",
+          "callback_at": "2026-10-24T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0928144976",
+      "call_date": "2026-10-24",
+      "customer_turns": [
+        "Chuẩn rồi, em mua máy Spectra S1, giá bốn triệu hai trăm chín mươi.",
+        "Thanh toán khi nhận hàng, giao đến Đường Tôn Đức Thắng, phường Ô Môn, Cần Thơ.",
+        "Xong rồi, em đợi anh giao hàng."
+      ],
+      "days_later": 2,
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-MB-PUMP1",
+        "price_quoted_vnd": 4290000,
+        "payment": "COD",
+        "delivery_address": "Đường Tôn Đức Thắng, phường Ô Môn, Cần Thơ",
+        "order_status": "created"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-MB-PUMP1",
+        "price_vnd": 4290000,
+        "in_stock": true,
+        "active_promos": [
+          "MOM-FREESHIP",
+          "COD-0"
+        ],
+        "expired_promos": [
+          "PUMP-GIFT"
+        ],
+        "promo_expiry_dates": {
+          "MOM-FREESHIP": "2026-11-29",
+          "COD-0": "2026-12-14",
+          "PUMP-GIFT": "2026-10-13"
+        },
+        "estimated_delivery": "2026-10-28"
       },
       "memory_expectation": {
         "order_status": "created"
@@ -45,26 +99,22 @@
       "success_if": {
         "tool_called": "order.create",
         "args_match": {
-          "sku": "SKU-SN-CAS-38-XAM",
-          "price_vnd": 890000
+          "sku": "SKU-MB-PUMP1",
+          "price_vnd": 4290000
         }
       }
     },
-    "call_2": {
+    "call_3": {
       "channel": "hotline",
-      "channel_identity": "0991280845",
-      "call_date": "2026-11-02",
+      "channel_identity": "0928144976",
+      "call_date": "2026-10-25",
       "customer_turns": [
-        "Anh ơi, em nhận hàng rồi, nhưng size xam ba mươi tám nhỏ quá, em cần đổi sang size xam bốn mươi hai.",
-        "Anh nhớ là em đã đặt đơn theo giá tám trăm chín mươi ngàn đồng, thanh toán khi nhận hàng, giao đến Số 109, đường Nguyễn Trãi.",
-        "Đơn em vẫn còn nguyên, anh xem có thể đổi được không?",
-        "Chuyển sang size bốn mươi hai được không anh? Em cần gấp lắm."
+        "Đơn của em đã đặt chưa?",
+        "Đã giao rồi à? Thôi khỏi."
       ],
-      "days_later": 4,
-      "customer_goal": "Đổi sang size khác sau khi nhận hàng",
-      "facts_established": {
-        "new_variant_sku": "SKU-SN-CAS-42-XAM"
-      },
+      "days_later": 1,
+      "customer_goal": "Kiểm tra đơn đã mua",
+      "facts_established": {},
       "must_carry_over": [
         "product_advised",
         "price_quoted_vnd",
@@ -76,28 +126,29 @@
         "product_advised"
       ],
       "ground_truth_facts": {
-        "sku": "SKU-SN-CAS-38-XAM",
-        "price_vnd": 890000,
+        "sku": "SKU-MB-PUMP1",
+        "price_vnd": 4290000,
         "in_stock": true,
         "active_promos": [
+          "MOM-FREESHIP",
           "COD-0"
         ],
-        "expired_promos": [],
+        "expired_promos": [
+          "PUMP-GIFT"
+        ],
         "promo_expiry_dates": {
-          "COD-0": "2026-12-14"
-        },
-        "replacement_in_stock": true,
-        "exchange_fee_vnd": 0,
-        "policy_reference": "DT-03"
+          "MOM-FREESHIP": "2026-11-29",
+          "COD-0": "2026-12-14",
+          "PUMP-GIFT": "2026-10-13"
+        }
       },
       "expected_outcome": "chot_don",
       "success_if": {
-        "tool_called": "order.update",
+        "tool_called": "order.status",
         "args_match": {
-          "order_id": "OD600001",
-          "action": "exchange_size",
-          "new_variant_sku": "SKU-SN-CAS-42-XAM"
-        }
+          "order_id": "OD600001"
+        },
+        "max_agent_questions": 1
       }
     }
   }

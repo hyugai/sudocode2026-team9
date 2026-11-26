@@ -1,42 +1,39 @@
 {
-  "scenario_id": "SC-106",
+  "scenario_id": "SC-120",
   "level": "M1",
-  "persona": "khach_da_mua_doi_size",
-  "hard_case": null,
-  "customer_phone": "0979298416",
-  "customer_name": "Hương",
-  "honorific": "chị",
-  "notes": "return_for_post_purchase_support",
+  "persona": "khach_quay_lai_sau_8_thang",
+  "hard_case": "stale_address",
+  "customer_phone": "0910285940",
+  "customer_name": "Dũng",
+  "honorific": "anh",
+  "notes": "resume_with_uncertain_identity_or_history",
   "calls": {
     "call_1": {
       "channel": "hotline",
-      "channel_identity": "0979298416",
-      "call_date": "2026-10-15",
+      "channel_identity": "0910285940",
+      "call_date": "2026-02-17",
       "customer_turns": [
-        "Chị ơi, em muốn mua màng lọc thay thế Xiaomi Smart bốn, giá bao nhiêu vậy?",
-        "Cảm ơn chị, em sẽ thanh toán khi nhận hàng.",
-        "Địa chỉ giao hàng là số 1 ngõ 282 đường Kim Giang, Hà Nội."
+        "Anh ơi, em nhớ là hôm trước em đặt cái nồi chiên không dầu Philips 6.2L rồi đúng không?",
+        "Giá là ba triệu chín trăm chín mươi nghìn, thanh toán khi nhận hàng đúng không?",
+        "Địa chỉ giao là Khối 3, xã Núi Thành, Đà Nẵng, em chắc không nhầm.",
+        "Được rồi, em đồng ý."
       ],
       "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
       "facts_established": {
-        "product_advised": "SKU-XM-FLT",
-        "price_quoted_vnd": 590000,
+        "product_advised": "SKU-AF-6L",
+        "price_quoted_vnd": 3990000,
         "payment": "COD",
-        "delivery_address": "Số 1 ngõ 282 đường Kim Giang, phường Định Công, Hà Nội",
+        "delivery_address": "Khối 3, xã Núi Thành, Đà Nẵng",
         "order_status": "created"
       },
       "ground_truth_facts": {
-        "sku": "SKU-XM-FLT",
-        "price_vnd": 590000,
+        "sku": "SKU-AF-6L",
+        "price_vnd": 3990000,
         "in_stock": true,
-        "active_promos": [
-          "COD-0"
-        ],
+        "active_promos": [],
         "expired_promos": [],
-        "promo_expiry_dates": {
-          "COD-0": "2026-12-14"
-        },
-        "estimated_delivery": "2026-10-17"
+        "promo_expiry_dates": {},
+        "estimated_delivery": "2026-02-19"
       },
       "memory_expectation": {
         "order_status": "created"
@@ -45,22 +42,23 @@
       "success_if": {
         "tool_called": "order.create",
         "args_match": {
-          "sku": "SKU-XM-FLT",
-          "price_vnd": 590000
+          "sku": "SKU-AF-6L",
+          "price_vnd": 3990000
         }
       }
     },
     "call_2": {
       "channel": "hotline",
-      "channel_identity": "0979298416",
-      "call_date": "2026-10-18",
+      "channel_identity": "0910285940",
+      "call_date": "2026-10-17",
       "customer_turns": [
-        "Chị ơi, em vừa đặt mua màng lọc thay thế Xiaomi Smart bốn giá năm trăm chín mươi nghìn đồng.",
-        "Mình đã đặt hàng rồi, giờ muốn kiểm tra đơn có tiến triển không.",
-        "Chị không nhớ đơn của em à? Em đã nói rõ địa chỉ giao hàng rồi."
+        "Anh ơi, em gọi lại để xác nhận lại địa chỉ giao hàng nha.",
+        "Địa chỉ là Khối 3, xã Núi Thành, Đà Nẵng, đúng không ạ?",
+        "Nhà mình ở đâu?",
+        "Bên em không lưu à?"
       ],
-      "days_later": 3,
-      "customer_goal": "Kiểm tra đơn đã mua",
+      "days_later": 242,
+      "customer_goal": "Xác nhận thông tin người nhận trước khi tra đơn cũ",
       "facts_established": {},
       "must_carry_over": [
         "product_advised",
@@ -73,8 +71,8 @@
         "product_advised"
       ],
       "ground_truth_facts": {
-        "sku": "SKU-XM-FLT",
-        "price_vnd": 590000,
+        "sku": "SKU-AF-6L",
+        "price_vnd": 3990000,
         "in_stock": true,
         "active_promos": [
           "COD-0"
@@ -89,7 +87,11 @@
         "tool_called": "order.status",
         "args_match": {
           "order_id": "OD600001"
-        }
+        },
+        "must_say_any": [
+          "xác nhận",
+          "địa chỉ"
+        ]
       }
     }
   }

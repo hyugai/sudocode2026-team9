@@ -1,6 +1,5 @@
 """Join accepted transcripts to Stage 1 and export BTC scenarios."""
 
-from collections import Counter, defaultdict
 import json
 from pathlib import Path
 import re
@@ -8,9 +7,9 @@ import runpy
 from tempfile import TemporaryDirectory
 
 from validate_and_split import (
-    LEGACY_PII_TOKEN, MINIMUMS, PII, SIMILARITY_LIMIT, below_minimum, call_map,
-    check_evaluator, deduplicate, normalize, read_json, stats_for, strings, write_json,
-    write_jsonl,
+    LEGACY_PII_TOKEN, PII, SIMILARITY_LIMIT, below_minimum, call_map,
+    check_evaluator, deduplicate, normalize, numbered_scenarios, read_json,
+    stats_for, strings, write_json, write_jsonl,
 )
 
 
@@ -101,52 +100,20 @@ def privacy_findings(scenario, customer, crm, venues):
     return sorted(flagged)
 
 
-def split_journeys(rows, target, public):
-    def stratum(row):
-        return row["persona"], row["edge_case_type"], len(call_map(row))
-
-    public_phones = {phone_key(row["customer_phone"]) for row in public if row.get("customer_phone")}
-    groups = defaultdict(list)
-    for row in rows:
-        groups[phone_key(row["customer_phone"])].append(row)
-    golden = [row for phone in sorted(groups.keys() & public_phones) for row in groups.pop(phone)]
-
-    counts = Counter(map(stratum, rows))
-    desired = {kind: count * max(target, len(golden)) / len(rows) for kind, count in counts.items()}
-    selected = Counter(map(stratum, golden))
-
-    def gain(group):
-        return sum(
-            abs(desired[kind] - selected[kind]) - abs(desired[kind] - selected[kind] - count)
-            for kind, count in Counter(map(stratum, group)).items()
-        )
-
-    while len(golden) < target and len(groups) > 1:
-        phone = max(groups, key=lambda key: gain(groups[key]))
-        group = groups.pop(phone)
-        golden.extend(group)
-        selected.update(map(stratum, group))
-
-    memory = [row for group in groups.values() for row in group]
-    if len(golden) < target or not memory:
-        raise ValueError("There are too few distinct customer groups for both splits.")
-    if {row["customer_id"] for row in memory} & {row["customer_id"] for row in golden}:
-        raise ValueError("A customer appears in both splits.")
-    return sorted(memory, key=lambda row: row["scenario_id"]), sorted(golden, key=lambda row: row["scenario_id"])
-
-
-def export(output, scenarios, memory, golden, drops, audit, stats):
+def export(output, scenarios, drops, audit, stats):
+    files = numbered_scenarios(stats["tier"], scenarios)
+    renamed = []
     with TemporaryDirectory(prefix=".stage-3-", dir=output.parent) as temporary:
         staged = Path(temporary) / "output"
         staged.mkdir()
-        for row in scenarios:
-            write_json(staged / f'{row["scenario_id"].removeprefix("TEAM-")}.json', row)
-        splits = staged / "splits"
-        splits.mkdir()
-        write_jsonl(splits / "journeys_memory_seed.jsonl", memory)
-        write_json(splits / "team_golden_scenarios.json", golden)
+        for filename, row in files:
+            scenario_id = row["scenario_id"]
+            if filename != f'{scenario_id.removeprefix("TEAM-")}.json':
+                renamed.append({"original_scenario_id": scenario_id, "new_filename": filename})
+            write_json(staged / filename, row)
         reports = staged / "audit"
         reports.mkdir()
+        write_jsonl(reports / "renamed_scenarios.jsonl", renamed)
         write_jsonl(reports / "stage3_dropped_duplicates.jsonl", drops)
         write_json(reports / "pii_audit_report.json", audit)
         write_json(reports / "dataset_stats.json", stats)
@@ -176,8 +143,6 @@ def finalize(input_dir, output, *, btc_dir, venue_catalog, batch_size):
     organizer = btc_dir / "BTC-Data-Vong1-TEAMS"
     crm = {row["customer_id"]: row for row in read_json(organizer / "catalog/crm_seed.json")["customers"]}
     venues = {row["reference_id"]: row for row in read_json(venue_catalog)}
-    public_dir = organizer / "test_set/public_sample"
-    public = [read_json(public_dir / f"SAMPLE-{number:02d}.json") for number in range(1, 8)]
     eligible, rejected = [], []
     scenarios = {}
     accepted.sort(key=lambda row: row["scenario_id"])
@@ -214,19 +179,9 @@ def finalize(input_dir, output, *, btc_dir, venue_catalog, batch_size):
     }
     if failures := below_minimum(stats, tier):
         raise ValueError(f"{tier} minimums failed: {', '.join(failures)}. Privacy rejections: {len(rejected)}.")
-    memory, golden = split_journeys(retained, MINIMUMS[tier][-1], public)
     individual = [scenarios[row["scenario_id"]] for row in retained]
-    if len({row["scenario_id"].removeprefix("TEAM-") for row in individual}) != len(individual):
-        raise ValueError("Journey filenames are not unique.")
-    memory = [scenarios[row["scenario_id"]] for row in memory]
-    custom_golden = [scenarios[row["scenario_id"]] for row in golden]
-    golden = custom_golden + public
-    if len({row["scenario_id"] for row in golden}) != len(golden):
-        raise ValueError("Golden scenario IDs are not unique.")
-
     evaluator = runpy.run_path(str(btc_dir / "BTC-cap-nhat-11-2026/eval/reference_eval.py"))
     check_evaluator(individual, evaluator)
-    check_evaluator(golden, evaluator)
     drops = [
         {"scenario_id": row["scenario"]["scenario_id"], "duplicate_of": row["duplicate_of"],
          "similarity": row["similarity"]}
@@ -234,10 +189,8 @@ def finalize(input_dir, output, *, btc_dir, venue_catalog, batch_size):
     ]
     audit = {"scope": "synthetic_journeys", "checked_journeys": len(accepted),
              "guardrail_violations": 0, "rejected_journeys": rejected}
-    stats.update(tier=tier, accepted_transcripts=len(accepted), memory_seed_journeys=len(memory),
-                 golden_test_scenarios=len(custom_golden), btc_public_scenarios=len(public),
-                 combined_golden_scenarios=len(golden), duplicates_removed=len(drops),
+    stats.update(tier=tier, accepted_transcripts=len(accepted), duplicates_removed=len(drops),
                  privacy_rejections=len(rejected), guardrail_violations=0,
                  cosine_threshold=SIMILARITY_LIMIT, reference_eval_smoke_check="passed")
-    export(output, individual, memory, golden, drops, audit, stats)
+    export(output, individual, drops, audit, stats)
     return stats

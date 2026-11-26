@@ -1,105 +1,99 @@
 {
-  "scenario_id": "SC-065",
+  "scenario_id": "SC-077",
   "level": "M1",
-  "persona": "khach_so_gia",
-  "hard_case": "expired_promo",
-  "customer_phone": "0928144976",
-  "customer_name": "Trung",
+  "persona": "khach_do_du_hoi_nguoi_nha",
+  "hard_case": "restock",
+  "customer_phone": "0993186032",
+  "customer_name": "Đức",
   "honorific": "anh",
   "notes": "return_after_price_or_stock_change",
   "calls": {
     "call_1": {
       "channel": "hotline",
-      "channel_identity": "0928144976",
-      "call_date": "2026-10-22",
+      "channel_identity": "0993186032",
+      "call_date": "2026-10-23",
       "customer_turns": [
-        "Anh ơi, em vừa so giá với bên khác rồi, họ chỉ năm triệu một trăm hai mươi ngàn.",
-        "Bên anh có ưu đãi tặng màng lọc khi mua AirPure X/Y, đúng không?",
-        "Giá của anh là năm triệu hai trăm ngàn, nhưng bên họ rẻ hơn, anh có thể giảm được không?",
-        "Ưu đãi hết ngày hai mươi hai tháng mười, anh ghi nhớ nhé.",
-        "Anh có thể gọi lại cho em lúc mười giờ ngày hai mươi ba tháng mười được không?"
+        "Anh ơi, em đang xem giày chạy bộ RunLite hai Pro đen bốn mươi mốt, giá một triệu năm trăm hai mươi mốt ngàn.",
+        "Em xin hỏi là nếu mua thì có được trả góp không? Em đang hỏi người nhà.",
+        "Chị có thể báo lại cho em vào mười giờ ngày hai mươi bốn tháng mười được không?"
       ],
-      "customer_goal": "So báo giá với nơi khác trước khi quyết định",
+      "customer_goal": "Xem sản phẩm trong ngân sách và hỏi ý kiến người nhà",
       "facts_established": {
-        "product_advised": "SKU-AP-Y",
-        "price_quoted_vnd": 5200000,
-        "promo_code": "GIFT-FILTER",
-        "promo_expiry": "2026-10-22",
-        "competitor_price_vnd": 5120000
+        "product_advised": "SKU-SN-RUN2-41-DEN",
+        "price_quoted_vnd": 1521000,
+        "budget_vnd": 2000000
       },
       "ground_truth_facts": {
-        "sku": "SKU-AP-Y",
-        "price_vnd": 5200000,
-        "in_stock": true,
+        "sku": "SKU-SN-RUN2-41-DEN",
+        "price_vnd": 1521000,
+        "in_stock": false,
         "active_promos": [
-          "NAM-SHIP0",
           "COD-0",
-          "GIFT-FILTER"
+          "RUN-10"
         ],
-        "expired_promos": [],
+        "expired_promos": [
+          "RUN2-SALE"
+        ],
         "promo_expiry_dates": {
-          "GIFT-FILTER": "2026-10-22",
-          "NAM-SHIP0": "2026-11-05",
-          "COD-0": "2026-12-14"
+          "RUN-10": "2026-10-25",
+          "COD-0": "2026-12-14",
+          "RUN2-SALE": "2026-10-07"
         },
-        "scheduled_callback_at": "2026-10-23T10:00"
+        "restock_expected": "2026-10-24",
+        "scheduled_callback_at": "2026-10-24T10:00"
       },
       "expected_outcome": "hen_goi_lai",
       "success_if": {
         "tool_called": "schedule.callback",
         "args_match": {
-          "customer_phone": "0928144976",
-          "callback_at": "2026-10-23T10:00"
+          "customer_phone": "0993186032",
+          "callback_at": "2026-10-24T10:00"
         }
       }
     },
     "call_2": {
       "channel": "hotline",
-      "channel_identity": "0928144976",
-      "call_date": "2026-10-23",
+      "channel_identity": "0993186032",
+      "call_date": "2026-10-24",
       "customer_turns": [
-        "Anh ơi, em đã đợi đến ngày hôm nay rồi. Giá của anh là năm triệu hai trăm ngàn, đúng như hôm trước.",
-        "Anh nói là thanh toán khi nhận hàng, và giao đến Đường Tôn Đức Thắng, phường Ô Môn, Cần Thơ.",
-        "Em đồng ý mua theo giá này, nếu anh có thể xác nhận đơn hàng.",
-        "Em cũng sẵn sàng nhận quà tặng kèm theo, nếu có.",
-        "Anh có thể giao hàng nhanh được không? Em muốn nhận sớm."
+        "Chị ơi, hôm trước chị nói rồi mà, em vẫn chưa biết. Em xin hỏi lại là có còn giày RunLite hai Pro đen bốn mươi mốt không?",
+        "Giá một triệu năm trăm hai mươi mốt ngàn, đúng không? Em thấy trong ngân sách, nhưng em chưa biết người nhà nói sao.",
+        "Chị có thể giao hàng đến 82 Bà Huyện Thanh Quan, TP.HCM không? Em sẽ thanh toán khi nhận hàng."
       ],
       "days_later": 1,
       "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
       "facts_established": {
-        "product_advised": "SKU-AP-Y",
-        "price_quoted_vnd": 5200000,
+        "product_advised": "SKU-SN-RUN2-41-DEN",
+        "price_quoted_vnd": 1521000,
         "payment": "COD",
-        "delivery_address": "Đường Tôn Đức Thắng, phường Ô Môn, Cần Thơ",
+        "delivery_address": "82 Bà Huyện Thanh Quan, phường Nhiêu Lộc, TP. Hồ Chí Minh",
         "order_status": "created"
       },
       "must_carry_over": [
         "product_advised",
         "price_quoted_vnd",
-        "promo_code",
-        "promo_expiry",
-        "competitor_price_vnd"
+        "budget_vnd"
       ],
       "must_not_ask": [
         "product_advised"
       ],
       "ground_truth_facts": {
-        "sku": "SKU-AP-Y",
-        "price_vnd": 5200000,
+        "sku": "SKU-SN-RUN2-41-DEN",
+        "price_vnd": 1521000,
         "in_stock": true,
         "active_promos": [
-          "NAM-SHIP0",
-          "COD-0"
+          "COD-0",
+          "RUN-10"
         ],
         "expired_promos": [
-          "GIFT-FILTER"
+          "RUN2-SALE"
         ],
         "promo_expiry_dates": {
-          "GIFT-FILTER": "2026-10-22",
-          "NAM-SHIP0": "2026-11-05",
-          "COD-0": "2026-12-14"
+          "RUN-10": "2026-10-25",
+          "COD-0": "2026-12-14",
+          "RUN2-SALE": "2026-10-07"
         },
-        "estimated_delivery": "2026-10-27"
+        "estimated_delivery": "2026-10-28"
       },
       "memory_expectation": {
         "order_status": "created"
@@ -108,8 +102,8 @@
       "success_if": {
         "tool_called": "order.create",
         "args_match": {
-          "sku": "SKU-AP-Y",
-          "price_vnd": 5200000
+          "sku": "SKU-SN-RUN2-41-DEN",
+          "price_vnd": 1521000
         }
       }
     }

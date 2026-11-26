@@ -1,32 +1,31 @@
 {
-  "scenario_id": "SC-029",
+  "scenario_id": "SC-037",
   "level": "M1",
-  "persona": "khach_hoi_nhieu_khong_mua",
+  "persona": "khach_da_kenh_fb_hotline",
   "hard_case": null,
-  "customer_phone": "0994157718",
-  "customer_name": "Tiến",
-  "honorific": "anh",
-  "notes": "consider_and_decide",
+  "customer_phone": "0979298416",
+  "customer_name": "Hương",
+  "honorific": "chị",
+  "notes": "continue_across_channels",
   "calls": {
     "call_1": {
-      "channel": "hotline",
-      "channel_identity": "0994157718",
-      "call_date": "2026-10-22",
+      "channel": "zalo_oa",
+      "channel_identity": "zalo_hương95",
+      "call_date": "2026-10-30",
       "customer_turns": [
-        "Anh ơi, nồi chiên không dầu Xiaomi 4.5L có dùng được cho chảo gang không ạ?",
-        "Giá một triệu năm trăm chín mươi nghìn đồng, có phải là giá gốc không ạ?",
-        "Em có thể giải thích rõ hơn về chức năng tự động tắt khi hết thời gian không?",
-        "Còn kích cỡ thì có to không, em ơi? Mình dùng cho gia đình 4 người có ổn không?",
-        "Để xem thêm."
+        "K, bn xem sp nồi chiên Lock&Lock 4L đc k? Đc 1.890k.",
+        "Mình đang xem, bn nhắn zalo cho mình xem lại nha.",
+        "Hẹn 10h ngày 2/11 nhé.",
+        "Cảm ơn nha."
       ],
-      "customer_goal": "Hỏi kỹ cách sử dụng và cân nhắc thêm trước khi mua",
+      "customer_goal": "Hỏi về sản phẩm và hẹn xem lại",
       "facts_established": {
-        "product_advised": "SKU-AF-XM",
-        "price_quoted_vnd": 1590000
+        "product_advised": "SKU-AF-4L",
+        "price_quoted_vnd": 1890000
       },
       "ground_truth_facts": {
-        "sku": "SKU-AF-XM",
-        "price_vnd": 1590000,
+        "sku": "SKU-AF-4L",
+        "price_vnd": 1890000,
         "in_stock": true,
         "active_promos": [
           "COD-0"
@@ -35,31 +34,36 @@
         "promo_expiry_dates": {
           "COD-0": "2026-12-14"
         },
-        "scheduled_callback_at": "2026-10-23T10:00"
+        "scheduled_callback_at": "2026-11-02T10:00"
       },
       "expected_outcome": "hen_goi_lai",
       "success_if": {
         "tool_called": "schedule.callback",
         "args_match": {
-          "customer_phone": "0994157718",
-          "callback_at": "2026-10-23T10:00"
+          "customer_phone": "0979298416",
+          "callback_at": "2026-11-02T10:00"
         }
       }
     },
     "call_2": {
       "channel": "hotline",
-      "channel_identity": "0994157718",
-      "call_date": "2026-10-23",
+      "channel_identity": "0979298416",
+      "call_date": "2026-11-02",
       "customer_turns": [
-        "Anh ơi, hôm qua em hỏi giá nồi chiên không dầu Xiaomi 4.5L là một triệu năm trăm chín mươi nghìn, giờ giá có đổi không ạ?",
-        "Em đang cân nhắc thêm, có thể hoãn mua được không ạ?",
-        "Em hỏi lại, nếu không mua thì có bị tính phí gì không ạ?",
-        "Để xem thêm."
+        "Chào chị, bên em có nhắn zalo hỏi về nồi chiên Lock&Lock 4L 1.890k.",
+        "Àa, bên em nhắn Facebook báo giá 1.890k rồi mà.",
+        "Chị ơi, mình muốn đặt 1 cái, thanh toán khi nhận hàng.",
+        "Giao đến số 1 ngõ 282 Kim Giang, Hà Nội.",
+        "Được rồi, mình chốt đơn."
       ],
-      "days_later": 1,
-      "customer_goal": "Xem lại báo giá và hoãn quyết định mua",
+      "days_later": 3,
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
       "facts_established": {
-        "product_advised": "SKU-AF-XM"
+        "product_advised": "SKU-AF-4L",
+        "price_quoted_vnd": 1890000,
+        "payment": "COD",
+        "delivery_address": "Số 1 ngõ 282 đường Kim Giang, phường Định Công, Hà Nội",
+        "order_status": "created"
       },
       "must_carry_over": [
         "product_advised",
@@ -69,8 +73,8 @@
         "product_advised"
       ],
       "ground_truth_facts": {
-        "sku": "SKU-AF-XM",
-        "price_vnd": 1590000,
+        "sku": "SKU-AF-4L",
+        "price_vnd": 1890000,
         "in_stock": true,
         "active_promos": [
           "COD-0"
@@ -78,12 +82,19 @@
         "expired_promos": [],
         "promo_expiry_dates": {
           "COD-0": "2026-12-14"
-        }
+        },
+        "estimated_delivery": "2026-11-04"
       },
-      "expected_outcome": "tu_choi",
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
       "success_if": {
-        "tool_called": null,
-        "args_match": {}
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-AF-4L",
+          "price_vnd": 1890000
+        }
       }
     }
   }

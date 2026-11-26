@@ -1,96 +1,44 @@
 {
-  "scenario_id": "SC-113",
+  "scenario_id": "SC-128",
   "level": "M1",
-  "persona": "khach_goi_lan_3_het_kien_nhan",
-  "hard_case": null,
-  "customer_phone": "0928144976",
-  "customer_name": "Trung",
-  "honorific": "anh",
-  "notes": "return_for_post_purchase_support",
+  "persona": "khach_da_mua_doi_size",
+  "hard_case": "verify_order_identity",
+  "customer_phone": "0979511174",
+  "customer_name": "Hiền",
+  "honorific": "chị",
+  "notes": "resume_with_uncertain_identity_or_history",
   "calls": {
     "call_1": {
       "channel": "hotline",
-      "channel_identity": "0928144976",
-      "call_date": "2026-10-22",
+      "channel_identity": "0979511174",
+      "call_date": "2026-10-16",
       "customer_turns": [
-        "Anh ơi, máy hút sữa điện đôi Spectra S1 bao nhiêu tiền?",
-        "Bốn triệu hai trăm chín mươi ngàn, đúng không?",
-        "Được, anh gọi lại cho em lúc mười giờ ngày hai mươi bốn tháng mười."
+        "Chị ơi, em gọi là khách hàng đã đặt máy lọc không khí AirPure Y rồi ạ.",
+        "Giá là năm triệu hai trăm nghìn, thanh toán khi nhận hàng, giao đến 232 Lý Nhân Tông, Huế.",
+        "Em mong shop nhớ đơn của em, đừng hỏi lại nữa nhé."
       ],
-      "customer_goal": "Hỏi về sản phẩm và hẹn xem lại",
-      "facts_established": {
-        "product_advised": "SKU-MB-PUMP1",
-        "price_quoted_vnd": 4290000
-      },
-      "ground_truth_facts": {
-        "sku": "SKU-MB-PUMP1",
-        "price_vnd": 4290000,
-        "in_stock": true,
-        "active_promos": [
-          "MOM-FREESHIP",
-          "COD-0"
-        ],
-        "expired_promos": [
-          "PUMP-GIFT"
-        ],
-        "promo_expiry_dates": {
-          "MOM-FREESHIP": "2026-11-29",
-          "COD-0": "2026-12-14",
-          "PUMP-GIFT": "2026-10-13"
-        },
-        "scheduled_callback_at": "2026-10-24T10:00"
-      },
-      "expected_outcome": "hen_goi_lai",
-      "success_if": {
-        "tool_called": "schedule.callback",
-        "args_match": {
-          "customer_phone": "0928144976",
-          "callback_at": "2026-10-24T10:00"
-        }
-      }
-    },
-    "call_2": {
-      "channel": "hotline",
-      "channel_identity": "0928144976",
-      "call_date": "2026-10-24",
-      "customer_turns": [
-        "Chuẩn rồi, em mua máy Spectra S1, giá bốn triệu hai trăm chín mươi.",
-        "Thanh toán khi nhận hàng, giao đến Đường Tôn Đức Thắng, phường Ô Môn, Cần Thơ.",
-        "Xong rồi, em đợi anh giao hàng."
-      ],
-      "days_later": 2,
       "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
       "facts_established": {
-        "product_advised": "SKU-MB-PUMP1",
-        "price_quoted_vnd": 4290000,
+        "product_advised": "SKU-AP-Y",
+        "price_quoted_vnd": 5200000,
         "payment": "COD",
-        "delivery_address": "Đường Tôn Đức Thắng, phường Ô Môn, Cần Thơ",
+        "delivery_address": "232 Lý Nhân Tông, phường Kim Trà, Huế",
         "order_status": "created"
       },
-      "must_carry_over": [
-        "product_advised",
-        "price_quoted_vnd"
-      ],
-      "must_not_ask": [
-        "product_advised"
-      ],
       "ground_truth_facts": {
-        "sku": "SKU-MB-PUMP1",
-        "price_vnd": 4290000,
+        "sku": "SKU-AP-Y",
+        "price_vnd": 5200000,
         "in_stock": true,
         "active_promos": [
-          "MOM-FREESHIP",
-          "COD-0"
+          "COD-0",
+          "GIFT-FILTER"
         ],
-        "expired_promos": [
-          "PUMP-GIFT"
-        ],
+        "expired_promos": [],
         "promo_expiry_dates": {
-          "MOM-FREESHIP": "2026-11-29",
-          "COD-0": "2026-12-14",
-          "PUMP-GIFT": "2026-10-13"
+          "GIFT-FILTER": "2026-10-22",
+          "COD-0": "2026-12-14"
         },
-        "estimated_delivery": "2026-10-28"
+        "estimated_delivery": "2026-10-19"
       },
       "memory_expectation": {
         "order_status": "created"
@@ -99,21 +47,22 @@
       "success_if": {
         "tool_called": "order.create",
         "args_match": {
-          "sku": "SKU-MB-PUMP1",
-          "price_vnd": 4290000
+          "sku": "SKU-AP-Y",
+          "price_vnd": 5200000
         }
       }
     },
-    "call_3": {
+    "call_2": {
       "channel": "hotline",
-      "channel_identity": "0928144976",
-      "call_date": "2026-10-25",
+      "channel_identity": "0979511174",
+      "call_date": "2026-10-17",
       "customer_turns": [
-        "Đơn của em đã đặt chưa?",
-        "Đã giao rồi à? Thôi khỏi."
+        "Chị ơi, em gọi lại là đơn AirPure Y ạ.",
+        "Giao đến 232 Lý Nhân Tông, Huế, thanh toán khi nhận hàng, năm triệu hai trăm nghìn.",
+        "Chị biết em rồi chứ? Em không muốn nhắc lại lần nữa."
       ],
       "days_later": 1,
-      "customer_goal": "Kiểm tra đơn đã mua",
+      "customer_goal": "Xác nhận thông tin người nhận trước khi tra đơn cũ",
       "facts_established": {},
       "must_carry_over": [
         "product_advised",
@@ -126,20 +75,17 @@
         "product_advised"
       ],
       "ground_truth_facts": {
-        "sku": "SKU-MB-PUMP1",
-        "price_vnd": 4290000,
+        "sku": "SKU-AP-Y",
+        "price_vnd": 5200000,
         "in_stock": true,
         "active_promos": [
-          "MOM-FREESHIP",
-          "COD-0"
+          "COD-0",
+          "GIFT-FILTER"
         ],
-        "expired_promos": [
-          "PUMP-GIFT"
-        ],
+        "expired_promos": [],
         "promo_expiry_dates": {
-          "MOM-FREESHIP": "2026-11-29",
-          "COD-0": "2026-12-14",
-          "PUMP-GIFT": "2026-10-13"
+          "GIFT-FILTER": "2026-10-22",
+          "COD-0": "2026-12-14"
         }
       },
       "expected_outcome": "chot_don",
@@ -148,7 +94,10 @@
         "args_match": {
           "order_id": "OD600001"
         },
-        "max_agent_questions": 1
+        "must_say_any": [
+          "xác nhận",
+          "địa chỉ"
+        ]
       }
     }
   }

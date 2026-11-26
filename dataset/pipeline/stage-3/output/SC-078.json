@@ -1,91 +1,84 @@
 {
-  "scenario_id": "SC-078",
+  "scenario_id": "SC-090",
   "level": "M1",
-  "persona": "khach_do_du_hoi_nguoi_nha",
-  "hard_case": "restock",
-  "customer_phone": "0956517883",
-  "customer_name": "Thủy",
+  "persona": "khach_da_mua_doi_size",
+  "hard_case": null,
+  "customer_phone": "0913301756",
+  "customer_name": "Vy",
   "honorific": "chị",
-  "notes": "return_after_price_or_stock_change",
+  "notes": "return_for_post_purchase_support",
   "calls": {
     "call_1": {
       "channel": "hotline",
-      "channel_identity": "0956517883",
+      "channel_identity": "0913301756",
       "call_date": "2026-10-20",
       "customer_turns": [
-        "Chị ơi, em đang xem máy lọc không khí AirPure Pro, giá bảy triệu sáu trăm chín mươi nghìn, em vừa đủ ngân sách tám triệu năm trăm nghìn.",
-        "Em chưa mua ngay được, để hỏi người nhà đã. Chị cho em hỏi là sản phẩm này có tốt không ạ?"
+        "Chị ơi, em vừa xem sản phẩm giày sneaker Urban Classic đen bốn mươi, giá tám trăm chín mươi ngàn đúng không ạ?",
+        "Em định mua nhưng chưa chắc, chị có thể hẹn gọi lại cho em lúc mười giờ ngày hai mươi bốn tháng mười được không ạ?"
       ],
-      "customer_goal": "Xem sản phẩm trong ngân sách và hỏi ý kiến người nhà",
+      "customer_goal": "Hỏi về sản phẩm và hẹn xem lại",
       "facts_established": {
-        "product_advised": "SKU-AP-PRO",
-        "price_quoted_vnd": 7690000,
-        "budget_vnd": 8500000
+        "product_advised": "SKU-SN-CAS-40-DEN",
+        "price_quoted_vnd": 890000
       },
       "ground_truth_facts": {
-        "sku": "SKU-AP-PRO",
-        "price_vnd": 7690000,
-        "in_stock": false,
+        "sku": "SKU-SN-CAS-40-DEN",
+        "price_vnd": 890000,
+        "in_stock": true,
         "active_promos": [
-          "COD-0",
-          "AIR-OCT"
+          "COD-0"
         ],
         "expired_promos": [],
         "promo_expiry_dates": {
-          "AIR-OCT": "2026-10-30",
           "COD-0": "2026-12-14"
         },
-        "restock_expected": "2026-10-21",
-        "scheduled_callback_at": "2026-10-21T10:00"
+        "scheduled_callback_at": "2026-10-24T10:00"
       },
       "expected_outcome": "hen_goi_lai",
       "success_if": {
         "tool_called": "schedule.callback",
         "args_match": {
-          "customer_phone": "0956517883",
-          "callback_at": "2026-10-21T10:00"
+          "customer_phone": "0913301756",
+          "callback_at": "2026-10-24T10:00"
         }
       }
     },
     "call_2": {
       "channel": "hotline",
-      "channel_identity": "0956517883",
-      "call_date": "2026-10-21",
+      "channel_identity": "0913301756",
+      "call_date": "2026-10-24",
       "customer_turns": [
-        "Chị ơi, hôm trước chị nói rồi mà, em đã hỏi người nhà rồi. Máy đó tốt, em muốn đặt mua.",
-        "Chị giao hàng đến 178 Phan Huy Chú, Khánh Xuân, Đắk Lắk ạ? Em sẽ thanh toán khi nhận hàng."
+        "Chị ơi, em đã quyết định mua giày sneaker Urban Classic đen bốn mươi, giá tám trăm chín mươi ngàn đúng không ạ?",
+        "Em chọn hình thức thanh toán khi nhận hàng, địa chỉ giao hàng là 53A Trần Phú, phường Chợ Quán, TP. Hồ Chí Minh. Chị làm đơn giúp em nhé."
       ],
-      "days_later": 1,
+      "days_later": 4,
       "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
       "facts_established": {
-        "product_advised": "SKU-AP-PRO",
-        "price_quoted_vnd": 7690000,
+        "product_advised": "SKU-SN-CAS-40-DEN",
+        "price_quoted_vnd": 890000,
         "payment": "COD",
-        "delivery_address": "178 Phan Huy Chú, phường Khánh Xuân, Đắk Lắk",
+        "delivery_address": "53A Trần Phú, phường Chợ Quán, TP. Hồ Chí Minh",
         "order_status": "created"
       },
       "must_carry_over": [
         "product_advised",
-        "price_quoted_vnd",
-        "budget_vnd"
+        "price_quoted_vnd"
       ],
       "must_not_ask": [
         "product_advised"
       ],
       "ground_truth_facts": {
-        "sku": "SKU-AP-PRO",
-        "price_vnd": 7690000,
+        "sku": "SKU-SN-CAS-40-DEN",
+        "price_vnd": 890000,
         "in_stock": true,
         "active_promos": [
-          "COD-0",
-          "AIR-OCT"
+          "COD-0"
         ],
         "expired_promos": [],
         "promo_expiry_dates": {
-          "AIR-OCT": "2026-10-30",
           "COD-0": "2026-12-14"
         },
-        "estimated_delivery": "2026-10-23"
+        "estimated_delivery": "2026-10-28"
       },
       "memory_expectation": {
         "order_status": "created"
@@ -94,8 +87,56 @@
       "success_if": {
         "tool_called": "order.create",
         "args_match": {
-          "sku": "SKU-AP-PRO",
-          "price_vnd": 7690000
+          "sku": "SKU-SN-CAS-40-DEN",
+          "price_vnd": 890000
+        }
+      }
+    },
+    "call_3": {
+      "channel": "hotline",
+      "channel_identity": "0913301756",
+      "call_date": "2026-10-28",
+      "customer_turns": [
+        "Chị ơi, em vừa nhận hàng rồi, nhưng size bốn mươi không vừa. Em muốn đổi sang size bốn mươi ba giày sneaker Urban Classic đen.",
+        "Chị xem giúp em xem có còn hàng không, nếu có thì chị xử lý đổi size cho em nha."
+      ],
+      "days_later": 4,
+      "customer_goal": "Đổi sang size khác sau khi nhận hàng",
+      "facts_established": {
+        "new_variant_sku": "SKU-SN-CAS-43-DEN"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "payment",
+        "delivery_address",
+        "order_status"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-SN-CAS-40-DEN",
+        "price_vnd": 890000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "replacement_in_stock": true,
+        "exchange_fee_vnd": 0,
+        "policy_reference": "DT-03"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.update",
+        "args_match": {
+          "order_id": "OD600001",
+          "action": "exchange_size",
+          "new_variant_sku": "SKU-SN-CAS-43-DEN"
         }
       }
     }

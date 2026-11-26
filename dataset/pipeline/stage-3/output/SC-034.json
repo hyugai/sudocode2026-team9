@@ -1,22 +1,21 @@
 {
-  "scenario_id": "SC-034",
+  "scenario_id": "SC-042",
   "level": "M1",
-  "persona": "khach_hoi_ngoai_tai_lieu",
-  "hard_case": "unsupported_question",
-  "customer_phone": "0936270107",
-  "customer_name": "Tuấn",
+  "persona": "khach_da_kenh_fb_hotline",
+  "hard_case": null,
+  "customer_phone": "0932568855",
+  "customer_name": "Lâm",
   "honorific": "anh",
-  "notes": "consider_and_decide",
+  "notes": "continue_across_channels",
   "calls": {
     "call_1": {
       "channel": "hotline",
-      "channel_identity": "0936270107",
-      "call_date": "2026-10-27",
+      "channel_identity": "0932568855",
+      "call_date": "2026-11-04",
       "customer_turns": [
-        "Anh ơi, em đang tìm hiểu về giày chạy bộ RunLite hai Pro.",
-        "Em muốn biết giá của sản phẩm đó là bao nhiêu ạ?",
-        "À, một triệu sáu trăm chín mươi ngàn đồng ư? Em cảm ơn.",
-        "Anh có thể gọi lại cho em lúc mười giờ ngày hai mươi chín tháng mười được không ạ?"
+        "Anh ơi, em đang xem sản phẩm giày chạy bộ RunLite 2 Pro có còn hàng không ạ?",
+        "Bên em có bán không anh? Giá bao nhiêu vậy?",
+        "Giá 1.690.000đ à, em xem lại đã. Em sẽ gọi lại anh vào 10h ngày 8/11 nhé."
       ],
       "customer_goal": "Hỏi về sản phẩm và hẹn xem lại",
       "facts_established": {
@@ -39,31 +38,34 @@
           "COD-0": "2026-12-14",
           "RUN2-SALE": "2026-10-07"
         },
-        "scheduled_callback_at": "2026-10-29T10:00"
+        "scheduled_callback_at": "2026-11-08T10:00"
       },
       "expected_outcome": "hen_goi_lai",
       "success_if": {
         "tool_called": "schedule.callback",
         "args_match": {
-          "customer_phone": "0936270107",
-          "callback_at": "2026-10-29T10:00"
+          "customer_phone": "0932568855",
+          "callback_at": "2026-11-08T10:00"
         }
       }
     },
     "call_2": {
-      "channel": "hotline",
-      "channel_identity": "0936270107",
-      "call_date": "2026-10-29",
+      "channel": "zalo_oa",
+      "channel_identity": "zalo_lâm94",
+      "call_date": "2026-11-08",
       "customer_turns": [
-        "Anh ơi, em muốn hỏi thêm về chất liệu của giày RunLite hai Pro.",
-        "Em thấy trong tài liệu không có thông tin đó, anh có thể chia sẻ không ạ?",
-        "Em lấy thông tin đó ở đâu?",
-        "À, anh chưa có thông tin, em sẽ kiểm tra. Em cảm ơn anh."
+        "Anh ơi, em đã xem sản phẩm rồi. Em muốn đặt 1 đôi, thanh toán khi nhận hàng nhé.",
+        "Giao hàng đến 01 Lý Nam Đế, thành phố Đắk Lắk được không anh?",
+        "Ko, em đồng ý. Chốt đơn rồi anh ạ."
       ],
-      "days_later": 2,
-      "customer_goal": "Yêu cầu thông tin không có trong tài liệu",
+      "days_later": 4,
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
       "facts_established": {
-        "product_advised": "SKU-SN-RUN2"
+        "product_advised": "SKU-SN-RUN2",
+        "price_quoted_vnd": 1690000,
+        "payment": "COD",
+        "delivery_address": "01 Lý Nam Đế, phường Thành Công, Đắk Lắk",
+        "order_status": "created"
       },
       "must_carry_over": [
         "product_advised",
@@ -87,13 +89,19 @@
           "RUN-10": "2026-10-25",
           "COD-0": "2026-12-14",
           "RUN2-SALE": "2026-10-07"
-        }
+        },
+        "estimated_delivery": "2026-11-10"
       },
-      "expected_outcome": "tu_choi",
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
       "success_if": {
-        "tool_called": null,
-        "args_match": {},
-        "agent_must_say": "không có thông tin"
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-SN-RUN2",
+          "price_vnd": 1690000
+        }
       }
     }
   }

@@ -1,100 +1,47 @@
 {
-  "scenario_id": "SC-074",
+  "scenario_id": "SC-086",
   "level": "M1",
-  "persona": "khach_do_du_hoi_nguoi_nha",
-  "hard_case": "expired_promo",
-  "customer_phone": "0979511174",
-  "customer_name": "Hiền",
+  "persona": "khach_da_mua_doi_size",
+  "hard_case": "exchange_after_restock",
+  "customer_phone": "0992566636",
+  "customer_name": "Chi",
   "honorific": "chị",
   "notes": "return_after_price_or_stock_change",
   "calls": {
     "call_1": {
       "channel": "hotline",
-      "channel_identity": "0979511174",
-      "call_date": "2026-10-22",
+      "channel_identity": "0992566636",
+      "call_date": "2026-10-18",
       "customer_turns": [
-        "Chị đang muốn xem máy lọc không khí trong ngân sách sáu triệu đồng.",
-        "Chị nghe nói AirPure Y có giá năm triệu hai trăm nghìn, có đúng không?",
-        "Có ưu đãi tặng màng lọc khi mua AirPure X/Y không ạ?",
-        "Ưu đãi hết hạn ngày hai mươi hai tháng mười đúng không?",
-        "Chị cần hỏi người nhà đã, chị sẽ gọi lại vào mười giờ ngày hai mươi ba tháng mười."
+        "Chị ơi, em muốn đặt cái Giày chạy bộ RunLite hai Pro den bốn mươi ba.",
+        "Giá là một triệu bảy trăm bốn mươi nghìn, thanh toán khi nhận hàng nhé.",
+        "Giao hàng tới Số 12 đường 351, phường An Dương, Hải Phòng."
       ],
-      "customer_goal": "Xem sản phẩm trong ngân sách và hỏi ý kiến người nhà",
-      "facts_established": {
-        "product_advised": "SKU-AP-Y",
-        "price_quoted_vnd": 5200000,
-        "promo_code": "GIFT-FILTER",
-        "promo_expiry": "2026-10-22",
-        "budget_vnd": 6000000
-      },
-      "ground_truth_facts": {
-        "sku": "SKU-AP-Y",
-        "price_vnd": 5200000,
-        "in_stock": true,
-        "active_promos": [
-          "COD-0",
-          "GIFT-FILTER"
-        ],
-        "expired_promos": [],
-        "promo_expiry_dates": {
-          "GIFT-FILTER": "2026-10-22",
-          "COD-0": "2026-12-14"
-        },
-        "scheduled_callback_at": "2026-10-23T10:00"
-      },
-      "expected_outcome": "hen_goi_lai",
-      "success_if": {
-        "tool_called": "schedule.callback",
-        "args_match": {
-          "customer_phone": "0979511174",
-          "callback_at": "2026-10-23T10:00"
-        }
-      }
-    },
-    "call_2": {
-      "channel": "hotline",
-      "channel_identity": "0979511174",
-      "call_date": "2026-10-23",
-      "customer_turns": [
-        "Chị đã hỏi người nhà rồi, đồng ý mua AirPure Y giá năm triệu hai trăm nghìn.",
-        "Chị muốn thanh toán khi nhận hàng, giao đến 232 Lý Nhân Tông, Huế.",
-        "Hôm trước chị nói rồi mà, không cần nhắc lại.",
-        "Chị đồng ý đặt hàng."
-      ],
-      "days_later": 1,
       "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
       "facts_established": {
-        "product_advised": "SKU-AP-Y",
-        "price_quoted_vnd": 5200000,
+        "product_advised": "SKU-SN-RUN2-43-DEN",
+        "price_quoted_vnd": 1740000,
         "payment": "COD",
-        "delivery_address": "232 Lý Nhân Tông, phường Kim Trà, Huế",
-        "order_status": "created"
+        "delivery_address": "Số 12 đường 351, phường An Dương, Hải Phòng",
+        "order_status": "created",
+        "requested_replacement_sku": "SKU-SN-RUN2-41-DEN"
       },
-      "must_carry_over": [
-        "product_advised",
-        "price_quoted_vnd",
-        "promo_code",
-        "promo_expiry",
-        "budget_vnd"
-      ],
-      "must_not_ask": [
-        "product_advised"
-      ],
       "ground_truth_facts": {
-        "sku": "SKU-AP-Y",
-        "price_vnd": 5200000,
+        "sku": "SKU-SN-RUN2-43-DEN",
+        "price_vnd": 1740000,
         "in_stock": true,
         "active_promos": [
           "COD-0"
         ],
         "expired_promos": [
-          "GIFT-FILTER"
+          "RUN2-SALE"
         ],
         "promo_expiry_dates": {
-          "GIFT-FILTER": "2026-10-22",
-          "COD-0": "2026-12-14"
+          "COD-0": "2026-12-14",
+          "RUN2-SALE": "2026-10-07"
         },
-        "estimated_delivery": "2026-10-27"
+        "estimated_delivery": "2026-10-20",
+        "replacement_in_stock": false
       },
       "memory_expectation": {
         "order_status": "created"
@@ -103,8 +50,61 @@
       "success_if": {
         "tool_called": "order.create",
         "args_match": {
-          "sku": "SKU-AP-Y",
-          "price_vnd": 5200000
+          "sku": "SKU-SN-RUN2-43-DEN",
+          "price_vnd": 1740000
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0992566636",
+      "call_date": "2026-10-24",
+      "customer_turns": [
+        "Chị ơi, em vừa nhận hàng rồi, nhưng size bốn mươi ba hơi chật.",
+        "Em muốn đổi sang size bốn mươi mốt, có sẵn không ạ?",
+        "Mong chị hỗ trợ nhanh nhé, em đang đợi."
+      ],
+      "days_later": 6,
+      "customer_goal": "Đổi sang size khác sau khi nhận hàng",
+      "facts_established": {
+        "new_variant_sku": "SKU-SN-RUN2-41-DEN"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "payment",
+        "delivery_address",
+        "order_status",
+        "requested_replacement_sku"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN2-43-DEN",
+        "price_vnd": 1740000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [
+          "RUN2-SALE"
+        ],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14",
+          "RUN2-SALE": "2026-10-07"
+        },
+        "replacement_in_stock": true,
+        "exchange_fee_vnd": 0,
+        "policy_reference": "DT-03"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.update",
+        "args_match": {
+          "order_id": "OD600001",
+          "action": "exchange_size",
+          "new_variant_sku": "SKU-SN-RUN2-41-DEN"
         }
       }
     }

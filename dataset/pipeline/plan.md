@@ -101,8 +101,8 @@
 - do not perform masking any PII
 - join stage-1 data
 - deduplicate journeys (use TF-IDF, threshold = 0.9)
-- split the dataset
 - write audit reports
+- make file name consecutive (log changes as JSONL)
 - fomat for each json file:
 ```
     Scenario

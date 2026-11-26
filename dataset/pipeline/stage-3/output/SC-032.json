@@ -1,65 +1,71 @@
 {
-  "scenario_id": "SC-032",
+  "scenario_id": "SC-040",
   "level": "M1",
-  "persona": "khach_hoi_nhieu_khong_mua",
+  "persona": "khach_da_kenh_fb_hotline",
   "hard_case": null,
-  "customer_phone": "0922808864",
-  "customer_name": "Tú",
-  "honorific": "anh",
-  "notes": "consider_and_decide",
+  "customer_phone": "0981933190",
+  "customer_name": "Lan",
+  "honorific": "chị",
+  "notes": "continue_across_channels",
   "calls": {
     "call_1": {
       "channel": "hotline",
-      "channel_identity": "0922808864",
-      "call_date": "2026-10-25",
+      "channel_identity": "0981933190",
+      "call_date": "2026-11-02",
       "customer_turns": [
-        "Anh ơi, em muốn hỏi là màng lọc thay thế AirPure X/Y có dùng được cho máy lọc không khí của hãng khác không?",
-        "Có phải loại màng này dùng được cho cả máy lọc không khí trong nhà và văn phòng không?",
-        "Giá bao nhiêu vậy anh? Em nghe nói là sáu trăm chín mươi nghìn.",
-        "Anh có thể giới thiệu thêm về cách thay màng lọc không? Em muốn biết rõ hơn trước khi quyết định.",
-        "Em nghĩ em cần xem thêm thông tin, để xem thêm."
+        "Chị ơi, em đang xem sản phẩm combo Spectra S1 + máy hâm sữa Fatz + 50 túi trữ sữa.",
+        "Bên em có bán không ạ? Giá bao nhiêu vậy chị?",
+        "Ờ em hiểu rồi, 4.790.000đ. Chị ơi em muốn hẹn lại để xem kỹ hơn, 10h ngày 4/11 được không chị?",
+        "Cảm ơn chị, em đợi gọi lại nha."
       ],
-      "customer_goal": "Hỏi kỹ cách sử dụng và cân nhắc thêm trước khi mua",
+      "customer_goal": "Hỏi về sản phẩm và hẹn xem lại",
       "facts_established": {
-        "product_advised": "SKU-AP-FLT-X",
-        "price_quoted_vnd": 690000
+        "product_advised": "SKU-BDL-MOM",
+        "price_quoted_vnd": 4790000
       },
       "ground_truth_facts": {
-        "sku": "SKU-AP-FLT-X",
-        "price_vnd": 690000,
+        "sku": "SKU-BDL-MOM",
+        "price_vnd": 4790000,
         "in_stock": true,
         "active_promos": [
+          "MOM-FREESHIP",
           "COD-0"
         ],
         "expired_promos": [],
         "promo_expiry_dates": {
+          "MOM-FREESHIP": "2026-11-29",
           "COD-0": "2026-12-14"
         },
-        "scheduled_callback_at": "2026-10-29T10:00"
+        "scheduled_callback_at": "2026-11-04T10:00"
       },
       "expected_outcome": "hen_goi_lai",
       "success_if": {
         "tool_called": "schedule.callback",
         "args_match": {
-          "customer_phone": "0922808864",
-          "callback_at": "2026-10-29T10:00"
+          "customer_phone": "0981933190",
+          "callback_at": "2026-11-04T10:00"
         }
       }
     },
     "call_2": {
-      "channel": "hotline",
-      "channel_identity": "0922808864",
-      "call_date": "2026-10-29",
+      "channel": "zalo_oa",
+      "channel_identity": "zalo_lan79",
+      "call_date": "2026-11-04",
       "customer_turns": [
-        "Anh ơi, em muốn hỏi lại giá màng lọc AirPure X/Y có phải là sáu trăm chín mươi nghìn không?",
-        "Em nghe nói là sản phẩm này vẫn còn hàng, đúng không ạ?",
-        "Em chưa muốn mua ngay, chỉ muốn xem lại giá và cân nhắc thêm.",
-        "Em nghĩ em sẽ quyết định sau, để xem thêm."
+        "Chị ơi em là người nhắn Zalo hôm qua đó ạ.",
+        "Giá như lúc trước là 4.790.000đ đúng không ạ?",
+        "Đc rồi, em muốn đặt luôn. Thanh toán khi nhận hàng nhé.",
+        "Địa chỉ giao hàng là số 15 đường Lê Hồng Phong, Hải Châu, Đà Nẵng.",
+        "Giao hàng sớm nhất có thể được không chị?"
       ],
-      "days_later": 4,
-      "customer_goal": "Xem lại báo giá và hoãn quyết định mua",
+      "days_later": 2,
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
       "facts_established": {
-        "product_advised": "SKU-AP-FLT-X"
+        "product_advised": "SKU-BDL-MOM",
+        "price_quoted_vnd": 4790000,
+        "payment": "COD",
+        "delivery_address": "Số 15 đường Lê Hồng Phong, phường Hải Châu, Đà Nẵng",
+        "order_status": "created"
       },
       "must_carry_over": [
         "product_advised",
@@ -69,21 +75,30 @@
         "product_advised"
       ],
       "ground_truth_facts": {
-        "sku": "SKU-AP-FLT-X",
-        "price_vnd": 690000,
+        "sku": "SKU-BDL-MOM",
+        "price_vnd": 4790000,
         "in_stock": true,
         "active_promos": [
+          "MOM-FREESHIP",
           "COD-0"
         ],
         "expired_promos": [],
         "promo_expiry_dates": {
+          "MOM-FREESHIP": "2026-11-29",
           "COD-0": "2026-12-14"
-        }
+        },
+        "estimated_delivery": "2026-11-06"
       },
-      "expected_outcome": "tu_choi",
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
       "success_if": {
-        "tool_called": null,
-        "args_match": {}
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-BDL-MOM",
+          "price_vnd": 4790000
+        }
       }
     }
   }

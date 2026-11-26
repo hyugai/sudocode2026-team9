@@ -1,67 +1,64 @@
 {
-  "scenario_id": "SC-031",
+  "scenario_id": "SC-039",
   "level": "M1",
-  "persona": "khach_hoi_nhieu_khong_mua",
+  "persona": "khach_da_kenh_fb_hotline",
   "hard_case": null,
-  "customer_phone": "0979298416",
-  "customer_name": "Hương",
-  "honorific": "chị",
-  "notes": "consider_and_decide",
+  "customer_phone": "0963279264",
+  "customer_name": "Đạt",
+  "honorific": "anh",
+  "notes": "continue_across_channels",
   "calls": {
     "call_1": {
-      "channel": "hotline",
-      "channel_identity": "0979298416",
-      "call_date": "2026-10-24",
+      "channel": "zalo_oa",
+      "channel_identity": "zalo_đạt52",
+      "call_date": "2026-11-01",
       "customer_turns": [
-        "Chị ơi, em muốn hỏi là bộ đó dùng để làm gì vậy?",
-        "Có cần phải mua thêm phụ kiện gì không?",
-        "Máy hâm sữa Fatz có dùng được cho bình sữa nào không?",
-        "Em thấy giá là bốn triệu bảy trăm chín mươi nghìn, đúng không?",
-        "Để em xem lại, rồi sẽ gọi lại chị nhé. Đợi chị gọi lại vào mười giờ ngày hai mươi bảy tháng mười nhé."
+        "Ko, bn đang bán sp gì vậy?",
+        "Đc rồi, máy lọc không khí AirPure Mini giá 2.190.000đ à?",
+        "Mình xem lại rồi, nếu có gì thêm thì nhắn Zalo nhé.",
+        "Hẹn 10 giờ ngày 2/11 gọi lại nhé."
       ],
-      "customer_goal": "Hỏi kỹ cách sử dụng và cân nhắc thêm trước khi mua",
+      "customer_goal": "Hỏi về sản phẩm và hẹn xem lại",
       "facts_established": {
-        "product_advised": "SKU-BDL-MOM",
-        "price_quoted_vnd": 4790000
+        "product_advised": "SKU-AP-MINI",
+        "price_quoted_vnd": 2190000
       },
       "ground_truth_facts": {
-        "sku": "SKU-BDL-MOM",
-        "price_vnd": 4790000,
+        "sku": "SKU-AP-MINI",
+        "price_vnd": 2190000,
         "in_stock": true,
         "active_promos": [
-          "MOM-FREESHIP",
           "COD-0"
         ],
         "expired_promos": [],
         "promo_expiry_dates": {
-          "MOM-FREESHIP": "2026-11-29",
           "COD-0": "2026-12-14"
         },
-        "scheduled_callback_at": "2026-10-27T10:00"
+        "scheduled_callback_at": "2026-11-02T10:00"
       },
       "expected_outcome": "hen_goi_lai",
       "success_if": {
         "tool_called": "schedule.callback",
         "args_match": {
-          "customer_phone": "0979298416",
-          "callback_at": "2026-10-27T10:00"
+          "customer_phone": "0963279264",
+          "callback_at": "2026-11-02T10:00"
         }
       }
     },
     "call_2": {
       "channel": "hotline",
-      "channel_identity": "0979298416",
-      "call_date": "2026-10-27",
+      "channel_identity": "0963279264",
+      "call_date": "2026-11-02",
       "customer_turns": [
-        "Chị ơi, em hỏi lại là giá bộ đó là bốn triệu bảy trăm chín mươi nghìn đúng không?",
-        "Em nghĩ là em cần xem lại một chút nữa, có lẽ để xem thêm.",
-        "Chị ơi, nếu em muốn mua sau thì có được không?",
-        "Em cảm ơn chị, để em nghĩ thêm."
+        "Àa bên em nhắn Facebook báo AirPure Mini 2.190.000đ mà.",
+        "Mình xem lại rồi, giá vẫn như vậy à?",
+        "Cảm ơn, mình chưa mua được, hoãn lại nhé.",
+        "Mong bên em hiểu, mình sẽ xem lại sau."
       ],
-      "days_later": 3,
+      "days_later": 1,
       "customer_goal": "Xem lại báo giá và hoãn quyết định mua",
       "facts_established": {
-        "product_advised": "SKU-BDL-MOM"
+        "product_advised": "SKU-AP-MINI"
       },
       "must_carry_over": [
         "product_advised",
@@ -71,16 +68,14 @@
         "product_advised"
       ],
       "ground_truth_facts": {
-        "sku": "SKU-BDL-MOM",
-        "price_vnd": 4790000,
+        "sku": "SKU-AP-MINI",
+        "price_vnd": 2190000,
         "in_stock": true,
         "active_promos": [
-          "MOM-FREESHIP",
           "COD-0"
         ],
         "expired_promos": [],
         "promo_expiry_dates": {
-          "MOM-FREESHIP": "2026-11-29",
           "COD-0": "2026-12-14"
         }
       },

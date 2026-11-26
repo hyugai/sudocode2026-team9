@@ -1,71 +1,69 @@
 {
-  "scenario_id": "SC-007",
+  "scenario_id": "SC-008",
   "level": "M1",
   "persona": "khach_do_du_hoi_nguoi_nha",
   "hard_case": null,
-  "customer_phone": "0982141621",
-  "customer_name": "Quân",
+  "customer_phone": "0922264686",
+  "customer_name": "Khoa",
   "honorific": "anh",
   "notes": "consider_and_decide",
   "calls": {
     "call_1": {
       "channel": "hotline",
-      "channel_identity": "0982141621",
-      "call_date": "2026-10-21",
+      "channel_identity": "0922264686",
+      "call_date": "2026-10-22",
       "customer_turns": [
-        "Chào chị, em đang muốn xem màng lọc thay thế AirPure X/Y trong ngân sách hai triệu.",
-        "Chị báo giá đi ạ, em muốn hỏi người nhà trước.",
-        "Hôm trước chị nói rồi mà, em đang hỏi về sản phẩm và giá.",
-        "Chị cho em hỏi thêm, nếu mua hai cái thì có giảm không?",
-        "Em sẽ gọi lại sau, để hỏi người nhà."
+        "Chào chị, em đang muốn xem máy lọc nước trong ngân sách bảy triệu rưỡi.",
+        "Chị có sản phẩm nào vừa giá mà người nhà em cũng đồng ý không?",
+        "Hôm trước chị nói rồi mà, em đang hỏi về máy lọc nước RO Karofi chín lõi.",
+        "Giá năm triệu chín trăm chín mươi nghìn, đúng không chị?",
+        "Em sẽ hỏi người nhà rồi gọi lại, chị ơi. Gọi lại cho em lúc mười giờ ngày hai mươi sáu tháng mười nhé."
       ],
       "customer_goal": "Xem sản phẩm trong ngân sách và hỏi ý kiến người nhà",
       "facts_established": {
-        "product_advised": "SKU-AP-FLT-X",
-        "price_quoted_vnd": 690000,
-        "budget_vnd": 2000000
+        "product_advised": "SKU-WF-RO9",
+        "price_quoted_vnd": 5990000,
+        "budget_vnd": 7500000
       },
       "ground_truth_facts": {
-        "sku": "SKU-AP-FLT-X",
-        "price_vnd": 690000,
+        "sku": "SKU-WF-RO9",
+        "price_vnd": 5990000,
         "in_stock": true,
         "active_promos": [
-          "NAM-SHIP0",
           "COD-0"
         ],
         "expired_promos": [],
         "promo_expiry_dates": {
-          "NAM-SHIP0": "2026-11-05",
           "COD-0": "2026-12-14"
         },
-        "scheduled_callback_at": "2026-10-24T10:00"
+        "scheduled_callback_at": "2026-10-27T10:00"
       },
       "expected_outcome": "hen_goi_lai",
       "success_if": {
         "tool_called": "schedule.callback",
         "args_match": {
-          "customer_phone": "0982141621",
-          "callback_at": "2026-10-24T10:00"
+          "customer_phone": "0922264686",
+          "callback_at": "2026-10-26T10:00"
         }
       }
     },
     "call_2": {
       "channel": "hotline",
-      "channel_identity": "0982141621",
-      "call_date": "2026-10-24",
+      "channel_identity": "0922264686",
+      "call_date": "2026-10-27",
       "customer_turns": [
-        "Chị ơi, em đồng ý mua hai cái màng lọc AirPure X/Y giá sáu trăm chín mươi ngàn.",
-        "Giao hàng đến 154 Tháp Mười, phường Bình Tây, TP.HCM, đúng không chị?",
-        "Thanh toán khi nhận hàng, em đồng ý.",
-        "Chị xác nhận đơn giúp em nhé, em đang đợi người nhà đồng ý."
+        "Chị ơi, em đã hỏi người nhà rồi. Máy lọc nước RO Karofi chín lõi, giá năm triệu chín trăm chín mươi nghìn, đúng không?",
+        "Em đồng ý mua, thanh toán khi nhận hàng.",
+        "Giao hàng đến số 231 Nguyễn Ngọc Vũ, Hà Nội nhé chị.",
+        "Chị ơi, em không rõ cái nào khác. Em chỉ muốn mua máy đó thôi."
       ],
-      "days_later": 3,
+      "days_later": 5,
       "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
       "facts_established": {
-        "product_advised": "SKU-AP-FLT-X",
-        "price_quoted_vnd": 690000,
+        "product_advised": "SKU-WF-RO9",
+        "price_quoted_vnd": 5990000,
         "payment": "COD",
-        "delivery_address": "154 Tháp Mười, phường Bình Tây, TP. Hồ Chí Minh",
+        "delivery_address": "Số 231 Nguyễn Ngọc Vũ, phường Yên Hòa, Hà Nội",
         "order_status": "created"
       },
       "must_carry_over": [
@@ -77,19 +75,17 @@
         "product_advised"
       ],
       "ground_truth_facts": {
-        "sku": "SKU-AP-FLT-X",
-        "price_vnd": 690000,
+        "sku": "SKU-WF-RO9",
+        "price_vnd": 5990000,
         "in_stock": true,
         "active_promos": [
-          "NAM-SHIP0",
           "COD-0"
         ],
         "expired_promos": [],
         "promo_expiry_dates": {
-          "NAM-SHIP0": "2026-11-05",
           "COD-0": "2026-12-14"
         },
-        "estimated_delivery": "2026-10-28"
+        "estimated_delivery": "2026-10-29"
       },
       "memory_expectation": {
         "order_status": "created"
@@ -98,8 +94,8 @@
       "success_if": {
         "tool_called": "order.create",
         "args_match": {
-          "sku": "SKU-AP-FLT-X",
-          "price_vnd": 690000
+          "sku": "SKU-WF-RO9",
+          "price_vnd": 5990000
         }
       }
     }

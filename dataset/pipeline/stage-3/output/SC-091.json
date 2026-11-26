@@ -1,75 +1,34 @@
 {
-  "scenario_id": "SC-091",
+  "scenario_id": "SC-105",
   "level": "M1",
   "persona": "khach_da_mua_doi_size",
   "hard_case": null,
-  "customer_phone": "0960161055",
-  "customer_name": "Thảo",
+  "customer_phone": "0985003703",
+  "customer_name": "Oanh",
   "honorific": "chị",
   "notes": "return_for_post_purchase_support",
   "calls": {
     "call_1": {
       "channel": "hotline",
-      "channel_identity": "0960161055",
-      "call_date": "2026-10-21",
+      "channel_identity": "0985003703",
+      "call_date": "2026-11-04",
       "customer_turns": [
-        "Chị ơi, em vừa xem sản phẩm giày sneaker Urban Classic xám bốn mươi mốt trên website, giá tám trăm chín mươi ngàn, có đúng không ạ?",
-        "Chị có thể nhắn lại cho em giá và thời gian để em xem lại được không? Em đang bận, em hứa sẽ gọi lại vào mười giờ ngày hai mươi lăm tháng mười."
+        "Chị ơi, em muốn mua máy lọc nước RO Karofi chín lõi đấy ạ.",
+        "Giá là năm triệu chín trăm chín mươi nghìn đồng à?",
+        "Thanh toán khi nhận hàng đúng không ạ?",
+        "Địa chỉ giao hàng là Số 8, khu dân cư Cẩm Xuân, đường Mạc Thái Tổ, xã Kiến Thụy, Hải Phòng."
       ],
-      "customer_goal": "Hỏi về sản phẩm và hẹn xem lại",
-      "facts_established": {
-        "product_advised": "SKU-SN-CAS-41-XAM",
-        "price_quoted_vnd": 890000
-      },
-      "ground_truth_facts": {
-        "sku": "SKU-SN-CAS-41-XAM",
-        "price_vnd": 890000,
-        "in_stock": true,
-        "active_promos": [
-          "COD-0"
-        ],
-        "expired_promos": [],
-        "promo_expiry_dates": {
-          "COD-0": "2026-12-14"
-        },
-        "scheduled_callback_at": "2026-10-25T10:00"
-      },
-      "expected_outcome": "hen_goi_lai",
-      "success_if": {
-        "tool_called": "schedule.callback",
-        "args_match": {
-          "customer_phone": "0960161055",
-          "callback_at": "2026-10-25T10:00"
-        }
-      }
-    },
-    "call_2": {
-      "channel": "hotline",
-      "channel_identity": "0960161055",
-      "call_date": "2026-10-25",
-      "customer_turns": [
-        "Chị ơi, em đã xem lại, giá tám trăm chín mươi ngàn là chính xác, em muốn đặt mua.",
-        "Giao hàng đến 92 Nguyễn Trãi, phường Bến Thành, TP. Hồ Chí Minh, em thanh toán khi nhận hàng nhé."
-      ],
-      "days_later": 4,
       "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
       "facts_established": {
-        "product_advised": "SKU-SN-CAS-41-XAM",
-        "price_quoted_vnd": 890000,
+        "product_advised": "SKU-WF-RO9",
+        "price_quoted_vnd": 5990000,
         "payment": "COD",
-        "delivery_address": "92 Nguyễn Trãi, phường Bến Thành, TP. Hồ Chí Minh",
+        "delivery_address": "Số 8, khu dân cư Cẩm Xuân, đường Mạc Thái Tổ, xã Kiến Thụy, Hải Phòng",
         "order_status": "created"
       },
-      "must_carry_over": [
-        "product_advised",
-        "price_quoted_vnd"
-      ],
-      "must_not_ask": [
-        "product_advised"
-      ],
       "ground_truth_facts": {
-        "sku": "SKU-SN-CAS-41-XAM",
-        "price_vnd": 890000,
+        "sku": "SKU-WF-RO9",
+        "price_vnd": 5990000,
         "in_stock": true,
         "active_promos": [
           "COD-0"
@@ -78,7 +37,7 @@
         "promo_expiry_dates": {
           "COD-0": "2026-12-14"
         },
-        "estimated_delivery": "2026-10-28"
+        "estimated_delivery": "2026-11-06"
       },
       "memory_expectation": {
         "order_status": "created"
@@ -87,24 +46,23 @@
       "success_if": {
         "tool_called": "order.create",
         "args_match": {
-          "sku": "SKU-SN-CAS-41-XAM",
-          "price_vnd": 890000
+          "sku": "SKU-WF-RO9",
+          "price_vnd": 5990000
         }
       }
     },
-    "call_3": {
+    "call_2": {
       "channel": "hotline",
-      "channel_identity": "0960161055",
-      "call_date": "2026-10-29",
+      "channel_identity": "0985003703",
+      "call_date": "2026-11-06",
       "customer_turns": [
-        "Chị ơi, em nhận hàng rồi, nhưng size bốn mươi mốt hơi chật, em muốn đổi sang size bốn mươi hai.",
-        "Chị có còn size bốn mươi hai không ạ? Em đã đặt hàng trước rồi, nếu được em muốn đổi luôn."
+        "Chị ơi, em vừa đặt đơn rồi đó. Đơn là máy lọc nước RO Karofi chín lõi, giá năm triệu chín trăm chín mươi nghìn, thanh toán khi nhận hàng, giao đến Số 8, khu dân cư Cẩm Xuân, đường Mạc Thái Tổ, xã Kiến Thụy, Hải Phòng.",
+        "Còn đơn của em đã được xử lý chưa ạ?",
+        "Chị kiểm tra giúp em với, em cũng không muốn phải gọi lại nữa."
       ],
-      "days_later": 4,
-      "customer_goal": "Đổi sang size khác sau khi nhận hàng",
-      "facts_established": {
-        "new_variant_sku": "SKU-SN-CAS-42-XAM"
-      },
+      "days_later": 2,
+      "customer_goal": "Kiểm tra đơn đã mua",
+      "facts_established": {},
       "must_carry_over": [
         "product_advised",
         "price_quoted_vnd",
@@ -116,27 +74,25 @@
         "product_advised"
       ],
       "ground_truth_facts": {
-        "sku": "SKU-SN-CAS-41-XAM",
-        "price_vnd": 890000,
+        "sku": "SKU-WF-RO9",
+        "price_vnd": 5990000,
         "in_stock": true,
         "active_promos": [
           "COD-0"
         ],
-        "expired_promos": [],
+        "expired_promos": [
+          "NAM-SHIP0"
+        ],
         "promo_expiry_dates": {
+          "NAM-SHIP0": "2026-11-05",
           "COD-0": "2026-12-14"
-        },
-        "replacement_in_stock": true,
-        "exchange_fee_vnd": 0,
-        "policy_reference": "DT-03"
+        }
       },
       "expected_outcome": "chot_don",
       "success_if": {
-        "tool_called": "order.update",
+        "tool_called": "order.status",
         "args_match": {
-          "order_id": "OD600001",
-          "action": "exchange_size",
-          "new_variant_sku": "SKU-SN-CAS-42-XAM"
+          "order_id": "OD600001"
         }
       }
     }

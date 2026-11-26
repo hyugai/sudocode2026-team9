@@ -1,69 +1,62 @@
 {
-  "scenario_id": "SC-036",
+  "scenario_id": "SC-044",
   "level": "M1",
-  "persona": "khach_da_kenh_fb_hotline",
-  "hard_case": null,
-  "customer_phone": "0994893949",
-  "customer_name": "Hạnh",
+  "persona": "khach_da_kenh_mau_thuan",
+  "hard_case": "conflicting_quotes",
+  "customer_phone": "0990853801",
+  "customer_name": "Nhung",
   "honorific": "chị",
   "notes": "continue_across_channels",
   "calls": {
     "call_1": {
-      "channel": "hotline",
-      "channel_identity": "0994893949",
-      "call_date": "2026-10-29",
+      "channel": "chat_fanpage",
+      "channel_identity": "fb.nhung.733",
+      "call_date": "2026-10-16",
       "customer_turns": [
-        "Chị ơi, em đang xem sản phẩm máy tiệt trùng sấy khô Moaz Bebe, giá 1.890.000đ đúng không ạ?",
-        "Em thấy có chương trình giao hàng tận nơi, bên em có còn hàng không ạ?",
-        "Nếu em đặt hàng thì có thể giao vào lúc 10 giờ ngày 31 tháng 10 không ạ?"
+        "Chị ơi, em đang cần mua màng lọc thay thế Xiaomi Smart 4, có ai tư vấn không ạ?",
+        "Cảm ơn chị, giá 590.000đ, em sẽ xem lại sau. Gọi lại em vào 10 giờ ngày 17/10 nhé.",
+        "Được rồi, em đợi chị gọi."
       ],
       "customer_goal": "Hỏi về sản phẩm và hẹn xem lại",
       "facts_established": {
-        "product_advised": "SKU-MB-STER",
-        "price_quoted_vnd": 1890000
+        "product_advised": "SKU-XM-FLT",
+        "price_quoted_vnd": 590000
       },
       "ground_truth_facts": {
-        "sku": "SKU-MB-STER",
-        "price_vnd": 1890000,
+        "sku": "SKU-XM-FLT",
+        "price_vnd": 590000,
         "in_stock": true,
         "active_promos": [
-          "MOM-FREESHIP",
           "COD-0"
         ],
         "expired_promos": [],
         "promo_expiry_dates": {
-          "MOM-FREESHIP": "2026-11-29",
           "COD-0": "2026-12-14"
         },
-        "scheduled_callback_at": "2026-10-31T10:00"
+        "scheduled_callback_at": "2026-10-17T10:00"
       },
       "expected_outcome": "hen_goi_lai",
       "success_if": {
         "tool_called": "schedule.callback",
         "args_match": {
-          "customer_phone": "0994893949",
-          "callback_at": "2026-10-31T10:00"
+          "customer_phone": "0990853801",
+          "callback_at": "2026-10-17T10:00"
         }
       }
     },
     "call_2": {
       "channel": "zalo_oa",
-      "channel_identity": "zalo_hạnh44",
-      "call_date": "2026-10-31",
+      "channel_identity": "zalo_nhung30",
+      "call_date": "2026-10-17",
       "customer_turns": [
-        "Chị ơi, em nhắn Zalo bên fanpage rồi, báo giá 1.890k đúng không ạ?",
-        "Em muốn đặt máy tiệt trùng sấy khô Moaz Bebe, thanh toán khi nhận hàng.",
-        "Địa chỉ giao hàng là 527 Hồng Bàng, Chợ Lớn, HCM.",
-        "Giao vào sáng ngày 31, đúng không chị?"
+        "Chị ơi, hôm qua em gọi điện hỏi màng lọc Xiaomi Smart 4, hôm nay em thấy trên kênh khác họ báo 690.000đ. Sao khác nhau vậy chị?",
+        "Chị ơi, em không hiểu, tại sao giá lại chênh nhau thế? Em muốn mua đúng giá rẻ nhất.",
+        "Chị có thể giải thích rõ không? Nếu không được, em sẽ xem lại."
       ],
-      "days_later": 2,
-      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "days_later": 1,
+      "customer_goal": "Hỏi về mức giá khác đã được báo qua kênh khác",
       "facts_established": {
-        "product_advised": "SKU-MB-STER",
-        "price_quoted_vnd": 1890000,
-        "payment": "COD",
-        "delivery_address": "527 Hồng Bàng, phường Chợ Lớn, TP. Hồ Chí Minh",
-        "order_status": "created"
+        "reported_price_vnd": 690000
       },
       "must_carry_over": [
         "product_advised",
@@ -73,19 +66,58 @@
         "product_advised"
       ],
       "ground_truth_facts": {
-        "sku": "SKU-MB-STER",
-        "price_vnd": 1890000,
+        "sku": "SKU-XM-FLT",
+        "price_vnd": 590000,
         "in_stock": true,
         "active_promos": [
-          "MOM-FREESHIP",
           "COD-0"
         ],
         "expired_promos": [],
         "promo_expiry_dates": {
-          "MOM-FREESHIP": "2026-11-29",
+          "COD-0": "2026-12-14"
+        }
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": null,
+        "args_match": {}
+      }
+    },
+    "call_3": {
+      "channel": "hotline",
+      "channel_identity": "0990853801",
+      "call_date": "2026-10-18",
+      "customer_turns": [
+        "Chị ơi, em đã xem qua, giá 590.000đ là đúng rồi. Em muốn đặt hàng theo giá đó.",
+        "Được rồi, em sẽ thanh toán khi nhận hàng. Giao đến số 68, Trần Nguyên Đán, Hải Phòng.",
+        "Cảm ơn chị, em chốt đơn rồi."
+      ],
+      "days_later": 1,
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-XM-FLT",
+        "price_quoted_vnd": 590000,
+        "payment": "COD",
+        "delivery_address": "Số 68, đường Trần Nguyên Đán, khu dân cư Bích Động Tân Tiến, phường Trần Hưng Đạo, Hải Phòng",
+        "order_status": "created"
+      },
+      "must_carry_over": [
+        "reported_price_vnd",
+        "price_quoted_vnd"
+      ],
+      "must_not_ask": [],
+      "ground_truth_facts": {
+        "sku": "SKU-XM-FLT",
+        "price_vnd": 590000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
           "COD-0": "2026-12-14"
         },
-        "estimated_delivery": "2026-11-03"
+        "estimated_delivery": "2026-10-20"
       },
       "memory_expectation": {
         "order_status": "created"
@@ -94,8 +126,8 @@
       "success_if": {
         "tool_called": "order.create",
         "args_match": {
-          "sku": "SKU-MB-STER",
-          "price_vnd": 1890000
+          "sku": "SKU-XM-FLT",
+          "price_vnd": 590000
         }
       }
     }

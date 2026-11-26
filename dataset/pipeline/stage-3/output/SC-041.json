@@ -1,92 +1,96 @@
 {
-  "scenario_id": "SC-041",
+  "scenario_id": "SC-050",
   "level": "M1",
-  "persona": "khach_da_kenh_fb_hotline",
+  "persona": "khach_so_gia",
   "hard_case": null,
-  "customer_phone": "0992298369",
-  "customer_name": "Ngọc",
-  "honorific": "chị",
+  "customer_phone": "0957990659",
+  "customer_name": "Bảo",
+  "honorific": "anh",
   "notes": "continue_across_channels",
   "calls": {
     "call_1": {
-      "channel": "zalo_oa",
-      "channel_identity": "zalo_ngọc53",
-      "call_date": "2026-11-03",
+      "channel": "chat_fanpage",
+      "channel_identity": "fb.bảo.320",
+      "call_date": "2026-10-22",
       "customer_turns": [
-        "Chị ơi, em đang xem xe đẩy 2 chiều Combi Sugocal. Bao nhiêu tiền vậy?",
-        "Chị ơi, 6.790.000đ à? Em nghĩ giá cũng ổn.",
-        "Thế nếu em muốn xem lại thì có thể hẹn gọi lại được không?",
-        "Vâng, 10 giờ ngày 6/11 được không chị?"
+        "Anh xin hỏi giá combo AirPure Y + 2 màng lọc đi ạ.",
+        "Giá 6.390.000đ, đúng không anh?",
+        "Bên đối thủ họ chỉ 6.370.000đ thôi, có thể giảm không ạ?",
+        "Nếu không được, anh giữ thông tin để mình xem lại.",
+        "Mình hẹn gọi lại vào 10 giờ ngày 23/10 nhé."
       ],
-      "customer_goal": "Hỏi về sản phẩm và hẹn xem lại",
+      "customer_goal": "So báo giá với nơi khác trước khi quyết định",
       "facts_established": {
-        "product_advised": "SKU-MB-STR2",
-        "price_quoted_vnd": 6790000
+        "product_advised": "SKU-BDL-AIR",
+        "price_quoted_vnd": 6390000,
+        "competitor_price_vnd": 6370000
       },
       "ground_truth_facts": {
-        "sku": "SKU-MB-STR2",
-        "price_vnd": 6790000,
+        "sku": "SKU-BDL-AIR",
+        "price_vnd": 6390000,
         "in_stock": true,
         "active_promos": [
-          "MOM-FREESHIP",
+          "NAM-SHIP0",
           "COD-0"
         ],
         "expired_promos": [],
         "promo_expiry_dates": {
-          "MOM-FREESHIP": "2026-11-29",
+          "NAM-SHIP0": "2026-11-05",
           "COD-0": "2026-12-14"
         },
-        "scheduled_callback_at": "2026-11-06T10:00"
+        "scheduled_callback_at": "2026-10-23T10:00"
       },
       "expected_outcome": "hen_goi_lai",
       "success_if": {
         "tool_called": "schedule.callback",
         "args_match": {
-          "customer_phone": "0992298369",
-          "callback_at": "2026-11-06T10:00"
+          "customer_phone": "0957990659",
+          "callback_at": "2026-10-23T10:00"
         }
       }
     },
     "call_2": {
       "channel": "hotline",
-      "channel_identity": "0992298369",
-      "call_date": "2026-11-06",
+      "channel_identity": "0957990659",
+      "call_date": "2026-10-23",
       "customer_turns": [
-        "Chào chị, em là khách đã nhắn Zalo ngày 3/11. Chị nhớ không?",
-        "Chị ơi, giá 6 triệu 790 nghìn, thanh toán khi nhận hàng đúng không?",
-        "Địa chỉ em giao là Số 503 đường Trần Cao Vân, Thanh Khê, Đà Nẵng.",
-        "Vậy em đặt hàng nhé, chị ơi."
+        "Anh ơi, giá hôm qua là 6.390.000đ, đúng không?",
+        "Bên đối thủ họ chỉ 6.370.000đ, có thể hỗ trợ được gì không?",
+        "Anh nói giá không đổi, nhưng bảo hành 2 năm và giao hàng miễn phí, có phải không?",
+        "Thôi được, mình đặt đơn. Giao hàng đến A8 Châu Thới, phường Hòa Hưng, TP. HCM.",
+        "Thanh toán khi nhận hàng, đúng rồi."
       ],
-      "days_later": 3,
+      "days_later": 1,
       "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
       "facts_established": {
-        "product_advised": "SKU-MB-STR2",
-        "price_quoted_vnd": 6790000,
+        "product_advised": "SKU-BDL-AIR",
+        "price_quoted_vnd": 6390000,
         "payment": "COD",
-        "delivery_address": "Số 503 đường Trần Cao Vân, phường Thanh Khê, Đà Nẵng",
+        "delivery_address": "A8 Châu Thới, phường Hòa Hưng, TP. Hồ Chí Minh",
         "order_status": "created"
       },
       "must_carry_over": [
         "product_advised",
-        "price_quoted_vnd"
+        "price_quoted_vnd",
+        "competitor_price_vnd"
       ],
       "must_not_ask": [
         "product_advised"
       ],
       "ground_truth_facts": {
-        "sku": "SKU-MB-STR2",
-        "price_vnd": 6790000,
+        "sku": "SKU-BDL-AIR",
+        "price_vnd": 6390000,
         "in_stock": true,
         "active_promos": [
-          "MOM-FREESHIP",
+          "NAM-SHIP0",
           "COD-0"
         ],
         "expired_promos": [],
         "promo_expiry_dates": {
-          "MOM-FREESHIP": "2026-11-29",
+          "NAM-SHIP0": "2026-11-05",
           "COD-0": "2026-12-14"
         },
-        "estimated_delivery": "2026-11-09"
+        "estimated_delivery": "2026-10-27"
       },
       "memory_expectation": {
         "order_status": "created"
@@ -95,8 +99,8 @@
       "success_if": {
         "tool_called": "order.create",
         "args_match": {
-          "sku": "SKU-MB-STR2",
-          "price_vnd": 6790000
+          "sku": "SKU-BDL-AIR",
+          "price_vnd": 6390000
         }
       }
     }

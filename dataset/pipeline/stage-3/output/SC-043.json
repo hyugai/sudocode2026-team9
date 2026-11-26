@@ -1,92 +1,96 @@
 {
-  "scenario_id": "SC-043",
+  "scenario_id": "SC-052",
   "level": "M1",
-  "persona": "khach_da_kenh_fb_hotline",
+  "persona": "khach_so_gia",
   "hard_case": null,
-  "customer_phone": "0980737028",
-  "customer_name": "Mai",
+  "customer_phone": "0965237355",
+  "customer_name": "Xuân",
   "honorific": "chị",
   "notes": "continue_across_channels",
   "calls": {
     "call_1": {
-      "channel": "zalo_oa",
-      "channel_identity": "zalo_mai37",
-      "call_date": "2026-10-15",
+      "channel": "chat_fanpage",
+      "channel_identity": "fb.xuân.519",
+      "call_date": "2026-10-24",
       "customer_turns": [
-        "K, bn sp này đc ko? Combo Spectra S1 + máy hâm Fatz + 50 túi",
-        "Giá bao nhiêu vậy chị? Mình xem thử.",
-        "Ok, 4.790.000đ à. Mình xin giờ 10h ngày 16/10 nhé.",
-        "Ờa bên em nhắn FB báo 4.790k mà."
+        "Chị ơi, em đang so sánh giá, bên họ báo 6,33 triệu, bên mình 6,39 triệu. Chị giảm được bao nhiêu?",
+        "Có chương trình nào để giảm không? Em xem bên họ cũng có bảo hành 2 năm.",
+        "Em đang cân nhắc, nếu chị có thể giảm thêm 60 nghìn, em đặt ngay.",
+        "Chị ơi, em xem giá họ cũng không chênh bao nhiêu. Chị có thể hỗ trợ được gì không?",
+        "Nếu không giảm, em xem thêm bên khác. Chị ơi, bên mình có quà tặng gì không?"
       ],
-      "customer_goal": "Hỏi về sản phẩm và hẹn xem lại",
+      "customer_goal": "So báo giá với nơi khác trước khi quyết định",
       "facts_established": {
-        "product_advised": "SKU-BDL-MOM",
-        "price_quoted_vnd": 4790000
+        "product_advised": "SKU-BDL-AIR",
+        "price_quoted_vnd": 6390000,
+        "competitor_price_vnd": 6330000
       },
       "ground_truth_facts": {
-        "sku": "SKU-BDL-MOM",
-        "price_vnd": 4790000,
+        "sku": "SKU-BDL-AIR",
+        "price_vnd": 6390000,
         "in_stock": true,
         "active_promos": [
-          "MOM-FREESHIP",
+          "NAM-SHIP0",
           "COD-0"
         ],
         "expired_promos": [],
         "promo_expiry_dates": {
-          "MOM-FREESHIP": "2026-11-29",
+          "NAM-SHIP0": "2026-11-05",
           "COD-0": "2026-12-14"
         },
-        "scheduled_callback_at": "2026-10-16T10:00"
+        "scheduled_callback_at": "2026-10-27T10:00"
       },
       "expected_outcome": "hen_goi_lai",
       "success_if": {
         "tool_called": "schedule.callback",
         "args_match": {
-          "customer_phone": "0980737028",
-          "callback_at": "2026-10-16T10:00"
+          "customer_phone": "0965237355",
+          "callback_at": "2026-10-27T10:00"
         }
       }
     },
     "call_2": {
       "channel": "hotline",
-      "channel_identity": "0980737028",
-      "call_date": "2026-10-16",
+      "channel_identity": "0965237355",
+      "call_date": "2026-10-27",
       "customer_turns": [
-        "Chào chị, mình là khách đã nhắn Zalo hôm qua. Hôm nay gọi để chốt đơn.",
-        "Giá là bốn triệu bảy trăm chín mươi ngàn, thanh toán khi nhận hàng.",
-        "Địa chỉ 531 Vĩnh Khánh, TP.HCM. Mình xác nhận đặt.",
-        "Được rồi, mình cảm ơn chị."
+        "Chị ơi, em thấy bên họ cũng có bảo hành 2 năm, nhưng bên mình có quà tặng thêm. Em đồng ý.",
+        "Giá 6,39 triệu, thanh toán khi nhận hàng, giao đến Thới Mỹ, Thới Long. Em đặt đơn.",
+        "Được rồi, em chuyển khoản cọc 500 nghìn để giữ hàng.",
+        "Chị ơi, em cảm ơn. Em sẽ đợi giao hàng đúng giờ.",
+        "Nếu có gì thay đổi, chị báo em nhé. Em cũng sẽ theo dõi đơn."
       ],
-      "days_later": 1,
+      "days_later": 3,
       "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
       "facts_established": {
-        "product_advised": "SKU-BDL-MOM",
-        "price_quoted_vnd": 4790000,
+        "product_advised": "SKU-BDL-AIR",
+        "price_quoted_vnd": 6390000,
         "payment": "COD",
-        "delivery_address": "531 Vĩnh Khánh, phường Khánh Hội, TP. Hồ Chí Minh",
+        "delivery_address": "Khu vực Thới Mỹ, phường Thới Long, Cần Thơ",
         "order_status": "created"
       },
       "must_carry_over": [
         "product_advised",
-        "price_quoted_vnd"
+        "price_quoted_vnd",
+        "competitor_price_vnd"
       ],
       "must_not_ask": [
         "product_advised"
       ],
       "ground_truth_facts": {
-        "sku": "SKU-BDL-MOM",
-        "price_vnd": 4790000,
+        "sku": "SKU-BDL-AIR",
+        "price_vnd": 6390000,
         "in_stock": true,
         "active_promos": [
-          "MOM-FREESHIP",
+          "NAM-SHIP0",
           "COD-0"
         ],
         "expired_promos": [],
         "promo_expiry_dates": {
-          "MOM-FREESHIP": "2026-11-29",
+          "NAM-SHIP0": "2026-11-05",
           "COD-0": "2026-12-14"
         },
-        "estimated_delivery": "2026-10-19"
+        "estimated_delivery": "2026-10-29"
       },
       "memory_expectation": {
         "order_status": "created"
@@ -95,8 +99,8 @@
       "success_if": {
         "tool_called": "order.create",
         "args_match": {
-          "sku": "SKU-BDL-MOM",
-          "price_vnd": 4790000
+          "sku": "SKU-BDL-AIR",
+          "price_vnd": 6390000
         }
       }
     }

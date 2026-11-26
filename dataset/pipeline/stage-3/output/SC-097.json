@@ -1,42 +1,45 @@
 {
-  "scenario_id": "SC-097",
+  "scenario_id": "SC-111",
   "level": "M1",
   "persona": "khach_da_mua_doi_size",
   "hard_case": null,
-  "customer_phone": "0932448452",
-  "customer_name": "Diệp",
-  "honorific": "chị",
+  "customer_phone": "0982141621",
+  "customer_name": "Quân",
+  "honorific": "anh",
   "notes": "return_for_post_purchase_support",
   "calls": {
     "call_1": {
       "channel": "hotline",
-      "channel_identity": "0932448452",
-      "call_date": "2026-10-27",
+      "channel_identity": "0982141621",
+      "call_date": "2026-10-20",
       "customer_turns": [
-        "Chị ơi, em muốn đặt mua giày sneaker Urban Classic trang ba mươi tám, giá tám trăm chín mươi nghìn đồng, thanh toán khi nhận hàng.",
-        "Giao đến 449 Phạm Văn Đồng, phường Mỹ Thượng, Huế nhé chị.",
-        "Em muốn đặt đơn ngay, nếu còn hàng thì chị xác nhận cho em nha."
+        "Anh ơi, em muốn đặt mua nồi chiên không dầu Xiaomi 4.5L.",
+        "Giá bao nhiêu vậy anh?",
+        "Em xin thanh toán khi nhận hàng, giao đến 154 Tháp Mười, phường Bình Tây, TP. Hồ Chí Minh.",
+        "Em mong anh nhớ đơn của em nha."
       ],
       "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
       "facts_established": {
-        "product_advised": "SKU-SN-CAS-38-TRANG",
-        "price_quoted_vnd": 890000,
+        "product_advised": "SKU-AF-XM",
+        "price_quoted_vnd": 1590000,
         "payment": "COD",
-        "delivery_address": "449 Phạm Văn Đồng, phường Mỹ Thượng, Huế",
+        "delivery_address": "154 Tháp Mười, phường Bình Tây, TP. Hồ Chí Minh",
         "order_status": "created"
       },
       "ground_truth_facts": {
-        "sku": "SKU-SN-CAS-38-TRANG",
-        "price_vnd": 890000,
+        "sku": "SKU-AF-XM",
+        "price_vnd": 1590000,
         "in_stock": true,
         "active_promos": [
+          "NAM-SHIP0",
           "COD-0"
         ],
         "expired_promos": [],
         "promo_expiry_dates": {
+          "NAM-SHIP0": "2026-11-05",
           "COD-0": "2026-12-14"
         },
-        "estimated_delivery": "2026-10-29"
+        "estimated_delivery": "2026-10-22"
       },
       "memory_expectation": {
         "order_status": "created"
@@ -45,24 +48,25 @@
       "success_if": {
         "tool_called": "order.create",
         "args_match": {
-          "sku": "SKU-SN-CAS-38-TRANG",
-          "price_vnd": 890000
+          "sku": "SKU-AF-XM",
+          "price_vnd": 1590000
         }
       }
     },
     "call_2": {
       "channel": "hotline",
-      "channel_identity": "0932448452",
-      "call_date": "2026-10-31",
+      "channel_identity": "0982141621",
+      "call_date": "2026-10-23",
       "customer_turns": [
-        "Chị ơi, em vừa nhận hàng rồi, nhưng size trang ba mươi tám hơi chật, em muốn đổi sang size trang ba mươi chín.",
-        "Chị nhớ đơn của em không? 449 Phạm Văn Đồng, Huế, giày Urban Classic, tám trăm chín mươi nghìn.",
-        "Nếu còn size trang ba mươi chín, chị hướng dẫn em đổi hộ đi, em đợi đó."
+        "Anh ơi, em muốn thay địa chỉ giao hàng sang 15 Chợ Lớn, phường Bình Phú, TP. Hồ Chí Minh.",
+        "Đơn của em vẫn còn được giao đúng không anh?",
+        "Giá vẫn là một triệu năm trăm chín mươi ngàn, thanh toán khi nhận hàng đúng không?",
+        "Em không muốn mất đơn đâu, anh nhớ giúp em nha."
       ],
-      "days_later": 4,
-      "customer_goal": "Đổi sang size khác sau khi nhận hàng",
+      "days_later": 3,
+      "customer_goal": "Cập nhật nơi giao cho đơn đã mua",
       "facts_established": {
-        "new_variant_sku": "SKU-SN-CAS-39-TRANG"
+        "delivery_address": "15 Chợ Lớn, phường Bình Phú, TP. Hồ Chí Minh"
       },
       "must_carry_over": [
         "product_advised",
@@ -75,27 +79,31 @@
         "product_advised"
       ],
       "ground_truth_facts": {
-        "sku": "SKU-SN-CAS-38-TRANG",
-        "price_vnd": 890000,
+        "sku": "SKU-AF-XM",
+        "price_vnd": 1590000,
         "in_stock": true,
         "active_promos": [
+          "NAM-SHIP0",
           "COD-0"
         ],
         "expired_promos": [],
         "promo_expiry_dates": {
+          "NAM-SHIP0": "2026-11-05",
           "COD-0": "2026-12-14"
-        },
-        "replacement_in_stock": true,
-        "exchange_fee_vnd": 0,
-        "policy_reference": "DT-03"
+        }
+      },
+      "memory_expectation": {
+        "delivery_address": "15 Chợ Lớn, phường Bình Phú, TP. Hồ Chí Minh",
+        "supersedes": {
+          "delivery_address": "154 Tháp Mười, phường Bình Tây, TP. Hồ Chí Minh"
+        }
       },
       "expected_outcome": "chot_don",
       "success_if": {
         "tool_called": "order.update",
         "args_match": {
           "order_id": "OD600001",
-          "action": "exchange_size",
-          "new_variant_sku": "SKU-SN-CAS-39-TRANG"
+          "action": "update_address"
         }
       }
     }

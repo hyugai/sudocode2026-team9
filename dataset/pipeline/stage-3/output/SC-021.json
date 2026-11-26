@@ -1,70 +1,71 @@
 {
-  "scenario_id": "SC-021",
+  "scenario_id": "SC-028",
   "level": "M1",
   "persona": "khach_so_gia",
   "hard_case": null,
-  "customer_phone": "0975475177",
-  "customer_name": "Long",
-  "honorific": "anh",
+  "customer_phone": "0994893949",
+  "customer_name": "Hạnh",
+  "honorific": "chị",
   "notes": "consider_and_decide",
   "calls": {
     "call_1": {
       "channel": "hotline",
-      "channel_identity": "0975475177",
-      "call_date": "2026-11-04",
+      "channel_identity": "0994893949",
+      "call_date": "2026-10-21",
       "customer_turns": [
-        "Anh ơi, em đang so sánh giá máy lọc nước RO Kangaroo mười lõi với bên khác.",
-        "Bên họ báo sáu triệu bảy trăm năm mươi ngàn, bên anh là sáu triệu tám trăm chín mươi.",
-        "Anh có thể giảm được bao nhiêu không?",
-        "Nếu không được, em sẽ xem bên họ."
+        "Chị ơi, em đang so sánh giá bên em, họ báo 4 triệu 510 ngàn.",
+        "Còn bên chị là bao nhiêu vậy?",
+        "Ừm, 4 triệu 790 ngàn. Giá cao hơn 280 ngàn, em hơi ngại.",
+        "Chị có thể giảm được không? Em đang tính xem nên chọn nơi nào."
       ],
       "customer_goal": "So báo giá với nơi khác trước khi quyết định",
       "facts_established": {
-        "product_advised": "SKU-WF-RO10",
-        "price_quoted_vnd": 6890000,
-        "competitor_price_vnd": 6750000
+        "product_advised": "SKU-BDL-MOM",
+        "price_quoted_vnd": 4790000,
+        "competitor_price_vnd": 4510000
       },
       "ground_truth_facts": {
-        "sku": "SKU-WF-RO10",
-        "price_vnd": 6890000,
+        "sku": "SKU-BDL-MOM",
+        "price_vnd": 4790000,
         "in_stock": true,
         "active_promos": [
-          "NAM-SHIP0",
+          "MOM-FREESHIP",
           "COD-0"
         ],
         "expired_promos": [],
         "promo_expiry_dates": {
-          "NAM-SHIP0": "2026-11-05",
+          "MOM-FREESHIP": "2026-11-29",
           "COD-0": "2026-12-14"
         },
-        "scheduled_callback_at": "2026-11-07T10:00"
+        "scheduled_callback_at": "2026-10-23T10:00"
       },
       "expected_outcome": "hen_goi_lai",
       "success_if": {
         "tool_called": "schedule.callback",
         "args_match": {
-          "customer_phone": "0975475177",
-          "callback_at": "2026-11-07T10:00"
+          "customer_phone": "0994893949",
+          "callback_at": "2026-10-23T10:00"
         }
       }
     },
     "call_2": {
       "channel": "hotline",
-      "channel_identity": "0975475177",
-      "call_date": "2026-11-07",
+      "channel_identity": "0994893949",
+      "call_date": "2026-10-23",
       "customer_turns": [
-        "Anh ơi, em đã so giá rồi. Bên họ cũng có sản phẩm giống, nhưng giá thấp hơn.",
-        "Anh có thể hỗ trợ gì để em mua được theo giá này không?",
-        "Em muốn mua ngay, nhưng nếu không có ưu đãi, em có thể cân nhắc lại.",
-        "Giá bên anh là sáu triệu tám trăm chín mươi, em sẽ đặt hàng."
+        "Chị ơi, em đã xem lại, giá bên em cũng không thay đổi.",
+        "Chị có thể giảm giá không? Em đang cân nhắc mua.",
+        "Chị nói là giao hàng tận nơi, thanh toán khi nhận hàng, đúng không?",
+        "Được, em mua theo giá chị báo. Giao hàng đến 527 Hồng Bàng nhé.",
+        "Cảm ơn chị, em chờ giao hàng."
       ],
-      "days_later": 3,
+      "days_later": 2,
       "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
       "facts_established": {
-        "product_advised": "SKU-WF-RO10",
-        "price_quoted_vnd": 6890000,
+        "product_advised": "SKU-BDL-MOM",
+        "price_quoted_vnd": 4790000,
         "payment": "COD",
-        "delivery_address": "611/20 Điện Biên Phủ, phường Bàn Cờ, TP. Hồ Chí Minh",
+        "delivery_address": "527 Hồng Bàng, phường Chợ Lớn, TP. Hồ Chí Minh",
         "order_status": "created"
       },
       "must_carry_over": [
@@ -76,20 +77,19 @@
         "product_advised"
       ],
       "ground_truth_facts": {
-        "sku": "SKU-WF-RO10",
-        "price_vnd": 6890000,
+        "sku": "SKU-BDL-MOM",
+        "price_vnd": 4790000,
         "in_stock": true,
         "active_promos": [
+          "MOM-FREESHIP",
           "COD-0"
         ],
-        "expired_promos": [
-          "NAM-SHIP0"
-        ],
+        "expired_promos": [],
         "promo_expiry_dates": {
-          "NAM-SHIP0": "2026-11-05",
+          "MOM-FREESHIP": "2026-11-29",
           "COD-0": "2026-12-14"
         },
-        "estimated_delivery": "2026-11-10"
+        "estimated_delivery": "2026-10-27"
       },
       "memory_expectation": {
         "order_status": "created"
@@ -98,8 +98,8 @@
       "success_if": {
         "tool_called": "order.create",
         "args_match": {
-          "sku": "SKU-WF-RO10",
-          "price_vnd": 6890000
+          "sku": "SKU-BDL-MOM",
+          "price_vnd": 4790000
         }
       }
     }

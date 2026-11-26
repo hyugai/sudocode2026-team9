@@ -1,88 +1,114 @@
 {
-  "scenario_id": "SC-057",
+  "scenario_id": "SC-067",
   "level": "M1",
-  "persona": "khach_do_du_hoi_nguoi_nha",
-  "hard_case": null,
-  "customer_phone": "0905154382",
-  "customer_name": "Thắng",
+  "persona": "khach_so_gia",
+  "hard_case": "expired_promo",
+  "customer_phone": "0922264686",
+  "customer_name": "Khoa",
   "honorific": "anh",
-  "notes": "continue_across_channels",
+  "notes": "return_after_price_or_stock_change",
   "calls": {
     "call_1": {
-      "channel": "zalo_oa",
-      "channel_identity": "zalo_thắng86",
-      "call_date": "2026-10-29",
+      "channel": "hotline",
+      "channel_identity": "0922264686",
+      "call_date": "2026-11-14",
       "customer_turns": [
-        "Chị ơi, em đang xem bình sữa Pigeon PPSU 240ml, giá 289.000đ đúng không?",
-        "Em đang có ngân sách 1.500.000đ, để hỏi ý kiến anh trai xem có nên mua không.",
-        "Nếu anh trai đồng ý, em sẽ gọi lại để đặt hàng."
+        "Anh ơi, em vừa so giá với bên khác rồi, bên họ chỉ năm triệu ba trăm bảy mươi nghìn.",
+        "Giá bên anh là năm triệu bốn trăm chín mươi nghìn, em thấy hơi cao.",
+        "Mà em cũng biết là có ưu đãi mua Xiaomi Smart 4 Pro tặng màng lọc, đúng không anh?",
+        "Ưu đãi hết ngày mười bốn tháng mười một, em muốn hỏi là có thể được giảm bao nhiêu không?",
+        "Nếu không giảm thì em sẽ xem bên khác."
       ],
-      "customer_goal": "Xem sản phẩm trong ngân sách và hỏi ý kiến người nhà",
+      "customer_goal": "So báo giá với nơi khác trước khi quyết định",
       "facts_established": {
-        "product_advised": "SKU-MB-BOT",
-        "price_quoted_vnd": 289000,
-        "budget_vnd": 1500000
+        "product_advised": "SKU-XM-4P",
+        "price_quoted_vnd": 5490000,
+        "promo_code": "XM-COMBO",
+        "promo_expiry": "2026-11-14",
+        "competitor_price_vnd": 5370000
       },
       "ground_truth_facts": {
-        "sku": "SKU-MB-BOT",
-        "price_vnd": 289000,
+        "sku": "SKU-XM-4P",
+        "price_vnd": 5490000,
         "in_stock": true,
         "active_promos": [
-          "COD-0"
+          "COD-0",
+          "XM-COMBO"
         ],
-        "expired_promos": [],
+        "expired_promos": [
+          "AIR-2ND-50",
+          "NAM-SHIP0",
+          "11-11"
+        ],
         "promo_expiry_dates": {
-          "COD-0": "2026-12-14"
+          "XM-COMBO": "2026-11-14",
+          "AIR-2ND-50": "2026-11-04",
+          "NAM-SHIP0": "2026-11-05",
+          "COD-0": "2026-12-14",
+          "11-11": "2026-11-12"
         },
-        "scheduled_callback_at": "2026-11-01T10:00"
+        "scheduled_callback_at": "2026-11-15T10:00"
       },
       "expected_outcome": "hen_goi_lai",
       "success_if": {
         "tool_called": "schedule.callback",
         "args_match": {
-          "customer_phone": "0905154382",
-          "callback_at": "2026-11-01T10:00"
+          "customer_phone": "0922264686",
+          "callback_at": "2026-11-15T10:00"
         }
       }
     },
     "call_2": {
       "channel": "hotline",
-      "channel_identity": "0905154382",
-      "call_date": "2026-11-01",
+      "channel_identity": "0922264686",
+      "call_date": "2026-11-15",
       "customer_turns": [
-        "Chị ơi, hôm trước chị nói rồi mà. Em đã đồng ý mua bình sữa Pigeon PPSU 240ml giá hai trăm tám mươi chín ngàn.",
-        "Em muốn đặt hàng, giao đến đường Phạm Hùng, Cái Răng, Cần Thơ.",
-        "Giao hàng và thanh toán khi nhận hàng, đúng không?"
+        "Anh ơi, em đã so giá rồi, bên em thấy giá bên anh vẫn cao hơn một chút.",
+        "Em biết là ưu đãi hết rồi, nhưng nếu mua hôm nay thì có được tặng quà gì không anh?",
+        "Giá em thấy là năm triệu bốn trăm chín mươi nghìn, mà em có thể thanh toán khi nhận hàng, đúng không?",
+        "Địa chỉ em giao hàng là Số 231 Nguyễn Ngọc Vũ, em muốn đặt hàng ngay hôm nay.",
+        "Nếu được thì em sẽ chốt đơn ngay."
       ],
-      "days_later": 3,
+      "days_later": 1,
       "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
       "facts_established": {
-        "product_advised": "SKU-MB-BOT",
-        "price_quoted_vnd": 289000,
+        "product_advised": "SKU-XM-4P",
+        "price_quoted_vnd": 5490000,
         "payment": "COD",
-        "delivery_address": "Đường Phạm Hùng, phường Cái Răng, Cần Thơ",
+        "delivery_address": "Số 231 Nguyễn Ngọc Vũ, phường Yên Hòa, Hà Nội",
         "order_status": "created"
       },
       "must_carry_over": [
         "product_advised",
         "price_quoted_vnd",
-        "budget_vnd"
+        "promo_code",
+        "promo_expiry",
+        "competitor_price_vnd"
       ],
       "must_not_ask": [
         "product_advised"
       ],
       "ground_truth_facts": {
-        "sku": "SKU-MB-BOT",
-        "price_vnd": 289000,
+        "sku": "SKU-XM-4P",
+        "price_vnd": 5490000,
         "in_stock": true,
         "active_promos": [
           "COD-0"
         ],
-        "expired_promos": [],
+        "expired_promos": [
+          "XM-COMBO",
+          "AIR-2ND-50",
+          "NAM-SHIP0",
+          "11-11"
+        ],
         "promo_expiry_dates": {
-          "COD-0": "2026-12-14"
+          "XM-COMBO": "2026-11-14",
+          "AIR-2ND-50": "2026-11-04",
+          "NAM-SHIP0": "2026-11-05",
+          "COD-0": "2026-12-14",
+          "11-11": "2026-11-12"
         },
-        "estimated_delivery": "2026-11-03"
+        "estimated_delivery": "2026-11-17"
       },
       "memory_expectation": {
         "order_status": "created"
@@ -91,8 +117,8 @@
       "success_if": {
         "tool_called": "order.create",
         "args_match": {
-          "sku": "SKU-MB-BOT",
-          "price_vnd": 289000
+          "sku": "SKU-XM-4P",
+          "price_vnd": 5490000
         }
       }
     }

@@ -1,126 +1,95 @@
 {
-  "scenario_id": "SC-048",
+  "scenario_id": "SC-058",
   "level": "M1",
-  "persona": "khach_da_kenh_mau_thuan",
-  "hard_case": "conflicting_quotes",
-  "customer_phone": "0905218549",
-  "customer_name": "Linh",
-  "honorific": "chị",
+  "persona": "khach_do_du_hoi_nguoi_nha",
+  "hard_case": null,
+  "customer_phone": "0911265844",
+  "customer_name": "Toàn",
+  "honorific": "anh",
   "notes": "continue_across_channels",
   "calls": {
     "call_1": {
-      "channel": "chat_fanpage",
-      "channel_identity": "fb.linh.398",
-      "call_date": "2026-10-20",
+      "channel": "hotline",
+      "channel_identity": "0911265844",
+      "call_date": "2026-10-30",
       "customer_turns": [
-        "Chị ơi, em đang tìm máy lọc không khí AirPure Mini, có thể giới thiệu không ạ?",
-        "Giá bao nhiêu vậy chị? Em xem ở đây thấy 2 triệu 190 nghìn.",
-        "Em đang bận, nếu chị có thể gọi lại em lúc 10 giờ ngày 21/10 được không?",
-        "Cảm ơn chị, em đợi gọi lại."
+        "Chào chị, em đang muốn xem sản phẩm trong ngân sách tám triệu đồng, nhưng cần hỏi ý kiến người nhà.",
+        "Chị có thể giới thiệu sản phẩm nào phù hợp với ngân sách không?",
+        "Em nghe nói là có combo AirPure Y + hai màng lọc, giá sáu triệu ba trăm chín mươi nghìn, đúng không?",
+        "Em sẽ hỏi người nhà rồi gọi lại, chị ơi.",
+        "Chị hẹn em 10 giờ ngày 3 tháng 11 nhé."
       ],
-      "customer_goal": "Hỏi về sản phẩm và hẹn xem lại",
+      "customer_goal": "Xem sản phẩm trong ngân sách và hỏi ý kiến người nhà",
       "facts_established": {
-        "product_advised": "SKU-AP-MINI",
-        "price_quoted_vnd": 2190000
+        "product_advised": "SKU-BDL-AIR",
+        "price_quoted_vnd": 6390000,
+        "budget_vnd": 8000000
       },
       "ground_truth_facts": {
-        "sku": "SKU-AP-MINI",
-        "price_vnd": 2190000,
+        "sku": "SKU-BDL-AIR",
+        "price_vnd": 6390000,
         "in_stock": true,
         "active_promos": [
+          "NAM-SHIP0",
           "COD-0"
         ],
         "expired_promos": [],
         "promo_expiry_dates": {
+          "NAM-SHIP0": "2026-11-05",
           "COD-0": "2026-12-14"
         },
-        "scheduled_callback_at": "2026-10-21T10:00"
+        "scheduled_callback_at": "2026-11-03T10:00"
       },
       "expected_outcome": "hen_goi_lai",
       "success_if": {
         "tool_called": "schedule.callback",
         "args_match": {
-          "customer_phone": "0905218549",
-          "callback_at": "2026-10-21T10:00"
+          "customer_phone": "0911265844",
+          "callback_at": "2026-11-03T10:00"
         }
       }
     },
     "call_2": {
-      "channel": "zalo_oa",
-      "channel_identity": "zalo_linh18",
-      "call_date": "2026-10-21",
+      "channel": "chat_fanpage",
+      "channel_identity": "fb.toàn.855",
+      "call_date": "2026-11-03",
       "customer_turns": [
-        "Chị ơi, em gọi lại vì thấy giá trên Zalo là 2 triệu 690 nghìn, khác với giá hôm qua.",
-        "Chị có thể giải thích tại sao lại chênh lệch như vậy không?",
-        "Em mong muốn có mức giá nhất, nếu không được thì em cần biết lý do.",
-        "Chị có thể báo lại giá chính xác được không?"
+        "Chị ơi, hôm trước chị nói rồi mà, em đã đồng ý mua combo AirPure Y + 2 màng lọc.",
+        "Giá là sáu ba chín, em thấy ổn. Thanh toán khi nhận hàng được không?",
+        "Giao hàng đến số 705 đường 3/2, Cần Thơ nhé.",
+        "Chị ơi, em đã chốt đơn rồi."
       ],
-      "days_later": 1,
-      "customer_goal": "Hỏi về mức giá khác đã được báo qua kênh khác",
+      "days_later": 4,
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
       "facts_established": {
-        "reported_price_vnd": 2690000
+        "product_advised": "SKU-BDL-AIR",
+        "price_quoted_vnd": 6390000,
+        "payment": "COD",
+        "delivery_address": "Số 705 đường 3/2, phường An Bình, Cần Thơ",
+        "order_status": "created"
       },
       "must_carry_over": [
         "product_advised",
-        "price_quoted_vnd"
+        "price_quoted_vnd",
+        "budget_vnd"
       ],
       "must_not_ask": [
         "product_advised"
       ],
       "ground_truth_facts": {
-        "sku": "SKU-AP-MINI",
-        "price_vnd": 2190000,
+        "sku": "SKU-BDL-AIR",
+        "price_vnd": 6390000,
         "in_stock": true,
         "active_promos": [
+          "NAM-SHIP0",
           "COD-0"
         ],
         "expired_promos": [],
         "promo_expiry_dates": {
-          "COD-0": "2026-12-14"
-        }
-      },
-      "expected_outcome": "hen_goi_lai",
-      "success_if": {
-        "tool_called": null,
-        "args_match": {}
-      }
-    },
-    "call_3": {
-      "channel": "hotline",
-      "channel_identity": "0905218549",
-      "call_date": "2026-10-22",
-      "customer_turns": [
-        "Chị ơi, em đã xem lại và thấy giá 2 triệu 190 nghìn là hợp lý.",
-        "Em muốn đặt máy lọc không khí AirPure Mini, giao đến số 24 đường Hoàng Diệu.",
-        "Thanh toán khi nhận hàng được không chị?",
-        "Em cảm ơn, em sẽ chờ nhận hàng."
-      ],
-      "days_later": 1,
-      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
-      "facts_established": {
-        "product_advised": "SKU-AP-MINI",
-        "price_quoted_vnd": 2190000,
-        "payment": "COD",
-        "delivery_address": "Số 24 đường Hoàng Diệu, khối 3, phường Điện Bàn, Đà Nẵng",
-        "order_status": "created"
-      },
-      "must_carry_over": [
-        "reported_price_vnd",
-        "price_quoted_vnd"
-      ],
-      "must_not_ask": [],
-      "ground_truth_facts": {
-        "sku": "SKU-AP-MINI",
-        "price_vnd": 2190000,
-        "in_stock": true,
-        "active_promos": [
-          "COD-0"
-        ],
-        "expired_promos": [],
-        "promo_expiry_dates": {
+          "NAM-SHIP0": "2026-11-05",
           "COD-0": "2026-12-14"
         },
-        "estimated_delivery": "2026-10-24"
+        "estimated_delivery": "2026-11-05"
       },
       "memory_expectation": {
         "order_status": "created"
@@ -129,8 +98,8 @@
       "success_if": {
         "tool_called": "order.create",
         "args_match": {
-          "sku": "SKU-AP-MINI",
-          "price_vnd": 2190000
+          "sku": "SKU-BDL-AIR",
+          "price_vnd": 6390000
         }
       }
     }

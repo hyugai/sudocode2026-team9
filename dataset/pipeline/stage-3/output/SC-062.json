@@ -1,74 +1,73 @@
 {
-  "scenario_id": "SC-062",
+  "scenario_id": "SC-074",
   "level": "M1",
-  "persona": "khach_so_gia",
+  "persona": "khach_do_du_hoi_nguoi_nha",
   "hard_case": "expired_promo",
-  "customer_phone": "0963279264",
-  "customer_name": "Đạt",
-  "honorific": "anh",
+  "customer_phone": "0979511174",
+  "customer_name": "Hiền",
+  "honorific": "chị",
   "notes": "return_after_price_or_stock_change",
   "calls": {
     "call_1": {
       "channel": "hotline",
-      "channel_identity": "0963279264",
-      "call_date": "2026-10-07",
+      "channel_identity": "0979511174",
+      "call_date": "2026-10-22",
       "customer_turns": [
-        "Anh chào em, em ơi, em có thể báo giá sản phẩm Giày chạy bộ RunLite hai Pro được không?",
-        "Giá là một triệu ba trăm năm mươi hai nghìn đồng, đúng không em?",
-        "Em có biết là bên đối thủ bán chỉ một triệu ba trăm ba mươi hai nghìn thôi, có phải không?",
-        "Em xem giúp mình xem có ưu đãi gì không, mình đang xem xét.",
-        "Mình muốn hẹn lại với em vào mười giờ ngày tám tháng mười."
+        "Chị đang muốn xem máy lọc không khí trong ngân sách sáu triệu đồng.",
+        "Chị nghe nói AirPure Y có giá năm triệu hai trăm nghìn, có đúng không?",
+        "Có ưu đãi tặng màng lọc khi mua AirPure X/Y không ạ?",
+        "Ưu đãi hết hạn ngày hai mươi hai tháng mười đúng không?",
+        "Chị cần hỏi người nhà đã, chị sẽ gọi lại vào mười giờ ngày hai mươi ba tháng mười."
       ],
-      "customer_goal": "So báo giá với nơi khác trước khi quyết định",
+      "customer_goal": "Xem sản phẩm trong ngân sách và hỏi ý kiến người nhà",
       "facts_established": {
-        "product_advised": "SKU-SN-RUN2",
-        "price_quoted_vnd": 1352000,
-        "promo_code": "RUN2-SALE",
-        "promo_expiry": "2026-10-07",
-        "competitor_price_vnd": 1332000
+        "product_advised": "SKU-AP-Y",
+        "price_quoted_vnd": 5200000,
+        "promo_code": "GIFT-FILTER",
+        "promo_expiry": "2026-10-22",
+        "budget_vnd": 6000000
       },
       "ground_truth_facts": {
-        "sku": "SKU-SN-RUN2",
-        "price_vnd": 1352000,
+        "sku": "SKU-AP-Y",
+        "price_vnd": 5200000,
         "in_stock": true,
         "active_promos": [
           "COD-0",
-          "RUN2-SALE"
+          "GIFT-FILTER"
         ],
         "expired_promos": [],
         "promo_expiry_dates": {
-          "COD-0": "2026-12-14",
-          "RUN2-SALE": "2026-10-07"
+          "GIFT-FILTER": "2026-10-22",
+          "COD-0": "2026-12-14"
         },
-        "scheduled_callback_at": "2026-10-08T10:00"
+        "scheduled_callback_at": "2026-10-23T10:00"
       },
       "expected_outcome": "hen_goi_lai",
       "success_if": {
         "tool_called": "schedule.callback",
         "args_match": {
-          "customer_phone": "0963279264",
-          "callback_at": "2026-10-08T10:00"
+          "customer_phone": "0979511174",
+          "callback_at": "2026-10-23T10:00"
         }
       }
     },
     "call_2": {
       "channel": "hotline",
-      "channel_identity": "0963279264",
-      "call_date": "2026-10-08",
+      "channel_identity": "0979511174",
+      "call_date": "2026-10-23",
       "customer_turns": [
-        "Chào em, mình là người gọi lại như đã hẹn.",
-        "Em có nhớ là mình muốn mua Giày chạy bộ RunLite hai Pro không?",
-        "Giá báo lúc trước là một triệu ba trăm năm mươi hai nghìn, nhưng giờ em nói là một triệu sáu trăm chín mươi nghìn?",
-        "Thế ưu đãi giảm 20% lúc trước còn không?",
-        "Mình đã biết là hết hạn rồi, nhưng mình vẫn muốn mua theo giá hiện tại, nếu có thể thì em giảm thêm cho mình được không?"
+        "Chị đã hỏi người nhà rồi, đồng ý mua AirPure Y giá năm triệu hai trăm nghìn.",
+        "Chị muốn thanh toán khi nhận hàng, giao đến 232 Lý Nhân Tông, Huế.",
+        "Hôm trước chị nói rồi mà, không cần nhắc lại.",
+        "Chị đồng ý đặt hàng."
       ],
       "days_later": 1,
       "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
       "facts_established": {
-        "product_advised": "SKU-SN-RUN2",
-        "price_quoted_vnd": 1690000,
+        "product_advised": "SKU-AP-Y",
+        "price_quoted_vnd": 5200000,
         "payment": "COD",
-        "delivery_address": "Số 71, đường Hà Sen, đặc khu Cát Hải, Hải Phòng",
+        "delivery_address": "232 Lý Nhân Tông, phường Kim Trà, Huế",
         "order_status": "created"
       },
       "must_carry_over": [
@@ -76,26 +75,26 @@
         "price_quoted_vnd",
         "promo_code",
         "promo_expiry",
-        "competitor_price_vnd"
+        "budget_vnd"
       ],
       "must_not_ask": [
         "product_advised"
       ],
       "ground_truth_facts": {
-        "sku": "SKU-SN-RUN2",
-        "price_vnd": 1690000,
+        "sku": "SKU-AP-Y",
+        "price_vnd": 5200000,
         "in_stock": true,
         "active_promos": [
           "COD-0"
         ],
         "expired_promos": [
-          "RUN2-SALE"
+          "GIFT-FILTER"
         ],
         "promo_expiry_dates": {
-          "COD-0": "2026-12-14",
-          "RUN2-SALE": "2026-10-07"
+          "GIFT-FILTER": "2026-10-22",
+          "COD-0": "2026-12-14"
         },
-        "estimated_delivery": "2026-10-10"
+        "estimated_delivery": "2026-10-27"
       },
       "memory_expectation": {
         "order_status": "created"
@@ -104,8 +103,8 @@
       "success_if": {
         "tool_called": "order.create",
         "args_match": {
-          "sku": "SKU-SN-RUN2",
-          "price_vnd": 1690000
+          "sku": "SKU-AP-Y",
+          "price_vnd": 5200000
         }
       }
     }

@@ -1,77 +1,33 @@
 {
-  "scenario_id": "SC-094",
+  "scenario_id": "SC-108",
   "level": "M1",
   "persona": "khach_da_mua_doi_size",
   "hard_case": null,
-  "customer_phone": "0977879432",
-  "customer_name": "Loan",
-  "honorific": "chị",
+  "customer_phone": "0924410646",
+  "customer_name": "Sơn",
+  "honorific": "anh",
   "notes": "return_for_post_purchase_support",
   "calls": {
     "call_1": {
       "channel": "hotline",
-      "channel_identity": "0977879432",
-      "call_date": "2026-10-24",
+      "channel_identity": "0924410646",
+      "call_date": "2026-10-17",
       "customer_turns": [
-        "Chị ơi, em vừa gọi hỏi về giày sneaker Urban Classic xám bốn mươi một, giá tám trăm chín mươi nghìn đúng không ạ?",
-        "Cảm ơn chị, em đang xem lại, nếu có gì cần hỏi thêm em sẽ gọi lại.",
-        "Hẹn chị 10 giờ ngày 28 tháng 10 nhé."
+        "Anh ơi, em muốn đặt mua nồi chiên không dầu Lock&Lock 4L.",
+        "Giá bao nhiêu vậy anh?",
+        "Em xin thanh toán khi nhận hàng, giao đến số 126 Hàng Trống, Hoàn Kiếm."
       ],
-      "customer_goal": "Hỏi về sản phẩm và hẹn xem lại",
-      "facts_established": {
-        "product_advised": "SKU-SN-CAS-41-XAM",
-        "price_quoted_vnd": 890000
-      },
-      "ground_truth_facts": {
-        "sku": "SKU-SN-CAS-41-XAM",
-        "price_vnd": 890000,
-        "in_stock": true,
-        "active_promos": [
-          "COD-0"
-        ],
-        "expired_promos": [],
-        "promo_expiry_dates": {
-          "COD-0": "2026-12-14"
-        },
-        "scheduled_callback_at": "2026-10-28T10:00"
-      },
-      "expected_outcome": "hen_goi_lai",
-      "success_if": {
-        "tool_called": "schedule.callback",
-        "args_match": {
-          "customer_phone": "0977879432",
-          "callback_at": "2026-10-28T10:00"
-        }
-      }
-    },
-    "call_2": {
-      "channel": "hotline",
-      "channel_identity": "0977879432",
-      "call_date": "2026-10-28",
-      "customer_turns": [
-        "Chị ơi, em muốn đặt mua giày sneaker Urban Classic xám bốn mươi một, giá tám trăm chín mươi nghìn đúng không ạ?",
-        "Giao hàng đến 67A Hoàng Quốc Việt, phường An Cựu, Huế, thanh toán khi nhận hàng.",
-        "Em đồng ý, chị giao hàng nhanh nhé."
-      ],
-      "days_later": 4,
       "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
       "facts_established": {
-        "product_advised": "SKU-SN-CAS-41-XAM",
-        "price_quoted_vnd": 890000,
+        "product_advised": "SKU-AF-4L",
+        "price_quoted_vnd": 1890000,
         "payment": "COD",
-        "delivery_address": "67A Hoàng Quốc Việt, phường An Cựu, Huế",
+        "delivery_address": "Số 126 Hàng Trống, phường Hoàn Kiếm, Hà Nội",
         "order_status": "created"
       },
-      "must_carry_over": [
-        "product_advised",
-        "price_quoted_vnd"
-      ],
-      "must_not_ask": [
-        "product_advised"
-      ],
       "ground_truth_facts": {
-        "sku": "SKU-SN-CAS-41-XAM",
-        "price_vnd": 890000,
+        "sku": "SKU-AF-4L",
+        "price_vnd": 1890000,
         "in_stock": true,
         "active_promos": [
           "COD-0"
@@ -80,7 +36,7 @@
         "promo_expiry_dates": {
           "COD-0": "2026-12-14"
         },
-        "estimated_delivery": "2026-10-30"
+        "estimated_delivery": "2026-10-20"
       },
       "memory_expectation": {
         "order_status": "created"
@@ -89,25 +45,23 @@
       "success_if": {
         "tool_called": "order.create",
         "args_match": {
-          "sku": "SKU-SN-CAS-41-XAM",
-          "price_vnd": 890000
+          "sku": "SKU-AF-4L",
+          "price_vnd": 1890000
         }
       }
     },
-    "call_3": {
+    "call_2": {
       "channel": "hotline",
-      "channel_identity": "0977879432",
-      "call_date": "2026-11-01",
+      "channel_identity": "0924410646",
+      "call_date": "2026-10-18",
       "customer_turns": [
-        "Chị ơi, em vừa nhận hàng, nhưng size bốn mươi một không vừa, em muốn đổi sang size bốn mươi ba.",
-        "Em đã đặt hàng trước đó, chị xem đơn giúp em với.",
-        "Chị kiểm tra xem có sẵn hàng size bốn mươi ba không, nếu có em muốn đổi luôn."
+        "Anh ơi em vừa đặt hàng nồi chiên không dầu Lock&Lock 4L rồi mà.",
+        "Giá một triệu tám trăm chín mươi nghìn, giao hàng đến số 126 Hàng Trống.",
+        "Anh kiểm giúp em xem đơn đã được xử lý chưa?"
       ],
-      "days_later": 4,
-      "customer_goal": "Đổi sang size khác sau khi nhận hàng",
-      "facts_established": {
-        "new_variant_sku": "SKU-SN-CAS-43-XAM"
-      },
+      "days_later": 1,
+      "customer_goal": "Kiểm tra đơn đã mua",
+      "facts_established": {},
       "must_carry_over": [
         "product_advised",
         "price_quoted_vnd",
@@ -119,8 +73,8 @@
         "product_advised"
       ],
       "ground_truth_facts": {
-        "sku": "SKU-SN-CAS-41-XAM",
-        "price_vnd": 890000,
+        "sku": "SKU-AF-4L",
+        "price_vnd": 1890000,
         "in_stock": true,
         "active_promos": [
           "COD-0"
@@ -128,18 +82,13 @@
         "expired_promos": [],
         "promo_expiry_dates": {
           "COD-0": "2026-12-14"
-        },
-        "replacement_in_stock": true,
-        "exchange_fee_vnd": 0,
-        "policy_reference": "DT-03"
+        }
       },
       "expected_outcome": "chot_don",
       "success_if": {
-        "tool_called": "order.update",
+        "tool_called": "order.status",
         "args_match": {
-          "order_id": "OD600001",
-          "action": "exchange_size",
-          "new_variant_sku": "SKU-SN-CAS-43-XAM"
+          "order_id": "OD600001"
         }
       }
     }

@@ -1,30 +1,30 @@
 {
-  "scenario_id": "SC-112",
+  "scenario_id": "SC-127",
   "level": "M1",
-  "persona": "khach_goi_lan_3_het_kien_nhan",
-  "hard_case": null,
-  "customer_phone": "0981933190",
-  "customer_name": "Lan",
-  "honorific": "chị",
-  "notes": "return_for_post_purchase_support",
+  "persona": "hai_nguoi_chung_sdt",
+  "hard_case": "shared_phone",
+  "customer_phone": "0958421083",
+  "customer_name": "Loan",
+  "honorific": "cô",
+  "notes": "resume_with_uncertain_identity_or_history",
   "calls": {
     "call_1": {
-      "channel": "hotline",
-      "channel_identity": "0981933190",
-      "call_date": "2026-10-21",
+      "channel": "chat_fanpage",
+      "channel_identity": "fb.hải.186",
+      "call_date": "2026-10-15",
       "customer_turns": [
-        "Chị ơi, mình muốn hỏi bình sữa Pigeon PPSU 240ml có còn không?",
-        "Giá bao nhiêu vậy?",
-        "Một cái 289 nghìn à? Thôi được, chị gọi lại mình lúc 10 giờ ngày mai nhé."
+        "Cô ơi, mình hỏi về màng lọc thay thế AirPure Pro được không ạ?",
+        "Giá bao nhiêu vậy cô?",
+        "Cảm ơn cô, mình sẽ xem xét. Cô ơi, cô có thể gọi lại mình vào 10 giờ ngày 19/10 được không ạ?"
       ],
       "customer_goal": "Hỏi về sản phẩm và hẹn xem lại",
       "facts_established": {
-        "product_advised": "SKU-MB-BOT",
-        "price_quoted_vnd": 289000
+        "product_advised": "SKU-AP-FLT-P",
+        "price_quoted_vnd": 990000
       },
       "ground_truth_facts": {
-        "sku": "SKU-MB-BOT",
-        "price_vnd": 289000,
+        "sku": "SKU-AP-FLT-P",
+        "price_vnd": 990000,
         "in_stock": true,
         "active_promos": [
           "COD-0"
@@ -33,46 +33,34 @@
         "promo_expiry_dates": {
           "COD-0": "2026-12-14"
         },
-        "scheduled_callback_at": "2026-10-22T10:00"
+        "scheduled_callback_at": "2026-10-19T10:00"
       },
       "expected_outcome": "hen_goi_lai",
       "success_if": {
         "tool_called": "schedule.callback",
         "args_match": {
-          "customer_phone": "0981933190",
-          "callback_at": "2026-10-22T10:00"
+          "customer_phone": "0958421083",
+          "callback_at": "2026-10-19T10:00"
         }
       }
     },
     "call_2": {
       "channel": "hotline",
-      "channel_identity": "0981933190",
-      "call_date": "2026-10-22",
+      "channel_identity": "0958421083",
+      "call_date": "2026-10-19",
       "customer_turns": [
-        "Chị ơi, mình mua bình sữa Pigeon PPSU 240ml rồi.",
-        "Giá 289 nghìn, thanh toán khi nhận hàng đúng không?",
-        "Giao đến số 15 Lê Hồng Phong, Hải Châu, Đà Nẵng.",
-        "Được rồi, mình đồng ý."
+        "Cô ơi, mình là con gái mẹ đây. Cô có nhớ không ạ? Mình hỏi lại về cái màng lọc AirPure Pro hôm trước.",
+        "Cô ơi, hôm đó giá 990.000đ đúng không ạ? Mình nhớ cô đã báo rồi.",
+        "Cô có thể gọi lại mình lúc 10 giờ ngày 19/10 được không ạ?"
       ],
-      "days_later": 1,
-      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
-      "facts_established": {
-        "product_advised": "SKU-MB-BOT",
-        "price_quoted_vnd": 289000,
-        "payment": "COD",
-        "delivery_address": "Số 15 đường Lê Hồng Phong, phường Hải Châu, Đà Nẵng",
-        "order_status": "created"
-      },
-      "must_carry_over": [
-        "product_advised",
-        "price_quoted_vnd"
-      ],
-      "must_not_ask": [
-        "product_advised"
-      ],
+      "days_later": 4,
+      "customer_goal": "Xác nhận đúng người đang gọi trước khi dùng lịch sử",
+      "facts_established": {},
+      "must_carry_over": [],
+      "must_not_ask": [],
       "ground_truth_facts": {
-        "sku": "SKU-MB-BOT",
-        "price_vnd": 289000,
+        "sku": "SKU-AP-FLT-P",
+        "price_vnd": 990000,
         "in_stock": true,
         "active_promos": [
           "COD-0"
@@ -80,62 +68,23 @@
         "expired_promos": [],
         "promo_expiry_dates": {
           "COD-0": "2026-12-14"
-        },
-        "estimated_delivery": "2026-10-24"
+        }
       },
       "memory_expectation": {
-        "order_status": "created"
+        "customer_id": "C034",
+        "must_not_write_to": "C035"
       },
-      "expected_outcome": "chot_don",
+      "expected_outcome": "hen_goi_lai",
       "success_if": {
-        "tool_called": "order.create",
+        "tool_called": "crm.get_customer",
         "args_match": {
-          "sku": "SKU-MB-BOT",
-          "price_vnd": 289000
-        }
-      }
-    },
-    "call_3": {
-      "channel": "hotline",
-      "channel_identity": "0981933190",
-      "call_date": "2026-10-23",
-      "customer_turns": [
-        "Mình kiểm tra đơn hàng rồi.",
-        "Giao hàng đúng không? Số 15 Lê Hồng Phong, Hải Châu.",
-        "Thôi khỏi."
-      ],
-      "days_later": 1,
-      "customer_goal": "Kiểm tra đơn đã mua",
-      "facts_established": {},
-      "must_carry_over": [
-        "product_advised",
-        "price_quoted_vnd",
-        "payment",
-        "delivery_address",
-        "order_status"
-      ],
-      "must_not_ask": [
-        "product_advised"
-      ],
-      "ground_truth_facts": {
-        "sku": "SKU-MB-BOT",
-        "price_vnd": 289000,
-        "in_stock": true,
-        "active_promos": [
-          "COD-0"
-        ],
-        "expired_promos": [],
-        "promo_expiry_dates": {
-          "COD-0": "2026-12-14"
-        }
-      },
-      "expected_outcome": "chot_don",
-      "success_if": {
-        "tool_called": "order.status",
-        "args_match": {
-          "order_id": "OD600001"
+          "phone": "0958421083"
         },
-        "max_agent_questions": 1
+        "must_say_any": [
+          "xác nhận",
+          "đang nói chuyện",
+          "đang trao đổi"
+        ]
       }
     }
   }

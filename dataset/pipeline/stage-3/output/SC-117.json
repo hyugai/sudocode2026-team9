@@ -1,67 +1,63 @@
 {
-  "scenario_id": "SC-117",
+  "scenario_id": "SC-133",
   "level": "M1",
-  "persona": "khach_goi_lan_3_het_kien_nhan",
-  "hard_case": null,
-  "customer_phone": "0964252477",
-  "customer_name": "Trang",
-  "honorific": "chị",
-  "notes": "return_for_post_purchase_support",
+  "persona": "khach_ngoai_pham_vi_chuyen_may",
+  "hard_case": "handoff",
+  "customer_phone": "0929486628",
+  "customer_name": "Nam",
+  "honorific": "anh",
+  "notes": "transfer_with_context",
   "calls": {
     "call_1": {
       "channel": "hotline",
-      "channel_identity": "0964252477",
-      "call_date": "2026-10-26",
+      "channel_identity": "0929486628",
+      "call_date": "2026-10-21",
       "customer_turns": [
-        "Chị ơi, mình muốn hỏi về túi trữ sữa Sunmum năm mươi túi.",
-        "Giá bao nhiêu vậy?",
-        "Hẹn 10 giờ ngày 29 tháng 10 gọi lại nhé."
+        "Anh ơi, em đang tìm xe đẩy hai chiều Combi Sugocal, giá bao nhiêu vậy?",
+        "Sáu triệu bảy trăm chín mươi nghìn đồng, đúng không ạ?",
+        "Em muốn xem lại sau, anh gọi lại cho em lúc mười giờ ngày hai mươi lăm tháng mười được không?"
       ],
       "customer_goal": "Hỏi về sản phẩm và hẹn xem lại",
       "facts_established": {
-        "product_advised": "SKU-MB-BAG",
-        "price_quoted_vnd": 119000
+        "product_advised": "SKU-MB-STR2",
+        "price_quoted_vnd": 6790000
       },
       "ground_truth_facts": {
-        "sku": "SKU-MB-BAG",
-        "price_vnd": 119000,
+        "sku": "SKU-MB-STR2",
+        "price_vnd": 6790000,
         "in_stock": true,
         "active_promos": [
+          "MOM-FREESHIP",
           "COD-0"
         ],
         "expired_promos": [],
         "promo_expiry_dates": {
+          "MOM-FREESHIP": "2026-11-29",
           "COD-0": "2026-12-14"
         },
-        "scheduled_callback_at": "2026-10-29T10:00"
+        "scheduled_callback_at": "2026-10-25T10:00"
       },
       "expected_outcome": "hen_goi_lai",
       "success_if": {
         "tool_called": "schedule.callback",
         "args_match": {
-          "customer_phone": "0964252477",
-          "callback_at": "2026-10-29T10:00"
+          "customer_phone": "0929486628",
+          "callback_at": "2026-10-25T10:00"
         }
       }
     },
     "call_2": {
       "channel": "hotline",
-      "channel_identity": "0964252477",
-      "call_date": "2026-10-29",
+      "channel_identity": "0929486628",
+      "call_date": "2026-10-25",
       "customer_turns": [
-        "Được rồi, mình mua túi trữ sữa Sunmum năm mươi túi.",
-        "Giá một trăm mười chín nghìn, thanh toán khi nhận hàng.",
-        "Giao đến số 289 đường Nguyễn Công Trứ, phường An Hải, Đà Nẵng."
+        "Anh ơi, em muốn hỏi về an toàn khi sử dụng xe đẩy ngoài phạm vi bán hàng.",
+        "Em có thể hỏi chuyên viên được không ạ?",
+        "Em muốn hỏi thêm về tính an toàn của xe đẩy, anh có thể chuyển máy cho ai biết về vấn đề này không?"
       ],
-      "days_later": 3,
-      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
-      "facts_established": {
-        "product_advised": "SKU-MB-BAG",
-        "price_quoted_vnd": 119000,
-        "payment": "COD",
-        "delivery_address": "Số 289 đường Nguyễn Công Trứ, phường An Hải, Đà Nẵng",
-        "order_status": "created"
-      },
+      "days_later": 4,
+      "customer_goal": "Hỏi về an toàn sử dụng ngoài phạm vi bán hàng và yêu cầu chuyên viên",
+      "facts_established": {},
       "must_carry_over": [
         "product_advised",
         "price_quoted_vnd"
@@ -70,80 +66,34 @@
         "product_advised"
       ],
       "ground_truth_facts": {
-        "sku": "SKU-MB-BAG",
-        "price_vnd": 119000,
+        "sku": "SKU-MB-STR2",
+        "price_vnd": 6790000,
         "in_stock": true,
         "active_promos": [
+          "MOM-FREESHIP",
           "COD-0"
         ],
         "expired_promos": [],
         "promo_expiry_dates": {
-          "COD-0": "2026-12-14"
-        },
-        "estimated_delivery": "2026-10-31"
-      },
-      "memory_expectation": {
-        "order_status": "created"
-      },
-      "expected_outcome": "chot_don",
-      "success_if": {
-        "tool_called": "order.create",
-        "args_match": {
-          "sku": "SKU-MB-BAG",
-          "price_vnd": 119000
-        }
-      }
-    },
-    "call_3": {
-      "channel": "hotline",
-      "channel_identity": "0964252477",
-      "call_date": "2026-10-30",
-      "customer_turns": [
-        "Mình muốn thay địa chỉ giao hàng.",
-        "Giao đến số 06 đường Nguyễn Phan Vinh, phường Sơn Trà, Đà Nẵng.",
-        "Thôi khỏi."
-      ],
-      "days_later": 1,
-      "customer_goal": "Cập nhật nơi giao cho đơn đã mua",
-      "facts_established": {
-        "delivery_address": "Số 06 đường Nguyễn Phan Vinh, phường Sơn Trà, Đà Nẵng"
-      },
-      "must_carry_over": [
-        "product_advised",
-        "price_quoted_vnd",
-        "payment",
-        "delivery_address",
-        "order_status"
-      ],
-      "must_not_ask": [
-        "product_advised"
-      ],
-      "ground_truth_facts": {
-        "sku": "SKU-MB-BAG",
-        "price_vnd": 119000,
-        "in_stock": true,
-        "active_promos": [
-          "COD-0"
-        ],
-        "expired_promos": [],
-        "promo_expiry_dates": {
+          "MOM-FREESHIP": "2026-11-29",
           "COD-0": "2026-12-14"
         }
       },
-      "memory_expectation": {
-        "delivery_address": "Số 06 đường Nguyễn Phan Vinh, phường Sơn Trà, Đà Nẵng",
-        "supersedes": {
-          "delivery_address": "Số 289 đường Nguyễn Công Trứ, phường An Hải, Đà Nẵng"
-        }
-      },
-      "expected_outcome": "chot_don",
+      "expected_outcome": "chuyen_may",
       "success_if": {
-        "tool_called": "order.update",
-        "args_match": {
-          "order_id": "OD600001",
-          "action": "update_address"
-        },
-        "max_agent_questions": 1
+        "tool_called": "handoff.transfer",
+        "args_match": {},
+        "brief_must_contain": [
+          "customer_phone",
+          "customer_name",
+          "escalation_reason",
+          "conversation_summary",
+          "product_advised",
+          "price_quoted_vnd",
+          "open_questions",
+          "next_action",
+          "generated_at"
+        ]
       }
     }
   }

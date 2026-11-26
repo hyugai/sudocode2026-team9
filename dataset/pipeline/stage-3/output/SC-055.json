@@ -1,88 +1,105 @@
 {
-  "scenario_id": "SC-055",
+  "scenario_id": "SC-065",
   "level": "M1",
-  "persona": "khach_do_du_hoi_nguoi_nha",
-  "hard_case": null,
-  "customer_phone": "0920525898",
-  "customer_name": "Phúc",
+  "persona": "khach_so_gia",
+  "hard_case": "expired_promo",
+  "customer_phone": "0928144976",
+  "customer_name": "Trung",
   "honorific": "anh",
-  "notes": "continue_across_channels",
+  "notes": "return_after_price_or_stock_change",
   "calls": {
     "call_1": {
-      "channel": "chat_fanpage",
-      "channel_identity": "fb.phúc.321",
-      "call_date": "2026-10-27",
+      "channel": "hotline",
+      "channel_identity": "0928144976",
+      "call_date": "2026-10-22",
       "customer_turns": [
-        "Chị ơi, em đang xem màng lọc thay thế AirPure Pro trong ngân sách 1 triệu, giá 990k có phải không ạ?",
-        "Chị nói em hỏi người nhà xem sao, em đang đợi phản hồi.",
-        "Chị ơi, nếu người nhà đồng ý, em sẽ gọi lại. Chị hẹn em 10 giờ ngày 28 nhé."
+        "Anh ơi, em vừa so giá với bên khác rồi, họ chỉ năm triệu một trăm hai mươi ngàn.",
+        "Bên anh có ưu đãi tặng màng lọc khi mua AirPure X/Y, đúng không?",
+        "Giá của anh là năm triệu hai trăm ngàn, nhưng bên họ rẻ hơn, anh có thể giảm được không?",
+        "Ưu đãi hết ngày hai mươi hai tháng mười, anh ghi nhớ nhé.",
+        "Anh có thể gọi lại cho em lúc mười giờ ngày hai mươi ba tháng mười được không?"
       ],
-      "customer_goal": "Xem sản phẩm trong ngân sách và hỏi ý kiến người nhà",
+      "customer_goal": "So báo giá với nơi khác trước khi quyết định",
       "facts_established": {
-        "product_advised": "SKU-AP-FLT-P",
-        "price_quoted_vnd": 990000,
-        "budget_vnd": 1000000
+        "product_advised": "SKU-AP-Y",
+        "price_quoted_vnd": 5200000,
+        "promo_code": "GIFT-FILTER",
+        "promo_expiry": "2026-10-22",
+        "competitor_price_vnd": 5120000
       },
       "ground_truth_facts": {
-        "sku": "SKU-AP-FLT-P",
-        "price_vnd": 990000,
+        "sku": "SKU-AP-Y",
+        "price_vnd": 5200000,
         "in_stock": true,
         "active_promos": [
-          "COD-0"
+          "NAM-SHIP0",
+          "COD-0",
+          "GIFT-FILTER"
         ],
         "expired_promos": [],
         "promo_expiry_dates": {
+          "GIFT-FILTER": "2026-10-22",
+          "NAM-SHIP0": "2026-11-05",
           "COD-0": "2026-12-14"
         },
-        "scheduled_callback_at": "2026-10-28T10:00"
+        "scheduled_callback_at": "2026-10-23T10:00"
       },
       "expected_outcome": "hen_goi_lai",
       "success_if": {
         "tool_called": "schedule.callback",
         "args_match": {
-          "customer_phone": "0920525898",
-          "callback_at": "2026-10-28T10:00"
+          "customer_phone": "0928144976",
+          "callback_at": "2026-10-23T10:00"
         }
       }
     },
     "call_2": {
       "channel": "hotline",
-      "channel_identity": "0920525898",
-      "call_date": "2026-10-28",
+      "channel_identity": "0928144976",
+      "call_date": "2026-10-23",
       "customer_turns": [
-        "Chị ơi, em đã hỏi người nhà rồi, họ đồng ý mua.",
-        "Giá 990k, thanh toán khi nhận hàng, giao đến số 2 Trúc Bạch, Ba Đình, Hà Nội đúng không ạ?",
-        "Chị giao hàng sớm nhất có thể được không ạ?"
+        "Anh ơi, em đã đợi đến ngày hôm nay rồi. Giá của anh là năm triệu hai trăm ngàn, đúng như hôm trước.",
+        "Anh nói là thanh toán khi nhận hàng, và giao đến Đường Tôn Đức Thắng, phường Ô Môn, Cần Thơ.",
+        "Em đồng ý mua theo giá này, nếu anh có thể xác nhận đơn hàng.",
+        "Em cũng sẵn sàng nhận quà tặng kèm theo, nếu có.",
+        "Anh có thể giao hàng nhanh được không? Em muốn nhận sớm."
       ],
       "days_later": 1,
       "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
       "facts_established": {
-        "product_advised": "SKU-AP-FLT-P",
-        "price_quoted_vnd": 990000,
+        "product_advised": "SKU-AP-Y",
+        "price_quoted_vnd": 5200000,
         "payment": "COD",
-        "delivery_address": "Số 2, phố Trúc Bạch, phường Ba Đình, Hà Nội",
+        "delivery_address": "Đường Tôn Đức Thắng, phường Ô Môn, Cần Thơ",
         "order_status": "created"
       },
       "must_carry_over": [
         "product_advised",
         "price_quoted_vnd",
-        "budget_vnd"
+        "promo_code",
+        "promo_expiry",
+        "competitor_price_vnd"
       ],
       "must_not_ask": [
         "product_advised"
       ],
       "ground_truth_facts": {
-        "sku": "SKU-AP-FLT-P",
-        "price_vnd": 990000,
+        "sku": "SKU-AP-Y",
+        "price_vnd": 5200000,
         "in_stock": true,
         "active_promos": [
+          "NAM-SHIP0",
           "COD-0"
         ],
-        "expired_promos": [],
+        "expired_promos": [
+          "GIFT-FILTER"
+        ],
         "promo_expiry_dates": {
+          "GIFT-FILTER": "2026-10-22",
+          "NAM-SHIP0": "2026-11-05",
           "COD-0": "2026-12-14"
         },
-        "estimated_delivery": "2026-10-30"
+        "estimated_delivery": "2026-10-27"
       },
       "memory_expectation": {
         "order_status": "created"
@@ -91,8 +108,8 @@
       "success_if": {
         "tool_called": "order.create",
         "args_match": {
-          "sku": "SKU-AP-FLT-P",
-          "price_vnd": 990000
+          "sku": "SKU-AP-Y",
+          "price_vnd": 5200000
         }
       }
     }

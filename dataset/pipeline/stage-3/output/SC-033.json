@@ -1,63 +1,70 @@
 {
-  "scenario_id": "SC-033",
+  "scenario_id": "SC-041",
   "level": "M1",
-  "persona": "khach_hoi_ngoai_tai_lieu",
-  "hard_case": "unsupported_question",
-  "customer_phone": "0924410646",
-  "customer_name": "Sơn",
-  "honorific": "anh",
-  "notes": "consider_and_decide",
+  "persona": "khach_da_kenh_fb_hotline",
+  "hard_case": null,
+  "customer_phone": "0992298369",
+  "customer_name": "Ngọc",
+  "honorific": "chị",
+  "notes": "continue_across_channels",
   "calls": {
     "call_1": {
-      "channel": "hotline",
-      "channel_identity": "0924410646",
-      "call_date": "2026-10-26",
+      "channel": "zalo_oa",
+      "channel_identity": "zalo_ngọc53",
+      "call_date": "2026-11-03",
       "customer_turns": [
-        "Anh ơi, em muốn hỏi về sản phẩm tất thể thao RunLite (ba đôi) có đúng không ạ?",
-        "Giá là một trăm bốn mươi chín nghìn đồng, đúng không anh?",
-        "Em muốn hẹn xem lại, anh có thể gọi lại cho em lúc mười giờ ngày hai mươi bảy tháng mười không?"
+        "Chị ơi, em đang xem xe đẩy 2 chiều Combi Sugocal. Bao nhiêu tiền vậy?",
+        "Chị ơi, 6.790.000đ à? Em nghĩ giá cũng ổn.",
+        "Thế nếu em muốn xem lại thì có thể hẹn gọi lại được không?",
+        "Vâng, 10 giờ ngày 6/11 được không chị?"
       ],
       "customer_goal": "Hỏi về sản phẩm và hẹn xem lại",
       "facts_established": {
-        "product_advised": "SKU-SN-SOCK",
-        "price_quoted_vnd": 149000
+        "product_advised": "SKU-MB-STR2",
+        "price_quoted_vnd": 6790000
       },
       "ground_truth_facts": {
-        "sku": "SKU-SN-SOCK",
-        "price_vnd": 149000,
+        "sku": "SKU-MB-STR2",
+        "price_vnd": 6790000,
         "in_stock": true,
         "active_promos": [
+          "MOM-FREESHIP",
           "COD-0"
         ],
         "expired_promos": [],
         "promo_expiry_dates": {
+          "MOM-FREESHIP": "2026-11-29",
           "COD-0": "2026-12-14"
         },
-        "scheduled_callback_at": "2026-10-27T10:00"
+        "scheduled_callback_at": "2026-11-06T10:00"
       },
       "expected_outcome": "hen_goi_lai",
       "success_if": {
         "tool_called": "schedule.callback",
         "args_match": {
-          "customer_phone": "0924410646",
-          "callback_at": "2026-10-27T10:00"
+          "customer_phone": "0992298369",
+          "callback_at": "2026-11-06T10:00"
         }
       }
     },
     "call_2": {
       "channel": "hotline",
-      "channel_identity": "0924410646",
-      "call_date": "2026-10-27",
+      "channel_identity": "0992298369",
+      "call_date": "2026-11-06",
       "customer_turns": [
-        "Anh ơi, em muốn hỏi thêm về chất liệu của sản phẩm đó có phải là vải co giãn tốt không?",
-        "Em thấy trong tài liệu không có thông tin này, anh có biết không ạ?",
-        "Em lấy thông tin đó ở đâu vậy anh?",
-        "Em nghĩ anh nên kiểm tra lại thì tốt hơn."
+        "Chào chị, em là khách đã nhắn Zalo ngày 3/11. Chị nhớ không?",
+        "Chị ơi, giá 6 triệu 790 nghìn, thanh toán khi nhận hàng đúng không?",
+        "Địa chỉ em giao là Số 503 đường Trần Cao Vân, Thanh Khê, Đà Nẵng.",
+        "Vậy em đặt hàng nhé, chị ơi."
       ],
-      "days_later": 1,
-      "customer_goal": "Yêu cầu thông tin không có trong tài liệu",
+      "days_later": 3,
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
       "facts_established": {
-        "product_advised": "SKU-SN-SOCK"
+        "product_advised": "SKU-MB-STR2",
+        "price_quoted_vnd": 6790000,
+        "payment": "COD",
+        "delivery_address": "Số 503 đường Trần Cao Vân, phường Thanh Khê, Đà Nẵng",
+        "order_status": "created"
       },
       "must_carry_over": [
         "product_advised",
@@ -67,22 +74,30 @@
         "product_advised"
       ],
       "ground_truth_facts": {
-        "sku": "SKU-SN-SOCK",
-        "price_vnd": 149000,
+        "sku": "SKU-MB-STR2",
+        "price_vnd": 6790000,
         "in_stock": true,
         "active_promos": [
+          "MOM-FREESHIP",
           "COD-0"
         ],
         "expired_promos": [],
         "promo_expiry_dates": {
+          "MOM-FREESHIP": "2026-11-29",
           "COD-0": "2026-12-14"
-        }
+        },
+        "estimated_delivery": "2026-11-09"
       },
-      "expected_outcome": "tu_choi",
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
       "success_if": {
-        "tool_called": null,
-        "args_match": {},
-        "agent_must_say": "không có thông tin"
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-MB-STR2",
+          "price_vnd": 6790000
+        }
       }
     }
   }

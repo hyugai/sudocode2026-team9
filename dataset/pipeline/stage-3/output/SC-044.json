@@ -1,30 +1,32 @@
 {
-  "scenario_id": "SC-044",
+  "scenario_id": "SC-054",
   "level": "M1",
-  "persona": "khach_da_kenh_mau_thuan",
-  "hard_case": "conflicting_quotes",
-  "customer_phone": "0990853801",
-  "customer_name": "Nhung",
+  "persona": "khach_so_gia",
+  "hard_case": null,
+  "customer_phone": "0984726714",
+  "customer_name": "Hoa",
   "honorific": "chị",
   "notes": "continue_across_channels",
   "calls": {
     "call_1": {
-      "channel": "chat_fanpage",
-      "channel_identity": "fb.nhung.733",
-      "call_date": "2026-10-16",
+      "channel": "zalo_oa",
+      "channel_identity": "zalo_hoa73",
+      "call_date": "2026-10-26",
       "customer_turns": [
-        "Chị ơi, em đang cần mua màng lọc thay thế Xiaomi Smart 4, có ai tư vấn không ạ?",
-        "Cảm ơn chị, giá 590.000đ, em sẽ xem lại sau. Gọi lại em vào 10 giờ ngày 17/10 nhé.",
-        "Được rồi, em đợi chị gọi."
+        "Chị ơi, em đang so sánh giá máy lọc không khí Xiaomi Smart 4 Lite với bên khác, bên họ chỉ 2.890.000đ mà.",
+        "Chị có thể giảm giá được không? Em muốn mua nhưng đang cân nhắc.",
+        "Giá em đưa là 2.990.000đ, nếu chị có chương trình nào ưu đãi thì em cũng xem xét.",
+        "Em hẹn chị gọi lại lúc 10 giờ ngày 27/10 nhé."
       ],
-      "customer_goal": "Hỏi về sản phẩm và hẹn xem lại",
+      "customer_goal": "So báo giá với nơi khác trước khi quyết định",
       "facts_established": {
-        "product_advised": "SKU-XM-FLT",
-        "price_quoted_vnd": 590000
+        "product_advised": "SKU-XM-4L",
+        "price_quoted_vnd": 2990000,
+        "competitor_price_vnd": 2890000
       },
       "ground_truth_facts": {
-        "sku": "SKU-XM-FLT",
-        "price_vnd": 590000,
+        "sku": "SKU-XM-4L",
+        "price_vnd": 2990000,
         "in_stock": true,
         "active_promos": [
           "COD-0"
@@ -33,41 +35,43 @@
         "promo_expiry_dates": {
           "COD-0": "2026-12-14"
         },
-        "scheduled_callback_at": "2026-10-17T10:00"
+        "scheduled_callback_at": "2026-10-27T10:00"
       },
       "expected_outcome": "hen_goi_lai",
       "success_if": {
         "tool_called": "schedule.callback",
         "args_match": {
-          "customer_phone": "0990853801",
-          "callback_at": "2026-10-17T10:00"
+          "customer_phone": "0984726714",
+          "callback_at": "2026-10-27T10:00"
         }
       }
     },
     "call_2": {
-      "channel": "zalo_oa",
-      "channel_identity": "zalo_nhung30",
-      "call_date": "2026-10-17",
+      "channel": "hotline",
+      "channel_identity": "0984726714",
+      "call_date": "2026-10-27",
       "customer_turns": [
-        "Chị ơi, hôm qua em gọi điện hỏi màng lọc Xiaomi Smart 4, hôm nay em thấy trên kênh khác họ báo 690.000đ. Sao khác nhau vậy chị?",
-        "Chị ơi, em không hiểu, tại sao giá lại chênh nhau thế? Em muốn mua đúng giá rẻ nhất.",
-        "Chị có thể giải thích rõ không? Nếu không được, em sẽ xem lại."
+        "Chị ơi, em lại gọi lại để xem lại giá bên em và bên đối thủ.",
+        "Bên em là 2.990.000đ, bên họ là 2.890.000đ. Chị có thể hỗ trợ gì thêm không?",
+        "Nếu không giảm thì em xin hoãn mua, để em suy nghĩ lại.",
+        "Cảm ơn chị, em sẽ xem lại."
       ],
       "days_later": 1,
-      "customer_goal": "Hỏi về mức giá khác đã được báo qua kênh khác",
+      "customer_goal": "Xem lại báo giá và hoãn quyết định mua",
       "facts_established": {
-        "reported_price_vnd": 690000
+        "product_advised": "SKU-XM-4L"
       },
       "must_carry_over": [
         "product_advised",
-        "price_quoted_vnd"
+        "price_quoted_vnd",
+        "competitor_price_vnd"
       ],
       "must_not_ask": [
         "product_advised"
       ],
       "ground_truth_facts": {
-        "sku": "SKU-XM-FLT",
-        "price_vnd": 590000,
+        "sku": "SKU-XM-4L",
+        "price_vnd": 2990000,
         "in_stock": true,
         "active_promos": [
           "COD-0"
@@ -77,58 +81,10 @@
           "COD-0": "2026-12-14"
         }
       },
-      "expected_outcome": "hen_goi_lai",
+      "expected_outcome": "tu_choi",
       "success_if": {
         "tool_called": null,
         "args_match": {}
-      }
-    },
-    "call_3": {
-      "channel": "hotline",
-      "channel_identity": "0990853801",
-      "call_date": "2026-10-18",
-      "customer_turns": [
-        "Chị ơi, em đã xem qua, giá 590.000đ là đúng rồi. Em muốn đặt hàng theo giá đó.",
-        "Được rồi, em sẽ thanh toán khi nhận hàng. Giao đến số 68, Trần Nguyên Đán, Hải Phòng.",
-        "Cảm ơn chị, em chốt đơn rồi."
-      ],
-      "days_later": 1,
-      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
-      "facts_established": {
-        "product_advised": "SKU-XM-FLT",
-        "price_quoted_vnd": 590000,
-        "payment": "COD",
-        "delivery_address": "Số 68, đường Trần Nguyên Đán, khu dân cư Bích Động Tân Tiến, phường Trần Hưng Đạo, Hải Phòng",
-        "order_status": "created"
-      },
-      "must_carry_over": [
-        "reported_price_vnd",
-        "price_quoted_vnd"
-      ],
-      "must_not_ask": [],
-      "ground_truth_facts": {
-        "sku": "SKU-XM-FLT",
-        "price_vnd": 590000,
-        "in_stock": true,
-        "active_promos": [
-          "COD-0"
-        ],
-        "expired_promos": [],
-        "promo_expiry_dates": {
-          "COD-0": "2026-12-14"
-        },
-        "estimated_delivery": "2026-10-20"
-      },
-      "memory_expectation": {
-        "order_status": "created"
-      },
-      "expected_outcome": "chot_don",
-      "success_if": {
-        "tool_called": "order.create",
-        "args_match": {
-          "sku": "SKU-XM-FLT",
-          "price_vnd": 590000
-        }
       }
     }
   }

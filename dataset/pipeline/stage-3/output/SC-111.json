@@ -1,34 +1,30 @@
 {
-  "scenario_id": "SC-111",
+  "scenario_id": "SC-126",
   "level": "M1",
-  "persona": "khach_da_mua_doi_size",
-  "hard_case": null,
-  "customer_phone": "0982141621",
-  "customer_name": "Quân",
-  "honorific": "anh",
-  "notes": "return_for_post_purchase_support",
+  "persona": "hai_nguoi_chung_sdt",
+  "hard_case": "shared_phone",
+  "customer_phone": "0958421083",
+  "customer_name": "Dung",
+  "honorific": "chị",
+  "notes": "resume_with_uncertain_identity_or_history",
   "calls": {
     "call_1": {
-      "channel": "hotline",
-      "channel_identity": "0982141621",
-      "call_date": "2026-10-20",
+      "channel": "zalo_oa",
+      "channel_identity": "zalo_dung99",
+      "call_date": "2026-11-04",
       "customer_turns": [
-        "Anh ơi, em muốn đặt mua nồi chiên không dầu Xiaomi 4.5L.",
-        "Giá bao nhiêu vậy anh?",
-        "Em xin thanh toán khi nhận hàng, giao đến 154 Tháp Mười, phường Bình Tây, TP. Hồ Chí Minh.",
-        "Em mong anh nhớ đơn của em nha."
+        "Chị ơi, em đang tìm nồi chiên không dầu Lock&Lock 4L, giá bao nhiêu vậy?",
+        "Cảm ơn chị, 1.890.000đ là đúng rồi. Em muốn xem lại sau, chị có thể gọi lại em vào 10 giờ ngày 7/11 không?",
+        "Vâng, em đợi chị nhé."
       ],
-      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "customer_goal": "Hỏi về sản phẩm và hẹn xem lại",
       "facts_established": {
-        "product_advised": "SKU-AF-XM",
-        "price_quoted_vnd": 1590000,
-        "payment": "COD",
-        "delivery_address": "154 Tháp Mười, phường Bình Tây, TP. Hồ Chí Minh",
-        "order_status": "created"
+        "product_advised": "SKU-AF-4L",
+        "price_quoted_vnd": 1890000
       },
       "ground_truth_facts": {
-        "sku": "SKU-AF-XM",
-        "price_vnd": 1590000,
+        "sku": "SKU-AF-4L",
+        "price_vnd": 1890000,
         "in_stock": true,
         "active_promos": [
           "NAM-SHIP0",
@@ -39,72 +35,61 @@
           "NAM-SHIP0": "2026-11-05",
           "COD-0": "2026-12-14"
         },
-        "estimated_delivery": "2026-10-22"
+        "scheduled_callback_at": "2026-11-07T10:00"
       },
-      "memory_expectation": {
-        "order_status": "created"
-      },
-      "expected_outcome": "chot_don",
+      "expected_outcome": "hen_goi_lai",
       "success_if": {
-        "tool_called": "order.create",
+        "tool_called": "schedule.callback",
         "args_match": {
-          "sku": "SKU-AF-XM",
-          "price_vnd": 1590000
+          "customer_phone": "0958421083",
+          "callback_at": "2026-11-07T10:00"
         }
       }
     },
     "call_2": {
       "channel": "hotline",
-      "channel_identity": "0982141621",
-      "call_date": "2026-10-23",
+      "channel_identity": "0958421083",
+      "call_date": "2026-11-07",
       "customer_turns": [
-        "Anh ơi, em muốn thay địa chỉ giao hàng sang 15 Chợ Lớn, phường Bình Phú, TP. Hồ Chí Minh.",
-        "Đơn của em vẫn còn được giao đúng không anh?",
-        "Giá vẫn là một triệu năm trăm chín mươi ngàn, thanh toán khi nhận hàng đúng không?",
-        "Em không muốn mất đơn đâu, anh nhớ giúp em nha."
+        "Chị ơi, em là con gái mẹ, mẹ em đang muốn hỏi về nồi chiên không dầu Lock&Lock 4L.",
+        "Chị ơi, em là người dùng số này. Chị có nhớ không? Hôm thứ Hai em hỏi giá 1.890.000đ và hẹn 10 giờ ngày 7/11.",
+        "Vâng, chị có thể gọi lại vào 10 giờ ngày 7/11 được không?"
       ],
       "days_later": 3,
-      "customer_goal": "Cập nhật nơi giao cho đơn đã mua",
-      "facts_established": {
-        "delivery_address": "15 Chợ Lớn, phường Bình Phú, TP. Hồ Chí Minh"
-      },
-      "must_carry_over": [
-        "product_advised",
-        "price_quoted_vnd",
-        "payment",
-        "delivery_address",
-        "order_status"
-      ],
-      "must_not_ask": [
-        "product_advised"
-      ],
+      "customer_goal": "Xác nhận đúng người đang gọi trước khi dùng lịch sử",
+      "facts_established": {},
+      "must_carry_over": [],
+      "must_not_ask": [],
       "ground_truth_facts": {
-        "sku": "SKU-AF-XM",
-        "price_vnd": 1590000,
+        "sku": "SKU-AF-4L",
+        "price_vnd": 1890000,
         "in_stock": true,
         "active_promos": [
-          "NAM-SHIP0",
           "COD-0"
         ],
-        "expired_promos": [],
+        "expired_promos": [
+          "NAM-SHIP0"
+        ],
         "promo_expiry_dates": {
           "NAM-SHIP0": "2026-11-05",
           "COD-0": "2026-12-14"
         }
       },
       "memory_expectation": {
-        "delivery_address": "15 Chợ Lớn, phường Bình Phú, TP. Hồ Chí Minh",
-        "supersedes": {
-          "delivery_address": "154 Tháp Mười, phường Bình Tây, TP. Hồ Chí Minh"
-        }
+        "customer_id": "C035",
+        "must_not_write_to": "C034"
       },
-      "expected_outcome": "chot_don",
+      "expected_outcome": "hen_goi_lai",
       "success_if": {
-        "tool_called": "order.update",
+        "tool_called": "crm.get_customer",
         "args_match": {
-          "order_id": "OD600001",
-          "action": "update_address"
-        }
+          "phone": "0958421083"
+        },
+        "must_say_any": [
+          "xác nhận",
+          "đang nói chuyện",
+          "đang trao đổi"
+        ]
       }
     }
   }

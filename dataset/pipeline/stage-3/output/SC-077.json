@@ -1,99 +1,86 @@
 {
-  "scenario_id": "SC-077",
+  "scenario_id": "SC-089",
   "level": "M1",
-  "persona": "khach_do_du_hoi_nguoi_nha",
-  "hard_case": "restock",
-  "customer_phone": "0993186032",
-  "customer_name": "Đức",
+  "persona": "khach_da_mua_doi_size",
+  "hard_case": null,
+  "customer_phone": "0930976582",
+  "customer_name": "Cường",
   "honorific": "anh",
-  "notes": "return_after_price_or_stock_change",
+  "notes": "return_for_post_purchase_support",
   "calls": {
     "call_1": {
       "channel": "hotline",
-      "channel_identity": "0993186032",
-      "call_date": "2026-10-23",
+      "channel_identity": "0930976582",
+      "call_date": "2026-10-19",
       "customer_turns": [
-        "Anh ơi, em đang xem giày chạy bộ RunLite hai Pro đen bốn mươi mốt, giá một triệu năm trăm hai mươi mốt ngàn.",
-        "Em xin hỏi là nếu mua thì có được trả góp không? Em đang hỏi người nhà.",
-        "Chị có thể báo lại cho em vào mười giờ ngày hai mươi bốn tháng mười được không?"
+        "Anh chào shop ạ, em muốn hỏi về giày sneaker Urban Classic đen bốn mươi một ạ.",
+        "Em nghe nói là sản phẩm này đang có ưu đãi, giá bao nhiêu vậy anh?",
+        "Em đang cân nhắc mua, anh có thể gọi lại cho em lúc mười giờ ngày hai mươi ba tháng mười được không ạ?"
       ],
-      "customer_goal": "Xem sản phẩm trong ngân sách và hỏi ý kiến người nhà",
+      "customer_goal": "Hỏi về sản phẩm và hẹn xem lại",
       "facts_established": {
-        "product_advised": "SKU-SN-RUN2-41-DEN",
-        "price_quoted_vnd": 1521000,
-        "budget_vnd": 2000000
+        "product_advised": "SKU-SN-CAS-41-DEN",
+        "price_quoted_vnd": 890000
       },
       "ground_truth_facts": {
-        "sku": "SKU-SN-RUN2-41-DEN",
-        "price_vnd": 1521000,
-        "in_stock": false,
+        "sku": "SKU-SN-CAS-41-DEN",
+        "price_vnd": 890000,
+        "in_stock": true,
         "active_promos": [
-          "COD-0",
-          "RUN-10"
+          "COD-0"
         ],
-        "expired_promos": [
-          "RUN2-SALE"
-        ],
+        "expired_promos": [],
         "promo_expiry_dates": {
-          "RUN-10": "2026-10-25",
-          "COD-0": "2026-12-14",
-          "RUN2-SALE": "2026-10-07"
+          "COD-0": "2026-12-14"
         },
-        "restock_expected": "2026-10-24",
-        "scheduled_callback_at": "2026-10-24T10:00"
+        "scheduled_callback_at": "2026-10-23T10:00"
       },
       "expected_outcome": "hen_goi_lai",
       "success_if": {
         "tool_called": "schedule.callback",
         "args_match": {
-          "customer_phone": "0993186032",
-          "callback_at": "2026-10-24T10:00"
+          "customer_phone": "0930976582",
+          "callback_at": "2026-10-23T10:00"
         }
       }
     },
     "call_2": {
       "channel": "hotline",
-      "channel_identity": "0993186032",
-      "call_date": "2026-10-24",
+      "channel_identity": "0930976582",
+      "call_date": "2026-10-23",
       "customer_turns": [
-        "Chị ơi, hôm trước chị nói rồi mà, em vẫn chưa biết. Em xin hỏi lại là có còn giày RunLite hai Pro đen bốn mươi mốt không?",
-        "Giá một triệu năm trăm hai mươi mốt ngàn, đúng không? Em thấy trong ngân sách, nhưng em chưa biết người nhà nói sao.",
-        "Chị có thể giao hàng đến 82 Bà Huyện Thanh Quan, TP.HCM không? Em sẽ thanh toán khi nhận hàng."
+        "Anh ơi, em muốn chốt đơn giày sneaker Urban Classic đen bốn mươi một, giá tám trăm chín mươi nghìn.",
+        "Giao hàng đến số một, phố Cựu Đôi, Hải Phòng nhé anh.",
+        "Thanh toán khi nhận hàng đúng không ạ?"
       ],
-      "days_later": 1,
+      "days_later": 4,
       "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
       "facts_established": {
-        "product_advised": "SKU-SN-RUN2-41-DEN",
-        "price_quoted_vnd": 1521000,
+        "product_advised": "SKU-SN-CAS-41-DEN",
+        "price_quoted_vnd": 890000,
         "payment": "COD",
-        "delivery_address": "82 Bà Huyện Thanh Quan, phường Nhiêu Lộc, TP. Hồ Chí Minh",
+        "delivery_address": "Số 1, phố Cựu Đôi, xã Tiên Lãng, Hải Phòng",
         "order_status": "created"
       },
       "must_carry_over": [
         "product_advised",
-        "price_quoted_vnd",
-        "budget_vnd"
+        "price_quoted_vnd"
       ],
       "must_not_ask": [
         "product_advised"
       ],
       "ground_truth_facts": {
-        "sku": "SKU-SN-RUN2-41-DEN",
-        "price_vnd": 1521000,
+        "sku": "SKU-SN-CAS-41-DEN",
+        "price_vnd": 890000,
         "in_stock": true,
         "active_promos": [
-          "COD-0",
-          "RUN-10"
+          "COD-0"
         ],
-        "expired_promos": [
-          "RUN2-SALE"
-        ],
+        "expired_promos": [],
         "promo_expiry_dates": {
-          "RUN-10": "2026-10-25",
-          "COD-0": "2026-12-14",
-          "RUN2-SALE": "2026-10-07"
+          "COD-0": "2026-12-14"
         },
-        "estimated_delivery": "2026-10-28"
+        "estimated_delivery": "2026-10-27"
       },
       "memory_expectation": {
         "order_status": "created"
@@ -102,8 +89,57 @@
       "success_if": {
         "tool_called": "order.create",
         "args_match": {
-          "sku": "SKU-SN-RUN2-41-DEN",
-          "price_vnd": 1521000
+          "sku": "SKU-SN-CAS-41-DEN",
+          "price_vnd": 890000
+        }
+      }
+    },
+    "call_3": {
+      "channel": "hotline",
+      "channel_identity": "0930976582",
+      "call_date": "2026-10-27",
+      "customer_turns": [
+        "Anh ơi, em nhận hàng rồi, nhưng size bốn mươi một chật quá. Em muốn đổi sang size bốn mươi ba.",
+        "Giày sneaker Urban Classic đen bốn mươi ba, em muốn đổi ạ.",
+        "Em đã mua trước đó, anh nhớ đơn của em chứ?"
+      ],
+      "days_later": 4,
+      "customer_goal": "Đổi sang size khác sau khi nhận hàng",
+      "facts_established": {
+        "new_variant_sku": "SKU-SN-CAS-43-DEN"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "payment",
+        "delivery_address",
+        "order_status"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-SN-CAS-41-DEN",
+        "price_vnd": 890000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "replacement_in_stock": true,
+        "exchange_fee_vnd": 0,
+        "policy_reference": "DT-03"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.update",
+        "args_match": {
+          "order_id": "OD600001",
+          "action": "exchange_size",
+          "new_variant_sku": "SKU-SN-CAS-43-DEN"
         }
       }
     }

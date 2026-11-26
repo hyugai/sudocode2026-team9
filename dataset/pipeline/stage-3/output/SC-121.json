@@ -1,97 +1,101 @@
 {
-  "scenario_id": "SC-121",
+  "scenario_id": "SC-137",
   "level": "M1",
-  "persona": "khach_quay_lai_sau_8_thang",
-  "hard_case": "stale_address",
-  "customer_phone": "0958421083",
-  "customer_name": "Dung",
+  "persona": "khach_ngoai_pham_vi_chuyen_may",
+  "hard_case": "handoff",
+  "customer_phone": "0965384535",
+  "customer_name": "Tâm",
   "honorific": "chị",
-  "notes": "resume_with_uncertain_identity_or_history",
+  "notes": "transfer_with_context",
   "calls": {
     "call_1": {
       "channel": "hotline",
-      "channel_identity": "0958421083",
-      "call_date": "2026-02-18",
+      "channel_identity": "0965384535",
+      "call_date": "2026-10-25",
       "customer_turns": [
-        "Chị ơi, em nhớ là hôm trước chị tư vấn nồi chiên không dầu Philips 6.2L đúng không?",
-        "Giá ba triệu chín trăm chín mươi ngàn, thanh toán khi nhận hàng.",
-        "Em đặt rồi, trạng thái đơn là đã tạo rồi ạ."
+        "Chị ơi, em đang tìm máy tiệt trùng sấy khô cho con nhỏ. Có sản phẩm nào phù hợp không ạ?",
+        "Máy tiệt trùng sấy khô Moaz Bebe ạ? Em nghe nói là tốt thật đấy.",
+        "Giá bao nhiêu vậy chị?",
+        "Một triệu tám trăm chín mươi nghìn, đúng không ạ? Em cảm ơn chị.",
+        "Chị ơi, em muốn xem lại sản phẩm này. Có thể gọi lại cho em được không ạ?"
       ],
-      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "customer_goal": "Hỏi về sản phẩm và hẹn xem lại",
       "facts_established": {
-        "product_advised": "SKU-AF-6L",
-        "price_quoted_vnd": 3990000,
-        "payment": "COD",
-        "delivery_address": "Số 438, đường Võ Văn Kiệt, phường Vị Thanh, Cần Thơ",
-        "order_status": "created"
+        "product_advised": "SKU-MB-STER",
+        "price_quoted_vnd": 1890000
       },
       "ground_truth_facts": {
-        "sku": "SKU-AF-6L",
-        "price_vnd": 3990000,
+        "sku": "SKU-MB-STER",
+        "price_vnd": 1890000,
         "in_stock": true,
-        "active_promos": [],
+        "active_promos": [
+          "MOM-FREESHIP",
+          "COD-0"
+        ],
         "expired_promos": [],
-        "promo_expiry_dates": {},
-        "estimated_delivery": "2026-02-20"
+        "promo_expiry_dates": {
+          "MOM-FREESHIP": "2026-11-29",
+          "COD-0": "2026-12-14"
+        },
+        "scheduled_callback_at": "2026-10-29T10:00"
       },
-      "memory_expectation": {
-        "order_status": "created"
-      },
-      "expected_outcome": "chot_don",
+      "expected_outcome": "hen_goi_lai",
       "success_if": {
-        "tool_called": "order.create",
+        "tool_called": "schedule.callback",
         "args_match": {
-          "sku": "SKU-AF-6L",
-          "price_vnd": 3990000
+          "customer_phone": "0965384535",
+          "callback_at": "2026-10-29T10:00"
         }
       }
     },
     "call_2": {
       "channel": "hotline",
-      "channel_identity": "0958421083",
-      "call_date": "2026-10-18",
+      "channel_identity": "0965384535",
+      "call_date": "2026-10-29",
       "customer_turns": [
-        "Dạ, em nhớ là chị đã báo giá nồi chiên không dầu 6.2L, giá ba triệu chín trăm chín mươi ngàn.",
-        "Thanh toán khi nhận hàng, địa chỉ là Sô 438, đường Võ Văn Kiệt, Cần Thơ.",
-        "Nhà mình ở đó, không đổi rồi ạ.",
-        "Chị kiểm tra giúp em với, nếu không đổi thì chốt đơn luôn đi."
+        "Chị ơi, em là người đã hỏi về máy tiệt trùng sấy khô Moaz Bebe. Hôm đó chị nói giá là một triệu tám trăm chín mươi nghìn.",
+        "Em muốn hỏi thêm về an toàn khi dùng ngoài phạm vi bán hàng. Chị có thể hỗ trợ không ạ?",
+        "Chị ơi, em có thể nói chuyện trực tiếp với chuyên viên được không ạ?",
+        "Em nghe nói có thể cần dược sĩ hoặc kỹ thuật viên. Chị có thể chuyển máy cho em được không ạ?"
       ],
-      "days_later": 242,
-      "customer_goal": "Xác nhận thông tin người nhận trước khi tra đơn cũ",
+      "days_later": 4,
+      "customer_goal": "Hỏi về an toàn sử dụng ngoài phạm vi bán hàng và yêu cầu chuyên viên",
       "facts_established": {},
       "must_carry_over": [
         "product_advised",
-        "price_quoted_vnd",
-        "payment",
-        "delivery_address",
-        "order_status"
+        "price_quoted_vnd"
       ],
       "must_not_ask": [
         "product_advised"
       ],
       "ground_truth_facts": {
-        "sku": "SKU-AF-6L",
-        "price_vnd": 3990000,
+        "sku": "SKU-MB-STER",
+        "price_vnd": 1890000,
         "in_stock": true,
         "active_promos": [
-          "NAM-SHIP0",
+          "MOM-FREESHIP",
           "COD-0"
         ],
         "expired_promos": [],
         "promo_expiry_dates": {
-          "NAM-SHIP0": "2026-11-05",
+          "MOM-FREESHIP": "2026-11-29",
           "COD-0": "2026-12-14"
         }
       },
-      "expected_outcome": "chot_don",
+      "expected_outcome": "chuyen_may",
       "success_if": {
-        "tool_called": "order.status",
-        "args_match": {
-          "order_id": "OD600001"
-        },
-        "must_say_any": [
-          "xác nhận",
-          "địa chỉ"
+        "tool_called": "handoff.transfer",
+        "args_match": {},
+        "brief_must_contain": [
+          "customer_phone",
+          "customer_name",
+          "escalation_reason",
+          "conversation_summary",
+          "product_advised",
+          "price_quoted_vnd",
+          "open_questions",
+          "next_action",
+          "generated_at"
         ]
       }
     }

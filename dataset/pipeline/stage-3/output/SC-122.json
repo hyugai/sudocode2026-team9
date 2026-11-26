@@ -1,98 +1,98 @@
 {
-  "scenario_id": "SC-122",
+  "scenario_id": "SC-138",
   "level": "M1",
-  "persona": "khach_quay_lai_sau_8_thang",
-  "hard_case": "stale_address",
-  "customer_phone": "0957990659",
-  "customer_name": "Bảo",
+  "persona": "khach_ngoai_pham_vi_chuyen_may",
+  "hard_case": "handoff",
+  "customer_phone": "0905154382",
+  "customer_name": "Thắng",
   "honorific": "anh",
-  "notes": "resume_with_uncertain_identity_or_history",
+  "notes": "transfer_with_context",
   "calls": {
     "call_1": {
       "channel": "hotline",
-      "channel_identity": "0957990659",
-      "call_date": "2026-02-19",
+      "channel_identity": "0905154382",
+      "call_date": "2026-10-26",
       "customer_turns": [
-        "Anh mua máy lọc không khí AirPure Mini rồi.",
-        "Giá hai triệu một trăm chín mươi ngàn, thanh toán khi nhận hàng.",
-        "Địa chỉ giao hàng là A8 Châu Thới, phường Hòa Hưng."
+        "Anh ơi, em đang tìm ghế ngồi ô tô cho bé Chicco, giá bao nhiêu vậy?",
+        "Ghế này có giá bốn triệu chín trăm chín mươi ngàn đồng, đúng không ạ?",
+        "Em xin hẹn lại với anh, mười giờ ngày hai mươi bảy tháng mười được không?"
       ],
-      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "customer_goal": "Hỏi về sản phẩm và hẹn xem lại",
       "facts_established": {
-        "product_advised": "SKU-AP-MINI",
-        "price_quoted_vnd": 2190000,
-        "payment": "COD",
-        "delivery_address": "A8 Châu Thới, phường Hòa Hưng, TP. Hồ Chí Minh",
-        "order_status": "created"
+        "product_advised": "SKU-MB-CAR",
+        "price_quoted_vnd": 4990000
       },
       "ground_truth_facts": {
-        "sku": "SKU-AP-MINI",
-        "price_vnd": 2190000,
+        "sku": "SKU-MB-CAR",
+        "price_vnd": 4990000,
         "in_stock": true,
-        "active_promos": [],
+        "active_promos": [
+          "MOM-FREESHIP",
+          "COD-0"
+        ],
         "expired_promos": [],
-        "promo_expiry_dates": {},
-        "estimated_delivery": "2026-02-21"
+        "promo_expiry_dates": {
+          "MOM-FREESHIP": "2026-11-29",
+          "COD-0": "2026-12-14"
+        },
+        "scheduled_callback_at": "2026-10-27T10:00"
       },
-      "memory_expectation": {
-        "order_status": "created"
-      },
-      "expected_outcome": "chot_don",
+      "expected_outcome": "hen_goi_lai",
       "success_if": {
-        "tool_called": "order.create",
+        "tool_called": "schedule.callback",
         "args_match": {
-          "sku": "SKU-AP-MINI",
-          "price_vnd": 2190000
+          "customer_phone": "0905154382",
+          "callback_at": "2026-10-27T10:00"
         }
       }
     },
     "call_2": {
       "channel": "hotline",
-      "channel_identity": "0957990659",
-      "call_date": "2026-10-19",
+      "channel_identity": "0905154382",
+      "call_date": "2026-10-27",
       "customer_turns": [
-        "Anh nhớ là mình đã đặt máy lọc không khí AirPure Mini rồi.",
-        "Giá hai triệu một trăm chín mươi ngàn, thanh toán khi nhận hàng.",
-        "Địa chỉ giao hàng là A8 Châu Thới, phường Hòa Hưng.",
-        "Bên em không lưu à?",
-        "Mình ở đó mà, chắc là đúng rồi."
+        "Anh ơi, em muốn hỏi thêm về an toàn sử dụng ghế này ngoài phạm vi bán hàng.",
+        "Em nghe nói ghế này có tiêu chuẩn an toàn cao, nhưng em chưa rõ.",
+        "Anh có thể chuyển cho chuyên viên y tế hoặc dược sĩ được không ạ?"
       ],
-      "days_later": 242,
-      "customer_goal": "Xác nhận thông tin người nhận trước khi tra đơn cũ",
+      "days_later": 1,
+      "customer_goal": "Hỏi về an toàn sử dụng ngoài phạm vi bán hàng và yêu cầu chuyên viên",
       "facts_established": {},
       "must_carry_over": [
         "product_advised",
-        "price_quoted_vnd",
-        "payment",
-        "delivery_address",
-        "order_status"
+        "price_quoted_vnd"
       ],
       "must_not_ask": [
         "product_advised"
       ],
       "ground_truth_facts": {
-        "sku": "SKU-AP-MINI",
-        "price_vnd": 2190000,
+        "sku": "SKU-MB-CAR",
+        "price_vnd": 4990000,
         "in_stock": true,
         "active_promos": [
-          "NAM-SHIP0",
+          "MOM-FREESHIP",
           "COD-0"
         ],
         "expired_promos": [],
         "promo_expiry_dates": {
-          "NAM-SHIP0": "2026-11-05",
+          "MOM-FREESHIP": "2026-11-29",
           "COD-0": "2026-12-14"
         }
       },
-      "expected_outcome": "chot_don",
+      "expected_outcome": "chuyen_may",
       "success_if": {
-        "tool_called": "order.status",
-        "args_match": {
-          "order_id": "OD600001"
-        },
-        "must_say_any": [
-          "xác nhận",
-          "địa chỉ"
+        "tool_called": "handoff.transfer",
+        "args_match": {},
+        "brief_must_contain": [
+          "customer_phone",
+          "customer_name",
+          "escalation_reason",
+          "conversation_summary",
+          "product_advised",
+          "price_quoted_vnd",
+          "open_questions",
+          "next_action",
+          "generated_at"
         ]
       }
     }

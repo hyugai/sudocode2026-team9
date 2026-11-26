@@ -1,34 +1,33 @@
 {
-  "scenario_id": "SC-096",
+  "scenario_id": "SC-110",
   "level": "M1",
   "persona": "khach_da_mua_doi_size",
   "hard_case": null,
-  "customer_phone": "0975475177",
-  "customer_name": "Long",
+  "customer_phone": "0963279264",
+  "customer_name": "Đạt",
   "honorific": "anh",
   "notes": "return_for_post_purchase_support",
   "calls": {
     "call_1": {
       "channel": "hotline",
-      "channel_identity": "0975475177",
-      "call_date": "2026-10-26",
+      "channel_identity": "0963279264",
+      "call_date": "2026-10-19",
       "customer_turns": [
-        "Anh ơi, em muốn đặt mua giày sneaker Urban Classic xám bốn mươi.",
-        "Giá bao nhiêu vậy anh?",
-        "Em xin thanh toán khi nhận hàng, giao đến 611/20 Điện Biên Phủ, quận Bình Thạnh.",
-        "Còn hàng không anh?"
+        "Anh ơi, em vừa đặt đơn bộ lõi lọc thay thế RO một-hai-ba rồi.",
+        "Giá ba trăm chín mươi nghìn đồng, thanh toán khi nhận hàng, đúng không ạ?",
+        "Giao hàng đến số 71, đường Hà Sen, đặc khu Cát Hải, Hải Phòng nhé."
       ],
       "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
       "facts_established": {
-        "product_advised": "SKU-SN-CAS-40-XAM",
-        "price_quoted_vnd": 890000,
+        "product_advised": "SKU-WF-CORE",
+        "price_quoted_vnd": 390000,
         "payment": "COD",
-        "delivery_address": "611/20 Điện Biên Phủ, phường Bàn Cờ, TP. Hồ Chí Minh",
+        "delivery_address": "Số 71, đường Hà Sen, đặc khu Cát Hải, Hải Phòng",
         "order_status": "created"
       },
       "ground_truth_facts": {
-        "sku": "SKU-SN-CAS-40-XAM",
-        "price_vnd": 890000,
+        "sku": "SKU-WF-CORE",
+        "price_vnd": 390000,
         "in_stock": true,
         "active_promos": [
           "COD-0"
@@ -37,7 +36,7 @@
         "promo_expiry_dates": {
           "COD-0": "2026-12-14"
         },
-        "estimated_delivery": "2026-10-28"
+        "estimated_delivery": "2026-10-21"
       },
       "memory_expectation": {
         "order_status": "created"
@@ -46,25 +45,24 @@
       "success_if": {
         "tool_called": "order.create",
         "args_match": {
-          "sku": "SKU-SN-CAS-40-XAM",
-          "price_vnd": 890000
+          "sku": "SKU-WF-CORE",
+          "price_vnd": 390000
         }
       }
     },
     "call_2": {
       "channel": "hotline",
-      "channel_identity": "0975475177",
-      "call_date": "2026-10-30",
+      "channel_identity": "0963279264",
+      "call_date": "2026-10-21",
       "customer_turns": [
-        "Anh ơi, em vừa nhận hàng rồi, nhưng size bốn mươi không vừa.",
-        "Em muốn đổi sang size bốn mươi hai, có được không ạ?",
-        "Giá vẫn là tám trăm chín mươi ngàn, giao hàng đúng địa chỉ cũ đúng không anh?",
-        "Có được đổi không anh? Em không muốn trả lại."
+        "Anh ơi, em muốn thay đổi địa chỉ giao hàng sang khu 1, đặc khu Bạch Long Vĩ, Hải Phòng.",
+        "Đơn em đã đặt rồi, em không muốn giao nhầm nữa.",
+        "Giá và cách thanh toán vẫn giữ nguyên, đúng không ạ?"
       ],
-      "days_later": 4,
-      "customer_goal": "Đổi sang size khác sau khi nhận hàng",
+      "days_later": 2,
+      "customer_goal": "Cập nhật nơi giao cho đơn đã mua",
       "facts_established": {
-        "new_variant_sku": "SKU-SN-CAS-42-XAM"
+        "delivery_address": "Khu 1, đặc khu Bạch Long Vĩ, Hải Phòng"
       },
       "must_carry_over": [
         "product_advised",
@@ -77,8 +75,8 @@
         "product_advised"
       ],
       "ground_truth_facts": {
-        "sku": "SKU-SN-CAS-40-XAM",
-        "price_vnd": 890000,
+        "sku": "SKU-WF-CORE",
+        "price_vnd": 390000,
         "in_stock": true,
         "active_promos": [
           "COD-0"
@@ -86,18 +84,20 @@
         "expired_promos": [],
         "promo_expiry_dates": {
           "COD-0": "2026-12-14"
-        },
-        "replacement_in_stock": true,
-        "exchange_fee_vnd": 0,
-        "policy_reference": "DT-03"
+        }
+      },
+      "memory_expectation": {
+        "delivery_address": "Khu 1, đặc khu Bạch Long Vĩ, Hải Phòng",
+        "supersedes": {
+          "delivery_address": "Số 71, đường Hà Sen, đặc khu Cát Hải, Hải Phòng"
+        }
       },
       "expected_outcome": "chot_don",
       "success_if": {
         "tool_called": "order.update",
         "args_match": {
           "order_id": "OD600001",
-          "action": "exchange_size",
-          "new_variant_sku": "SKU-SN-CAS-42-XAM"
+          "action": "update_address"
         }
       }
     }

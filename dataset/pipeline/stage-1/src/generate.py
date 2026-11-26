@@ -18,8 +18,11 @@ INPUT = STAGE / "input"
 sys.path[:0] = [str(STAGE / "src"), str(ROOT)]
 from common import BLUEPRINTS_FILE, CUSTOMERS_FILE, run_name
 
-DISTRIBUTIONS = {"M1": (78, 32, 14, 16), "M2": (57, 35, 18, 20)}
+DISTRIBUTIONS = {"M1": (78, 32, 14, 16), "M2": (60, 40, 20, 30)}
 CATEGORIES = ("standard", "omnichannel", "hard", "extended")
+M2_MIN_BLUEPRINTS = sum(DISTRIBUTIONS["M2"])
+CHANNEL_PAIRS = (("facebook", "hotline"), ("zalo", "hotline"),
+                 ("hotline", "zalo"), ("hotline", "facebook"))
 CRM_DISTRIBUTION = {"omnichannel": 12, "standard": 10, "hard": 8, "extended": 20}
 CRM_VARIANT_DISTRIBUTION = {"omnichannel": 18, "hard": 8, "standard": 44}
 CRM_DIALECTS = {"bac": "North", "trung": "Central", "nam": "South"}
@@ -167,13 +170,72 @@ def add_memory(session, previous, carry, no_repeat):
     session["must_not_ask"] = no_repeat
 
 
-def generation_distribution(tier, crm_backed):
+def generation_distribution(tier, crm_backed, blueprint_count=None):
+    if blueprint_count is not None and tier != "M2":
+        raise ValueError("Blueprint count is configurable for M2 only.")
     if crm_backed:
         return dict(Counter(CRM_DISTRIBUTION) + Counter(CRM_VARIANT_DISTRIBUTION))
-    return dict(zip(CATEGORIES, DISTRIBUTIONS[tier]))
+    distribution = dict(zip(CATEGORIES, DISTRIBUTIONS[tier]))
+    if blueprint_count is not None:
+        if not isinstance(blueprint_count, int) or blueprint_count < M2_MIN_BLUEPRINTS:
+            raise ValueError(f"M2 requires at least {M2_MIN_BLUEPRINTS} blueprints.")
+        distribution["standard"] += blueprint_count - M2_MIN_BLUEPRINTS
+    return distribution
 
 
-def generate(tools, personas, tier, seed, crm_customers=None):
+def blueprint_signature(journey):
+    """Describe the session goals and state changes using structured fields."""
+    sessions = []
+    previous = None
+    for key in ("call_1", "call_2", "call_3"):
+        if key not in journey:
+            continue
+        call = journey[key]
+        success = call["success_if"]
+        truth = call["ground_truth_facts"]
+        products = call["facts_established"].get("product_advised")
+        previous_promos = set(previous.get("active_promos", ())) if previous else set()
+        price_changed = previous is not None and previous.get("price_vnd") != truth.get("price_vnd")
+        sessions.append((
+            call["channel"], call["expected_outcome"], success["tool_called"],
+            success["args_match"].get("action"),
+            len(products) if isinstance(products, list) else 1,
+            truth.get("in_stock"), price_changed,
+            bool(previous_promos.intersection(truth.get("expired_promos", ()))),
+            truth.get("policy_reference"),
+        ))
+        previous = truth
+    return journey["target_sku"], tuple(sessions)
+
+
+def read_m1_reference(path: Path):
+    signatures, scenario_numbers = set(), set()
+    with path.open(encoding="utf-8") as source:
+        for number, line in enumerate(source, 1):
+            if not line.strip():
+                continue
+            row = json.loads(line)
+            scenario_id = row.get("scenario_id") if isinstance(row, dict) else None
+            match = re.fullmatch(r"(?:TEAM-)?SC-([0-9]+)", scenario_id) if isinstance(scenario_id, str) else None
+            if not match or row.get("tier") != "M1" or not {"call_1", "call_2"} <= row.keys():
+                raise ValueError(f"Expected a Stage 1 M1 blueprint in {path}, line {number}.")
+            scenario_number = int(match[1])
+            if scenario_number in scenario_numbers:
+                raise ValueError(f"Duplicate M1 scenario number in {path}, line {number}.")
+            scenario_numbers.add(scenario_number)
+            signatures.add(blueprint_signature(row))
+    if not scenario_numbers:
+        raise ValueError(f"The M1 reference has no blueprints: {path}")
+    return signatures, max(scenario_numbers)
+
+
+def reset_mock_state(tools):
+    for collection in (tools._ORDERS, tools._ONCE_USED, tools._CALLBACKS, tools._TICKETS, tools.CRM):
+        collection.clear()
+
+
+def generate(tools, personas, tier, seed, crm_customers=None, *, blueprint_count=None,
+             m1_signatures=(), scenario_offset=0):
     if crm_customers is not None:
         return generate_crm_journeys(tools, seed, crm_customers)
     rng = random.Random(seed)
@@ -183,9 +245,12 @@ def generate(tools, personas, tier, seed, crm_customers=None):
     registry, blueprints = [], []
     seen = set()
 
-    for category, count in generation_distribution(tier, False).items():
-        for i in range(count):
+    for category, count in generation_distribution(tier, False, blueprint_count).items():
+        i = retries = 0
+        while i < count:
             index = len(blueprints) + 1
+            if tier == "M2":
+                reset_mock_state(tools)
             first = first_date + timedelta(days=rng.randrange(28))
             followup_days = rng.choice((1, 2, 3, 4))
             channel_pair = ("hotline", "hotline")
@@ -194,14 +259,14 @@ def generate(tools, personas, tier, seed, crm_customers=None):
             persona = rng.choice(("khach_do_du_hoi_nguoi_nha", "khach_so_gia",
                                   "khach_hoi_nhieu_khong_mua"))
             if category == "omnichannel":
-                pairs = (("facebook", "hotline"), ("zalo", "hotline"),
-                         ("hotline", "zalo"), ("hotline", "facebook"))
-                channel_pair = rng.choice(pairs)
+                channel_pair = rng.choice(CHANNEL_PAIRS)
                 persona = "khach_da_kenh_fb_hotline"
             if category == "extended":
                 persona = "khach_goi_lan_3_het_kien_nhan"
             if category == "hard":
                 edge = ("expired_promo", "out_of_stock", "policy_trap", "handoff")[i % 4]
+                if retries:
+                    channel_pair = CHANNEL_PAIRS[(retries - 1) % len(CHANNEL_PAIRS)]
 
             second = first + timedelta(days=followup_days)
             candidates = [
@@ -217,17 +282,17 @@ def generate(tools, personas, tier, seed, crm_customers=None):
                 persona = "khach_ngoai_pham_vi_chuyen_may"
             sku = rng.choice(candidates)["sku"]
             if edge in {"expired_promo", "out_of_stock"}:
+                event_index = i // 4 + retries
                 if edge == "expired_promo":
-                    sku, first, promo_code = expired[i // 4 % len(expired)]
+                    sku, first, promo_code = expired[event_index % len(expired)]
                 else:
-                    sku, first = stockouts[i // 4 % len(stockouts)]
+                    sku, first = stockouts[event_index % len(stockouts)]
                 second = first + timedelta(days=1)
             customer = customer_profile(index, persona, rng)
             identities = {key: customer[key] for key in CHANNEL_IDS.values()}
             signature = (customer["customer_id"], sku, edge, channel_pair)
             if signature in seen:
                 raise ValueError(f"Duplicate journey signature: {signature}")
-            seen.add(signature)
 
             first_day, second_day = first.isoformat(), second.isoformat()
             before = ground_truth(tools, sku, first_day, customer)
@@ -295,7 +360,7 @@ def generate(tools, personas, tier, seed, crm_customers=None):
                 call_2["memory_expectation"] = {"order_status": "created"}
 
             journey = {
-                "scenario_id": f"SC-{index:03d}",
+                "scenario_id": f"SC-{scenario_offset + index:03d}",
                 "tier": tier,
                 "customer_id": customer["customer_id"],
                 "customer_phone": customer["phone"],
@@ -331,6 +396,13 @@ def generate(tools, personas, tier, seed, crm_customers=None):
                 journey["call_3"] = call_3
 
             if tier == "M2":
+                if blueprint_signature(journey) in m1_signatures:
+                    retries += 1
+                    if retries == 64:
+                        raise ValueError(
+                            f"Could not generate a {category} M2 blueprint distinct from M1 after {retries} attempts."
+                        )
+                    continue
                 profile = personas[persona]
                 calls = {key: value for key, value in journey.items() if key.startswith("call_")}
                 goals = " | ".join(f"{key}: {value['customer_goal']}" for key, value in calls.items())
@@ -345,8 +417,11 @@ def generate(tools, personas, tier, seed, crm_customers=None):
                     "patience_by_session": patience,
                 }
 
+            seen.add(signature)
             registry.append(customer)
             blueprints.append(journey)
+            i += 1
+            retries = 0
 
     return registry, blueprints
 
@@ -392,8 +467,7 @@ def generate_crm_journeys(tools, seed, crm_customers):
     rows = []
     for index, (pattern, persona, kind, variant) in enumerate(plan):
         customer = assigned[index]
-        for collection in (tools._ORDERS, tools._ONCE_USED, tools._CALLBACKS, tools._TICKETS, tools.CRM):
-            collection.clear()
+        reset_mock_state(tools)
         day = date.fromisoformat(tools.REF) + timedelta(days=index % 21)
         next_day = day + timedelta(days=1 + variant % 4)
         channel = ["hotline", "hotline", "hotline"]
@@ -623,8 +697,8 @@ def generate_crm_journeys(tools, seed, crm_customers):
     return sorted(registry, key=lambda row: row["customer_id"]), rows
 
 
-def validate(tools, tier, registry, blueprints, crm_backed=False):
-    expected = generation_distribution(tier, crm_backed)
+def validate(tools, tier, registry, blueprints, crm_backed=False, *, blueprint_count=None):
+    expected = generation_distribution(tier, crm_backed, blueprint_count)
     patterned = crm_backed and any("journey_pattern" in row for row in blueprints)
     if patterned:
         allocations = Counter()
@@ -803,12 +877,29 @@ def publish_output(run: Path) -> None:
             shutil.rmtree(work)
 
 
-def build_dataset(tier: str, seed: int = 2026, crm_customers: list[dict] | None = None):
+def build_dataset(tier: str, seed: int = 2026, crm_customers: list[dict] | None = None, *,
+                  blueprint_count: int | None = None, m1_blueprints: Path | None = None):
     if crm_customers is not None and tier != "M1":
         raise ValueError("CRM-backed blueprints currently support M1 only")
+    if tier != "M2" and m1_blueprints is not None:
+        raise ValueError("An M1 reference is used for M2 generation only.")
+    generation_distribution(tier, crm_customers is not None, blueprint_count)
+    signatures, scenario_offset = set(), 0
+    if tier == "M2":
+        if m1_blueprints is None:
+            published = STAGE / "output" / BLUEPRINTS_FILE
+            m1_blueprints = published if published.is_file() else INPUT / "m1-blueprints.jsonl"
+        if not m1_blueprints.is_file():
+            raise ValueError(f"M1 blueprints are required for M2 generation: {m1_blueprints}")
+        signatures, scenario_offset = read_m1_reference(m1_blueprints)
     tools, personas = load_organizer()
-    registry, blueprints = generate(tools, personas, tier, seed, crm_customers)
-    sessions = validate(tools, tier, registry, blueprints, crm_customers is not None)
+    registry, blueprints = generate(
+        tools, personas, tier, seed, crm_customers, blueprint_count=blueprint_count,
+        m1_signatures=signatures, scenario_offset=scenario_offset,
+    )
+    sessions = validate(
+        tools, tier, registry, blueprints, crm_customers is not None, blueprint_count=blueprint_count,
+    )
     return registry, blueprints, sessions
 
 
@@ -823,6 +914,9 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--tier", choices=DISTRIBUTIONS, default="M1")
     parser.add_argument("--seed", type=int, default=2026)
+    parser.add_argument("--blueprint-count", type=int,
+                        help=f"M2 blueprint count, at least {M2_MIN_BLUEPRINTS} (default: {M2_MIN_BLUEPRINTS}).")
+    parser.add_argument("--m1-blueprints", type=Path, help="Stage 1 M1 blueprints to compare with M2 candidates.")
     parser.add_argument("--identity-source", choices=("synthetic", "crm-seed"), default="synthetic",
                         help="Use crm-seed for organizer-backed identities. Add --publish to build M1 blueprints.")
     parser.add_argument("--publish", action="store_true", help="Copy the validated blueprint run to output/.")
@@ -838,7 +932,13 @@ def main():
             print(f"{args.tier}: {len(crm_customers)} organizer CRM customers in {run}")
             return
 
-    registry, blueprints, sessions = build_dataset(args.tier, args.seed, crm_customers)
+    try:
+        registry, blueprints, sessions = build_dataset(
+            args.tier, args.seed, crm_customers, blueprint_count=args.blueprint_count,
+            m1_blueprints=args.m1_blueprints,
+        )
+    except ValueError as error:
+        parser.error(str(error))
     timestamp = datetime.now().astimezone()
     run_dir = STAGE / "runs" / run_name(args.tier, timestamp)
     run_dir.mkdir(parents=True)

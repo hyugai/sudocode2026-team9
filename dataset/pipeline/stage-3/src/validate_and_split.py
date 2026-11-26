@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate, deduplicate, and split the synthetic telesales journeys."""
+"""Validate, deduplicate, and export the synthetic telesales journeys."""
 
 import argparse
 from collections import Counter, defaultdict
@@ -25,8 +25,8 @@ CALL_KEYS = ("call_1", "call_2", "call_3")
 OUTCOMES = {"chot_don", "hen_goi_lai", "tu_choi", "chuyen_may"}
 CHANNELS = {"hotline", "facebook", "zalo"}
 MINIMUMS = {
-    "M1": (120, 30, 3, 10, 5, 20),
-    "M2": (250, 60, 20, 30, 15, 40),
+    "M1": (120, 30, 3, 10, 5),
+    "M2": (250, 60, 20, 30, 15),
 }
 SIMILARITY_LIMIT = 0.90
 LEGACY_PII_TOKEN = re.compile(r"\[(?:PHONE|ADDR(?:_ALT)?|CCCD|BANK)_CUST_\d+\]")
@@ -224,33 +224,6 @@ def below_minimum(stats, tier):
     return failures
 
 
-def split(rows, target, seed):
-    grouped = defaultdict(list)
-    for row in rows:
-        grouped[row["customer_id"]].append(row)
-    strata = defaultdict(list)
-    for customer, journeys in grouped.items():
-        signature = tuple(sorted(
-            (row["persona"], row.get("edge_case_type") or "", len(call_map(row))) for row in journeys
-        ))
-        strata[signature].append(customer)
-    rng = random.Random(seed)
-    for customers in strata.values():
-        rng.shuffle(customers)
-
-    if target >= len(grouped):
-        raise ValueError("Not enough distinct customers for both splits")
-    portion = target / len(grouped)
-    allocations = {key: math.floor(len(customers) * portion) for key, customers in strata.items()}
-    ranked = sorted(strata, key=lambda key: (-(len(strata[key]) * portion - allocations[key]), key))
-    for key in ranked[:target - sum(allocations.values())]:
-        allocations[key] += 1
-    held_out = {customer for key, customers in strata.items() for customer in customers[:allocations[key]]}
-    memory = [row for row in rows if row["customer_id"] not in held_out]
-    golden = [row for row in rows if row["customer_id"] in held_out]
-    return memory, golden
-
-
 def evaluator_format(row):
     converted = {key: value for key, value in row.items() if key not in CALL_KEYS}
     converted["level"] = row["tier"]
@@ -262,13 +235,13 @@ def evaluator_format(row):
     return converted
 
 
-def check_evaluator(golden, evaluator):
-    with TemporaryDirectory(prefix="btc-golden-") as path:
-        for i, row in enumerate(golden, 1):
+def check_evaluator(scenarios, evaluator):
+    with TemporaryDirectory(prefix="btc-scenarios-") as path:
+        for i, row in enumerate(scenarios, 1):
             write_json(Path(path) / f"scenario_{i:03d}.json", row)
         loaded = evaluator["load_scenarios"](path)
-        if loaded != {row["scenario_id"]: row for row in golden}:
-            raise ValueError("BTC evaluator could not load the full golden set")
+        if loaded != {row["scenario_id"]: row for row in scenarios}:
+            raise ValueError("BTC evaluator could not load all exported scenarios")
         # Exercise the evaluator's scenario-field access using empty traces.
         evaluator["evaluate"](loaded, {})
 
@@ -338,7 +311,7 @@ def install_export(tier, export):
             shutil.rmtree(work)
 
 
-def publish(tier, name, rows):
+def numbered_scenarios(tier, rows):
     entries = []
     for row in rows:
         prefix, separator, suffix = row["scenario_id"].rpartition("-")
@@ -348,11 +321,19 @@ def publish(tier, name, rows):
     if len({number for number, _ in entries}) != len(entries):
         raise ValueError("Duplicate synthetic export ID")
 
-    export = STAGE / "exports" / name
-    export.mkdir(parents=True)
+    files = []
     for position, (scenario_number, row) in enumerate(sorted(entries, key=lambda entry: entry[0]), 1):
         file_number = position if tier == "M1" else scenario_number
-        write_json(export / f"SC-{file_number:03d}.json", row)
+        files.append((f"SC-{file_number:03d}.json", row))
+    return files
+
+
+def publish(tier, name, rows):
+    files = numbered_scenarios(tier, rows)
+    export = STAGE / "exports" / name
+    export.mkdir(parents=True)
+    for filename, row in files:
+        write_json(export / filename, row)
 
     install_export(tier, export)
 
@@ -388,51 +369,35 @@ def main():
     stats = stats_for(accepted)
     if below := below_minimum(stats, tier):
         raise ValueError(f"Below tier minimum after deduplication: {', '.join(below)}")
-    target = MINIMUMS[tier][-1]
-    seed, custom = split(accepted, target, upstream_log["seed"])
-    if len(custom) < target:
-        raise ValueError("Below tier minimum for custom golden scenarios")
-
     data = ROOT / "btc"
     if not data.is_dir():
         data = ROOT
-    sample_dir = data / "BTC-Data-Vong1-TEAMS/test_set/public_sample"
-    public = [read_json(sample_dir / f"SAMPLE-{index:02d}.json") for index in range(1, 8)]
-    custom_golden = [evaluator_format(row) for row in custom]
-    golden = custom_golden + public
-    for field in ("customer_id", "customer_phone"):
-        if {row[field] for row in seed} & {row[field] for row in golden if field in row}:
-            raise ValueError(f"Cross-split leakage: {field}")
-    if len({row["scenario_id"] for row in golden}) != len(golden):
-        raise ValueError("Duplicate scenario ID in golden output")
-    violations = sum(len(pattern.findall(value)) for value in strings([seed, custom_golden, dropped])
+    scenarios = [evaluator_format(row) for row in accepted]
+    violations = sum(len(pattern.findall(value)) for value in strings([scenarios, dropped])
                      for pattern in PII.values())
     if violations:
         raise ValueError(f"{violations} possible PII matches in generated journeys")
     reference = data / "BTC-cap-nhat-11-2026/eval/reference_eval.py"
-    check_evaluator(golden, runpy.run_path(str(reference)))
+    check_evaluator(scenarios, runpy.run_path(str(reference)))
 
     now = datetime.now().astimezone()
     name = f"run_{tier}_{now:%Y%m%d_%H%M}"
     run = STAGE / "runs" / name
     run.mkdir(parents=True)
-    write_jsonl(run / "journeys_memory_seed.jsonl", seed)
-    write_json(run / "team_golden_scenarios.json", golden)
     write_jsonl(run / "stage3_dropped_duplicates.jsonl", dropped)
     write_json(run / "pii_audit_report.json", {"tier": tier, "scope": "synthetic_journeys",
                                              "guardrail_violations": violations})
     write_json(run / "dataset_stats.json", {
         "tier": tier, "timestamp": now.isoformat(timespec="seconds"), "input_run": upstream.name,
-        **stats, "memory_seed_journeys": len(seed), "golden_test_scenarios": len(custom),
-        "btc_public_scenarios": len(public), "combined_golden_scenarios": len(golden),
+        **stats,
         "guardrail_violations": violations, "duplicate_candidates": len(dropped),
         "regeneration_attempts": attempts, "cosine_threshold": SIMILARITY_LIMIT,
         "reference_eval_smoke_check": "passed",
     })
     if args.publish:
-        publish(tier, name, seed + custom_golden)
+        publish(tier, name, scenarios)
     promote_latest(STAGE, name)
-    print(f"{tier}: {len(seed)} seed journeys, {len(custom)} custom golden, {len(public)} BTC public in {run}")
+    print(f"{tier}: validated {len(scenarios)} journeys. Audit: {run}")
 
 
 if __name__ == "__main__":

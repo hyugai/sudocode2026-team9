@@ -1,67 +1,64 @@
 {
-  "scenario_id": "SC-115",
+  "scenario_id": "SC-131",
   "level": "M1",
-  "persona": "khach_goi_lan_3_het_kien_nhan",
-  "hard_case": null,
-  "customer_phone": "0922264686",
-  "customer_name": "Khoa",
+  "persona": "khach_ngoai_pham_vi_chuyen_may",
+  "hard_case": "handoff",
+  "customer_phone": "0993186032",
+  "customer_name": "Đức",
   "honorific": "anh",
-  "notes": "return_for_post_purchase_support",
+  "notes": "transfer_with_context",
   "calls": {
     "call_1": {
       "channel": "hotline",
-      "channel_identity": "0922264686",
-      "call_date": "2026-10-24",
+      "channel_identity": "0993186032",
+      "call_date": "2026-10-19",
       "customer_turns": [
-        "Anh ơi, hôm qua anh gọi hỏi nồi chiên không dầu Xiaomi 4.5L, giá bao nhiêu?",
-        "Giá một triệu năm trăm chín mươi nghìn, đúng không?",
-        "Anh định mua, nhưng chưa chắc. Anh hẹn gọi lại lúc mười giờ ngày mai."
+        "Anh ơi, em đang tìm xe đẩy hai chiều Combi Sugocal, giá bao nhiêu vậy?",
+        "Giá sáu triệu bảy trăm chín mươi ngàn đồng hả anh?",
+        "Em xin hẹn gọi lại vào mười giờ ngày hai mươi mốt tháng mười nhé."
       ],
       "customer_goal": "Hỏi về sản phẩm và hẹn xem lại",
       "facts_established": {
-        "product_advised": "SKU-AF-XM",
-        "price_quoted_vnd": 1590000
+        "product_advised": "SKU-MB-STR2",
+        "price_quoted_vnd": 6790000
       },
       "ground_truth_facts": {
-        "sku": "SKU-AF-XM",
-        "price_vnd": 1590000,
+        "sku": "SKU-MB-STR2",
+        "price_vnd": 6790000,
         "in_stock": true,
         "active_promos": [
+          "MOM-FREESHIP",
           "COD-0"
         ],
         "expired_promos": [],
         "promo_expiry_dates": {
+          "MOM-FREESHIP": "2026-11-29",
           "COD-0": "2026-12-14"
         },
-        "scheduled_callback_at": "2026-10-25T10:00"
+        "scheduled_callback_at": "2026-10-21T10:00"
       },
       "expected_outcome": "hen_goi_lai",
       "success_if": {
         "tool_called": "schedule.callback",
         "args_match": {
-          "customer_phone": "0922264686",
-          "callback_at": "2026-10-25T10:00"
+          "customer_phone": "0993186032",
+          "callback_at": "2026-10-21T10:00"
         }
       }
     },
     "call_2": {
       "channel": "hotline",
-      "channel_identity": "0922264686",
-      "call_date": "2026-10-25",
+      "channel_identity": "0993186032",
+      "call_date": "2026-10-21",
       "customer_turns": [
-        "Anh gọi lại rồi. Mua nồi chiên không dầu Xiaomi 4.5L, giá một triệu năm trăm chín mươi nghìn.",
-        "Thanh toán khi nhận hàng, giao tới Số 231 Nguyễn Ngọc Vũ, Hà Nội.",
-        "Được rồi, anh cám ơn."
+        "Anh, em có câu hỏi về an toàn sử dụng xe đẩy này khi đi ra ngoài, có được không?",
+        "Em nghe nói có thể dùng ngoài phạm vi bán hàng, nhưng không biết có an toàn không?",
+        "Em có thể được nói chuyện với chuyên viên được không ạ?",
+        "Em không biết em có phải dược sĩ không, nhưng em cần câu trả lời."
       ],
-      "days_later": 1,
-      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
-      "facts_established": {
-        "product_advised": "SKU-AF-XM",
-        "price_quoted_vnd": 1590000,
-        "payment": "COD",
-        "delivery_address": "Số 231 Nguyễn Ngọc Vũ, phường Yên Hòa, Hà Nội",
-        "order_status": "created"
-      },
+      "days_later": 2,
+      "customer_goal": "Hỏi về an toàn sử dụng ngoài phạm vi bán hàng và yêu cầu chuyên viên",
+      "facts_established": {},
       "must_carry_over": [
         "product_advised",
         "price_quoted_vnd"
@@ -70,80 +67,34 @@
         "product_advised"
       ],
       "ground_truth_facts": {
-        "sku": "SKU-AF-XM",
-        "price_vnd": 1590000,
+        "sku": "SKU-MB-STR2",
+        "price_vnd": 6790000,
         "in_stock": true,
         "active_promos": [
+          "MOM-FREESHIP",
           "COD-0"
         ],
         "expired_promos": [],
         "promo_expiry_dates": {
-          "COD-0": "2026-12-14"
-        },
-        "estimated_delivery": "2026-10-28"
-      },
-      "memory_expectation": {
-        "order_status": "created"
-      },
-      "expected_outcome": "chot_don",
-      "success_if": {
-        "tool_called": "order.create",
-        "args_match": {
-          "sku": "SKU-AF-XM",
-          "price_vnd": 1590000
-        }
-      }
-    },
-    "call_3": {
-      "channel": "hotline",
-      "channel_identity": "0922264686",
-      "call_date": "2026-10-26",
-      "customer_turns": [
-        "À, hôm nay anh gọi lại để thay địa chỉ giao hàng.",
-        "Giao tới Số 25, phố Liễu Giai, Hà Nội.",
-        "Thôi khỏi."
-      ],
-      "days_later": 1,
-      "customer_goal": "Cập nhật nơi giao cho đơn đã mua",
-      "facts_established": {
-        "delivery_address": "Số 25, phố Liễu Giai, phường Ngọc Hà, Hà Nội"
-      },
-      "must_carry_over": [
-        "product_advised",
-        "price_quoted_vnd",
-        "payment",
-        "delivery_address",
-        "order_status"
-      ],
-      "must_not_ask": [
-        "product_advised"
-      ],
-      "ground_truth_facts": {
-        "sku": "SKU-AF-XM",
-        "price_vnd": 1590000,
-        "in_stock": true,
-        "active_promos": [
-          "COD-0"
-        ],
-        "expired_promos": [],
-        "promo_expiry_dates": {
+          "MOM-FREESHIP": "2026-11-29",
           "COD-0": "2026-12-14"
         }
       },
-      "memory_expectation": {
-        "delivery_address": "Số 25, phố Liễu Giai, phường Ngọc Hà, Hà Nội",
-        "supersedes": {
-          "delivery_address": "Số 231 Nguyễn Ngọc Vũ, phường Yên Hòa, Hà Nội"
-        }
-      },
-      "expected_outcome": "chot_don",
+      "expected_outcome": "chuyen_may",
       "success_if": {
-        "tool_called": "order.update",
-        "args_match": {
-          "order_id": "OD600001",
-          "action": "update_address"
-        },
-        "max_agent_questions": 1
+        "tool_called": "handoff.transfer",
+        "args_match": {},
+        "brief_must_contain": [
+          "customer_phone",
+          "customer_name",
+          "escalation_reason",
+          "conversation_summary",
+          "product_advised",
+          "price_quoted_vnd",
+          "open_questions",
+          "next_action",
+          "generated_at"
+        ]
       }
     }
   }

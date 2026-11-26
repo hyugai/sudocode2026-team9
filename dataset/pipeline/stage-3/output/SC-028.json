@@ -1,32 +1,30 @@
 {
-  "scenario_id": "SC-028",
+  "scenario_id": "SC-036",
   "level": "M1",
-  "persona": "khach_so_gia",
+  "persona": "khach_da_kenh_fb_hotline",
   "hard_case": null,
   "customer_phone": "0994893949",
   "customer_name": "Hạnh",
   "honorific": "chị",
-  "notes": "consider_and_decide",
+  "notes": "continue_across_channels",
   "calls": {
     "call_1": {
       "channel": "hotline",
       "channel_identity": "0994893949",
-      "call_date": "2026-10-21",
+      "call_date": "2026-10-29",
       "customer_turns": [
-        "Chị ơi, em đang so sánh giá bên em, họ báo 4 triệu 510 ngàn.",
-        "Còn bên chị là bao nhiêu vậy?",
-        "Ừm, 4 triệu 790 ngàn. Giá cao hơn 280 ngàn, em hơi ngại.",
-        "Chị có thể giảm được không? Em đang tính xem nên chọn nơi nào."
+        "Chị ơi, em đang xem sản phẩm máy tiệt trùng sấy khô Moaz Bebe, giá 1.890.000đ đúng không ạ?",
+        "Em thấy có chương trình giao hàng tận nơi, bên em có còn hàng không ạ?",
+        "Nếu em đặt hàng thì có thể giao vào lúc 10 giờ ngày 31 tháng 10 không ạ?"
       ],
-      "customer_goal": "So báo giá với nơi khác trước khi quyết định",
+      "customer_goal": "Hỏi về sản phẩm và hẹn xem lại",
       "facts_established": {
-        "product_advised": "SKU-BDL-MOM",
-        "price_quoted_vnd": 4790000,
-        "competitor_price_vnd": 4510000
+        "product_advised": "SKU-MB-STER",
+        "price_quoted_vnd": 1890000
       },
       "ground_truth_facts": {
-        "sku": "SKU-BDL-MOM",
-        "price_vnd": 4790000,
+        "sku": "SKU-MB-STER",
+        "price_vnd": 1890000,
         "in_stock": true,
         "active_promos": [
           "MOM-FREESHIP",
@@ -37,48 +35,46 @@
           "MOM-FREESHIP": "2026-11-29",
           "COD-0": "2026-12-14"
         },
-        "scheduled_callback_at": "2026-10-23T10:00"
+        "scheduled_callback_at": "2026-10-31T10:00"
       },
       "expected_outcome": "hen_goi_lai",
       "success_if": {
         "tool_called": "schedule.callback",
         "args_match": {
           "customer_phone": "0994893949",
-          "callback_at": "2026-10-23T10:00"
+          "callback_at": "2026-10-31T10:00"
         }
       }
     },
     "call_2": {
-      "channel": "hotline",
-      "channel_identity": "0994893949",
-      "call_date": "2026-10-23",
+      "channel": "zalo_oa",
+      "channel_identity": "zalo_hạnh44",
+      "call_date": "2026-10-31",
       "customer_turns": [
-        "Chị ơi, em đã xem lại, giá bên em cũng không thay đổi.",
-        "Chị có thể giảm giá không? Em đang cân nhắc mua.",
-        "Chị nói là giao hàng tận nơi, thanh toán khi nhận hàng, đúng không?",
-        "Được, em mua theo giá chị báo. Giao hàng đến 527 Hồng Bàng nhé.",
-        "Cảm ơn chị, em chờ giao hàng."
+        "Chị ơi, em nhắn Zalo bên fanpage rồi, báo giá 1.890k đúng không ạ?",
+        "Em muốn đặt máy tiệt trùng sấy khô Moaz Bebe, thanh toán khi nhận hàng.",
+        "Địa chỉ giao hàng là 527 Hồng Bàng, Chợ Lớn, HCM.",
+        "Giao vào sáng ngày 31, đúng không chị?"
       ],
       "days_later": 2,
       "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
       "facts_established": {
-        "product_advised": "SKU-BDL-MOM",
-        "price_quoted_vnd": 4790000,
+        "product_advised": "SKU-MB-STER",
+        "price_quoted_vnd": 1890000,
         "payment": "COD",
         "delivery_address": "527 Hồng Bàng, phường Chợ Lớn, TP. Hồ Chí Minh",
         "order_status": "created"
       },
       "must_carry_over": [
         "product_advised",
-        "price_quoted_vnd",
-        "competitor_price_vnd"
+        "price_quoted_vnd"
       ],
       "must_not_ask": [
         "product_advised"
       ],
       "ground_truth_facts": {
-        "sku": "SKU-BDL-MOM",
-        "price_vnd": 4790000,
+        "sku": "SKU-MB-STER",
+        "price_vnd": 1890000,
         "in_stock": true,
         "active_promos": [
           "MOM-FREESHIP",
@@ -89,7 +85,7 @@
           "MOM-FREESHIP": "2026-11-29",
           "COD-0": "2026-12-14"
         },
-        "estimated_delivery": "2026-10-27"
+        "estimated_delivery": "2026-11-03"
       },
       "memory_expectation": {
         "order_status": "created"
@@ -98,8 +94,8 @@
       "success_if": {
         "tool_called": "order.create",
         "args_match": {
-          "sku": "SKU-BDL-MOM",
-          "price_vnd": 4790000
+          "sku": "SKU-MB-STER",
+          "price_vnd": 1890000
         }
       }
     }

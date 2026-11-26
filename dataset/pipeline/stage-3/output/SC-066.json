@@ -1,31 +1,77 @@
 {
-  "scenario_id": "SC-066",
+  "scenario_id": "SC-078",
   "level": "M1",
-  "persona": "khach_so_gia",
-  "hard_case": "expired_promo",
-  "customer_phone": "0905218549",
-  "customer_name": "Linh",
+  "persona": "khach_do_du_hoi_nguoi_nha",
+  "hard_case": "restock",
+  "customer_phone": "0956517883",
+  "customer_name": "Thủy",
   "honorific": "chị",
   "notes": "return_after_price_or_stock_change",
   "calls": {
     "call_1": {
       "channel": "hotline",
-      "channel_identity": "0905218549",
-      "call_date": "2026-10-30",
+      "channel_identity": "0956517883",
+      "call_date": "2026-10-20",
       "customer_turns": [
-        "Chị ơi, em đang so sánh giá máy lọc không khí AirPure Pro ở vài nơi khác.",
-        "Một chỗ báo giá bảy triệu năm trăm chín mươi nghìn đồng, rẻ hơn 100.000 đồng so với chị.",
-        "Chị có thể giảm thêm không? Em đang cân nhắc.",
-        "Nếu không giảm được, em sẽ xem lại."
+        "Chị ơi, em đang xem máy lọc không khí AirPure Pro, giá bảy triệu sáu trăm chín mươi nghìn, em vừa đủ ngân sách tám triệu năm trăm nghìn.",
+        "Em chưa mua ngay được, để hỏi người nhà đã. Chị cho em hỏi là sản phẩm này có tốt không ạ?"
       ],
-      "customer_goal": "So báo giá với nơi khác trước khi quyết định",
+      "customer_goal": "Xem sản phẩm trong ngân sách và hỏi ý kiến người nhà",
       "facts_established": {
         "product_advised": "SKU-AP-PRO",
         "price_quoted_vnd": 7690000,
-        "promo_code": "AIR-OCT",
-        "promo_expiry": "2026-10-30",
-        "competitor_price_vnd": 7590000
+        "budget_vnd": 8500000
       },
+      "ground_truth_facts": {
+        "sku": "SKU-AP-PRO",
+        "price_vnd": 7690000,
+        "in_stock": false,
+        "active_promos": [
+          "COD-0",
+          "AIR-OCT"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "AIR-OCT": "2026-10-30",
+          "COD-0": "2026-12-14"
+        },
+        "restock_expected": "2026-10-21",
+        "scheduled_callback_at": "2026-10-21T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0956517883",
+          "callback_at": "2026-10-21T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0956517883",
+      "call_date": "2026-10-21",
+      "customer_turns": [
+        "Chị ơi, hôm trước chị nói rồi mà, em đã hỏi người nhà rồi. Máy đó tốt, em muốn đặt mua.",
+        "Chị giao hàng đến 178 Phan Huy Chú, Khánh Xuân, Đắk Lắk ạ? Em sẽ thanh toán khi nhận hàng."
+      ],
+      "days_later": 1,
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-AP-PRO",
+        "price_quoted_vnd": 7690000,
+        "payment": "COD",
+        "delivery_address": "178 Phan Huy Chú, phường Khánh Xuân, Đắk Lắk",
+        "order_status": "created"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "budget_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
       "ground_truth_facts": {
         "sku": "SKU-AP-PRO",
         "price_vnd": 7690000,
@@ -39,62 +85,7 @@
           "AIR-OCT": "2026-10-30",
           "COD-0": "2026-12-14"
         },
-        "scheduled_callback_at": "2026-10-31T10:00"
-      },
-      "expected_outcome": "hen_goi_lai",
-      "success_if": {
-        "tool_called": "schedule.callback",
-        "args_match": {
-          "customer_phone": "0905218549",
-          "callback_at": "2026-10-31T10:00"
-        }
-      }
-    },
-    "call_2": {
-      "channel": "hotline",
-      "channel_identity": "0905218549",
-      "call_date": "2026-10-31",
-      "customer_turns": [
-        "Chị ơi, em đã xem lại rồi. Giá bên em cũng không chênh nhiều.",
-        "Máy AirPure Pro giá bảy triệu chín trăm chín mươi nghìn, đúng không chị?",
-        "Em thấy bên khác có ưu đãi giảm 300.000đ, nhưng hôm nay hết rồi.",
-        "Chị có thể giúp em được gì không? Em muốn mua luôn.",
-        "Giao hàng đến số 24 đường Hoàng Diệu, Đà Nẵng nhé."
-      ],
-      "days_later": 1,
-      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
-      "facts_established": {
-        "product_advised": "SKU-AP-PRO",
-        "price_quoted_vnd": 7990000,
-        "payment": "COD",
-        "delivery_address": "Số 24 đường Hoàng Diệu, khối 3, phường Điện Bàn, Đà Nẵng",
-        "order_status": "created"
-      },
-      "must_carry_over": [
-        "product_advised",
-        "price_quoted_vnd",
-        "promo_code",
-        "promo_expiry",
-        "competitor_price_vnd"
-      ],
-      "must_not_ask": [
-        "product_advised"
-      ],
-      "ground_truth_facts": {
-        "sku": "SKU-AP-PRO",
-        "price_vnd": 7990000,
-        "in_stock": true,
-        "active_promos": [
-          "COD-0"
-        ],
-        "expired_promos": [
-          "AIR-OCT"
-        ],
-        "promo_expiry_dates": {
-          "AIR-OCT": "2026-10-30",
-          "COD-0": "2026-12-14"
-        },
-        "estimated_delivery": "2026-11-03"
+        "estimated_delivery": "2026-10-23"
       },
       "memory_expectation": {
         "order_status": "created"
@@ -104,7 +95,7 @@
         "tool_called": "order.create",
         "args_match": {
           "sku": "SKU-AP-PRO",
-          "price_vnd": 7990000
+          "price_vnd": 7690000
         }
       }
     }

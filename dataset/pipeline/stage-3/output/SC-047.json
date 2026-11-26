@@ -1,30 +1,31 @@
 {
-  "scenario_id": "SC-047",
+  "scenario_id": "SC-057",
   "level": "M1",
-  "persona": "khach_da_kenh_mau_thuan",
-  "hard_case": "conflicting_quotes",
-  "customer_phone": "0928144976",
-  "customer_name": "Trung",
+  "persona": "khach_do_du_hoi_nguoi_nha",
+  "hard_case": null,
+  "customer_phone": "0905154382",
+  "customer_name": "Thắng",
   "honorific": "anh",
   "notes": "continue_across_channels",
   "calls": {
     "call_1": {
-      "channel": "chat_fanpage",
-      "channel_identity": "fb.trung.122",
-      "call_date": "2026-10-19",
+      "channel": "zalo_oa",
+      "channel_identity": "zalo_thắng86",
+      "call_date": "2026-10-29",
       "customer_turns": [
-        "Anh ơi, em đang cần mua túi trữ sữa Sunmum 50 túi, giá bao nhiêu vậy?",
-        "Cảm ơn anh, 119.000đ là đúng rồi. Anh giúp em đặt nhé, em sẽ gọi lại sau.",
-        "Em hẹn anh 10 giờ ngày 23/10 được không? Em sẽ gọi lại."
+        "Chị ơi, em đang xem bình sữa Pigeon PPSU 240ml, giá 289.000đ đúng không?",
+        "Em đang có ngân sách 1.500.000đ, để hỏi ý kiến anh trai xem có nên mua không.",
+        "Nếu anh trai đồng ý, em sẽ gọi lại để đặt hàng."
       ],
-      "customer_goal": "Hỏi về sản phẩm và hẹn xem lại",
+      "customer_goal": "Xem sản phẩm trong ngân sách và hỏi ý kiến người nhà",
       "facts_established": {
-        "product_advised": "SKU-MB-BAG",
-        "price_quoted_vnd": 119000
+        "product_advised": "SKU-MB-BOT",
+        "price_quoted_vnd": 289000,
+        "budget_vnd": 1500000
       },
       "ground_truth_facts": {
-        "sku": "SKU-MB-BAG",
-        "price_vnd": 119000,
+        "sku": "SKU-MB-BOT",
+        "price_vnd": 289000,
         "in_stock": true,
         "active_promos": [
           "COD-0"
@@ -33,82 +34,46 @@
         "promo_expiry_dates": {
           "COD-0": "2026-12-14"
         },
-        "scheduled_callback_at": "2026-10-23T10:00"
+        "scheduled_callback_at": "2026-11-01T10:00"
       },
       "expected_outcome": "hen_goi_lai",
       "success_if": {
         "tool_called": "schedule.callback",
         "args_match": {
-          "customer_phone": "0928144976",
-          "callback_at": "2026-10-23T10:00"
+          "customer_phone": "0905154382",
+          "callback_at": "2026-11-01T10:00"
         }
       }
     },
     "call_2": {
-      "channel": "zalo_oa",
-      "channel_identity": "zalo_trung61",
-      "call_date": "2026-10-23",
+      "channel": "hotline",
+      "channel_identity": "0905154382",
+      "call_date": "2026-11-01",
       "customer_turns": [
-        "Anh ơi, em vừa thấy giá 519.000đ ở kênh khác, sao kênh này lại báo 119.000đ?",
-        "Anh giải thích giúp em với, vì sao giá lại chênh thế?",
-        "Nếu giá như vậy, em không mua đâu. Anh giúp em hẹn lại để giải quyết."
+        "Chị ơi, hôm trước chị nói rồi mà. Em đã đồng ý mua bình sữa Pigeon PPSU 240ml giá hai trăm tám mươi chín ngàn.",
+        "Em muốn đặt hàng, giao đến đường Phạm Hùng, Cái Răng, Cần Thơ.",
+        "Giao hàng và thanh toán khi nhận hàng, đúng không?"
       ],
-      "days_later": 4,
-      "customer_goal": "Hỏi về mức giá khác đã được báo qua kênh khác",
+      "days_later": 3,
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
       "facts_established": {
-        "reported_price_vnd": 519000
+        "product_advised": "SKU-MB-BOT",
+        "price_quoted_vnd": 289000,
+        "payment": "COD",
+        "delivery_address": "Đường Phạm Hùng, phường Cái Răng, Cần Thơ",
+        "order_status": "created"
       },
       "must_carry_over": [
         "product_advised",
-        "price_quoted_vnd"
+        "price_quoted_vnd",
+        "budget_vnd"
       ],
       "must_not_ask": [
         "product_advised"
       ],
       "ground_truth_facts": {
-        "sku": "SKU-MB-BAG",
-        "price_vnd": 119000,
-        "in_stock": true,
-        "active_promos": [
-          "COD-0"
-        ],
-        "expired_promos": [],
-        "promo_expiry_dates": {
-          "COD-0": "2026-12-14"
-        }
-      },
-      "expected_outcome": "hen_goi_lai",
-      "success_if": {
-        "tool_called": null,
-        "args_match": {}
-      }
-    },
-    "call_3": {
-      "channel": "hotline",
-      "channel_identity": "0928144976",
-      "call_date": "2026-10-24",
-      "customer_turns": [
-        "Anh ơi, em đã xem lại giá. Nếu giá là 119.000đ, em mua ngay.",
-        "Cảm ơn anh, em sẽ thanh toán khi nhận hàng.",
-        "Địa chỉ giao hàng là Đường Tôn Đức Thắng, phường Ô Môn, Cần Thơ."
-      ],
-      "days_later": 1,
-      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
-      "facts_established": {
-        "product_advised": "SKU-MB-BAG",
-        "price_quoted_vnd": 119000,
-        "payment": "COD",
-        "delivery_address": "Đường Tôn Đức Thắng, phường Ô Môn, Cần Thơ",
-        "order_status": "created"
-      },
-      "must_carry_over": [
-        "reported_price_vnd",
-        "price_quoted_vnd"
-      ],
-      "must_not_ask": [],
-      "ground_truth_facts": {
-        "sku": "SKU-MB-BAG",
-        "price_vnd": 119000,
+        "sku": "SKU-MB-BOT",
+        "price_vnd": 289000,
         "in_stock": true,
         "active_promos": [
           "COD-0"
@@ -117,7 +82,7 @@
         "promo_expiry_dates": {
           "COD-0": "2026-12-14"
         },
-        "estimated_delivery": "2026-10-28"
+        "estimated_delivery": "2026-11-03"
       },
       "memory_expectation": {
         "order_status": "created"
@@ -126,8 +91,8 @@
       "success_if": {
         "tool_called": "order.create",
         "args_match": {
-          "sku": "SKU-MB-BAG",
-          "price_vnd": 119000
+          "sku": "SKU-MB-BOT",
+          "price_vnd": 289000
         }
       }
     }

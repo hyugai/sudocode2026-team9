@@ -1,90 +1,117 @@
 {
-  "scenario_id": "SC-054",
+  "scenario_id": "SC-064",
   "level": "M1",
   "persona": "khach_so_gia",
-  "hard_case": null,
-  "customer_phone": "0984726714",
-  "customer_name": "Hoa",
+  "hard_case": "expired_promo",
+  "customer_phone": "0981933190",
+  "customer_name": "Lan",
   "honorific": "chị",
-  "notes": "continue_across_channels",
+  "notes": "return_after_price_or_stock_change",
   "calls": {
     "call_1": {
-      "channel": "zalo_oa",
-      "channel_identity": "zalo_hoa73",
-      "call_date": "2026-10-26",
+      "channel": "hotline",
+      "channel_identity": "0981933190",
+      "call_date": "2026-10-22",
       "customer_turns": [
-        "Chị ơi, em đang so sánh giá máy lọc không khí Xiaomi Smart 4 Lite với bên khác, bên họ chỉ 2.890.000đ mà.",
-        "Chị có thể giảm giá được không? Em muốn mua nhưng đang cân nhắc.",
-        "Giá em đưa là 2.990.000đ, nếu chị có chương trình nào ưu đãi thì em cũng xem xét.",
-        "Em hẹn chị gọi lại lúc 10 giờ ngày 27/10 nhé."
+        "Chị ơi, em đang so sánh giá máy lọc không khí AirPure X, bên họ báo 4,83 triệu, còn bên chị là 4,89 triệu.",
+        "Chị có thể giảm được bao nhiêu không? Em đang cân nhắc.",
+        "Nếu không giảm, em sẽ xem bên khác.",
+        "Chị ơi, 22/10 là hết ưu đãi rồi đúng không?",
+        "Em hẹn chị 10 giờ ngày 23/10 để quyết định nhé."
       ],
       "customer_goal": "So báo giá với nơi khác trước khi quyết định",
       "facts_established": {
-        "product_advised": "SKU-XM-4L",
-        "price_quoted_vnd": 2990000,
-        "competitor_price_vnd": 2890000
+        "product_advised": "SKU-AP-X",
+        "price_quoted_vnd": 4890000,
+        "promo_code": "GIFT-FILTER",
+        "promo_expiry": "2026-10-22",
+        "competitor_price_vnd": 4830000
       },
       "ground_truth_facts": {
-        "sku": "SKU-XM-4L",
-        "price_vnd": 2990000,
+        "sku": "SKU-AP-X",
+        "price_vnd": 4890000,
         "in_stock": true,
         "active_promos": [
-          "COD-0"
+          "COD-0",
+          "GIFT-FILTER"
         ],
-        "expired_promos": [],
+        "expired_promos": [
+          "AP-SEP"
+        ],
         "promo_expiry_dates": {
-          "COD-0": "2026-12-14"
+          "GIFT-FILTER": "2026-10-22",
+          "COD-0": "2026-12-14",
+          "AP-SEP": "2026-09-30"
         },
-        "scheduled_callback_at": "2026-10-27T10:00"
+        "scheduled_callback_at": "2026-10-23T10:00"
       },
       "expected_outcome": "hen_goi_lai",
       "success_if": {
         "tool_called": "schedule.callback",
         "args_match": {
-          "customer_phone": "0984726714",
-          "callback_at": "2026-10-27T10:00"
+          "customer_phone": "0981933190",
+          "callback_at": "2026-10-23T10:00"
         }
       }
     },
     "call_2": {
       "channel": "hotline",
-      "channel_identity": "0984726714",
-      "call_date": "2026-10-27",
+      "channel_identity": "0981933190",
+      "call_date": "2026-10-23",
       "customer_turns": [
-        "Chị ơi, em lại gọi lại để xem lại giá bên em và bên đối thủ.",
-        "Bên em là 2.990.000đ, bên họ là 2.890.000đ. Chị có thể hỗ trợ gì thêm không?",
-        "Nếu không giảm thì em xin hoãn mua, để em suy nghĩ lại.",
-        "Cảm ơn chị, em sẽ xem lại."
+        "Chị ơi, em đã so giá rồi, bên họ cũng không có ưu đãi gì. Chị có thể giữ giá 4,89 triệu được không?",
+        "Em thấy giá bên họ là 4,83 triệu, khác nhau 60 nghìn.",
+        "Chị có thể tặng thêm màng lọc không? Hoặc giảm 50 nghìn?",
+        "Chị ơi, nếu không giảm, em sẽ mua bên họ.",
+        "Chị ơi, em đồng ý mua theo giá 4,89 triệu, thanh toán khi nhận hàng."
       ],
       "days_later": 1,
-      "customer_goal": "Xem lại báo giá và hoãn quyết định mua",
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
       "facts_established": {
-        "product_advised": "SKU-XM-4L"
+        "product_advised": "SKU-AP-X",
+        "price_quoted_vnd": 4890000,
+        "payment": "COD",
+        "delivery_address": "Số 15 đường Lê Hồng Phong, phường Hải Châu, Đà Nẵng",
+        "order_status": "created"
       },
       "must_carry_over": [
         "product_advised",
         "price_quoted_vnd",
+        "promo_code",
+        "promo_expiry",
         "competitor_price_vnd"
       ],
       "must_not_ask": [
         "product_advised"
       ],
       "ground_truth_facts": {
-        "sku": "SKU-XM-4L",
-        "price_vnd": 2990000,
+        "sku": "SKU-AP-X",
+        "price_vnd": 4890000,
         "in_stock": true,
         "active_promos": [
           "COD-0"
         ],
-        "expired_promos": [],
+        "expired_promos": [
+          "GIFT-FILTER",
+          "AP-SEP"
+        ],
         "promo_expiry_dates": {
-          "COD-0": "2026-12-14"
-        }
+          "GIFT-FILTER": "2026-10-22",
+          "COD-0": "2026-12-14",
+          "AP-SEP": "2026-09-30"
+        },
+        "estimated_delivery": "2026-10-27"
       },
-      "expected_outcome": "tu_choi",
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
       "success_if": {
-        "tool_called": null,
-        "args_match": {}
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-AP-X",
+          "price_vnd": 4890000
+        }
       }
     }
   }

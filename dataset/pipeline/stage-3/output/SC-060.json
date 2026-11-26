@@ -1,102 +1,96 @@
 {
-  "scenario_id": "SC-060",
+  "scenario_id": "SC-070",
   "level": "M1",
-  "persona": "khach_da_mua_doi_size",
-  "hard_case": null,
-  "customer_phone": "0925822018",
-  "customer_name": "Quỳnh",
-  "honorific": "chị",
-  "notes": "continue_across_channels",
+  "persona": "khach_so_gia",
+  "hard_case": "out_of_stock",
+  "customer_phone": "0932568855",
+  "customer_name": "Lâm",
+  "honorific": "anh",
+  "notes": "return_after_price_or_stock_change",
   "calls": {
     "call_1": {
       "channel": "hotline",
-      "channel_identity": "0925822018",
-      "call_date": "2026-11-01",
+      "channel_identity": "0932568855",
+      "call_date": "2026-10-24",
       "customer_turns": [
-        "Chị ơi, em đã đặt đơn rồi, là Giày sneaker Urban Classic đen ba mươi chín.",
-        "Giá là tám trăm chín mươi ngàn, thanh toán khi nhận hàng.",
-        "Giao hàng về Số 1316 đường Bùi Hữu Nghĩa, phường Long Tuyền, Cần Thơ."
+        "Anh đang so giá với bên khác, bên họ báo ba triệu bốn trăm ba mươi nghìn.",
+        "Anh hỏi có thể giảm được không, vì giá bên họ rẻ hơn.",
+        "Anh muốn biết nếu mua hôm nay có được ưu đãi gì không.",
+        "Nếu không giảm, anh sẽ xem lại sau.",
+        "Hẹn anh gọi lại lúc mười giờ ngày hai mươi lăm tháng mười."
       ],
-      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "customer_goal": "So báo giá với nơi khác trước khi quyết định",
       "facts_established": {
-        "product_advised": "SKU-SN-CAS-39-DEN",
-        "price_quoted_vnd": 890000,
-        "payment": "COD",
-        "delivery_address": "Số 1316 đường Bùi Hữu Nghĩa, phường Long Tuyền, Cần Thơ",
-        "order_status": "created"
+        "product_advised": "SKU-MB-STR1",
+        "price_quoted_vnd": 3490000,
+        "competitor_price_vnd": 3430000
       },
       "ground_truth_facts": {
-        "sku": "SKU-SN-CAS-39-DEN",
-        "price_vnd": 890000,
+        "sku": "SKU-MB-STR1",
+        "price_vnd": 3490000,
         "in_stock": true,
         "active_promos": [
+          "MOM-FREESHIP",
           "COD-0"
         ],
         "expired_promos": [],
         "promo_expiry_dates": {
+          "MOM-FREESHIP": "2026-11-29",
           "COD-0": "2026-12-14"
         },
-        "estimated_delivery": "2026-11-03"
+        "scheduled_callback_at": "2026-10-25T10:00"
       },
-      "memory_expectation": {
-        "order_status": "created"
-      },
-      "expected_outcome": "chot_don",
+      "expected_outcome": "hen_goi_lai",
       "success_if": {
-        "tool_called": "order.create",
+        "tool_called": "schedule.callback",
         "args_match": {
-          "sku": "SKU-SN-CAS-39-DEN",
-          "price_vnd": 890000
+          "customer_phone": "0932568855",
+          "callback_at": "2026-10-25T10:00"
         }
       }
     },
     "call_2": {
-      "channel": "chat_fanpage",
-      "channel_identity": "fb.quỳnh.783",
-      "call_date": "2026-11-05",
+      "channel": "hotline",
+      "channel_identity": "0932568855",
+      "call_date": "2026-10-25",
       "customer_turns": [
-        "Chị ơi, em vừa nhận hàng rồi, nhưng size 39 không vừa.",
-        "Em muốn đổi sang size 41, Giày sneaker Urban Classic đen 41.",
-        "Chị xem giúp em có còn hàng không, nếu có thì em đổi luôn."
+        "Anh gọi lại như hẹn, hỏi xem xe đẩy gấp gọn Joie Pact còn hàng không.",
+        "Bên anh bảo hết hàng rồi, anh không mua được.",
+        "Anh hỏi nếu có thể đổi sang sản phẩm khác được không?",
+        "Nhân viên bảo không có hàng, anh đành thôi.",
+        "Anh cảm ơn và nói sẽ quay lại khi có hàng."
       ],
-      "days_later": 4,
-      "customer_goal": "Đổi sang size khác sau khi nhận hàng",
+      "days_later": 1,
+      "customer_goal": "Kiểm tra tồn kho và hoãn mua khi hết hàng",
       "facts_established": {
-        "new_variant_sku": "SKU-SN-CAS-41-DEN"
+        "product_advised": "SKU-MB-STR1"
       },
       "must_carry_over": [
         "product_advised",
         "price_quoted_vnd",
-        "payment",
-        "delivery_address",
-        "order_status"
+        "competitor_price_vnd"
       ],
       "must_not_ask": [
         "product_advised"
       ],
       "ground_truth_facts": {
-        "sku": "SKU-SN-CAS-39-DEN",
-        "price_vnd": 890000,
-        "in_stock": true,
+        "sku": "SKU-MB-STR1",
+        "price_vnd": 3490000,
+        "in_stock": false,
         "active_promos": [
+          "MOM-FREESHIP",
           "COD-0"
         ],
         "expired_promos": [],
         "promo_expiry_dates": {
+          "MOM-FREESHIP": "2026-11-29",
           "COD-0": "2026-12-14"
-        },
-        "replacement_in_stock": true,
-        "exchange_fee_vnd": 0,
-        "policy_reference": "DT-03"
-      },
-      "expected_outcome": "chot_don",
-      "success_if": {
-        "tool_called": "order.update",
-        "args_match": {
-          "order_id": "OD600001",
-          "action": "exchange_size",
-          "new_variant_sku": "SKU-SN-CAS-41-DEN"
         }
+      },
+      "expected_outcome": "tu_choi",
+      "success_if": {
+        "tool_called": null,
+        "args_match": {}
       }
     }
   }

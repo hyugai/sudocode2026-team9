@@ -1,96 +1,99 @@
 {
-  "scenario_id": "SC-119",
+  "scenario_id": "SC-135",
   "level": "M1",
-  "persona": "khach_quay_lai_sau_8_thang",
-  "hard_case": "stale_address",
-  "customer_phone": "0980737028",
-  "customer_name": "Mai",
-  "honorific": "chị",
-  "notes": "resume_with_uncertain_identity_or_history",
+  "persona": "khach_ngoai_pham_vi_chuyen_may",
+  "hard_case": "handoff",
+  "customer_phone": "0920525898",
+  "customer_name": "Phúc",
+  "honorific": "anh",
+  "notes": "transfer_with_context",
   "calls": {
     "call_1": {
       "channel": "hotline",
-      "channel_identity": "0980737028",
-      "call_date": "2026-02-16",
+      "channel_identity": "0920525898",
+      "call_date": "2026-10-23",
       "customer_turns": [
-        "Chị ơi, em nhớ là hôm trước chị tư vấn cho em cái máy lọc không khí AirPure Mini, đúng không ạ?",
-        "Giá là hai triệu một trăm chín mươi ngàn, thanh toán khi nhận hàng đúng không ạ?",
-        "Địa chỉ giao là 531 Vĩnh Khánh, phường Khánh Hội, TP. Hồ Chí Minh. Chị kiểm tra giúp em xem đơn còn tồn không ạ?"
+        "Anh ơi, em đang tìm xe đẩy hai chiều Combi Sugocal, giá bao nhiêu vậy?",
+        "Cảm ơn anh, sáu triệu bảy trăm chín mươi nghìn đồng. Em muốn đặt xem lại.",
+        "Em hẹn anh gọi lại lúc mười giờ ngày hai mươi lăm tháng mười được không?"
       ],
-      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "customer_goal": "Hỏi về sản phẩm và hẹn xem lại",
       "facts_established": {
-        "product_advised": "SKU-AP-MINI",
-        "price_quoted_vnd": 2190000,
-        "payment": "COD",
-        "delivery_address": "531 Vĩnh Khánh, phường Khánh Hội, TP. Hồ Chí Minh",
-        "order_status": "created"
+        "product_advised": "SKU-MB-STR2",
+        "price_quoted_vnd": 6790000
       },
       "ground_truth_facts": {
-        "sku": "SKU-AP-MINI",
-        "price_vnd": 2190000,
+        "sku": "SKU-MB-STR2",
+        "price_vnd": 6790000,
         "in_stock": true,
-        "active_promos": [],
+        "active_promos": [
+          "MOM-FREESHIP",
+          "COD-0"
+        ],
         "expired_promos": [],
-        "promo_expiry_dates": {},
-        "estimated_delivery": "2026-02-18"
+        "promo_expiry_dates": {
+          "MOM-FREESHIP": "2026-11-29",
+          "COD-0": "2026-12-14"
+        },
+        "scheduled_callback_at": "2026-10-25T10:00"
       },
-      "memory_expectation": {
-        "order_status": "created"
-      },
-      "expected_outcome": "chot_don",
+      "expected_outcome": "hen_goi_lai",
       "success_if": {
-        "tool_called": "order.create",
+        "tool_called": "schedule.callback",
         "args_match": {
-          "sku": "SKU-AP-MINI",
-          "price_vnd": 2190000
+          "customer_phone": "0920525898",
+          "callback_at": "2026-10-25T10:00"
         }
       }
     },
     "call_2": {
       "channel": "hotline",
-      "channel_identity": "0980737028",
-      "call_date": "2026-10-16",
+      "channel_identity": "0920525898",
+      "call_date": "2026-10-25",
       "customer_turns": [
-        "Chị ơi, em là khách hàng cũ mua máy lọc không khí AirPure Mini, giá hai triệu một trăm chín mươi ngàn, thanh toán khi nhận hàng.",
-        "Địa chỉ giao là 531 Vĩnh Khánh, quận 4, TP. HCM. Bên em không lưu à?",
-        "Em muốn xác nhận lại địa chỉ để tra đơn cũ, có phải không ạ?"
+        "Anh ơi, em muốn hỏi về độ an toàn khi dùng xe đẩy này ngoài phạm vi bán hàng.",
+        "Em nghe nói xe đẩy này có thể dùng cho bé trên 12 tháng, đúng không ạ?",
+        "Em có thể hỏi chuyên viên y tế được không? Em không biết hỏi ai.",
+        "Em muốn được chuyển máy, không phải nói chuyện với ai khác."
       ],
-      "days_later": 242,
-      "customer_goal": "Xác nhận thông tin người nhận trước khi tra đơn cũ",
+      "days_later": 2,
+      "customer_goal": "Hỏi về an toàn sử dụng ngoài phạm vi bán hàng và yêu cầu chuyên viên",
       "facts_established": {},
       "must_carry_over": [
         "product_advised",
-        "price_quoted_vnd",
-        "payment",
-        "delivery_address",
-        "order_status"
+        "price_quoted_vnd"
       ],
       "must_not_ask": [
         "product_advised"
       ],
       "ground_truth_facts": {
-        "sku": "SKU-AP-MINI",
-        "price_vnd": 2190000,
+        "sku": "SKU-MB-STR2",
+        "price_vnd": 6790000,
         "in_stock": true,
         "active_promos": [
-          "NAM-SHIP0",
+          "MOM-FREESHIP",
           "COD-0"
         ],
         "expired_promos": [],
         "promo_expiry_dates": {
-          "NAM-SHIP0": "2026-11-05",
+          "MOM-FREESHIP": "2026-11-29",
           "COD-0": "2026-12-14"
         }
       },
-      "expected_outcome": "chot_don",
+      "expected_outcome": "chuyen_may",
       "success_if": {
-        "tool_called": "order.status",
-        "args_match": {
-          "order_id": "OD600001"
-        },
-        "must_say_any": [
-          "xác nhận",
-          "địa chỉ"
+        "tool_called": "handoff.transfer",
+        "args_match": {},
+        "brief_must_contain": [
+          "customer_phone",
+          "customer_name",
+          "escalation_reason",
+          "conversation_summary",
+          "product_advised",
+          "price_quoted_vnd",
+          "open_questions",
+          "next_action",
+          "generated_at"
         ]
       }
     }

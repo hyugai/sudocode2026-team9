@@ -1,117 +1,98 @@
 {
-  "scenario_id": "SC-064",
+  "scenario_id": "SC-076",
   "level": "M1",
-  "persona": "khach_so_gia",
-  "hard_case": "expired_promo",
-  "customer_phone": "0981933190",
-  "customer_name": "Lan",
+  "persona": "khach_do_du_hoi_nguoi_nha",
+  "hard_case": "out_of_stock",
+  "customer_phone": "0965237355",
+  "customer_name": "Xuân",
   "honorific": "chị",
   "notes": "return_after_price_or_stock_change",
   "calls": {
     "call_1": {
       "channel": "hotline",
-      "channel_identity": "0981933190",
-      "call_date": "2026-10-22",
+      "channel_identity": "0965237355",
+      "call_date": "2026-10-17",
       "customer_turns": [
-        "Chị ơi, em đang so sánh giá máy lọc không khí AirPure X, bên họ báo 4,83 triệu, còn bên chị là 4,89 triệu.",
-        "Chị có thể giảm được bao nhiêu không? Em đang cân nhắc.",
-        "Nếu không giảm, em sẽ xem bên khác.",
-        "Chị ơi, 22/10 là hết ưu đãi rồi đúng không?",
-        "Em hẹn chị 10 giờ ngày 23/10 để quyết định nhé."
+        "Chị ơi, em đang muốn xem máy lọc không khí trong ngân sách tám triệu năm trăm ngàn.",
+        "Chị tư vấn giúp em máy nào phù hợp với giá đó được không?",
+        "Em đang định hỏi người nhà, nhưng chị có sản phẩm nào vừa giá mà chất lượng tốt không?"
       ],
-      "customer_goal": "So báo giá với nơi khác trước khi quyết định",
+      "customer_goal": "Xem sản phẩm trong ngân sách và hỏi ý kiến người nhà",
       "facts_established": {
-        "product_advised": "SKU-AP-X",
-        "price_quoted_vnd": 4890000,
-        "promo_code": "GIFT-FILTER",
-        "promo_expiry": "2026-10-22",
-        "competitor_price_vnd": 4830000
+        "product_advised": "SKU-AP-PRO",
+        "price_quoted_vnd": 7690000,
+        "budget_vnd": 8500000
       },
       "ground_truth_facts": {
-        "sku": "SKU-AP-X",
-        "price_vnd": 4890000,
+        "sku": "SKU-AP-PRO",
+        "price_vnd": 7690000,
         "in_stock": true,
         "active_promos": [
+          "NAM-SHIP0",
           "COD-0",
-          "GIFT-FILTER"
+          "AIR-OCT"
         ],
-        "expired_promos": [
-          "AP-SEP"
-        ],
+        "expired_promos": [],
         "promo_expiry_dates": {
-          "GIFT-FILTER": "2026-10-22",
-          "COD-0": "2026-12-14",
-          "AP-SEP": "2026-09-30"
+          "AIR-OCT": "2026-10-30",
+          "NAM-SHIP0": "2026-11-05",
+          "COD-0": "2026-12-14"
         },
-        "scheduled_callback_at": "2026-10-23T10:00"
+        "scheduled_callback_at": "2026-10-18T10:00"
       },
       "expected_outcome": "hen_goi_lai",
       "success_if": {
         "tool_called": "schedule.callback",
         "args_match": {
-          "customer_phone": "0981933190",
-          "callback_at": "2026-10-23T10:00"
+          "customer_phone": "0965237355",
+          "callback_at": "2026-10-18T10:00"
         }
       }
     },
     "call_2": {
       "channel": "hotline",
-      "channel_identity": "0981933190",
-      "call_date": "2026-10-23",
+      "channel_identity": "0965237355",
+      "call_date": "2026-10-18",
       "customer_turns": [
-        "Chị ơi, em đã so giá rồi, bên họ cũng không có ưu đãi gì. Chị có thể giữ giá 4,89 triệu được không?",
-        "Em thấy giá bên họ là 4,83 triệu, khác nhau 60 nghìn.",
-        "Chị có thể tặng thêm màng lọc không? Hoặc giảm 50 nghìn?",
-        "Chị ơi, nếu không giảm, em sẽ mua bên họ.",
-        "Chị ơi, em đồng ý mua theo giá 4,89 triệu, thanh toán khi nhận hàng."
+        "Chị ơi, hôm trước chị nói rồi mà, em muốn hỏi xem máy AirPure Pro còn không?",
+        "Em nghe nói hết hàng rồi, đúng không?",
+        "Chị cho em hỏi, nếu hết hàng thì bao giờ có lại?",
+        "Chị ơi, em đang đợi, nếu có lại thì chị gọi lại em nhé."
       ],
       "days_later": 1,
-      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "customer_goal": "Kiểm tra tồn kho và hoãn mua khi hết hàng",
       "facts_established": {
-        "product_advised": "SKU-AP-X",
-        "price_quoted_vnd": 4890000,
-        "payment": "COD",
-        "delivery_address": "Số 15 đường Lê Hồng Phong, phường Hải Châu, Đà Nẵng",
-        "order_status": "created"
+        "product_advised": "SKU-AP-PRO"
       },
       "must_carry_over": [
         "product_advised",
         "price_quoted_vnd",
-        "promo_code",
-        "promo_expiry",
-        "competitor_price_vnd"
+        "budget_vnd"
       ],
       "must_not_ask": [
         "product_advised"
       ],
       "ground_truth_facts": {
-        "sku": "SKU-AP-X",
-        "price_vnd": 4890000,
-        "in_stock": true,
+        "sku": "SKU-AP-PRO",
+        "price_vnd": 7690000,
+        "in_stock": false,
         "active_promos": [
-          "COD-0"
+          "NAM-SHIP0",
+          "COD-0",
+          "AIR-OCT"
         ],
-        "expired_promos": [
-          "GIFT-FILTER",
-          "AP-SEP"
-        ],
+        "expired_promos": [],
         "promo_expiry_dates": {
-          "GIFT-FILTER": "2026-10-22",
-          "COD-0": "2026-12-14",
-          "AP-SEP": "2026-09-30"
+          "AIR-OCT": "2026-10-30",
+          "NAM-SHIP0": "2026-11-05",
+          "COD-0": "2026-12-14"
         },
-        "estimated_delivery": "2026-10-27"
+        "restock_expected": "2026-10-21"
       },
-      "memory_expectation": {
-        "order_status": "created"
-      },
-      "expected_outcome": "chot_don",
+      "expected_outcome": "tu_choi",
       "success_if": {
-        "tool_called": "order.create",
-        "args_match": {
-          "sku": "SKU-AP-X",
-          "price_vnd": 4890000
-        }
+        "tool_called": null,
+        "args_match": {}
       }
     }
   }

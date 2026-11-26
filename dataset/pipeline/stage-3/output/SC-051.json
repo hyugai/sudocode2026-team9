@@ -1,83 +1,33 @@
 {
-  "scenario_id": "SC-051",
+  "scenario_id": "SC-061",
   "level": "M1",
-  "persona": "khach_so_gia",
+  "persona": "khach_da_mua_doi_size",
   "hard_case": null,
-  "customer_phone": "0952059972",
-  "customer_name": "Minh",
+  "customer_phone": "0930976582",
+  "customer_name": "Cường",
   "honorific": "anh",
   "notes": "continue_across_channels",
   "calls": {
     "call_1": {
-      "channel": "hotline",
-      "channel_identity": "0952059972",
-      "call_date": "2026-10-23",
+      "channel": "zalo_oa",
+      "channel_identity": "zalo_cường76",
+      "call_date": "2026-11-02",
       "customer_turns": [
-        "Anh ơi, em vừa so giá với bên khác rồi, họ chỉ 6.350.000 đồng thôi.",
-        "Bên anh có thể giảm được bao nhiêu không? Em muốn chốt đơn luôn.",
-        "Em không muốn chờ lâu, nếu không được thì em sẽ xem bên khác.",
-        "Anh bảo là 6.390.000, em thấy hơi cao so với đối thủ.",
-        "Nếu không giảm thì em sẽ xem lại."
+        "Anh ơi, em đã đặt đơn rồi, là Giày sneaker Urban Classic trang 39, giá 890.000đ, thanh toán khi nhận hàng, giao đến Số 1, phố Cựu Đôi, xã Tiên Lãng, Hải Phòng.",
+        "Anh nhớ đơn em nhé, không cần hỏi lại đâu.",
+        "Đợi anh chốt đơn nha."
       ],
-      "customer_goal": "So báo giá với nơi khác trước khi quyết định",
-      "facts_established": {
-        "product_advised": "SKU-BDL-AIR",
-        "price_quoted_vnd": 6390000,
-        "competitor_price_vnd": 6350000
-      },
-      "ground_truth_facts": {
-        "sku": "SKU-BDL-AIR",
-        "price_vnd": 6390000,
-        "in_stock": true,
-        "active_promos": [
-          "COD-0"
-        ],
-        "expired_promos": [],
-        "promo_expiry_dates": {
-          "COD-0": "2026-12-14"
-        },
-        "scheduled_callback_at": "2026-10-25T10:00"
-      },
-      "expected_outcome": "hen_goi_lai",
-      "success_if": {
-        "tool_called": "schedule.callback",
-        "args_match": {
-          "customer_phone": "0952059972",
-          "callback_at": "2026-10-25T10:00"
-        }
-      }
-    },
-    "call_2": {
-      "channel": "chat_fanpage",
-      "channel_identity": "fb.minh.658",
-      "call_date": "2026-10-25",
-      "customer_turns": [
-        "Anh ơi, em đã xem qua rồi, bên anh có chương trình gì không? Em muốn mua theo giá hôm qua.",
-        "Em thấy họ cũng đưa 6.350.000, nhưng em không muốn đổi bên khác.",
-        "Nếu không được giảm thì em sẽ nhận hàng theo giá 6.390.000.",
-        "Anh có thể hỗ trợ em được gì không? Em muốn mua combo Y + 2 màng lọc.",
-        "Em sẽ đặt hàng theo giá và điều kiện hôm qua."
-      ],
-      "days_later": 2,
       "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
       "facts_established": {
-        "product_advised": "SKU-BDL-AIR",
-        "price_quoted_vnd": 6390000,
+        "product_advised": "SKU-SN-CAS-39-TRANG",
+        "price_quoted_vnd": 890000,
         "payment": "COD",
-        "delivery_address": "Số 5, đường Linh Đường, phường Hoàng Liệt, Hà Nội",
+        "delivery_address": "Số 1, phố Cựu Đôi, xã Tiên Lãng, Hải Phòng",
         "order_status": "created"
       },
-      "must_carry_over": [
-        "product_advised",
-        "price_quoted_vnd",
-        "competitor_price_vnd"
-      ],
-      "must_not_ask": [
-        "product_advised"
-      ],
       "ground_truth_facts": {
-        "sku": "SKU-BDL-AIR",
-        "price_vnd": 6390000,
+        "sku": "SKU-SN-CAS-39-TRANG",
+        "price_vnd": 890000,
         "in_stock": true,
         "active_promos": [
           "COD-0"
@@ -86,7 +36,7 @@
         "promo_expiry_dates": {
           "COD-0": "2026-12-14"
         },
-        "estimated_delivery": "2026-10-28"
+        "estimated_delivery": "2026-11-04"
       },
       "memory_expectation": {
         "order_status": "created"
@@ -95,8 +45,58 @@
       "success_if": {
         "tool_called": "order.create",
         "args_match": {
-          "sku": "SKU-BDL-AIR",
-          "price_vnd": 6390000
+          "sku": "SKU-SN-CAS-39-TRANG",
+          "price_vnd": 890000
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0930976582",
+      "call_date": "2026-11-06",
+      "customer_turns": [
+        "Anh ơi, em đã nhận hàng rồi, nhưng size 39 hơi chật. Em muốn đổi sang size 40.",
+        "Em đã đặt đơn trước đó là Giày sneaker Urban Classic trang 39, giá 890.000đ, thanh toán khi nhận hàng, giao đến Số 1, phố Cựu Đôi, xã Tiên Lãng, Hải Phòng.",
+        "Mong anh nhớ đơn, không cần hỏi lại nữa.",
+        "Em đổi sang size 40, có sẵn không anh?"
+      ],
+      "days_later": 4,
+      "customer_goal": "Đổi sang size khác sau khi nhận hàng",
+      "facts_established": {
+        "new_variant_sku": "SKU-SN-CAS-40-TRANG"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "payment",
+        "delivery_address",
+        "order_status"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-SN-CAS-39-TRANG",
+        "price_vnd": 890000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "replacement_in_stock": true,
+        "exchange_fee_vnd": 0,
+        "policy_reference": "DT-03"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.update",
+        "args_match": {
+          "order_id": "OD600001",
+          "action": "exchange_size",
+          "new_variant_sku": "SKU-SN-CAS-40-TRANG"
         }
       }
     }

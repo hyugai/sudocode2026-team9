@@ -1,47 +1,42 @@
 {
-  "scenario_id": "SC-087",
+  "scenario_id": "SC-100",
   "level": "M1",
   "persona": "khach_da_mua_doi_size",
-  "hard_case": "exchange_after_restock",
-  "customer_phone": "0949066882",
-  "customer_name": "Phương",
+  "hard_case": null,
+  "customer_phone": "0990853801",
+  "customer_name": "Nhung",
   "honorific": "chị",
-  "notes": "return_after_price_or_stock_change",
+  "notes": "return_for_post_purchase_support",
   "calls": {
     "call_1": {
       "channel": "hotline",
-      "channel_identity": "0949066882",
-      "call_date": "2026-10-18",
+      "channel_identity": "0990853801",
+      "call_date": "2026-10-30",
       "customer_turns": [
-        "Chị ơi, em muốn đặt cái Giày chạy bộ RunLite hai Pro den bốn mươi ba, giá một triệu bảy trăm bốn mươi ngàn đồng, thanh toán khi nhận hàng.",
-        "Địa chỉ giao hàng là Số 177 đường Nguyễn Văn Cừ, phường Cái Khế, Cần Thơ.",
-        "Em thấy size 43 còn hàng, chị giúp em đặt luôn nhé."
+        "Chị ơi, em muốn đặt mua giày sneaker Urban Classic trang bốn mươi hai.",
+        "Giá là tám trăm chín mươi nghìn, thanh toán khi nhận hàng đúng không ạ?",
+        "Giao đến số 68, đường Trần Nguyên Đán, Hải Phòng nhé."
       ],
       "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
       "facts_established": {
-        "product_advised": "SKU-SN-RUN2-43-DEN",
-        "price_quoted_vnd": 1740000,
+        "product_advised": "SKU-SN-CAS-42-TRANG",
+        "price_quoted_vnd": 890000,
         "payment": "COD",
-        "delivery_address": "Số 177 đường Nguyễn Văn Cừ, phường Cái Khế, Cần Thơ",
-        "order_status": "created",
-        "requested_replacement_sku": "SKU-SN-RUN2-41-DEN"
+        "delivery_address": "Số 68, đường Trần Nguyên Đán, khu dân cư Bích Động Tân Tiến, phường Trần Hưng Đạo, Hải Phòng",
+        "order_status": "created"
       },
       "ground_truth_facts": {
-        "sku": "SKU-SN-RUN2-43-DEN",
-        "price_vnd": 1740000,
+        "sku": "SKU-SN-CAS-42-TRANG",
+        "price_vnd": 890000,
         "in_stock": true,
         "active_promos": [
           "COD-0"
         ],
-        "expired_promos": [
-          "RUN2-SALE"
-        ],
+        "expired_promos": [],
         "promo_expiry_dates": {
-          "COD-0": "2026-12-14",
-          "RUN2-SALE": "2026-10-07"
+          "COD-0": "2026-12-14"
         },
-        "estimated_delivery": "2026-10-20",
-        "replacement_in_stock": false
+        "estimated_delivery": "2026-11-02"
       },
       "memory_expectation": {
         "order_status": "created"
@@ -50,50 +45,45 @@
       "success_if": {
         "tool_called": "order.create",
         "args_match": {
-          "sku": "SKU-SN-RUN2-43-DEN",
-          "price_vnd": 1740000
+          "sku": "SKU-SN-CAS-42-TRANG",
+          "price_vnd": 890000
         }
       }
     },
     "call_2": {
       "channel": "hotline",
-      "channel_identity": "0949066882",
-      "call_date": "2026-10-24",
+      "channel_identity": "0990853801",
+      "call_date": "2026-11-03",
       "customer_turns": [
-        "Chị ơi, em vừa nhận hàng hôm qua, nhưng size 43 của em bị nhỏ, em muốn đổi sang size 41.",
-        "Chị xem giúp em xem có còn hàng không, em nhớ là hôm trước em đặt theo giá một triệu bảy trăm bốn mươi ngàn đồng.",
-        "Địa chỉ giao hàng vẫn là Số 177 đường Nguyễn Văn Cừ, phường Cái Khế, Cần Thơ.",
-        "Em muốn đổi sang Giày chạy bộ RunLite hai Pro den bốn mươi mốt."
+        "Chị ơi, em vừa nhận hàng rồi, nhưng size trang bốn mươi hai hơi chật.",
+        "Em muốn đổi sang size trang bốn mươi ba, có còn hàng không ạ?",
+        "Chị xem lại đơn của em, em đã đặt theo báo giá tám trăm chín mươi nghìn, thanh toán khi nhận hàng rồi."
       ],
-      "days_later": 6,
+      "days_later": 4,
       "customer_goal": "Đổi sang size khác sau khi nhận hàng",
       "facts_established": {
-        "new_variant_sku": "SKU-SN-RUN2-41-DEN"
+        "new_variant_sku": "SKU-SN-CAS-43-TRANG"
       },
       "must_carry_over": [
         "product_advised",
         "price_quoted_vnd",
         "payment",
         "delivery_address",
-        "order_status",
-        "requested_replacement_sku"
+        "order_status"
       ],
       "must_not_ask": [
         "product_advised"
       ],
       "ground_truth_facts": {
-        "sku": "SKU-SN-RUN2-43-DEN",
-        "price_vnd": 1740000,
+        "sku": "SKU-SN-CAS-42-TRANG",
+        "price_vnd": 890000,
         "in_stock": true,
         "active_promos": [
           "COD-0"
         ],
-        "expired_promos": [
-          "RUN2-SALE"
-        ],
+        "expired_promos": [],
         "promo_expiry_dates": {
-          "COD-0": "2026-12-14",
-          "RUN2-SALE": "2026-10-07"
+          "COD-0": "2026-12-14"
         },
         "replacement_in_stock": true,
         "exchange_fee_vnd": 0,
@@ -105,7 +95,7 @@
         "args_match": {
           "order_id": "OD600001",
           "action": "exchange_size",
-          "new_variant_sku": "SKU-SN-RUN2-41-DEN"
+          "new_variant_sku": "SKU-SN-CAS-43-TRANG"
         }
       }
     }

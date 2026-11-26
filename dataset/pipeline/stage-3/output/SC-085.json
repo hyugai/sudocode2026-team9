@@ -1,47 +1,42 @@
 {
-  "scenario_id": "SC-085",
+  "scenario_id": "SC-098",
   "level": "M1",
   "persona": "khach_da_mua_doi_size",
-  "hard_case": "exchange_after_restock",
-  "customer_phone": "0911265844",
-  "customer_name": "Toàn",
+  "hard_case": null,
+  "customer_phone": "0960454146",
+  "customer_name": "Kiên",
   "honorific": "anh",
-  "notes": "return_after_price_or_stock_change",
+  "notes": "return_for_post_purchase_support",
   "calls": {
     "call_1": {
       "channel": "hotline",
-      "channel_identity": "0911265844",
-      "call_date": "2026-10-18",
+      "channel_identity": "0960454146",
+      "call_date": "2026-10-28",
       "customer_turns": [
-        "Anh ơi, em muốn đặt mua giày chạy bộ RunLite hai Pro den bốn mươi ba.",
-        "Giá là một triệu bảy trăm bốn mươi ngàn đồng, thanh toán khi nhận hàng.",
-        "Giao hàng đến Số 705 đường 3/2, phường An Bình, Cần Thơ."
+        "Anh ơi, em vừa đặt đơn giày sneaker Urban Classic xám bốn mươi hai rồi.",
+        "Giá là tám trăm chín mươi nghìn đồng, thanh toán khi nhận hàng.",
+        "Giao đến Đường ĐH2, thôn Thạch Nham Tây, xã Bà Nà, Đà Nẵng nhé."
       ],
       "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
       "facts_established": {
-        "product_advised": "SKU-SN-RUN2-43-DEN",
-        "price_quoted_vnd": 1740000,
+        "product_advised": "SKU-SN-CAS-42-XAM",
+        "price_quoted_vnd": 890000,
         "payment": "COD",
-        "delivery_address": "Số 705 đường 3/2, phường An Bình, Cần Thơ",
-        "order_status": "created",
-        "requested_replacement_sku": "SKU-SN-RUN2-41-DEN"
+        "delivery_address": "Đường ĐH2, thôn Thạch Nham Tây, xã Bà Nà, Đà Nẵng",
+        "order_status": "created"
       },
       "ground_truth_facts": {
-        "sku": "SKU-SN-RUN2-43-DEN",
-        "price_vnd": 1740000,
+        "sku": "SKU-SN-CAS-42-XAM",
+        "price_vnd": 890000,
         "in_stock": true,
         "active_promos": [
           "COD-0"
         ],
-        "expired_promos": [
-          "RUN2-SALE"
-        ],
+        "expired_promos": [],
         "promo_expiry_dates": {
-          "COD-0": "2026-12-14",
-          "RUN2-SALE": "2026-10-07"
+          "COD-0": "2026-12-14"
         },
-        "estimated_delivery": "2026-10-20",
-        "replacement_in_stock": false
+        "estimated_delivery": "2026-10-30"
       },
       "memory_expectation": {
         "order_status": "created"
@@ -50,50 +45,45 @@
       "success_if": {
         "tool_called": "order.create",
         "args_match": {
-          "sku": "SKU-SN-RUN2-43-DEN",
-          "price_vnd": 1740000
+          "sku": "SKU-SN-CAS-42-XAM",
+          "price_vnd": 890000
         }
       }
     },
     "call_2": {
       "channel": "hotline",
-      "channel_identity": "0911265844",
-      "call_date": "2026-10-24",
+      "channel_identity": "0960454146",
+      "call_date": "2026-11-01",
       "customer_turns": [
-        "Anh ơi, em vừa nhận hàng rồi, nhưng size bốn mươi ba không vừa.",
-        "Em muốn đổi sang size bốn mươi mốt, giày cùng dòng.",
-        "Em đã đặt hàng theo báo giá một triệu bảy trăm bốn mươi ngàn, thanh toán khi nhận hàng.",
-        "Giao hàng tới số 705 đường 3/2, phường An Bình, Cần Thơ."
+        "Anh ơi, em vừa nhận hàng rồi, nhưng size bốn mươi hai hơi chật.",
+        "Em muốn đổi sang size bốn mươi ba, giày sneaker Urban Classic xám.",
+        "Anh xem có còn hàng không, nếu có thì em muốn đổi."
       ],
-      "days_later": 6,
+      "days_later": 4,
       "customer_goal": "Đổi sang size khác sau khi nhận hàng",
       "facts_established": {
-        "new_variant_sku": "SKU-SN-RUN2-41-DEN"
+        "new_variant_sku": "SKU-SN-CAS-43-XAM"
       },
       "must_carry_over": [
         "product_advised",
         "price_quoted_vnd",
         "payment",
         "delivery_address",
-        "order_status",
-        "requested_replacement_sku"
+        "order_status"
       ],
       "must_not_ask": [
         "product_advised"
       ],
       "ground_truth_facts": {
-        "sku": "SKU-SN-RUN2-43-DEN",
-        "price_vnd": 1740000,
+        "sku": "SKU-SN-CAS-42-XAM",
+        "price_vnd": 890000,
         "in_stock": true,
         "active_promos": [
           "COD-0"
         ],
-        "expired_promos": [
-          "RUN2-SALE"
-        ],
+        "expired_promos": [],
         "promo_expiry_dates": {
-          "COD-0": "2026-12-14",
-          "RUN2-SALE": "2026-10-07"
+          "COD-0": "2026-12-14"
         },
         "replacement_in_stock": true,
         "exchange_fee_vnd": 0,
@@ -105,7 +95,7 @@
         "args_match": {
           "order_id": "OD600001",
           "action": "exchange_size",
-          "new_variant_sku": "SKU-SN-RUN2-41-DEN"
+          "new_variant_sku": "SKU-SN-CAS-43-XAM"
         }
       }
     }

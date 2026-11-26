@@ -1,106 +1,101 @@
 {
-  "scenario_id": "SC-058",
+  "scenario_id": "SC-068",
   "level": "M1",
-  "persona": "khach_do_du_hoi_nguoi_nha",
-  "hard_case": null,
-  "customer_phone": "0911265844",
-  "customer_name": "Toàn",
-  "honorific": "anh",
-  "notes": "continue_across_channels",
+  "persona": "khach_so_gia",
+  "hard_case": "out_of_stock",
+  "customer_phone": "0992298369",
+  "customer_name": "Ngọc",
+  "honorific": "chị",
+  "notes": "return_after_price_or_stock_change",
   "calls": {
     "call_1": {
       "channel": "hotline",
-      "channel_identity": "0911265844",
-      "call_date": "2026-10-30",
+      "channel_identity": "0992298369",
+      "call_date": "2026-10-16",
       "customer_turns": [
-        "Chào chị, em đang muốn xem sản phẩm trong ngân sách tám triệu đồng, nhưng cần hỏi ý kiến người nhà.",
-        "Chị có thể giới thiệu sản phẩm nào phù hợp với ngân sách không?",
-        "Em nghe nói là có combo AirPure Y + hai màng lọc, giá sáu triệu ba trăm chín mươi nghìn, đúng không?",
-        "Em sẽ hỏi người nhà rồi gọi lại, chị ơi.",
-        "Chị hẹn em 10 giờ ngày 3 tháng 11 nhé."
+        "Chị ơi, em đang so sánh giá giày chạy bộ RunLite hai Pro đen bốn mươi mốt với nơi khác.",
+        "Bên họ báo giá một triệu năm trăm lẻ một nghìn, bên chị là một triệu năm trăm hai mươi mốt nghìn.",
+        "Chị có thể giảm cho em 20 nghìn không?",
+        "Được rồi, chị hẹn gọi lại cho em lúc mười giờ ngày mười bảy tháng mười."
       ],
-      "customer_goal": "Xem sản phẩm trong ngân sách và hỏi ý kiến người nhà",
+      "customer_goal": "So báo giá với nơi khác trước khi quyết định",
       "facts_established": {
-        "product_advised": "SKU-BDL-AIR",
-        "price_quoted_vnd": 6390000,
-        "budget_vnd": 8000000
+        "product_advised": "SKU-SN-RUN2-41-DEN",
+        "price_quoted_vnd": 1521000,
+        "competitor_price_vnd": 1501000
       },
       "ground_truth_facts": {
-        "sku": "SKU-BDL-AIR",
-        "price_vnd": 6390000,
+        "sku": "SKU-SN-RUN2-41-DEN",
+        "price_vnd": 1521000,
         "in_stock": true,
         "active_promos": [
-          "NAM-SHIP0",
-          "COD-0"
+          "COD-0",
+          "RUN-10"
         ],
-        "expired_promos": [],
+        "expired_promos": [
+          "RUN2-SALE"
+        ],
         "promo_expiry_dates": {
-          "NAM-SHIP0": "2026-11-05",
-          "COD-0": "2026-12-14"
+          "RUN-10": "2026-10-25",
+          "COD-0": "2026-12-14",
+          "RUN2-SALE": "2026-10-07"
         },
-        "scheduled_callback_at": "2026-11-03T10:00"
+        "scheduled_callback_at": "2026-10-17T10:00"
       },
       "expected_outcome": "hen_goi_lai",
       "success_if": {
         "tool_called": "schedule.callback",
         "args_match": {
-          "customer_phone": "0911265844",
-          "callback_at": "2026-11-03T10:00"
+          "customer_phone": "0992298369",
+          "callback_at": "2026-10-17T10:00"
         }
       }
     },
     "call_2": {
-      "channel": "chat_fanpage",
-      "channel_identity": "fb.toàn.855",
-      "call_date": "2026-11-03",
+      "channel": "hotline",
+      "channel_identity": "0992298369",
+      "call_date": "2026-10-17",
       "customer_turns": [
-        "Chị ơi, hôm trước chị nói rồi mà, em đã đồng ý mua combo AirPure Y + 2 màng lọc.",
-        "Giá là sáu ba chín, em thấy ổn. Thanh toán khi nhận hàng được không?",
-        "Giao hàng đến số 705 đường 3/2, Cần Thơ nhé.",
-        "Chị ơi, em đã chốt đơn rồi."
+        "Chị ơi, hôm nay em gọi lại để hỏi về giày RunLite hai Pro đen bốn mươi mốt.",
+        "Em thấy hôm qua chị nói hết hàng, vậy giờ có còn không?",
+        "Nếu không có thì khi nào có hàng lại?",
+        "Chị nói là có thể hết hàng đến ngày hai mươi bốn tháng mười, em hiểu rồi."
       ],
-      "days_later": 4,
-      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "days_later": 1,
+      "customer_goal": "Kiểm tra tồn kho và hoãn mua khi hết hàng",
       "facts_established": {
-        "product_advised": "SKU-BDL-AIR",
-        "price_quoted_vnd": 6390000,
-        "payment": "COD",
-        "delivery_address": "Số 705 đường 3/2, phường An Bình, Cần Thơ",
-        "order_status": "created"
+        "product_advised": "SKU-SN-RUN2-41-DEN"
       },
       "must_carry_over": [
         "product_advised",
         "price_quoted_vnd",
-        "budget_vnd"
+        "competitor_price_vnd"
       ],
       "must_not_ask": [
         "product_advised"
       ],
       "ground_truth_facts": {
-        "sku": "SKU-BDL-AIR",
-        "price_vnd": 6390000,
-        "in_stock": true,
+        "sku": "SKU-SN-RUN2-41-DEN",
+        "price_vnd": 1521000,
+        "in_stock": false,
         "active_promos": [
-          "NAM-SHIP0",
-          "COD-0"
+          "COD-0",
+          "RUN-10"
         ],
-        "expired_promos": [],
+        "expired_promos": [
+          "RUN2-SALE"
+        ],
         "promo_expiry_dates": {
-          "NAM-SHIP0": "2026-11-05",
-          "COD-0": "2026-12-14"
+          "RUN-10": "2026-10-25",
+          "COD-0": "2026-12-14",
+          "RUN2-SALE": "2026-10-07"
         },
-        "estimated_delivery": "2026-11-05"
+        "restock_expected": "2026-10-24"
       },
-      "memory_expectation": {
-        "order_status": "created"
-      },
-      "expected_outcome": "chot_don",
+      "expected_outcome": "tu_choi",
       "success_if": {
-        "tool_called": "order.create",
-        "args_match": {
-          "sku": "SKU-BDL-AIR",
-          "price_vnd": 6390000
-        }
+        "tool_called": null,
+        "args_match": {}
       }
     }
   }

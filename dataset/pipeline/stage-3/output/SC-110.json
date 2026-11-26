@@ -1,33 +1,30 @@
 {
-  "scenario_id": "SC-110",
+  "scenario_id": "SC-125",
   "level": "M1",
-  "persona": "khach_da_mua_doi_size",
-  "hard_case": null,
-  "customer_phone": "0963279264",
-  "customer_name": "Đạt",
-  "honorific": "anh",
-  "notes": "return_for_post_purchase_support",
+  "persona": "hai_nguoi_chung_sdt",
+  "hard_case": "shared_phone",
+  "customer_phone": "0958421083",
+  "customer_name": "Loan",
+  "honorific": "cô",
+  "notes": "resume_with_uncertain_identity_or_history",
   "calls": {
     "call_1": {
-      "channel": "hotline",
-      "channel_identity": "0963279264",
-      "call_date": "2026-10-19",
+      "channel": "chat_fanpage",
+      "channel_identity": "fb.hải.186",
+      "call_date": "2026-11-03",
       "customer_turns": [
-        "Anh ơi, em vừa đặt đơn bộ lõi lọc thay thế RO một-hai-ba rồi.",
-        "Giá ba trăm chín mươi nghìn đồng, thanh toán khi nhận hàng, đúng không ạ?",
-        "Giao hàng đến số 71, đường Hà Sen, đặc khu Cát Hải, Hải Phòng nhé."
+        "Chào cô, mình hỏi về combo AirPure Y với 2 màng lọc nhé.",
+        "Giá là 6.390.000đ đúng không ạ?",
+        "Mình muốn xem lại sau, cô gọi lại giúp mình lúc 10 giờ ngày 5/11 được không ạ?"
       ],
-      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "customer_goal": "Hỏi về sản phẩm và hẹn xem lại",
       "facts_established": {
-        "product_advised": "SKU-WF-CORE",
-        "price_quoted_vnd": 390000,
-        "payment": "COD",
-        "delivery_address": "Số 71, đường Hà Sen, đặc khu Cát Hải, Hải Phòng",
-        "order_status": "created"
+        "product_advised": "SKU-BDL-AIR",
+        "price_quoted_vnd": 6390000
       },
       "ground_truth_facts": {
-        "sku": "SKU-WF-CORE",
-        "price_vnd": 390000,
+        "sku": "SKU-BDL-AIR",
+        "price_vnd": 6390000,
         "in_stock": true,
         "active_promos": [
           "COD-0"
@@ -36,47 +33,34 @@
         "promo_expiry_dates": {
           "COD-0": "2026-12-14"
         },
-        "estimated_delivery": "2026-10-21"
+        "scheduled_callback_at": "2026-11-05T10:00"
       },
-      "memory_expectation": {
-        "order_status": "created"
-      },
-      "expected_outcome": "chot_don",
+      "expected_outcome": "hen_goi_lai",
       "success_if": {
-        "tool_called": "order.create",
+        "tool_called": "schedule.callback",
         "args_match": {
-          "sku": "SKU-WF-CORE",
-          "price_vnd": 390000
+          "customer_phone": "0958421083",
+          "callback_at": "2026-11-05T10:00"
         }
       }
     },
     "call_2": {
       "channel": "hotline",
-      "channel_identity": "0963279264",
-      "call_date": "2026-10-21",
+      "channel_identity": "0958421083",
+      "call_date": "2026-11-05",
       "customer_turns": [
-        "Anh ơi, em muốn thay đổi địa chỉ giao hàng sang khu 1, đặc khu Bạch Long Vĩ, Hải Phòng.",
-        "Đơn em đã đặt rồi, em không muốn giao nhầm nữa.",
-        "Giá và cách thanh toán vẫn giữ nguyên, đúng không ạ?"
+        "Chào cô, cô đang gọi cho mẹ mình đúng không ạ?",
+        "Mẹ mình đã hỏi về combo AirPure Y rồi, cô nhớ không ạ?",
+        "Mình muốn xem lại, cô gọi lại giúp mình lúc 10 giờ ngày 5/11 được không ạ?"
       ],
       "days_later": 2,
-      "customer_goal": "Cập nhật nơi giao cho đơn đã mua",
-      "facts_established": {
-        "delivery_address": "Khu 1, đặc khu Bạch Long Vĩ, Hải Phòng"
-      },
-      "must_carry_over": [
-        "product_advised",
-        "price_quoted_vnd",
-        "payment",
-        "delivery_address",
-        "order_status"
-      ],
-      "must_not_ask": [
-        "product_advised"
-      ],
+      "customer_goal": "Xác nhận đúng người đang gọi trước khi dùng lịch sử",
+      "facts_established": {},
+      "must_carry_over": [],
+      "must_not_ask": [],
       "ground_truth_facts": {
-        "sku": "SKU-WF-CORE",
-        "price_vnd": 390000,
+        "sku": "SKU-BDL-AIR",
+        "price_vnd": 6390000,
         "in_stock": true,
         "active_promos": [
           "COD-0"
@@ -87,18 +71,20 @@
         }
       },
       "memory_expectation": {
-        "delivery_address": "Khu 1, đặc khu Bạch Long Vĩ, Hải Phòng",
-        "supersedes": {
-          "delivery_address": "Số 71, đường Hà Sen, đặc khu Cát Hải, Hải Phòng"
-        }
+        "customer_id": "C034",
+        "must_not_write_to": "C035"
       },
-      "expected_outcome": "chot_don",
+      "expected_outcome": "hen_goi_lai",
       "success_if": {
-        "tool_called": "order.update",
+        "tool_called": "crm.get_customer",
         "args_match": {
-          "order_id": "OD600001",
-          "action": "update_address"
-        }
+          "phone": "0958421083"
+        },
+        "must_say_any": [
+          "xác nhận",
+          "đang nói chuyện",
+          "đang trao đổi"
+        ]
       }
     }
   }
