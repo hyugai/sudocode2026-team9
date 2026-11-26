@@ -8,9 +8,9 @@ import os
 from pathlib import Path
 import uuid
 
-from .models import digest, redact, sanitize
+from eval.benchmark_support import DEFAULT_SCENARIOS
 
-DEFAULT_SCENARIOS = Path(__file__).resolve().parents[2] / "dataset/main/scenarios_complete"
+from .models import digest, redact, sanitize
 
 
 def load_scenarios(directory, ids=(), limit=1):

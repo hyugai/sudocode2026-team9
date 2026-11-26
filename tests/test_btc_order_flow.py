@@ -26,7 +26,7 @@ from mcp_servers.tools.pricing import PricingCalculator
 from test_btc_pricing import FixtureDB
 from eval.team_eval import evaluate_team, REFERENCE
 
-DATA = ROOT / "dataset/organizer/catalog"
+DATA = ROOT / "dataset/pipeline/stage-1/input/catalog"
 PRODUCTS = json.loads((DATA / "products.json").read_text(encoding="utf-8"))["products"]
 PROMOS = json.loads((DATA / "promotions.json").read_text(encoding="utf-8"))["promotions"]
 PRICING = {k: None for k in ("input_per_million", "output_per_million", "tool_call", "memory_write", "storage_per_mb", "fixed_call")}

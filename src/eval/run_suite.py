@@ -21,7 +21,7 @@ for stream in (sys.stdout,sys.stderr):
         stream.reconfigure(encoding="utf-8",line_buffering=True)
 os.environ["PYTHONIOENCODING"] = "utf-8"
 from dotenv import load_dotenv
-from eval.benchmark_support import (validate_inputs, turn_keys, trace_health,
+from eval.benchmark_support import (DEFAULT_SCENARIOS, validate_inputs, turn_keys, trace_health,
                                     compare_metrics, machine_metadata)
 from eval.team_eval import REFERENCE, evaluate_team, select_scenarios
 from eval.model_config import configure_eval_model, permanent_provider_error
@@ -235,11 +235,12 @@ def main():
     load_dotenv(ROOT / ".env")
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--version",default="benchmark_v"+datetime.now().strftime("%Y%m%d%H%M%S"))
-    parser.add_argument("--scenarios",type=Path,default=ROOT / "dataset/main/scenarios_complete")
-    parser.add_argument("--audio-root",type=Path,default=ROOT / "dataset/main/audio")
+    parser.add_argument("--scenarios",type=Path,default=DEFAULT_SCENARIOS)
+    parser.add_argument("--audio-root",type=Path,help="WAV directory with a sibling manifest.jsonl")
     parser.add_argument("--output-root",type=Path,default=ROOT / "outputs/benchmark")
     parser.add_argument("--limit",type=int,default=40)
-    parser.add_argument("--input-kinds",nargs="+",choices=["text","audio"],default=["text","audio"])
+    parser.add_argument("--input-kinds",nargs="+",choices=["text","audio"],
+                        help="Defaults to text, or text and audio when --audio-root is supplied")
     parser.add_argument("--llm-provider",help="Eval provider (default: gemini; override with EVAL_LLM_PROVIDER)")
     parser.add_argument("--llm-model",help="Eval model (default: gemini-3.6-flash; override with EVAL_LLM_MODEL)")
     parser.add_argument("--request-timeout",type=float,default=30)
@@ -262,9 +263,13 @@ def main():
         parser.error("limit/timeout/failure threshold must be positive; sleep must be nonnegative")
     if not args.version or Path(args.version).name!=args.version or args.version in (".",".."):
         parser.error("version must be a single directory name")
+    if args.input_kinds is None:
+        args.input_kinds = ["text", "audio"] if args.audio_root is not None else ["text"]
     args.input_kinds = list(dict.fromkeys(args.input_kinds))
     if args.asr_only:
         args.input_kinds = ["audio"]
+    if "audio" in args.input_kinds and args.audio_root is None:
+        parser.error("audio evaluation requires --audio-root and a matching scenario dataset")
     if args.thinking_level:
         os.environ["LLM_THINKING_LEVEL"] = args.thinking_level
     os.environ["LLM_REQUEST_TIMEOUT_SECONDS"] = str(args.request_timeout)

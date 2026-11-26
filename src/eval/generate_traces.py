@@ -32,12 +32,6 @@ REPO_ROOT = HERE.parent.parent                  # sudo_code_2026-group_9/
 sys.path.insert(0, str(REPO_ROOT / "src"))
 load_dotenv(REPO_ROOT / ".env")
 
-DEFAULT_SCENARIOS_DIR = (
-    REPO_ROOT
-    / "dataset"
-    / "main"
-    / "scenarios_complete"
-)
 DEFAULT_OUT_DIR = REPO_ROOT / "outputs" / "eval"
 TEAM_EVAL_PATH = HERE / "team_eval.py"
 
@@ -60,7 +54,7 @@ from eval.trace_extractors import (  # noqa: E402
     extract_facts_used,
     extract_questions,
 )
-from eval.benchmark_support import audio_path, validate_inputs  # noqa: E402
+from eval.benchmark_support import DEFAULT_SCENARIOS, audio_path, validate_inputs  # noqa: E402
 from eval.model_config import configure_eval_model, permanent_provider_error  # noqa: E402
 
 _SCHEMAS = REPO_ROOT / "dataset" / "organizer" / "schemas"
@@ -409,8 +403,8 @@ async def main():
     )
     parser.add_argument(
         "--scenarios",
-        default=str(DEFAULT_SCENARIOS_DIR),
-        help=f"Thư mục chứa các scenario JSON (default: {DEFAULT_SCENARIOS_DIR})",
+        default=str(DEFAULT_SCENARIOS),
+        help=f"Thư mục chứa các scenario JSON (default: {DEFAULT_SCENARIOS})",
     )
     parser.add_argument(
         "--config",
@@ -429,7 +423,7 @@ async def main():
     parser.add_argument("--input-kind", choices=["text","audio"], default="text")
     parser.add_argument("--llm-provider",default=None)
     parser.add_argument("--llm-model",default=None)
-    parser.add_argument("--audio-root", type=Path, default=REPO_ROOT / "dataset/main/audio")
+    parser.add_argument("--audio-root", type=Path, help="WAV directory with a sibling manifest.jsonl")
     parser.add_argument(
         "--scenario-ids",
         nargs="+",
@@ -483,6 +477,8 @@ async def main():
         ),
     )
     args = parser.parse_args()
+    if args.input_kind == "audio" and args.audio_root is None:
+        parser.error("--input-kind audio requires --audio-root and a matching scenario dataset")
     configure_eval_model(args.llm_provider,args.llm_model)
 
     if args.limit is not None and args.limit <= 0:

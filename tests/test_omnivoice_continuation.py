@@ -31,6 +31,29 @@ spec = importlib.util.spec_from_file_location("prepare_audio_continuation", ROOT
 PREPARE = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(PREPARE)
 
+BASELINE_CONFIG = {
+    "model_repo_id": "splendor1811/omnivoice-vietnamese",
+    "model_revision": "f70093f90d78a5b790ff0f066b3629ebcc33cb5d",
+    "audio_tokenizer_repo_id": "k2-fsa/OmniVoice",
+    "audio_tokenizer_revision": "c5fdb5ccb189668d56333f77ba2629f4cd7535f4",
+    "omnivoice_version": "0.2.1",
+    "transformers_version": "5.3.0",
+    "dtype": "float16",
+    "attn_implementation": "sdpa",
+    "language": "vi",
+    "speed": 1.0,
+    "generation_options": {
+        "num_step": 32, "guidance_scale": 2.0, "denoise": True, "t_shift": 0.1,
+        "position_temperature": 5.0, "class_temperature": 0.0, "layer_penalty_factor": 5.0,
+        "preprocess_prompt": False, "postprocess_output": True, "audio_chunk_duration": 15.0,
+        "audio_chunk_threshold": 30.0, "pad_duration": 0.1, "fade_duration": 0.1,
+    },
+    "base_seed": 20261007,
+    "reference_preprocessing": "full_audio_with_frame_padding",
+    "normalize_text": False,
+    "pipeline_version": 2,
+}
+
 
 def wav_info(path):
     with wave.open(str(path), "rb") as audio:
@@ -74,29 +97,52 @@ def functions_namespace():
 class ContinuationTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        # Continuation starts with SC-001..SC-040 already generated. The live
-        # dataset may also contain later WAVs whose generation manifest has
-        # not been imported yet; those belong to a different audit input.
         cls.baseline_temporary = tempfile.TemporaryDirectory()
         cls.addClassCleanup(cls.baseline_temporary.cleanup)
         cls.baseline = Path(cls.baseline_temporary.name)
-        source = ROOT / "dataset/main"
-        manifest = json.loads((source / "manifest.json").read_text(encoding="utf-8"))
-        protected = {f"SC-{number:03d}" for number in range(1, 41)}
-        retained = {key: row for key, row in manifest["results"].items()
-                    if row["scenario_id"] in protected}
-        baseline_manifest = {**manifest, "scenario_ids": sorted(protected),
+
+        # Simulate the notebook's original 100-scenario input and its 40
+        # protected scenarios without requiring the retired source recordings.
+        scenario_dir = cls.baseline / "scenarios_complete"
+        scenario_dir.mkdir()
+        for number in range(1, 101):
+            sid = f"SC-{number:03d}"
+            scenario = {
+                "scenario_id": sid,
+                "honorific": "chị" if number % 2 else "anh",
+                "calls": {
+                    "call_1": {"customer_turns": ["Còn hàng không em?", "Giao ngày mai được không?"]},
+                    "call_2": {"customer_turns": ["Cho tôi xác nhận lại đơn."]},
+                },
+            }
+            (scenario_dir / f"{sid}.json").write_text(json.dumps(scenario, ensure_ascii=False), encoding="utf-8")
+
+        namespace = functions_namespace()
+        voice_specs = {
+            sid: {
+                "scenario_id": sid, "gender_label": gender, "gender": 0 if gender == "Nữ" else 1,
+                "province_requested": province, "province_key": namespace["province_key"](province),
+                "region_requested": region,
+            }
+            for sid, gender, province, region in PREPARE.base_voice_rows()
+        }
+        namespace.update(BASE_SEED=BASELINE_CONFIG["base_seed"], INFERENCE_CONFIG=BASELINE_CONFIG,
+                         VOICE_SPECS=voice_specs)
+        reference = {"audio_sha256": "fixture", "ref_text_tts": "Mẫu giọng thử nghiệm"}
+        retained = {}
+        for task in namespace["build_tasks"](scenario_dir, list(voice_specs)):
+            row = namespace["new_result"](task, reference)
+            destination = cls.baseline / row["output_relative"]
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            write_wav(destination, [0.2] * 240)
+            row.update(status="generated", sample_rate=24000, duration_seconds=0.01,
+                       bytes=destination.stat().st_size, output_sha256=PREPARE.sha256_file(destination))
+            retained[row["task_id"]] = row
+
+        baseline_manifest = {"inference_config": BASELINE_CONFIG, "scenario_ids": list(voice_specs),
                              "expected_turns": len(retained), "results": retained}
         (cls.baseline / "manifest.json").write_text(
             json.dumps(baseline_manifest, ensure_ascii=False), encoding="utf-8")
-        (cls.baseline / "scenarios_complete").mkdir()
-        for number in range(1, 101):
-            name = f"SC-{number:03d}.json"
-            shutil.copy2(source / "scenarios_complete" / name, cls.baseline / "scenarios_complete" / name)
-        for row in retained.values():
-            destination = cls.baseline / row["output_relative"]
-            destination.parent.mkdir(parents=True, exist_ok=True)
-            shutil.copy2(source / row["output_relative"], destination)
 
     def setUp(self):
         self.ns = functions_namespace()
@@ -185,33 +231,33 @@ class ContinuationTests(unittest.TestCase):
             if index == 6:
                 tree.body = [node for node in tree.body if not isinstance(node, (ast.Import, ast.ImportFrom))]
             exec(compile(tree, str(NOTEBOOK_PATH), "exec"), self.ns)
-        self.assertEqual(len(self.ns["TASKS"]), 652)
-        self.assertEqual(len(self.ns["VERIFIED_RESULTS"]), 250)
+        self.assertEqual(len(self.ns["TASKS"]), 300)
+        self.assertEqual(len(self.ns["VERIFIED_RESULTS"]), 120)
         self.assertEqual(self.ns["REFERENCE_SCENARIO_IDS"], ["SC-041"])
         for number in range(41, 101):
             sid = f"SC-{number:03d}"
-            scenario = json.loads((ROOT / f"dataset/main/scenarios_complete/{sid}.json").read_text(encoding="utf-8"))
+            scenario = json.loads((self.baseline / f"scenarios_complete/{sid}.json").read_text(encoding="utf-8"))
             self.assertEqual(self.ns["VOICE_SPECS"][sid]["gender_label"],
                              "Nữ" if scenario["honorific"] == "chị" else "Nam")
-        self.assertEqual(len(list(self.ns["OUTPUT_DIR"].rglob("*.wav"))), 250)
+        self.assertEqual(len(list(self.ns["OUTPUT_DIR"].rglob("*.wav"))), 120)
 
     def test_partial_dataset_counts_checksums_and_gender_plan(self):
         report, manifest, plan = PREPARE.audit_dataset(self.baseline)
         self.assertEqual((report["expected_calls"], report["expected_turns"],
-                          report["existing_verified"], report["missing_turns"]), (210, 652, 250, 402))
-        self.assertEqual(len(manifest["results"]), 250)
+                          report["existing_verified"], report["missing_turns"]), (200, 300, 120, 180))
+        self.assertEqual(len(manifest["results"]), 120)
         self.assertEqual(len(plan), 100)
         voices = PREPARE.base_voice_rows()
         for number in range(41, 101):
             sid = f"SC-{number:03d}"
-            scenario = json.loads((ROOT / f"dataset/main/scenarios_complete/{sid}.json").read_text(encoding="utf-8"))
+            scenario = json.loads((self.baseline / f"scenarios_complete/{sid}.json").read_text(encoding="utf-8"))
             row = plan[number - 1]
             self.assertEqual(row["gender"], "Nữ" if scenario["honorific"] == "chị" else "Nam")
             self.assertEqual(row["province_requested"], voices[(number - 41) % 40][2])
             self.assertEqual(row["speaker_id"], "")
             self.assertEqual(row["status"], "planned")
 
-    def test_partial_250_wavs_resume_without_old_references(self):
+    def test_partial_wavs_resume_without_old_references(self):
         report, manifest, plan = PREPARE.audit_dataset(self.baseline)
         self.ns.update(OUTPUT_DIR=self.baseline, MANIFEST_FILE=self.baseline / "manifest.json",
                        INFERENCE_CONFIG=manifest["inference_config"], BASE_SEED=manifest["inference_config"]["base_seed"],
@@ -224,9 +270,9 @@ class ContinuationTests(unittest.TestCase):
                           "region_requested": row["region_requested"]}
         self.ns["VOICE_SPECS"] = specs
         tasks = self.ns["build_tasks"](self.baseline / "scenarios_complete", list(specs))
-        self.assertEqual(len(tasks), 652)
+        self.assertEqual(len(tasks), 300)
         _, verified = self.ns["scan_existing_results"](tasks)
-        self.assertEqual(len(verified), 250)
+        self.assertEqual(len(verified), 120)
         self.assertTrue(all(row["status"] == "resumed" for row in verified.values()))
         self.assertFalse((self.baseline / "references").exists())
 
