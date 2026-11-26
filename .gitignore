@@ -246,6 +246,7 @@ tests/
 /outputs/debug/streaming-ui/
 /outputs/audio-continuation/
 /outputs/noise-augmentation/
+/outputs/audio-regeneration/
 /dataset/text-to-speech/noise_sources/
 /dataset/main/noisy_SC071_SC100/*.zip
 
