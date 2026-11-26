@@ -2,8 +2,9 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { VoiceClient, type VoiceEvent } from "@/utils/voice-api";
-import { AgentAudioVisualizerWave } from "@/components/agents-ui/agent-audio-visualizer-wave";
+import { AgentAudioVisualizerAura } from "@/components/agents-ui/agent-audio-visualizer-aura";
 import { idleVisualizer, updateVoiceVisualizer } from "@/utils/voice-visualizer";
+import { useAuth } from "@/app/components/auth-provider";
 
 type Line = { key: string; role: "user" | "agent"; text: string };
 type Status = "idle" | "connecting" | "connected" | "reconnecting";
@@ -11,6 +12,8 @@ type Status = "idle" | "connecting" | "connected" | "reconnecting";
 export default function VoicePanel({ apiBase, customerPhone, onActiveChange }: {
   apiBase: string; customerPhone: string; onActiveChange: (active: boolean) => void;
 }) {
+  const { user } = useAuth();
+  const accountMode = !!user;
   const client = useRef<VoiceClient | null>(null);
   const [status, setStatus] = useState<Status>("idle");
   const [visualizer, setVisualizer] = useState(idleVisualizer);
@@ -35,7 +38,7 @@ export default function VoicePanel({ apiBase, customerPhone, onActiveChange }: {
       .then((data) => {
         if (!abort.signal.aborted) {
           setAvailable(data.enabled === true);
-          setRequiresCode(data.requires_access_code === true);
+          setRequiresCode(!accountMode && data.requires_access_code === true);
         }
       })
       .catch(() => { if (!abort.signal.aborted) setAvailable(false); });
@@ -46,7 +49,7 @@ export default function VoicePanel({ apiBase, customerPhone, onActiveChange }: {
       client.current = null;
       onActiveChange(false);
     };
-  }, [apiBase, onActiveChange]);
+  }, [apiBase, onActiveChange, accountMode]);
 
   useEffect(() => {
     const history = historyRef.current;
@@ -89,7 +92,7 @@ export default function VoicePanel({ apiBase, customerPhone, onActiveChange }: {
     setStatus("connecting");
     setVisualizer({ state: "connecting", volume: 0 });
     onActiveChange(true);
-    const next = new VoiceClient(apiBase, handle);
+    const next = new VoiceClient(apiBase, handle, !!user);
     client.current = next;
     await next.connect(customerPhone, accessCode);
   };
@@ -110,21 +113,21 @@ export default function VoicePanel({ apiBase, customerPhone, onActiveChange }: {
     connected: visualizer.state === "speaking" ? "Synee đang trả lời" : visualizer.state === "thinking" ? "Synee đang suy nghĩ…" : muted ? "Microphone đang tắt" : "Đang lắng nghe",
     reconnecting: "Đang kết nối lại…",
   };
-  const waveState = status === "connecting" || status === "reconnecting" ? "connecting"
+  const auraState = status === "connecting" || status === "reconnecting" ? "connecting"
     : status === "idle" ? "disconnected" : visualizer.state;
 
   return (
     <section aria-label="Voice" className="realtime-voice">
       <div className="voice-stage">
         <div className="voice-stage-heading"><span>SYNEE / VOICE</span></div>
-        <AgentAudioVisualizerWave
+        <AgentAudioVisualizerAura
           size="xl"
-          color="#00ff26"
+          color="#2f00ff"
           colorShift={2}
-          lineWidth={6}
-          state={waveState}
+          state={auraState}
+          themeMode="dark"
           volume={visualizer.volume}
-          className="voice-wave mx-auto aspect-square size-auto h-full"
+          className="voice-aura mx-auto aspect-square size-auto w-full"
           aria-hidden="true"
         />
         <div className="voice-stage-caption">

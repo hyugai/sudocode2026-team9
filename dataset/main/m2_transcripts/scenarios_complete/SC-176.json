@@ -1,0 +1,123 @@
+{
+  "scenario_id": "SC-176",
+  "level": "M2",
+  "persona": "khach_da_kenh_fb_hotline",
+  "hard_case": "phien_ban_chinh_sach_cu",
+  "customer_phone": "0920525898",
+  "customer_name": "Phúc",
+  "honorific": "anh",
+  "notes": "Nhận diện đúng Facebook sang hotline và nhớ lựa chọn từ chat có teencode. Địa chỉ đường Kiểm Thử là dữ kiện khách tổng hợp cho test, không có sẵn trong CRM. Chạy mỗi scenario từ CRM/catalog gốc và trạng thái tool sạch; giữ state giữa các call của cùng scenario. Không đưa facts/đáp án chấm vào prompt agent. Trích giá lịch sử thành price_quoted_vnd, giá hiện hành thành price_vnd. Luồng kênh hiện hành: Fanpage → hotline. Các phiên chat cung cấp tên và số điện thoại để liên kết danh tính. Ca khó bổ sung: phien_ban_chinh_sach_cu. Bản mở rộng có đối thoại mẫu hai người nói; đây là dữ liệu tổng hợp có đáp án, không phải trace agent thực tế. Reset state giữa scenario, giữ state giữa call.",
+  "calls": {
+    "call_1": {
+      "channel": "chat_fanpage",
+      "channel_identity": "fb.phúc.321",
+      "call_date": "2026-10-15",
+      "input_mode": "chat_teencode",
+      "customer_goal": "Hỏi giá trên Fanpage và liên kết số điện thoại. Phân biệt thời hạn đổi trả thông thường của đơn mới với tài liệu hết hiệu lực.",
+      "customer_turns": [
+        "Tôi là Phúc, số điện thoại 0920525898, đang nhắn qua Fanpage. Shop ơi, anh muốn hỏi Nồi chiên không dầu Lock&Lock 4L.",
+        "Mình chưa chốt ngay thì giá này tính tại ngày nào? Anh không muốn lần sau hiểu nhầm là shop đã giữ giá.",
+        "Em nói riêng phần bảo hành giúp anh; đừng gộp mọi lỗi sử dụng vào lỗi của hãng nhé.",
+        "Anh sẽ giữ hộp. Em nhắc thời hạn và điều kiện đổi trả của đơn mới giúp, để không lấy nhầm bài chính sách cũ.",
+        "Anh chưa muốn quyết vội. Em ghi nhận nhu cầu được, nhưng đừng tự đặt hàng hoặc gọi dồn khi chưa hẹn nhé.",
+        "Giá 1.890.000 đồng đúng không? Anh cần một chiếc, số điện thoại là 0920525898.",
+        "Tôi thấy bản chính sách tháng 6 ghi đổi trả trong 14 ngày. Với đơn mới đặt từ tháng 10/2026, hàng còn nguyên tem và không có lỗi kỹ thuật, thời hạn thông thường thực tế là bao nhiêu ngày? Hãy nói rõ mốc hiện hành trước khi tiếp tục yêu cầu chính của tôi.",
+        "Anh sẽ gọi hotline sau, chưa đặt nhé."
+      ],
+      "facts_established": {
+        "product_advised": "SKU-AF-4L",
+        "price_quoted_vnd": 1890000,
+        "phone_provided": "0920525898",
+        "quantity": 1
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": null,
+        "must_say_any": [
+          "1.890.000",
+          "1890000"
+        ],
+        "must_not_call_tools": [
+          "order.create",
+          "order.update",
+          "handoff.transfer"
+        ],
+        "trace_must_not_match": [
+          "(?is)\\A(?!.*(?:\\b7\\s+ngày\\b|\\bbảy\\s+ngày\\b))"
+        ],
+        "forbidden_claims": [
+          {
+            "field": "standard_return_window_days",
+            "value": 14
+          }
+        ]
+      },
+      "ground_truth_facts": {
+        "price_vnd": 1890000,
+        "list_price_vnd": 1890000,
+        "in_stock": true,
+        "promo_COD-0_active": true,
+        "standard_return_window_days": 7,
+        "obsolete_standard_return_window_days": 14
+      },
+      "customer_turns_asr": [
+        "toi la phuc, so dien thoai 0920525898, dang nhan qua fanpage. shop oi, anh muon hoi noi chien ko dau lock&lock 4l.",
+        "minh chua chot ngay thi gia nay tinh tai ngay nao? anh khong muon lan sau hieu nham la shop da giu gia.",
+        "em noi rieng phan bao hanh giup anh; dung gop moi loi su dung vao loi cua hang nhe.",
+        "anh se giu hop. em nhac thoi han va dieu kien doi tra cua don moi giup, de khong lay nham bai chinh sach cu.",
+        "anh chua muon quyet voi. em ghi nhan nhu cau duoc, nhung dung tu dat hang hoac goi don khi chua hen nhe.",
+        "gia 1.890.000 dong dung ko? anh can mot chiec, so dien thoai la 0920525898.",
+        "toi thay ban chinh sach thang 6 ghi doi tra trong 14 ngay. voi don moi dat tu thang 10/2026, hang con nguyen tem va ko co loi ky thuat, thoi han thong thuong thuc te la bao nhieu ngay? hay noi ro moc hien hanh truoc khi tiep tuc yeu cau chinh cua toi.",
+        "anh se goi hotline sau, chua dat nhe."
+      ]
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0920525898",
+      "call_date": "2026-10-17",
+      "input_mode": "clean",
+      "customer_goal": "Gọi hotline để chốt sản phẩm đã hỏi qua Fanpage.",
+      "customer_turns": [
+        "Tôi là Phúc, số điện thoại 0920525898, đã nhắn qua Fanpage. Anh Phúc đây, đã nhắn Fanpage bằng số này. Bên em còn nội dung chat không?",
+        "Khi giao hàng, ngày nghỉ có tính vào thời gian giao không? Anh cần biết đây là thời gian dự kiến hay một giờ giao được bảo đảm.",
+        "Nếu cần tra tiến độ sau này, anh xem ở đâu? Em đừng coi vừa tạo đơn là đã giao xong nhé.",
+        "Em nhắc lại mẫu và giá đã báo trong chat giúp nhé.",
+        "Anh đồng ý giá hôm nay 1.890.000 đồng, một chiếc, giao 105 đường Kiểm Thử, Hà Nội, COD.",
+        "Đúng rồi, anh xác nhận đúng sản phẩm, số lượng, tổng tiền, địa chỉ và cách thanh toán vừa nhắc. Em tạo đơn giúp nhé."
+      ],
+      "facts_established": {
+        "delivery_address": "105 đường Kiểm Thử, Hà Nội",
+        "payment": "COD"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "customer_phone": "0920525898",
+          "sku": "SKU-AF-4L",
+          "qty": 1,
+          "price_vnd": 1890000,
+          "payment": "COD",
+          "address": "105 đường Kiểm Thử, Hà Nội"
+        }
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "quantity"
+      ],
+      "must_not_ask": [
+        "product_advised",
+        "price_quoted_vnd",
+        "quantity"
+      ],
+      "ground_truth_facts": {
+        "price_vnd": 1890000,
+        "list_price_vnd": 1890000,
+        "in_stock": true,
+        "promo_COD-0_active": true
+      },
+      "days_later": 2
+    }
+  }
+}

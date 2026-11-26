@@ -1,14 +1,17 @@
+import argparse
 import os
 from pathlib import Path
-from langchain_community.document_loaders import TextLoader
+from chromadb import PersistentClient
+from langchain_core.documents import Document
 from langchain_text_splitters import MarkdownHeaderTextSplitter, RecursiveCharacterTextSplitter
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_chroma import Chroma
 
 # Paths
 ROOT_DIR = Path(__file__).resolve().parents[1]
-POLICY_DIR = ROOT_DIR / "dataset" / "BTC-Data-Vong1-TEAMS" / "policy"
+POLICY_DIR = ROOT_DIR / "dataset" / "organizer" / "policy"
 CHROMA_DB_DIR = ROOT_DIR / "data" / "chroma_db"
+COLLECTION_NAME = "langchain"
 
 # Exclude trap files (Internal, Expired)
 EXCLUDED_FILES = [
@@ -16,7 +19,15 @@ EXCLUDED_FILES = [
     "ghi-chu-nhap-hang-NOI-BO.md",
 ]
 
-def ingest_policies():
+def ingest_policies(*, if_empty: bool = False) -> None:
+    if if_empty and (CHROMA_DB_DIR / "chroma.sqlite3").is_file():
+        client = PersistentClient(path=str(CHROMA_DB_DIR))
+        collection = client.get_or_create_collection(COLLECTION_NAME, embedding_function=None)
+        count = collection.count()
+        if count:
+            print(f"Chroma already contains {count} policy chunks: {CHROMA_DB_DIR}")
+            return
+
     print(f"Loading policies from {POLICY_DIR}...")
     
     docs = []
@@ -29,14 +40,10 @@ def ingest_policies():
             continue
             
         file_path = POLICY_DIR / filename
-        loader = TextLoader(file_path, encoding='utf-8')
-        raw_docs = loader.load()
-        
-        # Thêm metadata để sau này biết chunk này thuộc file nào
-        for d in raw_docs:
-            d.metadata["source_file"] = filename
-            
-        docs.extend(raw_docs)
+        docs.append(Document(
+            page_content=file_path.read_text(encoding="utf-8"),
+            metadata={"source": str(file_path), "source_file": filename},
+        ))
         print(f" ✅ Loaded: {filename}")
 
     # 1. Chunking: Split by Markdown Headings first to preserve semantic blocks
@@ -62,6 +69,8 @@ def ingest_policies():
         separators=["\n\n", "\n", ".", " ", ""]
     )
     final_chunks = text_splitter.split_documents(md_splits)
+    if not final_chunks:
+        raise RuntimeError(f"No policy chunks found in {POLICY_DIR}")
     
     print(f"\nCreated {len(final_chunks)} chunks from valid policy files.")
 
@@ -76,10 +85,13 @@ def ingest_policies():
     Chroma.from_documents(
         documents=final_chunks,
         embedding=embeddings,
+        collection_name=COLLECTION_NAME,
         persist_directory=str(CHROMA_DB_DIR)
     )
     
     print("✅ Ingestion complete! Database is ready to use.")
 
 if __name__ == "__main__":
-    ingest_policies()
+    parser = argparse.ArgumentParser(description="Build the local Chroma policy store.")
+    parser.add_argument("--if-empty", action="store_true", help="Reuse an existing policy collection.")
+    ingest_policies(if_empty=parser.parse_args().if_empty)

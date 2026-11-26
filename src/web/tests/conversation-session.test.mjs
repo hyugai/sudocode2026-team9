@@ -6,6 +6,25 @@ const saved={messages:[{role:'agent',text:'Xin chào'},{role:'user',text:'Tư v�
 test('Guest snapshot restores conversation identity, draft, mode and explicit context',()=>{
  assert.deepEqual(readGuestSession(writeGuestSession(saved)),saved);assert.equal(readGuestSession(null),null);
 });
+
+test('Customer code survives reload and invalid codes are rejected',()=>{
+ const snapshot={...saved,customerId:'C051'};
+ assert.deepEqual(readGuestSession(writeGuestSession(snapshot)),snapshot);
+ for(const customerId of ['../C051',42,null])assert.throws(()=>readGuestSession(JSON.stringify({...saved,version:1,customerId})));
+});
+
+test('Chat response exposes the resolved customer code',async()=>{
+ const client=createChatClient('',async()=>Response.json({response:'Xin chào',customer_id:'C050'}));
+ const result=await client.send({conversationId:saved.sessionId,message:'Alo',audioFile:null,customerPhone:saved.customerPhone});
+ assert.equal(result.customer_id,'C050');
+});
+
+test('Guest reload keeps compact brief including unresolved issues and excludes raw CRM',()=>{
+ const callBrief={summary:'Needs advice',needs:['Quiet'],objections:[],unresolvedIssues:['Warranty?']};
+ const raw=writeGuestSession({...saved,callBrief:{...callBrief,customer_memory:{private:true},verified_customer_data:{private:true}}});
+ assert.deepEqual(readGuestSession(raw).callBrief,callBrief);
+ assert.equal(raw.includes('private'),false);
+});
 test('Guest restore rejects invalid identities, roles and stale schemas',()=>{
  for(const patch of [{sessionId:'someone-else'},{messages:[{role:['agent'],text:'x'}]},{consultation:{...saved.consultation,quantity:0}},{version:2}])assert.throws(()=>readGuestSession(JSON.stringify({...saved,version:1,...patch})));
  assert.throws(()=>readGuestSession('{bad'));assert.throws(()=>readGuestSession('x'.repeat(2000001)));

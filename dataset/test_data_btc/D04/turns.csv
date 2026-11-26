@@ -1,0 +1,8 @@
+﻿turn_index,turn_number,role,voice_id,voice_label,customer_turn_index,text,source_body_index
+0,1,customer,NU_2,Nữ 2,0,"alo, chị mới nhận giày hôm qua mà size bốn mươi hơi chật em ạ",47
+1,2,advisor,NU_3,Nữ 3,,"dạ em chào chị, em thấy đơn ô đê năm trăm hai mươi mốt nghìn ba trăm ba mươi tám giày run lai hai pro size bốn mươi màu đen, chị muốn đổi lên size bốn mươi mốt ạ",48
+2,3,customer,NU_2,Nữ 2,1,"ừ, đổi lên bốn mươi mốt, có mất phí gì không",49
+3,4,advisor,NU_3,Nữ 3,,"dạ đổi size lần đầu bên em miễn phí hoàn toàn, shop chịu phí ship hai chiều ạ, em kiểm tra tồn kho size bốn mươi mốt màu đen chị chờ em chút",50
+4,5,customer,NU_2,Nữ 2,2,ừ,51
+5,6,advisor,NU_3,Nữ 3,,"dạ còn hàng ạ, bên vận chuyển sẽ qua lấy đôi cũ trong một đến hai ngày làm việc và giao đôi mới, chị giữ nguyên hộp và tem giúp em nhé",52
+6,7,customer,NU_2,Nữ 2,3,"ok em, cảm ơn em nhé",53

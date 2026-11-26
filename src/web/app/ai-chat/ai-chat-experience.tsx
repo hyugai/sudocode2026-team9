@@ -11,9 +11,12 @@ import { InfoDialog } from "../components/info-dialog";
 import { Icon } from "./icons";
 import { ReplyFeedback, ReplyFeedbackProvider } from "./reply-feedback";
 import { CallBriefPanel } from "./call-brief-panel";
+import { ChatProductCards } from "../components/chat-product-cards";
+import { CartLink } from "../components/cart-link";
+import { AccountMenu } from "../components/account-menu";
 
 export type AiChatMode = "text" | "realtime";
-type Dialog = "history" | "details" | "profile" | "new" | null;
+type Dialog = "history" | "details" | "profile" | "new" | "account" | null;
 const modes = [
   ["text", "message", "Chat"],
   ["realtime", "mic", "Voice"],
@@ -39,7 +42,7 @@ export function AiChatExperience({ mode }: { mode: AiChatMode }) {
   const fileRef = useRef<HTMLInputElement>(null);
   const historyRef = useRef<HTMLDivElement>(null);
   const busy = c.isLoading || !c.sessionReady;
-  const canSend = !busy && c.backendReady && c.cooldownSeconds === 0 && (!!c.input.trim() || !!c.audioFile);
+  const canSend = !busy && !c.conversationEnded && c.backendReady && c.cooldownSeconds === 0 && (!!c.input.trim() || !!c.audioFile);
   const title = c.messages.find(message => message.role === "user")?.text || "Cuộc trò chuyện mới";
   const query = search.trim().toLocaleLowerCase("vi");
   const visibleMessages = c.messages.map((message, index) => ({ ...message, index }))
@@ -47,8 +50,9 @@ export function AiChatExperience({ mode }: { mode: AiChatMode }) {
   const hint = c.errorMessage || (c.cooldownSeconds > 0
     ? `Có thể gửi tiếp sau ${c.cooldownSeconds} giây.`
     : !c.sessionReady ? "Đang khôi phục hội thoại…"
+    : c.conversationEnded ? "Hội thoại đã kết thúc. Chọn Cuộc trò chuyện mới để tiếp tục."
     : c.voiceActive ? "Kết thúc phiên voice trước khi gửi tin nhắn hoặc ghi âm."
-    : c.isLoading ? (c.audioFile ? "Đang nhận dạng ghi âm và chờ phản hồi…" : "Đang chờ phản hồi…")
+    : c.isLoading ? (c.processingLabel || "Đang chờ phản hồi…")
     : !c.backendReady ? "Backend chưa sẵn sàng. Hệ thống đang kiểm tra lại; nội dung vẫn được giữ."
     : c.audioFile ? "Gửi ghi âm để chuyển thành văn bản và nhận phản hồi. Tối đa 25 MB / 120 giây."
     : "");
@@ -56,7 +60,7 @@ export function AiChatExperience({ mode }: { mode: AiChatMode }) {
   useEffect(() => {
     const history = historyRef.current;
     if (history && !query) history.scrollTop = history.scrollHeight;
-  }, [c.messages, c.isLoading, query, mode]);
+  }, [c.messages, c.isLoading, c.streamingText, c.chatCatalog, query, mode]);
 
   useLayoutEffect(() => {
     const input = inputRef.current;
@@ -142,7 +146,11 @@ export function AiChatExperience({ mode }: { mode: AiChatMode }) {
         <div className="ai-topbar-actions">
           {!voiceMode && <button className="ai-icon-button" aria-label="Xuất hội thoại" onClick={exportConversation}><Icon name="share" /></button>}
           {!voiceMode && <button className="ai-detail-button" aria-label="Mở call brief" onClick={() => setDialog("details")}><Icon name="panel" /><span>Call brief</span></button>}
-          <Link href="/" className="ai-exit-link" aria-label="Trở lại dashboard"><Icon name="arrowLeft" /><span>Dashboard</span></Link>
+          <div className="ai-header-commerce">
+            <CartLink compact />
+            <AccountMenu className="ai-account-menu" open={dialog === "account"} onOpenChange={open => setDialog(open ? "account" : null)} />
+            <Link href="/" className="ai-exit-link" aria-label="Trở lại dashboard" title="Trở lại dashboard"><Icon name="arrowLeft" /><span>Dashboard</span></Link>
+          </div>
         </div>
       </header>
       {!voiceMode && <aside className="ai-sidebar" aria-label="Lịch sử hội thoại">{sidebar}</aside>}
@@ -153,14 +161,16 @@ export function AiChatExperience({ mode }: { mode: AiChatMode }) {
           <section className="ai-chat-stage" aria-label="Trò chuyện cùng Synee AI">
             <div className="ai-message-scroll" ref={historyRef} tabIndex={0} aria-label="Nội dung trò chuyện">
               {c.messages.length === 1 && !query && <div className="ai-thread-intro"><span className="ai-thread-icon"><Icon name="spark" /></span><h2>Bắt đầu cùng Synee AI</h2><p>Không gian riêng để bạn trò chuyện, tìm hiểu và lựa chọn.</p></div>}
-              <ReplyFeedbackProvider key={`${c.customerPhone}:${feedbackRevision}`}><div className="ai-message-list" role="log" aria-live="polite" aria-relevant="additions text" aria-label="Tin nhắn cùng Synee">
+              <ReplyFeedbackProvider key={`${c.sessionId}:${c.customerPhone}:${feedbackRevision}`}><div className="ai-message-list" role="log" aria-live="polite" aria-relevant="additions text" aria-label="Tin nhắn cùng Synee">
                 {visibleMessages.map(message => <article key={message.index} className={`ai-message ${message.role === "agent" ? "assistant" : "user"}`}>
                   {message.role === "agent" && <span className="ai-avatar"><Icon name="spark" /></span>}
                   <div><div className="ai-message-meta"><strong>{message.role === "agent" ? "Synee AI" : "Bạn"}</strong></div><div className="ai-bubble">{message.text}</div>
+                    {message.role === "agent" && <ChatProductCards text={message.text} catalog={c.chatCatalog} />}
                     {message.role === "agent" ? <ReplyFeedback message={c.messages[message.index]} messageNumber={message.index + 1} onCopy={() => void copy(message.text)} disabled={!c.sessionReady} /> : <div className="ai-message-tools"><button type="button" aria-label={`Sao chép tin nhắn ${message.index + 1}`} onClick={() => void copy(message.text)}><Icon name="copy" /></button></div>}
                   </div>
                 </article>)}
-                {c.isLoading && !c.voiceActive && <article className="ai-message assistant"><span className="ai-avatar"><Icon name="spark" /></span><div className="ai-thinking" role="status" aria-label="Synee đang xử lý"><i /><i /><i /></div></article>}
+                {c.pendingMessage && <article className="ai-message user"><div><div className="ai-message-meta"><strong>Bạn</strong></div><div className="ai-bubble">{c.pendingMessage}</div></div></article>}
+                {c.isLoading && !c.voiceActive && <article className="ai-message assistant"><span className="ai-avatar"><Icon name="spark" /></span><div><div className="ai-message-meta"><strong>Synee AI</strong><span role="status">{c.processingLabel || "Đang xử lý…"}</span></div>{c.streamingText ? <div className="ai-bubble" aria-live="off">{c.streamingText}</div> : <div className="ai-thinking" aria-hidden="true"><i /><i /><i /></div>}</div></article>}
               </div></ReplyFeedbackProvider>
               {query && <p className="ai-search-summary" role="status">{visibleMessages.length} tin nhắn phù hợp. <button className="text-link" onClick={() => setSearch("")}>Xóa tìm kiếm</button></p>}
               {c.messages.length === 1 && mode === "text" && !query && <div className="ai-suggestion-grid">{suggestions.map(item =>
@@ -183,7 +193,7 @@ export function AiChatExperience({ mode }: { mode: AiChatMode }) {
                   event.target.value = "";
                 }} />
                 <div className="ai-composer-actions"><div><button type="button" aria-label="Tải file audio" title="Tải file audio · Tối đa 25 MB / 120 giây" disabled={busy} onClick={() => fileRef.current?.click()}><Icon name="mic" /></button></div>
-                  <div><button type="button" className="ai-composer-mic" aria-label="Chuyển sang Voice trực tiếp" title="Chuyển sang Voice trực tiếp" disabled={busy} onClick={() => switchMode("realtime")}><Icon name="mic" /></button><button type="submit" className="ai-send" disabled={!canSend} aria-describedby="ai-send-status" aria-label={c.audioFile ? "Gửi ghi âm" : c.errorMessage ? "Thử lại tin nhắn" : "Gửi tin nhắn"}><Icon name="arrowUp" /></button></div>
+                  <div><button type="submit" className="ai-send" disabled={!canSend} aria-describedby="ai-send-status" aria-label={c.audioFile ? "Gửi ghi âm" : c.errorMessage ? "Thử lại tin nhắn" : "Gửi tin nhắn"}><Icon name="arrowUp" /></button></div>
                 </div>
               </form>
               <p className="ai-disclaimer">Kiểm tra lại thông tin quan trọng trước khi đặt hàng.</p>
@@ -198,7 +208,7 @@ export function AiChatExperience({ mode }: { mode: AiChatMode }) {
     {dialog === "details" && <InfoDialog title="Call brief" drawer className="ai-details-dialog" onClose={() => setDialog(null)}>{details}</InfoDialog>}
     {dialog === "profile" && <InfoDialog title="Thông tin tư vấn" drawer onClose={() => setDialog(null)}><GuestProfile idPrefix="ai-customer" /></InfoDialog>}
     {dialog === "new" && <InfoDialog title="Bắt đầu hội thoại mới" onClose={() => { if (!busy) setDialog(null); }}>
-      <p>Hội thoại, bản nháp và ghi âm hiện tại sẽ được xóa khỏi tab này. Thông tin tư vấn vẫn được giữ.</p>
+      <p>{c.accountMode ? "Hội thoại sẽ được kết thúc và giữ trong lịch sử tài khoản. Bản nháp và ghi âm hiện tại sẽ được xóa khỏi tab này." : "Hội thoại, bản nháp và ghi âm hiện tại sẽ được xóa khỏi tab này."} Thông tin tư vấn vẫn được giữ.</p>
       <p>Bạn có thể xuất hội thoại trước khi tiếp tục.</p>
       <div className="ai-reset-actions"><button className="commerce-secondary" disabled={busy} onClick={exportConversation}>Xuất hội thoại</button><button className="commerce-secondary" disabled={busy} onClick={() => void startNew()}>{c.isLoading ? "Đang kết thúc…" : "Bắt đầu mới"}</button></div>
       {resetError && <p className="error" role="alert">{resetError}</p>}

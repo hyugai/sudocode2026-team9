@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
 """
-Unpack scenarios JSONL → thư mục chứa từng file JSON lẻ.
+Optional converter for an explicitly supplied external JSONL scenario file.
+
+Current scenarios already exist as individual JSON files in
+``dataset/main/scenarios_complete``; no conversion is needed to evaluate them.
 
 Usage:
-    python src/eval/prepare_scenarios.py
-    python src/eval/prepare_scenarios.py --src dataset/iterative-refinement/02_scenarios_complete.jsonl
-                                        --out dataset/iterative-refinement/scenarios
+    python src/eval/prepare_scenarios.py --src /path/to/scenarios.jsonl --out /tmp/scenarios
 
-Mỗi dòng trong JSONL → một file `<scenario_id>.json` trong thư mục output.
+Each JSONL record becomes one ``<scenario_id>.json`` file in the output directory.
 """
 
 import argparse
@@ -17,8 +18,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent          # src/eval/
 REPO_ROOT = HERE.parent.parent                  # sudo_code_2026-group_9/
 
-DEFAULT_SRC = REPO_ROOT / "dataset" / "iterative-refinement" / "02_scenarios_complete.jsonl"
-DEFAULT_OUT = REPO_ROOT / "dataset" / "iterative-refinement" / "scenarios"
+DEFAULT_OUT = REPO_ROOT / "dataset" / "main" / "scenarios_complete"
 
 
 def unpack(src: Path, out: Path):
@@ -42,7 +42,7 @@ def unpack(src: Path, out: Path):
 
 def main():
     parser = argparse.ArgumentParser(description="Tách JSONL scenarios thành JSON lẻ.")
-    parser.add_argument("--src", default=str(DEFAULT_SRC), help="File JSONL đầu vào")
+    parser.add_argument("--src", required=True, help="File JSONL bên ngoài cần chuyển đổi")
     parser.add_argument("--out", default=str(DEFAULT_OUT), help="Thư mục output")
     args = parser.parse_args()
     unpack(Path(args.src), Path(args.out))

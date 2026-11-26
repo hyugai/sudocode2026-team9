@@ -1,9 +1,12 @@
+import asyncio
 import re
 import unicodedata
 
 from telesale_agent.core.interfaces import IdentityResolver
 from telesale_agent.core.models import CustomerIdentity, TurnContext
 from telesale_agent.adapters.db.client import db_client
+from telesale_agent.adapters.db.customer_identity import normalize_phone, normalize_email
+from telesale_agent.application.customer_addressing import explicit_honorific
 
 
 def _normalized_identity_text(value: str | None) -> str:
@@ -20,12 +23,16 @@ class HintIdentityResolver(IdentityResolver):
 
     async def resolve_identity(self, context: TurnContext) -> CustomerIdentity:
         # In a real system, ASR or caller ID provides the phone number
-        phone = context.input.customer_hint
-        if not phone:
+        hint = context.input.customer_hint or ""
+        email = normalize_email(context.input.metadata.get("account_email") or (hint if "@" in hint else None))
+        phone = normalize_phone(hint if "@" not in hint else None)
+        if not phone and not email:
             return CustomerIdentity(confidence=0.0, profile={"identity_missing": True})
         
         # Check if customer exists in DB
-        result = db_client.get_customer(phone=phone)
+        result = await asyncio.to_thread(db_client.resolve_customer, phone=phone, email=email,
+                                         name=context.input.metadata.get("account_name"),
+                                         honorific=explicit_honorific(context.input.text))
         
         if result.get("ambiguous"):
             spoken_text = _normalized_identity_text(context.input.text)
@@ -55,10 +62,10 @@ class HintIdentityResolver(IdentityResolver):
                 if _identity_tokens(candidate.get("name")) <= spoken_tokens
             ]
             if len(matching) == 1:
-                selected = db_client.get_customer_by_id(matching[0]["customer_id"])
+                selected = await asyncio.to_thread(db_client.get_customer_by_id, matching[0]["customer_id"])
                 return CustomerIdentity(
                     customer_id=selected.get("customer_id"),
-                    phone=phone,
+                    phone=selected.get("phone") or None,
                     confidence=1.0,
                     profile={
                         "name": selected.get("name"),
@@ -76,19 +83,24 @@ class HintIdentityResolver(IdentityResolver):
                 },
             )
 
-        if result.get("found"):
-            # Old user -> return existing CXXX ID
-            customer_id = result.get("customer_id")
-        else:
-            # New user -> create in DB to get a new CXXX ID
-            customer_id = db_client.create_customer(phone=phone)
+        customer_id = result.get("customer_id")
             
         return CustomerIdentity(
             customer_id=customer_id,
-            phone=phone,
+            phone=result.get("phone") or None,
             confidence=1.0,
             profile={
                 "name": result.get("name"),
                 "honorific": result.get("honorific"),
+                "is_new": result.get("is_new", False),
             } if result.get("found") else {},
         )
+
+    async def update_profile(self, context: TurnContext) -> bool:
+        identity = context.state.identity
+        honorific = explicit_honorific(context.input.text)
+        if not identity or not identity.customer_id or not honorific:
+            return False
+        changed = await asyncio.to_thread(db_client.update_customer_honorific, identity.customer_id, honorific)
+        identity.profile["honorific"] = honorific
+        return changed

@@ -1,0 +1,116 @@
+{
+  "scenario_id": "SC-102",
+  "level": "M1",
+  "persona": "khach_quay_lai_sau_8_thang",
+  "hard_case": "khach_cu_ttl_sku_ngung_ban",
+  "customer_phone": "0985003703",
+  "customer_name": "Oanh",
+  "honorific": "chị",
+  "notes": "Khách quay lại sau khoảng 8 tháng; SKU cũ ngừng bán, xác nhận lại địa chỉ và dùng thu cũ đổi mới. Địa chỉ đường Kiểm Thử là dữ kiện khách tổng hợp cho test, không có sẵn trong CRM. Chạy mỗi scenario từ CRM/catalog gốc và trạng thái tool sạch; giữ state giữa các call của cùng scenario. Không đưa facts/đáp án chấm vào prompt agent. Trích giá lịch sử thành price_quoted_vnd, giá hiện hành thành price_vnd. Luồng kênh hiện hành: Fanpage → Zalo OA. Các phiên chat cung cấp tên và số điện thoại để liên kết danh tính.",
+  "calls": {
+    "call_1": {
+      "channel": "chat_fanpage",
+      "channel_identity": "fb.oanh.620",
+      "call_date": "2026-10-22",
+      "input_mode": "clean",
+      "customer_goal": "Tra đơn tháng 2 và hỏi đổi máy cũ sang mẫu đang bán.",
+      "customer_turns": [
+        "Tôi là Oanh, số điện thoại 0985003703, đang nhắn qua Fanpage. Chị Oanh đây. Hồi tháng hai chị mua AirPure X bản 2024 của shop, giờ muốn đổi máy.",
+        "Chị đang xem Máy lọc không khí AirPure Y. Với máy cũ trong đơn OD188213, chị có được áp thu cũ đổi mới không?",
+        "Chị xem giá sau ưu đãi là 4.800.000 đồng. Địa chỉ cũ ở Hoàng Cầu không dùng nữa; giờ giao 101 đường Kiểm Thử, Hà Nội.",
+        "Chị còn hỏi người nhà, liên hệ lại lúc 10 giờ ngày 2026-10-24 nhé."
+      ],
+      "facts_established": {
+        "product_advised": "SKU-AP-Y",
+        "price_quoted_vnd": 4800000,
+        "owned_sku": "SKU-AP-X-2024",
+        "promo_code": "TRADE-IN-AP",
+        "delivery_address": "101 đường Kiểm Thử, Hà Nội"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0985003703",
+          "callback_at": "2026-10-24T10:00"
+        },
+        "must_not_call_tools": [
+          "order.create"
+        ]
+      },
+      "seed_history": [
+        {
+          "session_id": "S-OLD-1",
+          "date": "2026-02-17",
+          "channel": "hotline",
+          "summary": "Mua AirPure X bản 2024 giá 4.290.000đ, phòng 20m², địa chỉ giao: 12 ngõ 38 Hoàng Cầu, Đống Đa, Hà Nội",
+          "outcome": "chot_don"
+        }
+      ],
+      "memory_expectation": {
+        "delivery_address": "101 đường Kiểm Thử, Hà Nội",
+        "superseded": {
+          "delivery_address": "12 ngõ 38 Hoàng Cầu, Đống Đa, Hà Nội"
+        },
+        "address_ttl_check": true
+      },
+      "ground_truth_facts": {
+        "price_vnd": 4800000,
+        "list_price_vnd": 5200000,
+        "in_stock": true,
+        "promo_COD-0_active": true,
+        "promo_TRADE-IN-AP_active": true,
+        "old_sku_discontinued": true,
+        "old_sku_in_stock": false
+      }
+    },
+    "call_2": {
+      "channel": "zalo_oa",
+      "channel_identity": "zalo_oanh96",
+      "call_date": "2026-10-24",
+      "input_mode": "clean",
+      "customer_goal": "Chốt máy mới với TRADE-IN-AP và địa chỉ đã cập nhật. Tiếp tục đúng hồ sơ qua Zalo OA.",
+      "customer_turns": [
+        "Tôi là Oanh, số điện thoại 0985003703, đang nhắn qua Zalo OA. Chị liên hệ lại theo lịch, người nhà đồng ý đổi máy rồi.",
+        "Em nhắc lại máy mới, giá sau thu cũ đổi mới và dùng địa chỉ chị đã sửa ở lần vừa rồi nhé.",
+        "Chị đồng ý 4.800.000 đồng, một máy, COD. Khi giao em thu máy cũ theo chương trình."
+      ],
+      "facts_established": {
+        "payment": "COD"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "customer_phone": "0985003703",
+          "sku": "SKU-AP-Y",
+          "qty": 1,
+          "price_vnd": 4800000,
+          "payment": "COD",
+          "address": "101 đường Kiểm Thử, Hà Nội"
+        }
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "promo_code",
+        "delivery_address"
+      ],
+      "must_not_ask": [
+        "product_advised",
+        "price_quoted_vnd",
+        "promo_code",
+        "delivery_address"
+      ],
+      "ground_truth_facts": {
+        "price_vnd": 4800000,
+        "list_price_vnd": 5200000,
+        "in_stock": true,
+        "promo_COD-0_active": true,
+        "promo_TRADE-IN-AP_active": true,
+        "promo_GIFT-FILTER_active": false
+      },
+      "days_later": 2
+    }
+  }
+}

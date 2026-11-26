@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useId, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { applianceSubcategories, categories, filterProducts, productHref, type LiveProductDetails, type ProductCard } from "@/utils/catalog";
 import { Asset, ChatPanel } from "./chat-panel";
 import { useSharedConversation } from "./conversation-provider";
@@ -11,9 +11,10 @@ import { ProductDetail } from "./product-detail";
 import { ProductImage } from "./product-image";
 import { HeroBackdrop } from "./hero-backdrop";
 import { PurchaseJourney, type PurchaseView } from "./purchase-journey";
-import { usePurchase } from "./purchase-provider";
+import { CartLink } from "./cart-link";
 import type { Consultation } from "@/utils/use-conversation";
-import { AccountQuickLinks, AccountPage, type AccountView } from "./account-content";
+import { AccountPage, type AccountView } from "./account-content";
+import { AccountMenu } from "./account-menu";
 import { InformationPage } from "./information-content";
 import { informationPages, type InformationPageId } from "@/utils/information-pages";
 
@@ -26,7 +27,6 @@ export default function Storefront({ product, catalogProducts = [], catalogError
   const [inlineVisible, setInlineVisible] = useState<boolean | null>(isCatalog ? null : false);
   const [floatingOpen, setFloatingOpen] = useState(false);
   const { voicePreview, setVoicePreview } = conversation;
-  const purchase = usePurchase();
   const [dialog, setDialog] = useState<Dialog>(null);
   const [category, setCategory] = useState<string>(categories.some(c => c.name === initialCategory) ? initialCategory : "Tất cả");
   const [subcategory, setSubcategory] = useState("");
@@ -35,9 +35,7 @@ export default function Storefront({ product, catalogProducts = [], catalogError
   const inlineRef = useRef<HTMLDivElement>(null);
   const launcherRef = useRef<HTMLButtonElement>(null);
   const askRef = useRef<HTMLDivElement>(null);
-  const accountRef = useRef<HTMLDivElement>(null);
   const accountTriggerRef = useRef<HTMLButtonElement>(null);
-  const accountMenuId = useId();
   const floatingEligible = inlineVisible === false;
 
   useEffect(() => {
@@ -79,26 +77,6 @@ export default function Storefront({ product, catalogProducts = [], catalogError
   }, [floatingOpen, product, dialog]);
 
   useEffect(() => {
-    if (dialog !== "account") return;
-    const closeOutside = (event: Event) => {
-      if (event.target instanceof Node && !accountRef.current?.contains(event.target)) setDialog(null);
-    };
-    const closeOnEscape = (event: KeyboardEvent) => {
-      if (event.key !== "Escape") return;
-      setDialog(null);
-      accountTriggerRef.current?.focus({ preventScroll: true });
-    };
-    document.addEventListener("pointerdown", closeOutside);
-    document.addEventListener("focusin", closeOutside);
-    document.addEventListener("keydown", closeOnEscape);
-    return () => {
-      document.removeEventListener("pointerdown", closeOutside);
-      document.removeEventListener("focusin", closeOutside);
-      document.removeEventListener("keydown", closeOnEscape);
-    };
-  }, [dialog]);
-
-  useEffect(() => {
     if (product && floatingOpen && matchMedia("(max-width: 900px)").matches) {
       document.querySelector(".pdp-chat")?.scrollIntoView({ block: "start", behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth" });
     }
@@ -137,16 +115,8 @@ export default function Storefront({ product, catalogProducts = [], catalogError
           <Asset name="search" /><label htmlFor="product-search" className="sr-only">Tìm sản phẩm, thương hiệu</label><input id="product-search" value={query} onChange={e => setQuery(e.target.value)} placeholder="Tìm sản phẩm, thương hiệu…" /><button type="submit" aria-label="Tìm sản phẩm"><Asset name="searchPurple" /><span>Tìm</span></button>
         </form>
         <div className="header-right">
-          <div className="commerce-actions"><Link href="/cart" className="cart-link" aria-label={`Giỏ hàng demo, ${purchase.cart.reduce((n, l) => n + l.quantity, 0)} sản phẩm`}><Asset name="cart" /><span>Giỏ hàng <span className="cart-count" aria-live="polite">{purchase.cart.reduce((n, l) => n + l.quantity, 0)}</span></span></Link>
-            <div className="account-menu" ref={accountRef}>
-              <button ref={accountTriggerRef} className="account-trigger" aria-label="Mở menu tài khoản" aria-controls={accountMenuId} aria-expanded={dialog === "account"} onClick={() => setDialog(value => value === "account" ? null : "account")} onKeyDown={event => {
-                if (event.key !== "ArrowDown") return;
-                event.preventDefault();
-                setDialog("account");
-                requestAnimationFrame(() => accountRef.current?.querySelector<HTMLAnchorElement>(".account-quick-links a")?.focus());
-              }}><Asset name="account" /><span>Tài khoản</span></button>
-              {dialog === "account" && <div id={accountMenuId} className="account-popover"><AccountQuickLinks activeView={accountView ?? (view === "orders" ? "orders" : undefined)} onNavigate={() => setDialog(null)} /></div>}
-            </div>
+          <div className="commerce-actions"><CartLink />
+            <AccountMenu open={dialog === "account"} onOpenChange={open => setDialog(open ? "account" : null)} activeView={accountView ?? (view === "orders" ? "orders" : undefined)} triggerRef={accountTriggerRef} />
           </div>
           <nav className="utility-nav" aria-label="Hỗ trợ mua sắm"><Link href="/support" aria-current={informationPage === "support" ? "page" : undefined}>Hỗ trợ</Link></nav>
         </div>

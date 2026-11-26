@@ -1,0 +1,34 @@
+{
+  "response": "Dạ báo giá giỏ hàng của mình gồm:\n1. Máy lọc không khí AirPure Pro — 7.990.000 đồng\n2. Máy lọc không khí AirPure Pro — 7.990.000 đồng\n3. Máy lọc không khí AirPure Mini — 2.190.000 đồng\nTổng tiền: 18.170.000 đồng.",
+  "latency": {
+    "ttft_ms": 7677,
+    "total_ms": 7677,
+    "ttfa_ms": null,
+    "measurement_mode": "non_streaming",
+    "timing_boundary": "response_ready_before_persistence",
+    "asr_ms": null,
+    "call_brief_ms": 3700,
+    "response_ready_ms": 7677,
+    "persistence_ms": 4657.374,
+    "request_complete_ms": 12334.726,
+    "backend_total_ms": 12334.726,
+    "precomputed_parts": []
+  },
+  "call_brief": {
+    "summary": "Customer facts: quantity: 2, basket_skus: ['SKU-AP-PRO', 'SKU-AP-MINI'], basket_product_names: {'SKU-AP-PRO': 'Máy lọc không khí AirPure Pro', 'SKU-AP-MINI': 'Máy lọc không khí AirPure Mini'}",
+    "needs": [
+      "quantity: 2",
+      "basket_skus: ['SKU-AP-PRO', 'SKU-AP-MINI']",
+      "basket_product_names: {'SKU-AP-PRO': 'Máy lọc không khí AirPure Pro', 'SKU-AP-MINI': 'Máy lọc không khí AirPure Mini'}",
+      "basket_lines: [{'sku': 'SKU-AP-PRO', 'qty': 2}, {'sku': 'SKU-AP-MINI', 'qty': 1}]",
+      "basket_item_1: SKU-AP-PRO",
+      "basket_item_2: SKU-AP-MINI",
+      "product_advised: SKU-AP-MINI",
+      "basket_unit_quotes: [{'sku': 'SKU-AP-PRO', 'price_quoted_vnd': 7990000, 'quoted_on': '2026-11-15', 'promo_code': None}, {'sku': 'SKU-AP-PRO', 'price_quoted_vnd': 7990000, 'quoted_on': '2026-11-15', 'promo_code': None}, {'sku': 'SKU-AP-MINI', 'price_quoted_vnd': 2190000, 'quoted_on': '2026-11-15', 'promo_code': None}]"
+    ],
+    "objections": [],
+    "unresolved_issues": []
+  },
+  "call_brief_latency_ms": 3700,
+  "normalized_message": "Tôi muốn mua 2 Máy lọc không khí AirPure Pro và 1 Máy lọc không khí AirPure Mini. Hãy kiểm tra giá từng máy và tổng tiền giỏ này. Chưa tạo đơn."
+}

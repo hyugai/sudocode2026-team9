@@ -1,0 +1,123 @@
+{
+  "schema_version": 1,
+  "scenario_id": "D02",
+  "title": "Khách gọi lại sau hai ngày (cùng khách với D01)",
+  "source": {
+    "document": "Kịch-bản-thu-âm-D01-D04.docx",
+    "sha256": "676f81303e57e6f9f1b31310e7377e3afec9d459c1e9d9a00131232caea9e552",
+    "text_policy": "Nguyên văn từng lượt trong tài liệu BTC; không đưa nhãn vai hay hướng dẫn thu âm vào TTS."
+  },
+  "customer_group_id": "BTC_CUSTOMER_01",
+  "follows_dialogue": "D01",
+  "days_after_previous": 2,
+  "voice_cast": {
+    "customer": "NU_1",
+    "advisor": "NU_3"
+  },
+  "calls": {
+    "call_1": {
+      "customer_turns": [
+        "alo, hôm trước chị có gọi hỏi máy lọc không khí bên em đó",
+        "rồi, ông xã chị đồng ý rồi, giá vẫn vậy đúng không em",
+        "ừ lên đơn cho chị đi, giao về địa chỉ cũ, thanh toán khi nhận hàng",
+        "đúng rồi em"
+      ],
+      "dialogue_turns": [
+        {
+          "turn_index": 0,
+          "turn_number": 1,
+          "role": "customer",
+          "role_label": "Khách",
+          "voice_id": "NU_1",
+          "voice_label": "Nữ 1",
+          "customer_turn_index": 0,
+          "text": "alo, hôm trước chị có gọi hỏi máy lọc không khí bên em đó",
+          "source_body_index": 26
+        },
+        {
+          "turn_index": 1,
+          "turn_number": 2,
+          "role": "advisor",
+          "role_label": "Tư vấn",
+          "voice_id": "NU_3",
+          "voice_label": "Nữ 3",
+          "customer_turn_index": null,
+          "text": "dạ em chào chị, hôm mười lăm bên em có tư vấn chị mẫu e pia y cho phòng ngủ hai mươi lăm mét, giá năm triệu hai trăm nghìn, chị đã trao đổi với anh nhà chưa ạ",
+          "source_body_index": 27
+        },
+        {
+          "turn_index": 2,
+          "turn_number": 3,
+          "role": "customer",
+          "role_label": "Khách",
+          "voice_id": "NU_1",
+          "voice_label": "Nữ 1",
+          "customer_turn_index": 1,
+          "text": "rồi, ông xã chị đồng ý rồi, giá vẫn vậy đúng không em",
+          "source_body_index": 28
+        },
+        {
+          "turn_index": 3,
+          "turn_number": 4,
+          "role": "advisor",
+          "role_label": "Tư vấn",
+          "voice_id": "NU_3",
+          "voice_label": "Nữ 3",
+          "customer_turn_index": null,
+          "text": "dạ vẫn năm triệu hai trăm nghìn, còn tặng màng lọc, giao nội thành một đến hai ngày làm việc ạ",
+          "source_body_index": 29
+        },
+        {
+          "turn_index": 4,
+          "turn_number": 5,
+          "role": "customer",
+          "role_label": "Khách",
+          "voice_id": "NU_1",
+          "voice_label": "Nữ 1",
+          "customer_turn_index": 2,
+          "text": "ừ lên đơn cho chị đi, giao về địa chỉ cũ, thanh toán khi nhận hàng",
+          "source_body_index": 30
+        },
+        {
+          "turn_index": 5,
+          "turn_number": 6,
+          "role": "advisor",
+          "role_label": "Tư vấn",
+          "voice_id": "NU_3",
+          "voice_label": "Nữ 3",
+          "customer_turn_index": null,
+          "text": "dạ em xác nhận lại, một máy e pia y, năm triệu hai trăm nghìn, giao về số mười hai ngõ ba mươi tám phố hoàng cầu quận đống đa, thanh toán cê ô đê, đúng không ạ",
+          "source_body_index": 31
+        },
+        {
+          "turn_index": 6,
+          "turn_number": 7,
+          "role": "customer",
+          "role_label": "Khách",
+          "voice_id": "NU_1",
+          "voice_label": "Nữ 1",
+          "customer_turn_index": 3,
+          "text": "đúng rồi em",
+          "source_body_index": 32
+        },
+        {
+          "turn_index": 7,
+          "turn_number": 8,
+          "role": "advisor",
+          "role_label": "Tư vấn",
+          "voice_id": "NU_3",
+          "voice_label": "Nữ 3",
+          "customer_turn_index": null,
+          "text": "dạ mã đơn của chị là ô đê ba trăm mười hai nghìn bốn trăm năm mươi sáu, em cảm ơn chị ạ",
+          "source_body_index": 33
+        }
+      ]
+    }
+  },
+  "audio_spec": {
+    "sample_rate": 24000,
+    "channels": 1,
+    "subtype": "PCM_16",
+    "gap_seconds": 1.0
+  }
+}

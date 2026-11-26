@@ -44,6 +44,16 @@ class VoiceStore:
                 return dict(row) if row else None
         return await asyncio.to_thread(get)
 
+    async def save_snapshot(self, source, brief, memory):
+        def write():
+            with self.engine.begin() as conn:
+                payload = conn.execute(select(turns.c.payload).where(turns.c.source_id == source)).scalar_one()
+                payload = {**payload, "call_brief": brief, "memory_snapshot": memory,
+                           "snapshot_at": datetime.now(timezone.utc).isoformat()}
+                conn.execute(update(turns).where(turns.c.source_id == source).values(
+                    payload=payload, updated_at=datetime.now(timezone.utc)))
+        await asyncio.to_thread(write)
+
     async def prepared(self, source, batch):
         await self._update(source, prepared=batch, status="prepared")
 

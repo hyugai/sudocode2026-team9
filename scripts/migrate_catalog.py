@@ -10,9 +10,10 @@ from sqlalchemy.orm import declarative_base, sessionmaker, relationship
 from sqlalchemy.dialects.postgresql import JSONB
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-CATALOG_DIR = REPO_ROOT / "dataset" / "BTC-Data-Vong1-TEAMS" / "catalog"
+CATALOG_DIR = REPO_ROOT / "dataset" / "organizer" / "catalog"
 
 ORDER_COLUMNS = {
+    "lines": "JSONB",
     "qty": "INTEGER NOT NULL DEFAULT 1",
     "promo_code": "VARCHAR(50)",
     "payment": "VARCHAR(50) NOT NULL DEFAULT 'COD'",
@@ -101,6 +102,7 @@ class Order(Base):
     sku = Column(String(50))
     qty = Column(Integer, nullable=False, default=1)
     price_vnd = Column(Numeric(15, 2))
+    lines = Column(JSONB, nullable=True)
     promo_code = Column(String(50))
     payment = Column(String(50), nullable=False, default="COD")
     address = Column(String)

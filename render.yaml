@@ -1,6 +1,7 @@
 services:
   - type: web
     name: telesale-agent-api
+    branch: deployment
     runtime: docker
     region: singapore
     plan: free
@@ -8,6 +9,7 @@ services:
     dockerfilePath: ./Dockerfile
     dockerContext: .
     healthCheckPath: /health
+    maxShutdownDelaySeconds: 120
     envVars:
       - key: DATABASE_URL
         sync: false
@@ -21,6 +23,12 @@ services:
         sync: false
       - key: CORS_ORIGINS
         value: https://agentweb-alpha.vercel.app,https://agentweb-nganbees-projects.vercel.app
+      - key: WEB_ORIGIN
+        value: https://agentweb-alpha.vercel.app
+      - key: SESSION_TTL_DAYS
+        value: "7"
+      - key: SESSION_COOKIE_SECURE
+        value: "true"
       - key: REALTIME_VOICE_ENABLED
         value: "true"
       - key: REALTIME_ALLOWED_ORIGINS
@@ -56,7 +64,30 @@ services:
       - key: MEMORY_PERSISTER_MODE
         value: llm_learning
       - key: CUSTOMER_MEMORY_BACKEND
-        value: file
+        value: object_storage
+      - key: CUSTOMER_MEMORY_PREFIX
+        value: users
+      # Run the learning migration separately on Neon before enabling/deploying.
+      # DB jobs + agent lessons on the existing object-storage bucket.
+      - key: KNOWLEDGE_GAP_LOOP_ENABLED
+        value: "true"
+      - key: AGENT_MEMORY_PREFIX
+        value: agents/telesales_agent/knowledge_gap_loop
+      - key: AGENT_LEARNING_RUNTIME_PREFIX
+        value: learning-runtime/telesales_agent
+      # AGENT_MEMORY_BUCKET is optional; defaults to CUSTOMER_MEMORY_BUCKET below.
+      # For an existing Blueprint, add these values in Render Environment before syncing.
+      # Keep credentials out of this file.
+      - key: CUSTOMER_MEMORY_BUCKET
+        value: user-memory
+      - key: AWS_ENDPOINT_URL_S3
+        sync: false
+      - key: AWS_ACCESS_KEY_ID
+        sync: false
+      - key: AWS_SECRET_ACCESS_KEY
+        sync: false
+      - key: AWS_REGION
+        value: ap-southeast-1
       - key: CUSTOMER_MEMORY_ROOT
         value: /app/data/memory-root/users
       - key: AGENT_INSTRUCTIONS_ROOT

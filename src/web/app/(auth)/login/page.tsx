@@ -3,7 +3,7 @@ import { AuthScreen } from "../auth-screen";
 
 export const metadata: Metadata = {
   title: "Đăng nhập · Synee AI",
-  description: "Giao diện đăng nhập demo của Synee AI và SUDO market.",
+  description: "Đăng nhập tài khoản Synee AI và SUDO market.",
 };
 
 export default function Page() {

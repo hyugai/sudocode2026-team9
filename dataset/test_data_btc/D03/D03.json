@@ -1,0 +1,135 @@
+{
+  "schema_version": 1,
+  "scenario_id": "D03",
+  "title": "Khách so giá máy lọc nước",
+  "source": {
+    "document": "Kịch-bản-thu-âm-D01-D04.docx",
+    "sha256": "676f81303e57e6f9f1b31310e7377e3afec9d459c1e9d9a00131232caea9e552",
+    "text_policy": "Nguyên văn từng lượt trong tài liệu BTC; không đưa nhãn vai hay hướng dẫn thu âm vào TTS."
+  },
+  "customer_group_id": "BTC_CUSTOMER_D03",
+  "follows_dialogue": null,
+  "days_after_previous": null,
+  "voice_cast": {
+    "customer": "NAM_3",
+    "advisor": "NU_2"
+  },
+  "calls": {
+    "call_1": {
+      "customer_turns": [
+        "em ơi máy lọc nước ka rô phi chín lõi bên em giá bao nhiêu",
+        "bên kia anh thấy bán có năm triệu bảy thôi, sao bên em đắt hơn",
+        "thế lắp đặt có mất phí không",
+        "để anh cân nhắc thêm rồi báo lại",
+        "đúng rồi"
+      ],
+      "dialogue_turns": [
+        {
+          "turn_index": 0,
+          "turn_number": 1,
+          "role": "customer",
+          "role_label": "Khách",
+          "voice_id": "NAM_3",
+          "voice_label": "Nam 3",
+          "customer_turn_index": 0,
+          "text": "em ơi máy lọc nước ka rô phi chín lõi bên em giá bao nhiêu",
+          "source_body_index": 36
+        },
+        {
+          "turn_index": 1,
+          "turn_number": 2,
+          "role": "advisor",
+          "role_label": "Tư vấn",
+          "voice_id": "NU_2",
+          "voice_label": "Nữ 2",
+          "customer_turn_index": null,
+          "text": "dạ máy ka rô phi chín lõi bên em giá năm triệu chín trăm chín mươi nghìn, bảo hành ba mươi sáu tháng ạ",
+          "source_body_index": 37
+        },
+        {
+          "turn_index": 2,
+          "turn_number": 3,
+          "role": "customer",
+          "role_label": "Khách",
+          "voice_id": "NAM_3",
+          "voice_label": "Nam 3",
+          "customer_turn_index": 1,
+          "text": "bên kia anh thấy bán có năm triệu bảy thôi, sao bên em đắt hơn",
+          "source_body_index": 38
+        },
+        {
+          "turn_index": 3,
+          "turn_number": 4,
+          "role": "advisor",
+          "role_label": "Tư vấn",
+          "voice_id": "NU_2",
+          "voice_label": "Nữ 2",
+          "customer_turn_index": null,
+          "text": "dạ bên em bảo hành ba năm thân máy, giao lắp tận nơi và đổi trả trong bảy ngày ạ, em không so được giá bên khác nhưng giá bên em là giá niêm yết chính hãng",
+          "source_body_index": 39
+        },
+        {
+          "turn_index": 4,
+          "turn_number": 5,
+          "role": "customer",
+          "role_label": "Khách",
+          "voice_id": "NAM_3",
+          "voice_label": "Nam 3",
+          "customer_turn_index": 2,
+          "text": "thế lắp đặt có mất phí không",
+          "source_body_index": 40
+        },
+        {
+          "turn_index": 5,
+          "turn_number": 6,
+          "role": "advisor",
+          "role_label": "Tư vấn",
+          "voice_id": "NU_2",
+          "voice_label": "Nữ 2",
+          "customer_turn_index": null,
+          "text": "dạ đơn từ hai triệu được miễn phí vận chuyển, hàng cồng kềnh ngoài nội thành phụ thu ba mươi nghìn thôi ạ",
+          "source_body_index": 41
+        },
+        {
+          "turn_index": 6,
+          "turn_number": 7,
+          "role": "customer",
+          "role_label": "Khách",
+          "voice_id": "NAM_3",
+          "voice_label": "Nam 3",
+          "customer_turn_index": 3,
+          "text": "để anh cân nhắc thêm rồi báo lại",
+          "source_body_index": 42
+        },
+        {
+          "turn_index": 7,
+          "turn_number": 8,
+          "role": "advisor",
+          "role_label": "Tư vấn",
+          "voice_id": "NU_2",
+          "voice_label": "Nữ 2",
+          "customer_turn_index": null,
+          "text": "dạ vâng, số của anh là không chín một bảy hai hai ba bốn năm sáu đúng không ạ, em lưu lại để gọi lại anh",
+          "source_body_index": 43
+        },
+        {
+          "turn_index": 8,
+          "turn_number": 9,
+          "role": "customer",
+          "role_label": "Khách",
+          "voice_id": "NAM_3",
+          "voice_label": "Nam 3",
+          "customer_turn_index": 4,
+          "text": "đúng rồi",
+          "source_body_index": 44
+        }
+      ]
+    }
+  },
+  "audio_spec": {
+    "sample_rate": 24000,
+    "channels": 1,
+    "subtype": "PCM_16",
+    "gap_seconds": 1.0
+  }
+}

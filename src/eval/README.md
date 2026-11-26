@@ -249,7 +249,7 @@ outputs/benchmark/benchmark_vN/
 Nguồn công thức tham chiếu:
 
 ```text
-dataset/BTC-Data-Vong1-TEAMS/eval/reference_eval.py
+dataset/organizer/eval/reference_eval.py
 ```
 
 `team_eval.py` tải trực tiếp file này để tránh viết lại các metric BTC theo một công thức khác.
@@ -462,7 +462,7 @@ Các API key và `DATABASE_URL` được đọc từ `.env`; không được cop
 ```powershell
 .\.venv\Scripts\python.exe src\eval\run_benchmark.py `
   --version benchmark_v7 `
-  --scenarios "dataset\iterative-refinement\scenarios_complete dataset" `
+  --scenarios "dataset\main\scenarios_complete" `
   --llm-provider gemini `
   --llm-model gemini-3.6-flash `
   --memory-persister-mode llm_learning `
@@ -481,7 +481,7 @@ Ví dụ trace chỉ chứa ba scenario đầu:
 
 ```powershell
 .\.venv\Scripts\python.exe src\eval\team_eval.py `
-  --scenarios "dataset\iterative-refinement\scenarios_complete dataset" `
+  --scenarios "dataset\main\scenarios_complete" `
   --limit 3 `
   --trace "outputs\benchmark\benchmark_v5\trace.jsonl" `
   --out "outputs\benchmark\benchmark_v5\report.json"
@@ -493,7 +493,7 @@ Phải truyền lại cùng `--scenario-id` hoặc `--limit` đã dùng khi gene
 
 ```powershell
 .\.venv\Scripts\python.exe src\eval\memory_judge.py `
-  --scenarios "dataset\iterative-refinement\scenarios_complete dataset" `
+  --scenarios "dataset\main\scenarios_complete" `
   --limit 3 `
   --trace "outputs\benchmark\benchmark_v5\trace.jsonl" `
   --provider gemini `
@@ -505,7 +505,7 @@ Sau đó chấm lại và gắn report MWQ:
 
 ```powershell
 .\.venv\Scripts\python.exe src\eval\team_eval.py `
-  --scenarios "dataset\iterative-refinement\scenarios_complete dataset" `
+  --scenarios "dataset\main\scenarios_complete" `
   --limit 3 `
   --trace "outputs\benchmark\benchmark_v5\trace.jsonl" `
   --memory-judge-report "outputs\benchmark\benchmark_v5\memory_judge.json" `

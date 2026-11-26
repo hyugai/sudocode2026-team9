@@ -5,10 +5,14 @@ import re
 import secrets
 import json
 import time
+from datetime import date
+from uuid import UUID
+from sqlalchemy.exc import SQLAlchemyError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi import Depends, FastAPI, File, Form, Header, HTTPException, UploadFile, Request
-from pydantic import BaseModel, field_validator
-from fastapi.responses import JSONResponse
+from pydantic import BaseModel, Field, field_validator
+from fastapi.responses import JSONResponse, StreamingResponse
+from fastapi.encoders import jsonable_encoder
 import sys
 
 # Add src to Python path so we can import the agent
@@ -19,35 +23,71 @@ from telesale_agent.adapters.asr.config import ASRConfig
 from telesale_agent.adapters.llm.rate_limits import is_rate_limit_error, provider_cooldown
 from telesale_agent.core.errors import ASRUnavailableError, AudioInputError, AudioTooLargeError
 from telesale_agent.core.models import CallBrief, Channel, TurnInput, ConversationState
+from telesale_agent.core.business_time import business_date
 from telesale_agent.adapters.rules.pii_utils import mask_pii
 from contextlib import asynccontextmanager
+from telesale_agent.adapters.db.app_repository import AppDataNotFound, AppDataRepository, ConversationConflict
+from telesale_agent.adapters.db.checkpoint import CheckpointError
+from telesale_agent.adapters.db.learning import LearningSnapshotTooLarge
+from telesale_agent.adapters.db.customer_identity import CustomerContactError
+from telesale_agent.application.memory.lifecycle import flush_customer_memory
+from telesale_agent.entrypoints.api.auth import COOKIE_NAME, auth_error, get_auth_repository, require_origin, require_user, require_customer
 
 # Global harness reference
 harness = None
+learning_service = None
 logger = logging.getLogger(__name__)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    global harness
+    global harness, learning_service
     print("🚀 Khởi tạo kết nối MCP Servers cho API Backend...")
     harness = await build_deepagent_harness_async()
     try:
+        from self_agent.config import LearningConfig
+        if LearningConfig.from_env().enabled:
+            from self_agent.backend import build_backend_learning
+            learning_service = await build_backend_learning(harness, get_auth_repository().engine)
         yield
     finally:
         try:
+            if stream_tasks:
+                await asyncio.gather(*stream_tasks, return_exceptions=True)
             await shutdown_voice()
         finally:
-            print("🛑 Đóng kết nối MCP Servers...")
-            if harness:
-                await harness.__aexit__(None, None, None)
+            try:
+                if learning_service:
+                    await learning_service.close()
+            finally:
+                learning_service = None
+                print("🛑 Đóng kết nối MCP Servers...")
+                try:
+                    if harness:
+                        await harness.__aexit__(None, None, None)
+                finally:
+                    harness = None
 
 app = FastAPI(title="Telesale Agent API", lifespan=lifespan)
 
 from telesale_agent.entrypoints.api.catalog import router as catalog_router
+from telesale_agent.entrypoints.api.auth import router as auth_router
+from telesale_agent.entrypoints.api.conversations import router as conversations_router
+from telesale_agent.entrypoints.api.salesman import router as salesman_router
 from telesale_agent.entrypoints.api.voice import create_voice_router
 app.include_router(catalog_router)
-voice_router, shutdown_voice = create_voice_router(lambda: harness)
+app.include_router(auth_router)
+app.include_router(conversations_router)
+app.include_router(salesman_router)
+voice_router, shutdown_voice = create_voice_router(lambda: harness, get_learning=lambda: learning_service)
 app.include_router(voice_router)
+
+
+@app.middleware("http")
+async def private_history_headers(request: Request, call_next):
+    response = await call_next(request)
+    if request.url.path.startswith("/api/salesman/"):
+        response.headers["Cache-Control"] = "no-store"
+    return response
 
 
 class ArrivalTimingMiddleware:
@@ -63,7 +103,9 @@ class ArrivalTimingMiddleware:
         async def emit(message):
             nonlocal response_start
             if (message["type"] == "http.response.start" and message["status"] == 200
-                    and scope.get("path") in {"/api/chat", "/api/chat/audio"}):
+                    and scope.get("path") in {"/api/chat", "/api/chat/audio"}
+                    and any(key.lower() == b"content-type" and value.startswith(b"application/json")
+                            for key, value in message["headers"])):
                 response_start = message
                 return
             if response_start is not None:
@@ -104,10 +146,10 @@ app.add_middleware(
     expose_headers=["Retry-After"],
 )
 
-# Active call state is intentionally in-memory. Render is configured with one
-# instance because customer .md memory lives on a persistent disk.
+# Active calls and pending memory uploads share one backend worker.
 sessions: dict[str, ConversationState] = {}
 session_locks: dict[str, asyncio.Lock] = {}
+stream_tasks: set[asyncio.Task] = set()
 
 
 def require_api_key(x_api_key: str | None = Header(default=None)) -> None:
@@ -117,10 +159,21 @@ def require_api_key(x_api_key: str | None = Header(default=None)) -> None:
     ):
         raise HTTPException(status_code=401, detail="Invalid or missing API key")
 
+async def require_chat_access(request: Request, x_api_key: str | None = Header(default=None),
+                              repository: AppDataRepository = Depends(get_auth_repository)) -> None:
+    if request.cookies.get(COOKIE_NAME) or request.headers.get("X-Conversation-Mode") == "account":
+        require_origin(request)
+        user = await require_user(request, repository)
+        await require_customer(user)
+    else:
+        require_api_key(x_api_key)
+
+
 class ChatRequest(BaseModel):
     conversation_id: str
-    message: str
+    message: str = Field(max_length=10000)
     customer_phone: str | None = None
+    call_date: date | None = None
 
     @field_validator("conversation_id", "message")
     @classmethod
@@ -129,23 +182,29 @@ class ChatRequest(BaseModel):
             raise ValueError("must not be empty")
         return value.strip()
 
-@app.post("/api/chat", dependencies=[Depends(require_api_key)])
-async def chat_endpoint(req: ChatRequest, request: Request):
+@app.post("/api/chat", dependencies=[Depends(require_chat_access)])
+async def chat_endpoint(req: ChatRequest, request: Request, repository: AppDataRepository = Depends(get_auth_repository)):
     turn_input = TurnInput(
         conversation_id=req.conversation_id,
         text=req.message,
         customer_hint=req.customer_phone,
-        metadata={"_latency_started_at": request.scope["telesale_received_at"]},
+        metadata={"_latency_started_at": request.scope["telesale_received_at"],
+                  "call_date": business_date(req.call_date).isoformat()},
     )
-    return await run_chat_turn(turn_input)
+    repository, user_id = await conversation_owner(request, req.conversation_id, repository)
+    if "text/event-stream" in request.headers.get("accept", ""):
+        return stream_chat_turn(turn_input, repository=repository, user_id=user_id)
+    return await run_chat_turn(turn_input, repository=repository, user_id=user_id)
 
 
-@app.post("/api/chat/audio", dependencies=[Depends(require_api_key)])
+@app.post("/api/chat/audio", dependencies=[Depends(require_chat_access)])
 async def audio_chat_endpoint(
     request: Request,
     conversation_id: str = Form(...),
     file: UploadFile = File(...),
     customer_phone: str | None = Form(default=None),
+    call_date: date | None = Form(default=None),
+    repository: AppDataRepository = Depends(get_auth_repository),
 ):
     try:
         if harness is None:
@@ -166,35 +225,157 @@ async def audio_chat_endpoint(
             audio=audio,
             channel=Channel.VOICE,
             customer_hint=customer_phone or None,
-            metadata={"_latency_started_at": request.scope["telesale_received_at"], "offline_audio": True},
+            metadata={"_latency_started_at": request.scope["telesale_received_at"], "offline_audio": True,
+                      "call_date": business_date(call_date).isoformat()},
         )
-        return await run_chat_turn(turn_input)
+        repository, user_id = await conversation_owner(request, conversation_id.strip(), repository)
+        if "text/event-stream" in request.headers.get("accept", ""):
+            return stream_chat_turn(turn_input, repository=repository, user_id=user_id)
+        return await run_chat_turn(turn_input, repository=repository, user_id=user_id)
     finally:
         await file.close()
 
 
-async def run_chat_turn(turn_input: TurnInput):
+async def conversation_owner(request: Request, conversation_id: str, repository: AppDataRepository) -> tuple[AppDataRepository | None, str | None]:
+    account = bool(request.cookies.get(COOKIE_NAME)) or request.headers.get("X-Conversation-Mode") == "account"
+    if account:
+        require_origin(request)
+        user = await require_user(request, repository)
+        return repository, user["id"]
+    await guard_guest_id(conversation_id, repository)
+    return None, None
+
+
+async def guard_guest_id(conversation_id: str, repository: AppDataRepository) -> None:
+    try:
+        UUID(conversation_id)
+    except ValueError:
+        return  # Legacy guest IDs are allowed and cannot be account UUIDs.
+    try:
+        if await repository.conversation_exists(conversation_id):
+            raise auth_error(404, "Không tìm thấy hội thoại.")
+    except SQLAlchemyError as exc:
+        raise auth_error(503, "Chưa kiểm tra được hội thoại. Hãy thử lại.") from exc
+
+
+def stream_chat_turn(turn_input: TurnInput, *, repository=None, user_id=None) -> StreamingResponse:
+    """Stream drafts, then one receipt after guardrails and the DB transaction."""
+    async def events():
+        queue = asyncio.Queue()
+        connected = True
+        latest_text, text_queued = "", False
+
+        async def on_text(text):
+            nonlocal latest_text, text_queued
+            latest_text = text
+            if connected and not text_queued:
+                text_queued = True
+                queue.put_nowait(("text", None))
+
+        async def on_status(stage):
+            if connected:
+                queue.put_nowait(("status", {"stage": stage}))
+
+        async def produce():
+            try:
+                result = await run_chat_turn(turn_input, repository=repository, user_id=user_id, on_text=on_text, on_status=on_status)
+                if isinstance(result, JSONResponse):
+                    data = json.loads(result.body)
+                    event = "error" if result.status_code >= 400 else "done"
+                    if event == "error":
+                        data["status"] = result.status_code
+                else:
+                    event, data = "done", result
+                if connected:
+                    queue.put_nowait((event, data))
+            except HTTPException as exc:
+                if connected:
+                    queue.put_nowait(("error", {"detail": exc.detail, "status": exc.status_code}))
+            except Exception:
+                logger.exception("Chat stream failed: %s", turn_input.conversation_id)
+                if connected:
+                    queue.put_nowait(("error", {"detail": "Kết nối bị gián đoạn. Hãy kiểm tra lịch sử trước khi gửi lại."}))
+
+        # Finish the current turn/save even if the browser disconnects; never replay it.
+        task = asyncio.create_task(produce())
+        stream_tasks.add(task)
+        task.add_done_callback(stream_tasks.discard)
+        try:
+            yield 'event: status\ndata: {"stage":"processing"}\n\n'
+            while True:
+                try:
+                    event, data = await asyncio.wait_for(queue.get(), timeout=15)
+                except TimeoutError:
+                    yield ": keepalive\n\n"
+                    continue
+                if event == "text":
+                    text_queued = False
+                    data = {"text": latest_text}
+                yield f"event: {event}\ndata: {json.dumps(jsonable_encoder(data), ensure_ascii=False)}\n\n"
+                if event in {"done", "error"}:
+                    break
+        finally:
+            connected = False
+
+    return StreamingResponse(events(), media_type="text/event-stream",
+                             headers={"Cache-Control": "no-store, no-transform", "X-Accel-Buffering": "no"})
+
+
+async def run_chat_turn(turn_input: TurnInput, *, repository: AppDataRepository | None = None, user_id: str | None = None, on_text=None, on_status=None):
     """Keep text and voice turns in the same ordered conversation."""
     if harness is None:
         raise HTTPException(status_code=503, detail="Agent is not ready")
 
     conversation_id = turn_input.conversation_id
+    if repository is not None:
+        try:
+            conversation_id = turn_input.conversation_id = str(UUID(conversation_id))
+        except ValueError as exc:
+            raise auth_error(422, "Mã hội thoại không hợp lệ.") from exc
     lock = session_locks.setdefault(conversation_id, asyncio.Lock())
 
     async with lock:
         if provider_cooldown.remaining():
             return rate_limit_response()
-        state = sessions.get(conversation_id) or ConversationState(
-            conversation_id=conversation_id
-        )
+        if repository is not None:
+            try:
+                state = await repository.load_state(user_id, conversation_id, active_only=True)
+            except AppDataNotFound as exc:
+                raise auth_error(404, "Không tìm thấy hội thoại.") from exc
+            except (CheckpointError, ConversationConflict) as exc:
+                raise auth_error(409, str(exc)) from exc
+            except SQLAlchemyError as exc:
+                raise auth_error(503, "Chưa đọc được hội thoại. Hãy thử lại.") from exc
+        else:
+            state = sessions.get(conversation_id) or ConversationState(conversation_id=conversation_id)
+            if learning_service:
+                try:
+                    await learning_service.flush_guest(conversation_id)
+                except Exception as exc:
+                    raise auth_error(503, "Chưa lưu được lượt trước. Hãy thử lại sau.") from exc
+            if learning_service and conversation_id not in sessions:
+                try:
+                    state = await learning_service.restore_guest(conversation_id) or state
+                except ValueError as exc:
+                    raise auth_error(409, str(exc)) from exc
+                except Exception as exc:
+                    raise auth_error(503, "Chưa khôi phục được phiên. Hãy thử lại.") from exc
+        lesson_token = None
         try:
-            result = await harness.run_turn(turn_input, state)
+            if repository is not None and (not state.identity or not state.identity.customer_id):
+                turn_input.metadata.update(await repository.identity_contact(user_id))
+            if learning_service:
+                lesson_token = await learning_service.begin_chat("account" if repository else "guest", turn_input, state)
+            result = (await harness.run_turn(turn_input, state, on_text=on_text, on_status=on_status)
+                      if on_text is not None else await harness.run_turn(turn_input, state))
         except AudioTooLargeError as exc:
             raise HTTPException(status_code=413, detail=str(exc)) from exc
         except AudioInputError as exc:
             raise HTTPException(status_code=422, detail=str(exc)) from exc
         except ASRUnavailableError as exc:
             raise HTTPException(status_code=503, detail=str(exc)) from exc
+        except CustomerContactError as exc:
+            raise HTTPException(status_code=422, detail=str(exc)) from exc
         except HTTPException:
             raise
         except Exception as exc:
@@ -209,9 +390,37 @@ async def run_chat_turn(turn_input: TurnInput):
                 status_code=502,
                 detail="Không thể xử lý lượt hội thoại lúc này. Vui lòng thử lại sau.",
             ) from exc
+        finally:
+            if lesson_token is not None:
+                learning_service.reset_chat(lesson_token)
+        payload = turn_payload(turn_input, result)
+        if repository is not None:
+            try:
+                if on_status:
+                    await on_status("saving")
+                extra = {"learning_hook": learning_service.save_hook("account", result.state, result)} if learning_service else {}
+                payload.update(await repository.save_turn(user_id, result.state, turn_input.text,
+                                                         result.response_text, payload["call_brief"], **extra))
+            except Exception:
+                logger.exception("Could not persist account conversation %s", conversation_id)
+                sessions.pop(conversation_id, None)
+                return JSONResponse(status_code=502, headers={"Cache-Control": "no-store"}, content={
+                    "detail": "Chưa xác nhận lưu được kết quả. Hãy kiểm tra lịch sử trước khi gửi lại.",
+                    "code": "turn_outcome_unknown",
+                })
+        elif learning_service:
+            try:
+                await learning_service.save_guest(result.state, result)
+            except Exception:
+                logger.warning("Could not persist guest learning turn")
+                sessions[conversation_id] = result.state
+                return JSONResponse(status_code=502, headers={"Cache-Control": "no-store"}, content={
+                    "detail": "Chưa xác nhận lưu được kết quả. Hãy kiểm tra lịch sử trước khi gửi lại.",
+                    "code": "turn_outcome_unknown",
+                })
         sessions[conversation_id] = result.state
 
-    return turn_payload(turn_input, result)
+    return JSONResponse(content=jsonable_encoder(payload), headers={"Cache-Control": "no-store"}) if repository else payload
 
 
 def _call_brief_preview(brief: CallBrief | None) -> dict[str, str | list[str]] | None:
@@ -238,6 +447,8 @@ def _call_brief_preview(brief: CallBrief | None) -> dict[str, str | list[str]] |
 
 def turn_payload(turn_input, result):
     response = {"response": result.response_text, "latency": getattr(result, "latency", {})}
+    identity = getattr(result.state, "identity", None)
+    response["customer_id"] = identity.customer_id if identity else None
     response["call_brief"] = _call_brief_preview(getattr(result, "call_brief", None))
     response["call_brief_latency_ms"] = response["latency"].get("call_brief_ms")
     if turn_input.channel == Channel.VOICE:
@@ -282,9 +493,31 @@ def rate_limit_response() -> JSONResponse:
     "/api/sessions/{conversation_id}",
     dependencies=[Depends(require_api_key)],
 )
-async def clear_session(conversation_id: str):
-    sessions.pop(conversation_id, None)
-    session_locks.pop(conversation_id, None)
+async def clear_session(conversation_id: str, request: Request, repository: AppDataRepository = Depends(get_auth_repository)):
+    if request.cookies.get(COOKIE_NAME) or request.headers.get("X-Conversation-Mode") == "account":
+        user = await require_user(request, repository)
+        await require_customer(user)
+    await guard_guest_id(conversation_id, repository)
+    async with session_locks.setdefault(conversation_id, asyncio.Lock()):
+        try:
+            state = sessions.get(conversation_id)
+            if learning_service:
+                await learning_service.flush_guest(conversation_id)
+            if state is None and learning_service:
+                try:
+                    state = await learning_service.restore_guest(conversation_id)
+                except ValueError:
+                    # An already-ended guest session is an idempotent clear.
+                    return {"status": "cleared", "conversation_id": conversation_id}
+            await flush_customer_memory(harness, state)
+            if learning_service and state:
+                await learning_service.end_guest(state)
+        except LearningSnapshotTooLarge as exc:
+            raise auth_error(413, str(exc)) from exc
+        except Exception as exc:
+            logger.warning("Could not finalize guest memory error=%s", type(exc).__name__)
+            raise HTTPException(503, "Chưa đồng bộ được bộ nhớ. Phiên vẫn được giữ, hãy thử kết thúc lại.") from exc
+        sessions.pop(conversation_id, None)
     return {"status": "cleared", "conversation_id": conversation_id}
 
 # Optional root endpoint for health checks
@@ -294,7 +527,14 @@ def read_root():
 
 
 @app.get("/health")
-def health():
+@app.get("/api/health")
+async def health():
     if harness is None:
         raise HTTPException(status_code=503, detail="Agent is starting")
-    return {"status": "ok"}
+    from telesale_agent.entrypoints.api.readiness import check_readiness
+    from telesale_agent.adapters.llm.tracing import tracing_status
+    checks = await check_readiness(harness)
+    ready = all(value == "ok" for value in checks.values())
+    return JSONResponse(status_code=200 if ready else 503,
+                        content={"status": "ok" if ready else "unavailable",
+                                 "checks": checks, "tracing": tracing_status()})

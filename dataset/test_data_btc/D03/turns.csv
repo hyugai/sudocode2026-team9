@@ -1,0 +1,10 @@
+﻿turn_index,turn_number,role,voice_id,voice_label,customer_turn_index,text,source_body_index
+0,1,customer,NAM_3,Nam 3,0,em ơi máy lọc nước ka rô phi chín lõi bên em giá bao nhiêu,36
+1,2,advisor,NU_2,Nữ 2,,"dạ máy ka rô phi chín lõi bên em giá năm triệu chín trăm chín mươi nghìn, bảo hành ba mươi sáu tháng ạ",37
+2,3,customer,NAM_3,Nam 3,1,"bên kia anh thấy bán có năm triệu bảy thôi, sao bên em đắt hơn",38
+3,4,advisor,NU_2,Nữ 2,,"dạ bên em bảo hành ba năm thân máy, giao lắp tận nơi và đổi trả trong bảy ngày ạ, em không so được giá bên khác nhưng giá bên em là giá niêm yết chính hãng",39
+4,5,customer,NAM_3,Nam 3,2,thế lắp đặt có mất phí không,40
+5,6,advisor,NU_2,Nữ 2,,"dạ đơn từ hai triệu được miễn phí vận chuyển, hàng cồng kềnh ngoài nội thành phụ thu ba mươi nghìn thôi ạ",41
+6,7,customer,NAM_3,Nam 3,3,để anh cân nhắc thêm rồi báo lại,42
+7,8,advisor,NU_2,Nữ 2,,"dạ vâng, số của anh là không chín một bảy hai hai ba bốn năm sáu đúng không ạ, em lưu lại để gọi lại anh",43
+8,9,customer,NAM_3,Nam 3,4,đúng rồi,44

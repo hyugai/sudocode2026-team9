@@ -1,0 +1,10 @@
+D02 — Khách gọi lại sau hai ngày (cùng khách với D01)
+
+01. Khách (Nữ 1): alo, hôm trước chị có gọi hỏi máy lọc không khí bên em đó
+02. Tư vấn (Nữ 3): dạ em chào chị, hôm mười lăm bên em có tư vấn chị mẫu e pia y cho phòng ngủ hai mươi lăm mét, giá năm triệu hai trăm nghìn, chị đã trao đổi với anh nhà chưa ạ
+03. Khách (Nữ 1): rồi, ông xã chị đồng ý rồi, giá vẫn vậy đúng không em
+04. Tư vấn (Nữ 3): dạ vẫn năm triệu hai trăm nghìn, còn tặng màng lọc, giao nội thành một đến hai ngày làm việc ạ
+05. Khách (Nữ 1): ừ lên đơn cho chị đi, giao về địa chỉ cũ, thanh toán khi nhận hàng
+06. Tư vấn (Nữ 3): dạ em xác nhận lại, một máy e pia y, năm triệu hai trăm nghìn, giao về số mười hai ngõ ba mươi tám phố hoàng cầu quận đống đa, thanh toán cê ô đê, đúng không ạ
+07. Khách (Nữ 1): đúng rồi em
+08. Tư vấn (Nữ 3): dạ mã đơn của chị là ô đê ba trăm mười hai nghìn bốn trăm năm mươi sáu, em cảm ơn chị ạ

@@ -44,8 +44,8 @@ try {
   await b.wait("document.querySelector('#floating-message')");
   await check("Live SKU context reaches the shared chat", "document.querySelector('.consultation-context').textContent.includes('SKU-AP-X') && document.querySelector('.consultation-context').textContent.includes('1.234.567₫')");
   await b.evaluate("document.querySelector('.mode-toggle button:last-child').click()");
-  await b.wait("document.querySelector('.voice-wave')");
-  await check("LiveKit Wave remains available from live product consultation", "!!document.querySelector('dialog[open] .voice-wave[data-lk-state=disconnected]')");
+  await b.wait("document.querySelector('.voice-aura')");
+  await check("LiveKit Aura remains available from live product consultation", "!!document.querySelector('dialog[open] .voice-aura[data-lk-state=disconnected]')");
   await b.screenshot(`${output}/live-product-voice.png`);
   await b.send("Emulation.setDeviceMetricsOverride", { width: 320, height: 760, deviceScaleFactor: 1, mobile: false });
   await check("Live catalog and Voice dialog fit 320px", "document.documentElement.scrollWidth <= 320 && document.querySelector('dialog').scrollWidth <= document.querySelector('dialog').clientWidth");

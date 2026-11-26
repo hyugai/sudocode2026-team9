@@ -1,0 +1,292 @@
+{
+  "transcript_id": "SC-142-call_2",
+  "scenario_id": "SC-142",
+  "source_scenario_id": "SC-022",
+  "customer_id": "C010",
+  "call": "call_2",
+  "channel": "hotline",
+  "channel_identity": "0993186032",
+  "call_date": "2026-10-07",
+  "language": "vi",
+  "origin": "authored_synthetic_reference_dialogue",
+  "is_actual_agent_trace": false,
+  "audio_status": "pending_recording",
+  "voice_region_target": "trung",
+  "noise_target": false,
+  "utterances": [
+    {
+      "speaker": "customer",
+      "text": "Anh liên hệ lại theo lịch. Đơn OD600001 đã nhận hôm qua; sản phẩm hơi chật.",
+      "source_customer_turn_index": 0
+    },
+    {
+      "speaker": "agent",
+      "text": "Dạ anh, em đã tìm đơn OD600001 của lần mua trước. Em ghi nhận việc đã nhận hàng theo thông tin anh vừa báo, sẽ đối chiếu điều kiện đổi trước khi xử lý.",
+      "source_refs": [
+        "schemas/tools.schema.json",
+        "catalog/products.json"
+      ],
+      "tool_refs": [
+        0,
+        1
+      ]
+    },
+    {
+      "speaker": "customer",
+      "text": "Anh muốn đổi từ size 39 sang 40, giữ màu cũ. Đây là lần đổi đầu tiên; hàng còn nguyên tem, hộp và chưa sử dụng.",
+      "source_customer_turn_index": 1
+    },
+    {
+      "speaker": "agent",
+      "text": "Giày sneaker Urban Classic, size 40, màu đen còn hàng. Với thông tin anh vừa xác nhận về ngày nhận, tem hộp và chưa sử dụng, lần đổi size đầu tiên được miễn phí vận chuyển hai chiều. Em sẽ tạo yêu cầu đúng đơn cũ, không tạo đơn mua mới.",
+      "source_refs": [
+        "schemas/tools.schema.json",
+        "catalog/products.json"
+      ],
+      "tool_refs": [
+        2
+      ]
+    },
+    {
+      "speaker": "customer",
+      "text": "Phí đổi size lần đầu thế nào? Anh đồng ý làm thủ tục đổi, lấy hàng tại địa chỉ đã giao.",
+      "source_customer_turn_index": 2
+    },
+    {
+      "speaker": "agent",
+      "text": "Em đã gửi yêu cầu đổi size cho đơn OD600001; trạng thái chờ sắp lịch lấy hàng. Phí đổi lần này là 0 đồng. Shop dự kiến bố trí lấy trong 1–2 ngày làm việc; đây chưa phải xác nhận đã lấy hoặc đã giao hàng đổi.",
+      "source_refs": [
+        "policy/chinh-sach-doi-tra.md#DT-03",
+        "policy/chinh-sach-doi-tra.md#DT-07"
+      ],
+      "tool_refs": [
+        3
+      ]
+    }
+  ],
+  "private_annotations": {
+    "persona": "khach_da_mua_doi_size",
+    "customer_goal": "Đổi lên size tiếp theo, giữ màu, lần đầu và trong hạn 7 ngày.",
+    "expected_outcome": "chot_don",
+    "facts_established": {
+      "order_id": "OD600001",
+      "requested_size": 40,
+      "first_exchange": true,
+      "received_on": "2026-10-06",
+      "unused_with_tags": true
+    },
+    "sentiment_target": "trung tính",
+    "objection": null,
+    "fact_provenance_after_call": {
+      "product_advised": {
+        "value": "SKU-SN-CAS",
+        "source_session": "SC-142-call_1",
+        "last_confirmed_session": "SC-142-call_1",
+        "valid_from": "2026-10-03",
+        "supersedes_session": null
+      },
+      "variant_sku": {
+        "value": "SKU-SN-CAS-39-DEN",
+        "source_session": "SC-142-call_1",
+        "last_confirmed_session": "SC-142-call_1",
+        "valid_from": "2026-10-03",
+        "supersedes_session": null
+      },
+      "size": {
+        "value": 39,
+        "source_session": "SC-142-call_1",
+        "last_confirmed_session": "SC-142-call_1",
+        "valid_from": "2026-10-03",
+        "supersedes_session": null
+      },
+      "color": {
+        "value": "den",
+        "source_session": "SC-142-call_1",
+        "last_confirmed_session": "SC-142-call_1",
+        "valid_from": "2026-10-03",
+        "supersedes_session": null
+      },
+      "price_quoted_vnd": {
+        "value": 890000,
+        "source_session": "SC-142-call_1",
+        "last_confirmed_session": "SC-142-call_1",
+        "valid_from": "2026-10-03",
+        "supersedes_session": null
+      },
+      "payment": {
+        "value": "COD",
+        "source_session": "SC-142-call_1",
+        "last_confirmed_session": "SC-142-call_1",
+        "valid_from": "2026-10-03",
+        "supersedes_session": null
+      },
+      "delivery_address": {
+        "value": "101 đường Kiểm Thử, TP. Hồ Chí Minh",
+        "source_session": "SC-142-call_1",
+        "last_confirmed_session": "SC-142-call_1",
+        "valid_from": "2026-10-03",
+        "supersedes_session": null
+      },
+      "order_id": {
+        "value": "OD600001",
+        "source_session": "SC-142-call_2",
+        "last_confirmed_session": "SC-142-call_2",
+        "valid_from": "2026-10-07",
+        "supersedes_session": null
+      },
+      "requested_size": {
+        "value": 40,
+        "source_session": "SC-142-call_2",
+        "last_confirmed_session": "SC-142-call_2",
+        "valid_from": "2026-10-07",
+        "supersedes_session": null
+      },
+      "first_exchange": {
+        "value": true,
+        "source_session": "SC-142-call_2",
+        "last_confirmed_session": "SC-142-call_2",
+        "valid_from": "2026-10-07",
+        "supersedes_session": null
+      },
+      "received_on": {
+        "value": "2026-10-06",
+        "source_session": "SC-142-call_2",
+        "last_confirmed_session": "SC-142-call_2",
+        "valid_from": "2026-10-07",
+        "supersedes_session": null
+      },
+      "unused_with_tags": {
+        "value": true,
+        "source_session": "SC-142-call_2",
+        "last_confirmed_session": "SC-142-call_2",
+        "valid_from": "2026-10-07",
+        "supersedes_session": null
+      }
+    },
+    "memory_expectation": null,
+    "memory_rules": {
+      "price_and_stock": "revalidate with tools every session; historical quote remains episodic",
+      "address_ttl_days": 180,
+      "intent_ttl_days": 30,
+      "shared_phone": "resolve customer_id; never merge profiles solely by phone"
+    },
+    "source_refs": [
+      "catalog/products.json",
+      "policy/chinh-sach-doi-tra.md#DT-03",
+      "policy/chinh-sach-doi-tra.md#DT-07",
+      "schemas/tools.schema.json"
+    ],
+    "reference_tool_executions": [
+      {
+        "name": "crm.get_customer",
+        "args": {
+          "phone": "0993186032"
+        },
+        "result": {
+          "found": true,
+          "ambiguous": false,
+          "customer_id": "C010",
+          "name": "Đức",
+          "honorific": "anh",
+          "phone": "0993186032",
+          "identities": {
+            "zalo_id": null,
+            "fb_id": "fb.đức.146"
+          },
+          "orders": [
+            {
+              "order_id": "OD600001",
+              "customer_phone": "0993186032",
+              "sku": "SKU-SN-CAS-39-DEN",
+              "lines": [
+                {
+                  "sku": "SKU-SN-CAS-39-DEN",
+                  "price_vnd": 890000
+                }
+              ],
+              "qty": 1,
+              "price_vnd": 890000,
+              "total_vnd": 890000,
+              "promos": [
+                "COD-0"
+              ],
+              "payment": "COD",
+              "address": "101 đường Kiểm Thử, TP. Hồ Chí Minh",
+              "created_on": "2026-10-03",
+              "status": "created"
+            }
+          ],
+          "sessions": []
+        },
+        "origin": "executed_reference_mock_for_authored_fixture"
+      },
+      {
+        "name": "order.status",
+        "args": {
+          "order_id": "OD600001"
+        },
+        "result": {
+          "orders": [
+            {
+              "order_id": "OD600001",
+              "customer_phone": "0993186032",
+              "sku": "SKU-SN-CAS-39-DEN",
+              "lines": [
+                {
+                  "sku": "SKU-SN-CAS-39-DEN",
+                  "price_vnd": 890000
+                }
+              ],
+              "qty": 1,
+              "price_vnd": 890000,
+              "total_vnd": 890000,
+              "promos": [
+                "COD-0"
+              ],
+              "payment": "COD",
+              "address": "101 đường Kiểm Thử, TP. Hồ Chí Minh",
+              "created_on": "2026-10-03",
+              "status": "created"
+            }
+          ]
+        },
+        "origin": "executed_reference_mock_for_authored_fixture"
+      },
+      {
+        "name": "inventory.check",
+        "args": {
+          "sku": "SKU-SN-CAS-40-DEN",
+          "on": "2026-10-07"
+        },
+        "result": {
+          "sku": "SKU-SN-CAS-40-DEN",
+          "in_stock": true,
+          "qty": 5
+        },
+        "origin": "executed_reference_mock_for_authored_fixture"
+      },
+      {
+        "name": "order.update",
+        "args": {
+          "order_id": "OD600001",
+          "action": "exchange_size",
+          "new_variant_sku": "SKU-SN-CAS-40-DEN",
+          "on": "2026-10-07"
+        },
+        "result": {
+          "order_id": "OD600001",
+          "action": "exchange_size",
+          "new_variant_sku": "SKU-SN-CAS-40-DEN",
+          "fee_vnd": 0,
+          "price_diff_vnd": 0,
+          "refund_vnd": 0,
+          "extra_payment_vnd": 0,
+          "refund_days": "3-5 ngày làm việc",
+          "status": "pickup_scheduled"
+        },
+        "origin": "executed_reference_mock_for_authored_fixture"
+      }
+    ],
+    "review_status": "automated_fixture_checks; human_semantic_review_pending"
+  }
+}

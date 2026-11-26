@@ -9,7 +9,7 @@ from telesale_agent.core.address import (
     extract_explicit_delivery_address,
     looks_like_delivery_address,
 )
-from telesale_agent.core.basket import mentioned_catalog_items
+from telesale_agent.core.basket import mentioned_catalog_items, product_lines
 from telesale_agent.core.models import TurnContext
 from telesale_agent.application.customer_text import literal_customer_text
 from telesale_agent.application.deepagent.context.facts import _current_fact, _known_fact
@@ -175,19 +175,41 @@ def _quantity(context: TurnContext) -> int:
             return int(val)
         if val in word_map:
             return word_map[val]
+    pending = context.state.working_memory.get("pending_order") or {}
+    if isinstance(pending.get("quantity"), int) and pending["quantity"] > 0:
+        return pending["quantity"]
     return 1
 
 def _basket_skus(context: TurnContext) -> list[str]:
     value = _current_fact(context, "basket_skus")
     if not isinstance(value, list):
-        return []
-    return list(
-        dict.fromkeys(
-            str(sku).strip()
-            for sku in value
-            if isinstance(sku, str) and sku.strip()
-        )
-    )
+        lines = _current_fact(context, "basket_lines")
+        return [line["sku"] for line in lines if isinstance(line, dict) and isinstance(line.get("sku"), str)] if isinstance(lines, list) else []
+    return [sku.strip() for sku in value if isinstance(sku, str) and sku.strip()]
+
+
+def _basket_lines(
+    context: TurnContext, skus: list[str] | None = None,
+    names: dict[str, str] | None = None,
+) -> list[dict[str, Any]]:
+    """Use per-item counts; read old repeated-SKU and quantity_each baskets too."""
+    skus = skus if skus is not None else _basket_skus(context)
+    previous = _known_fact(context, "basket_lines")
+    pending = context.state.working_memory.get("pending_order") or {}
+    if not isinstance(previous, list):
+        previous = pending.get("lines", []) if isinstance(pending, dict) else []
+    if not skus:
+        skus = [line["sku"] for line in previous if isinstance(line, dict) and isinstance(line.get("sku"), str)]
+    # Older memory represents physical units by repeating the SKU. Keep their
+    # order, which also determines the winner when AIR-2ND-50 prices tie.
+    if len(skus) != len(set(skus)):
+        return [{"sku": sku, "qty": 1} for sku in skus]
+    known_names = _current_fact(context, "basket_product_names")
+    resolved_names = dict(known_names) if isinstance(known_names, dict) else {}
+    resolved_names.update(names or {})
+    return product_lines(literal_customer_text(context.input),
+                         [{"sku": sku, "name": resolved_names.get(sku, sku)} for sku in skus],
+                         previous, _quantity(context))
 
 def _customer_phone(context: TurnContext) -> str | None:
     """Return only the phone already verified by CRM/identity resolution."""

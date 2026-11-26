@@ -44,6 +44,9 @@ class CustomerContextService:
         }
 
     async def _load_memory(self, customer_id: str) -> dict[str, Any]:
+        ensure = getattr(self.memory, "ensure_customer", None)
+        if callable(ensure):
+            await asyncio.to_thread(ensure, customer_id)
         if callable(getattr(self.memory, "save_snapshot", None)):
             return await asyncio.to_thread(self.memory.load, customer_id)
         return self.memory.load(customer_id)

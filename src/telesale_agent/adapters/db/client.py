@@ -4,6 +4,7 @@ from urllib.parse import quote_plus
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from telesale_agent.adapters.db.customer_identity import customer_contacts, get_or_create_customer
 
 from telesale_agent.adapters.db.models import (
     Product, ProductVariant, Promotion, InventoryEvent, Customer, Order
@@ -56,10 +57,11 @@ class PostgresClient:
         max_price_vnd: int = None,
         *,
         include_discontinued: bool = False,
+        min_room_area_m2: int | None = None,
     ):
         with self.get_session() as session:
             stmt = session.query(Product)
-            if not include_discontinued:
+            if not include_discontinued and not sku:
                 stmt = stmt.filter(Product.is_discontinued == False)
             
             if sku:
@@ -81,6 +83,8 @@ class PostgresClient:
             products = stmt.all()
             results = []
             for p in products:
+                if min_room_area_m2 and (p.attributes or {}).get("room_area_m2", 0) < min_room_area_m2:
+                    continue
                 results.append({
                     "sku": p.sku,
                     "name": p.name,
@@ -96,16 +100,22 @@ class PostgresClient:
                             "size": v.size, 
                             "color": v.color, 
                             "price_delta": float(v.price_delta_vnd) if v.price_delta_vnd else 0,
+                            "price_delta_vnd": int(v.price_delta_vnd or 0),
                         } for v in p.variants
                     ]
                 })
-            return {"items": results}
+            return {"items": results[:20], "total": len(results)}
 
     def check_stock(self, sku: str, target_date: date) -> dict:
         with self.get_session() as session:
             variant = session.query(ProductVariant).filter_by(variant_sku=sku).first()
             product_sku = variant.product_sku if variant else sku
             product = session.query(Product).filter_by(sku=product_sku).first()
+            if product is None:
+                return {"sku": sku, "error": "unknown_sku"}
+            if product.is_discontinued:
+                return {"sku": sku, "in_stock": False, "qty": 0, "discontinued": True,
+                        "successor_sku": product.successor_sku}
 
             # Check inventory_events
             event = session.query(InventoryEvent).filter(
@@ -202,9 +212,10 @@ class PostgresClient:
                 if order.get("sku") and order.get("status") == "delivered"
             ],
             "used_promos": [
-                order.get("promo_code")
+                code
                 for order in orders
-                if order.get("promo_code")
+                for code in order.get("promos", [])
+                if code
             ],
         }
 
@@ -254,6 +265,11 @@ class PostgresClient:
 
     @staticmethod
     def _serialize_order(order, *, customer_phone: str | None = None):
+        lines = order.lines or [{"sku": order.sku, "qty": order.qty,
+                                 "price_vnd": int(order.price_vnd or 0)}]
+        promos = {code for line in lines for code in line.get("promos", [])}
+        if order.lines is None and order.promo_code:
+            promos.add(order.promo_code)
         return {
             "order_id": order.order_id,
             "customer_id": order.customer_id,
@@ -261,6 +277,9 @@ class PostgresClient:
             "sku": order.sku,
             "qty": order.qty,
             "price_vnd": int(order.price_vnd) if order.price_vnd is not None else None,
+            "lines": lines,
+            "total_vnd": sum(line["price_vnd"] * line.get("qty", 1) for line in lines),
+            "promos": sorted(promos),
             "promo_code": order.promo_code,
             "payment": order.payment,
             "address": order.address,
@@ -289,6 +308,8 @@ class PostgresClient:
             "region": customer.region,
             "attributes": customer.attributes or {},
             "orders": orders_data,
+            "identities": {"zalo_id": customer.zalo_id, "fb_id": customer.fb_id},
+            "sessions": (customer.attributes or {}).get("sessions", []),
         }
 
     def get_customer_by_id(self, customer_id: str):
@@ -299,12 +320,12 @@ class PostgresClient:
                 return {"found": False, "orders": []}
             return self._serialize_customer(customer)
 
-    def get_customer(self, phone: str = None, zalo_id: str = None, fb_id: str = None):
+    def get_customer(self, phone: str = None, zalo_id: str = None, fb_id: str = None, email: str = None):
         with self.get_session() as session:
             stmt = session.query(Customer)
             
-            if phone:
-                stmt = stmt.filter_by(phone=phone)
+            if phone or email:
+                customers = customer_contacts(session, phone=phone, email=email)
             elif zalo_id:
                 stmt = stmt.filter_by(zalo_id=zalo_id)
             elif fb_id:
@@ -312,7 +333,8 @@ class PostgresClient:
             else:
                 return {"found": False, "orders": []}
                 
-            customers = stmt.all()
+            if not (phone or email):
+                customers = stmt.all()
             
             if len(customers) == 0:
                 return {"found": False, "orders": []}
@@ -326,35 +348,39 @@ class PostgresClient:
                     candidates.append({
                         "customer_id": c.customer_id,
                         "name": c.name,
-                        "phone": c.phone
+                        "phone": c.phone,
+                        "honorific": c.honorific,
+                        "sessions": (c.attributes or {}).get("sessions", []),
+                        "orders": [self._serialize_order(order, customer_phone=c.phone) for order in c.orders],
                     })
                 return {"found": True, "ambiguous": True, "candidates": candidates, "orders": []}
             
             return self._serialize_customer(customers[0])
 
-    def create_customer(self, phone: str) -> str:
-        """Tạo khách hàng mới nếu chưa có, auto-generate mã CXXX."""
-        with self.get_session() as session:
-            # Tìm mã CXXX lớn nhất
-            last_customer = session.query(Customer).filter(Customer.customer_id.like("C%")).order_by(Customer.customer_id.desc()).first()
-            if last_customer and len(last_customer.customer_id) >= 4:
-                try:
-                    last_num = int(last_customer.customer_id[1:])
-                    new_id = f"C{last_num + 1:03d}"
-                except ValueError:
-                    new_id = "C001"
-            else:
-                new_id = "C001"
-                
-            new_customer = Customer(
-                customer_id=new_id,
-                phone=phone,
-                name="Khách hàng mới",
-                honorific="Anh/Chị"
-            )
-            session.add(new_customer)
-            session.commit()
-            return new_id
+    def resolve_customer(self, *, phone=None, email=None, name=None, honorific=None):
+        with self.get_session() as session, session.begin():
+            customers, created = get_or_create_customer(session, phone=phone, email=email, name=name, honorific=honorific)
+            if len(customers) > 1:
+                return {"found": True, "ambiguous": True,
+                        "candidates": [self._serialize_customer(customer) for customer in customers], "orders": []}
+            return {**self._serialize_customer(customers[0]), "is_new": created}
+
+    def create_customer(self, phone: str = None, *, email: str = None) -> str:
+        result = self.resolve_customer(phone=phone, email=email)
+        if result.get("ambiguous"):
+            raise ValueError("Số điện thoại thuộc nhiều khách hàng.")
+        return result["customer_id"]
+
+    def update_customer_honorific(self, customer_id: str, honorific: str) -> bool:
+        from telesale_agent.application.customer_addressing import HONORIFICS
+        if honorific not in HONORIFICS:
+            raise ValueError("Cách xưng hô không hợp lệ.")
+        with self.get_session() as session, session.begin():
+            customer = session.query(Customer).filter_by(customer_id=customer_id).with_for_update().one()
+            if (customer.honorific or "").strip().lower() == honorific:
+                return False
+            customer.honorific = honorific
+            return True
 
     def update_customer_attributes(self, phone: str, deltas: dict):
         if not deltas:
@@ -387,6 +413,7 @@ class PostgresClient:
         payment: str,
         address: str,
         order_date: date,
+        lines: list[dict] | None = None,
     ) -> dict:
         """Persist one order transaction and return its canonical payload."""
         with self.get_session() as session:
@@ -411,6 +438,7 @@ class PostgresClient:
                 sku=sku,
                 qty=qty,
                 price_vnd=price_vnd,
+                lines=lines,
                 promo_code=promo_code,
                 payment=payment,
                 address=address,
@@ -475,9 +503,15 @@ class PostgresClient:
             if row is None:
                 return {"error": "order_not_found"}
             order, phone = row
+            if new_variant_sku and order.lines and len(order.lines) != 1:
+                # The legacy contract has no line selector. Never silently
+                # exchange every item of a multi-line order.
+                return {"error": "ambiguous_order_line"}
             order.status = status
             if new_variant_sku:
                 order.sku = new_variant_sku
+                if order.lines:
+                    order.lines = [{**order.lines[0], "sku": new_variant_sku}]
             if increment_exchange:
                 order.exchange_count = (order.exchange_count or 0) + 1
             order.updated_at = datetime.utcnow()

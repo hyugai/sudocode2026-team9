@@ -1,0 +1,402 @@
+{
+  "transcript_id": "SC-235-call_2",
+  "scenario_id": "SC-235",
+  "source_scenario_id": "SC-115",
+  "customer_id": "C003",
+  "call": "call_2",
+  "channel": "chat_fanpage",
+  "channel_identity": "test_chat_fanpage_C003",
+  "call_date": "2026-10-21",
+  "language": "vi",
+  "origin": "authored_synthetic_reference_dialogue",
+  "is_actual_agent_trace": false,
+  "audio_status": "text_chat",
+  "voice_region_target": null,
+  "noise_target": false,
+  "utterances": [
+    {
+      "speaker": "customer",
+      "text": "Tôi là Lan, số điện thoại 0981933190, đang nhắn qua Fanpage. Chị đã cân nhắc xong rồi. Em nhắc đúng hai món cuối cùng sau khi sửa và tổng tiền nhé.",
+      "source_customer_turn_index": 0
+    },
+    {
+      "speaker": "agent",
+      "text": "Dạ chị, giỏ đã sửa gồm Máy tiệt trùng sấy khô Moaz Bebe và Máy hâm sữa Fatz 4 chức năng; món đã bỏ không còn trong giỏ. Tổng hàng hôm nay là 2.380.000 đồng.",
+      "source_refs": [
+        "schemas/tools.schema.json",
+        "catalog/products.json"
+      ],
+      "tool_refs": [
+        0,
+        1
+      ]
+    },
+    {
+      "speaker": "customer",
+      "text": "Tổng 2.380.000 đồng nằm trong ngân sách, mỗi món một chiếc, giao 104 đường Kiểm Thử, Đà Nẵng.",
+      "source_customer_turn_index": 1
+    },
+    {
+      "speaker": "agent",
+      "text": "Em ghi nhận đúng hai món, số lượng và địa chỉ mình vừa cung cấp. Em chờ chị chọn cách thanh toán rồi xác nhận tổng trước khi tạo một đơn nhiều dòng.",
+      "source_refs": [
+        "schemas/tools.schema.json",
+        "catalog/products.json"
+      ],
+      "tool_refs": []
+    },
+    {
+      "speaker": "customer",
+      "text": "Khi giao hàng, ngày nghỉ có tính vào thời gian giao không? Chị cần biết đây là thời gian dự kiến hay một giờ giao được bảo đảm."
+    },
+    {
+      "speaker": "agent",
+      "text": "Thời gian giao được tính theo ngày làm việc, không gồm Chủ nhật, ngày lễ và lịch nghỉ nội bộ. Giờ đặt sau 16 giờ cũng ảnh hưởng mốc xử lý. Em chỉ báo dự kiến theo đơn và khu vực, không bảo đảm một giờ giao cụ thể khi chưa có xác nhận từ vận chuyển.",
+      "source_refs": [
+        "policy/chinh-sach-van-chuyen-thanh-toan.md#VC-01"
+      ],
+      "tool_refs": []
+    },
+    {
+      "speaker": "customer",
+      "text": "Nếu cần tra tiến độ sau này, chị xem ở đâu? Em đừng coi vừa tạo đơn là đã giao xong nhé."
+    },
+    {
+      "speaker": "agent",
+      "text": "Mã đơn dùng để tra trạng thái trên hệ thống hoặc liên hệ Zalo OA. Mã vận đơn được gửi khi hàng bàn giao cho đơn vị vận chuyển. Tạo đơn, bàn giao và đã nhận hàng là ba trạng thái khác nhau; em chỉ xác nhận trạng thái có nguồn, không tự coi đơn đã giao.",
+      "source_refs": [
+        "policy/chinh-sach-van-chuyen-thanh-toan.md#VC-06"
+      ],
+      "tool_refs": []
+    },
+    {
+      "speaker": "customer",
+      "text": "Chị chọn thanh toán COD.",
+      "source_customer_turn_index": 2
+    },
+    {
+      "speaker": "agent",
+      "text": "Em ghi nhận thanh toán khi nhận hàng. Em sẽ xác nhận tổng một lần trước khi tạo một đơn nhiều dòng đúng giỏ đã sửa.",
+      "source_refs": [
+        "schemas/tools.schema.json",
+        "catalog/products.json"
+      ],
+      "tool_refs": []
+    },
+    {
+      "speaker": "customer",
+      "text": "Em lên đơn đúng giỏ cuối cùng, bỏ món Quạt đứng Senko TS16 đã hủy nhé.",
+      "source_customer_turn_index": 3
+    },
+    {
+      "speaker": "agent",
+      "text": "Em xác nhận một lần: Máy tiệt trùng sấy khô Moaz Bebe: 1.890.000 đồng; Máy hâm sữa Fatz 4 chức năng: 490.000 đồng; tổng hàng 2.380.000 đồng, thanh toán khi nhận hàng, giao theo địa chỉ đã xác nhận tại Đà Nẵng. Dự kiến giao ngày 2026-10-23, có tính ngày nghỉ; đây là dự kiến. Mình xác nhận để em tạo đơn này nhé?",
+      "source_refs": [
+        "policy/playbook-telesale.md#PB-09",
+        "policy/chinh-sach-van-chuyen-thanh-toan.md#VC-01"
+      ],
+      "tool_refs": [
+        2
+      ]
+    },
+    {
+      "speaker": "customer",
+      "text": "Đúng rồi, chị xác nhận đúng sản phẩm, số lượng, tổng tiền, địa chỉ và cách thanh toán vừa nhắc. Em tạo đơn giúp nhé."
+    },
+    {
+      "speaker": "agent",
+      "text": "Đơn OD600001 đã được tạo, tổng hàng 2.380.000 đồng. Dự kiến giao ngày 2026-10-23. Đơn COD này cần cuộc gọi xác nhận trước khi giao.",
+      "source_refs": [
+        "policy/chinh-sach-van-chuyen-thanh-toan.md#VC-05"
+      ],
+      "tool_refs": [
+        3
+      ]
+    }
+  ],
+  "private_annotations": {
+    "persona": "khach_mua_nhieu_mon",
+    "customer_goal": "Chốt đúng giỏ sau khi đổi ý và tổng tiền đã xác nhận. Tiếp tục đúng hồ sơ qua Fanpage.",
+    "expected_outcome": "chot_don",
+    "facts_established": {
+      "payment": "COD",
+      "delivery_address": "104 đường Kiểm Thử, Đà Nẵng"
+    },
+    "sentiment_target": "trung tính",
+    "objection": null,
+    "fact_provenance_after_call": {
+      "basket_skus": {
+        "value": [
+          "SKU-MB-STER",
+          "SKU-MB-MON"
+        ],
+        "source_session": "SC-235-call_1",
+        "last_confirmed_session": "SC-235-call_1",
+        "valid_from": "2026-10-19",
+        "supersedes_session": null
+      },
+      "removed_sku": {
+        "value": "SKU-FAN-SEN",
+        "source_session": "SC-235-call_1",
+        "last_confirmed_session": "SC-235-call_1",
+        "valid_from": "2026-10-19",
+        "supersedes_session": null
+      },
+      "budget_vnd": {
+        "value": 2680000,
+        "source_session": "SC-235-call_1",
+        "last_confirmed_session": "SC-235-call_1",
+        "valid_from": "2026-10-19",
+        "supersedes_session": null
+      },
+      "quantity_each": {
+        "value": 1,
+        "source_session": "SC-235-call_1",
+        "last_confirmed_session": "SC-235-call_1",
+        "valid_from": "2026-10-19",
+        "supersedes_session": null
+      },
+      "payment": {
+        "value": "COD",
+        "source_session": "SC-235-call_2",
+        "last_confirmed_session": "SC-235-call_2",
+        "valid_from": "2026-10-21",
+        "supersedes_session": null
+      },
+      "delivery_address": {
+        "value": "104 đường Kiểm Thử, Đà Nẵng",
+        "source_session": "SC-235-call_2",
+        "last_confirmed_session": "SC-235-call_2",
+        "valid_from": "2026-10-21",
+        "supersedes_session": null
+      }
+    },
+    "memory_expectation": {
+      "basket_item_1": "SKU-MB-STER",
+      "basket_item_2": "SKU-MB-MON",
+      "profile_state": {
+        "basket_skus": [
+          "SKU-MB-STER",
+          "SKU-MB-MON"
+        ]
+      },
+      "superseded": {
+        "basket_skus": [
+          "SKU-MB-STER",
+          "SKU-FAN-SEN"
+        ]
+      }
+    },
+    "memory_rules": {
+      "price_and_stock": "revalidate with tools every session; historical quote remains episodic",
+      "address_ttl_days": 180,
+      "intent_ttl_days": 30,
+      "shared_phone": "resolve customer_id; never merge profiles solely by phone"
+    },
+    "source_refs": [
+      "catalog/products.json",
+      "policy/chinh-sach-van-chuyen-thanh-toan.md#VC-01",
+      "policy/chinh-sach-van-chuyen-thanh-toan.md#VC-05",
+      "policy/chinh-sach-van-chuyen-thanh-toan.md#VC-06",
+      "policy/playbook-telesale.md#PB-09",
+      "schemas/tools.schema.json"
+    ],
+    "reference_tool_executions": [
+      {
+        "name": "crm.get_customer",
+        "args": {
+          "phone": "0981933190"
+        },
+        "result": {
+          "found": true,
+          "ambiguous": false,
+          "customer_id": "C003",
+          "name": "Lan",
+          "honorific": "chị",
+          "phone": "0981933190",
+          "identities": {
+            "zalo_id": "zalo_lan79",
+            "fb_id": null
+          },
+          "orders": [],
+          "sessions": []
+        },
+        "origin": "executed_reference_mock_for_authored_fixture"
+      },
+      {
+        "name": "pricing.quote_order",
+        "args": {
+          "lines": [
+            {
+              "sku": "SKU-MB-STER",
+              "qty": 1
+            },
+            {
+              "sku": "SKU-MB-MON",
+              "qty": 1
+            }
+          ],
+          "customer_phone": "0981933190",
+          "address": "104 đường Kiểm Thử, Đà Nẵng",
+          "on": "2026-10-21"
+        },
+        "result": {
+          "units": [
+            {
+              "unit": 1,
+              "line": 0,
+              "sku": "SKU-MB-STER",
+              "list_price_vnd": 1890000,
+              "final_price_vnd": 1890000,
+              "applied_promos": []
+            },
+            {
+              "unit": 2,
+              "line": 1,
+              "sku": "SKU-MB-MON",
+              "list_price_vnd": 490000,
+              "final_price_vnd": 490000,
+              "applied_promos": []
+            }
+          ],
+          "lines": [
+            {
+              "sku": "SKU-MB-STER",
+              "qty": 1,
+              "unit_prices_vnd": [
+                1890000
+              ],
+              "line_total_vnd": 1890000
+            },
+            {
+              "sku": "SKU-MB-MON",
+              "qty": 1,
+              "unit_prices_vnd": [
+                490000
+              ],
+              "line_total_vnd": 490000
+            }
+          ],
+          "total_vnd": 2380000,
+          "order_promos": [
+            {
+              "promo_code": "MOM-FREESHIP",
+              "type": "freeship",
+              "discount_vnd": 0
+            },
+            {
+              "promo_code": "COD-0",
+              "type": "freecod",
+              "discount_vnd": 0
+            }
+          ],
+          "freeship": true,
+          "note": "Khi giá trong một dòng khác nhau (VD 2 máy cùng SKU, 1 máy được giảm 50%), tạo đơn bằng mỗi máy một dòng qty=1."
+        },
+        "origin": "executed_reference_mock_for_authored_fixture"
+      },
+      {
+        "name": "pricing.quote_order",
+        "args": {
+          "lines": [
+            {
+              "sku": "SKU-MB-STER",
+              "qty": 1
+            },
+            {
+              "sku": "SKU-MB-MON",
+              "qty": 1
+            }
+          ],
+          "customer_phone": "0981933190",
+          "address": "104 đường Kiểm Thử, Đà Nẵng",
+          "on": "2026-10-21"
+        },
+        "result": {
+          "units": [
+            {
+              "unit": 1,
+              "line": 0,
+              "sku": "SKU-MB-STER",
+              "list_price_vnd": 1890000,
+              "final_price_vnd": 1890000,
+              "applied_promos": []
+            },
+            {
+              "unit": 2,
+              "line": 1,
+              "sku": "SKU-MB-MON",
+              "list_price_vnd": 490000,
+              "final_price_vnd": 490000,
+              "applied_promos": []
+            }
+          ],
+          "lines": [
+            {
+              "sku": "SKU-MB-STER",
+              "qty": 1,
+              "unit_prices_vnd": [
+                1890000
+              ],
+              "line_total_vnd": 1890000
+            },
+            {
+              "sku": "SKU-MB-MON",
+              "qty": 1,
+              "unit_prices_vnd": [
+                490000
+              ],
+              "line_total_vnd": 490000
+            }
+          ],
+          "total_vnd": 2380000,
+          "order_promos": [
+            {
+              "promo_code": "MOM-FREESHIP",
+              "type": "freeship",
+              "discount_vnd": 0
+            },
+            {
+              "promo_code": "COD-0",
+              "type": "freecod",
+              "discount_vnd": 0
+            }
+          ],
+          "freeship": true,
+          "note": "Khi giá trong một dòng khác nhau (VD 2 máy cùng SKU, 1 máy được giảm 50%), tạo đơn bằng mỗi máy một dòng qty=1."
+        },
+        "origin": "executed_reference_mock_for_authored_fixture"
+      },
+      {
+        "name": "order.create",
+        "args": {
+          "customer_phone": "0981933190",
+          "payment": "COD",
+          "address": "104 đường Kiểm Thử, Đà Nẵng",
+          "lines": [
+            {
+              "sku": "SKU-MB-STER",
+              "qty": 1,
+              "price_vnd": 1890000
+            },
+            {
+              "sku": "SKU-MB-MON",
+              "qty": 1,
+              "price_vnd": 490000
+            }
+          ],
+          "on": "2026-10-21"
+        },
+        "result": {
+          "order_id": "OD600001",
+          "status": "created",
+          "total_vnd": 2380000,
+          "needs_confirmation_call": true,
+          "estimated_delivery": "2026-10-23"
+        },
+        "origin": "executed_reference_mock_for_authored_fixture"
+      }
+    ],
+    "review_status": "automated_fixture_checks; human_semantic_review_pending"
+  }
+}

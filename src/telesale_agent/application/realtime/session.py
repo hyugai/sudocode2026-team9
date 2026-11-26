@@ -29,13 +29,14 @@ class Session:
 
 
 class VoiceSessionManager:
-    def __init__(self, services, settings, store, model_factory=GeminiLiveClient):
+    def __init__(self, services, settings, store, model_factory=GeminiLiveClient, *, learning=None):
         self.services, self.settings, self.store = services, settings, store
         self.model_factory = model_factory
         self.sessions = {}
         self.lock = asyncio.Lock()
         self.lease = None
         self.initialized = False
+        self.learning = learning
 
     async def initialize(self):
         if self.initialized:
@@ -54,7 +55,7 @@ class VoiceSessionManager:
         await recover_memory(self.services, self.store)
         self.initialized = True
 
-    async def create(self, phone):
+    async def create(self, phone, *, user_id=None):
         async with self.lock:
             await self.initialize()
             now = time.monotonic()
@@ -65,12 +66,19 @@ class VoiceSessionManager:
                 raise ValueError("Hệ thống đang đủ phiên realtime; thử lại sau")
             session_id, owner, ticket = uuid4().hex, secrets.token_urlsafe(32), secrets.token_urlsafe(32)
             conversation_id = "live-" + session_id
-            state, context = await initialize_customer(self.services, conversation_id, phone)
+            contact = None
+            if user_id:
+                from telesale_agent.adapters.db.app_repository import AppDataRepository
+                contact = await AppDataRepository(self.store.engine).identity_contact(user_id)
+            state, context = await initialize_customer(self.services, conversation_id, phone, contact=contact)
+            if self.learning:
+                await self.learning.register_voice(state)
             model = self.model_factory(
                 self.settings, instructions(state),
                 tool_declarations(self.services.mcp_tools, self.settings.tools_mode))
             controller = VoiceSessionController(
-                self.services, self.settings, model, self.store, state, context, phone)
+                self.services, self.settings, model, self.store, state, context, phone,
+                user_id=user_id, learning=self.learning)
             self.sessions[session_id] = Session(
                 controller, digest(owner), digest(ticket), now + 120)
             return {"session_id": session_id, "conversation_id": conversation_id,
@@ -95,6 +103,8 @@ class VoiceSessionManager:
         for session in list(self.sessions.values()):
             session.controller.closed = True
             session.controller.stop.set()
+            if self.learning and session.runner is None:
+                await self.learning.finalize_voice(session.controller.state)
         runners = [s.runner for s in self.sessions.values() if s.runner and not s.runner.done()]
         if runners:
             try:

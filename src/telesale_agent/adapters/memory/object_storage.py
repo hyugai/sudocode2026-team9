@@ -56,7 +56,13 @@ class ObjectStorageCustomerMemoryRepository:
             self.client = boto3.client(
                 "s3",
                 endpoint_url=os.environ.get("AWS_ENDPOINT_URL_S3") or None,
-                config=Config(s3={"addressing_style": "path"}),
+                region_name=os.environ.get("AWS_REGION") or os.environ.get("AWS_DEFAULT_REGION") or None,
+                config=Config(
+                    s3={"addressing_style": "path"},
+                    connect_timeout=3,
+                    read_timeout=5,
+                    retries={"mode": "standard", "total_max_attempts": 2},
+                ),
             )
         else:
             self.client = client
@@ -246,16 +252,15 @@ class ObjectStorageCustomerMemoryRepository:
         current, archives = self._split_recent(snapshot)
         customer_prefix = self._customer_prefix(customer_id)
         files = self._individual_files(snapshot)
+        previous_files = self._individual_files(previous_snapshot) if previous_snapshot is not None else {}
         evicted_keys = {key for key, _ in archives}
         initial_export = previous_snapshot is None or previous_snapshot == empty_snapshot(customer_id)
         previous_days = self._active_days(previous_snapshot) if previous_snapshot else []
         current_days = self._active_days(snapshot)
         advanced_day = bool(previous_days and current_days and current_days[-1] > previous_days[-1])
         closed_day = previous_days[-1] if advanced_day else None
-        # Routine turns only PUT current.md. Export the visible tree when the
-        # customer is first created; on a new activity day, flush the prior
-        # day's complete files and static mirrors. Evicted dates are forced
-        # durable before current.md drops them.
+        # A buffered session flush exports changed files before committing the
+        # canonical snapshot. Evicted dates must be durable before being dropped.
         for relative_key, content in files.items():
             static_sync = (
                 (advanced_day or bool(evicted_keys))
@@ -270,7 +275,8 @@ class ObjectStorageCustomerMemoryRepository:
                     for collection, pattern in _DAILY_SOURCE.items()
                 )
             )
-            if initial_export or relative_key in evicted_keys or closed_file or static_sync:
+            if (initial_export or previous_files.get(relative_key) != content
+                    or relative_key in evicted_keys or closed_file or static_sync):
                 self._put_markdown(f"{customer_prefix}/{relative_key}", content)
         key = self._key(customer_id)
         # TemporaryDirectory removes the local draft after a successful PUT

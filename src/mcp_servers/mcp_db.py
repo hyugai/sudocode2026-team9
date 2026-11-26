@@ -6,7 +6,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 # Import existing tool functions
 from mcp_servers.tools.crm import crm_get_customer
-from mcp_servers.tools.catalog import catalog_search, inventory_check, pricing_get_quote
+from mcp_servers.tools.catalog import catalog_search, inventory_check, pricing_get_quote, pricing_quote_order
 from mcp_servers.tools.order import order_create, order_status, order_update
 
 # Initialize FastMCP Server
@@ -27,9 +27,12 @@ def search_catalog(
     category: str | None = None,
     sku: str | None = None,
     max_price_vnd: int | None = None,
+    min_room_area_m2: int | None = None,
+    on: str | None = None,
 ) -> dict[str, Any]:
     """Search for products in the catalog."""
-    return catalog_search(query=query, category=category, sku=sku, max_price_vnd=max_price_vnd)
+    return catalog_search(query=query, category=category, sku=sku, max_price_vnd=max_price_vnd,
+                          min_room_area_m2=min_room_area_m2, on=on)
 
 @mcp.tool()
 def check_inventory(sku: str, on: str | None = None) -> dict[str, Any]:
@@ -58,17 +61,31 @@ def get_pricing_quote(
     )
 
 @mcp.tool()
+def get_order_quote(
+    lines: list[dict[str, Any]],
+    on: str | None = None,
+    customer_phone: str | None = None,
+    address: str | None = None,
+    customer_id: str | None = None,
+) -> dict[str, Any]:
+    """Quote every unit in a basket before creating one multi-line order."""
+    return pricing_quote_order(lines, on, customer_phone, address, customer_id)
+
+
+@mcp.tool()
 def create_new_order(
     customer_phone: str,
-    sku: str,
-    price_vnd: int,
-    qty: int,
-    address: str,
+    sku: str | None = None,
+    price_vnd: int | None = None,
+    qty: int = 1,
+    address: str | None = None,
     payment_method: str = "COD",
     promo_code: str | None = None,
     on: str | None = None,
     idempotency_key: str | None = None,
     customer_id: str | None = None,
+    lines: list[dict[str, Any]] | None = None,
+    basket_skus: list[str] | None = None,
 ) -> dict[str, Any]:
     """Create a new order in the system."""
     return order_create(
@@ -82,6 +99,8 @@ def create_new_order(
         on=on,
         idempotency_key=idempotency_key,
         customer_id=customer_id,
+        lines=lines,
+        basket_skus=basket_skus,
     )
 
 @mcp.tool()

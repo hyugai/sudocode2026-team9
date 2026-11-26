@@ -199,7 +199,8 @@ class ArrivalBoundaryTests(unittest.IsolatedAsyncioTestCase):
         emitted = []
         async def application(scope, receive, send):
             clock[0] = .8
-            await send({"type": "http.response.start", "status": 200, "headers": [(b"content-length", b"1")]})
+            await send({"type": "http.response.start", "status": 200,
+                        "headers": [(b"content-type", b"application/json"), (b"content-length", b"1")]})
             clock[0] = 1
             body = json.dumps({"response": "Xin chào", "latency": {
                 "measurement_mode": "non_streaming", "asr_ms": 500,

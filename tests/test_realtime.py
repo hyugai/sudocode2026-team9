@@ -72,7 +72,7 @@ class RealtimeTests(unittest.IsolatedAsyncioTestCase):
         from telesale_agent.application.deepagent import runtime
         registry = {"search_catalog": object(), "search_policy": object()}
         harness = SimpleNamespace(agent=None, memory=self.svc.memory, exit_stack=object(),
-                                  checkpointer=None, _prewarm_knowledge_mcp=AsyncMock())
+                                  checkpointer=None, mcp_sessions={}, _prewarm_knowledge_mcp=AsyncMock())
         compiled_agent = object()
         instruction_dir = Path(__file__).resolve().parents[1] / "data/memory-root/agents/telesales_agent"
         with patch.dict("os.environ", {"AGENT_INSTRUCTIONS_ROOT": str(instruction_dir)}), patch(
@@ -89,12 +89,13 @@ class RealtimeTests(unittest.IsolatedAsyncioTestCase):
             self.assertIs(harness.agent, compiled_agent)
             # An initialized harness must reuse the same connection and graph.
             await runtime.initialize_runtime(harness)
-            connect.assert_awaited_once_with(harness.exit_stack, harness.memory)
+            connect.assert_awaited_once_with(harness.exit_stack, harness.memory, sessions=harness.mcp_sessions)
             harness._prewarm_knowledge_mcp.assert_awaited_once()
             build_agent.assert_called_once()
 
     async def test_one_event_preserves_audio_and_both_transcripts(self):
         controller = await self.make_controller()
+        controller.user_id = "synthetic-account"
         await controller.provider_event({"server_content": {
             "input_transcription": {"text": "tôi thích màu xanh", "finished": True},
             "output_transcription": {"text": "Em đã hiểu."},
@@ -108,6 +109,13 @@ class RealtimeTests(unittest.IsolatedAsyncioTestCase):
         self.assertTrue(any(isinstance(event, tuple) and event[0] == "audio" for event in events))
         self.assertEqual(self.svc.memory.latest_fact("customer-test", "preference"), "màu xanh")
         self.assertEqual((await self.store.get(controller.source(record)))["status"], "committed")
+        payload = (await self.store.get(controller.source(record)))["payload"]
+        self.assertEqual(payload["user_id"], "synthetic-account")
+        self.assertEqual(payload["turn_number"], 1)
+        self.assertTrue(payload["created_at"])
+        self.assertTrue(payload["snapshot_at"])
+        self.assertIn("summary", payload["call_brief"])
+        self.assertEqual(payload["memory_snapshot"]["customer_memory"]["facts"]["preference"], "màu xanh")
 
     async def test_transcript_can_arrive_after_model_completion(self):
         controller = await self.make_controller()
@@ -129,6 +137,7 @@ class RealtimeTests(unittest.IsolatedAsyncioTestCase):
         self.assertTrue(old.interrupted)
         self.assertGreater(controller.generation, old.generation)
         self.assertEqual((await self.store.get(controller.source(old)))["status"], "incomplete")
+        self.assertNotIn("snapshot_at", (await self.store.get(controller.source(old)))["payload"])
         self.assertIsNone(self.svc.memory.latest_fact("customer-test", "preference"))
 
     async def test_prepared_learning_batch_replays_without_duplicate_appends(self):

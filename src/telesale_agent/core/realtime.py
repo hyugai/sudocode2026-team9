@@ -1,5 +1,6 @@
 """Application-owned session/turn identifiers; no SDK objects cross this boundary."""
 from dataclasses import dataclass, field
+from datetime import datetime, timezone
 from typing import Any
 from uuid import uuid4
 
@@ -28,6 +29,8 @@ class VoiceTurnRecord:
     prepared_revision: int = -1
     context: Any = None
     finalized: bool = False
+    sequence: int = 0
+    created_at: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
     def transcript(self, text: str, *, finished: bool = False):
         self.input_text += text

@@ -64,7 +64,8 @@ def build_base_user_message(
 ) -> tuple[str, str]:
     """Project CRM, memory, recent dialogue and retrieval into one prompt."""
     user_text = context.input.text or "[Audio]"
-    notes: list[str] = []
+    from telesale_agent.application.customer_addressing import addressing_instruction
+    notes: list[str] = [addressing_instruction(context)]
     if context.identity and context.identity.customer_id:
         notes.append(f"Customer ID: {context.identity.customer_id}")
     call_date = context.input.metadata.get("call_date")

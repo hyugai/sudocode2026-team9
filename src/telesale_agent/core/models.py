@@ -86,6 +86,31 @@ class CallBrief:
     verified_customer_data: JsonObject = field(default_factory=dict)
     remembered_preferences: JsonObject = field(default_factory=dict)
     relevant_episodes: list[JsonObject] = field(default_factory=list)
+    customer_phone: str = ""
+    honorific: str | None = None
+    is_returning: bool = False
+    n_previous_sessions: int = 0
+    last_session: JsonObject | None = None
+    profile_facts: JsonObject = field(default_factory=dict)
+    products_advised: list[JsonObject] = field(default_factory=list)
+    orders: list[JsonObject] = field(default_factory=list)
+    open_blockers: list[str] = field(default_factory=list)
+    open_questions: list[str] = field(default_factory=list)
+    must_not_ask: list[str] = field(default_factory=list)
+    stale_warnings: list[str] = field(default_factory=list)
+    suggested_opening: str = ""
+    generated_at: str = ""
+    latency_ms: int = 0
+    precomputed_parts: list[str] = field(default_factory=list)
+
+    def to_btc(self) -> JsonObject:
+        """Export the BTC brief without the internal CRM/memory projection."""
+        return {key: getattr(self, key) for key in (
+            "customer_phone", "customer_name", "honorific", "is_returning",
+            "n_previous_sessions", "last_session", "profile_facts", "products_advised",
+            "orders", "open_blockers", "open_questions", "must_not_ask", "stale_warnings",
+            "suggested_opening", "generated_at", "latency_ms", "precomputed_parts",
+        )}
 
 
 @dataclass(slots=True)

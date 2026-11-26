@@ -9,14 +9,18 @@ import { createPurchaseStore } from '../utils/commerce.ts';
 
 const python = String.raw`
 import ast, asyncio, copy, json, os, re, secrets, sys, unicodedata
+from uuid import UUID
 from types import SimpleNamespace as NS
 from unittest.mock import patch
 
 source = ast.parse(open(sys.argv[1], encoding='utf-8').read())
 identity_source = ast.parse(open(sys.argv[2], encoding='utf-8').read())
+contacts_source = ast.parse(open(sys.argv[3], encoding='utf-8').read())
 class HTTPError(Exception):
     def __init__(self, status_code, detail): self.status_code = status_code
 class InputError(Exception): pass
+class GuestRepository:
+    async def conversation_exists(self, key): return False
 
 def load(tree, names, namespace):
     selected = [copy.deepcopy(n) for n in tree.body if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)) and n.name in names]
@@ -29,14 +33,20 @@ async def probe():
     sid = '10000000-0000-4000-8000-000000000001'
     state = NS(conversation_id=sid, owner='synthetic-user-a', customer_profile={'owner':'synthetic-user-a'}, customer_memory={'synthetic':True}, past_history={'synthetic':True})
     calls = []
+    async def flush_memory(*args): pass
     async def run_turn(turn, existing):
         calls.append((turn.customer_hint, existing.owner))
         return NS(state=existing, response_text='synthetic response', perception=None, retrieved=None, tool_calls=[], memory_writes=[], usage={})
-    namespace = dict(os=os, secrets=secrets, asyncio=asyncio, Header=lambda **kw:None, HTTPException=HTTPError,
-        harness=NS(run_turn=run_turn), sessions={sid:state}, session_locks={},
+    # This diagnostic seeds guest RAM only, not an authenticated database conversation.
+    namespace = dict(os=os, secrets=secrets, asyncio=asyncio, UUID=UUID,
+        Depends=lambda factory:factory(), get_auth_repository=lambda:GuestRepository(),
+        Header=lambda **kw:None, HTTPException=HTTPError,
+        harness=NS(run_turn=run_turn), learning_service=None, sessions={sid:state}, session_locks={},
         provider_cooldown=NS(remaining=lambda:0), Channel=NS(VOICE='voice'),
-        AudioTooLargeError=InputError, AudioInputError=InputError, ASRUnavailableError=InputError)
-    load(source, {'require_api_key','run_chat_turn','_call_brief_preview','turn_payload','clear_session'}, namespace)
+        flush_customer_memory=flush_memory,
+        AudioTooLargeError=InputError, AudioInputError=InputError, ASRUnavailableError=InputError,
+        CustomerContactError=InputError, LearningSnapshotTooLarge=InputError)
+    load(source, {'require_api_key','run_chat_turn','_call_brief_preview','turn_payload','guard_guest_id','clear_session'}, namespace)
     with patch.dict(os.environ, {'API_KEY':'', 'ENABLE_DEBUG_RESPONSE':'false'}, clear=True):
         namespace['require_api_key']()
         anonymous_allowed = True
@@ -46,7 +56,8 @@ async def probe():
         os.environ['ENABLE_DEBUG_RESPONSE'] = 'true'
         response = await namespace['run_chat_turn'](turn)
         debug_exposes_profile = response['debug']['crm_profile']['owner'] == 'synthetic-user-a'
-        await namespace['clear_session'](sid)
+        namespace['COOKIE_NAME'] = 'synee_session'
+        await namespace['clear_session'](sid, NS(cookies={}, headers={}))
         foreign_state_deleted = sid not in namespace['sessions']
         os.environ['API_KEY'] = 'm3-synthetic-service-key'
         try:
@@ -55,14 +66,15 @@ async def probe():
         except HTTPError as e:
             configured_guard_rejects_missing = e.status_code == 401
         namespace['require_api_key']('m3-synthetic-service-key')
-    identity = dict(re=re, unicodedata=unicodedata, IdentityResolver=object, CustomerIdentity=lambda **kw:NS(**kw),
-        db_client=NS(get_customer=lambda **kw: {'found':True,'customer_id':'synthetic-user-b','name':'Synthetic B'}))
+    identity = dict(re=re, asyncio=asyncio, unicodedata=unicodedata, IdentityResolver=object, CustomerIdentity=lambda **kw:NS(**kw), CustomerContactError=ValueError, explicit_honorific=lambda text:None,
+        db_client=NS(resolve_customer=lambda **kw: {'found':True,'customer_id':'synthetic-user-b','name':'Synthetic B'}))
+    load(contacts_source, {'normalize_phone', 'normalize_email'}, identity)
     load(identity_source, {'_normalized_identity_text','_identity_tokens','HintIdentityResolver'}, identity)
-    resolved = await identity['HintIdentityResolver']().resolve_identity(NS(input=NS(customer_hint='0000000000', text='synthetic')))
+    resolved = await identity['HintIdentityResolver']().resolve_identity(NS(input=NS(customer_hint='0000000000', text='synthetic', metadata={})))
     routes=[]
     for n in source.body:
         for d in getattr(n,'decorator_list',[]):
-            if isinstance(d,ast.Call) and isinstance(d.func,ast.Attribute) and isinstance(d.func.value,ast.Name) and d.func.value.id=='app' and d.args and isinstance(d.args[0],ast.Constant):
+            if isinstance(d,ast.Call) and isinstance(d.func,ast.Attribute) and isinstance(d.func.value,ast.Name) and d.func.value.id=='app' and d.func.attr in {'get','post','put','patch','delete','options','head'} and d.args and isinstance(d.args[0],ast.Constant):
                 routes.append([d.func.attr.upper(),d.args[0].value])
     return dict(routes=routes,anonymous_allowed=anonymous_allowed,configured_guard_rejects_missing=configured_guard_rejects_missing,
         reused_foreign_state=reused_foreign_state,foreign_state_deleted=foreign_state_deleted,
@@ -72,12 +84,13 @@ print(json.dumps(asyncio.run(probe())))
 const pythonCommand = process.env.PYTHON || (process.platform === 'win32' ? 'python' : 'python3');
 const processResult = spawnSync(pythonCommand, ['-I', '-B', '-c', python,
   fileURLToPath(new URL('../../telesale_agent/entrypoints/api/chat.py', import.meta.url)),
-  fileURLToPath(new URL('../../telesale_agent/adapters/mock/identity.py', import.meta.url))], { encoding:'utf8' });
+  fileURLToPath(new URL('../../telesale_agent/adapters/mock/identity.py', import.meta.url)),
+  fileURLToPath(new URL('../../telesale_agent/adapters/db/customer_identity.py', import.meta.url))], { encoding:'utf8' });
 assert.equal(processResult.status, 0, processResult.stderr || processResult.error?.message);
 const findings = JSON.parse(processResult.stdout);
 
 test('M3 selected chat module handlers retain text/audio/session/health routes', () => {
-  assert.deepEqual(findings.routes, [['POST','/api/chat'],['POST','/api/chat/audio'],['DELETE','/api/sessions/{conversation_id}'],['GET','/'],['GET','/health']]);
+  assert.deepEqual(findings.routes, [['POST','/api/chat'],['POST','/api/chat/audio'],['DELETE','/api/sessions/{conversation_id}'],['GET','/'],['GET','/health'],['GET','/api/health']]);
 });
 test('M3 finding: service key rejects missing keys when configured but permits anonymous calls by default', () => {
   assert.equal(findings.configured_guard_rejects_missing, true);

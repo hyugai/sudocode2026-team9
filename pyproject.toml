@@ -13,6 +13,7 @@ dependencies = [
     "langchain-mcp-adapters==0.3.2",
     "mcp==1.30.0",
     "pydantic==2.13.5",
+    "pwdlib[argon2]==0.3.0",
     "python-dotenv==1.2.3",
     "langchain-groq==1.1.3",
     "langchain-google-genai==4.4.0",
@@ -23,6 +24,7 @@ dependencies = [
     "psycopg2-binary==2.9.13",
     "langchain-chroma==1.1.0",
     "langchain-huggingface==1.2.2",
+    "langchain-text-splitters==1.1.2",
     "chromadb==1.5.9",
     "sentence-transformers==6.1.0",
     "pinecone>=10,<11",
@@ -32,6 +34,7 @@ dependencies = [
 
 [project.optional-dependencies]
 realtime = ["google-genai==2.30.1"]
+learning = ["boto3>=1.35,<2"]
 voice = [
     "sherpa-onnx>=1.12.25,<2",
     "imageio-ffmpeg>=0.6,<0.7",
@@ -40,6 +43,7 @@ voice = [
 dev = [
     "pytest==9.1.1",
     "pytest-asyncio==1.4.0",
+    "jsonschema>=4.18,<5",
 ]
 
 [tool.setuptools.packages.find]

@@ -4,22 +4,28 @@ import json
 import logging
 import time
 from copy import deepcopy
-from datetime import datetime, timezone, timedelta
 from telesale_agent.core.models import Channel, ConversationState, CustomerIdentity, TurnContext, TurnInput, Message
+from telesale_agent.core.business_time import business_date
 from telesale_agent.core.realtime import VoiceTurnRecord, SessionInit
 from telesale_agent.application.asr_normalization import normalize_asr_transcript
 from telesale_agent.application.conversation.prepare import prepare_context
 from telesale_agent.application.memory.coordinator import commit_voice
+from telesale_agent.core.history import brief_preview, memory_preview
 from telesale_agent.application.tools.protocol import tool_calls_to_steps
+from telesale_agent.application.memory.lifecycle import flush_customer_memory
 from telesale_agent.application.realtime.tool_dispatch import dispatch
 
 logger = logging.getLogger(__name__)
 
 
-async def initialize_customer(services, conversation_id, phone, customer_id=None):
+async def initialize_customer(services, conversation_id, phone, customer_id=None, *, contact=None):
+    started = time.perf_counter()
     state = ConversationState(conversation_id=conversation_id)
     # Session setup is not a customer utterance and does not go through run_turn.
     init = SessionInit(conversation_id, phone)
+    init.metadata["call_date"] = business_date().isoformat()
+    if contact:
+        init.metadata.update(contact)
     context = TurnContext(input=init, state=state)
     if customer_id:
         context.identity = CustomerIdentity(customer_id=customer_id, phone=phone)
@@ -30,6 +36,7 @@ async def initialize_customer(services, conversation_id, phone, customer_id=None
         await services.customer_context.hydrate(context)
     if services.call_brief:
         state.call_brief = await services.call_brief.build_call_brief(context)
+        state.call_brief.latency_ms = round((time.perf_counter() - started) * 1000)
     return state, context
 
 
@@ -45,7 +52,7 @@ async def turn_context(services, state, record, phone, source):
             customer_hint=phone, metadata={
                 "raw_asr_transcript": record.input_text, "memory_source_id": source,
                 "call_key": state.conversation_id,
-                "call_date": datetime.now(timezone(timedelta(hours=7))).date().isoformat(),
+                "call_date": business_date().isoformat(),
             }),
         state=isolated,
     )
@@ -55,9 +62,12 @@ async def turn_context(services, state, record, phone, source):
     return context
 
 
-async def recover_memory(services, store):
+async def recover_memory(services, store, *, conversation_id=None):
     """Replay prepared batches or finish pending final turns on the next connection."""
-    for job in (await store.pending())[:30]:
+    pending = await store.pending()
+    if conversation_id is not None:
+        pending = [job for job in pending if job["payload"].get("conversation_id") == conversation_id]
+    for job in pending[:30]:
         payload = job["payload"]
         if not payload.get("input_finished") or not payload.get("input_text"):
             await store._update(job["source_id"], status="incomplete")
@@ -74,9 +84,12 @@ async def recover_memory(services, store):
 
 
 class VoiceSessionController:
-    def __init__(self, services, settings, model, store, state, initial_context, phone):
+    def __init__(self, services, settings, model, store, state, initial_context, phone, *, user_id=None, learning=None):
         self.services, self.settings, self.model, self.store = services, settings, model, store
         self.state, self.initial_context, self.phone = state, initial_context, phone
+        self.user_id = user_id
+        self.learning = learning
+        self.turn_sequence = 0
         self.outbox = asyncio.Queue(maxsize=settings.queue_limit)
         self.generation = 0
         self.current = None
@@ -104,7 +117,8 @@ class VoiceSessionController:
     def active_turn(self):
         if self.current is None or self.current.finalized:
             self.generation += 1
-            self.current = VoiceTurnRecord(generation=self.generation)
+            self.turn_sequence += 1
+            self.current = VoiceTurnRecord(generation=self.generation, sequence=self.turn_sequence)
             self.records[self.current.turn_id] = self.current
         return self.current
 
@@ -258,10 +272,14 @@ class VoiceSessionController:
         record.finalized = True
         payload = {
             "conversation_id": self.state.conversation_id, "phone": self.phone,
+            "user_id": self.user_id, "turn_number": record.sequence, "created_at": record.created_at,
             "input_text": record.input_text, "input_finished": record.input_finished,
             "output_text": record.output_text, "interrupted": record.interrupted,
+            "output_complete": record.model_complete and not record.interrupted,
             "played_samples": record.played_samples, "tools": record.tools,
         }
+        if self.learning:
+            payload["learning"] = self.learning.capture_voice_turn(self.state, payload)
         customer = self.state.identity.customer_id if self.state.identity else None
         source = self.source(record)
         try:
@@ -285,6 +303,8 @@ class VoiceSessionController:
                 self.state.messages = self.state.messages[-20:]
                 if self.services.call_brief:
                     self.state.call_brief = await self.services.call_brief.build_call_brief(context)
+                # Projection-only update: never reset journal status or prepared memory jobs.
+                await self.store.save_snapshot(source, brief_preview(self.state.call_brief), memory_preview(context.state))
                 await self.emit({"type": "memory_committed", "turn_id": record.turn_id})
         except Exception:
             logger.exception("Voice memory job pending: %s", source)
@@ -385,4 +405,11 @@ class VoiceSessionController:
             if self.jobs:
                 # Backend persistence must finish independently of playback/disconnect.
                 await asyncio.gather(*list(self.jobs), return_exceptions=True)
-            await self.model.close()
+            try:
+                await flush_customer_memory(self.services, self.state)
+            finally:
+                try:
+                    if self.learning:
+                        await self.learning.finalize_voice(self.state)
+                finally:
+                    await self.model.close()

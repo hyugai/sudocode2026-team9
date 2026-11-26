@@ -1,0 +1,463 @@
+{
+  "transcript_id": "SC-264-call_1",
+  "scenario_id": "SC-264",
+  "source_scenario_id": null,
+  "customer_id": "M2-C024",
+  "call": "call_1",
+  "channel": "zalo_oa",
+  "channel_identity": "m2.zalo.024",
+  "call_date": "2026-10-22",
+  "language": "vi",
+  "origin": "authored_synthetic_reference_dialogue",
+  "is_actual_agent_trace": false,
+  "audio_status": "text_chat",
+  "voice_region_target": null,
+  "noise_target": false,
+  "utterances": [
+    {
+      "speaker": "customer",
+      "text": "Tôi là Hoài Nam, số điện thoại 0909000024. Anh cần 1 Máy lọc không khí AirPure Y; 1 Máy lọc không khí AirPure Mini, giao tại 223 đường Kiểm Thử, TP. Hồ Chí Minh.",
+      "source_customer_turn_index": 0
+    },
+    {
+      "speaker": "agent",
+      "text": "Em ghi nhận đúng giỏ và địa chỉ vừa cung cấp, chưa tạo đơn. Máy 1, Máy lọc không khí AirPure Y: 5.200.000 đồng, GIFT-FILTER; Máy 2, Máy lọc không khí AirPure Mini: 1.095.000 đồng, AIR-2ND-50. Tổng hàng 6.295.000 đồng.",
+      "source_refs": [
+        "schemas/tools.schema.json",
+        "catalog/products.json"
+      ],
+      "tool_refs": [
+        0,
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "speaker": "customer",
+      "text": "Nếu có hai máy bằng giá thì có phải cả hai đều được giảm một nửa không? Em tính từng máy giúp, đừng gộp một giá chung.",
+      "source_customer_turn_index": 1
+    },
+    {
+      "speaker": "agent",
+      "text": "AIR-2ND-50 chỉ giảm cho một máy lọc không khí có giá niêm yết thấp nhất trong đơn; nếu cùng giá thì chọn máy đứng sau. Dù mua ba máy, toàn đơn vẫn chỉ có một máy nhận giảm 50%, không phải mỗi cặp được giảm một lần. Mỗi máy chỉ nhận một ưu đãi không cộng dồn; các máy còn lại có thể nhận ưu đãi phù hợp riêng.",
+      "source_refs": [
+        "schemas/tools.schema.json",
+        "catalog/products.json"
+      ],
+      "tool_refs": []
+    },
+    {
+      "speaker": "customer",
+      "text": "Anh muốn biết giá em báo là giá một sản phẩm hay đã gồm nhiều món; nếu quay lại hôm khác có cần kiểm tra lại không?"
+    },
+    {
+      "speaker": "agent",
+      "text": "Giá một sản phẩm là giá sau ưu đãi được hệ thống kiểm tra ở ngày tư vấn; tổng giỏ là cộng các đơn vị mình chọn. Khi quay lại em kiểm tra lại theo ngày tạo đơn. Chưa có mã đơn thì giá cũ là lịch sử, không phải cam kết giữ giá qua ngày hết hạn.",
+      "source_refs": [
+        "policy/dieu-khoan-khuyen-mai.md#KM-01"
+      ],
+      "tool_refs": []
+    },
+    {
+      "speaker": "customer",
+      "text": "Nếu hàng bị lỗi thì bảo hành khác đổi trả ở điểm nào? Anh muốn biết điều kiện để còn giữ giấy tờ."
+    },
+    {
+      "speaker": "agent",
+      "text": "Catalog của mẫu này ghi bảo hành 24 tháng. Phạm vi là lỗi kỹ thuật do nhà sản xuất; hao mòn tự nhiên, rơi vỡ, vào nước, dùng sai điện áp hoặc tự tháo máy không thuộc phạm vi đó. Mình giữ hóa đơn hoặc mã đơn để đối chiếu. Đổi trả là quy trình khác và phải xét thời hạn riêng.",
+      "source_refs": [
+        "catalog/products.json",
+        "policy/chinh-sach-bao-hanh.md#BH-01",
+        "policy/chinh-sach-bao-hanh.md#BH-02"
+      ],
+      "tool_refs": []
+    },
+    {
+      "speaker": "customer",
+      "text": "Còn thời hạn đổi trả của đơn đặt hôm nay thì tính từ lúc nào? Anh cần chuẩn bị tem hộp thế nào?"
+    },
+    {
+      "speaker": "agent",
+      "text": "Thời hạn thông thường là 7 ngày kể từ ngày nhận, với hàng còn tem nhãn, hộp, chưa sử dụng và có hóa đơn hoặc mã đơn. Gia dụng, mẹ và bé có lỗi kỹ thuật nhà sản xuất được xét đổi mới trong 30 ngày khi đủ xác nhận. Hàng vệ sinh đã bóc seal và hư do người dùng có điều kiện loại trừ, nên không phải mọi lý do đều đổi được.",
+      "source_refs": [
+        "policy/chinh-sach-doi-tra.md#DT-01",
+        "policy/chinh-sach-doi-tra.md#DT-02",
+        "policy/chinh-sach-doi-tra.md#DT-06"
+      ],
+      "tool_refs": []
+    },
+    {
+      "speaker": "customer",
+      "text": "Nếu cần bảo hành, anh gửi qua shop thế nào? Có được hứa xong ngay trong ngày không?"
+    },
+    {
+      "speaker": "agent",
+      "text": "Mình có thể mang đến trung tâm bảo hành hãng hoặc gửi qua shop để hỗ trợ chuyển đến hãng; phí vận chuyển chiều đi do khách chịu. Thời gian xử lý theo chính sách là 7–15 ngày làm việc. Em không hứa xong ngay trong ngày, vì cần kiểm tra và xác nhận tình trạng thực tế trước.",
+      "source_refs": [
+        "policy/chinh-sach-bao-hanh.md#BH-03"
+      ],
+      "tool_refs": []
+    },
+    {
+      "speaker": "customer",
+      "text": "Nếu mua ba máy thì được giảm thêm cho máy thứ ba không? Đợt này anh chỉ lấy đúng số lượng vừa nêu.",
+      "source_customer_turn_index": 2
+    },
+    {
+      "speaker": "agent",
+      "text": "AIR-2ND-50 chỉ giảm cho một máy lọc không khí có giá niêm yết thấp nhất trong đơn; nếu cùng giá thì chọn máy đứng sau. Dù mua ba máy, toàn đơn vẫn chỉ có một máy nhận giảm 50%, không phải mỗi cặp được giảm một lần. Mỗi máy chỉ nhận một ưu đãi không cộng dồn; các máy còn lại có thể nhận ưu đãi phù hợp riêng.",
+      "source_refs": [
+        "schemas/tools.schema.json",
+        "catalog/products.json"
+      ],
+      "tool_refs": []
+    },
+    {
+      "speaker": "customer",
+      "text": "Tổng hàng em tính là 6.295.000 đồng. Anh cần trao đổi người nhà, chưa đặt và không hẹn gọi chủ động.",
+      "source_customer_turn_index": 3
+    },
+    {
+      "speaker": "agent",
+      "text": "Tổng hàng hiện tại là 6.295.000 đồng cho đúng giỏ vừa tính. Em ghi nhận mình còn trao đổi người nhà, chưa có đơn và không tự đặt lịch gọi lại.",
+      "source_refs": [
+        "eval/mock_tools.py#pricing_quote_order",
+        "policy/dieu-khoan-khuyen-mai.md#KM-03"
+      ],
+      "tool_refs": [
+        4,
+        5,
+        6
+      ]
+    }
+  ],
+  "private_annotations": {
+    "persona": "khach_mua_nhieu_mon",
+    "customer_goal": "Hiểu giá từng máy và giới hạn ưu đãi",
+    "expected_outcome": "tu_choi",
+    "facts_established": {
+      "basket_lines": [
+        {
+          "sku": "SKU-AP-Y",
+          "qty": 1
+        },
+        {
+          "sku": "SKU-AP-MINI",
+          "qty": 1
+        }
+      ],
+      "delivery_address": "223 đường Kiểm Thử, TP. Hồ Chí Minh",
+      "basket_skus": [
+        "SKU-AP-Y",
+        "SKU-AP-MINI"
+      ],
+      "quantity_by_sku": {
+        "SKU-AP-Y": 1,
+        "SKU-AP-MINI": 1
+      }
+    },
+    "sentiment_target": "trung tính",
+    "objection": null,
+    "fact_provenance_after_call": {
+      "basket_lines": {
+        "value": [
+          {
+            "sku": "SKU-AP-Y",
+            "qty": 1
+          },
+          {
+            "sku": "SKU-AP-MINI",
+            "qty": 1
+          }
+        ],
+        "source_session": "SC-264-call_1",
+        "last_confirmed_session": "SC-264-call_1",
+        "valid_from": "2026-10-22",
+        "supersedes_session": null
+      },
+      "delivery_address": {
+        "value": "223 đường Kiểm Thử, TP. Hồ Chí Minh",
+        "source_session": "SC-264-call_1",
+        "last_confirmed_session": "SC-264-call_1",
+        "valid_from": "2026-10-22",
+        "supersedes_session": null
+      },
+      "basket_skus": {
+        "value": [
+          "SKU-AP-Y",
+          "SKU-AP-MINI"
+        ],
+        "source_session": "SC-264-call_1",
+        "last_confirmed_session": "SC-264-call_1",
+        "valid_from": "2026-10-22",
+        "supersedes_session": null
+      },
+      "quantity_by_sku": {
+        "value": {
+          "SKU-AP-Y": 1,
+          "SKU-AP-MINI": 1
+        },
+        "source_session": "SC-264-call_1",
+        "last_confirmed_session": "SC-264-call_1",
+        "valid_from": "2026-10-22",
+        "supersedes_session": null
+      }
+    },
+    "memory_expectation": null,
+    "memory_rules": {
+      "price_and_stock": "revalidate with tools every session; historical quote remains episodic",
+      "address_ttl_days": 180,
+      "intent_ttl_days": 30,
+      "shared_phone": "resolve customer_id; never merge profiles solely by phone"
+    },
+    "source_refs": [
+      "catalog/products.json",
+      "eval/mock_tools.py#pricing_quote_order",
+      "policy/chinh-sach-bao-hanh.md#BH-01",
+      "policy/chinh-sach-bao-hanh.md#BH-02",
+      "policy/chinh-sach-bao-hanh.md#BH-03",
+      "policy/chinh-sach-doi-tra.md#DT-01",
+      "policy/chinh-sach-doi-tra.md#DT-02",
+      "policy/chinh-sach-doi-tra.md#DT-06",
+      "policy/dieu-khoan-khuyen-mai.md#KM-01",
+      "policy/dieu-khoan-khuyen-mai.md#KM-03",
+      "schemas/tools.schema.json"
+    ],
+    "reference_tool_executions": [
+      {
+        "name": "crm.get_customer",
+        "args": {
+          "phone": "0909000024"
+        },
+        "result": {
+          "found": false
+        },
+        "origin": "executed_reference_mock_for_authored_fixture"
+      },
+      {
+        "name": "inventory.check",
+        "args": {
+          "sku": "SKU-AP-Y",
+          "on": "2026-10-22"
+        },
+        "result": {
+          "sku": "SKU-AP-Y",
+          "in_stock": true,
+          "qty": 15
+        },
+        "origin": "executed_reference_mock_for_authored_fixture"
+      },
+      {
+        "name": "inventory.check",
+        "args": {
+          "sku": "SKU-AP-MINI",
+          "on": "2026-10-22"
+        },
+        "result": {
+          "sku": "SKU-AP-MINI",
+          "in_stock": true,
+          "qty": 8
+        },
+        "origin": "executed_reference_mock_for_authored_fixture"
+      },
+      {
+        "name": "pricing.quote_order",
+        "args": {
+          "lines": [
+            {
+              "sku": "SKU-AP-Y",
+              "qty": 1
+            },
+            {
+              "sku": "SKU-AP-MINI",
+              "qty": 1
+            }
+          ],
+          "customer_phone": "0909000024",
+          "address": "223 đường Kiểm Thử, TP. Hồ Chí Minh",
+          "on": "2026-10-22"
+        },
+        "result": {
+          "units": [
+            {
+              "unit": 1,
+              "line": 0,
+              "sku": "SKU-AP-Y",
+              "list_price_vnd": 5200000,
+              "final_price_vnd": 5200000,
+              "applied_promos": [
+                {
+                  "promo_code": "GIFT-FILTER",
+                  "type": "gift",
+                  "discount_vnd": 0,
+                  "gift_sku": "SKU-AP-FLT-X"
+                }
+              ]
+            },
+            {
+              "unit": 2,
+              "line": 1,
+              "sku": "SKU-AP-MINI",
+              "list_price_vnd": 2190000,
+              "final_price_vnd": 1095000,
+              "applied_promos": [
+                {
+                  "promo_code": "AIR-2ND-50",
+                  "type": "percent_second_item",
+                  "discount_vnd": 1095000
+                }
+              ]
+            }
+          ],
+          "lines": [
+            {
+              "sku": "SKU-AP-Y",
+              "qty": 1,
+              "unit_prices_vnd": [
+                5200000
+              ],
+              "line_total_vnd": 5200000
+            },
+            {
+              "sku": "SKU-AP-MINI",
+              "qty": 1,
+              "unit_prices_vnd": [
+                1095000
+              ],
+              "line_total_vnd": 1095000
+            }
+          ],
+          "total_vnd": 6295000,
+          "order_promos": [
+            {
+              "promo_code": "NAM-SHIP0",
+              "type": "freeship",
+              "discount_vnd": 0
+            },
+            {
+              "promo_code": "COD-0",
+              "type": "freecod",
+              "discount_vnd": 0
+            }
+          ],
+          "freeship": true,
+          "note": "Khi giá trong một dòng khác nhau (VD 2 máy cùng SKU, 1 máy được giảm 50%), tạo đơn bằng mỗi máy một dòng qty=1."
+        },
+        "origin": "executed_reference_mock_for_authored_fixture"
+      },
+      {
+        "name": "inventory.check",
+        "args": {
+          "sku": "SKU-AP-Y",
+          "on": "2026-10-22"
+        },
+        "result": {
+          "sku": "SKU-AP-Y",
+          "in_stock": true,
+          "qty": 15
+        },
+        "origin": "executed_reference_mock_for_authored_fixture"
+      },
+      {
+        "name": "inventory.check",
+        "args": {
+          "sku": "SKU-AP-MINI",
+          "on": "2026-10-22"
+        },
+        "result": {
+          "sku": "SKU-AP-MINI",
+          "in_stock": true,
+          "qty": 8
+        },
+        "origin": "executed_reference_mock_for_authored_fixture"
+      },
+      {
+        "name": "pricing.quote_order",
+        "args": {
+          "lines": [
+            {
+              "sku": "SKU-AP-Y",
+              "qty": 1
+            },
+            {
+              "sku": "SKU-AP-MINI",
+              "qty": 1
+            }
+          ],
+          "customer_phone": "0909000024",
+          "address": "223 đường Kiểm Thử, TP. Hồ Chí Minh",
+          "on": "2026-10-22"
+        },
+        "result": {
+          "units": [
+            {
+              "unit": 1,
+              "line": 0,
+              "sku": "SKU-AP-Y",
+              "list_price_vnd": 5200000,
+              "final_price_vnd": 5200000,
+              "applied_promos": [
+                {
+                  "promo_code": "GIFT-FILTER",
+                  "type": "gift",
+                  "discount_vnd": 0,
+                  "gift_sku": "SKU-AP-FLT-X"
+                }
+              ]
+            },
+            {
+              "unit": 2,
+              "line": 1,
+              "sku": "SKU-AP-MINI",
+              "list_price_vnd": 2190000,
+              "final_price_vnd": 1095000,
+              "applied_promos": [
+                {
+                  "promo_code": "AIR-2ND-50",
+                  "type": "percent_second_item",
+                  "discount_vnd": 1095000
+                }
+              ]
+            }
+          ],
+          "lines": [
+            {
+              "sku": "SKU-AP-Y",
+              "qty": 1,
+              "unit_prices_vnd": [
+                5200000
+              ],
+              "line_total_vnd": 5200000
+            },
+            {
+              "sku": "SKU-AP-MINI",
+              "qty": 1,
+              "unit_prices_vnd": [
+                1095000
+              ],
+              "line_total_vnd": 1095000
+            }
+          ],
+          "total_vnd": 6295000,
+          "order_promos": [
+            {
+              "promo_code": "NAM-SHIP0",
+              "type": "freeship",
+              "discount_vnd": 0
+            },
+            {
+              "promo_code": "COD-0",
+              "type": "freecod",
+              "discount_vnd": 0
+            }
+          ],
+          "freeship": true,
+          "note": "Khi giá trong một dòng khác nhau (VD 2 máy cùng SKU, 1 máy được giảm 50%), tạo đơn bằng mỗi máy một dòng qty=1."
+        },
+        "origin": "executed_reference_mock_for_authored_fixture"
+      }
+    ],
+    "review_status": "automated_fixture_checks; human_semantic_review_pending"
+  }
+}

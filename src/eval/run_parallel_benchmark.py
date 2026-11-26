@@ -39,7 +39,7 @@ REPO_ROOT = HERE.parent.parent
 sys.path.insert(0,str(REPO_ROOT / "src"))
 from eval.model_config import configure_eval_model
 DEFAULT_SCENARIOS = (
-    REPO_ROOT / "dataset" / "iterative-refinement" / "scenarios_complete dataset"
+    REPO_ROOT / "dataset" / "main" / "scenarios_complete"
 )
 DEFAULT_OUTPUT_ROOT = REPO_ROOT / "outputs" / "benchmark"
 GENERATE_TRACES = HERE / "generate_traces.py"

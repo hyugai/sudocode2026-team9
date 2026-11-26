@@ -1,0 +1,9 @@
+﻿turn_index,turn_number,role,voice_id,voice_label,customer_turn_index,text,source_body_index
+0,1,customer,NU_1,Nữ 1,0,"alo, hôm trước chị có gọi hỏi máy lọc không khí bên em đó",26
+1,2,advisor,NU_3,Nữ 3,,"dạ em chào chị, hôm mười lăm bên em có tư vấn chị mẫu e pia y cho phòng ngủ hai mươi lăm mét, giá năm triệu hai trăm nghìn, chị đã trao đổi với anh nhà chưa ạ",27
+2,3,customer,NU_1,Nữ 1,1,"rồi, ông xã chị đồng ý rồi, giá vẫn vậy đúng không em",28
+3,4,advisor,NU_3,Nữ 3,,"dạ vẫn năm triệu hai trăm nghìn, còn tặng màng lọc, giao nội thành một đến hai ngày làm việc ạ",29
+4,5,customer,NU_1,Nữ 1,2,"ừ lên đơn cho chị đi, giao về địa chỉ cũ, thanh toán khi nhận hàng",30
+5,6,advisor,NU_3,Nữ 3,,"dạ em xác nhận lại, một máy e pia y, năm triệu hai trăm nghìn, giao về số mười hai ngõ ba mươi tám phố hoàng cầu quận đống đa, thanh toán cê ô đê, đúng không ạ",31
+6,7,customer,NU_1,Nữ 1,3,đúng rồi em,32
+7,8,advisor,NU_3,Nữ 3,,"dạ mã đơn của chị là ô đê ba trăm mười hai nghìn bốn trăm năm mươi sáu, em cảm ơn chị ạ",33

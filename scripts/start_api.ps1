@@ -24,12 +24,27 @@ if ($Reload) {
 }
 
 Write-Host "Backend Python: $ApiPython"
+$LocalEnvironment = @{
+    WEB_ORIGIN = 'http://localhost:3000'
+    SESSION_COOKIE_SECURE = 'false'
+    CORS_ORIGINS = 'http://localhost:3000'
+    REALTIME_ALLOWED_ORIGINS = 'http://localhost:3000'
+}
+$SavedEnvironment = @{}
 Push-Location -LiteralPath $ProjectRoot
 try {
+    foreach ($VariableName in $LocalEnvironment.Keys) {
+        $SavedEnvironment[$VariableName] = [Environment]::GetEnvironmentVariable($VariableName, 'Process')
+        [Environment]::SetEnvironmentVariable($VariableName, $LocalEnvironment[$VariableName], 'Process')
+    }
+    Write-Host "Local frontend: $($LocalEnvironment.WEB_ORIGIN)"
     & $ApiPython @ApiArguments
     $ApiExitCode = $LASTEXITCODE
 }
 finally {
+    foreach ($VariableName in $SavedEnvironment.Keys) {
+        [Environment]::SetEnvironmentVariable($VariableName, $SavedEnvironment[$VariableName], 'Process')
+    }
     Pop-Location
 }
 exit $ApiExitCode

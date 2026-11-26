@@ -24,7 +24,7 @@ const settleMode = () => b.evaluate(`(async () => {
     .map(animation => animation.finished.catch(() => {})));
 })()`);
 const watchHeader = () => b.evaluate(`(() => {
-  const selectors = ['.ai-header-brand', '.ai-header-brand h1', '.ai-brand-mark', '.ai-mode-bar', '.ai-mode-bar button:first-child', '.ai-mode-bar button:last-child', '.ai-exit-link'];
+  const selectors = ['.ai-header-brand', '.ai-header-brand h1', '.ai-brand-mark', '.ai-mode-bar', '.ai-mode-bar button:first-child', '.ai-mode-bar button:last-child', '.ai-exit-link', '.ai-cart-link', '.account-trigger'];
   const rects = () => selectors.map(selector => {
     const r = document.querySelector(selector).getBoundingClientRect();
     return [r.x, r.y, r.width, r.height];
@@ -70,6 +70,10 @@ try {
     if (!sessionStorage.getItem('ai-chat-test-seeded')) {
       sessionStorage.clear();
       sessionStorage.setItem('ai-chat-test-seeded', '1');
+      localStorage.setItem('synee.demo.cart.v1', JSON.stringify([
+        { productSku: 'SKU-AP-X', sku: 'SKU-AP-X', quantity: 2 },
+        { productSku: 'SKU-AF-4L', sku: 'SKU-AF-4L', quantity: 1 }
+      ]));
       sessionStorage.setItem('synee.guest.conversation.v1', JSON.stringify({ version: 1,
         messages: [{ role: 'agent', text: 'Chào bạn, mình là Synee AI.' }], input: '', sessionId: '',
         customerPhone: '0901234567', voicePreview: false, consultation: null }));
@@ -78,6 +82,7 @@ try {
     const state = window.__test, originalFetch = window.fetch.bind(window), NativeSocket = window.WebSocket;
     window.fetch = async (input, options = {}) => {
       const url = String(input);
+      if (url.endsWith('/api/auth/me')) return Response.json({ detail: 'Chưa đăng nhập.' }, { status: 401 });
       if (url.endsWith('/health')) return Response.json({}, { status: state.ready ? 200 : 503 });
       if (/\\/api\\/chat(?:\\/audio)?$/.test(url)) {
         const audio = options.body instanceof FormData;
@@ -139,6 +144,38 @@ try {
   await click(".header-chat-link");
   await b.wait("location.pathname === '/ai-chat' && document.querySelector('#ai-message')?.value === 'Bản nháp mở từ nút Chatbot'");
   await check("Header Chatbot link opens the dedicated workspace with the draft and no automatic send or microphone", "location.search === '?mode=text' && __test.calls.length === 0 && __test.mic === 0 && document.querySelectorAll('.ai-message').length === 1 && document.querySelector('.ai-sidebar-footer strong').textContent === '0901234567'");
+  await check("Chat shares the dashboard cart and puts export to its left", "document.querySelector('.ai-cart-link .cart-count').textContent === '3' && document.querySelector('.ai-cart-link').getAttribute('href') === '/cart' && document.querySelector('[aria-label=\"Xuất hội thoại\"]').getBoundingClientRect().right <= document.querySelector('.ai-cart-link').getBoundingClientRect().left");
+  await click(".account-trigger");
+  await b.wait("!!document.querySelector('.account-popover')");
+  await check("Chat uses the dashboard account menu and guest authentication state", "!!document.querySelector('.account-popover a[href=\"/account\"]') && !!document.querySelector('.account-popover a[href=\"/orders\"]') && !!document.querySelector('.account-popover a[href=\"/account/conversations\"]') && !!document.querySelector('.account-popover a[href=\"/login\"]') && !!document.querySelector('.account-popover a[href=\"/register\"]') && document.querySelector('.account-logout').disabled");
+  await escape();
+  await b.wait("!document.querySelector('.account-popover')");
+  await check("Escape restores focus to the Chat account button", "document.activeElement === document.querySelector('.account-trigger')");
+  await b.evaluate("window.__cartInChat = JSON.stringify(document.querySelector('.ai-cart-link').getBoundingClientRect().toJSON())");
+  await watchHeader();
+  await mode("realtime");
+  await b.wait("!!document.querySelector('.voice-start')");
+  await settleMode();
+  await stopHeaderWatch();
+  await check("Cart and dashboard stay fixed when switching from Chat to Voice", "__headerMaxShift < 1 && JSON.stringify(document.querySelector('.ai-cart-link').getBoundingClientRect().toJSON()) === __cartInChat && document.querySelector('.ai-cart-link .cart-count').textContent === '3' && __test.mic === 0");
+  await click(".account-trigger");
+  await b.wait("!!document.querySelector('.account-popover')");
+  await check("Voice shares the same guest menu without starting the microphone", "!!document.querySelector('.account-popover a[href=\"/login\"]') && document.querySelector('.account-logout').disabled && __test.mic === 0");
+  await click(".account-trigger");
+  await b.screenshot(`${output}/cart-header-voice-desktop.png`);
+  await click(".ai-cart-link");
+  await b.wait("location.pathname === '/cart' && document.querySelectorAll('.order-line').length === 2");
+  await check("Voice opens the dashboard cart with the same product quantities", "document.querySelector('.cart-count').textContent === '3' && document.querySelector('.order-line[data-sku=SKU-AP-X] .quantity-control input').value === '2'");
+  await click(".order-line[data-sku=SKU-AP-X] .quantity-control button:last-child");
+  await b.wait("document.querySelector('.cart-count').textContent === '4'");
+  await click(".header-chat-link");
+  await b.wait("location.pathname === '/ai-chat' && !!document.querySelector('#ai-message')");
+  await check("Cart edits reach Chat while preserving its draft", "document.querySelector('.ai-cart-link .cart-count').textContent === '4' && document.querySelector('#ai-message').value === 'Bản nháp mở từ nút Chatbot' && __test.calls.length === 0");
+  await b.screenshot(`${output}/cart-header-chat-desktop.png`);
+  await openDashboard();
+  await check("Dashboard keeps the updated shared cart count", "document.querySelector('.cart-count').textContent === '4'");
+  await click(".header-chat-link");
+  await b.wait("!!document.querySelector('#ai-message')");
   await openDashboard();
   await type("#inline-message", "Tìm tai nghe dưới 3 triệu");
   await b.evaluate("document.querySelector('.composer').requestSubmit(); document.querySelector('.composer')?.requestSubmit()");
@@ -147,7 +184,7 @@ try {
   await check("Customer identity is preserved across navigation", "__test.calls[0].phone === '0901234567'");
   await check("Workspace exposes only Chat and Voice", "JSON.stringify([...document.querySelectorAll('.ai-mode-bar button')].map(button => button.textContent)) === JSON.stringify(['Chat', 'Voice'])");
   await check("Chat and Voice are centered across the entire viewport", "!!document.querySelector('.ai-workspace > .ai-topbar > .ai-mode-bar') && !document.querySelector('.ai-chat-stage .ai-mode-bar') && (() => { const m=document.querySelector('.ai-mode-bar').getBoundingClientRect(); return Math.abs(m.left+m.width/2-innerWidth/2) < 1; })()");
-  await check("The workspace omits the session note, ready heading and empty-input instruction", "!document.querySelector('.ai-session-note') && !document.querySelector('.ai-topbar [role=status]') && !document.body.innerText.includes('Synee đã sẵn sàng') && !document.body.innerText.includes('Cuộc trò chuyện cùng Synee') && document.querySelector('#ai-send-status').textContent === '' && getComputedStyle(document.querySelector('#ai-send-status')).display === 'none'");
+  await check("The workspace omits the session note, ready heading and empty-input instruction", "!document.querySelector('.ai-session-note') && !document.querySelector('.ai-topbar [role=status]:not(.cart-link [role=status])') && !document.body.innerText.includes('Synee đã sẵn sàng') && !document.body.innerText.includes('Cuộc trò chuyện cùng Synee') && document.querySelector('#ai-send-status').textContent === '' && getComputedStyle(document.querySelector('#ai-send-status')).display === 'none'");
   await b.evaluate("window.__conversationId = __test.calls[0].conversationId");
   await type("#ai-message", "Giữ bản nháp khi chuyển chế độ");
   await upload();
@@ -160,7 +197,7 @@ try {
   await check("Failed upload preserves file and draft without retrying", "__test.calls.length === 2 && !!document.querySelector('audio') && document.querySelector('#ai-message').value.includes('Giữ bản nháp')");
   await b.evaluate("__test.apiMode = 'ok'");
   await submit();
-  await b.wait("document.querySelectorAll('.ai-message').length === 5");
+  await b.wait("document.querySelectorAll('.ai-message').length === 5 && !document.querySelector('audio') && [...document.querySelectorAll('.ai-bubble')].some(bubble => bubble.textContent === 'Tôi cần tai nghe pin lâu.')");
   await check("Chat audio uses the ASR endpoint, renders its transcript and shares the text conversation ID", "__test.calls.every(call => call.conversationId === __conversationId) && __test.calls[2].url.endsWith('/api/chat/audio') && __test.calls[2].file.endsWith('.wav') && [...document.querySelectorAll('.ai-bubble')].some(bubble => bubble.textContent === 'Tôi cần tai nghe pin lâu.') && document.querySelector('#ai-message').value.includes('Giữ bản nháp') && !document.querySelector('audio')");
   await mode("text");
   await b.evaluate("__test.apiMode = 'limit'");
@@ -199,7 +236,7 @@ try {
   await check("SYNEE / VOICE is centered at the top of its panel", "(() => { const s=document.querySelector('.voice-stage').getBoundingClientRect(); const t=document.querySelector('.voice-stage-heading span').getBoundingClientRect(); return Math.abs(t.left+t.width/2-s.left-s.width/2)<1; })()");
   await b.screenshot(`${output}/realtime-idle-desktop.png`);
   await click(".voice-start");
-  await b.wait("document.querySelector('.voice-wave')?.dataset.lkState === 'listening'");
+  await b.wait("document.querySelector('.voice-aura')?.dataset.lkState === 'listening'");
   await check("LiveKit uses the working voice client without rendering a text composer", "__test.mic === 1 && __test.sockets.length === 1 && !document.querySelector('#ai-message')");
   await b.evaluate("__test.sockets[0].emit({ type: 'transcript_update', turn_id: 'one', role: 'user', text: 'Mình cần tai nghe.' }); __test.sockets[0].emit({ type: 'transcript_update', turn_id: 'one', role: 'agent', text: 'Mình hỗ trợ bạn.' })");
   await b.wait("document.querySelectorAll('.voice-line').length === 2");
@@ -291,8 +328,8 @@ try {
   await b.send("Emulation.setDeviceMetricsOverride", { width: 1440, height: 900, deviceScaleFactor: 1, mobile: false });
   await b.screenshot(`${output}/realtime-desktop.png`);
   await b.send("Emulation.setEmulatedMedia", { features: [{ name: "prefers-reduced-motion", value: "reduce" }] });
-  await b.wait("!!document.querySelector('[data-wave-fallback]')");
-  await check("Reduced motion uses the LiveKit static fallback", "!document.querySelector('.voice-wave canvas')");
+  await b.wait("!!document.querySelector('[data-aura-fallback]')");
+  await check("Reduced motion uses a full-size static Aura", "!document.querySelector('.voice-aura canvas') && (() => { const aura=document.querySelector('.voice-aura').getBoundingClientRect(); const fallback=document.querySelector('[data-aura-fallback]').getBoundingClientRect(); return Math.abs(aura.width-fallback.width)<1 && Math.abs(aura.height-fallback.height)<1; })()");
   await check("Reduced motion also disables layout, panel and selector animations", "getComputedStyle(document.querySelector('.ai-workspace')).transitionDuration === '0s' && getComputedStyle(document.querySelector('.ai-voice-session')).animationName === 'none' && getComputedStyle(document.querySelector('.ai-mode-bar'), '::before').transitionDuration === '0s'");
   await check("Voice has no offline audio picker; upload stays in Chat", "!document.querySelector('input[type=file]') && !document.querySelector('#ai-message')");
   await mode("text");
@@ -334,9 +371,12 @@ try {
   await b.screenshot(`${output}/realtime-error-desktop.png`);
   await b.evaluate("__test.denyMic = false");
   await click(".voice-start");
-  await b.wait("document.querySelector('.voice-wave')?.dataset.lkState === 'listening'");
+  await b.wait("document.querySelector('.voice-aura')?.dataset.lkState === 'listening'");
   await openDashboard();
   await b.wait("__test.stopped === 1");
   await check("Leaving Voice for the dashboard closes the microphone and socket", "__test.sockets[0].readyState === 3 && __test.voiceRequests.some(request => request.method === 'DELETE') && !document.querySelector('.ai-voice-workspace')");
   console.log("AI chat browser regression complete");
+} catch (error) {
+  console.error(await b.evaluate("({url:location.href,calls:window.__test?.calls,conversationId:window.__conversationId,bubbles:[...document.querySelectorAll('.ai-bubble')].map(n=>n.textContent),draft:document.querySelector('#ai-message')?.value,audio:!!document.querySelector('audio')})"));
+  throw error;
 } finally { await b.close(); }

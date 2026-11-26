@@ -1,0 +1,257 @@
+{
+  "scenario_id": "SC-059",
+  "scenario_seed": {
+    "scenario_id": "SC-059",
+    "level": "M1",
+    "persona": "khach_da_kenh_fb_hotline",
+    "hard_case": "phien_ban_chinh_sach_cu",
+    "customer_phone": "0990853801",
+    "customer_name": "Nhung",
+    "honorific": "chị",
+    "calls": {
+      "call_1": {
+        "channel": "chat_fanpage",
+        "channel_identity": "fb.nhung.733",
+        "call_date": "2026-10-19",
+        "input_mode": "chat_teencode",
+        "facts_established": {
+          "product_advised": "SKU-WF-UF",
+          "price_quoted_vnd": 3290000,
+          "phone_provided": "0990853801",
+          "quantity": 1
+        },
+        "expected_outcome": "hen_goi_lai",
+        "success_if": {
+          "tool_called": null,
+          "must_say_any": [
+            "3.290.000",
+            "3290000"
+          ],
+          "must_not_call_tools": [
+            "order.create",
+            "order.update",
+            "handoff.transfer"
+          ],
+          "trace_must_not_match": [
+            "(?is)\\A(?!.*(?:\\b7\\s+ngày\\b|\\bbảy\\s+ngày\\b))"
+          ],
+          "forbidden_claims": [
+            {
+              "field": "standard_return_window_days",
+              "value": 14
+            }
+          ]
+        },
+        "ground_truth_facts": {
+          "price_vnd": 3290000,
+          "list_price_vnd": 3290000,
+          "in_stock": true,
+          "promo_COD-0_active": true,
+          "standard_return_window_days": 7,
+          "obsolete_standard_return_window_days": 14
+        }
+      },
+      "call_2": {
+        "channel": "hotline",
+        "channel_identity": "0990853801",
+        "call_date": "2026-10-21",
+        "input_mode": "clean",
+        "facts_established": {
+          "delivery_address": "108 đường Kiểm Thử, Hà Nội",
+          "payment": "COD"
+        },
+        "expected_outcome": "chot_don",
+        "success_if": {
+          "tool_called": "order.create",
+          "args_match": {
+            "customer_phone": "0990853801",
+            "sku": "SKU-WF-UF",
+            "qty": 1,
+            "price_vnd": 3290000,
+            "payment": "COD",
+            "address": "108 đường Kiểm Thử, Hà Nội"
+          }
+        },
+        "must_carry_over": [
+          "product_advised",
+          "price_quoted_vnd",
+          "quantity"
+        ],
+        "must_not_ask": [
+          "product_advised",
+          "price_quoted_vnd",
+          "quantity"
+        ],
+        "ground_truth_facts": {
+          "price_vnd": 3290000,
+          "list_price_vnd": 3290000,
+          "in_stock": true,
+          "promo_COD-0_active": true
+        },
+        "days_later": 2
+      }
+    }
+  },
+  "fields_to_generate": [
+    "notes",
+    "calls.call_1.customer_goal",
+    "calls.call_1.customer_turns",
+    "calls.call_1.customer_turns_asr",
+    "calls.call_2.customer_goal",
+    "calls.call_2.customer_turns"
+  ],
+  "generation_context": {
+    "test_objective": "Nhận diện đúng Facebook sang hotline và nhớ lựa chọn từ chat có teencode. Luồng kênh: Fanpage → hotline.",
+    "customer": {
+      "customer_id": "C025",
+      "name": "Nhung",
+      "honorific": "chị",
+      "phone": "0990853801",
+      "zalo_id": "zalo_nhung30",
+      "fb_id": "fb.nhung.733",
+      "region": "bac",
+      "orders": []
+    },
+    "persona": {
+      "persona_id": "khach_da_kenh_fb_hotline",
+      "patience_initial": {
+        "call_1": 4,
+        "call_2": 3,
+        "call_3": 2
+      },
+      "style": "nhắn tin teencode, gọi thì bình thường",
+      "system_prompt": "Bạn nhắn qua Fanpage/Zalo bằng teencode ngắn (k, ko, bn, sp, đc…), khi gọi hotline thì nói bình thường. Mục tiêu: {goal}. Đã biết: {facts}. Dàn ý: {turn_outline}. Bạn kỳ vọng hotline biết bạn đã nhắn gì; nếu không, bạn nói 'ủa bên em nhắn Facebook báo … mà'."
+    },
+    "products": [
+      {
+        "sku": "SKU-WF-UF",
+        "name": "Máy lọc nước UF Sunhouse",
+        "category": "gia-dung/may-loc-nuoc",
+        "brand": "Sunhouse",
+        "list_price_vnd": 3290000,
+        "attributes": {
+          "stages": 5,
+          "warranty_months": 36
+        },
+        "stock": 20,
+        "variants": []
+      }
+    ],
+    "business_snapshots": [
+      {
+        "call": "call_1",
+        "sku": "SKU-WF-UF",
+        "on": "2026-10-19",
+        "quote": {
+          "sku": "SKU-WF-UF",
+          "list_price_vnd": 3290000,
+          "final_price_vnd": 3290000,
+          "applied_promos": [
+            {
+              "promo_code": "COD-0",
+              "type": "freecod",
+              "discount_vnd": 0
+            }
+          ],
+          "expired_promos": [],
+          "ineligible_promos": [
+            {
+              "promo_code": "NAM-SHIP0",
+              "reason": "region"
+            }
+          ],
+          "not_applied_exclusive": [],
+          "freeship": true
+        },
+        "inventory": {
+          "sku": "SKU-WF-UF",
+          "in_stock": true,
+          "qty": 20
+        }
+      },
+      {
+        "call": "call_2",
+        "sku": "SKU-WF-UF",
+        "on": "2026-10-21",
+        "quote": {
+          "sku": "SKU-WF-UF",
+          "list_price_vnd": 3290000,
+          "final_price_vnd": 3290000,
+          "applied_promos": [
+            {
+              "promo_code": "COD-0",
+              "type": "freecod",
+              "discount_vnd": 0
+            }
+          ],
+          "expired_promos": [],
+          "ineligible_promos": [
+            {
+              "promo_code": "NAM-SHIP0",
+              "reason": "region"
+            }
+          ],
+          "not_applied_exclusive": [],
+          "freeship": true
+        },
+        "inventory": {
+          "sku": "SKU-WF-UF",
+          "in_stock": true,
+          "qty": 20
+        }
+      }
+    ],
+    "planned_goals": {
+      "call_1": "Hỏi giá trên Fanpage và liên kết số điện thoại. Phân biệt thời hạn đổi trả thông thường của đơn mới với tài liệu hết hiệu lực.",
+      "call_2": "Gọi hotline để chốt sản phẩm đã hỏi qua Fanpage."
+    },
+    "synthetic_customer_facts": {
+      "delivery_address": "108 đường Kiểm Thử, Hà Nội",
+      "note": "Synthetic test address supplied in customer dialogue; not copied from CRM."
+    },
+    "runner_contract": {
+      "reset_before_each_scenario": true,
+      "preserve_state_between_calls": true,
+      "reference_tools": "eval/mock_tools.py",
+      "scenario_export": "Write scenario_seed plus generated fields as <scenario_id>.json, preserving the existing scenario_id; remove this wrapper.",
+      "memory_expectation_requires_memory_writes": false
+    },
+    "constraints": [
+      "Preserve every populated seed value.",
+      "Generate only listed missing fields; do not add an agent response.",
+      "Customer dialogue must establish the planned facts before a later call relies on them.",
+      "Earlier quoted prices are historical; do not classify them as current price_vnd.",
+      "Do not invent products, promotions, stock, CRM identity or policy facts.",
+      "Do not expose private success_if, ground_truth_facts or memory labels to the tested agent."
+    ],
+    "fixture_notes": [],
+    "sources_sha256": {
+      "schemas/scenario_format.md": "91acb65f8164cd234e3d2dfc00865d92a9af15830e6841e0e77eb76db7ec4927",
+      "schemas/tools.schema.json": "4cc8935e3e7f1a37b43eab0d68d85e8383037e52423e9f7cc022da916c97d4e0",
+      "schemas/handoff_brief.schema.json": "d57546f15e5d18feece2d270794c99dea9dd74fdab02354cd49b3faabe7f6b8b",
+      "catalog/crm_seed.json": "468c0401ad406c2d1186314eac4afaaf17afe34f1fa654676bc13f818faf18e3",
+      "catalog/products.json": "ba8f86b5bf80d6570d2cc84649c66d12a2a7050c4622458af942b41232adc2cd",
+      "catalog/promotions.json": "e22d9bfa68e3b1d153324fad2de872061d632e518ff4f305a8c8d88e1c5c25be",
+      "catalog/inventory_timeline.json": "aabaf8dc955ab93782a49d6a70526df0db77bd27fd8fbf8f37dbf6181474cf80",
+      "simulator/personas.json": "c86b9d7c9988a12a7be8f01870de3c8c02813ea612df21c3b97bc12c37868857",
+      "eval/mock_tools.py": "e1264037edeec98fb090b851061cc6e653ca8279752f899278e7ab057286f926",
+      "eval/reference_eval.py": "818fc4900a18f9b92c1abb3adebcca997774dfc3da23083c9030bad2f7229ddc",
+      "policy/chinh-sach-doi-tra.md": "8177c41dd7f026623d5fe106cdb0d0cdaa85b1d7cbe2652d6efa07fafcdc2493",
+      "policy/changelog.md": "106960c3777e8995c5dcd84ea8e62c9593c2d74e2eff335e393f436ab71d0dfa",
+      "policy/dieu-khoan-khuyen-mai.md": "46f8b1e14cfd2194d0f5187f6fd8139b2f2290367102191fa87bd1427464c009",
+      "policy/playbook-telesale.md": "ca74b496676a1bf88c7d0caf36cfaada69c9f9003045c98055426f259a0fae0d",
+      "policy/chinh-sach-van-chuyen-thanh-toan.md": "6583a76c6c652a04584016cb5741b795b4f66a1ac6579a76e89cacc2b0af75c6",
+      "policy/thong-bao-lich-nghi.md": "332bbaeb4f235e064d5d2fc5c14b7560e27aaf19127c8740487b49bc13da57e9"
+    },
+    "quality_revision": {
+      "additional_hard_cases": [
+        "phien_ban_chinh_sach_cu"
+      ],
+      "channel_sequence": [
+        "chat_fanpage",
+        "hotline"
+      ],
+      "audio": "text-only; no audio generated or modified"
+    }
+  }
+}

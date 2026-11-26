@@ -7,6 +7,11 @@ services:
     ports:
       - "8000:10000"
     environment:
+      PORT: "10000"
+      WEB_ORIGIN: http://localhost:3000
+      SESSION_COOKIE_SECURE: "false"
+      CORS_ORIGINS: http://localhost:3000
+      REALTIME_ALLOWED_ORIGINS: http://localhost:3000
       CUSTOMER_MEMORY_BACKEND: file
       KNOWLEDGE_MCP_PREWARM: "false"
     volumes:

@@ -1,0 +1,9 @@
+D04 — Khách đã mua giày, gọi đổi size
+
+01. Khách (Nữ 2): alo, chị mới nhận giày hôm qua mà size bốn mươi hơi chật em ạ
+02. Tư vấn (Nữ 3): dạ em chào chị, em thấy đơn ô đê năm trăm hai mươi mốt nghìn ba trăm ba mươi tám giày run lai hai pro size bốn mươi màu đen, chị muốn đổi lên size bốn mươi mốt ạ
+03. Khách (Nữ 2): ừ, đổi lên bốn mươi mốt, có mất phí gì không
+04. Tư vấn (Nữ 3): dạ đổi size lần đầu bên em miễn phí hoàn toàn, shop chịu phí ship hai chiều ạ, em kiểm tra tồn kho size bốn mươi mốt màu đen chị chờ em chút
+05. Khách (Nữ 2): ừ
+06. Tư vấn (Nữ 3): dạ còn hàng ạ, bên vận chuyển sẽ qua lấy đôi cũ trong một đến hai ngày làm việc và giao đôi mới, chị giữ nguyên hộp và tem giúp em nhé
+07. Khách (Nữ 2): ok em, cảm ơn em nhé
