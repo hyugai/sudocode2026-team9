@@ -10,7 +10,7 @@ from sqlalchemy.orm import declarative_base, sessionmaker, relationship
 from sqlalchemy.dialects.postgresql import JSONB
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-CATALOG_DIR = REPO_ROOT / "dataset" / "organizer" / "catalog"
+CATALOG_DIR = REPO_ROOT / "dataset/pipeline/stage-1/input/catalog"
 
 ORDER_COLUMNS = {
     "lines": "JSONB",

@@ -20,6 +20,7 @@ from telesale_agent.adapters.db.models import (
 )
 
 BTC = Path(__file__).resolve().parents[1] / "dataset/organizer"
+BTC_INPUT = BTC.parent / "pipeline/stage-1/input"
 
 
 @compiles(JSONB, "sqlite")
@@ -34,7 +35,7 @@ def validate_schema(name, payload):
 
 @pytest.fixture
 def btc_db(monkeypatch):
-    spec = importlib.util.spec_from_file_location("btc_reference_tools", BTC / "eval/mock_tools.py")
+    spec = importlib.util.spec_from_file_location("btc_reference_tools", BTC_INPUT / "eval/mock_tools.py")
     reference = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(reference)
     # These contract fixtures replay BTC's reference day, not the live clock.

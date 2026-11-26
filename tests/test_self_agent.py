@@ -1,6 +1,7 @@
 import asyncio
 import os
 from pathlib import Path
+import json
 from tempfile import TemporaryDirectory
 from types import SimpleNamespace as NS
 import unittest
@@ -966,8 +967,11 @@ class Tests(unittest.IsolatedAsyncioTestCase):
 
     def test_unseen_m2_dataset_selection(self):
         from self_agent.scenario_runner import load_scenarios
-        root = Path(__file__).resolve().parents[1]
-        scenarios = load_scenarios(root / "dataset/main/m2_transcripts/scenarios_complete", limit=3)
+        with TemporaryDirectory() as root:
+            for sid in ("SC-124", "SC-122", "SC-121", "SC-123"):
+                scenario = {"scenario_id": sid, "calls": {"call_1": {"customer_turns": ["Xin chào."]}}}
+                (Path(root) / f"{sid}.json").write_text(json.dumps(scenario), encoding="utf-8")
+            scenarios = load_scenarios(root, limit=3)
         self.assertEqual([s["scenario_id"] for s in scenarios], ["SC-121", "SC-122", "SC-123"])
 
     async def test_learning_model_provider_content_blocks(self):
@@ -1093,7 +1097,8 @@ class Tests(unittest.IsolatedAsyncioTestCase):
 
     async def test_scenarios_end_each_call_and_report_changes(self):
         from self_agent.scenario_runner import replay, load_scenarios, DEFAULT_SCENARIOS
-        self.assertEqual(len(load_scenarios(DEFAULT_SCENARIOS, limit=0)), 120)
+        audit = json.loads((DEFAULT_SCENARIOS / "audit/dataset_stats.json").read_text(encoding="utf-8"))
+        self.assertEqual(len(load_scenarios(DEFAULT_SCENARIOS, limit=0)), audit["total_journeys"])
         with TemporaryDirectory() as root:
             class Chat(Base):
                 def reset_customer_memory(self): pass

@@ -20,11 +20,8 @@ HERE = Path(__file__).resolve().parent
 REPO_ROOT = HERE.parent.parent
 sys.path.insert(0,str(REPO_ROOT / "src"))
 from eval.model_config import configure_eval_model
-from eval.benchmark_support import machine_metadata
+from eval.benchmark_support import DEFAULT_SCENARIOS, machine_metadata
 from telesale_agent.adapters.llm.model_factory import resolve_model_config
-DEFAULT_SCENARIOS = (
-    REPO_ROOT / "dataset" / "main" / "scenarios_complete"
-)
 DEFAULT_OUTPUT_ROOT = REPO_ROOT / "outputs" / "benchmark"
 TEAM_EVAL = HERE / "team_eval.py"
 MEMORY_JUDGE = HERE / "memory_judge.py"

@@ -6,12 +6,13 @@ import { applianceSubcategories, categoryFor, filterProducts as filterCatalog, p
 import { getProductDetails, products } from "../utils/demo-catalog.ts";
 import { productIllustrationFor } from "../utils/product-illustrations.ts";
 
-const source = JSON.parse(await readFile(new URL("../../../dataset/organizer/catalog/products.json", import.meta.url)));
+const sourceCatalog = new URL("../../../dataset/pipeline/stage-1/input/catalog/", import.meta.url);
+const source = JSON.parse(await readFile(new URL("products.json", sourceCatalog)));
 const filterProducts = (category, subcategory, search) => filterCatalog(category, subcategory, search, products);
 
 test("Deployable catalog snapshots match the source dataset", async () => {
   for (const name of ["products.json", "inventory_timeline.json", "promotions.json"]) {
-    const original = await readFile(new URL(`../../../dataset/organizer/catalog/${name}`, import.meta.url));
+    const original = await readFile(new URL(name, sourceCatalog));
     const deployable = await readFile(new URL(`../data/${name}`, import.meta.url));
     assert.deepEqual(deployable, original, `${name} is out of sync`);
   }

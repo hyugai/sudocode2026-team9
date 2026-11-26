@@ -37,10 +37,8 @@ if hasattr(sys.stderr, "reconfigure"):
 HERE = Path(__file__).resolve().parent
 REPO_ROOT = HERE.parent.parent
 sys.path.insert(0,str(REPO_ROOT / "src"))
+from eval.benchmark_support import DEFAULT_SCENARIOS
 from eval.model_config import configure_eval_model
-DEFAULT_SCENARIOS = (
-    REPO_ROOT / "dataset" / "main" / "scenarios_complete"
-)
 DEFAULT_OUTPUT_ROOT = REPO_ROOT / "outputs" / "benchmark"
 GENERATE_TRACES = HERE / "generate_traces.py"
 TEAM_EVAL = HERE / "team_eval.py"

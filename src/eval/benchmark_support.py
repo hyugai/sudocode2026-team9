@@ -10,6 +10,9 @@ import statistics
 import wave
 
 
+DEFAULT_SCENARIOS = Path(__file__).resolve().parents[2] / "dataset/pipeline/stage-3/output"
+
+
 def turn_keys(scenarios):
     return {
         (sid, call, turn)

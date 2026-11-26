@@ -8,6 +8,7 @@ import importlib.util
 import io
 import json
 import math
+import shutil
 import tempfile
 import unittest
 import wave
@@ -62,15 +63,42 @@ class BackgroundNoiseTests(unittest.TestCase):
         return bank, snapshots
 
     def test_balanced_real_dataset_plan_has_195_wavs_and_only_target_range(self):
-        calls = NOISE.build_calls(ROOT / "dataset/main")
+        source = ROOT / "dataset/main"
+        manifest = json.loads((source / "noisy_SC071_SC100/noise_manifest.json").read_text(encoding="utf-8"))
+        scenarios = {}
+        rows = sorted(manifest["results"].values(), key=lambda row: (
+            row["scenario_id"], row["call_id"], row["turn_index"],
+        ))
+        for row in rows:
+            sid, cid = row["scenario_id"], row["call_id"]
+            scenario = scenarios.setdefault(sid, {"scenario_id": sid, "calls": {}})
+            call = scenario["calls"].setdefault(cid, {
+                "customer_turns": [], "channel": row["channel"], "input_mode": row["input_mode"],
+            })
+            self.assertEqual(row["turn_index"], len(call["customer_turns"]))
+            call["customer_turns"].append(row["text_original"])
+            target = self.input / row["input_relative"]
+            target.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(source / row["input_relative"], target)
+
+        scenario_dir = self.input / "scenarios_complete"
+        scenario_dir.mkdir()
+        for sid, scenario in scenarios.items():
+            (scenario_dir / f"{sid}.json").write_text(json.dumps(scenario), encoding="utf-8")
+
+        calls = NOISE.build_calls(self.input)
         self.assertEqual(len(calls), 60)
         self.assertEqual(sum(len(call["tasks"]) for call in calls), 195)
         self.assertEqual(collections.Counter(call["noise_code"] for call in calls),
                          {profile["code"]: 10 for profile in NOISE.PROFILES})
         self.assertEqual(collections.Counter(call["target_call_snr_db"] for call in calls), {20.0: 20, 15.0: 20, 10.0: 20})
         self.assertTrue(all(71 <= int(call["scenario_id"].split("-")[1]) <= 100 for call in calls))
+        for call in calls:
+            for task in call["tasks"]:
+                previous = manifest["results"][task["task_id"]]
+                self.assertEqual(task["input_sha256"], previous["input_sha256"])
         with self.assertRaises(ValueError):
-            NOISE.build_calls(ROOT / "dataset/main", start=70)
+            NOISE.build_calls(self.input, start=70)
 
     def test_call_noise_is_contiguous_and_snr_is_controlled(self):
         bank, _ = self.fixture()
