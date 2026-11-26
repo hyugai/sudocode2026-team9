@@ -8,12 +8,8 @@ import { accountConversationKey, conversationApi, type SavedConversation, type S
 import type { LiveProductDetails } from "./catalog";
 import { loadChatCatalog } from "./chat-products";
 
-// Keep the legacy deployment contract. This public URL must never contain a key.
-export const apiBase = (process.env.NEXT_PUBLIC_API_BASE_URL || (
-  process.env.NODE_ENV === "development"
-    ? "http://localhost:8000"
-    : "https://telesale-agent-api-3no2.onrender.com"
-)).replace(/\/$/, "");
+// This public URL must never contain a key; default to the local backend.
+export const apiBase = (process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000").replace(/\/$/, "");
 
 export interface Message { id?: string; role: "user" | "agent"; text: string; feedback?: StoredFeedback | null }
 export interface LogEntry { userMessage: string; debug: DebugInfo }

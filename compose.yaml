@@ -1,21 +1,92 @@
+x-backend: &backend
+  build:
+    context: .
+    dockerfile: Dockerfile.local
+  image: telesale-agent-local:full
+  env_file: .env
+  environment:
+    PORT: "10000"
+    DATABASE_URL: postgresql+psycopg2://telesale:telesale_dev_password@postgres:5432/telesale?sslmode=disable
+    WEB_ORIGIN: http://localhost:3000
+    SESSION_COOKIE_SECURE: "false"
+    CORS_ORIGINS: http://localhost:3000
+    REALTIME_ALLOWED_ORIGINS: http://localhost:3000,http://127.0.0.1:3000
+    CUSTOMER_MEMORY_BACKEND: file
+    CUSTOMER_MEMORY_ROOT: /app/data/memory-root/users
+    ENABLE_VECTOR_RAG: "true"
+    KNOWLEDGE_BACKEND: chroma
+    CHROMA_DB_DIR: /app/data/chroma_db
+    ASR_MODEL_DIR: /app/models/sherpa-onnx-zipformer-vi-30M-int8-2026-02-09
+    HF_HOME: /app/.cache/huggingface
+  volumes:
+    - chroma_data:/app/data/chroma_db
+    - type: volume
+      source: customer_memory_crm
+      target: /app/data/memory-root/users
+      volume:
+        nocopy: true
+    - asr_models:/app/models
+    - huggingface_cache:/app/.cache/huggingface
+
 services:
-  backend:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    image: telesale-agent-local:free
+  postgres:
+    image: postgres:16
     ports:
-      - "8000:10000"
+      - "127.0.0.1:5432:5432"
     environment:
-      PORT: "10000"
-      WEB_ORIGIN: http://localhost:3000
-      SESSION_COOKIE_SECURE: "false"
-      CORS_ORIGINS: http://localhost:3000
-      REALTIME_ALLOWED_ORIGINS: http://localhost:3000
-      CUSTOMER_MEMORY_BACKEND: file
-      KNOWLEDGE_MCP_PREWARM: "false"
+      POSTGRES_USER: telesale
+      POSTGRES_PASSWORD: telesale_dev_password
+      POSTGRES_DB: telesale
     volumes:
-      - type: bind
-        source: ./.env
-        target: /app/.env
-        read_only: true
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U telesale -d telesale"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  init:
+    <<: *backend
+    command: ["python", "scripts/setup_docker_data.py"]
+    restart: "no"
+    healthcheck:
+      disable: true
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  backend:
+    <<: *backend
+    init: true
+    ports:
+      - "127.0.0.1:8000:10000"
+    depends_on:
+      init:
+        condition: service_completed_successfully
+      postgres:
+        condition: service_healthy
+
+  web:
+    build:
+      context: ./src/web
+      args:
+        NEXT_PUBLIC_API_BASE_URL: http://localhost:8000
+        API_BACKEND_URL: http://backend:10000
+    ports:
+      - "127.0.0.1:3000:3000"
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/ai-chat').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      start_period: 30s
+      retries: 6
+
+volumes:
+  postgres_data:
+  chroma_data:
+  customer_memory_crm:
+  asr_models:
+  huggingface_cache:

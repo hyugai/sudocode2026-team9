@@ -118,6 +118,7 @@ finally:
     Invoke-Migration 'scripts/migrate_app_data.py'
     Invoke-Migration 'scripts/migrate_voice.py'
     Invoke-Migration 'scripts/migrate_learning.py'
+    Invoke-Migration 'scripts/migrate_memory.py'
 
     Write-Host '[3/3] Preparing local Chroma policy data...'
     Invoke-Migration 'scripts/ingest_policy.py' @('--if-empty')

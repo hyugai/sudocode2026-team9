@@ -17,7 +17,9 @@ RUN python -m pip install --upgrade pip \
 
 COPY pyproject.toml ./pyproject.toml
 COPY src ./src
-COPY data/memory-root ./data/memory-root
+COPY data/memory-root/agents/telesales_agent/agent.md \
+     data/memory-root/agents/telesales_agent/soul.md \
+     data/memory-root/agents/telesales_agent/tools.md ./data/memory-root/agents/telesales_agent/
 
 EXPOSE 10000
 
