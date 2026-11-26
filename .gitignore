@@ -243,6 +243,10 @@ tests/
 # Generated recordings, screenshots and isolated local UI fixtures.
 /outputs/debug/streaming-ui/
 
+# Local audio datasets and regeneration outputs.
+/dataset/audio/
+/outputs/audio-regeneration/
+
 # Runtime data required by the Render image. Customer memory is intentionally
 # reviewable before commit; do not place secrets outside these documented files.
 #data/*
