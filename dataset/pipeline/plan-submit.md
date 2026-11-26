@@ -1,0 +1,31 @@
+# dataset folder
+- sources directories to create this folder should be read-only
+- create separate folder to submit the dataset
+    - root/{M1,M2}/stage-{1,2,3}
+        - stage-{1,2,3}/{src,input,output}
+- 1 README.md
+    - short description of method for generating the dataset
+        - 3 stages (blueprints, transcript generation and validation, assembly), 3 stages' name can be wording again 
+        - stage 1, explain persona x journey pattern and combination counts
+        - stage 2, generation (AI model choice, code-check, list aspects check), validation (AI model choice, LLM-as-a-judge, list aspects check)
+            - use subsections instead of putting all information into 1 line
+        - stage 3, assembling and deduplication (TF-IDF)
+            - use subsections if possible to clarify the ideas and for good readability
+    - distribution
+        - use a table from "SUDO CODE 2026 - Đề Bài Dự Án Cuối Kì.pdf" (page 3, section C.1)
+            - 3 columns: 1st columns (Hạng mục dataset) - keep it unchanged, 2nd column (M1) - keep it unchanged, 3rd column is generated dataset
+        - link to README.md inside M1 folder for detailed information
+    - limitations
+
+## M1/M2 folder
+- README.md
+    - summarized statistics
+        - passed/failed counts
+        - measured metrics (mean, median, min, max)
+        - categorize failed ones
+        - scope: every scored ones + accepted ones + rejected ones
+            - use subsections if possible to improve readability
+    - stage 1
+        - the distributions are also covered as a table with 2 axes (persona, journey pattern)
+    - stage 2
+        - phase-1, phase-2 will be ranamed to generation, validation respectively

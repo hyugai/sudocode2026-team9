@@ -1,0 +1,140 @@
+{
+  "scenario_id": "SC-134",
+  "level": "M1",
+  "persona": "khach_goi_lan_3_het_kien_nhan",
+  "hard_case": null,
+  "customer_phone": "0936270107",
+  "customer_name": "Tuấn",
+  "honorific": "anh",
+  "notes": "return_for_post_purchase_support",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0936270107",
+      "call_date": "2026-10-22",
+      "customer_turns": [
+        "Anh ơi, mình hỏi về áo phao lông vũ Warmly màu be size L có không?",
+        "Giá bao nhiêu vậy anh?",
+        "Hẹn anh gọi lại lúc mười giờ ngày hai mươi bảy tháng mười nhé."
+      ],
+      "customer_goal": "Hỏi về sản phẩm và hẹn xem lại",
+      "facts_established": {
+        "product_advised": "SKU-JK-DWN-L-BE",
+        "price_quoted_vnd": 1490000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-JK-DWN-L-BE",
+        "price_vnd": 1490000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "scheduled_callback_at": "2026-10-27T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0936270107",
+          "callback_at": "2026-10-26T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0936270107",
+      "call_date": "2026-10-27",
+      "customer_turns": [
+        "Anh ơi, mình đặt cái áo phao lông vũ Warmly màu be size L rồi.",
+        "Giá một triệu bốn trăm chín mươi ngàn, thanh toán khi nhận hàng.",
+        "Giao đến 58B Nguyễn Đình Chiểu, phường Tân Định, TP. Hồ Chí Minh."
+      ],
+      "days_later": 5,
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-JK-DWN-L-BE",
+        "price_quoted_vnd": 1490000,
+        "payment": "COD",
+        "delivery_address": "58B Nguyễn Đình Chiểu, phường Tân Định, TP. Hồ Chí Minh",
+        "order_status": "created"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-JK-DWN-L-BE",
+        "price_vnd": 1490000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "estimated_delivery": "2026-10-29"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-JK-DWN-L-BE",
+          "price_vnd": 1490000
+        }
+      }
+    },
+    "call_3": {
+      "channel": "hotline",
+      "channel_identity": "0936270107",
+      "call_date": "2026-10-28",
+      "customer_turns": [
+        "Anh ơi, đơn mình đã đặt rồi đấy.",
+        "Thôi khỏi."
+      ],
+      "days_later": 1,
+      "customer_goal": "Kiểm tra đơn đã mua",
+      "facts_established": {},
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "payment",
+        "delivery_address",
+        "order_status"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-JK-DWN-L-BE",
+        "price_vnd": 1490000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        }
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.status",
+        "args_match": {
+          "order_id": "OD600001"
+        },
+        "max_agent_questions": 1
+      }
+    }
+  }
+}

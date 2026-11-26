@@ -1,0 +1,150 @@
+{
+  "scenario_id": "SC-136",
+  "level": "M1",
+  "persona": "khach_goi_lan_3_het_kien_nhan",
+  "hard_case": null,
+  "customer_phone": "0957990659",
+  "customer_name": "Bảo",
+  "honorific": "anh",
+  "notes": "return_for_post_purchase_support",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0957990659",
+      "call_date": "2026-10-24",
+      "customer_turns": [
+        "Tôi muốn hỏi về cái áo khoác gió Windbreak màu đen size S.",
+        "Giá bao nhiêu?",
+        "Hẹn 10 giờ ngày mai gọi lại nhé."
+      ],
+      "customer_goal": "Hỏi về sản phẩm và hẹn xem lại",
+      "facts_established": {
+        "product_advised": "SKU-JK-WND-S-DEN",
+        "price_quoted_vnd": 690000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-JK-WND-S-DEN",
+        "price_vnd": 690000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "scheduled_callback_at": "2026-10-25T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0957990659",
+          "callback_at": "2026-10-25T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0957990659",
+      "call_date": "2026-10-25",
+      "customer_turns": [
+        "Tôi mua cái áo khoác gió Windbreak màu đen size S.",
+        "Giá sáu trăm chín mươi ngàn đúng không?",
+        "Giao hàng đến A8 Châu Thới, phường Hòa Hưng, TP. Hồ Chí Minh.",
+        "Thanh toán khi nhận hàng."
+      ],
+      "days_later": 1,
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-JK-WND-S-DEN",
+        "price_quoted_vnd": 690000,
+        "payment": "COD",
+        "delivery_address": "A8 Châu Thới, phường Hòa Hưng, TP. Hồ Chí Minh",
+        "order_status": "created"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-JK-WND-S-DEN",
+        "price_vnd": 690000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "estimated_delivery": "2026-10-28"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-JK-WND-S-DEN",
+          "price_vnd": 690000
+        }
+      }
+    },
+    "call_3": {
+      "channel": "hotline",
+      "channel_identity": "0957990659",
+      "call_date": "2026-10-26",
+      "customer_turns": [
+        "Giao hàng đến 210–212 Âu Dương Lân, phường Chánh Hưng, TP. Hồ Chí Minh.",
+        "Thôi khỏi."
+      ],
+      "days_later": 1,
+      "customer_goal": "Cập nhật nơi giao cho đơn đã mua",
+      "facts_established": {
+        "delivery_address": "210–212 Âu Dương Lân, phường Chánh Hưng, TP. Hồ Chí Minh"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "payment",
+        "delivery_address",
+        "order_status"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-JK-WND-S-DEN",
+        "price_vnd": 690000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        }
+      },
+      "memory_expectation": {
+        "delivery_address": "210–212 Âu Dương Lân, phường Chánh Hưng, TP. Hồ Chí Minh",
+        "supersedes": {
+          "delivery_address": "A8 Châu Thới, phường Hòa Hưng, TP. Hồ Chí Minh"
+        }
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.update",
+        "args_match": {
+          "order_id": "OD600001",
+          "action": "update_address"
+        },
+        "max_agent_questions": 1
+      }
+    }
+  }
+}

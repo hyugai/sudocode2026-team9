@@ -1,0 +1,98 @@
+{
+  "scenario_id": "SC-066",
+  "level": "M1",
+  "persona": "khach_hoi_ngoai_tai_lieu",
+  "hard_case": "unsupported_question",
+  "customer_phone": "0964252477",
+  "customer_name": "Trang",
+  "honorific": "chị",
+  "notes": "continue_across_channels",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0964252477",
+      "call_date": "2026-10-17",
+      "customer_turns": [
+        "Chị ơi, em đang xem giày chạy bộ RunLite hai Pro màu xám size bốn mươi hai, giá là một triệu năm trăm hai mươi mốt nghìn đúng không ạ?",
+        "Chị cho em hỏi, nếu em mua thì có được bảo hành bao lâu không?",
+        "Em thấy giá ổn, nhưng có thể chị hẹn gọi lại em lúc mười giờ ngày hai mươi mốt tháng mười được không?"
+      ],
+      "customer_goal": "Hỏi về sản phẩm và hẹn xem lại",
+      "facts_established": {
+        "product_advised": "SKU-SN-RUN2-42-XAM",
+        "price_quoted_vnd": 1521000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN2-42-XAM",
+        "price_vnd": 1521000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0",
+          "RUN-10"
+        ],
+        "expired_promos": [
+          "RUN2-SALE"
+        ],
+        "promo_expiry_dates": {
+          "RUN-10": "2026-10-25",
+          "COD-0": "2026-12-14",
+          "RUN2-SALE": "2026-10-07"
+        },
+        "scheduled_callback_at": "2026-10-21T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0964252477",
+          "callback_at": "2026-10-21T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "chat_fanpage",
+      "channel_identity": "fb.trang.394",
+      "call_date": "2026-10-21",
+      "customer_turns": [
+        "Chị ơi, em đang hỏi về giày RunLite hai Pro màu xám size bốn mươi hai, mà em thấy có người nói là có thêm lớp đệm êm hơn, chị có biết không?",
+        "Em không thấy thông tin này trên tài liệu, chị có thể cho em biết thêm không ạ?",
+        "Chị ơi, em lấy thông tin đó ở đâu?"
+      ],
+      "days_later": 4,
+      "customer_goal": "Yêu cầu thông tin không có trong tài liệu",
+      "facts_established": {
+        "product_advised": "SKU-SN-RUN2-42-XAM"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN2-42-XAM",
+        "price_vnd": 1521000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0",
+          "RUN-10"
+        ],
+        "expired_promos": [
+          "RUN2-SALE"
+        ],
+        "promo_expiry_dates": {
+          "RUN-10": "2026-10-25",
+          "COD-0": "2026-12-14",
+          "RUN2-SALE": "2026-10-07"
+        }
+      },
+      "expected_outcome": "tu_choi",
+      "success_if": {
+        "tool_called": null,
+        "args_match": {},
+        "agent_must_say": "không có thông tin"
+      }
+    }
+  }
+}

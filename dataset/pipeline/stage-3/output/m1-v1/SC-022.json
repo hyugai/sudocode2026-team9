@@ -1,0 +1,156 @@
+{
+  "scenario_id": "SC-025",
+  "level": "M1",
+  "persona": "khach_da_mua_doi_size",
+  "hard_case": null,
+  "customer_phone": "0975475177",
+  "customer_name": "Long",
+  "honorific": "anh",
+  "notes": "consider_and_decide",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0975475177",
+      "call_date": "2026-10-18",
+      "customer_turns": [
+        "Anh ơi, em đang muốn hỏi về giày chạy bộ RunLite hai Pro màu xám size bốn mươi ba, giá bao nhiêu vậy?",
+        "Cảm ơn anh, giá một triệu bảy trăm bốn mươi ngàn đồng. Em nghĩ xem lại đã, anh nhắn lại cho em lúc mười giờ ngày hai mươi tháng mười được không?",
+        "Vâng, em đợi anh."
+      ],
+      "customer_goal": "Hỏi về sản phẩm và hẹn xem lại",
+      "facts_established": {
+        "product_advised": "SKU-SN-RUN2-43-XAM",
+        "price_quoted_vnd": 1740000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN2-43-XAM",
+        "price_vnd": 1740000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [
+          "RUN2-SALE"
+        ],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14",
+          "RUN2-SALE": "2026-10-07"
+        },
+        "scheduled_callback_at": "2026-10-20T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0975475177",
+          "callback_at": "2026-10-20T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0975475177",
+      "call_date": "2026-10-20",
+      "customer_turns": [
+        "Anh ơi, hôm nay em muốn chốt đơn giày RunLite hai Pro màu xám size bốn mươi ba, giá một triệu bảy trăm bốn mươi ngàn đồng.",
+        "Giao hàng đến 611/20 Điện Biên Phủ, em sẽ thanh toán khi nhận hàng.",
+        "Cảm ơn anh, em đợi giao hàng."
+      ],
+      "days_later": 2,
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-SN-RUN2-43-XAM",
+        "price_quoted_vnd": 1740000,
+        "payment": "COD",
+        "delivery_address": "611/20 Điện Biên Phủ, phường Bàn Cờ, TP. Hồ Chí Minh",
+        "order_status": "created"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN2-43-XAM",
+        "price_vnd": 1740000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [
+          "RUN2-SALE"
+        ],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14",
+          "RUN2-SALE": "2026-10-07"
+        },
+        "estimated_delivery": "2026-10-22"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-SN-RUN2-43-XAM",
+          "price_vnd": 1740000
+        }
+      }
+    },
+    "call_3": {
+      "channel": "hotline",
+      "channel_identity": "0975475177",
+      "call_date": "2026-10-24",
+      "customer_turns": [
+        "Anh ơi, em nhận hàng rồi, nhưng size bốn mươi ba không vừa. Em muốn đổi sang size ba mươi chín.",
+        "Em đã mua sản phẩm đó rồi, anh nhớ đơn của em chứ?",
+        "Mong anh hỗ trợ đổi size nhanh nhé."
+      ],
+      "days_later": 4,
+      "customer_goal": "Đổi sang size khác sau khi nhận hàng",
+      "facts_established": {
+        "new_variant_sku": "SKU-SN-RUN2-39-XAM"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "payment",
+        "delivery_address",
+        "order_status"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN2-43-XAM",
+        "price_vnd": 1740000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [
+          "RUN2-SALE"
+        ],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14",
+          "RUN2-SALE": "2026-10-07"
+        },
+        "replacement_in_stock": true,
+        "exchange_fee_vnd": 0,
+        "policy_reference": "DT-03"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.update",
+        "args_match": {
+          "order_id": "OD600001",
+          "action": "exchange_size",
+          "new_variant_sku": "SKU-SN-RUN2-39-XAM"
+        }
+      }
+    }
+  }
+}

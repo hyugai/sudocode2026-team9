@@ -1,0 +1,89 @@
+{
+  "scenario_id": "SC-028",
+  "level": "M1",
+  "persona": "khach_hoi_nhieu_khong_mua",
+  "hard_case": null,
+  "customer_phone": "0936270107",
+  "customer_name": "Tuấn",
+  "honorific": "anh",
+  "notes": "consider_and_decide",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0936270107",
+      "call_date": "2026-10-21",
+      "customer_turns": [
+        "Anh ơi, em muốn hỏi xem áo khoác gió Windbreak màu be size L có dùng được cho thời tiết mưa gió không?",
+        "Em cũng muốn biết là áo này có chống thấm nước không? Chứ em nghe nói gió thì có thể chống được, nhưng mưa thì sao?",
+        "Giá sáu trăm chín mươi ngàn, có phải là giá gốc không ạ? Em nghe nói có thể có khuyến mãi?",
+        "Để xem thêm, anh ơi."
+      ],
+      "customer_goal": "Hỏi kỹ cách sử dụng và cân nhắc thêm trước khi mua",
+      "facts_established": {
+        "product_advised": "SKU-JK-WND-L-BE",
+        "price_quoted_vnd": 690000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-JK-WND-L-BE",
+        "price_vnd": 690000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "scheduled_callback_at": "2026-10-23T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0936270107",
+          "callback_at": "2026-10-23T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0936270107",
+      "call_date": "2026-10-23",
+      "customer_turns": [
+        "Anh ơi, em gọi lại để xem lại giá áo Windbreak màu be size L một lần nữa.",
+        "Giá sáu trăm chín mươi ngàn vẫn là giá đúng không ạ? Em nghe nói có thể giảm?",
+        "Em nghĩ em sẽ suy nghĩ thêm, không mua ngay.",
+        "Để xem thêm."
+      ],
+      "days_later": 2,
+      "customer_goal": "Xem lại báo giá và hoãn quyết định mua",
+      "facts_established": {
+        "product_advised": "SKU-JK-WND-L-BE"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-JK-WND-L-BE",
+        "price_vnd": 690000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        }
+      },
+      "expected_outcome": "tu_choi",
+      "success_if": {
+        "tool_called": null,
+        "args_match": {}
+      }
+    }
+  }
+}

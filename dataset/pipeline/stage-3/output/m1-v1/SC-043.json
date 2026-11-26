@@ -1,0 +1,93 @@
+{
+  "scenario_id": "SC-049",
+  "level": "M1",
+  "persona": "khach_hoi_nhieu_khong_mua",
+  "hard_case": null,
+  "customer_phone": "0905154382",
+  "customer_name": "Thắng",
+  "honorific": "anh",
+  "notes": "continue_across_channels",
+  "calls": {
+    "call_1": {
+      "channel": "zalo_oa",
+      "channel_identity": "zalo_thắng86",
+      "call_date": "2026-10-21",
+      "customer_turns": [
+        "Anh ơi, em đang xem giày chạy bộ RunLite màu đen size ba mươi tám, giá một triệu một trăm sáu mươi mốt ngàn đồng đúng không?",
+        "Em muốn hỏi kỹ hơn về cách bảo quản và sử dụng để đảm bảo nó phù hợp với mình.",
+        "Anh có thể nói rõ hơn về chất liệu và độ bền không?",
+        "Em đang cân nhắc thêm, để xem thêm."
+      ],
+      "customer_goal": "Hỏi kỹ cách sử dụng và cân nhắc thêm trước khi mua",
+      "facts_established": {
+        "product_advised": "SKU-SN-RUN1-38-DEN",
+        "price_quoted_vnd": 1161000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN1-38-DEN",
+        "price_vnd": 1161000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0",
+          "RUN-10"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "RUN-10": "2026-10-25",
+          "COD-0": "2026-12-14"
+        },
+        "scheduled_callback_at": "2026-10-24T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0905154382",
+          "callback_at": "2026-10-24T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0905154382",
+      "call_date": "2026-10-24",
+      "customer_turns": [
+        "Anh ơi, em nhớ giá là một triệu một trăm sáu mốt ngàn đúng không?",
+        "Em thấy giá vẫn vậy, nhưng em vẫn chưa quyết định mua.",
+        "Anh có thể cho em thêm thời gian suy nghĩ không?",
+        "Em xin lỗi, để xem thêm."
+      ],
+      "days_later": 3,
+      "customer_goal": "Xem lại báo giá và hoãn quyết định mua",
+      "facts_established": {
+        "product_advised": "SKU-SN-RUN1-38-DEN"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN1-38-DEN",
+        "price_vnd": 1161000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0",
+          "RUN-10"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "RUN-10": "2026-10-25",
+          "COD-0": "2026-12-14"
+        }
+      },
+      "expected_outcome": "tu_choi",
+      "success_if": {
+        "tool_called": null,
+        "args_match": {}
+      }
+    }
+  }
+}

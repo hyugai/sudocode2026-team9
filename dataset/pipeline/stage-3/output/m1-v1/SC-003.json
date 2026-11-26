@@ -1,0 +1,103 @@
+{
+  "scenario_id": "SC-003",
+  "level": "M1",
+  "persona": "khach_do_du_hoi_nguoi_nha",
+  "hard_case": null,
+  "customer_phone": "0925877188",
+  "customer_name": "Huy",
+  "honorific": "anh",
+  "notes": "consider_and_decide",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0925877188",
+      "call_date": "2026-10-17",
+      "customer_turns": [
+        "Chào chị, em đang xem giày sneaker Urban Classic màu đen size 43.",
+        "Giá là 940 nghìn, đúng ngân sách hai triệu.",
+        "Em đang hỏi người nhà, chị có thể nhắn lại cho em được không?",
+        "Hẹn 10 giờ ngày 20 tháng 10 nhé."
+      ],
+      "customer_goal": "Xem sản phẩm trong ngân sách và hỏi ý kiến người nhà",
+      "facts_established": {
+        "product_advised": "SKU-SN-CAS-43-DEN",
+        "price_quoted_vnd": 940000,
+        "budget_vnd": 2000000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-SN-CAS-43-DEN",
+        "price_vnd": 940000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "scheduled_callback_at": "2026-10-20T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0925877188",
+          "callback_at": "2026-10-20T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0925877188",
+      "call_date": "2026-10-20",
+      "customer_turns": [
+        "Chị ơi, hôm trước chị nói rồi mà.",
+        "Người nhà đồng ý mua rồi, em muốn đặt đơn.",
+        "Giao hàng đến số 486 Lê Văn Hiến, Đà Nẵng.",
+        "Thanh toán khi nhận hàng là được."
+      ],
+      "days_later": 3,
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-SN-CAS-43-DEN",
+        "price_quoted_vnd": 940000,
+        "payment": "COD",
+        "delivery_address": "Số 486 đường Lê Văn Hiến, phường Ngũ Hành Sơn, Đà Nẵng",
+        "order_status": "created",
+        "family_approved_purchase": true
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "budget_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-SN-CAS-43-DEN",
+        "price_vnd": 940000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "estimated_delivery": "2026-10-22"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-SN-CAS-43-DEN",
+          "price_vnd": 940000
+        }
+      }
+    }
+  }
+}

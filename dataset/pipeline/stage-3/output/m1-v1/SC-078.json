@@ -1,0 +1,116 @@
+{
+  "scenario_id": "SC-084",
+  "level": "M1",
+  "persona": "khach_so_gia",
+  "hard_case": "expired_promo",
+  "customer_phone": "0913301756",
+  "customer_name": "Vy",
+  "honorific": "chị",
+  "notes": "return_after_price_or_stock_change",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0913301756",
+      "call_date": "2026-10-25",
+      "customer_turns": [
+        "Chị ơi, em đang so sánh giá với nơi khác rồi quyết định. Mấy hôm trước em hỏi giá giày RunLite hai Pro màu đen size bốn mươi, được báo là một triệu năm trăm hai mươi mốt ngàn.",
+        "Nhưng bên em bán chỉ một triệu bốn trăm bốn mươi mốt ngàn. Chị xem lại chương trình giảm 10% giày RunLite có còn không?",
+        "Ưu đãi giảm 10% hết ngày hai mươi lăm tháng mười, đúng không chị?"
+      ],
+      "customer_goal": "So báo giá với nơi khác trước khi quyết định",
+      "facts_established": {
+        "product_advised": "SKU-SN-RUN2-40-DEN",
+        "price_quoted_vnd": 1521000,
+        "promo_code": "RUN-10",
+        "promo_expiry": "2026-10-25",
+        "competitor_price_vnd": 1441000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN2-40-DEN",
+        "price_vnd": 1521000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0",
+          "RUN-10"
+        ],
+        "expired_promos": [
+          "RUN2-SALE"
+        ],
+        "promo_expiry_dates": {
+          "RUN-10": "2026-10-25",
+          "COD-0": "2026-12-14",
+          "RUN2-SALE": "2026-10-07"
+        },
+        "scheduled_callback_at": "2026-10-27T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0913301756",
+          "callback_at": "2026-10-26T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0913301756",
+      "call_date": "2026-10-27",
+      "customer_turns": [
+        "Chị ơi, em đã xem lại rồi. Giá bên em là một triệu sáu trăm chín mươi ngàn, còn bên ngoài chỉ một triệu sáu trăm mười ngàn.",
+        "Chị có thể giảm thêm không? Em đang cân nhắc mua.",
+        "Em thấy bên họ cũng chấp nhận thanh toán khi nhận hàng, giao đến 53A Trần Phú, phường Chợ Quán, TP. Hồ Chí Minh.",
+        "Chị xem lại giá và điều kiện có phù hợp không, để em quyết định luôn."
+      ],
+      "days_later": 2,
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-SN-RUN2-40-DEN",
+        "price_quoted_vnd": 1690000,
+        "payment": "COD",
+        "delivery_address": "53A Trần Phú, phường Chợ Quán, TP. Hồ Chí Minh",
+        "order_status": "created",
+        "competitor_price_vnd": 1610000
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "promo_code",
+        "promo_expiry",
+        "competitor_price_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN2-40-DEN",
+        "price_vnd": 1690000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [
+          "RUN-10",
+          "RUN2-SALE"
+        ],
+        "promo_expiry_dates": {
+          "RUN-10": "2026-10-25",
+          "COD-0": "2026-12-14",
+          "RUN2-SALE": "2026-10-07"
+        },
+        "estimated_delivery": "2026-10-29"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-SN-RUN2-40-DEN",
+          "price_vnd": 1690000
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,117 @@
+{
+  "scenario_id": "SC-063",
+  "level": "M1",
+  "persona": "khach_so_gia",
+  "hard_case": "expired_promo",
+  "customer_phone": "0982141621",
+  "customer_name": "Quân",
+  "honorific": "anh",
+  "notes": "return_after_price_or_stock_change",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0982141621",
+      "call_date": "2026-10-13",
+      "customer_turns": [
+        "Anh ơi, em vừa so giá bên khác rồi, họ bán chỉ bốn triệu hai trăm năm mươi ngàn.",
+        "Giá anh báo là bốn triệu hai trăm chín mươi ngàn, chênh 40 ngàn thôi mà.",
+        "Anh có thể giảm giá được không? Em đang cân nhắc mua.",
+        "Mà ưu đãi tặng túi trữ sữa cũng được, nhưng em muốn giá tốt hơn.",
+        "Em sẽ gọi lại cho anh sau nếu anh có thể hỗ trợ được."
+      ],
+      "customer_goal": "So báo giá với nơi khác trước khi quyết định",
+      "facts_established": {
+        "product_advised": "SKU-MB-PUMP1",
+        "price_quoted_vnd": 4290000,
+        "promo_code": "PUMP-GIFT",
+        "promo_expiry": "2026-10-13",
+        "competitor_price_vnd": 4250000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-MB-PUMP1",
+        "price_vnd": 4290000,
+        "in_stock": true,
+        "active_promos": [
+          "MOM-FREESHIP",
+          "COD-0",
+          "PUMP-GIFT"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "MOM-FREESHIP": "2026-11-29",
+          "COD-0": "2026-12-14",
+          "PUMP-GIFT": "2026-10-13"
+        },
+        "scheduled_callback_at": "2026-10-14T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0982141621",
+          "callback_at": "2026-10-14T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0982141621",
+      "call_date": "2026-10-14",
+      "customer_turns": [
+        "Anh ơi, em đã nghĩ kỹ rồi, giá anh báo là bốn triệu hai trăm chín mươi ngàn, em đồng ý.",
+        "Ưu đãi lúc trước là tặng túi trữ sữa, em cũng vừa nhận được rồi.",
+        "Em muốn đặt hàng, giao đến 154 Tháp Mười, phường Bình Tây.",
+        "Thanh toán khi nhận hàng được không anh?",
+        "Giao hàng nhanh chút nhé, em đợi để dùng."
+      ],
+      "days_later": 1,
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-MB-PUMP1",
+        "price_quoted_vnd": 4290000,
+        "payment": "COD",
+        "delivery_address": "154 Tháp Mười, phường Bình Tây, TP. Hồ Chí Minh",
+        "order_status": "created"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "promo_code",
+        "promo_expiry",
+        "competitor_price_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-MB-PUMP1",
+        "price_vnd": 4290000,
+        "in_stock": true,
+        "active_promos": [
+          "MOM-FREESHIP",
+          "COD-0"
+        ],
+        "expired_promos": [
+          "PUMP-GIFT"
+        ],
+        "promo_expiry_dates": {
+          "MOM-FREESHIP": "2026-11-29",
+          "COD-0": "2026-12-14",
+          "PUMP-GIFT": "2026-10-13"
+        },
+        "estimated_delivery": "2026-10-16"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-MB-PUMP1",
+          "price_vnd": 4290000
+        }
+      }
+    }
+  }
+}

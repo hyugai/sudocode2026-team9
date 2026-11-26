@@ -1,0 +1,98 @@
+{
+  "scenario_id": "SC-164",
+  "level": "M1",
+  "persona": "khach_quay_lai_sau_8_thang",
+  "hard_case": "stale_address",
+  "customer_phone": "0928144976",
+  "customer_name": "Trung",
+  "honorific": "anh",
+  "notes": "resume_with_uncertain_identity_or_history",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0928144976",
+      "call_date": "2026-02-24",
+      "customer_turns": [
+        "À, anh gọi lại rồi à? Mình nhớ không nhầm thì hôm trước anh gọi hỏi về cái áo khoác gió Windbreak màu be size L.",
+        "Giá là sáu trăm chín mươi ngàn, thanh toán khi nhận hàng đúng không anh?",
+        "Địa chỉ giao hàng là Đường Tôn Đức Thắng, phường Ô Môn, Cần Thơ. Mình nhớ vậy.",
+        "Được rồi, mình đồng ý mua."
+      ],
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-JK-WND-L-BE",
+        "price_quoted_vnd": 690000,
+        "payment": "COD",
+        "delivery_address": "Đường Tôn Đức Thắng, phường Ô Môn, Cần Thơ",
+        "order_status": "created"
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-JK-WND-L-BE",
+        "price_vnd": 690000,
+        "in_stock": true,
+        "active_promos": [],
+        "expired_promos": [],
+        "promo_expiry_dates": {},
+        "estimated_delivery": "2026-02-26"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-JK-WND-L-BE",
+          "price_vnd": 690000
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0928144976",
+      "call_date": "2026-10-24",
+      "customer_turns": [
+        "À, anh lại rồi à? Mình không nhớ rõ lắm, nhưng hình như hôm trước anh hỏi lại về đơn hàng đó.",
+        "Nhà mình ở Đường Tôn Đức Thắng, Ô Môn, Cần Thơ. Bên em không lưu à?",
+        "Anh xem lại giúp mình nhé, mình không chắc lắm.",
+        "Được rồi, nếu đúng thì chốt đơn luôn."
+      ],
+      "days_later": 242,
+      "customer_goal": "Xác nhận thông tin người nhận trước khi tra đơn cũ",
+      "facts_established": {},
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "payment",
+        "delivery_address",
+        "order_status"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-JK-WND-L-BE",
+        "price_vnd": 690000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        }
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.status",
+        "args_match": {
+          "order_id": "OD600001"
+        },
+        "must_say_any": [
+          "xác nhận",
+          "địa chỉ"
+        ]
+      }
+    }
+  }
+}

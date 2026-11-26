@@ -1,0 +1,113 @@
+{
+  "scenario_id": "SC-071",
+  "level": "M1",
+  "persona": "khach_so_gia",
+  "hard_case": "restock",
+  "customer_phone": "0980737028",
+  "customer_name": "Mai",
+  "honorific": "chị",
+  "notes": "return_after_price_or_stock_change",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0980737028",
+      "call_date": "2026-10-23",
+      "customer_turns": [
+        "Chị ơi, em vừa so giá với bên khác rồi, bên họ chỉ một triệu năm trăm lẻ một ngàn, rẻ hơn 20 ngàn so với chị.",
+        "Chị có thể giảm giá được không? Em đang cân nhắc mua.",
+        "Nếu không giảm, em không mua đâu.",
+        "Em muốn hẹn lại vào 10 giờ ngày mai để chị báo lại giá nhé."
+      ],
+      "customer_goal": "So báo giá với nơi khác trước khi quyết định",
+      "facts_established": {
+        "product_advised": "SKU-SN-RUN2-41-DEN",
+        "price_quoted_vnd": 1521000,
+        "competitor_price_vnd": 1501000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN2-41-DEN",
+        "price_vnd": 1521000,
+        "in_stock": false,
+        "active_promos": [
+          "COD-0",
+          "RUN-10"
+        ],
+        "expired_promos": [
+          "RUN2-SALE"
+        ],
+        "promo_expiry_dates": {
+          "RUN-10": "2026-10-25",
+          "COD-0": "2026-12-14",
+          "RUN2-SALE": "2026-10-07"
+        },
+        "restock_expected": "2026-10-24",
+        "scheduled_callback_at": "2026-10-24T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0980737028",
+          "callback_at": "2026-10-24T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0980737028",
+      "call_date": "2026-10-24",
+      "customer_turns": [
+        "Chị ơi, em vừa gọi lại như đã hẹn. Bên em thấy giá chị vẫn là một triệu năm trăm hai mươi mốt, mà bên đối thủ vẫn giữ nguyên một triệu năm trăm lẻ một.",
+        "Chị có thể hỗ trợ thêm gì không? Em cũng muốn mua nhưng nếu không có ưu đãi, em sẽ chọn bên khác.",
+        "Chị ơi, nếu không được giảm, em xin đổi sang thanh toán khi nhận hàng cũng được.",
+        "Được rồi, em đặt hàng luôn."
+      ],
+      "days_later": 1,
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-SN-RUN2-41-DEN",
+        "price_quoted_vnd": 1521000,
+        "payment": "COD",
+        "delivery_address": "531 Vĩnh Khánh, phường Khánh Hội, TP. Hồ Chí Minh",
+        "order_status": "created"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "competitor_price_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN2-41-DEN",
+        "price_vnd": 1521000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0",
+          "RUN-10"
+        ],
+        "expired_promos": [
+          "RUN2-SALE"
+        ],
+        "promo_expiry_dates": {
+          "RUN-10": "2026-10-25",
+          "COD-0": "2026-12-14",
+          "RUN2-SALE": "2026-10-07"
+        },
+        "estimated_delivery": "2026-10-28"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-SN-RUN2-41-DEN",
+          "price_vnd": 1521000
+        }
+      }
+    }
+  }
+}

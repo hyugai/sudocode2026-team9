@@ -10,21 +10,19 @@ import random
 import re
 import shutil
 import sys
+from tempfile import TemporaryDirectory
 from types import SimpleNamespace
 
 STAGE = Path(__file__).resolve().parents[1]
 ROOT = STAGE.parent
 INPUT = STAGE / "input"
 sys.path[:0] = [str(STAGE / "src"), str(ROOT)]
+from blueprint_duplicates import blueprint_signature, is_duplicate_blueprint, read_blueprint_reference
 from common import BLUEPRINTS_FILE, CUSTOMERS_FILE, run_name
 
-DISTRIBUTIONS = {"M1": (78, 32, 14, 16), "M2": (60, 40, 20, 30)}
-CATEGORIES = ("standard", "omnichannel", "hard", "extended")
-M2_MIN_BLUEPRINTS = sum(DISTRIBUTIONS["M2"])
+SYNTHETIC_M1_DISTRIBUTION = {"standard": 78, "omnichannel": 32, "hard": 14, "extended": 16}
 CHANNEL_PAIRS = (("facebook", "hotline"), ("zalo", "hotline"),
                  ("hotline", "zalo"), ("hotline", "facebook"))
-CRM_DISTRIBUTION = {"omnichannel": 12, "standard": 10, "hard": 8, "extended": 20}
-CRM_VARIANT_DISTRIBUTION = {"omnichannel": 18, "hard": 8, "standard": 44}
 CRM_DIALECTS = {"bac": "North", "trung": "Central", "nam": "South"}
 CONSIDER = "consider_and_decide"
 CROSS_CHANNEL = "continue_across_channels"
@@ -36,32 +34,72 @@ FAMILY = "khach_do_du_hoi_nguoi_nha"
 PRICE = "khach_so_gia"
 EXCHANGE = "khach_da_mua_doi_size"
 IMPATIENT = "khach_goi_lan_3_het_kien_nhan"
-CRM_PLAN = (
-    (CONSIDER, FAMILY, "decision", 14), (CONSIDER, PRICE, "decision", 14),
+RESEARCHER = "khach_hoi_nhieu_khong_mua"
+UNSUPPORTED = "khach_hoi_ngoai_tai_lieu"
+RETURNING = "khach_quay_lai_sau_8_thang"
+MULTI_ITEM = "khach_mua_nhieu_mon"
+M1_REGIONS = ("trung", "nam")
+M1_SKU_COUNT = 45
+M1_RUN_NAME = re.compile(r"m1-([0-9]{8})-v([1-9][0-9]*)")
+M1_CRM_PLAN = (
+    (CONSIDER, FAMILY, "decision", 12), (CONSIDER, PRICE, "decision", 10),
+    (CONSIDER, EXCHANGE, "exchange_after_consultation", 3),
+    (CONSIDER, RESEARCHER, "defer", 3), (CONSIDER, UNSUPPORTED, "unsupported_question", 2),
+    (CROSS_CHANNEL, FAMILY, "decision", 5), (CROSS_CHANNEL, PRICE, "decision", 5),
+    (CROSS_CHANNEL, EXCHANGE, "size_exchange", 5), (CROSS_CHANNEL, RESEARCHER, "defer", 4),
+    (CROSS_CHANNEL, "khach_da_kenh_fb_hotline", "decision", 12),
+    (CROSS_CHANNEL, UNSUPPORTED, "unsupported_question", 5),
+    (CROSS_CHANNEL, "khach_da_kenh_mau_thuan", "conflicting_quotes", 6),
+    (BUSINESS_CHANGE, FAMILY, "expired_promo", 6), (BUSINESS_CHANGE, PRICE, "expired_promo", 7),
+    (BUSINESS_CHANGE, PRICE, "out_of_stock", 1), (BUSINESS_CHANGE, PRICE, "restock", 1),
+    (BUSINESS_CHANGE, EXCHANGE, "exchange_after_promo", 5),
+    (BUSINESS_CHANGE, RESEARCHER, "research_price_change", 2),
+    (BUSINESS_CHANGE, IMPATIENT, "third_call_price_change", 2),
+    (BUSINESS_CHANGE, RETURNING, "return_after_promo", 2),
+    (BUSINESS_CHANGE, MULTI_ITEM, "basket_reprice", 4),
+    (POST_PURCHASE, FAMILY, "order_status", 2), (POST_PURCHASE, PRICE, "order_status", 2),
+    (POST_PURCHASE, EXCHANGE, "size_exchange", 16),
+    (POST_PURCHASE, EXCHANGE, "exchange_after_consultation", 3),
+    (POST_PURCHASE, RESEARCHER, "order_status", 2),
+    (POST_PURCHASE, IMPATIENT, "order_status", 5), (POST_PURCHASE, IMPATIENT, "address_update", 5),
+    (POST_PURCHASE, RETURNING, "stale_address", 3), (POST_PURCHASE, MULTI_ITEM, "basket_follow_up", 2),
+    (IDENTITY, EXCHANGE, "verify_order_identity", 4), (IDENTITY, IMPATIENT, "verify_order_identity", 2),
+    (IDENTITY, "hai_nguoi_chung_sdt", "shared_phone", 2), (IDENTITY, RETURNING, "stale_address", 10),
+    (TRANSFER, PRICE, "handoff", 2), (TRANSFER, EXCHANGE, "order_handoff", 2),
+    (TRANSFER, IMPATIENT, "third_call_handoff", 2),
+    (TRANSFER, "khach_ngoai_pham_vi_chuyen_may", "handoff", 7),
+    (TRANSFER, UNSUPPORTED, "handoff", 2),
+)
+M2_CRM_PLAN = (
+    (CONSIDER, FAMILY, "decision", 12), (CONSIDER, PRICE, "decision", 12),
     (CONSIDER, "khach_hoi_nhieu_khong_mua", "defer", 4),
     (CONSIDER, "khach_hoi_ngoai_tai_lieu", "unsupported_question", 2),
-    (CROSS_CHANNEL, "khach_da_kenh_fb_hotline", "decision", 9),
-    (CROSS_CHANNEL, "khach_da_kenh_mau_thuan", "conflicting_quotes", 6),
-    (CROSS_CHANNEL, PRICE, "decision", 5), (CROSS_CHANNEL, FAMILY, "decision", 4),
-    (CROSS_CHANNEL, EXCHANGE, "size_exchange", 3),
+    (CROSS_CHANNEL, "khach_da_kenh_fb_hotline", "decision", 11),
+    (CROSS_CHANNEL, "khach_da_kenh_mau_thuan", "conflicting_quotes", 9),
+    (CROSS_CHANNEL, PRICE, "decision", 8), (CROSS_CHANNEL, FAMILY, "decision", 7),
+    (CROSS_CHANNEL, EXCHANGE, "size_exchange", 5),
     (BUSINESS_CHANGE, PRICE, "expired_promo", 6), (BUSINESS_CHANGE, PRICE, "out_of_stock", 3),
     (BUSINESS_CHANGE, PRICE, "restock", 2), (BUSINESS_CHANGE, FAMILY, "expired_promo", 2),
     (BUSINESS_CHANGE, FAMILY, "out_of_stock", 2), (BUSINESS_CHANGE, FAMILY, "restock", 2),
     (BUSINESS_CHANGE, "khach_mua_nhieu_mon", "basket_restock", 6),
-    (BUSINESS_CHANGE, EXCHANGE, "exchange_after_restock", 3),
-    (POST_PURCHASE, EXCHANGE, "exchange_after_consultation", 8),
-    (POST_PURCHASE, EXCHANGE, "size_exchange", 8), (POST_PURCHASE, EXCHANGE, "order_status", 5),
-    (POST_PURCHASE, EXCHANGE, "address_update", 3),
-    (POST_PURCHASE, IMPATIENT, "order_status", 3), (POST_PURCHASE, IMPATIENT, "address_update", 3),
+    (BUSINESS_CHANGE, EXCHANGE, "exchange_after_restock", 4),
+    (POST_PURCHASE, EXCHANGE, "exchange_after_consultation", 20),
+    (POST_PURCHASE, EXCHANGE, "size_exchange", 2),
+    (POST_PURCHASE, IMPATIENT, "order_status", 5), (POST_PURCHASE, IMPATIENT, "address_update", 5),
     (IDENTITY, "khach_quay_lai_sau_8_thang", "stale_address", 6),
     (IDENTITY, "hai_nguoi_chung_sdt", "shared_phone", 4),
     (IDENTITY, EXCHANGE, "verify_order_identity", 2),
-    (TRANSFER, "khach_ngoai_pham_vi_chuyen_may", "handoff", 11),
+    (TRANSFER, "khach_ngoai_pham_vi_chuyen_may", "handoff", 9),
 )
+M1_MIN_BLUEPRINTS = sum(count for _, _, _, count in M1_CRM_PLAN)
+M2_MIN_BLUEPRINTS = sum(count for _, _, _, count in M2_CRM_PLAN)
+DEFAULT_BLUEPRINT_COUNTS = {"M1": 180, "M2": 180}
 CRM_HARD_CASES = {
     "unsupported_question", "conflicting_quotes", "expired_promo", "out_of_stock", "restock",
     "basket_restock", "exchange_after_restock", "stale_address", "shared_phone",
     "verify_order_identity", "handoff",
+    "exchange_after_promo", "research_price_change", "third_call_price_change", "return_after_promo",
+    "basket_reprice", "order_handoff", "third_call_handoff",
 }
 CHANNEL_IDS = {"hotline": "phone", "facebook": "fb_id", "zalo": "zalo_id"}
 ORDER_GOAL = "Chốt mua theo báo giá hiện hành"
@@ -170,63 +208,197 @@ def add_memory(session, previous, carry, no_repeat):
     session["must_not_ask"] = no_repeat
 
 
-def generation_distribution(tier, crm_backed, blueprint_count=None):
-    if blueprint_count is not None and tier != "M2":
-        raise ValueError("Blueprint count is configurable for M2 only.")
-    if crm_backed:
-        return dict(Counter(CRM_DISTRIBUTION) + Counter(CRM_VARIANT_DISTRIBUTION))
-    distribution = dict(zip(CATEGORIES, DISTRIBUTIONS[tier]))
-    if blueprint_count is not None:
-        if not isinstance(blueprint_count, int) or blueprint_count < M2_MIN_BLUEPRINTS:
-            raise ValueError(f"M2 requires at least {M2_MIN_BLUEPRINTS} blueprints.")
-        distribution["standard"] += blueprint_count - M2_MIN_BLUEPRINTS
-    return distribution
+def m1_hotline_capacities(by_region, reserved_chat, blueprint_count):
+    if blueprint_count == M1_MIN_BLUEPRINTS:
+        return {key: 5 - chat_slots for key, chat_slots in reserved_chat.items()}
+
+    hotline_count = blueprint_count - sum(reserved_chat.values())
+    per_customer, extra = divmod(hotline_count, len(reserved_chat))
+    capacity = dict.fromkeys(reserved_chat, per_customer)
+    available = {region: deque(row["customer_id"] for row in rows) for region, rows in by_region.items()}
+    regional_counts = {
+        region: sum(per_customer + reserved_chat[key] for key in customers)
+        for region, customers in available.items()
+    }
+    for _ in range(extra):
+        region = min((region for region in available if available[region]), key=regional_counts.__getitem__)
+        capacity[available[region].popleft()] += 1
+        regional_counts[region] += 1
+    return capacity
 
 
-def blueprint_signature(journey):
-    """Describe the session goals and state changes using structured fields."""
-    sessions = []
-    previous = None
-    for key in ("call_1", "call_2", "call_3"):
-        if key not in journey:
-            continue
-        call = journey[key]
-        success = call["success_if"]
-        truth = call["ground_truth_facts"]
-        products = call["facts_established"].get("product_advised")
-        previous_promos = set(previous.get("active_promos", ())) if previous else set()
-        price_changed = previous is not None and previous.get("price_vnd") != truth.get("price_vnd")
-        sessions.append((
-            call["channel"], call["expected_outcome"], success["tool_called"],
-            success["args_match"].get("action"),
-            len(products) if isinstance(products, list) else 1,
-            truth.get("in_stock"), price_changed,
-            bool(previous_promos.intersection(truth.get("expired_promos", ()))),
-            truth.get("policy_reference"),
-        ))
-        previous = truth
-    return journey["target_sku"], tuple(sessions)
+def m1_assign_customers(registry, plan):
+    by_region = {region: [row for row in registry if row["region"] == region] for region in M1_REGIONS}
+    reserved_chat = {row["customer_id"]: 2 if row["fb_id"] or row["zalo_id"] else 0 for row in registry}
+    hotline_capacity = m1_hotline_capacities(by_region, reserved_chat, len(plan))
+    assigned = {}
+    for cross_channel in (True, False):
+        capacities = reserved_chat.copy() if cross_channel else hotline_capacity
+        groups = defaultdict(list)
+        for index, (pattern, persona, _, _) in enumerate(plan):
+            if (pattern == CROSS_CHANNEL) == cross_channel:
+                groups[pattern, persona].append(index)
+
+        central, south = M1_REGIONS
+        split, unassigned = {}, []
+        for indexes in groups.values():
+            kind = plan[indexes[0]][2]
+            if kind in {"shared_phone", "conflicting_quotes"}:
+                pivot = len(indexes) // 2
+                split.update((index, central) for index in indexes[:pivot])
+                split.update((index, south) for index in indexes[pivot:])
+            else:
+                split[indexes[0]], split[indexes[1]] = central, south
+                unassigned.extend(indexes[2:])
+        remaining = {
+            region: sum(capacities[row["customer_id"]] for row in customers)
+            - sum(value == region for value in split.values())
+            for region, customers in by_region.items()
+        }
+        if min(remaining.values()) < 0 or sum(remaining.values()) != len(unassigned):
+            raise ValueError("M1 regional allocation does not match the BTC roster")
+        for index in unassigned:
+            region = max(remaining, key=remaining.get)
+            split[index] = region
+            remaining[region] -= 1
+
+        special = {"shared_phone", "conflicting_quotes"}
+        used_special = set()
+        for index in sorted(split, key=lambda i: (plan[i][2] not in special, i)):
+            kind = plan[index][2]
+            eligible = [row for row in by_region[split[index]] if capacities[row["customer_id"]]]
+            if kind == "shared_phone":
+                eligible = [row for row in eligible if row["shared_phone_with"]]
+            elif kind == "conflicting_quotes":
+                eligible = [row for row in eligible if row["fb_id"] and row["zalo_id"]]
+            if kind in special:
+                eligible = [row for row in eligible if row["customer_id"] not in used_special]
+            customer = max(eligible, key=lambda row: capacities[row["customer_id"]], default=None)
+            if customer is None:
+                raise ValueError(f"No M1 CRM profile in {split[index]} for {kind}")
+            customer_id = customer["customer_id"]
+            capacities[customer_id] -= 1
+            if kind in special:
+                used_special.add(customer_id)
+            assigned[index] = customer
+    return assigned
 
 
-def read_m1_reference(path: Path):
-    signatures, scenario_numbers = set(), set()
-    with path.open(encoding="utf-8") as source:
-        for number, line in enumerate(source, 1):
-            if not line.strip():
+M1_PROMO_CASES = {
+    "expired_promo", "exchange_after_promo", "research_price_change",
+    "third_call_price_change", "return_after_promo", "basket_reprice",
+}
+
+
+def m1_fashion_scope(tools, rng):
+    variants = {
+        variant["variant_sku"]: (product, variant)
+        for product in tools.PRODUCTS
+        if product["category"].split("/")[0] == "thoi-trang" and not product["attributes"].get("discontinued")
+        for variant in product["variants"]
+        if tools.inventory_check(variant["variant_sku"], on=tools.REF)["in_stock"]
+    }
+    transitions = []
+    for sku, (product, _) in variants.items():
+        for promo in tools.PROMOS:
+            if product["sku"] not in promo["applies_to"]:
                 continue
-            row = json.loads(line)
-            scenario_id = row.get("scenario_id") if isinstance(row, dict) else None
-            match = re.fullmatch(r"(?:TEAM-)?SC-([0-9]+)", scenario_id) if isinstance(scenario_id, str) else None
-            if not match or row.get("tier") != "M1" or not {"call_1", "call_2"} <= row.keys():
-                raise ValueError(f"Expected a Stage 1 M1 blueprint in {path}, line {number}.")
-            scenario_number = int(match[1])
-            if scenario_number in scenario_numbers:
-                raise ValueError(f"Duplicate M1 scenario number in {path}, line {number}.")
-            scenario_numbers.add(scenario_number)
-            signatures.add(blueprint_signature(row))
-    if not scenario_numbers:
-        raise ValueError(f"The M1 reference has no blueprints: {path}")
-    return signatures, max(scenario_numbers)
+            day = date.fromisoformat(promo["end"])
+            after = day + timedelta(days=1)
+            before_quote = tools.pricing_get_quote(sku, on=day.isoformat())
+            after_quote = tools.pricing_get_quote(sku, on=after.isoformat())
+            if (promo["promo_code"] in {row["promo_code"] for row in before_quote["applied_promos"]}
+                    and before_quote["final_price_vnd"] != after_quote["final_price_vnd"]
+                    and all(tools.inventory_check(sku, on=on.isoformat())["in_stock"] for on in (day, after))):
+                transitions.append((sku, day, promo["promo_code"]))
+    required = {sku for sku, _, _ in transitions}
+    required.update(event["sku"] for event in tools.INV if event["sku"] in variants)
+    others = list(variants.keys() - required)
+    others.sort()
+    rng.shuffle(others)
+    # Keep at least one variant from each active product with sellable variants.
+    covered = {variants[sku][0]["sku"] for sku in required}
+    for sku in others:
+        parent = variants[sku][0]["sku"]
+        if parent not in covered:
+            covered.add(parent)
+            required.add(sku)
+    skus = sorted(required) + [sku for sku in others if sku not in required][:M1_SKU_COUNT - len(required)]
+    if len(skus) != M1_SKU_COUNT:
+        raise ValueError(f"M1 requires {M1_SKU_COUNT} valid fashion variants")
+    return {sku: variants[sku] for sku in skus}, transitions
+
+
+def m1_case_options(tools, variants, transitions, kind, day, next_day, address, sku_uses):
+    if kind in M1_PROMO_CASES:
+        lead = {"exchange_after_promo": 3, "third_call_price_change": 1}.get(kind, 0)
+        lag = 0 if kind == "third_call_price_change" else 1
+        dates = [(sku, end - timedelta(days=lead), end + timedelta(days=lag), promo)
+                 for sku, end, promo in transitions if sku in variants]
+    elif kind in {"out_of_stock", "restock"}:
+        dates = []
+        for event in tools.INV:
+            sku = event["sku"]
+            if sku not in variants:
+                continue
+            after = date.fromisoformat(event["date"])
+            before = after - timedelta(days=1)
+            if (event["qty"] == 0) == (kind == "out_of_stock") and (
+                    tools.inventory_check(sku, on=before.isoformat())["in_stock"] == (kind == "out_of_stock")):
+                dates.append((sku, before, after, None))
+    else:
+        dates = [(sku, day, next_day, None) for sku in variants]
+
+    options = []
+    exchange = kind in {"size_exchange", "exchange_after_consultation", "exchange_after_promo"}
+    for sku, first, second, promo in dates:
+        if kind not in {"out_of_stock", "restock"} and not all(
+                tools.inventory_check(sku, on=on.isoformat())["in_stock"] for on in (first, second)):
+            continue
+        if exchange:
+            after_consultation = kind == "exchange_after_consultation"
+            purchase_day = second if after_consultation else first
+            delivery = date.fromisoformat(tools._eta(purchase_day.isoformat(), address))
+            follow_up = max(delivery, second + timedelta(days=4 if after_consultation else 0))
+            parent, variant = variants[sku]
+            for replacement, (other_parent, other) in variants.items():
+                if (other_parent is parent and other["color"] == variant["color"]
+                        and other["size"] != variant["size"]
+                        and tools.inventory_check(replacement, on=follow_up.isoformat())["in_stock"]):
+                    options.append((sku, first, second, promo, replacement))
+        else:
+            options.append((sku, first, second, promo, None))
+    return sorted(options, key=lambda option: sku_uses[option[0]])
+
+
+def crm_plan(tier, blueprint_count):
+    baseline, minimum = (M1_CRM_PLAN, M1_MIN_BLUEPRINTS) if tier == "M1" else (M2_CRM_PLAN, M2_MIN_BLUEPRINTS)
+    count = DEFAULT_BLUEPRINT_COUNTS[tier] if blueprint_count is None else blueprint_count
+    if type(count) is not int or count < minimum:
+        raise ValueError(f"{tier} requires at least {minimum} blueprints.")
+
+    # Spread extra two-session cases across patterns and preserve the reserved M1 chat slots.
+    by_pattern = defaultdict(list)
+    for index, (pattern, persona, kind, _) in enumerate(baseline):
+        if crm_three_session(tier, persona, kind) or kind in {"shared_phone", "out_of_stock", "restock"}:
+            continue
+        if tier == "M1" and pattern == CROSS_CHANNEL:
+            continue
+        by_pattern[pattern].append(index)
+    patterns = list(by_pattern.values())
+    extra = Counter()
+    for position in range(count - minimum):
+        round_number, pattern_index = divmod(position, len(patterns))
+        cases = patterns[pattern_index]
+        extra[cases[round_number % len(cases)]] += 1
+    return tuple((pattern, persona, kind, base_count + extra[index])
+                 for index, (pattern, persona, kind, base_count) in enumerate(baseline))
+
+
+def crm_three_session(tier, persona, kind):
+    return persona == IMPATIENT or kind == "exchange_after_consultation" or (
+        tier == "M1" and kind == "conflicting_quotes"
+    )
 
 
 def reset_mock_state(tools):
@@ -234,10 +406,14 @@ def reset_mock_state(tools):
         collection.clear()
 
 
-def generate(tools, personas, tier, seed, crm_customers=None, *, blueprint_count=None,
-             m1_signatures=(), scenario_offset=0):
+def generate(tools, personas, tier, seed, crm_customers=None, *, plan=None,
+             reference_signatures=(), scenario_offset=0):
     if crm_customers is not None:
-        return generate_crm_journeys(tools, seed, crm_customers)
+        return generate_crm_journeys(
+            tools, personas, tier, seed, crm_customers, plan, reference_signatures, scenario_offset,
+        )
+    if tier != "M1":
+        raise ValueError("M2 generation requires the BTC CRM roster.")
     rng = random.Random(seed)
     products = [p for p in tools.PRODUCTS if not p["attributes"].get("discontinued")]
     first_date = date.fromisoformat(tools.REF)
@@ -245,12 +421,9 @@ def generate(tools, personas, tier, seed, crm_customers=None, *, blueprint_count
     registry, blueprints = [], []
     seen = set()
 
-    for category, count in generation_distribution(tier, False, blueprint_count).items():
-        i = retries = 0
-        while i < count:
+    for category, count in SYNTHETIC_M1_DISTRIBUTION.items():
+        for i in range(count):
             index = len(blueprints) + 1
-            if tier == "M2":
-                reset_mock_state(tools)
             first = first_date + timedelta(days=rng.randrange(28))
             followup_days = rng.choice((1, 2, 3, 4))
             channel_pair = ("hotline", "hotline")
@@ -265,8 +438,6 @@ def generate(tools, personas, tier, seed, crm_customers=None, *, blueprint_count
                 persona = "khach_goi_lan_3_het_kien_nhan"
             if category == "hard":
                 edge = ("expired_promo", "out_of_stock", "policy_trap", "handoff")[i % 4]
-                if retries:
-                    channel_pair = CHANNEL_PAIRS[(retries - 1) % len(CHANNEL_PAIRS)]
 
             second = first + timedelta(days=followup_days)
             candidates = [
@@ -282,7 +453,7 @@ def generate(tools, personas, tier, seed, crm_customers=None, *, blueprint_count
                 persona = "khach_ngoai_pham_vi_chuyen_may"
             sku = rng.choice(candidates)["sku"]
             if edge in {"expired_promo", "out_of_stock"}:
-                event_index = i // 4 + retries
+                event_index = i // 4
                 if edge == "expired_promo":
                     sku, first, promo_code = expired[event_index % len(expired)]
                 else:
@@ -360,7 +531,7 @@ def generate(tools, personas, tier, seed, crm_customers=None, *, blueprint_count
                 call_2["memory_expectation"] = {"order_status": "created"}
 
             journey = {
-                "scenario_id": f"SC-{scenario_offset + index:03d}",
+                "scenario_id": f"SC-{index:03d}",
                 "tier": tier,
                 "customer_id": customer["customer_id"],
                 "customer_phone": customer["phone"],
@@ -395,67 +566,69 @@ def generate(tools, personas, tier, seed, crm_customers=None, *, blueprint_count
                            ["product_advised", "payment"])
                 journey["call_3"] = call_3
 
-            if tier == "M2":
-                if blueprint_signature(journey) in m1_signatures:
-                    retries += 1
-                    if retries == 64:
-                        raise ValueError(
-                            f"Could not generate a {category} M2 blueprint distinct from M1 after {retries} attempts."
-                        )
-                    continue
-                profile = personas[persona]
-                calls = {key: value for key, value in journey.items() if key.startswith("call_")}
-                goals = " | ".join(f"{key}: {value['customer_goal']}" for key, value in calls.items())
-                patience = {key: profile["patience_initial"][key] for key in calls}
-                journey["simulator_profile"] = {
-                    "persona_system_prompt": profile["system_prompt"].format(
-                        goal=goals, facts="{facts}", turn_outline="{turn_outline}"
-                    ),
-                    "hidden_goal": goals,
-                    "patience_level": patience["call_1"],
-                    "patience_max_turns": patience["call_1"],
-                    "patience_by_session": patience,
-                }
-
             seen.add(signature)
             registry.append(customer)
             blueprints.append(journey)
-            i += 1
-            retries = 0
 
     return registry, blueprints
 
 
-def generate_crm_journeys(tools, seed, crm_customers):
+def generate_crm_journeys(tools, personas, tier, seed, crm_customers, plan, reference_signatures, scenario_offset):
     rng = random.Random(seed)
     registry = [{**row, "dialect": CRM_DIALECTS[row["region"]]} for row in crm_customers]
     rng.shuffle(registry)
     # Reserve the limited two-handle and shared-phone records before allocating general journeys.
-    plan = [(pattern, persona, kind, index) for pattern, persona, kind, count in CRM_PLAN for index in range(count)]
-    def priority(index):
-        pattern, _, kind, _ = plan[index]
-        if kind == "shared_phone":
-            return 0
-        if kind == "conflicting_quotes":
-            return 1
-        return 2 if pattern == CROSS_CHANNEL else 3
-    uses = Counter()
-    assigned = {}
-    for index in sorted(range(len(plan)), key=priority):
-        pattern, _, kind, _ = plan[index]
-        eligible = (row for row in registry if (
-            bool(row["shared_phone_with"]) if kind == "shared_phone"
-            else bool(row["fb_id"] and row["zalo_id"]) if kind == "conflicting_quotes"
-            else bool(row["fb_id"] or row["zalo_id"]) if pattern == CROSS_CHANNEL
-            else True
-        ))
-        customer = min(eligible, key=lambda row: uses[row["customer_id"]], default=None)
-        if customer is None:
-            raise ValueError(f"No CRM customer has the identities required for {kind}")
-        uses[customer["customer_id"]] += 1
-        assigned[index] = customer
+    plan = [(pattern, persona, kind, index) for pattern, persona, kind, count in plan for index in range(count)]
 
-    expired, stockouts = hard_cases(tools)
+    m1 = tier == "M1"
+    if m1:
+        assigned = m1_assign_customers(registry, plan)
+        variants, transitions = m1_fashion_scope(tools, rng)
+        used_skus = Counter()
+        seen_signatures = set(reference_signatures)
+    else:
+        def priority(index):
+            pattern, persona, kind, _ = plan[index]
+            if kind == "shared_phone":
+                return 0
+            if tier == "M2":
+                if pattern == CROSS_CHANNEL:
+                    return 1
+                return 2 if crm_three_session(tier, persona, kind) else 3
+            if kind == "conflicting_quotes":
+                return 1
+            return 2 if pattern == CROSS_CHANNEL else 3
+        uses, cross_channel_uses, extended_uses = Counter(), Counter(), Counter()
+        assigned = {}
+        for index in sorted(range(len(plan)), key=priority):
+            pattern, persona, kind, _ = plan[index]
+            if kind == "shared_phone":
+                eligible = [row for row in registry if row["shared_phone_with"]]
+            elif kind == "conflicting_quotes" and tier == "M1":
+                eligible = [row for row in registry if row["fb_id"] and row["zalo_id"]]
+            elif pattern == CROSS_CHANNEL:
+                # Shared-phone cases already use chat. Reserve their other M2 slot for hotline coverage.
+                eligible = [row for row in registry if (row["fb_id"] or row["zalo_id"])
+                            and (tier == "M1" or not row["shared_phone_with"])]
+            else:
+                eligible = registry
+            type_uses = None
+            if tier == "M2":
+                if pattern == CROSS_CHANNEL:
+                    type_uses = cross_channel_uses
+                elif crm_three_session(tier, persona, kind):
+                    type_uses = extended_uses
+            customer = min(eligible, key=lambda row: (
+                type_uses[row["customer_id"]] if type_uses is not None else 0, uses[row["customer_id"]],
+            ), default=None)
+            if customer is None:
+                raise ValueError(f"No CRM customer has the identities required for {kind}")
+            uses[customer["customer_id"]] += 1
+            if type_uses is not None:
+                type_uses[customer["customer_id"]] += 1
+            assigned[index] = customer
+
+    expired, stockouts = hard_cases(tools) if not m1 else ([], [])
     restocks = []
     for event in tools.INV:
         day = date.fromisoformat(event["date"])
@@ -465,48 +638,82 @@ def generate_crm_journeys(tools, seed, crm_customers):
     products = [p for p in tools.PRODUCTS if not p["attributes"].get("discontinued")]
     shoe_variants = [v for p in products if p["sku"] == "SKU-SN-CAS" for v in p["variants"] if v["stock"] > 0]
     rows = []
-    for index, (pattern, persona, kind, variant) in enumerate(plan):
+    index = retries = 0
+    while index < len(plan):
+        pattern, persona, kind, variant = plan[index]
         customer = assigned[index]
         reset_mock_state(tools)
-        day = date.fromisoformat(tools.REF) + timedelta(days=index % 21)
+        day = date.fromisoformat(tools.REF) + timedelta(days=(index + retries) % 21)
         next_day = day + timedelta(days=1 + variant % 4)
         channel = ["hotline", "hotline", "hotline"]
         if pattern == CROSS_CHANNEL:
             social = [key for key in ("facebook", "zalo") if customer[CHANNEL_IDS[key]]]
-            if kind == "conflicting_quotes":
+            if kind == "conflicting_quotes" and tier == "M1":
                 channel = ["facebook", "zalo", "hotline"]
             else:
                 channel[:2] = [rng.choice(social), "hotline"]
-                if variant % 2:
+                if (variant + retries) % 2 and (not m1 or persona != "khach_da_kenh_fb_hotline"):
                     channel[:2] = channel[:2][::-1]
-        elif kind == "shared_phone":
+        elif kind == "shared_phone" and not m1:
             channel[0] = "facebook" if customer["fb_id"] else "zalo"
 
         promo = None
         replacement = None
-        if kind == "expired_promo":
-            sku, day, promo = expired[index % len(expired)]
+        if m1:
+            day = date.fromisoformat(tools.REF) + timedelta(days=index % 21)
+            next_day = day + timedelta(days=1 + variant % 4)
+            if kind == "stale_address":
+                day = date(2026, 2, 15) + timedelta(days=variant)
+                next_day = date(2026, 10, 15) + timedelta(days=variant)
+            options = m1_case_options(tools, variants, transitions, kind, day, next_day,
+                                      REGIONS[customer["dialect"]], used_skus)
+            if not options:
+                raise ValueError(f"No valid fashion SKU for M1 {kind}")
+            sku, day, next_day, promo, replacement = options[retries % len(options)]
+        elif kind == "expired_promo":
+            sku, day, promo = expired[(index + retries) % len(expired)]
             next_day = day + timedelta(days=1)
         elif kind == "out_of_stock":
-            sku, day = stockouts[variant % len(stockouts)]
+            sku, day = stockouts[(variant + retries) % len(stockouts)]
             next_day = day + timedelta(days=1)
         elif kind == "restock":
-            sku, next_day = restocks[variant % len(restocks)]
+            sku, next_day = restocks[(variant + retries) % len(restocks)]
             day = next_day - timedelta(days=1)
         elif kind == "basket_restock":
             appliance_restocks = [(item, on) for item, on in restocks if item.startswith(("SKU-AP-", "SKU-XM-"))]
-            sku, next_day = appliance_restocks[variant % len(appliance_restocks)]
+            sku, next_day = appliance_restocks[(variant + retries) % len(appliance_restocks)]
             day = next_day - timedelta(days=1)
         elif kind == "exchange_after_restock":
             sku, replacement = "SKU-SN-RUN2-43-DEN", "SKU-SN-RUN2-41-DEN"
             day, next_day = date(2026, 10, 18), date(2026, 10, 24)
+            if tier == "M2":
+                variants = next(p["variants"] for p in products if p["sku"] == "SKU-SN-RUN2")
+                color = next(v["color"] for v in variants if v["variant_sku"] == replacement)
+                originals = [v["variant_sku"] for v in variants
+                             if v["color"] == color and v["variant_sku"] != replacement
+                             and tools.inventory_check(v["variant_sku"], on=day.isoformat())["in_stock"]]
+                sku = rng.choice(originals)
         elif kind in {"size_exchange", "exchange_after_consultation"}:
-            original = rng.choice(shoe_variants)
-            options = [v for v in shoe_variants if v["color"] == original["color"] and v["size"] > original["size"]]
-            if not options:
-                options = [v for v in shoe_variants if v["color"] == original["color"] and v["size"] < original["size"]]
-            sku, replacement = original["variant_sku"], rng.choice(options)["variant_sku"]
             next_day = day + timedelta(days=4)
+            if tier == "M1":
+                original = rng.choice(shoe_variants)
+                options = [v for v in shoe_variants if v["color"] == original["color"] and v["size"] > original["size"]]
+                if not options:
+                    options = [v for v in shoe_variants if v["color"] == original["color"] and v["size"] < original["size"]]
+                sku, replacement = original["variant_sku"], rng.choice(options)["variant_sku"]
+            else:
+                stock_days = (day, next_day, next_day + timedelta(days=4), next_day + timedelta(days=5))
+                pairs = []
+                for product in products:
+                    if not product["sku"].startswith("SKU-SN-"):
+                        continue
+                    in_stock = [v for v in product["variants"] if all(
+                        tools.inventory_check(v["variant_sku"], on=on.isoformat())["in_stock"] for on in stock_days
+                    )]
+                    pairs.extend((original["variant_sku"], other["variant_sku"])
+                                 for original in in_stock for other in in_stock
+                                 if original["color"] == other["color"] and original["size"] != other["size"])
+                sku, replacement = rng.choice(pairs)
         else:
             if kind == "stale_address":
                 day, next_day = date(2026, 2, 15) + timedelta(days=variant), date(2026, 10, 15) + timedelta(days=variant)
@@ -584,22 +791,53 @@ def generate_crm_journeys(tools, seed, crm_customers):
                 truth["basket_lines"] = order_lines
                 args = {"sku": sku}
                 checks = {"also_ordered": basket[1:], "total_match_vnd": total}
-            call = add("basket_purchase" if basket else ("purchase_after_expiry" if promo else "purchase"),
+            if m1 and persona == FAMILY:
+                facts["family_approved_purchase"] = True
+            if m1 and persona == PRICE:
+                facts["competitor_price_vnd"] = max(1_000, truth["price_vnd"] - (variant + 1) * 20_000)
+            expired_purchase = promo and (not m1 or promo in truth["expired_promos"])
+            call = add("basket_purchase" if basket else ("purchase_after_expiry" if expired_purchase else "purchase"),
                        on, "Chốt đơn theo báo giá và điều kiện hiện hành", facts, truth, "chot_don",
                        "order.create", args, **checks)
             call["memory_expectation"] = {"order_status": "created"}
             return order
 
+        def fashion_basket(on):
+            alternatives = [item for item in variants if item != sku
+                            and tools.inventory_check(item, on=on.isoformat())["in_stock"]]
+            if not alternatives:
+                raise ValueError("No second fashion SKU available for the order")
+            return [sku, alternatives[(index + retries) % len(alternatives)]]
+
+        def finish_repriced_purchase(on):
+            # Try other valid resolutions if every SKU in this transition already occurred.
+            resolution = (retries // len(options)) % 3
+            if resolution == 0:
+                purchase(on)
+            elif resolution == 1:
+                add("decline_after_expiry", on, "Xác nhận giá sau khuyến mãi và từ chối mua",
+                    {}, quote(on), "tu_choi", "pricing.get_quote", {"sku": sku})
+            else:
+                requested = (on + timedelta(days=2)).isoformat() + "T10:00"
+                callback = tools.schedule_callback(customer["phone"], requested)
+                truth = {**quote(on), "scheduled_callback_at": callback["callback_at"]}
+                add("callback_after_expiry", on, "Xem lại giá mới và hẹn trao đổi trước khi quyết định",
+                    {}, truth, "hen_goi_lai", "schedule.callback",
+                    {"customer_phone": customer["phone"], "callback_at": requested})
+
         order_workflows = {"size_exchange", "exchange_after_consultation", "exchange_after_restock", "order_status",
-                           "address_update", "verify_order_identity", "stale_address"}
+                           "address_update", "verify_order_identity", "stale_address", "exchange_after_promo",
+                           "order_handoff", "basket_follow_up"}
         if kind in order_workflows:
             if kind == "exchange_after_consultation" or persona == IMPATIENT:
                 consultation()
                 order = purchase(next_day)
                 follow_up = next_day + timedelta(days=4 if replacement else 1)
             else:
-                order = purchase(day)
+                order = purchase(day, fashion_basket(day) if kind == "basket_follow_up" else None)
                 follow_up = next_day
+            if m1 and replacement:
+                follow_up = max(follow_up, date.fromisoformat(order["estimated_delivery"]))
             truth = quote(follow_up)
             oid = order["order_id"]
             args = {"order_id": oid}
@@ -619,6 +857,12 @@ def generate_crm_journeys(tools, seed, crm_customers):
                              policy_reference="DT-03")
                 add("size_exchange", follow_up, "Đổi sang size khác sau khi nhận hàng", {"new_variant_sku": replacement},
                     truth, "chot_don", "order.update", args)
+            elif kind == "order_handoff":
+                if not tools.order_status(order_id=oid)["orders"]:
+                    raise ValueError("Handoff has no matching fashion order")
+                add("handoff", follow_up, "Nhờ chuyên viên xử lý ngoại lệ đổi size cho đơn đã mua",
+                    {"order_id": oid}, truth, "chuyen_may", "handoff.transfer",
+                    brief_must_contain=list(tools.REQUIRED_BRIEF))
             elif kind == "address_update":
                 args["action"] = "update_address"
                 if tools.order_update(**args, on=follow_up.isoformat()).get("status") != "updated":
@@ -630,9 +874,14 @@ def generate_crm_journeys(tools, seed, crm_customers):
             else:
                 if not tools.order_status(order_id=oid)["orders"]:
                     raise ValueError("Order status has no matching purchase")
-                goal = "Kiểm tra đơn đã mua" if kind == "order_status" else "Xác nhận thông tin người nhận trước khi tra đơn cũ"
+                if kind == "basket_follow_up":
+                    goal = "Kiểm tra các món thời trang đã đặt và yêu cầu tổng kết đầy đủ đơn hàng"
+                elif kind == "order_status":
+                    goal = "Kiểm tra đơn đã mua"
+                else:
+                    goal = "Xác nhận thông tin người nhận trước khi tra đơn cũ"
                 add(kind, follow_up, goal, {}, truth, "chot_don", "order.status", args,
-                    **({"must_say_any": ["xác nhận", "địa chỉ"]} if kind != "order_status" else {}))
+                    **({"must_say_any": ["xác nhận", "địa chỉ"]} if kind in {"verify_order_identity", "stale_address"} else {}))
             if persona == IMPATIENT:
                 calls[-1]["success_if"]["max_agent_questions"] = 1
         else:
@@ -640,11 +889,16 @@ def generate_crm_journeys(tools, seed, crm_customers):
             truth = quote(next_day)
             if kind == "conflicting_quotes":
                 reported = truth["price_vnd"] + (variant + 1) * 100_000
-                add("conflicting_quote", next_day, "Hỏi về mức giá khác đã được báo qua kênh khác",
-                    {"reported_price_vnd": reported}, truth, "hen_goi_lai")
-                purchase(next_day + timedelta(days=1))
+                if tier == "M1":
+                    add("conflicting_quote", next_day, "Hỏi về mức giá khác đã được báo qua kênh khác",
+                        {"reported_price_vnd": reported}, truth, "hen_goi_lai")
+                    purchase(next_day + timedelta(days=1))
+                    calls[-1]["must_carry_over"].append("price_quoted_vnd")
+                else:
+                    purchase(next_day)
+                    calls[-1]["customer_goal"] = "Đối chiếu mức giá đã báo qua hai kênh rồi chốt đơn"
+                    calls[-1]["facts_established"]["reported_price_vnd"] = reported
                 calls[-1]["session_purpose"] = "resolve_quotes"
-                calls[-1]["must_carry_over"].append("price_quoted_vnd")
             elif kind == "shared_phone":
                 tools.CRM.extend(row for row in registry if row["phone"] == customer["phone"])
                 lookup = tools.crm_get_customer(phone=customer["phone"])
@@ -661,9 +915,63 @@ def generate_crm_journeys(tools, seed, crm_customers):
                                               "must_not_write_to": customer["shared_phone_with"]}
                 call["must_carry_over"] = []
                 call["must_not_ask"] = []
-            elif kind == "handoff":
-                add("handoff", next_day, "Hỏi về an toàn sử dụng ngoài phạm vi bán hàng và yêu cầu chuyên viên",
-                    {}, truth, "chuyen_may", "handoff.transfer", brief_must_contain=list(tools.REQUIRED_BRIEF))
+            elif kind in {"handoff", "third_call_handoff"}:
+                goal = "Hỏi về an toàn sử dụng ngoài phạm vi bán hàng và yêu cầu chuyên viên"
+                if m1 and persona == PRICE:
+                    goal = "Yêu cầu chuyên viên xem lại ngoại lệ về giá sau khi so sánh giá giày hoặc áo"
+                elif m1 and persona == UNSUPPORTED:
+                    goal = "Yêu cầu chuyên viên xác minh chi tiết chất liệu chưa có trong tài liệu"
+                elif m1 and persona == "khach_ngoai_pham_vi_chuyen_may":
+                    goal = "Hỏi sản phẩm có phù hợp với người thân đang hồi phục sau chấn thương và đồng ý để chuyên viên hỗ trợ"
+                if kind == "third_call_handoff":
+                    add("follow_up", next_day, "Nhắc lại yêu cầu làm rõ chính sách và chờ xác minh",
+                        {}, truth, "hen_goi_lai")
+                    next_day += timedelta(days=1)
+                    truth = quote(next_day)
+                    goal = "Gọi lần thứ ba và yêu cầu chuyển máy ngay vì câu hỏi chưa được xử lý"
+                call = add("handoff", next_day, goal, {}, truth, "chuyen_may", "handoff.transfer",
+                           brief_must_contain=list(tools.REQUIRED_BRIEF))
+                if persona == IMPATIENT:
+                    call["success_if"]["max_agent_questions"] = 1
+            elif kind == "third_call_price_change":
+                add("follow_up", next_day, "Gọi lại xác nhận mức giá trước khi hết khuyến mãi",
+                    {}, truth, "hen_goi_lai")
+                purchase(next_day + timedelta(days=1))
+                calls[-1]["customer_goal"] = "Gọi lần thứ ba, xác nhận giá mới và chốt đơn nhanh"
+                calls[-1]["success_if"]["max_agent_questions"] = 1
+            elif kind == "return_after_promo":
+                old_date = day - timedelta(days=240)
+                old_quote = quote(old_date)
+                if not old_quote["in_stock"]:
+                    raise ValueError(f"No historical stock for M1 returning customer: {sku}")
+                first["facts_established"].update(previous_purchase_date=old_date.isoformat(), previous_purchase_sku=sku)
+                first["customer_goal"] = "Quay lại sau tám tháng, xác nhận sản phẩm đã mua và hỏi giá hiện tại"
+                finish_repriced_purchase(next_day)
+            elif m1 and kind == "expired_promo":
+                finish_repriced_purchase(next_day)
+            elif kind == "research_price_change":
+                add(kind, next_day, "Hỏi kỹ về mẫu và mức giá sau khuyến mãi rồi cân nhắc thêm",
+                    {"product_advised": sku}, truth, "tu_choi", "pricing.get_quote", {"sku": sku})
+            elif m1 and kind == "out_of_stock":
+                if retries % 2:
+                    alternative = fashion_basket(next_day)[1]
+                    comparison = ground_truth(tools, alternative, next_day.isoformat(), customer)
+                    truth["comparison_quote"] = comparison
+                    add(kind, next_day, "Hỏi giá một mẫu thay thế còn hàng rồi hoãn quyết định",
+                        {"alternative_sku": alternative, "alternative_price_vnd": comparison["price_vnd"]},
+                        truth, "tu_choi", "pricing.get_quote", {"sku": alternative})
+                else:
+                    add(kind, next_day, "Kiểm tra lại đúng size đã hỏi rồi hoãn mua vì hết hàng",
+                        {}, truth, "tu_choi", "inventory.check", {"sku": sku})
+            elif tier == "M2" and kind in {"out_of_stock", "restock"}:
+                requested = (next_day + timedelta(days=3)).isoformat() + "T10:00"
+                callback = tools.schedule_callback(customer["phone"], requested)
+                truth["scheduled_callback_at"] = callback["callback_at"]
+                goal = ("Hẹn trao đổi lại sau khi sản phẩm hết hàng" if kind == "out_of_stock"
+                        else "Xác nhận sản phẩm đã về hàng và hẹn quyết định sau khi xem lại giá")
+                add(kind, next_day, goal,
+                    {"product_advised": sku}, truth, "hen_goi_lai", "schedule.callback",
+                    {"customer_phone": customer["phone"], "callback_at": requested})
             elif kind in {"out_of_stock", "defer", "unsupported_question"} or kind == "decision" and variant % 5 == 4:
                 purpose = kind if kind != "decision" else "defer"
                 goal = {"out_of_stock": "Kiểm tra tồn kho và hoãn mua khi hết hàng",
@@ -678,37 +986,67 @@ def generate_crm_journeys(tools, seed, crm_customers):
                                 and item["category"].startswith("gia-dung")
                                 and tools.inventory_check(item["sku"], on=next_day.isoformat())["in_stock"]]
                     basket = [sku, rng.choice(eligible)]
+                elif m1 and kind in {"basket_reprice", "restock"}:
+                    basket = fashion_basket(next_day)
+                if basket:
                     first["facts_established"]["basket_skus"] = basket
                     first["entities_multi"].append("basket_skus")
                     first["session_purpose"] = "basket_inquiry"
                 purchase(next_day, basket)
                 if kind == "restock":
                     calls[-1]["session_purpose"] = "purchase_after_restock"
-        rows.append({
-            "scenario_id": f"SC-{index + 1:03d}", "tier": "M1", "customer_id": customer["customer_id"],
+        journey = {
+            "scenario_id": f"SC-{scenario_offset + index + 1:03d}", "tier": tier, "customer_id": customer["customer_id"],
             "customer_phone": customer["phone"], "customer_identities": {key: customer[key] for key in CHANNEL_IDS.values()},
             "persona": persona, "journey_pattern": pattern, "target_sku": sku, "hard_case": kind in CRM_HARD_CASES,
             "edge_case_type": kind if kind in CRM_HARD_CASES else None,
             "archetype": "extended" if len(calls) == 3 else "hard" if kind in CRM_HARD_CASES
                          else "omnichannel" if pattern == CROSS_CHANNEL else "standard",
             **{f"call_{i}": call for i, call in enumerate(calls, 1)},
-        })
+        }
+        if m1 or tier == "M2":
+            references = seen_signatures if m1 else reference_signatures
+            if is_duplicate_blueprint(journey, references):
+                retries += 1
+                if retries == (256 if m1 else 64):
+                    raise ValueError(f"Could not generate a distinct {tier} {kind} case for {journey['scenario_id']}")
+                continue
+        if m1:
+            seen_signatures.add(blueprint_signature(journey))
+            used_skus[sku] += 1
+        if tier == "M2":
+            profile = personas[persona]
+            goals = " | ".join(f"call_{i}: {call['customer_goal']}" for i, call in enumerate(calls, 1))
+            patience = {f"call_{i}": profile["patience_initial"][f"call_{i}"] for i in range(1, len(calls) + 1)}
+            journey["simulator_profile"] = {
+                "persona_system_prompt": profile["system_prompt"].format(
+                    goal=goals, facts="{facts}", turn_outline="{turn_outline}",
+                ),
+                "hidden_goal": goals,
+                "patience_level": patience["call_1"],
+                "patience_max_turns": patience["call_1"],
+                "patience_by_session": patience,
+            }
+        rows.append(journey)
+        index += 1
+        retries = 0
     tools.CRM.clear()
     return sorted(registry, key=lambda row: row["customer_id"]), rows
 
 
-def validate(tools, tier, registry, blueprints, crm_backed=False, *, blueprint_count=None):
-    expected = generation_distribution(tier, crm_backed, blueprint_count)
-    patterned = crm_backed and any("journey_pattern" in row for row in blueprints)
-    if patterned:
+def validate(tools, tier, registry, blueprints, plan=None):
+    crm_backed = plan is not None
+    if crm_backed:
         allocations = Counter()
-        for pattern, persona, _, count in CRM_PLAN:
+        for pattern, persona, _, count in plan:
             allocations[pattern, persona] += count
         if Counter((row["journey_pattern"], row["persona"]) for row in blueprints) != allocations:
             raise ValueError("Stage 1 persona and pattern allocation mismatch")
-        if [row["scenario_id"] for row in blueprints] != [f"SC-{i:03d}" for i in range(1, len(blueprints) + 1)]:
+        if tier == "M1" and [row["scenario_id"] for row in blueprints] != [
+            f"SC-{i:03d}" for i in range(1, len(blueprints) + 1)
+        ]:
             raise ValueError("Stage 1 scenario IDs must be consecutive SC-XXX IDs")
-    elif Counter(j["archetype"] for j in blueprints) != expected:
+    elif Counter(j["archetype"] for j in blueprints) != SYNTHETIC_M1_DISTRIBUTION:
         raise ValueError("Stage 1 archetype distribution mismatch")
     customers = {row["customer_id"]: row for row in registry}
     if len(customers) != len(registry) or {
@@ -746,7 +1084,7 @@ def validate(tools, tier, registry, blueprints, crm_backed=False, *, blueprint_c
         calls = [journey[key] for key in ("call_1", "call_2", "call_3") if key in journey]
         if len(calls) != (3 if journey["archetype"] == "extended" else 2):
             raise ValueError("Incorrect number of sessions")
-        if patterned:
+        if crm_backed:
             pattern = journey["journey_pattern"]
             last = calls[-1]["success_if"]
             actions = [call["success_if"]["tool_called"] for call in calls]
@@ -765,7 +1103,10 @@ def validate(tools, tier, registry, blueprints, crm_backed=False, *, blueprint_c
             persona = journey["persona"]
             if not covered[pattern] or (persona == IMPATIENT and len(calls) != 3):
                 raise ValueError(f"Journey does not exercise its persona or pattern: {journey['scenario_id']}")
-            if persona == EXCHANGE and ("order.create" not in actions[:-1] or actions[-1] not in {"order.update", "order.status"}):
+            order_follow_up = actions[-1] in {"order.update", "order.status"} or (
+                tier == "M1" and actions[-1] == "handoff.transfer" and "order_id" in calls[-1]["facts_established"]
+            )
+            if persona == EXCHANGE and ("order.create" not in actions[:-1] or not order_follow_up):
                 raise ValueError("The returning customer must have an existing order")
         if tier == "M2" and not journey.get("simulator_profile", {}).get("patience_max_turns"):
             raise ValueError("Missing M2 simulator profile")
@@ -789,7 +1130,7 @@ def validate(tools, tier, registry, blueprints, crm_backed=False, *, blueprint_c
             truth = call["ground_truth_facts"]
             # Reset per-customer mock promo state to verify the original quote.
             # Post-order sessions can legitimately reflect a consumed promo.
-            if call["session_index"] < 3:
+            if call["session_index"] < 3 or (tier == "M1" and crm_backed):
                 once_used = tools._ONCE_USED.copy()
                 tools._ONCE_USED.difference_update(
                     [pair for pair in once_used if pair[0] == customer["phone"]]
@@ -801,10 +1142,69 @@ def validate(tools, tier, registry, blueprints, crm_backed=False, *, blueprint_c
                 tools._ONCE_USED.update(once_used)
             session_count += 1
 
-    planned = 2 * len(blueprints) + (20 if patterned else expected["extended"])
+    extended = (sum(count for _, persona, kind, count in plan if crm_three_session(tier, persona, kind))
+                if crm_backed else SYNTHETIC_M1_DISTRIBUTION["extended"])
+    planned = 2 * len(blueprints) + extended
     if session_count != planned:
         raise ValueError("Stage 1 session total mismatch")
     return session_count
+
+
+def referenced_skus(value):
+    if isinstance(value, dict):
+        for item in value.values():
+            yield from referenced_skus(item)
+    elif isinstance(value, list):
+        for item in value:
+            yield from referenced_skus(item)
+    elif isinstance(value, str) and value.startswith("SKU-"):
+        yield value
+
+
+def validate_m1_coverage(tools, registry, blueprints, sessions, references, planned_count):
+    customers = {row["customer_id"]: row for row in registry}
+    regions = Counter(row["region"] for row in registry)
+    if regions != {"trung": 18, "nam": 17}:
+        raise ValueError("M1 requires the 35 Central and Southern BTC CRM profiles")
+    planned_sessions = 2 * planned_count + 28
+    if (len(blueprints), sessions) != (planned_count, planned_sessions):
+        raise ValueError(f"M1 requires {planned_count} blueprints and {planned_sessions} planned sessions")
+
+    multi_call, cross_channel = Counter(), Counter()
+    pairing_regions = defaultdict(set)
+    signatures = set(references)
+    for blueprint in blueprints:
+        customer_id = blueprint["customer_id"]
+        pairing_regions[blueprint["persona"], blueprint["journey_pattern"]].add(customers[customer_id]["region"])
+        channels = [blueprint[key]["channel"] for key in ("call_1", "call_2", "call_3") if key in blueprint]
+        hotline_calls = channels.count("hotline")
+        if hotline_calls >= 2:
+            multi_call[customer_id] += 1
+        if 0 < hotline_calls < len(channels):
+            cross_channel[customer_id] += 1
+        if is_duplicate_blueprint(blueprint, signatures):
+            raise ValueError(f"Duplicate M1 blueprint: {blueprint['scenario_id']}")
+        signatures.add(blueprint_signature(blueprint))
+
+    expected_chat = {key: 2 for key, row in customers.items() if row["fb_id"] or row["zalo_id"]}
+    if len(expected_chat) != 21 or cross_channel != expected_chat:
+        raise ValueError("M1 requires two omnichannel blueprints per chat-eligible customer")
+    if planned_count == M1_MIN_BLUEPRINTS:
+        if any(multi_call[key] != 5 - expected_chat.get(key, 0) for key in customers):
+            raise ValueError("M1 base multi-call allocations do not match the plan")
+    else:
+        per_customer, extra = divmod(planned_count - sum(expected_chat.values()), len(customers))
+        actual = sorted(multi_call[key] for key in customers)
+        expected = [per_customer] * (len(customers) - extra) + [per_customer + 1] * extra
+        if actual != expected:
+            raise ValueError("M1 multi-call blueprints are not balanced across customers")
+    if len(pairing_regions) != 35 or any(regions != set(M1_REGIONS) for regions in pairing_regions.values()):
+        raise ValueError("Each M1 persona and pattern pairing must cover both regions")
+    targets = {blueprint["target_sku"] for blueprint in blueprints}
+    if (len(targets) != M1_SKU_COUNT or not set(referenced_skus(blueprints)) <= targets
+            or any(not tools._parent(sku)[1] or tools._parent(sku)[0]["category"].split("/")[0] != "thoi-trang"
+                   for sku in targets)):
+        raise ValueError("M1 blueprints must use exactly 45 official fashion variant SKUs")
 
 
 def write_json(path, data):
@@ -877,29 +1277,65 @@ def publish_output(run: Path) -> None:
             shutil.rmtree(work)
 
 
+def next_m1_run_name(runs: Path, timestamp: datetime) -> str:
+    day = timestamp.strftime("%Y%m%d")
+    versions = (
+        int(match[2]) for path in runs.glob(f"m1-{day}-v*")
+        if (match := M1_RUN_NAME.fullmatch(path.name))
+    )
+    return f"m1-{day}-v{max(versions, default=0) + 1}"
+
+
+def m1_duplicate_references():
+    published = STAGE / "output" / BLUEPRINTS_FILE
+    runs = STAGE / "runs"
+    versioned = [path for path in runs.glob(f"m1-*/{BLUEPRINTS_FILE}") if M1_RUN_NAME.fullmatch(path.parent.name)]
+    archives = sorted([*versioned, *runs.glob(f"run-*/{BLUEPRINTS_FILE}"), *runs.glob(f"run_*/{BLUEPRINTS_FILE}")])
+    bundled = sorted((INPUT / "duplicate-references").glob("*.jsonl"))
+    return [path for path in (published, *archives, *bundled) if path.is_file()]
+
+
 def build_dataset(tier: str, seed: int = 2026, crm_customers: list[dict] | None = None, *,
-                  blueprint_count: int | None = None, m1_blueprints: Path | None = None):
-    if crm_customers is not None and tier != "M1":
-        raise ValueError("CRM-backed blueprints currently support M1 only")
+                  blueprint_count: int | None = None, m1_blueprints: Path | None = None,
+                  duplicate_references: list[Path] | None = None, synthetic: bool = False):
     if tier != "M2" and m1_blueprints is not None:
-        raise ValueError("An M1 reference is used for M2 generation only.")
-    generation_distribution(tier, crm_customers is not None, blueprint_count)
+        raise ValueError("The M1 blueprint reference is configurable for M2 only.")
     signatures, scenario_offset = set(), 0
     if tier == "M2":
+        roster = load_crm_seed_registry()
+        if crm_customers is not None and crm_customers != roster:
+            raise ValueError("M2 generation uses the BTC CRM roster.")
+        crm_customers = roster
         if m1_blueprints is None:
             published = STAGE / "output" / BLUEPRINTS_FILE
             m1_blueprints = published if published.is_file() else INPUT / "m1-blueprints.jsonl"
         if not m1_blueprints.is_file():
             raise ValueError(f"M1 blueprints are required for M2 generation: {m1_blueprints}")
-        signatures, scenario_offset = read_m1_reference(m1_blueprints)
+        if duplicate_references is not None or synthetic:
+            raise ValueError("M2 uses the BTC CRM roster and an M1 blueprint reference.")
+        signatures, scenario_offset = read_blueprint_reference(m1_blueprints, expected_tier="M1")
+    elif not synthetic:
+        roster = load_crm_seed_registry()
+        selected = [row for row in roster if row["region"] in M1_REGIONS]
+        if crm_customers is not None and crm_customers not in (roster, selected):
+            raise ValueError("M1 uses the Central and Southern BTC CRM profiles.")
+        crm_customers = selected
+        references = m1_duplicate_references() if duplicate_references is None else duplicate_references
+        for path in references:
+            loaded, _ = read_blueprint_reference(path)
+            signatures.update(loaded)
+    elif crm_customers is not None or duplicate_references is not None or blueprint_count is not None:
+        raise ValueError("The legacy synthetic run uses its own roster, blueprint count, and reference settings.")
+    plan = crm_plan(tier, blueprint_count) if crm_customers is not None else None
     tools, personas = load_organizer()
     registry, blueprints = generate(
-        tools, personas, tier, seed, crm_customers, blueprint_count=blueprint_count,
-        m1_signatures=signatures, scenario_offset=scenario_offset,
+        tools, personas, tier, seed, crm_customers, plan=plan,
+        reference_signatures=signatures, scenario_offset=scenario_offset,
     )
-    sessions = validate(
-        tools, tier, registry, blueprints, crm_customers is not None, blueprint_count=blueprint_count,
-    )
+    sessions = validate(tools, tier, registry, blueprints, plan)
+    if tier == "M1" and not synthetic:
+        planned_count = sum(count for _, _, _, count in plan)
+        validate_m1_coverage(tools, registry, blueprints, sessions, signatures, planned_count)
     return registry, blueprints, sessions
 
 
@@ -912,37 +1348,54 @@ def write_dataset(directory: Path, registry: list[dict], blueprints: list[dict])
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--tier", choices=DISTRIBUTIONS, default="M1")
+    parser.add_argument("--tier", choices=("M1", "M2"), default="M1")
     parser.add_argument("--seed", type=int, default=2026)
     parser.add_argument("--blueprint-count", type=int,
-                        help=f"M2 blueprint count, at least {M2_MIN_BLUEPRINTS} (default: {M2_MIN_BLUEPRINTS}).")
+                        help=f"CRM blueprint count (defaults: {DEFAULT_BLUEPRINT_COUNTS['M1']} M1 and "
+                             f"{DEFAULT_BLUEPRINT_COUNTS['M2']} M2, minima: {M1_MIN_BLUEPRINTS} M1 and "
+                             f"{M2_MIN_BLUEPRINTS} M2).")
     parser.add_argument("--m1-blueprints", type=Path, help="Stage 1 M1 blueprints to compare with M2 candidates.")
-    parser.add_argument("--identity-source", choices=("synthetic", "crm-seed"), default="synthetic",
-                        help="Use crm-seed for organizer-backed identities. Add --publish to build M1 blueprints.")
+    parser.add_argument("--duplicate-reference", type=Path, action="append",
+                        help="Pinned Stage 1 M1/M2 blueprint file for M1 duplicate checks. Repeat for more files.")
+    parser.add_argument("--identity-source", choices=("synthetic", "crm-seed"),
+                        help="M1 defaults to the Central and Southern BTC CRM profiles. Synthetic selects the legacy run.")
     parser.add_argument("--publish", action="store_true", help="Copy the validated blueprint run to output/.")
     args = parser.parse_args()
 
     crm_customers = None
-    if args.identity_source == "crm-seed":
-        if args.publish and args.tier != "M1":
-            parser.error("CRM-backed blueprint publication currently supports M1 only")
+    if args.tier == "M2" and args.identity_source == "synthetic":
+        parser.error("M2 generation uses the BTC CRM roster.")
+    if args.tier == "M1" and args.identity_source == "crm-seed":
         crm_customers = load_crm_seed_registry()
-        if not args.publish:
+        if not args.publish and args.duplicate_reference is None and args.blueprint_count is None:
             run = write_crm_seed_registry(args.tier, datetime.now().astimezone(), crm_customers)
             print(f"{args.tier}: {len(crm_customers)} organizer CRM customers in {run}")
             return
 
+    runs = STAGE / "runs"
+    # Choose the M1 destination before reading references so competing runs contend for the same name.
+    run_dir = runs / next_m1_run_name(runs, datetime.now().astimezone()) if args.tier == "M1" else None
     try:
         registry, blueprints, sessions = build_dataset(
             args.tier, args.seed, crm_customers, blueprint_count=args.blueprint_count,
-            m1_blueprints=args.m1_blueprints,
+            m1_blueprints=args.m1_blueprints, duplicate_references=args.duplicate_reference,
+            synthetic=args.identity_source == "synthetic",
         )
-    except ValueError as error:
+    except (OSError, ValueError) as error:
         parser.error(str(error))
-    timestamp = datetime.now().astimezone()
-    run_dir = STAGE / "runs" / run_name(args.tier, timestamp)
-    run_dir.mkdir(parents=True)
-    write_dataset(run_dir, registry, blueprints)
+    if run_dir is None:
+        run_dir = runs / run_name(args.tier, datetime.now().astimezone())
+    runs.mkdir(parents=True, exist_ok=True)
+    with TemporaryDirectory(dir=runs, prefix=".stage1-") as temporary:
+        staged = Path(temporary) / run_dir.name
+        staged.mkdir()
+        write_dataset(staged, registry, blueprints)
+        try:
+            staged.rename(run_dir)
+        except OSError:
+            if run_dir.exists():
+                parser.error(f"Run directory already exists: {run_dir}")
+            raise
     if args.publish:
         publish_output(run_dir)
     print(f"{args.tier}: {len(blueprints)} journeys / {sessions} planned sessions in {run_dir}")

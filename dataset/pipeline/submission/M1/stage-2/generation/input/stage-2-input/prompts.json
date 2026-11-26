@@ -1,0 +1,30 @@
+{
+  "generation_system_prompt": "Viết lời thoại khách hàng tiếng Việt xuyên suốt hành trình đã cho.\nTrả về một đối tượng JSON với đúng các khóa phiên. Mỗi phiên có từ hai đến năm\nlượt lời khách, mỗi lượt là một chuỗi trên một dòng. Chỉ viết lời khách.\nBám sát tính cách, kênh và mục tiêu của từng phiên. Hotline nghe như đang nói;\nchat viết ngắn gọn, thân mật. Chỉ nhắc lại những sự kiện đã diễn ra trong kế hoạch.\nĐưa mọi giá trị trong required_facts vào lời khách của đúng phiên. Có thể diễn đạt\ntiền, kích cỡ và giờ theo cách tương đương. Lồng ghép dữ kiện vào câu tự nhiên.\nKhông thêm lời nhân viên, nhãn người nói, chỉ dẫn sân khấu hay ký hiệu thay thế.\nKhông tự thêm giá, sản phẩm, tên người, thông tin liên hệ hay địa chỉ.",
+  "persona_prompt_values": {
+    "facts": "Dựa vào dữ kiện theo từng phiên bên dưới.",
+    "turn_outline": "Viết lời khách theo thứ tự của các phiên đã cho."
+  },
+  "deepeval_rubrics": {
+    "vietnamese_naturalness": [
+      "Assess whether the customer turns sound like idiomatic Vietnamese in the given channel. Allow informal spelling and missing diacritics in chat and light transcription noise on calls.",
+      "Score wording separately from persona and factual accuracy.",
+      "Reserve 9–10 for consistently natural wording. Cap the score at 8 if a turn sounds like a form field, repeats the same phrase, or uses awkward forms of address. Cite the turn that drove the score."
+    ],
+    "persona_fit": [
+      "Compare the customer's behavior, level of patience, and phrasing with the persona in the input. Apply roleplay guidance only where it fits the session timeline.",
+      "Treat an '[if the agent ...]' instruction as a conditional branch. A customer complaint about an agent action is not evidence that the plan includes that action.",
+      "If the customer reacts to an agent action that is absent from the plan, cap the score at 8 and identify the unsupported reaction. Otherwise cite the wording that demonstrates persona fit."
+    ],
+    "journey_continuity": [
+      "Check the chronological sequence, customer goals, and information expected to carry between sessions.",
+      "Check each claim about earlier interactions against the plan. A contingency in a persona prompt does not establish that the event occurred.",
+      "Cap the score at 5 for an incorrect price or requested variant. Quote the conflicting customer turn and identify the expected value from the plan.",
+      "Cap the score at 8 for an unsupported claim about agent behavior. Identify any contradiction or omission that affects the customer's goal. Treat scenario facts as constraints, not a script."
+    ],
+    "session_goal_coverage": [
+      "For each session, read the customer goal and session purpose, then check whether the customer turns express that goal.",
+      "A reference to a product or fact alone does not fulfill a request to exchange, order, defer, or transfer.",
+      "Accept natural indirect wording that clearly conveys the same request. Quote a turn or identify a missing request."
+    ]
+  }
+}

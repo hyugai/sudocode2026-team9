@@ -1,0 +1,96 @@
+{
+  "scenario_id": "SC-172",
+  "level": "M1",
+  "persona": "khach_ngoai_pham_vi_chuyen_may",
+  "hard_case": "handoff",
+  "customer_phone": "0994157718",
+  "customer_name": "Tiến",
+  "honorific": "anh",
+  "notes": "transfer_with_context",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0994157718",
+      "call_date": "2026-10-18",
+      "customer_turns": [
+        "Anh ơi, em đang tìm giày trekking HikePro màu trắng size bốn mươi ba, giá bao nhiêu vậy?",
+        "Cảm ơn anh, hai triệu không trăm bốn mươi nghìn đồng. Em có thể xem lại sau không?",
+        "Em hẹn anh gọi lại lúc mười giờ ngày mười chín tháng mười được không ạ?"
+      ],
+      "customer_goal": "Hỏi về sản phẩm và hẹn xem lại",
+      "facts_established": {
+        "product_advised": "SKU-SN-TRK-43-TRANG",
+        "price_quoted_vnd": 2040000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-SN-TRK-43-TRANG",
+        "price_vnd": 2040000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "scheduled_callback_at": "2026-10-19T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0994157718",
+          "callback_at": "2026-10-19T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0994157718",
+      "call_date": "2026-10-19",
+      "customer_turns": [
+        "Anh ơi, em đang hỏi về giày HikePro có phù hợp với người thân đang hồi phục sau chấn thương không?",
+        "Em đồng ý để chuyên viên hỗ trợ, anh chuyển máy giúp em với.",
+        "Em cảm ơn anh, em chờ ở đây."
+      ],
+      "days_later": 1,
+      "customer_goal": "Hỏi sản phẩm có phù hợp với người thân đang hồi phục sau chấn thương và đồng ý để chuyên viên hỗ trợ",
+      "facts_established": {},
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-SN-TRK-43-TRANG",
+        "price_vnd": 2040000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        }
+      },
+      "expected_outcome": "chuyen_may",
+      "success_if": {
+        "tool_called": "handoff.transfer",
+        "args_match": {},
+        "brief_must_contain": [
+          "customer_phone",
+          "customer_name",
+          "escalation_reason",
+          "conversation_summary",
+          "product_advised",
+          "price_quoted_vnd",
+          "open_questions",
+          "next_action",
+          "generated_at"
+        ]
+      }
+    }
+  }
+}

@@ -1,19 +1,5 @@
 [
   {
-    "customer_id": "C001",
-    "name": "Hoa",
-    "honorific": "chị",
-    "phone": "0984726714",
-    "fb_id": "fb.hoa.479",
-    "zalo_id": "zalo_hoa73",
-    "region": "bac",
-    "shared_phone_with": null,
-    "address": "Số 8 ngõ 6 phố Bùi Huy Bích, phường Hoàng Mai, Hà Nội",
-    "alternate_address": "Số 2/224 đường Hoàng Mai, phường Tương Mai, Hà Nội",
-    "address_reference_id": "VENUE-001",
-    "dialect": "North"
-  },
-  {
     "customer_id": "C002",
     "name": "Tuấn",
     "honorific": "anh",
@@ -40,48 +26,6 @@
     "alternate_address": "Số 388 đường Núi Thành, phường Hòa Cường, Đà Nẵng",
     "address_reference_id": "VENUE-016",
     "dialect": "Central"
-  },
-  {
-    "customer_id": "C004",
-    "name": "Minh",
-    "honorific": "anh",
-    "phone": "0952059972",
-    "fb_id": "fb.minh.658",
-    "zalo_id": null,
-    "region": "bac",
-    "shared_phone_with": null,
-    "address": "Số 5, đường Linh Đường, phường Hoàng Liệt, Hà Nội",
-    "alternate_address": "Số 177 phố Thanh Đàm, phường Vĩnh Hưng, Hà Nội",
-    "address_reference_id": "VENUE-002",
-    "dialect": "North"
-  },
-  {
-    "customer_id": "C005",
-    "name": "Hương",
-    "honorific": "chị",
-    "phone": "0979298416",
-    "fb_id": null,
-    "zalo_id": "zalo_hương95",
-    "region": "bac",
-    "shared_phone_with": null,
-    "address": "Số 1 ngõ 282 đường Kim Giang, phường Định Công, Hà Nội",
-    "alternate_address": "Số 669 đường Lĩnh Nam, phường Lĩnh Nam, Hà Nội",
-    "address_reference_id": "VENUE-003",
-    "dialect": "North"
-  },
-  {
-    "customer_id": "C006",
-    "name": "Nam",
-    "honorific": "anh",
-    "phone": "0929486628",
-    "fb_id": null,
-    "zalo_id": null,
-    "region": "bac",
-    "shared_phone_with": null,
-    "address": "Số 45 phố Nghĩa Tân, phường Nghĩa Đô, Hà Nội",
-    "alternate_address": "Số 96 Trần Thái Tông, phường Cầu Giấy, Hà Nội",
-    "address_reference_id": "VENUE-004",
-    "dialect": "North"
   },
   {
     "customer_id": "C007",
@@ -154,20 +98,6 @@
     "dialect": "South"
   },
   {
-    "customer_id": "C012",
-    "name": "Khoa",
-    "honorific": "anh",
-    "phone": "0922264686",
-    "fb_id": null,
-    "zalo_id": null,
-    "region": "bac",
-    "shared_phone_with": null,
-    "address": "Số 231 Nguyễn Ngọc Vũ, phường Yên Hòa, Hà Nội",
-    "alternate_address": "Số 25, phố Liễu Giai, phường Ngọc Hà, Hà Nội",
-    "address_reference_id": "VENUE-005",
-    "dialect": "North"
-  },
-  {
     "customer_id": "C013",
     "name": "Trang",
     "honorific": "chị",
@@ -208,20 +138,6 @@
     "alternate_address": "45 Phước Hưng, phường An Đông, TP. Hồ Chí Minh",
     "address_reference_id": "VENUE-039",
     "dialect": "South"
-  },
-  {
-    "customer_id": "C016",
-    "name": "Phúc",
-    "honorific": "anh",
-    "phone": "0920525898",
-    "fb_id": "fb.phúc.321",
-    "zalo_id": null,
-    "region": "bac",
-    "shared_phone_with": null,
-    "address": "Số 2, phố Trúc Bạch, phường Ba Đình, Hà Nội",
-    "alternate_address": "Số 525, phố Kim Mã, phường Giảng Võ, Hà Nội",
-    "address_reference_id": "VENUE-006",
-    "dialect": "North"
   },
   {
     "customer_id": "C017",
@@ -266,20 +182,6 @@
     "dialect": "Central"
   },
   {
-    "customer_id": "C020",
-    "name": "Sơn",
-    "honorific": "anh",
-    "phone": "0924410646",
-    "fb_id": null,
-    "zalo_id": null,
-    "region": "bac",
-    "shared_phone_with": null,
-    "address": "Số 126 Hàng Trống, phường Hoàn Kiếm, Hà Nội",
-    "alternate_address": "Số 29 Quang Trung, phường Cửa Nam, Hà Nội",
-    "address_reference_id": "VENUE-007",
-    "dialect": "North"
-  },
-  {
     "customer_id": "C021",
     "name": "Yến",
     "honorific": "chị",
@@ -308,20 +210,6 @@
     "dialect": "South"
   },
   {
-    "customer_id": "C023",
-    "name": "Thu",
-    "honorific": "chị",
-    "phone": "0976158464",
-    "fb_id": null,
-    "zalo_id": "zalo_thu55",
-    "region": "bac",
-    "shared_phone_with": null,
-    "address": "Số 242A, đường Lý Thánh Tông, phường Đồ Sơn, Hải Phòng",
-    "alternate_address": "Thôn Trần Thành, xã An Hưng, Hải Phòng",
-    "address_reference_id": "VENUE-008",
-    "dialect": "North"
-  },
-  {
     "customer_id": "C024",
     "name": "Kiên",
     "honorific": "anh",
@@ -334,20 +222,6 @@
     "alternate_address": "Thôn Tịnh Sơn, xã Tam Mỹ, Đà Nẵng",
     "address_reference_id": "VENUE-022",
     "dialect": "Central"
-  },
-  {
-    "customer_id": "C025",
-    "name": "Nhung",
-    "honorific": "chị",
-    "phone": "0990853801",
-    "fb_id": "fb.nhung.733",
-    "zalo_id": "zalo_nhung30",
-    "region": "bac",
-    "shared_phone_with": null,
-    "address": "Số 68, đường Trần Nguyên Đán, khu dân cư Bích Động Tân Tiến, phường Trần Hưng Đạo, Hải Phòng",
-    "alternate_address": "Thôn Tân Nam, đường 354, xã An Khánh, Hải Phòng",
-    "address_reference_id": "VENUE-009",
-    "dialect": "North"
   },
   {
     "customer_id": "C026",
@@ -364,48 +238,6 @@
     "dialect": "Central"
   },
   {
-    "customer_id": "C027",
-    "name": "Chi",
-    "honorific": "chị",
-    "phone": "0992566636",
-    "fb_id": null,
-    "zalo_id": "zalo_chi94",
-    "region": "bac",
-    "shared_phone_with": null,
-    "address": "Số 12 đường 351, phường An Dương, Hải Phòng",
-    "alternate_address": "Thôn Cầu Hạ A, xã An Quang, Hải Phòng",
-    "address_reference_id": "VENUE-010",
-    "dialect": "North"
-  },
-  {
-    "customer_id": "C028",
-    "name": "Tú",
-    "honorific": "anh",
-    "phone": "0922808864",
-    "fb_id": "fb.tú.905",
-    "zalo_id": null,
-    "region": "bac",
-    "shared_phone_with": null,
-    "address": "Số 388, đường An Phong, phường An Phong, Hải Phòng",
-    "alternate_address": "Thôn Ngọc Trừ 2, xã An Trường, Hải Phòng",
-    "address_reference_id": "VENUE-011",
-    "dialect": "North"
-  },
-  {
-    "customer_id": "C029",
-    "name": "Hà",
-    "honorific": "chị",
-    "phone": "0930048764",
-    "fb_id": null,
-    "zalo_id": "zalo_hà50",
-    "region": "bac",
-    "shared_phone_with": null,
-    "address": "Số 17 và 19 Nguyễn Văn Trỗi, xã An Lão, Hải Phòng",
-    "alternate_address": "Thôn Vũ Vi, xã Kiến Minh, Hải Phòng",
-    "address_reference_id": "VENUE-012",
-    "dialect": "North"
-  },
-  {
     "customer_id": "C030",
     "name": "Việt",
     "honorific": "anh",
@@ -418,20 +250,6 @@
     "alternate_address": "Số 01, đường Châu Văn Tiếp, phường Phú Lợi, Cần Thơ",
     "address_reference_id": "VENUE-043",
     "dialect": "South"
-  },
-  {
-    "customer_id": "C031",
-    "name": "Oanh",
-    "honorific": "chị",
-    "phone": "0985003703",
-    "fb_id": "fb.oanh.620",
-    "zalo_id": "zalo_oanh96",
-    "region": "bac",
-    "shared_phone_with": null,
-    "address": "Số 8, khu dân cư Cẩm Xuân, đường Mạc Thái Tổ, xã Kiến Thụy, Hải Phòng",
-    "alternate_address": "Thôn Kinh Lương 4, xã Tân Minh, Hải Phòng",
-    "address_reference_id": "VENUE-013",
-    "dialect": "North"
   },
   {
     "customer_id": "C032",
@@ -532,20 +350,6 @@
     "dialect": "Central"
   },
   {
-    "customer_id": "C039",
-    "name": "Cường",
-    "honorific": "anh",
-    "phone": "0930976582",
-    "fb_id": null,
-    "zalo_id": "zalo_cường76",
-    "region": "bac",
-    "shared_phone_with": null,
-    "address": "Số 1, phố Cựu Đôi, xã Tiên Lãng, Hải Phòng",
-    "alternate_address": "Đường 20/8, xã Vĩnh Bảo, Hải Phòng",
-    "address_reference_id": "VENUE-014",
-    "dialect": "North"
-  },
-  {
     "customer_id": "C040",
     "name": "Quỳnh",
     "honorific": "chị",
@@ -642,20 +446,6 @@
     "alternate_address": "Thới Thuận, phường Phước Thới, Cần Thơ",
     "address_reference_id": "VENUE-049",
     "dialect": "South"
-  },
-  {
-    "customer_id": "C047",
-    "name": "Đạt",
-    "honorific": "anh",
-    "phone": "0963279264",
-    "fb_id": null,
-    "zalo_id": "zalo_đạt52",
-    "region": "bac",
-    "shared_phone_with": null,
-    "address": "Số 71, đường Hà Sen, đặc khu Cát Hải, Hải Phòng",
-    "alternate_address": "Khu 1, đặc khu Bạch Long Vĩ, Hải Phòng",
-    "address_reference_id": "VENUE-015",
-    "dialect": "North"
   },
   {
     "customer_id": "C048",

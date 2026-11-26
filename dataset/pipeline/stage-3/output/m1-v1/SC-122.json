@@ -1,0 +1,140 @@
+{
+  "scenario_id": "SC-135",
+  "level": "M1",
+  "persona": "khach_goi_lan_3_het_kien_nhan",
+  "hard_case": null,
+  "customer_phone": "0994157718",
+  "customer_name": "Tiến",
+  "honorific": "anh",
+  "notes": "return_for_post_purchase_support",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0994157718",
+      "call_date": "2026-10-23",
+      "customer_turns": [
+        "Anh ơi, tôi muốn hỏi về giày trekking HikePro màu trắng size bốn mươi ba.",
+        "Giá bao nhiêu?",
+        "Hẹn 10 giờ ngày 24 tháng 10 nhé."
+      ],
+      "customer_goal": "Hỏi về sản phẩm và hẹn xem lại",
+      "facts_established": {
+        "product_advised": "SKU-SN-TRK-43-TRANG",
+        "price_quoted_vnd": 2040000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-SN-TRK-43-TRANG",
+        "price_vnd": 2040000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "scheduled_callback_at": "2026-10-24T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0994157718",
+          "callback_at": "2026-10-24T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0994157718",
+      "call_date": "2026-10-24",
+      "customer_turns": [
+        "Tôi mua giày HikePro màu trắng size bốn mươi ba, giá hai triệu không trăm bốn mươi nghìn.",
+        "Giao đến Thôn 2, phường Phong Quảng, Huế.",
+        "Thanh toán khi nhận hàng."
+      ],
+      "days_later": 1,
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-SN-TRK-43-TRANG",
+        "price_quoted_vnd": 2040000,
+        "payment": "COD",
+        "delivery_address": "Thôn 2, phường Phong Quảng, Huế",
+        "order_status": "created"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-SN-TRK-43-TRANG",
+        "price_vnd": 2040000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "estimated_delivery": "2026-10-28"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-SN-TRK-43-TRANG",
+          "price_vnd": 2040000
+        }
+      }
+    },
+    "call_3": {
+      "channel": "hotline",
+      "channel_identity": "0994157718",
+      "call_date": "2026-10-25",
+      "customer_turns": [
+        "Đơn của tôi đã được chốt chưa?",
+        "Tôi không cần hỏi gì thêm nữa."
+      ],
+      "days_later": 1,
+      "customer_goal": "Kiểm tra đơn đã mua",
+      "facts_established": {},
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "payment",
+        "delivery_address",
+        "order_status"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-SN-TRK-43-TRANG",
+        "price_vnd": 2040000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        }
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.status",
+        "args_match": {
+          "order_id": "OD600001"
+        },
+        "max_agent_questions": 1
+      }
+    }
+  }
+}

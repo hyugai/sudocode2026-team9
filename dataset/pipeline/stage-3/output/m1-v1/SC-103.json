@@ -1,0 +1,103 @@
+{
+  "scenario_id": "SC-113",
+  "level": "M1",
+  "persona": "khach_da_mua_doi_size",
+  "hard_case": null,
+  "customer_phone": "0981933190",
+  "customer_name": "Lan",
+  "honorific": "chị",
+  "notes": "return_for_post_purchase_support",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0981933190",
+      "call_date": "2026-10-22",
+      "customer_turns": [
+        "Chị ơi, em vừa đặt đơn giày sneaker Urban Classic màu trắng size bốn mươi mốt rồi.",
+        "Giá là tám trăm chín mươi nghìn, thanh toán khi nhận hàng, giao đến Số 15 đường Lê Hồng Phong, phường Hải Châu, Đà Nẵng.",
+        "Chị nhớ đơn của em nhé, nếu cần thêm thông tin thì em sẵn sàng."
+      ],
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-SN-CAS-41-TRANG",
+        "price_quoted_vnd": 890000,
+        "payment": "COD",
+        "delivery_address": "Số 15 đường Lê Hồng Phong, phường Hải Châu, Đà Nẵng",
+        "order_status": "created"
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-SN-CAS-41-TRANG",
+        "price_vnd": 890000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "estimated_delivery": "2026-10-24"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-SN-CAS-41-TRANG",
+          "price_vnd": 890000
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0981933190",
+      "call_date": "2026-10-26",
+      "customer_turns": [
+        "Chị ơi, em vừa nhận hàng rồi, nhưng size bốn mươi mốt hơi chật.",
+        "Em muốn đổi sang size bốn mươi ba của cùng sản phẩm, màu trắng luôn.",
+        "Chị xem giúp em có thể đổi được không, em đã đợi lâu rồi."
+      ],
+      "days_later": 4,
+      "customer_goal": "Đổi sang size khác sau khi nhận hàng",
+      "facts_established": {
+        "new_variant_sku": "SKU-SN-CAS-43-TRANG"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "payment",
+        "delivery_address",
+        "order_status"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-SN-CAS-41-TRANG",
+        "price_vnd": 890000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "replacement_in_stock": true,
+        "exchange_fee_vnd": 0,
+        "policy_reference": "DT-03"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.update",
+        "args_match": {
+          "order_id": "OD600001",
+          "action": "exchange_size",
+          "new_variant_sku": "SKU-SN-CAS-43-TRANG"
+        }
+      }
+    }
+  }
+}

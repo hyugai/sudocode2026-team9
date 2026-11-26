@@ -1,0 +1,144 @@
+{
+  "scenario_id": "SC-088",
+  "level": "M1",
+  "persona": "khach_da_mua_doi_size",
+  "hard_case": null,
+  "customer_phone": "0925822018",
+  "customer_name": "Quỳnh",
+  "honorific": "chị",
+  "notes": "return_for_post_purchase_support",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0925822018",
+      "call_date": "2026-10-18",
+      "customer_turns": [
+        "Chị ơi, em vừa gọi hỏi về cái giày sneaker Urban Classic xám bốn mươi ba, giá chín trăm bốn mươi ngàn đúng không ạ?",
+        "Em đang cân nhắc mua, nhưng chưa quyết. Chị cho em hẹn lại lúc mười giờ ngày hai mươi hai tháng mười được không?"
+      ],
+      "customer_goal": "Hỏi về sản phẩm và hẹn xem lại",
+      "facts_established": {
+        "product_advised": "SKU-SN-CAS-43-XAM",
+        "price_quoted_vnd": 940000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-SN-CAS-43-XAM",
+        "price_vnd": 940000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "scheduled_callback_at": "2026-10-22T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0925822018",
+          "callback_at": "2026-10-22T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0925822018",
+      "call_date": "2026-10-22",
+      "customer_turns": [
+        "Chị ơi, em đã quyết định mua giày sneaker Urban Classic xám bốn mươi ba, giá chín trăm bốn mươi ngàn.",
+        "Giao hàng đến Số 1316 đường Bùi Hữu Nghĩa, phường Long Tuyền, Cần Thơ. Thanh toán khi nhận hàng nhé."
+      ],
+      "days_later": 4,
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-SN-CAS-43-XAM",
+        "price_quoted_vnd": 940000,
+        "payment": "COD",
+        "delivery_address": "Số 1316 đường Bùi Hữu Nghĩa, phường Long Tuyền, Cần Thơ",
+        "order_status": "created"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-SN-CAS-43-XAM",
+        "price_vnd": 940000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "estimated_delivery": "2026-10-24"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-SN-CAS-43-XAM",
+          "price_vnd": 940000
+        }
+      }
+    },
+    "call_3": {
+      "channel": "hotline",
+      "channel_identity": "0925822018",
+      "call_date": "2026-10-26",
+      "customer_turns": [
+        "Chị ơi, em vừa nhận hàng, nhưng size bốn mươi ba hơi chật. Em muốn đổi sang size bốn mươi.",
+        "Mong chị hỗ trợ đổi, em đã mua sản phẩm đó rồi mà."
+      ],
+      "days_later": 4,
+      "customer_goal": "Đổi sang size khác sau khi nhận hàng",
+      "facts_established": {
+        "new_variant_sku": "SKU-SN-CAS-40-XAM"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "payment",
+        "delivery_address",
+        "order_status"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-SN-CAS-43-XAM",
+        "price_vnd": 940000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "replacement_in_stock": true,
+        "exchange_fee_vnd": 0,
+        "policy_reference": "DT-03"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.update",
+        "args_match": {
+          "order_id": "OD600001",
+          "action": "exchange_size",
+          "new_variant_sku": "SKU-SN-CAS-40-XAM"
+        }
+      }
+    }
+  }
+}

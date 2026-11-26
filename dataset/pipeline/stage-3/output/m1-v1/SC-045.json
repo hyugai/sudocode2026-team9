@@ -1,0 +1,103 @@
+{
+  "scenario_id": "SC-051",
+  "level": "M1",
+  "persona": "khach_da_kenh_fb_hotline",
+  "hard_case": null,
+  "customer_phone": "0981933190",
+  "customer_name": "Lan",
+  "honorific": "chị",
+  "notes": "continue_across_channels",
+  "calls": {
+    "call_1": {
+      "channel": "zalo_oa",
+      "channel_identity": "zalo_lan79",
+      "call_date": "2026-10-23",
+      "customer_turns": [
+        "K, bn co sp giay chay bo RunLite 1 mau trang size 39 ko?",
+        "Gia bao nhieu vay?",
+        "Thế 10h ngay 24 thang 10 nhe, em nho co the goi lai khong?"
+      ],
+      "customer_goal": "Hỏi về sản phẩm và hẹn xem lại",
+      "facts_established": {
+        "product_advised": "SKU-SN-RUN1-39-TRANG",
+        "price_quoted_vnd": 1161000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN1-39-TRANG",
+        "price_vnd": 1161000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0",
+          "RUN-10"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "RUN-10": "2026-10-25",
+          "COD-0": "2026-12-14"
+        },
+        "scheduled_callback_at": "2026-10-24T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0981933190",
+          "callback_at": "2026-10-24T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0981933190",
+      "call_date": "2026-10-24",
+      "customer_turns": [
+        "Đc rồi, em mua 1 cái giày chạy bộ RunLite một màu trắng size ba mươi chín.",
+        "Giá một triệu một trăm sáu mươi mốt nghìn đồng, đúng như lúc anh báo.",
+        "Em thanh toán khi nhận hàng, giao về số 15 đường Lê Hồng Phong, Hải Châu, Đà Nẵng.",
+        "Cảm ơn anh, em đợi đơn nha."
+      ],
+      "days_later": 1,
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-SN-RUN1-39-TRANG",
+        "price_quoted_vnd": 1161000,
+        "payment": "COD",
+        "delivery_address": "Số 15 đường Lê Hồng Phong, phường Hải Châu, Đà Nẵng",
+        "order_status": "created"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN1-39-TRANG",
+        "price_vnd": 1161000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0",
+          "RUN-10"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "RUN-10": "2026-10-25",
+          "COD-0": "2026-12-14"
+        },
+        "estimated_delivery": "2026-10-28"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-SN-RUN1-39-TRANG",
+          "price_vnd": 1161000
+        }
+      }
+    }
+  }
+}

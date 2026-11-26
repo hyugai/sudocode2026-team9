@@ -1,0 +1,151 @@
+{
+  "scenario_id": "SC-073",
+  "level": "M1",
+  "persona": "khach_da_kenh_mau_thuan",
+  "hard_case": "conflicting_quotes",
+  "customer_phone": "0911265844",
+  "customer_name": "Toàn",
+  "honorific": "anh",
+  "notes": "continue_across_channels",
+  "calls": {
+    "call_1": {
+      "channel": "chat_fanpage",
+      "channel_identity": "fb.toàn.855",
+      "call_date": "2026-10-24",
+      "customer_turns": [
+        "Anh ơi, em đang xem sản phẩm giày chạy bộ RunLite hai Pro màu đen size bốn mươi mốt, giá bao nhiêu vậy?",
+        "Một triệu năm trăm hai mươi mốt ngàn đồng à, em nghĩ giá hơi cao một chút.",
+        "Em sẽ xem lại sau, nếu có gì em gọi lại anh nhé, khoảng mười giờ ngày hai mươi bảy tháng mười."
+      ],
+      "customer_goal": "Hỏi về sản phẩm và hẹn xem lại",
+      "facts_established": {
+        "product_advised": "SKU-SN-RUN2-41-DEN",
+        "price_quoted_vnd": 1521000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN2-41-DEN",
+        "price_vnd": 1521000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0",
+          "RUN-10"
+        ],
+        "expired_promos": [
+          "RUN2-SALE"
+        ],
+        "promo_expiry_dates": {
+          "RUN-10": "2026-10-25",
+          "COD-0": "2026-12-14",
+          "RUN2-SALE": "2026-10-07"
+        },
+        "scheduled_callback_at": "2026-10-27T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0911265844",
+          "callback_at": "2026-10-26T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "zalo_oa",
+      "channel_identity": "zalo_toàn15",
+      "call_date": "2026-10-27",
+      "customer_turns": [
+        "Anh ơi, em nhớ là ở kênh khác họ báo giá hai triệu hai trăm chín mươi ngàn đồng, tại sao ở đây lại rẻ hơn vậy?",
+        "Em không hiểu, tại sao giá lại khác nhau như vậy? Em muốn được giải thích rõ.",
+        "Nếu giá ở đây là đúng, em sẽ xem xét lại, nhưng nếu có lý do gì đó thì anh nên thông báo trước."
+      ],
+      "days_later": 3,
+      "customer_goal": "Hỏi về mức giá khác đã được báo qua kênh khác",
+      "facts_established": {
+        "reported_price_vnd": 2290000
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN2-41-DEN",
+        "price_vnd": 1690000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [
+          "RUN-10",
+          "RUN2-SALE"
+        ],
+        "promo_expiry_dates": {
+          "RUN-10": "2026-10-25",
+          "COD-0": "2026-12-14",
+          "RUN2-SALE": "2026-10-07"
+        }
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": null,
+        "args_match": {}
+      }
+    },
+    "call_3": {
+      "channel": "hotline",
+      "channel_identity": "0911265844",
+      "call_date": "2026-10-28",
+      "customer_turns": [
+        "Anh ơi, em thấy giá ở đây là một triệu sáu trăm chín mươi ngàn, thấp hơn giá em nhớ trước đó.",
+        "Anh có thể giải thích tại sao giá lại thay đổi không? Em muốn mua sản phẩm này.",
+        "Nếu anh có thể đảm bảo giá này là chính xác và em được giao hàng đúng như đã nói, em sẽ đặt đơn.",
+        "Địa chỉ giao hàng là số 705 đường 3/2, phường An Bình, Cần Thơ. Thanh toán khi nhận hàng nhé."
+      ],
+      "days_later": 1,
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-SN-RUN2-41-DEN",
+        "price_quoted_vnd": 1690000,
+        "payment": "COD",
+        "delivery_address": "Số 705 đường 3/2, phường An Bình, Cần Thơ",
+        "order_status": "created"
+      },
+      "must_carry_over": [
+        "reported_price_vnd",
+        "price_quoted_vnd"
+      ],
+      "must_not_ask": [],
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN2-41-DEN",
+        "price_vnd": 1690000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [
+          "RUN-10",
+          "RUN2-SALE"
+        ],
+        "promo_expiry_dates": {
+          "RUN-10": "2026-10-25",
+          "COD-0": "2026-12-14",
+          "RUN2-SALE": "2026-10-07"
+        },
+        "estimated_delivery": "2026-10-30"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-SN-RUN2-41-DEN",
+          "price_vnd": 1690000
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,115 @@
+{
+  "scenario_id": "SC-015",
+  "level": "M1",
+  "persona": "khach_so_gia",
+  "hard_case": null,
+  "customer_phone": "0913301756",
+  "customer_name": "Vy",
+  "honorific": "chị",
+  "notes": "consider_and_decide",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0913301756",
+      "call_date": "2026-10-29",
+      "customer_turns": [
+        "Chị ơi, em đang so sánh giá với nơi khác, bên họ chỉ có một triệu sáu trăm năm mươi thôi.",
+        "Em muốn hỏi bên chị có thể giảm bớt không? Vì bên họ rẻ hơn.",
+        "Nếu không giảm, em cũng không mua đâu, chị ạ.",
+        "Chị có thể cho em biết chương trình nào để được giá tốt hơn không?",
+        "Em đang cân nhắc, nếu có thể giảm thì em mua ngay."
+      ],
+      "customer_goal": "So báo giá với nơi khác trước khi quyết định",
+      "facts_established": {
+        "product_advised": "SKU-SN-RUN2-39-XAM",
+        "price_quoted_vnd": 1690000,
+        "competitor_price_vnd": 1650000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN2-39-XAM",
+        "price_vnd": 1690000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [
+          "RUN-10",
+          "RUN2-SALE"
+        ],
+        "promo_expiry_dates": {
+          "RUN-10": "2026-10-25",
+          "COD-0": "2026-12-14",
+          "RUN2-SALE": "2026-10-07"
+        },
+        "scheduled_callback_at": "2026-10-31T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0913301756",
+          "callback_at": "2026-10-31T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0913301756",
+      "call_date": "2026-10-31",
+      "customer_turns": [
+        "Chị ơi, em đã suy nghĩ kỹ rồi, giá bên chị là một triệu sáu trăm chín mươi, em thấy hợp lý.",
+        "Em muốn đặt đơn, bên họ chỉ rẻ hơn vài chục ngàn mà thôi.",
+        "Em muốn đặt hàng giày chạy bộ RunLite hai Pro màu xám size ba mươi chín.",
+        "Giao hàng đến 53A Trần Phú, phường Chợ Quán, TP. Hồ Chí Minh.",
+        "Thanh toán khi nhận hàng, em đồng ý."
+      ],
+      "days_later": 2,
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-SN-RUN2-39-XAM",
+        "price_quoted_vnd": 1690000,
+        "payment": "COD",
+        "delivery_address": "53A Trần Phú, phường Chợ Quán, TP. Hồ Chí Minh",
+        "order_status": "created",
+        "competitor_price_vnd": 1650000
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "competitor_price_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN2-39-XAM",
+        "price_vnd": 1690000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [
+          "RUN-10",
+          "RUN2-SALE"
+        ],
+        "promo_expiry_dates": {
+          "RUN-10": "2026-10-25",
+          "COD-0": "2026-12-14",
+          "RUN2-SALE": "2026-10-07"
+        },
+        "estimated_delivery": "2026-11-03"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-SN-RUN2-39-XAM",
+          "price_vnd": 1690000
+        }
+      }
+    }
+  }
+}

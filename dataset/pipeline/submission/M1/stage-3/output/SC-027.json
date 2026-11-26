@@ -1,0 +1,100 @@
+{
+  "scenario_id": "SC-034",
+  "level": "M1",
+  "persona": "khach_hoi_ngoai_tai_lieu",
+  "hard_case": "unsupported_question",
+  "customer_phone": "0936270107",
+  "customer_name": "Tuấn",
+  "honorific": "anh",
+  "notes": "consider_and_decide",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0936270107",
+      "call_date": "2026-10-27",
+      "customer_turns": [
+        "Anh ơi, em đang tìm hiểu về giày chạy bộ RunLite hai Pro.",
+        "Em muốn biết giá của sản phẩm đó là bao nhiêu ạ?",
+        "À, một triệu sáu trăm chín mươi ngàn đồng ư? Em cảm ơn.",
+        "Anh có thể gọi lại cho em lúc mười giờ ngày hai mươi chín tháng mười được không ạ?"
+      ],
+      "customer_goal": "Hỏi về sản phẩm và hẹn xem lại",
+      "facts_established": {
+        "product_advised": "SKU-SN-RUN2",
+        "price_quoted_vnd": 1690000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN2",
+        "price_vnd": 1690000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [
+          "RUN-10",
+          "RUN2-SALE"
+        ],
+        "promo_expiry_dates": {
+          "RUN-10": "2026-10-25",
+          "COD-0": "2026-12-14",
+          "RUN2-SALE": "2026-10-07"
+        },
+        "scheduled_callback_at": "2026-10-29T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0936270107",
+          "callback_at": "2026-10-29T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0936270107",
+      "call_date": "2026-10-29",
+      "customer_turns": [
+        "Anh ơi, em muốn hỏi thêm về chất liệu của giày RunLite hai Pro.",
+        "Em thấy trong tài liệu không có thông tin đó, anh có thể chia sẻ không ạ?",
+        "Em lấy thông tin đó ở đâu?",
+        "À, anh chưa có thông tin, em sẽ kiểm tra. Em cảm ơn anh."
+      ],
+      "days_later": 2,
+      "customer_goal": "Yêu cầu thông tin không có trong tài liệu",
+      "facts_established": {
+        "product_advised": "SKU-SN-RUN2"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN2",
+        "price_vnd": 1690000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [
+          "RUN-10",
+          "RUN2-SALE"
+        ],
+        "promo_expiry_dates": {
+          "RUN-10": "2026-10-25",
+          "COD-0": "2026-12-14",
+          "RUN2-SALE": "2026-10-07"
+        }
+      },
+      "expected_outcome": "tu_choi",
+      "success_if": {
+        "tool_called": null,
+        "args_match": {},
+        "agent_must_say": "không có thông tin"
+      }
+    }
+  }
+}

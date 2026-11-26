@@ -1,0 +1,94 @@
+{
+  "scenario_id": "SC-055",
+  "level": "M1",
+  "persona": "khach_da_kenh_fb_hotline",
+  "hard_case": null,
+  "customer_phone": "0993186032",
+  "customer_name": "Đức",
+  "honorific": "anh",
+  "notes": "continue_across_channels",
+  "calls": {
+    "call_1": {
+      "channel": "chat_fanpage",
+      "channel_identity": "fb.đức.146",
+      "call_date": "2026-10-27",
+      "customer_turns": [
+        "K, bn sp RunLite màu đen size 42 có không?",
+        "Giá bao nhiêu vậy?",
+        "Đc, 1tr290k. Mình xem lại sau, nhắn fb lại nhé.",
+        "Gọi lại 10h ngày 28 nhé."
+      ],
+      "customer_goal": "Hỏi về sản phẩm và hẹn xem lại",
+      "facts_established": {
+        "product_advised": "SKU-SN-RUN1-42-DEN",
+        "price_quoted_vnd": 1290000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN1-42-DEN",
+        "price_vnd": 1290000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [
+          "RUN-10"
+        ],
+        "promo_expiry_dates": {
+          "RUN-10": "2026-10-25",
+          "COD-0": "2026-12-14"
+        },
+        "scheduled_callback_at": "2026-10-28T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0993186032",
+          "callback_at": "2026-10-28T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0993186032",
+      "call_date": "2026-10-28",
+      "customer_turns": [
+        "À, bên em nhắn fb báo giá 1tr290k đúng không?",
+        "Mình xem lại rồi, giờ chưa mua được.",
+        "Cảm ơn nhé, nếu có thêm gì thì nhắn mình."
+      ],
+      "days_later": 1,
+      "customer_goal": "Xem lại báo giá và hoãn quyết định mua",
+      "facts_established": {
+        "product_advised": "SKU-SN-RUN1-42-DEN"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN1-42-DEN",
+        "price_vnd": 1290000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [
+          "RUN-10"
+        ],
+        "promo_expiry_dates": {
+          "RUN-10": "2026-10-25",
+          "COD-0": "2026-12-14"
+        }
+      },
+      "expected_outcome": "tu_choi",
+      "success_if": {
+        "tool_called": null,
+        "args_match": {}
+      }
+    }
+  }
+}

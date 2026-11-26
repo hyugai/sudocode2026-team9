@@ -1,0 +1,104 @@
+{
+  "scenario_id": "SC-001",
+  "level": "M1",
+  "persona": "khach_do_du_hoi_nguoi_nha",
+  "hard_case": null,
+  "customer_phone": "0932448452",
+  "customer_name": "Diệp",
+  "honorific": "chị",
+  "notes": "consider_and_decide",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0932448452",
+      "call_date": "2026-10-15",
+      "customer_turns": [
+        "Chị ơi, em đang xem xe đẩy hai chiều Combi Sugocal, giá sáu triệu bảy trăm chín mươi nghìn đồng. Em đang hỏi ý kiến người nhà.",
+        "Em có ngân sách bảy triệu, có được không chị?",
+        "Chị ơi, em muốn hẹn gọi lại lúc mười giờ ngày mười sáu tháng mười được không?"
+      ],
+      "customer_goal": "Xem sản phẩm trong ngân sách và hỏi ý kiến người nhà",
+      "facts_established": {
+        "product_advised": "SKU-MB-STR2",
+        "price_quoted_vnd": 6790000,
+        "budget_vnd": 7000000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-MB-STR2",
+        "price_vnd": 6790000,
+        "in_stock": true,
+        "active_promos": [
+          "MOM-FREESHIP",
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "MOM-FREESHIP": "2026-11-29",
+          "COD-0": "2026-12-14"
+        },
+        "scheduled_callback_at": "2026-10-16T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0932448452",
+          "callback_at": "2026-10-16T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0932448452",
+      "call_date": "2026-10-16",
+      "customer_turns": [
+        "Chị ơi, hôm trước chị nói rồi mà, em đồng ý mua xe đẩy hai chiều Combi Sugocal.",
+        "Giá sáu triệu bảy trăm chín mươi nghìn, thanh toán khi nhận hàng nhé.",
+        "Địa chỉ giao hàng là 449 Phạm Văn Đồng, Huế."
+      ],
+      "days_later": 1,
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-MB-STR2",
+        "price_quoted_vnd": 6790000,
+        "payment": "COD",
+        "delivery_address": "449 Phạm Văn Đồng, phường Mỹ Thượng, Huế",
+        "order_status": "created"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "budget_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-MB-STR2",
+        "price_vnd": 6790000,
+        "in_stock": true,
+        "active_promos": [
+          "MOM-FREESHIP",
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "MOM-FREESHIP": "2026-11-29",
+          "COD-0": "2026-12-14"
+        },
+        "estimated_delivery": "2026-10-19"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-MB-STR2",
+          "price_vnd": 6790000
+        }
+      }
+    }
+  }
+}
