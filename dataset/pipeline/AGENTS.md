@@ -11,7 +11,7 @@ You are building a **3-stage, text-only synthetic dataset generation pipeline** 
 * **Customer / Journey (Blueprint):** One unique customer identity (`CUST-XXX`, linked across `phone`, `fb_id`, and `zalo_id`) and their connected end-to-end history across **2–3 consecutive sessions** (`call_1` $\rightarrow$ `call_2` [$\rightarrow$ `call_3`]).
 * **Transcript (`Số cuộc hội thoại`):** The complete record of one customer journey. **One journey produces one transcript**, containing its 2–3 consecutive sessions.
 * **Session:** One bounded call or chat interaction within a transcript, represented by `call_1`, `call_2`, or `call_3`. Each session contains its own customer turns and evaluation assertions.
-* **Evaluation Format (`customer_turns` + M2 Simulator Fields):** Per [organizer scenario schema](./btc_data/BTC-Data-Vong1-TEAMS/schemas/scenario_format.md) and [seven public samples](./btc_data/BTC-Data-Vong1-TEAMS/test_set/public_sample/), each session stores static replay utterances as `customer_turns: list[str]` (**do not** generate pre-written agent replies). For `--tier M2`, each scenario also includes `simulator_profile` (`persona_system_prompt`, `hidden_goal`, `patience_level`) so the evaluation harness can run a live LLM Customer Simulator.
+* **Evaluation Format (`customer_turns` + M2 Simulator Fields):** Per [organizer scenario schema](./btc/BTC-Data-Vong1-TEAMS/schemas/scenario_format.md) and [seven public samples](./btc/BTC-Data-Vong1-TEAMS/test_set/public_sample/), each session stores static replay utterances as `customer_turns: list[str]` (**do not** generate pre-written agent replies). For `--tier M2`, each scenario also includes `simulator_profile` (`persona_system_prompt`, `hidden_goal`, `patience_level`) so the evaluation harness can run a live LLM Customer Simulator.
 * **Canonical Outcomes (`expected_outcome`):** `"chot_don"`, `"hen_goi_lai"`, `"tu_choi"`, or `"chuyen_may"` (paired with `success_if` tool assertions such as `order.create`, `order.update`, `schedule.callback`, or `handoff.transfer`).
 
 ### Tier Volume & Quality Thresholds (`--tier M1` vs. `--tier M2`)
@@ -32,46 +32,63 @@ You are building a **3-stage, text-only synthetic dataset generation pipeline** 
 
 ## 2. Directory Structure & Symlink Contract
 
-Each stage has a dedicated root-level instruction file, an isolated stage directory with immutable timestamped run folders (`runs/run_<tier>_YYYYMMDD_HHMM/`), and **relative symlinks** (`latest` and `input_*`). Organizer bundles are read-only. Scripts use `btc_data/` when present, otherwise they read the bundles directly from the workspace root.
+Each stage has a dedicated root-level instruction file and immutable timestamped run folders. New Stage 1 and Stage 2 runs use `runs/run-<tier>-YYYYMMDD-HHMM/`. Readers also support the recorded names of older runs. Stage 1 uses regular directories for inputs and published output. Stages 2 and 3 use relative symlinks for their remaining run pointers. Organizer bundles are read-only.
 
 ```text
-synthetic_pipeline/
+pipeline/
 ├── AGENTS.md                                          # Master orchestrator guide (this file)
-├── stage_1_instructions.md
-├── stage_2_instructions.md
-├── stage_3_instructions.md
-├── pipeline_common.py
-├── btc_data/                                          # Read-only organizer bundles
+├── stage-1.md
+├── stage-2.md
+├── stage-3.md
+├── common.py
+├── btc/                                          # Read-only organizer bundles
 │   ├── BTC-Data-Vong1-TEAMS/
 │   └── BTC-cap-nhat-11-2026/
-├── final_datasets/
-│   ├── M1 -> ../stage_3_validate_split/journey_exports/run_M1_<timestamp>/
-│   └── M2 -> ../stage_3_validate_split/journey_exports/run_M2_<timestamp>/
+├── final/
+│   ├── M1/SC-XXX.json                                # Published copies of a validated M1 run
+│   └── M2/SC-XXX.json                                # Published copies of a validated M2 run
 │
-├── stage_1_blueprints/
+├── stage-1/
 │   ├── src/
-│   │   └── generate_blueprints.py
+│   │   └── generate.py
+│   ├── input/                                        # Copies of the required organizer files
+│   │   ├── catalog/
+│   │   ├── eval/
+│   │   └── simulator/
 │   ├── runs/
-│   │   └── run_<tier>_YYYYMMDD_HHMM/
-│   │       ├── stage1_customers.json
-│   │       ├── stage1_blueprints.jsonl
-│   │       └── manifest.json
-│   └── latest -> runs/run_<tier>_YYYYMMDD_HHMM/
+│   │   └── run-<tier>-YYYYMMDD-HHMM/
+│   │       ├── customers.json
+│   │       └── blueprints.jsonl
+│   └── output/                                       # Copy of the selected validated run
 │
-├── stage_2_transcripts/
+├── stage-2/
+│   ├── run-kaggle.py
+│   ├── prompts.json
+│   ├── kaggle-input/
+│   ├── kaggle-output/
 │   ├── src/
-│   │   └── generate_transcripts.py
-│   ├── input_blueprints -> ../stage_1_blueprints/latest
+│   │   ├── generate.py
+│   │   ├── bundle.py
+│   │   ├── jobs.py
+│   │   ├── worker.py
+│   │   └── quality.py
 │   ├── runs/
-│   │   └── run_<tier>_YYYYMMDD_HHMM/
-│   │       ├── raw_scenarios.jsonl
-│   │       └── generation_log.json
-│   └── latest -> runs/run_<tier>_YYYYMMDD_HHMM/
+│   │   └── run-<tier>-YYYYMMDD-HHMM/
+│   │       ├── raw-scenarios.jsonl
+│   │       ├── generation-log.json
+│   │       ├── validation-report.jsonl
+│   │       ├── ai-report.jsonl
+│   │       ├── regeneration-list.json
+│   │       ├── validation-manifest.json
+│   │       ├── generation-manifest.json
+│   │       ├── quality-report.jsonl
+│   │       └── quality-report.manifest.json
+│   └── latest -> runs/run-<tier>-YYYYMMDD-HHMM/
 │
-└── stage_3_validate_split/
+└── stage-3/
     ├── src/
     │   └── validate_and_split.py
-    ├── input_scenarios -> ../stage_2_transcripts/latest
+    ├── input -> ../stage-2/latest
     ├── runs/
     │   └── run_<tier>_YYYYMMDD_HHMM/
     │       ├── journeys_memory_seed.jsonl
@@ -79,7 +96,7 @@ synthetic_pipeline/
     │       ├── stage3_dropped_duplicates.jsonl
     │       ├── pii_audit_report.json
     │       └── dataset_stats.json
-    ├── journey_exports/
+    ├── exports/
     │   └── run_<tier>_YYYYMMDD_HHMM/SC-XXX.json
     └── latest -> runs/run_<tier>_YYYYMMDD_HHMM/
 ```
@@ -88,9 +105,9 @@ synthetic_pipeline/
 
 ## 3. Shared Execution & Symlink Rules (MANDATORY)
 
-1. **CLI Tier Propagation:** Every stage script accepts `--tier M1` or `--tier M2` and records the tier in its run metadata. Stages 1 and 3 default to M1. Stage 2 infers the tier from its upstream manifest when the flag is omitted. Use matching upstream and downstream tiers.
-2. **Always Use Relative Symlinks:** Create symlinks using relative paths (e.g., `runs/run_M2_20261118_1645` for `latest`; `../stage_1_blueprints/latest` for `input_blueprints`) so paths never break across machines or containers.
-3. **Atomic Symlink Promotion:** Every full stage run must write outputs into a new timestamped folder `runs/run_<tier>_YYYYMMDD_HHMM/`, run its exit assertions for the active tier, and update its `latest` symlink **only after all checks succeed**.
+1. **CLI Tier Propagation:** Stage 1 accepts `--tier M1` or `--tier M2`, defaults to M1, and stores the tier in its blueprints. The manual Stage 2 workflow reads the tier from those blueprints. The Kaggle CLI infers the tier from its saved input bundle when `--tier` is omitted. Stage 3 defaults to M1. Use matching tiers across stages.
+2. **Relative Symlinks:** Use relative targets for the Stage 2 and Stage 3 `latest` links and the Stage 3 `input` link. Stage 2 reads `stage-1/output/` directly.
+3. **Run Publication:** Full runs write outputs into a new timestamped folder and run their tier exit assertions. Stage 1 updates its regular `output/` directory on `--publish` after validation. Stages 2 and 3 atomically update their `latest` symlinks after validation.
 4. **Cross-Platform Helper:** Implement a shared utility `promote_latest(stage_dir, run_folder_name)` that atomically updates `latest` via `os.symlink` + `os.replace`, falling back to writing `latest_path.txt` if OS permissions restrict symlinks.
 
 ---
@@ -99,14 +116,16 @@ synthetic_pipeline/
 
 Follow the root-level stage instructions and run the pipeline sequentially.
 
-| Order | Stage | Instruction File | Script Target | Input Symlink | Promoted Output (`latest/`) |
+| Order | Stage | Instruction File | Script Target | Input | Published Output |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **1** | **World-State & Blueprints** | [`stage_1_instructions.md`](./stage_1_instructions.md) | `stage_1_blueprints/src/generate_blueprints.py` | Organizer bundles (read-only) | `stage1_customers.json`, `stage1_blueprints.jsonl`, `manifest.json` |
-| **2** | **Multi-Turn Transcripts** | [`stage_2_instructions.md`](./stage_2_instructions.md) | `stage_2_transcripts/src/generate_transcripts.py` | `input_blueprints -> ../stage_1_blueprints/latest` | `raw_scenarios.jsonl`, `generation_log.json` |
-| **3** | **Validate, Split & Publish** | [`stage_3_instructions.md`](./stage_3_instructions.md) | `stage_3_validate_split/src/validate_and_split.py` | `input_scenarios -> ../stage_2_transcripts/latest` | `journeys_memory_seed.jsonl`, `team_golden_scenarios.json`, `stage3_dropped_duplicates.jsonl`, `pii_audit_report.json`, `dataset_stats.json` |
+| **1** | **World-State & Blueprints** | [`stage-1.md`](./stage-1.md) | `stage-1/src/generate.py` | `stage-1/input/` | `output/customers.json`, `output/blueprints.jsonl` |
+| **2** | **Multi-Turn Transcripts** | [`stage-2.md`](./stage-2.md) | `stage-2/run-kaggle.py` | `stage-1/output/`, pinned Kaggle input bundle | `raw-scenarios.jsonl`, `generation-log.json`, `quality-report.jsonl` |
+| **3** | **Validate, Split & Publish** | [`stage-3.md`](./stage-3.md) | `stage-3/src/validate_and_split.py` | `input -> ../stage-2/latest` | `journeys_memory_seed.jsonl`, `team_golden_scenarios.json`, `stage3_dropped_duplicates.jsonl`, `pii_audit_report.json`, `dataset_stats.json` |
+
+Stage 2 uses two private Kaggle GPU notebooks, each started by its own command. `--generate OWNER/SLUG` saves every Qwen attempt and prints the exact generation version. `--validate OWNER/SLUG/VERSION` runs Python structure checks and uses Gemma and DeepEval to judge facts and goals in the customer dialogue before assembly. Validation writes regeneration feedback for clear draft failures and marks ambiguous or incomplete judgments for review. Use `--generate` with `--regenerate-from` to rerun the marked journeys. See the [Stage 2 instructions](./stage-2.md).
 
 ## 5. Published Journey Exports
 
-[`final_datasets/M1`](./final_datasets/M1) and [`final_datasets/M2`](./final_datasets/M2) are relative symlinks to exports of specific validated Stage 3 runs. Each tier directory contains only individual synthetic journeys named `SC-XXX.json`. M1 assigns consecutive filenames in ascending scenario ID order. M2 uses the numeric part of each scenario ID as the filename number, including gaps left by deduplication. Every file retains its original `scenario_id`.
+[`final/M1`](./final/M1) and [`final/M2`](./final/M2) are regular directories containing copies of specific validated Stage 3 exports, so both can be opened directly on Windows. Each tier directory contains only individual synthetic journeys named `SC-XXX.json`. M1 assigns consecutive filenames in ascending scenario ID order. M2 uses the numeric part of each scenario ID as the filename number, including gaps left by deduplication. Every file retains its original `scenario_id`.
 
-Each export includes the memory-seed and custom golden journeys. Custom journeys use fictional contact values and delivery addresses generated for the dataset. Stage 3 rejects detected PII in these journeys. The seven scrubbed BTC samples and aggregate validation artifacts are available in the corresponding Stage 3 run. Changes to a stage's `latest` link do not move either tier export.
+Each export includes the memory-seed and custom golden journeys. Custom journeys use fictional contact values and delivery addresses generated for the dataset. Stage 3 rejects detected PII in these journeys. The corresponding Stage 3 run includes the seven BTC samples as supplied by the organizer, alongside the aggregate validation artifacts. Stage 3 refreshes a published tier directory when invoked with `--publish`.

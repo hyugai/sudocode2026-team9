@@ -1,7 +1,0 @@
-{
-  "tier": "M2",
-  "replacements_by_type": {
-    "PHONE": 9
-  },
-  "guardrail_violations": 0
-}

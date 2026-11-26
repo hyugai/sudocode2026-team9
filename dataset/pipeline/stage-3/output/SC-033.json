@@ -1,0 +1,89 @@
+{
+  "scenario_id": "SC-033",
+  "level": "M1",
+  "persona": "khach_hoi_ngoai_tai_lieu",
+  "hard_case": "unsupported_question",
+  "customer_phone": "0924410646",
+  "customer_name": "Sơn",
+  "honorific": "anh",
+  "notes": "consider_and_decide",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0924410646",
+      "call_date": "2026-10-26",
+      "customer_turns": [
+        "Anh ơi, em muốn hỏi về sản phẩm tất thể thao RunLite (ba đôi) có đúng không ạ?",
+        "Giá là một trăm bốn mươi chín nghìn đồng, đúng không anh?",
+        "Em muốn hẹn xem lại, anh có thể gọi lại cho em lúc mười giờ ngày hai mươi bảy tháng mười không?"
+      ],
+      "customer_goal": "Hỏi về sản phẩm và hẹn xem lại",
+      "facts_established": {
+        "product_advised": "SKU-SN-SOCK",
+        "price_quoted_vnd": 149000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-SN-SOCK",
+        "price_vnd": 149000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "scheduled_callback_at": "2026-10-27T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0924410646",
+          "callback_at": "2026-10-27T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0924410646",
+      "call_date": "2026-10-27",
+      "customer_turns": [
+        "Anh ơi, em muốn hỏi thêm về chất liệu của sản phẩm đó có phải là vải co giãn tốt không?",
+        "Em thấy trong tài liệu không có thông tin này, anh có biết không ạ?",
+        "Em lấy thông tin đó ở đâu vậy anh?",
+        "Em nghĩ anh nên kiểm tra lại thì tốt hơn."
+      ],
+      "days_later": 1,
+      "customer_goal": "Yêu cầu thông tin không có trong tài liệu",
+      "facts_established": {
+        "product_advised": "SKU-SN-SOCK"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-SN-SOCK",
+        "price_vnd": 149000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        }
+      },
+      "expected_outcome": "tu_choi",
+      "success_if": {
+        "tool_called": null,
+        "args_match": {},
+        "agent_must_say": "không có thông tin"
+      }
+    }
+  }
+}

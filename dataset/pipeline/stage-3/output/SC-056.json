@@ -1,0 +1,100 @@
+{
+  "scenario_id": "SC-056",
+  "level": "M1",
+  "persona": "khach_do_du_hoi_nguoi_nha",
+  "hard_case": null,
+  "customer_phone": "0930048764",
+  "customer_name": "Hà",
+  "honorific": "chị",
+  "notes": "continue_across_channels",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0930048764",
+      "call_date": "2026-10-28",
+      "customer_turns": [
+        "Chị ơi, em đang xem máy lọc không khí Samsung AX40, giá sáu triệu bốn trăm chín mươi nghìn đồng đúng không?",
+        "Em có ngân sách bảy triệu, nên chị tư vấn thêm nhé.",
+        "Chị ơi, em cần hỏi người nhà đã, chị có thể hẹn lại 10 giờ ngày 30 tháng 10 được không?"
+      ],
+      "customer_goal": "Xem sản phẩm trong ngân sách và hỏi ý kiến người nhà",
+      "facts_established": {
+        "product_advised": "SKU-SS-AX40",
+        "price_quoted_vnd": 6490000,
+        "budget_vnd": 7000000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-SS-AX40",
+        "price_vnd": 6490000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "scheduled_callback_at": "2026-10-30T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0930048764",
+          "callback_at": "2026-10-30T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "zalo_oa",
+      "channel_identity": "zalo_hà50",
+      "call_date": "2026-10-30",
+      "customer_turns": [
+        "Chị ơi, hôm trước chị nói rồi mà, em đã đồng ý mua máy lọc không khí Samsung AX40 giá 6.490.000đ.",
+        "Em muốn đặt hàng, giao đến số 17 và 19 Nguyễn Văn Trỗi, Hải Phòng.",
+        "Cách thanh toán là khi nhận hàng đúng không chị?"
+      ],
+      "days_later": 2,
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-SS-AX40",
+        "price_quoted_vnd": 6490000,
+        "payment": "COD",
+        "delivery_address": "Số 17 và 19 Nguyễn Văn Trỗi, xã An Lão, Hải Phòng",
+        "order_status": "created"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "budget_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-SS-AX40",
+        "price_vnd": 6490000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "estimated_delivery": "2026-11-02"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-SS-AX40",
+          "price_vnd": 6490000
+        }
+      }
+    }
+  }
+}

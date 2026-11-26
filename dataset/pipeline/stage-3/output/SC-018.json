@@ -1,0 +1,104 @@
+{
+  "scenario_id": "SC-018",
+  "level": "M1",
+  "persona": "khach_so_gia",
+  "hard_case": null,
+  "customer_phone": "0954742843",
+  "customer_name": "Giang",
+  "honorific": "chị",
+  "notes": "consider_and_decide",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0954742843",
+      "call_date": "2026-11-01",
+      "customer_turns": [
+        "Chị ơi, em đang so sánh giá với nơi khác, bên họ chỉ 310 nghìn thôi.",
+        "Có thể giảm được không chị? Em đang xem xét mà.",
+        "Em muốn mua bộ lõi lọc RO một-hai-ba, giá bên chị là 390 nghìn, bên họ 310 nghìn.",
+        "Chị có thể hỗ trợ giảm giá được không?",
+        "Nếu không giảm, em sẽ mua bên họ."
+      ],
+      "customer_goal": "So báo giá với nơi khác trước khi quyết định",
+      "facts_established": {
+        "product_advised": "SKU-WF-CORE",
+        "price_quoted_vnd": 390000,
+        "competitor_price_vnd": 310000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-WF-CORE",
+        "price_vnd": 390000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "scheduled_callback_at": "2026-11-05T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0954742843",
+          "callback_at": "2026-11-05T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0954742843",
+      "call_date": "2026-11-05",
+      "customer_turns": [
+        "Chị ơi, em đã quyết định mua theo giá bên chị rồi.",
+        "Giá 390 nghìn, thanh toán khi nhận hàng, giao đến Buôn Krông A, xã Ea Tu, Đắk Lắk.",
+        "Em thấy giá bên chị hợp lý hơn, có gì bảo hành không chị?",
+        "Chị có thể giao hàng nhanh hơn không? Em cần để kịp lắp đặt.",
+        "Được rồi, em đặt hàng rồi."
+      ],
+      "days_later": 4,
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-WF-CORE",
+        "price_quoted_vnd": 390000,
+        "payment": "COD",
+        "delivery_address": "Buôn Krông A, xã Ea Tu, Đắk Lắk",
+        "order_status": "created"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "competitor_price_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-WF-CORE",
+        "price_vnd": 390000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "estimated_delivery": "2026-11-07"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-WF-CORE",
+          "price_vnd": 390000
+        }
+      }
+    }
+  }
+}

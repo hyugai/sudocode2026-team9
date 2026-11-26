@@ -1,0 +1,103 @@
+{
+  "scenario_id": "SC-008",
+  "level": "M1",
+  "persona": "khach_do_du_hoi_nguoi_nha",
+  "hard_case": null,
+  "customer_phone": "0922264686",
+  "customer_name": "Khoa",
+  "honorific": "anh",
+  "notes": "consider_and_decide",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0922264686",
+      "call_date": "2026-10-22",
+      "customer_turns": [
+        "Chào chị, em đang muốn xem máy lọc nước trong ngân sách bảy triệu rưỡi.",
+        "Chị có sản phẩm nào vừa giá mà người nhà em cũng đồng ý không?",
+        "Hôm trước chị nói rồi mà, em đang hỏi về máy lọc nước RO Karofi chín lõi.",
+        "Giá năm triệu chín trăm chín mươi nghìn, đúng không chị?",
+        "Em sẽ hỏi người nhà rồi gọi lại, chị ơi. Gọi lại cho em lúc mười giờ ngày hai mươi sáu tháng mười nhé."
+      ],
+      "customer_goal": "Xem sản phẩm trong ngân sách và hỏi ý kiến người nhà",
+      "facts_established": {
+        "product_advised": "SKU-WF-RO9",
+        "price_quoted_vnd": 5990000,
+        "budget_vnd": 7500000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-WF-RO9",
+        "price_vnd": 5990000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "scheduled_callback_at": "2026-10-27T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0922264686",
+          "callback_at": "2026-10-26T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0922264686",
+      "call_date": "2026-10-27",
+      "customer_turns": [
+        "Chị ơi, em đã hỏi người nhà rồi. Máy lọc nước RO Karofi chín lõi, giá năm triệu chín trăm chín mươi nghìn, đúng không?",
+        "Em đồng ý mua, thanh toán khi nhận hàng.",
+        "Giao hàng đến số 231 Nguyễn Ngọc Vũ, Hà Nội nhé chị.",
+        "Chị ơi, em không rõ cái nào khác. Em chỉ muốn mua máy đó thôi."
+      ],
+      "days_later": 5,
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-WF-RO9",
+        "price_quoted_vnd": 5990000,
+        "payment": "COD",
+        "delivery_address": "Số 231 Nguyễn Ngọc Vũ, phường Yên Hòa, Hà Nội",
+        "order_status": "created"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "budget_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-WF-RO9",
+        "price_vnd": 5990000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "estimated_delivery": "2026-10-29"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-WF-RO9",
+          "price_vnd": 5990000
+        }
+      }
+    }
+  }
+}

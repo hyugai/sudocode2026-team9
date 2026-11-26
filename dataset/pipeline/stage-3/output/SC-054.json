@@ -1,0 +1,91 @@
+{
+  "scenario_id": "SC-054",
+  "level": "M1",
+  "persona": "khach_so_gia",
+  "hard_case": null,
+  "customer_phone": "0984726714",
+  "customer_name": "Hoa",
+  "honorific": "chị",
+  "notes": "continue_across_channels",
+  "calls": {
+    "call_1": {
+      "channel": "zalo_oa",
+      "channel_identity": "zalo_hoa73",
+      "call_date": "2026-10-26",
+      "customer_turns": [
+        "Chị ơi, em đang so sánh giá máy lọc không khí Xiaomi Smart 4 Lite với bên khác, bên họ chỉ 2.890.000đ mà.",
+        "Chị có thể giảm giá được không? Em muốn mua nhưng đang cân nhắc.",
+        "Giá em đưa là 2.990.000đ, nếu chị có chương trình nào ưu đãi thì em cũng xem xét.",
+        "Em hẹn chị gọi lại lúc 10 giờ ngày 27/10 nhé."
+      ],
+      "customer_goal": "So báo giá với nơi khác trước khi quyết định",
+      "facts_established": {
+        "product_advised": "SKU-XM-4L",
+        "price_quoted_vnd": 2990000,
+        "competitor_price_vnd": 2890000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-XM-4L",
+        "price_vnd": 2990000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "scheduled_callback_at": "2026-10-27T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0984726714",
+          "callback_at": "2026-10-27T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0984726714",
+      "call_date": "2026-10-27",
+      "customer_turns": [
+        "Chị ơi, em lại gọi lại để xem lại giá bên em và bên đối thủ.",
+        "Bên em là 2.990.000đ, bên họ là 2.890.000đ. Chị có thể hỗ trợ gì thêm không?",
+        "Nếu không giảm thì em xin hoãn mua, để em suy nghĩ lại.",
+        "Cảm ơn chị, em sẽ xem lại."
+      ],
+      "days_later": 1,
+      "customer_goal": "Xem lại báo giá và hoãn quyết định mua",
+      "facts_established": {
+        "product_advised": "SKU-XM-4L"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "competitor_price_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-XM-4L",
+        "price_vnd": 2990000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        }
+      },
+      "expected_outcome": "tu_choi",
+      "success_if": {
+        "tool_called": null,
+        "args_match": {}
+      }
+    }
+  }
+}
