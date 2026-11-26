@@ -1,0 +1,102 @@
+{
+  "scenario_id": "SC-017",
+  "level": "M1",
+  "persona": "khach_so_gia",
+  "hard_case": null,
+  "customer_phone": "0932157116",
+  "customer_name": "Nga",
+  "honorific": "chị",
+  "notes": "consider_and_decide",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0932157116",
+      "call_date": "2026-10-31",
+      "customer_turns": [
+        "Chị ơi, em đang so sánh giá màng lọc thay thế Xiaomi Smart bốn với bên khác.",
+        "Bên họ báo 530 nghìn, nhưng bên chị 590 nghìn à? Em đang cân nhắc.",
+        "Chị có thể giảm được bao nhiêu không? Em muốn mua đúng giá tốt nhất."
+      ],
+      "customer_goal": "So báo giá với nơi khác trước khi quyết định",
+      "facts_established": {
+        "product_advised": "SKU-XM-FLT",
+        "price_quoted_vnd": 590000,
+        "competitor_price_vnd": 530000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-XM-FLT",
+        "price_vnd": 590000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "scheduled_callback_at": "2026-11-03T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0932157116",
+          "callback_at": "2026-11-03T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0932157116",
+      "call_date": "2026-11-03",
+      "customer_turns": [
+        "Chị ơi, em đã xem lại. Giá bên chị 590 nghìn, bên họ 530 nghìn.",
+        "Em muốn mua theo giá bên chị, nhưng nếu có ưu đãi gì thì em cũng chịu.",
+        "Chị ơi, em đồng ý mua theo giá 590 nghìn, chỉ cần giao hàng đến Tổ dân phố Bồ Điền, Huế.",
+        "Thanh toán khi nhận hàng, em không cần trả trước.",
+        "Chị ghi nhận đơn em nhé."
+      ],
+      "days_later": 3,
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-XM-FLT",
+        "price_quoted_vnd": 590000,
+        "payment": "COD",
+        "delivery_address": "Tổ dân phố Bồ Điền, phường Phong Thái, Huế",
+        "order_status": "created"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "competitor_price_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-XM-FLT",
+        "price_vnd": 590000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "estimated_delivery": "2026-11-05"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-XM-FLT",
+          "price_vnd": 590000
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,102 @@
+{
+  "scenario_id": "SC-136",
+  "level": "M1",
+  "persona": "khach_ngoai_pham_vi_chuyen_may",
+  "hard_case": "handoff",
+  "customer_phone": "0930048764",
+  "customer_name": "Hà",
+  "honorific": "chị",
+  "notes": "transfer_with_context",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0930048764",
+      "call_date": "2026-10-24",
+      "customer_turns": [
+        "Chị ơi, em đang tìm ghế ngồi ô tô cho bé, có sản phẩm Chicco không ạ?",
+        "Giá sản phẩm là bao nhiêu vậy chị?",
+        "Em thấy giá là bốn triệu chín trăm chín mươi nghìn đồng, đúng không ạ?",
+        "Em muốn hẹn chị gọi lại vào mười giờ ngày hai mươi bảy tháng mười được không ạ?"
+      ],
+      "customer_goal": "Hỏi về sản phẩm và hẹn xem lại",
+      "facts_established": {
+        "product_advised": "SKU-MB-CAR",
+        "price_quoted_vnd": 4990000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-MB-CAR",
+        "price_vnd": 4990000,
+        "in_stock": true,
+        "active_promos": [
+          "MOM-FREESHIP",
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "MOM-FREESHIP": "2026-11-29",
+          "COD-0": "2026-12-14"
+        },
+        "scheduled_callback_at": "2026-10-27T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0930048764",
+          "callback_at": "2026-10-27T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0930048764",
+      "call_date": "2026-10-27",
+      "customer_turns": [
+        "Chị ơi, em muốn hỏi thêm về an toàn sử dụng ghế ngồi ô tô cho bé, có phải không ạ?",
+        "Chị có thể hướng dẫn em thêm không ạ?",
+        "Em có nên dùng ghế này cho bé dưới 6 tháng không ạ?",
+        "Chị ơi, em có thể nói chuyện với chuyên viên được không ạ?"
+      ],
+      "days_later": 3,
+      "customer_goal": "Hỏi về an toàn sử dụng ngoài phạm vi bán hàng và yêu cầu chuyên viên",
+      "facts_established": {},
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-MB-CAR",
+        "price_vnd": 4990000,
+        "in_stock": true,
+        "active_promos": [
+          "MOM-FREESHIP",
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "MOM-FREESHIP": "2026-11-29",
+          "COD-0": "2026-12-14"
+        }
+      },
+      "expected_outcome": "chuyen_may",
+      "success_if": {
+        "tool_called": "handoff.transfer",
+        "args_match": {},
+        "brief_must_contain": [
+          "customer_phone",
+          "customer_name",
+          "escalation_reason",
+          "conversation_summary",
+          "product_advised",
+          "price_quoted_vnd",
+          "open_questions",
+          "next_action",
+          "generated_at"
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,102 @@
+{
+  "scenario_id": "SC-009",
+  "level": "M1",
+  "persona": "khach_do_du_hoi_nguoi_nha",
+  "hard_case": null,
+  "customer_phone": "0910285940",
+  "customer_name": "Dũng",
+  "honorific": "anh",
+  "notes": "consider_and_decide",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0910285940",
+      "call_date": "2026-10-23",
+      "customer_turns": [
+        "Chào chị, em đang muốn xem bình sữa Pigeon PPSU 240ml trong ngân sách năm trăm nghìn.",
+        "Chị có thể tư vấn thêm không ạ? Em muốn hỏi người nhà trước.",
+        "Giá sản phẩm là hai trăm tám mươi chín nghìn phải không chị?",
+        "Em sẽ gọi lại sau, mười giờ ngày hai mươi bốn tháng mười được không chị?"
+      ],
+      "customer_goal": "Xem sản phẩm trong ngân sách và hỏi ý kiến người nhà",
+      "facts_established": {
+        "product_advised": "SKU-MB-BOT",
+        "price_quoted_vnd": 289000,
+        "budget_vnd": 500000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-MB-BOT",
+        "price_vnd": 289000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "scheduled_callback_at": "2026-10-24T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0910285940",
+          "callback_at": "2026-10-24T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0910285940",
+      "call_date": "2026-10-24",
+      "customer_turns": [
+        "Chị ơi, hôm trước chị nói rồi mà. Em đã hỏi người nhà rồi, đồng ý mua.",
+        "Em muốn đặt bình sữa Pigeon PPSU 240ml, giá hai trăm tám mươi chín nghìn.",
+        "Em muốn thanh toán khi nhận hàng, giao đến Khối 3, xã Núi Thành, Đà Nẵng.",
+        "Chị kiểm tra lại giúp em nhé, nếu còn hàng thì em đặt luôn."
+      ],
+      "days_later": 1,
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-MB-BOT",
+        "price_quoted_vnd": 289000,
+        "payment": "COD",
+        "delivery_address": "Khối 3, xã Núi Thành, Đà Nẵng",
+        "order_status": "created"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "budget_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-MB-BOT",
+        "price_vnd": 289000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "estimated_delivery": "2026-10-28"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-MB-BOT",
+          "price_vnd": 289000
+        }
+      }
+    }
+  }
+}

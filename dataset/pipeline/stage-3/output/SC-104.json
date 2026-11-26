@@ -1,0 +1,102 @@
+{
+  "scenario_id": "SC-118",
+  "level": "M1",
+  "persona": "khach_quay_lai_sau_8_thang",
+  "hard_case": "stale_address",
+  "customer_phone": "0932568855",
+  "customer_name": "Lâm",
+  "honorific": "anh",
+  "notes": "resume_with_uncertain_identity_or_history",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0932568855",
+      "call_date": "2026-02-15",
+      "customer_turns": [
+        "Anh gọi nhờ hỏi lại cái máy tiệt trùng sấy khô Moaz Bebe ấy, giá bao nhiêu vậy?",
+        "Một triệu tám trăm chín mươi nghìn, đúng không anh?",
+        "Thanh toán khi nhận hàng, đúng không?",
+        "Địa chỉ em giao là 01 Lý Nam Đế, Thành Công, Đắk Lắk, đúng không?",
+        "Được, em đặt đơn vậy."
+      ],
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-MB-STER",
+        "price_quoted_vnd": 1890000,
+        "payment": "COD",
+        "delivery_address": "01 Lý Nam Đế, phường Thành Công, Đắk Lắk",
+        "order_status": "created"
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-MB-STER",
+        "price_vnd": 1890000,
+        "in_stock": true,
+        "active_promos": [],
+        "expired_promos": [],
+        "promo_expiry_dates": {},
+        "estimated_delivery": "2026-02-17"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-MB-STER",
+          "price_vnd": 1890000
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0932568855",
+      "call_date": "2026-10-15",
+      "customer_turns": [
+        "Anh ơi, em nhớ là trước em đặt máy tiệt trùng Moaz Bebe, giá một triệu tám chín mươi nghìn, thanh toán khi nhận hàng.",
+        "Địa chỉ giao là 01 Lý Nam Đế, Thành Công, Đắk Lắk. Nhà mình ở đó đúng không?",
+        "Nhà mình ở đó mà, em không nhớ lắm, nhưng nếu là như trước thì đúng.",
+        "Được rồi, nếu đơn đã được tạo thì em xin xác nhận lại.",
+        "Nếu có gì thay đổi thì anh báo em nhé."
+      ],
+      "days_later": 242,
+      "customer_goal": "Xác nhận thông tin người nhận trước khi tra đơn cũ",
+      "facts_established": {},
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "payment",
+        "delivery_address",
+        "order_status"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-MB-STER",
+        "price_vnd": 1890000,
+        "in_stock": true,
+        "active_promos": [
+          "MOM-FREESHIP",
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "MOM-FREESHIP": "2026-11-29",
+          "COD-0": "2026-12-14"
+        }
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.status",
+        "args_match": {
+          "order_id": "OD600001"
+        },
+        "must_say_any": [
+          "xác nhận",
+          "địa chỉ"
+        ]
+      }
+    }
+  }
+}

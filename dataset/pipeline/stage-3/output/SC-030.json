@@ -1,0 +1,100 @@
+{
+  "scenario_id": "SC-038",
+  "level": "M1",
+  "persona": "khach_da_kenh_fb_hotline",
+  "hard_case": null,
+  "customer_phone": "0922808864",
+  "customer_name": "Tú",
+  "honorific": "anh",
+  "notes": "continue_across_channels",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0922808864",
+      "call_date": "2026-10-31",
+      "customer_turns": [
+        "Anh ơi, em đang xem sản phẩm giày sneaker Urban Classic trên page, giá 890k đúng không ạ?",
+        "Ừa, em đang xem lại, nếu có hàng thì anh nhắn em biết nhé.",
+        "Em sẽ gọi lại sau nếu cần, anh nhớ nhắn cho em nhé.",
+        "Giá 890k, 10h ngày 4/11, anh nhớ nhắn em nhé."
+      ],
+      "customer_goal": "Hỏi về sản phẩm và hẹn xem lại",
+      "facts_established": {
+        "product_advised": "SKU-SN-CAS",
+        "price_quoted_vnd": 890000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-SN-CAS",
+        "price_vnd": 890000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "scheduled_callback_at": "2026-11-04T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0922808864",
+          "callback_at": "2026-11-04T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "chat_fanpage",
+      "channel_identity": "fb.tú.905",
+      "call_date": "2026-11-04",
+      "customer_turns": [
+        "K, bên em nhắn FB báo giá 890k và giao hàng đến số 388, An Phong, Hải Phòng.",
+        "Đc, em đặt rồi. Thanh toán khi nhận hàng nhé.",
+        "Giao hàng đúng 4/11 đúng không anh?",
+        "Cảm ơn anh, em sẽ đợi."
+      ],
+      "days_later": 4,
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-SN-CAS",
+        "price_quoted_vnd": 890000,
+        "payment": "COD",
+        "delivery_address": "Số 388, đường An Phong, phường An Phong, Hải Phòng",
+        "order_status": "created"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-SN-CAS",
+        "price_vnd": 890000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "estimated_delivery": "2026-11-06"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-SN-CAS",
+          "price_vnd": 890000
+        }
+      }
+    }
+  }
+}

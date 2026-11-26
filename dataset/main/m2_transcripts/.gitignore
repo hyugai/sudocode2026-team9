@@ -1,3 +1,0 @@
-# The repository ignores all directories called tests. Keep this corpus's tests visible.
-!tests/
-!tests/*.py
