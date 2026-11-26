@@ -16,3 +16,6 @@ SQLAlchemy==2.1.1
 psycopg2-binary==2.9.13
 pinecone>=10,<11
 boto3>=1.36,<2
+sherpa-onnx>=1.12.25,<2
+imageio-ffmpeg>=0.6,<0.7
+numpy>=1.26,<3

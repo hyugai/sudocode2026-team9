@@ -17,6 +17,10 @@ RUN python -m pip install --upgrade pip \
 
 COPY pyproject.toml ./pyproject.toml
 COPY src ./src
+COPY scripts/download_asr_model.py ./scripts/download_asr_model.py
+ENV ASR_MODEL_DIR=/app/models/sherpa-onnx-zipformer-vi-30M-int8-2026-02-09
+RUN python scripts/download_asr_model.py
+
 COPY data/memory-root ./data/memory-root
 
 EXPOSE 10000
