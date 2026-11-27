@@ -2,11 +2,7 @@ import "server-only";
 
 import type { LiveProductDetails } from "./catalog";
 
-const apiBase = (process.env.NEXT_PUBLIC_API_BASE_URL || (
-  process.env.NODE_ENV === "development"
-    ? "http://localhost:8000"
-    : "https://telesale-agent-api-3no2.onrender.com"
-)).replace(/\/$/, "");
+const apiBase = (process.env.API_BACKEND_URL || process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000").replace(/\/$/, "");
 
 async function catalogResponse(path: string) {
   const response = await fetch(`${apiBase}/api/catalog/products${path}`, { cache: "no-store" });

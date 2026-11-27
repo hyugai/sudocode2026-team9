@@ -15,12 +15,27 @@ docs
 notebooks
 src/web
 dataset
+!dataset/organizer/
+!dataset/organizer/**
+models
+outputs
+tmp
+.codegraph
+.agents
+.codex
+.aws
+.cache
+node_modules
 
-# Only runtime data is sent to the Docker build context.
+# Only static agent instructions enter the build context. Never send local
+# customer memory or learned agent memory to Docker.
 data/*
 !data/memory-root/
 data/memory-root/*
 !data/memory-root/agents/
-!data/memory-root/agents/**
-!data/memory-root/users/
-!data/memory-root/users/**
+data/memory-root/agents/*
+!data/memory-root/agents/telesales_agent/
+data/memory-root/agents/telesales_agent/*
+!data/memory-root/agents/telesales_agent/agent.md
+!data/memory-root/agents/telesales_agent/soul.md
+!data/memory-root/agents/telesales_agent/tools.md
