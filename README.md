@@ -337,24 +337,23 @@ Các runner gọi pipeline trực tiếp nên có thể chạy khi Web và API �
 > [!WARNING]
 > Nên dùng DB riêng cho benchmark vì một số kịch bản có thể tạo đơn hàng test. Các bài test tư vấn yêu cầu DB dev đã seed và API key của model đánh giá; benchmark audio cần tải sẵn model Zipformer (mục 4.2).
 
-### Các lệnh chạy nhanh
+### Chấm chéo BTC M1
+
+Chuẩn bị hai database eval từ cùng một bản seed catalog và CRM. Trước mỗi
+lệnh sinh trace, đặt kết nối của cấu hình tương ứng trong
+`EVAL_DATABASE_URL` và dùng cùng API key, endpoint và model cho cả hai cấu hình.
+Các biến môi trường được mô tả trong `.env.example`.
 
 ```powershell
-# Chạy thử 1 kịch bản text
-.\.venv\Scripts\python.exe -X utf8 src\eval\run_suite.py --input-kinds text --limit 1
-
-# Kiểm tra kịch bản, manifest và file WAV trước khi gọi LLM
-.\.venv\Scripts\python.exe -X utf8 src\eval\run_suite.py --preflight-only
-
-# Đo riêng WER/CER của Zipformer local (không gọi LLM)
-.\.venv\Scripts\python.exe -X utf8 src\eval\run_suite.py --asr-only
-
-# Chạy 40 kịch bản text + audio, so sánh hai chế độ bộ nhớ
-.\.venv\Scripts\python.exe -X utf8 src\eval\run_suite.py --limit 40
+python run_eval.py --scenarios $datasetDir --config baseline_no_memory --out outputs/eval/baseline.jsonl
+python run_eval.py --scenarios $datasetDir --config full --out outputs/eval/full.jsonl
+python -X utf8 dataset/organizer/eval/reference_eval.py --scenarios $datasetDir --trace outputs/eval/full.jsonl --baseline outputs/eval/baseline.jsonl --out outputs/eval/btc_report.json
 ```
 
-- Dữ liệu mặc định: `dataset/main/scenarios_complete/`, `dataset/main/audio/` và `dataset/main/manifest.jsonl`.
-- Kết quả xuất ra: `outputs/benchmark/<version>/` (dùng `--llm-provider` và `--llm-model` nếu muốn đổi model).
+Đặt `$datasetDir` thành đường dẫn thư mục JSON BTC cung cấp. Runner mặc định
+chạy toàn bộ thư mục. Thêm `--preflight-only` để kiểm tra đầu vào trước.
+Hướng dẫn xuất ASR nguyên hội thoại, chạy benchmark cặp và đọc các ngưỡng
+nghiệm thu nằm trong [tài liệu eval](src/eval/README.md).
 
 ### Các script benchmark khác
 

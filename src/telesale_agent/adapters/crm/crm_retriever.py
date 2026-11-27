@@ -2,6 +2,7 @@ import logging
 from typing import Any, Dict
 
 from telesale_agent.core.models import TurnContext
+from telesale_agent.core.business_time import business_date
 from telesale_agent.core.interfaces import CRMRetriever
 from telesale_agent.adapters.db.client import db_client
 
@@ -48,6 +49,12 @@ class PostgresCRMRetriever(CRMRetriever):
             or attributes.get("delivery_address")
             or attributes.get("shipping_address")
         )
+        on = business_date(ctx.input.metadata.get("call_date")).isoformat()
+        sessions = [
+            session for session in result.get("sessions", [])
+            if isinstance(session, dict) and session.get("date")
+            and str(session["date"])[:10] <= on
+        ]
 
         # Expose only verified operational fields. Conversation memory remains
         # file-backed and is never flattened into the CRM profile.
@@ -59,6 +66,7 @@ class PostgresCRMRetriever(CRMRetriever):
             "phone": result.get("phone"),
             "region": result.get("region"),
             "address": saved_address,
+            "sessions": sessions,
         }
 
     async def precompute_brief(self, ctx: TurnContext) -> Dict[str, Any]:

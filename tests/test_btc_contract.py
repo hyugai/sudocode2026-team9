@@ -318,7 +318,9 @@ async def test_generated_trace_validates_schema_on_success_and_failure(failure):
     harness = SimpleNamespace(memory=SimpleNamespace(), reset_customer_memory=Mock(),
         run_turn=AsyncMock(side_effect=TimeoutError() if failure else None, return_value=result))
     scenario = {"scenario_id": "BTC-SCHEMA", "calls": {"call_1": {"customer_turns": ["Xin chào"]}}}
-    rows = await run_scenario(scenario, harness, "full", "btc-test", max_retries=1)
+    rows = await run_scenario(
+        scenario, harness, "full", "btc-test", max_retries=1, include_closing_turn=False,
+    )
     assert len(rows) == 1
     validate_schema("trace_log", rows[0])
     if failure:
@@ -420,6 +422,215 @@ async def test_agent_checkout_uses_btc_units_then_one_persisted_order(btc_db, sk
     assert [unit["price_quoted_vnd"] for unit in memory["basket_unit_quotes"]] == [
         unit["final_price_vnd"] for unit in quote["units"]
     ]
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    "filename, prior_sku, turn_ordered, variant",
+    [
+        ("SC-002", "SKU-JK-WND-M-BE", 3, "original"),
+        ("SC-046", "SKU-SN-RUN2-40-TRANG", 4, "original"),
+        ("SC-001", "SKU-JK-DWN-L-NAVY", 3, "original"),
+        ("SC-031", "SKU-SN-TRK-39-XAM", 2, "original"),
+        ("SC-046", "SKU-SN-RUN2-40-TRANG", None, "same_price"),
+        ("SC-046", "SKU-SN-RUN2-40-TRANG", None, "refused"),
+        ("SC-046", "SKU-SN-RUN2-40-TRANG", None, "payment_question"),
+        ("SC-002", "SKU-JK-WND-M-BE", None, "price_changed"),
+    ],
+    ids=["SC-002", "SC-052", "SC-001", "SC-034", "same-price", "refused", "payment-only", "price-changed"],
+)
+async def test_checkout_replay_against_btc(btc_db, filename, prior_sku, turn_ordered, variant):
+    from types import SimpleNamespace
+    from eval.generate_traces import run_scenario
+    from eval.team_eval import REFERENCE
+    from langchain_core.messages import AIMessage
+    from mcp_servers import mcp_db
+    from telesale_agent.core.deepagent_pipeline import DeepAgentHarness
+    from telesale_agent.core.models import CallBrief, CustomerIdentity, Perception
+
+    reference, db = btc_db
+    source = BTC.parent / "pipeline/stage-3/output/m1-v1"
+    scenario = json.loads((source / f"{filename}.json").read_bytes())
+    spec = scenario["calls"]["call_2"]
+    scenario["calls"] = {"call_2": spec}
+    if variant == "refused":
+        spec["customer_turns"][2] = "Khoan đặt đơn, mình đổi ý rồi."
+    elif variant == "payment_question":
+        spec["customer_turns"] = spec["customer_turns"][-1:]
+    elif variant == "price_changed":
+        spec["customer_turns"][1] = spec["customer_turns"][1].replace(
+            "sáu trăm chín mươi ngàn", "sáu trăm năm mươi ngàn"
+        )
+    phone = scenario["customer_phone"]
+    customer_id = next(customer["customer_id"] for customer in reference.CRM if customer["phone"] == phone)
+    identity = CustomerIdentity(customer_id=customer_id, phone=phone)
+
+    async def resolve_identity(context):
+        return identity
+
+    async def build_call_brief(context):
+        return CallBrief(customer_id=customer_id, remembered_preferences={"facts": {"variant_sku": prior_sku}})
+
+    async def perceive(context):
+        text = context.input.text
+        # Only identify catalog mentions that the customer actually supplied.
+        hints = {"RunLite": ("giày RunLite", 40, "trắng"), "Warmly": ("áo phao Warmly", "L", "navy")}
+        entities = {}
+        for word, (name, size, color) in hints.items():
+            if word in text:
+                entities = {"product_name": name, "size": size, "color": color}
+        return Perception(transcript=text, entities=entities)
+
+    async def respond(*args, **kwargs):
+        return {"messages": [AIMessage(content="Dạ, em ghi nhận yêu cầu ạ.")]}
+
+    class LocalTool:
+        def __init__(self, name):
+            self.name = name
+
+        async def ainvoke(self, args):
+            value = getattr(mcp_db, self.name)(**args)
+            if variant == "same_price" and self.name == "get_pricing_quote" and args["sku"] == prior_sku:
+                return {**value, "final_price_vnd": 1_290_000}
+            return value
+
+    harness = DeepAgentHarness(
+        identity=SimpleNamespace(resolve_identity=resolve_identity),
+        call_brief=SimpleNamespace(build_call_brief=build_call_brief),
+        perceive=SimpleNamespace(perceive=perceive),
+    )
+    harness.agent = SimpleNamespace(ainvoke=respond)
+    harness.mcp_tools = {
+        name: LocalTool(name)
+        for name in ("search_catalog", "check_inventory", "get_pricing_quote", "get_order_quote", "create_new_order")
+    }
+    before = len(db.find_orders(customer_phone=phone))
+    rows = await run_scenario(
+        scenario, harness, "baseline_no_memory", "checkout-replay",
+        cleanup_orders=False, include_closing_turn=False,
+    )
+    assert len(rows) == len(spec["customer_turns"])
+    assert not [row.get("_error") for row in rows if "_error" in row]
+    orders = [(row["turn"], call) for row in rows for call in row["tool_calls"] if call["name"] == "order.create"]
+    passed, reasons = REFERENCE.check_call(spec, rows)
+    if turn_ordered is None:
+        assert not orders and not passed
+        assert len(db.find_orders(customer_phone=phone)) == before
+    else:
+        assert passed, reasons
+        [(turn, order_call)] = orders
+        assert turn == turn_ordered
+        assert order_call["args"]["payment"] == "COD"
+        assert order_call["result"]["order_id"]
+        assert len(db.find_orders(customer_phone=phone)) == before + 1
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    "filename, product, size, color, checked_calls",
+    [
+        ("SC-003", "Urban Classic", 43, "đen", ("call_1", "call_2")),
+        ("SC-021", "RunLite 2 Pro", 43, "trắng", ("call_1", "call_2", "call_3")),
+        ("SC-037", "Urban Classic", 43, "trắng", ("call_1", "call_2")),
+        ("SC-045", "RunLite 1", 39, "trắng", ("call_1", "call_2")),
+        ("SC-049", "RunLite", 42, "đen", ("call_1", "call_2")),
+        ("SC-085", "RunLite 2 Pro", 41, "xám", ("call_1", "call_2")),
+        ("SC-091", "RunLite", 38, "đen", ("call_1", "call_2", "call_3")),
+        ("SC-097", "Warmly", "S", "navy", ("call_1", "call_2")),
+        ("SC-004", None, None, None, ("call_2",)),
+        ("SC-008", None, None, None, ("call_2",)),
+        ("SC-009", None, None, None, ("call_2",)),
+        ("SC-011", None, None, None, ("call_2",)),
+        ("SC-012", None, None, None, ("call_2",)),
+        ("SC-017", None, None, None, ("call_1",)),
+        ("SC-022", None, None, None, ("call_1", "call_2", "call_3")),
+        ("SC-023", None, None, None, ("call_2", "call_3")),
+        ("SC-027", None, None, None, ("call_2",)),
+        ("SC-028", None, None, None, ("call_2",)),
+        ("SC-032", None, None, None, ("call_1", "call_2")),
+        ("SC-035", None, None, None, ("call_2",)),
+        ("SC-037", None, None, None, ("call_1", "call_2")),
+    ],
+    ids=["SC-003", "SC-024", "SC-043", "SC-051", "SC-055", "SC-092", "SC-098", "SC-105",
+         "SC-004-literal", "SC-008-literal", "SC-009-literal", "SC-012-literal", "SC-013-literal", "SC-018-literal",
+         "SC-025-literal", "SC-026-literal", "SC-030-literal", "SC-031-literal", "SC-035-literal",
+         "SC-040-literal", "SC-043-literal"],
+)
+async def test_btc_callback_checkout_exchange_journey(
+    btc_db, monkeypatch, filename, product, size, color, checked_calls
+):
+    from types import SimpleNamespace
+    from eval.generate_traces import run_scenario
+    from eval.team_eval import REFERENCE
+    from langchain_core.messages import AIMessage
+    from mcp_servers import mcp_db, mcp_workflow
+    from telesale_agent.adapters.crm import crm_retriever
+    from telesale_agent.adapters.memory import InMemoryCustomerMemoryRepository, TurnMemoryPersister
+    from telesale_agent.application.memory.call_brief import CallBriefProjector, FreshCallBrief
+    from telesale_agent.core.deepagent_pipeline import DeepAgentHarness
+    from telesale_agent.core.models import CustomerIdentity, Perception
+
+    reference, db = btc_db
+    monkeypatch.setattr(crm_retriever, "db_client", db)
+    source = BTC.parent / "pipeline/stage-3/output/m1-v1"
+    scenario = json.loads((source / f"{filename}.json").read_bytes())
+    phone = scenario["customer_phone"]
+    customer = next(customer for customer in reference.CRM if customer["phone"] == phone)
+    memory = InMemoryCustomerMemoryRepository()
+
+    async def identity(context):
+        return CustomerIdentity(customer_id=customer["customer_id"], phone=phone)
+
+    async def perceive(context):
+        text = context.input.text
+        # Keep perception limited to catalog references already in the utterance.
+        named = product and product.split(" ")[0].casefold() in text.casefold()
+        entities = {"product_name": product, "size": size, "color": color} if named else {}
+        return Perception(transcript=text, entities=entities)
+
+    async def respond(*args, **kwargs):
+        return {"messages": [AIMessage(content="Dạ, em ghi nhận yêu cầu ạ.")]}
+
+    class LocalTool:
+        def __init__(self, function):
+            self.function = function
+
+        async def ainvoke(self, args):
+            return self.function(**args)
+
+    harness = DeepAgentHarness(
+        identity=SimpleNamespace(resolve_identity=identity),
+        crm=crm_retriever.PostgresCRMRetriever(),
+        call_brief=FreshCallBrief(CallBriefProjector(), db),
+        memory=memory,
+        persist=TurnMemoryPersister(memory),
+        perceive=SimpleNamespace(perceive=perceive),
+    )
+    harness.agent = SimpleNamespace(ainvoke=respond)
+    harness.mcp_tools = {
+        name: LocalTool(getattr(mcp_db, name))
+        for name in (
+            "search_catalog", "check_inventory", "get_pricing_quote", "get_order_quote",
+            "create_new_order", "check_order_status", "update_order",
+        )
+    }
+    harness.mcp_tools["mcp_schedule_callback"] = LocalTool(mcp_workflow.mcp_schedule_callback)
+    rows = await run_scenario(scenario, harness, "full", "workflow-replay", cleanup_orders=False,
+                              include_closing_turn=False)
+    assert not [row.get("_error") for row in rows if "_error" in row]
+    for key in checked_calls:
+        spec = scenario["calls"][key]
+        current = [row for row in rows if row["call"] == key]
+        earlier = [row for row in rows if row["call"] < key]
+        aliases = REFERENCE.created_order_ids(earlier)
+        passed, reasons = REFERENCE.check_call(spec, current, aliases)
+        assert passed, (scenario["scenario_id"], key, reasons)
+        expected = spec["success_if"]["tool_called"]
+        if expected in {"order.create", "order.update", "schedule.callback"}:
+            [write] = [call for row in current for call in row["tool_calls"] if call["name"] == expected]
+            assert not write["result"].get("error")
+            if expected == "order.update":
+                assert write["args"]["order_id"] in aliases
 
 
 @pytest.mark.asyncio

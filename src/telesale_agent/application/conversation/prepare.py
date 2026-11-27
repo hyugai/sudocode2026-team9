@@ -1,8 +1,9 @@
 """Channel-independent customer and turn context preparation."""
 import time
-from telesale_agent.core.models import Message
+from telesale_agent.core.models import Message, Perception
 from telesale_agent.core.business_time import business_date
 from telesale_agent.adapters.llm.usage_tracking import usage_stage
+from telesale_agent.application.customer_text import is_closing_turn
 
 async def prepare_context(harness, context, *, identity_started=None, on_status=None):
     # Pin the date before freshness checks, reads and mutations. A prior order's
@@ -37,7 +38,13 @@ async def prepare_context(harness, context, *, identity_started=None, on_status=
             hydrated_this_turn = True
         
     # 2b. Turn-based phase (Runs every turn)
-    if harness.perceive:
+    if is_closing_turn(context):
+        context.perception = Perception(
+            transcript="",
+            intent="end_call",
+            intents=["end_call"],
+        )
+    elif harness.perceive:
         if on_status:
             await on_status("analyzing")
         with usage_stage("perception"):

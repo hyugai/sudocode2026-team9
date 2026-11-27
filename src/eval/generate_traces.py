@@ -7,13 +7,16 @@ isolated memory, scoring and reproducibility metadata around this generator.
 
 import argparse
 import asyncio
+import hashlib
 import json
 import os
 import re
+import subprocess
 import sys
 import time
 import wave
 from datetime import date, timedelta
+from collections import defaultdict
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -44,18 +47,20 @@ def _env_flag(name: str, default: bool = False) -> bool:
 
 
 # ---------------------------------------------------------------------------
-# Import agent (lazy để lỗi import hiện rõ)
+# Trace dependencies
 # ---------------------------------------------------------------------------
-from telesale_agent.bootstrap import build_deepagent_harness_async  # noqa: E402
-from telesale_agent.adapters.db.client import db_client  # noqa: E402
 from telesale_agent.core.models import Channel, ConversationState, TurnInput  # noqa: E402
+from eval.model_config import configure_eval_model, permanent_provider_error  # noqa: E402
 from eval.trace_extractors import (  # noqa: E402
     extract_claims,
     extract_facts_used,
     extract_questions,
 )
-from eval.benchmark_support import DEFAULT_SCENARIOS, audio_path, validate_inputs  # noqa: E402
-from eval.model_config import configure_eval_model, permanent_provider_error  # noqa: E402
+from eval.benchmark_support import (  # noqa: E402
+    DEFAULT_SCENARIOS, audio_path, load_scenario_inputs, machine_metadata,
+    trace_health, validate_inputs,
+)
+from eval.team_eval import reference_sha256  # noqa: E402
 
 _SCHEMAS = REPO_ROOT / "dataset" / "organizer" / "schemas"
 _TRACE_VALIDATOR = Draft202012Validator(json.loads(
@@ -79,23 +84,6 @@ def _extract_tool_calls(result) -> list[dict]:
     ]
 
 
-def _replace_order_ids(value, order_id_map: dict[str, str]):
-    """Normalize opaque runtime IDs to scenario IDs in evaluation traces only."""
-    if isinstance(value, dict):
-        return {
-            key: _replace_order_ids(item, order_id_map)
-            for key, item in value.items()
-        }
-    if isinstance(value, list):
-        return [_replace_order_ids(item, order_id_map) for item in value]
-    if isinstance(value, str):
-        normalized = value
-        for runtime_id, scenario_id in order_id_map.items():
-            normalized = normalized.replace(runtime_id, scenario_id)
-        return normalized
-    return value
-
-
 # ---------------------------------------------------------------------------
 # Chạy một scenario đầy đủ (tất cả calls × turns)
 # ---------------------------------------------------------------------------
@@ -110,26 +98,22 @@ async def run_scenario(
     cleanup_orders: bool = True,
     input_kind: str = "text",
     audio_root: Path | None = None,
+    include_closing_turn: bool = True,
 ) -> list[dict]:
     rows = []
     scenario_id = scenario["scenario_id"]
     customer_phone = scenario.get("customer_phone")
     calls_spec: dict = scenario.get("calls", {})
-    expected_order_id = next(
-        (
-            spec.get("facts_established", {}).get("order_id")
-            for spec in calls_spec.values()
-            if spec.get("facts_established", {}).get("order_id")
-        ),
-        None,
-    )
-    order_id_map: dict[str, str] = {}
     created_order_ids: set[str] = set()
+    persisted_facts: dict[str, dict] = defaultdict(dict)
+    seeded_episodes: set[str] = set()
 
     def cleanup_created_orders() -> None:
         if not cleanup_orders or not created_order_ids:
             return
         try:
+            from telesale_agent.adapters.db.client import db_client
+
             deleted = db_client.delete_orders(created_order_ids)
             print(f" [cleanup: {deleted} eval order(s)]", end="", flush=True)
         except Exception as cleanup_exc:
@@ -150,42 +134,57 @@ async def run_scenario(
         select_namespace(scenario_id)
     else:
         harness.reset_customer_memory()
-    if config == "full":
-        seed_history = [
-            episode
-            for call_spec in calls_spec.values()
-            for episode in call_spec.get("seed_history", [])
-        ]
-        if seed_history:
+    def seed_history(episodes):
+        if episodes:
+            from telesale_agent.adapters.db.client import db_client
+
             customer = db_client.get_customer(phone=customer_phone)
             customer_id = customer.get("customer_id") if customer.get("found") else None
-            if customer_id:
-                for episode in seed_history:
-                    summary = (
-                        f"Channel: {episode.get('channel', 'unknown')}\n"
-                        f"Outcome: {episode.get('outcome', 'unknown')}\n"
-                        f"Summary: {episode.get('summary', '')}"
-                    )
-                    harness.memory.record_episode(
-                        customer_id,
-                        summary,
-                        occurred_on=episode.get("date"),
-                        source_id=episode.get("session_id"),
-                    )
+            if not customer_id:
+                raise ValueError(f"Cannot seed history for {scenario_id}: customer is absent or ambiguous")
+            for episode in episodes:
+                marker = episode.get("session_id") or json.dumps(episode, sort_keys=True)
+                if marker in seeded_episodes:
+                    continue
+                summary = (
+                    f"Channel: {episode.get('channel', 'unknown')}\n"
+                    f"Outcome: {episode.get('outcome', 'unknown')}\n"
+                    f"Summary: {episode.get('summary', '')}"
+                )
+                harness.memory.record_episode(
+                    customer_id, summary, occurred_on=episode.get("date"),
+                    source_id=episode.get("session_id"),
+                )
+                seeded_episodes.add(marker)
+
+    if config == "full":
+        seed_history(scenario.get("seed_history", []))
     previous_call_date = date(2026, 10, 15)
 
     for call_key in sorted(calls_spec.keys()):  # call_1, call_2, ...
         spec = calls_spec[call_key]
-        input_mode = spec.get("input_mode", "clean")
+        prior_facts = {cid: facts.copy() for cid, facts in persisted_facts.items()}
+        if config == "full":
+            try:
+                seed_history(spec.get("seed_history", []))
+            except Exception:
+                cleanup_created_orders()
+                raise
+        raw_input_mode = spec.get("input_mode")
+        if raw_input_mode in {"clean", "asr_transcript", "chat_teencode"}:
+            input_mode = raw_input_mode
+        elif raw_input_mode == "noisy" or spec.get("customer_turns_asr") or input_kind == "audio":
+            input_mode = "asr_transcript"
+        else:
+            input_mode = "clean"
         customer_turns: list[str] = (
             spec.get("customer_turns_asr")
             if spec.get("customer_turns_asr")
             else spec.get("customer_turns", [])
         )
+        reference_turns = spec.get("customer_turns") or []
         if spec.get("call_date"):
             current_call_date = date.fromisoformat(spec["call_date"])
-        elif call_key == "call_1":
-            current_call_date = date(2026, 10, 15)
         else:
             current_call_date = previous_call_date + timedelta(
                 days=int(spec.get("days_later", 0))
@@ -195,30 +194,40 @@ async def run_scenario(
         conversation_id = f"{run_id}__{scenario_id}__{call_key}"
         conv_state = ConversationState(conversation_id=conversation_id)
 
-        for turn_idx, customer_text in enumerate(customer_turns, start=1):
+        turn_specs = [
+            (turn_idx, customer_text, False)
+            for turn_idx, customer_text in enumerate(customer_turns, start=1)
+        ]
+        if include_closing_turn:
+            turn_specs.append((len(customer_turns) + 1, "", True))
+
+        for turn_idx, customer_text, is_closing_turn in turn_specs:
             if sleep_turn > 0 and (turn_idx > 1 or call_key != "call_1"):
                 await asyncio.sleep(sleep_turn)
             t0 = time.perf_counter()
             try:
                 audio_file = None
                 audio_info = None
-                if input_kind == "audio":
+                if input_kind == "audio" and not is_closing_turn:
                     if audio_root is None:
                         raise ValueError("audio_root is required for audio evaluation")
                     audio_file = audio_path(audio_root, scenario_id, call_key, turn_idx)
                     with wave.open(str(audio_file), "rb") as wav:
                         audio_info = {"path":str(audio_file), "duration_seconds":wav.getnframes()/wav.getframerate()}
+                turn_metadata = {
+                    "call_date": call_date,
+                    "call_key": call_key,
+                    "scenario_id": scenario_id,
+                }
+                if is_closing_turn:
+                    turn_metadata["closing_turn"] = True
                 turn_input = TurnInput(
                     conversation_id=conversation_id,
                     text=None if audio_file else customer_text,
                     audio=audio_file.read_bytes() if audio_file else None,
                     channel=Channel.CHAT,
                     customer_hint=customer_phone,
-                    metadata={
-                        "call_date": call_date,
-                        "call_key": call_key,
-                        "scenario_id": scenario_id,
-                    },
+                    metadata=turn_metadata,
                 )
                 result = None
                 for attempt in range(max_retries):
@@ -289,43 +298,39 @@ async def run_scenario(
                     and isinstance(call.get("result"), dict)
                     and call["result"].get("order_id")
                 )
-                if expected_order_id and expected_order_id not in order_id_map.values():
-                    created_id = next(
-                        (
-                            call.get("result", {}).get("order_id")
-                            for call in tool_calls
-                            if call.get("name") == "order.create"
-                            and isinstance(call.get("result"), dict)
-                            and call["result"].get("order_id")
-                        ),
-                        None,
-                    )
-                    if created_id:
-                        order_id_map[str(created_id)] = str(expected_order_id)
-                tool_calls = _replace_order_ids(tool_calls, order_id_map)
                 is_baseline = config == "baseline_no_memory"
-                response_text = _replace_order_ids(
-                    result.response_text or "", order_id_map
-                )
-                trace_memory_writes = _replace_order_ids(
-                    result.memory_writes, order_id_map
-                )
+                response_text = result.response_text or ""
+                trace_memory_writes = [] if is_baseline else (result.memory_writes or [])
+                customer_id = getattr(getattr(result, "call_brief", None), "customer_id", None)
+                for write in trace_memory_writes:
+                    cid, key = write.get("customer_id") or customer_id, write.get("key")
+                    if not cid or not key:
+                        continue
+                    if write.get("op") == "delete":
+                        persisted_facts[cid].pop(key, None)
+                    elif write.get("op") in {"set", "supersede"} and "value" in write:
+                        persisted_facts[cid][key] = write["value"]
                 row = {
                     "run_id": run_id,
                     "config": config,
                     "scenario_id": scenario_id,
                     "call": call_key,
                     "turn": turn_idx,
-                    "customer_text": turn_input.metadata.get("raw_asr_transcript", customer_text),
-                    "reference_customer_text": spec.get("customer_turns", customer_turns)[turn_idx - 1],
-                    "normalized_customer_text": turn_input.text,
+                    "customer_text": "" if is_closing_turn else turn_input.metadata.get("raw_asr_transcript", customer_text),
+                    "reference_customer_text": (
+                        ""
+                        if is_closing_turn
+                        else (reference_turns[turn_idx - 1] if turn_idx <= len(reference_turns) else customer_text)
+                    ),
+                    "normalized_customer_text": "" if is_closing_turn else turn_input.text,
                     "agent_text": response_text,
                     "questions": extract_questions(response_text),
                     "facts_used": (
                         []
                         if is_baseline or call_key == "call_1"
                         else extract_facts_used(
-                            response_text, tool_calls, result.call_brief
+                            response_text, tool_calls, prior_facts.get(customer_id, {}),
+                            current_brief=result.call_brief,
                         )
                     ),
                     "claims": extract_claims(
@@ -334,7 +339,7 @@ async def run_scenario(
                         response_text=response_text,
                     ),
                     "tool_calls": tool_calls,
-                    "memory_writes": [] if is_baseline else trace_memory_writes,
+                    "memory_writes": trace_memory_writes,
                     "usage": result.usage,
                     "customer_input_mode": input_mode,
                     "input_kind": input_kind,
@@ -359,7 +364,7 @@ async def run_scenario(
                     "scenario_id": scenario_id,
                     "call": call_key,
                     "turn": turn_idx,
-                    "customer_text": customer_text,
+                    "customer_text": "" if is_closing_turn else customer_text,
                     "agent_text": "",
                     "questions": [],
                     "facts_used": [],
@@ -382,7 +387,11 @@ async def run_scenario(
                 }
                 if getattr(exc,"telesale_profile",None):
                     row["latency"]["profile"] = exc.telesale_profile
-            _TRACE_VALIDATOR.validate(row)
+            try:
+                _TRACE_VALIDATOR.validate(row)
+            except Exception:
+                cleanup_created_orders()
+                raise
             rows.append(row)
             if row.get("_fatal_provider_error"):
                 cleanup_created_orders()
@@ -397,24 +406,26 @@ async def run_scenario(
 # ---------------------------------------------------------------------------
 # Entry point
 # ---------------------------------------------------------------------------
-async def main():
+async def main(*, submission=False):
     parser = argparse.ArgumentParser(
         description="Chạy AI Agent thật qua BTC scenarios và ghi trace JSONL."
     )
     parser.add_argument(
         "--scenarios",
         default=str(DEFAULT_SCENARIOS),
+        required=submission,
         help=f"Thư mục chứa các scenario JSON (default: {DEFAULT_SCENARIOS})",
     )
     parser.add_argument(
         "--config",
         default="full",
+        required=submission,
         choices=["full", "baseline_no_memory"],
         help="Config name ghi vào trace (default: full)",
     )
     parser.add_argument("--run-id", default="team_run", dest="run_id",
                         help="Tên định danh của run (default: team_run)")
-    parser.add_argument("--out", default=None,
+    parser.add_argument("--out", default=None, required=submission,
                         help="Đường dẫn JSONL output (default: outputs/eval/<run_id>.jsonl)")
     parser.add_argument("--limit", type=int, default=None,
                         help="Chỉ chạy N scenario đầu (để test nhanh)")
@@ -424,6 +435,7 @@ async def main():
     parser.add_argument("--llm-provider",default=None)
     parser.add_argument("--llm-model",default=None)
     parser.add_argument("--audio-root", type=Path, help="WAV directory with a sibling manifest.jsonl")
+    parser.add_argument("--preflight-only", action="store_true", help="Validate every selected input and exit.")
     parser.add_argument(
         "--scenario-ids",
         nargs="+",
@@ -476,10 +488,19 @@ async def main():
             "its calls finish (default: true)."
         ),
     )
+    parser.add_argument(
+        "--closing-turn",
+        action=argparse.BooleanOptionalAction,
+        default=True,
+        help=(
+            "Append one post-call agent closing turn with empty customer_text "
+            "after each call's last customer turn (default: true)."
+        ),
+    )
     args = parser.parse_args()
     if args.input_kind == "audio" and args.audio_root is None:
         parser.error("--input-kind audio requires --audio-root and a matching scenario dataset")
-    configure_eval_model(args.llm_provider,args.llm_model)
+    model = configure_eval_model(args.llm_provider, args.llm_model)
 
     if args.limit is not None and args.limit <= 0:
         parser.error("--limit must be greater than zero")
@@ -491,39 +512,34 @@ async def main():
         parser.error("--sleep and --sleep-scenario cannot be negative")
 
     scenarios_dir = Path(args.scenarios)
-    DEFAULT_OUT_DIR.mkdir(parents=True, exist_ok=True)
     out_path = Path(args.out) if args.out else DEFAULT_OUT_DIR / f"{args.run_id}.jsonl"
+    try:
+        selected = load_scenario_inputs(scenarios_dir)
+        ids = args.scenario_ids or ([args.scenario_id] if args.scenario_id else list(selected))
+        selected = {sid: selected[sid] for sid in ids[:args.limit]}
+        selection = validate_inputs(selected, args.audio_root if args.input_kind == "audio" else None)
+    except (ValueError, OSError, KeyError) as exc:
+        parser.error(str(exc))
+    print(f"[Preflight] {json.dumps(selection, ensure_ascii=False)}", flush=True)
+    if args.preflight_only:
+        return 0
+
+    metadata_path = out_path.with_suffix(".metadata.json")
+    if submission:
+        memory_root = out_path.with_name(f"{out_path.stem}_memory")
+        if out_path.exists() or metadata_path.exists() or memory_root.exists():
+            parser.error("Output exists. Choose a new --out path.")
+        if not model.api_key:
+            parser.error(f"No API key configured for {model.provider}")
+        os.environ["CUSTOMER_MEMORY_ROOT"] = str(memory_root.resolve())
+        os.environ["CUSTOMER_MEMORY_BACKEND"] = "file"
+        os.environ["LANGSMITH_TRACING"] = "false"
+        os.environ["LANGCHAIN_TRACING_V2"] = "false"
     out_path.parent.mkdir(parents=True, exist_ok=True)
-
-    # Thu thập file
-    all_files = sorted(
-        path for path in scenarios_dir.glob("*.json") if not path.name.startswith("_")
-    )
-    if not all_files:
-        print(f"[ERROR] Không tìm thấy file JSON trong: {scenarios_dir}", file=sys.stderr)
-        sys.exit(1)
-
-    if args.scenario_ids:
-        file_map = {path.stem: path for path in all_files}
-        missing = [sid for sid in args.scenario_ids if sid not in file_map]
-        if missing:
-            print(f"[ERROR] Không tìm thấy các scenario: {', '.join(missing)}", file=sys.stderr)
-            sys.exit(1)
-        all_files = [file_map[sid] for sid in args.scenario_ids]
-    elif args.scenario_id:
-        all_files = [path for path in all_files if path.stem == args.scenario_id]
-        if not all_files:
-            print(f"[ERROR] Không tìm thấy: {args.scenario_id}", file=sys.stderr)
-            sys.exit(1)
-
-    if args.limit is not None:
-        all_files = all_files[:args.limit]
-    selected = {p.stem:json.loads(p.read_text(encoding="utf-8")) for p in all_files}
-    validate_inputs(selected, args.audio_root if args.input_kind == "audio" else None)
 
     print(f"[Runner] Config         : {args.config}")
     print(f"[Runner] Run ID         : {args.run_id}")
-    print(f"[Runner] Scenarios      : {len(all_files)} files")
+    print(f"[Runner] Scenarios      : {len(selected)} files")
     print(f"[Runner] Sleep turn     : {args.sleep}s | Sleep scenario: {args.sleep_scenario}s")
     print(f"[Runner] Persist memory : {args.persist_memory}")
     print(f"[Runner] Cleanup orders : {args.cleanup_orders}")
@@ -531,6 +547,8 @@ async def main():
     print()
 
     print("[Runner] Khởi động Agent Harness...")
+    from telesale_agent.bootstrap import build_deepagent_harness_async
+
     memory_mode = (
         ("durable" if args.persist_memory else "evaluation")
         if args.config == "full"
@@ -541,15 +559,13 @@ async def main():
 
     total_rows = 0
     failures = 0
+    trace = defaultdict(list)
     try:
-        with out_path.open("w", encoding="utf-8") as out_f:
-            for i, fpath in enumerate(all_files, start=1):
+        with out_path.open("x" if submission else "w", encoding="utf-8") as out_f:
+            for i, (sid, scenario) in enumerate(selected.items(), start=1):
                 if i > 1 and args.sleep_scenario > 0:
                     await asyncio.sleep(args.sleep_scenario)
-                with open(fpath, encoding="utf-8") as scenario_file:
-                    scenario = json.load(scenario_file)
-                sid = scenario.get("scenario_id", fpath.stem)
-                print(f"[{i:3d}/{len(all_files)}] {sid} starting...", flush=True)
+                print(f"[{i:3d}/{len(selected)}] {sid} starting...", flush=True)
 
                 t0 = time.perf_counter()
                 try:
@@ -564,13 +580,15 @@ async def main():
                         cleanup_orders=args.cleanup_orders,
                         input_kind=args.input_kind,
                         audio_root=args.audio_root,
+                        include_closing_turn=args.closing_turn,
                     )
                     elapsed = time.perf_counter() - t0
-                    print(f"[{i:3d}/{len(all_files)}] {sid}: ✓ {len(rows)} turns, {elapsed:.1f}s", flush=True)
+                    print(f"[{i:3d}/{len(selected)}] {sid}: ✓ {len(rows)} turns, {elapsed:.1f}s", flush=True)
                     for row in rows:
                         row["latency_warmup"] = total_rows < 3
                         total_rows += 1
                         failures += int("_error" in row)
+                        trace[(sid, row["call"])].append(row)
                         out_f.write(json.dumps(row, ensure_ascii=False) + "\n")
                         out_f.flush()
                     if any(row.get("_fatal_provider_error") for row in rows):
@@ -579,10 +597,36 @@ async def main():
                 except Exception as scenario_exc:
                     failures += 1
                     elapsed = time.perf_counter() - t0
-                    print(f"[{i:3d}/{len(all_files)}] {sid}: FAILED ({elapsed:.1f}s) - {scenario_exc}", flush=True)
+                    print(f"[{i:3d}/{len(selected)}] {sid}: FAILED ({elapsed:.1f}s) - {scenario_exc}", flush=True)
     finally:
         await harness.__aexit__(None, None, None)
 
+    health = trace_health(selected, trace)
+    if submission:
+        metadata = {
+            "config": args.config,
+            "selection": selection,
+            "trace_health": health,
+            "provider": model.provider,
+            "model": model.model,
+            "request_timeout_seconds": model.timeout,
+            "model_max_retries": model.max_retries,
+            "max_output_tokens": model.max_output_tokens,
+                "request_interval_seconds": float(os.environ["EVAL_REQUEST_INTERVAL_SECONDS"]),
+                "thinking_level": os.environ.get("LLM_THINKING_LEVEL"),
+                "nlu_thinking_level": os.environ.get("NLU_THINKING_LEVEL"),
+                "deepagent_thinking_level": os.environ.get("DEEPAGENT_THINKING_LEVEL"),
+                "memory_persister_mode": os.environ.get("MEMORY_PERSISTER_MODE", "llm_learning"),
+                "custom_endpoint": bool(os.environ.get("LLM_API_ENDPOINT")),
+            "hardware": machine_metadata(),
+                "reference_sha256": reference_sha256(),
+                "git_commit": subprocess.run(
+                    ["git", "rev-parse", "HEAD"], cwd=REPO_ROOT, capture_output=True, text=True,
+                ).stdout.strip(),
+            "finished_at": time.strftime("%Y-%m-%dT%H:%M:%S%z"),
+            "dataset_sha256": hashlib.sha256(json.dumps(selected, sort_keys=True).encode()).hexdigest(),
+        }
+        metadata_path.write_text(json.dumps(metadata, ensure_ascii=False, indent=2), encoding="utf-8")
     report_path = out_path.with_name(f"{out_path.stem}_report.json")
     if args.scenario_ids:
         selector = f" --scenario-ids {','.join(args.scenario_ids)}"
@@ -598,7 +642,7 @@ async def main():
         f'  python "{TEAM_EVAL_PATH}" --scenarios "{scenarios_dir}" '
         f'--trace "{out_path}"{selector} --out "{report_path}"'
     )
-    return 2 if failures else 0
+    return 2 if failures or (submission and not health["valid"]) else 0
 
 
 if __name__ == "__main__":

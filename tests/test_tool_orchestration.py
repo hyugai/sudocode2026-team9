@@ -1,4 +1,10 @@
+import json
+from pathlib import Path
+from types import SimpleNamespace
+from unittest.mock import AsyncMock
+
 import pytest
+from langchain_core.messages import AIMessage
 
 from telesale_agent.adapters.memory.turn_persist import _tool_memory_candidates
 from telesale_agent.core.models import (
@@ -33,6 +39,7 @@ from telesale_agent.core.deepagent_pipeline import (
 )
 from mcp_servers.tools.catalog import _filter_requested_variants
 from mcp_servers.tools import catalog as catalog_tools
+from mcp_servers.tools.workflow import schedule_callback
 
 
 def test_routes_exchange_turn_to_small_order_tool_set():
@@ -1289,6 +1296,172 @@ async def test_callback_is_normalized_and_orchestrated_once():
     assert calls[0]["name"] == "schedule.callback"
 
 
+def _callback_harness(draft="Dạ, em đã ghi nhận yêu cầu ạ.", *, schedule=schedule_callback):
+    tool = SimpleNamespace(ainvoke=AsyncMock(side_effect=lambda args: schedule(**args)))
+    harness = DeepAgentHarness()
+    harness.mcp_tools = {"mcp_schedule_callback": tool}
+    harness.agent = SimpleNamespace(
+        ainvoke=AsyncMock(return_value={"messages": [AIMessage(content=draft)]})
+    )
+    return harness, tool
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    "scenario_id, filename, expected_at, btc_pass, holiday_variant",
+    [
+        ("SC-001", "SC-001", "2026-10-16T10:00", True, False),
+        ("SC-034", "SC-031", "2026-10-30T10:00", True, False),
+        ("SC-002", "SC-002", None, False, False),
+        ("SC-052", "SC-046", "2026-10-27T10:00", False, False),
+        ("SC-073", "SC-067", None, False, False),
+        ("SC-052", "SC-046", "2026-10-26T10:00", True, True),
+    ],
+    ids=["SC-001", "SC-034", "SC-002", "SC-052", "SC-073-customer-calls", "SC-052-requested-on-holiday"],
+)
+async def test_callback_replay_matches_benchmark_utterance(
+    scenario_id, filename, expected_at, btc_pass, holiday_variant
+):
+    from eval.generate_traces import run_scenario
+    from eval.team_eval import REFERENCE
+
+    directory = Path(__file__).resolve().parents[1] / "dataset/pipeline/stage-3/output/m1-v1"
+    scenario = json.loads((directory / f"{filename}.json").read_text(encoding="utf-8"))
+    assert scenario["scenario_id"] == scenario_id
+    spec = scenario["calls"]["call_1"]
+    scenario["calls"] = {"call_1": spec}
+    if holiday_variant:
+        spec["customer_turns"] = [
+            text.replace("10h ngày 27/10", "10h ngày 26/10")
+            for text in spec["customer_turns"]
+        ]
+    harness, tool = _callback_harness()
+
+    rows = await run_scenario(
+        scenario, harness, "baseline_no_memory", "callback-replay", include_closing_turn=False,
+    )
+    assert len(rows) == len(spec["customer_turns"])
+    assert all("_error" not in row for row in rows)
+    callback_rows = [
+        (row, call)
+        for row in rows for call in row["tool_calls"]
+        if call["name"] == "schedule.callback"
+    ]
+    if expected_at:
+        [(row, call)] = callback_rows
+        effective_at = "2026-10-27T10:00" if holiday_variant else expected_at
+        assert call["args"]["callback_at"] == expected_at
+        assert call["result"]["callback_at"] == effective_at
+        assert call["result"]["callback_id"].startswith("CB-")
+        assert call["result"]["moved_from"] == (expected_at if holiday_variant else None)
+        date = effective_at[:10].split("-")
+        assert f"10:00 ngày {date[2]}/{date[1]}/{date[0]}" in row["agent_text"]
+        if holiday_variant:
+            assert "26/10/2026" in row["agent_text"]
+            assert "chuyển lịch" in row["agent_text"]
+        assert tool.ainvoke.await_count == 1
+    else:
+        assert not callback_rows
+        tool.ainvoke.assert_not_awaited()
+    passed, reasons = REFERENCE.check_call(spec, rows)
+    assert passed is btc_pass
+    if not btc_pass:
+        assert reasons == ["không có tool call schedule.callback khớp args_match"]
+
+
+@pytest.mark.asyncio
+async def test_callback_collects_only_missing_fields_and_deduplicates_in_same_conversation():
+    harness, tool = _callback_harness("Dạ, em đã hẹn gọi lại lúc 9 giờ ngày 20/10.")
+    state = ConversationState(conversation_id="callback")
+
+    async def turn(text):
+        return await harness.run_turn(
+            TurnInput("callback", text=text, metadata={"call_date": "2026-10-15"}), state
+        )
+
+    response = await turn("Hẹn gọi lại ngày mai nhé.")
+    assert "xin giờ và số điện thoại" in response.response_text
+    assert "ngày 20/10" not in response.response_text
+    response = await turn("10 giờ sáng ạ.")
+    assert "xin số điện thoại" in response.response_text
+    tool.ainvoke.assert_not_awaited()
+    response = await turn("Số điện thoại là +84 912 345 678 ạ.")
+    assert "10:00 ngày 16/10/2026" in response.response_text
+    assert tool.ainvoke.call_args.args[0]["customer_phone"] == "0912345678"
+    response = await turn("Hẹn gọi lại 10h ngày 16/10 nhé.")
+    assert not response.tool_calls
+    assert "10:00 ngày 16/10/2026" in response.response_text
+    assert tool.ainvoke.await_count == 1
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("tool_result", [
+    {"callback_at": "2026-10-16T10:00"},
+    {"callback_id": "CB-TEST", "callback_at": "2026-10-16"},
+])
+async def test_callback_needs_verified_id_and_time_before_streaming(tool_result):
+    harness, _ = _callback_harness(
+        "Dạ, em đã đặt lịch gọi lại. Em có thể gửi thêm thông tin sản phẩm ạ.",
+        schedule=lambda **args: tool_result,
+    )
+    on_text = AsyncMock()
+    state = ConversationState(conversation_id="callback")
+    response = await harness.run_turn(TurnInput(
+        "callback", text="Hẹn lại 10:00 ngày 16/10 nhé.",
+        customer_hint="0912345678", metadata={"call_date": "2026-10-15"},
+    ), state, on_text=on_text)
+
+    assert "chưa xác nhận được lịch" in response.response_text
+    assert "đã đặt lịch" not in response.response_text
+    assert "thông tin sản phẩm" in response.response_text
+    on_text.assert_awaited_once_with(response.response_text)
+
+
+@pytest.mark.asyncio
+async def test_customer_calling_back_clears_pending_callback():
+    harness, tool = _callback_harness("Dạ, bên em sẽ gọi lại lúc 10 giờ ngày 16/10.")
+    state = ConversationState(conversation_id="callback")
+
+    async def turn(text):
+        return await harness.run_turn(TurnInput(
+            "callback", text=text, customer_hint="0912345678", metadata={"call_date": "2026-10-15"},
+        ), state)
+
+    await turn("Hẹn gọi lại ngày mai nhé.")
+    response = await turn("Em sẽ tự gọi lại sau.")
+    assert "bên em sẽ gọi lại" not in response.response_text
+    await turn("10 giờ sáng ạ.")
+    assert "pending_callback" not in state.working_memory
+    tool.ainvoke.assert_not_awaited()
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("text, expected", [
+    ("Anh nhắn lại cho em lúc mười giờ ngày hai mươi tháng mười được không?", "đồng ý để bên em gọi"),
+    ("Chờ anh 10 giờ ngày 4 tháng 11 nhé.", "hay mình sẽ chủ động liên hệ"),
+])
+async def test_callback_clarifies_channel_or_caller_without_promising_unverified_schedule(text, expected):
+    harness, tool = _callback_harness("Dạ, em đã hẹn gọi lại cho mình rồi ạ.")
+    response = await harness.run_turn(TurnInput(
+        "callback", text=text, customer_hint="0912345678", metadata={"call_date": "2026-10-15"},
+    ))
+    tool.ainvoke.assert_not_awaited()
+    assert "đã hẹn gọi lại" not in response.response_text
+    assert expected in response.response_text
+
+
+@pytest.mark.asyncio
+async def test_checkout_does_not_confirm_an_uncreated_order_on_a_followup():
+    harness = DeepAgentHarness()
+    harness.agent = SimpleNamespace(ainvoke=AsyncMock(return_value={"messages": [AIMessage(
+        content="Dạ, đơn hàng của anh đã được ghi nhận và chuẩn bị giao ạ.",
+    )]}))
+    state = ConversationState("checkout", working_memory={"pending_order": {"checkout_confirmed": True}})
+    response = await harness.run_turn(TurnInput("checkout", text="Cảm ơn, em sẽ đợi đơn hàng."), state)
+    assert "đã được ghi nhận" not in response.response_text
+    assert "phiên bản sản phẩm" in response.response_text
+
+
 @pytest.mark.asyncio
 async def test_confirmed_create_waits_for_required_delivery_address():
     class StubTool:
@@ -1347,6 +1520,7 @@ async def test_confirmed_create_waits_for_required_delivery_address():
         "sku": "SKU-SN-CAS-39-DEN",
         "price_vnd": 890_000,
         "payment": "COD",
+        "checkout_confirmed": True,
     }
 
 
