@@ -10,7 +10,8 @@ import statistics
 import wave
 
 
-DEFAULT_SCENARIOS = Path(__file__).resolve().parents[2] / "dataset/pipeline/stage-3/output"
+# Use the versioned M1 export containing both the scenarios and audit report.
+DEFAULT_SCENARIOS = Path(__file__).resolve().parents[2] / "dataset/pipeline/stage-3/output/m1-v1"
 
 
 def turn_keys(scenarios):

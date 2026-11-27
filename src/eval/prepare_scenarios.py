@@ -3,7 +3,7 @@
 Optional converter for an explicitly supplied external JSONL scenario file.
 
 Current scenarios already exist as individual JSON files in
-``dataset/pipeline/stage-3/output``; no conversion is needed to evaluate them.
+``dataset/pipeline/stage-3/output/m1-v1`` and can be evaluated directly.
 
 Usage:
     python src/eval/prepare_scenarios.py --src /path/to/scenarios.jsonl --out /tmp/scenarios
