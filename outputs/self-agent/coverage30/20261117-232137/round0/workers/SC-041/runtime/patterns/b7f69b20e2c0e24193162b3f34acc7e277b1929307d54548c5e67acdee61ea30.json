@@ -1,0 +1,47 @@
+{
+  "id": "b7f69b20e2c0e24193162b3f34acc7e277b1929307d54548c5e67acdee61ea30",
+  "reason": "unsupported_claim",
+  "pattern": "Do not state an unverified claim as a fact.",
+  "status": "approved",
+  "scope": "general",
+  "mechanism": "knowledge_gap",
+  "criterion": "Do not state an unverified claim as a fact.",
+  "evidence_refs": [
+    {
+      "job_id": "99b9f19efa550134751c0aefb1a8ef643f3ae947b5097b147f1b7ec2f2010c58",
+      "message_id": 0,
+      "turn_id": 1,
+      "origin": "turn_detector"
+    }
+  ],
+  "assessment": "unsupported_by_evidence",
+  "report_ref": "99b9f19efa550134751c0aefb1a8ef643f3ae947b5097b147f1b7ec2f2010c58",
+  "lesson": {
+    "title": "Do Not Invent Customer History Details",
+    "when": "Answering a customer referencing a past conversation or order details when tool results or sources do not contain previous record data",
+    "do": "State clearly that the specific past details are not found in the records and ask the customer to provide them directly",
+    "otherwise": "State unverified past selections or products as existing customer history",
+    "triggers": [
+      "gọi lại chuyện hôm trước",
+      "thông tin cũ",
+      "đơn hàng cũ",
+      "past details missing",
+      "unsupported customer history"
+    ],
+    "id": "515c421124f6b3312adad4f15c8f4440e7f3b61d194c2fab38b632c3468485ea",
+    "status": "approved",
+    "scope": "general",
+    "mechanism": "knowledge_gap",
+    "source_refs": [
+      {
+        "job_id": "99b9f19efa550134751c0aefb1a8ef643f3ae947b5097b147f1b7ec2f2010c58",
+        "message_id": 0,
+        "turn_id": 1,
+        "origin": "turn_detector"
+      }
+    ],
+    "version": 2
+  },
+  "lesson_path": "lessons\\approved\\515c421124f6b3312adad4f15c8f4440e7f3b61d194c2fab38b632c3468485ea.md",
+  "lesson_hash": "eb4cfea3ac7b78f8b1cee6ea6cd6ff589f7cb09fd5a43a00c0d60e53e5754c81"
+}

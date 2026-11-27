@@ -1,0 +1,46 @@
+{
+  "id": "93d22d2b04b5b12adc5f39c8ca4ec7659a9f88dbfa70677283a6ff2f097f6384",
+  "reason": "unsupported_claim",
+  "pattern": "Do not state an unverified claim as a fact.",
+  "status": "approved",
+  "scope": "general",
+  "mechanism": "knowledge_gap",
+  "criterion": "Do not state an unverified claim as a fact.",
+  "evidence_refs": [
+    {
+      "job_id": "6db2feeccbc2033b414e1f8fe01408f6fba429423d5134d163dfdeef614f2ec7",
+      "message_id": 6,
+      "turn_id": 4,
+      "origin": "turn_detector"
+    }
+  ],
+  "assessment": "unsupported_by_evidence",
+  "report_ref": "6db2feeccbc2033b414e1f8fe01408f6fba429423d5134d163dfdeef614f2ec7",
+  "lesson": {
+    "title": "Verify Cart Item Pricing Before Asserting Totals",
+    "when": "A customer updates cart items or states a total budget and requests cart verification, but product prices or total amounts have not been retrieved or verified via tools.",
+    "do": "Retrieve product pricing using system tools and verify cart item costs before stating or confirming total amounts.",
+    "otherwise": "Express uncertainty about the total cart cost without stating unconfirmed prices or totals.",
+    "triggers": [
+      "xac nhan lai dung hai mon",
+      "ngan sach tong",
+      "confirm cart items total",
+      "verify updated cart price"
+    ],
+    "id": "87c9c05b05da094ee7037247552de108a33c2862cd4340fb35cc1a7414e8e02f",
+    "status": "approved",
+    "scope": "general",
+    "mechanism": "knowledge_gap",
+    "source_refs": [
+      {
+        "job_id": "6db2feeccbc2033b414e1f8fe01408f6fba429423d5134d163dfdeef614f2ec7",
+        "message_id": 6,
+        "turn_id": 4,
+        "origin": "turn_detector"
+      }
+    ],
+    "version": 2
+  },
+  "lesson_path": "lessons\\approved\\87c9c05b05da094ee7037247552de108a33c2862cd4340fb35cc1a7414e8e02f.md",
+  "lesson_hash": "4a4c0d7935ef16c063e3d7878c4110712629d56b2dc78b58ffb238660a144ff6"
+}

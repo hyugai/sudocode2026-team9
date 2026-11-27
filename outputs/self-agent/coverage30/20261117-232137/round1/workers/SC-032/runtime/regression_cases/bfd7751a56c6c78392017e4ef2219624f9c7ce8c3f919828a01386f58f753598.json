@@ -1,0 +1,46 @@
+{
+  "id": "bfd7751a56c6c78392017e4ef2219624f9c7ce8c3f919828a01386f58f753598",
+  "reason": "unsupported_claim",
+  "pattern": "Do not state an unverified claim as a fact.",
+  "status": "approved",
+  "scope": "general",
+  "mechanism": "knowledge_gap",
+  "criterion": "Do not state an unverified claim as a fact.",
+  "evidence_refs": [
+    {
+      "job_id": "c822205dd5ce473adbcdf72529e9e10a7b7939074dd960c557990de4d0f0b065",
+      "message_id": 0,
+      "turn_id": 1,
+      "origin": "turn_detector"
+    }
+  ],
+  "assessment": "unsupported_by_evidence",
+  "report_ref": "c822205dd5ce473adbcdf72529e9e10a7b7939074dd960c557990de4d0f0b065",
+  "lesson": {
+    "title": "Avoid Inventing Prior Customer Interaction Details",
+    "when": "The user refers generally to a previous inquiry or callback without verified record of the specific item or issue in provided evidence",
+    "do": "Ask the user politely which product or policy they are considering, without claiming specific SKUs or previous concerns",
+    "otherwise": "State clearly that the specific past details are not available in current records and ask how to assist",
+    "triggers": [
+      "khách liên hệ lại",
+      "cân nhắc món đã hỏi",
+      "chưa có lịch sử tư vấn",
+      "unsupported past inquiry"
+    ],
+    "id": "b83a1e622ef1f27e4028ca59fee9dcb810018c2e00a3baf8a76cd11154fabee4",
+    "status": "approved",
+    "scope": "general",
+    "mechanism": "knowledge_gap",
+    "source_refs": [
+      {
+        "job_id": "c822205dd5ce473adbcdf72529e9e10a7b7939074dd960c557990de4d0f0b065",
+        "message_id": 0,
+        "turn_id": 1,
+        "origin": "turn_detector"
+      }
+    ],
+    "version": 2
+  },
+  "lesson_path": "lessons\\approved\\b83a1e622ef1f27e4028ca59fee9dcb810018c2e00a3baf8a76cd11154fabee4.md",
+  "lesson_hash": "ca3c9d7a182234a21f3f685e885250b07c96520cc586be340b07d722f9cd2e6b"
+}

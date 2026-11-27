@@ -1,0 +1,303 @@
+{
+  "scenario_id": "SC-001",
+  "call": "call_2",
+  "session_id": "self-e10a00c12c284b82b47eb4199e8cbc85-SC-001-call_2",
+  "turns": [
+    {
+      "customer": "Chị gọi lại chuyện hôm trước, người nhà đã đồng ý rồi.",
+      "agent": "Dạ em chào chị [private], em rất vui khi nhận được phản hồi từ chị ạ. Người nhà mình đã đồng ý rồi thì em xin phép hỗ trợ chị làm thủ tục tiếp theo nhé. \n\nKhông biết chị muốn em lên đơn đặt hàng cho sản phẩm hôm trước luôn hay chị cần em hỗ trợ thêm thông tin gì nữa không ạ?",
+      "latency": {
+        "ttft_ms": 4493,
+        "total_ms": 4493,
+        "ttfa_ms": null,
+        "measurement_mode": "non_streaming",
+        "timing_boundary": "response_ready_before_persistence",
+        "asr_ms": null,
+        "call_brief_ms": 3096,
+        "response_ready_ms": 4493,
+        "persistence_ms": 0.11,
+        "request_complete_ms": 4493.391,
+        "backend_total_ms": 4493.391,
+        "precomputed_parts": [
+          "persisted_facts"
+        ]
+      },
+      "lesson_trace": null
+    },
+    {
+      "customer": "Em nhắc lại mẫu và giá đã trao đổi giúp chị; hôm nay hàng có sẵn chưa?",
+      "agent": "Dạ chị [private], mẫu hôm trước em tư vấn cho mình là máy lọc không khí **SKU-AP-X** với giá là **4.890.000đ** (được miễn phí vận chuyển và tặng kèm màng lọc SKU-AP-FLT-X ạ). \n\nHôm nay sản phẩm này đang có sẵn hàng trong kho chị nhé. Chị có muốn em hỗ trợ lên đơn đặt hàng luôn cho mình không ạ?",
+      "latency": {
+        "ttft_ms": 7999,
+        "total_ms": 7999,
+        "ttfa_ms": null,
+        "measurement_mode": "non_streaming",
+        "timing_boundary": "response_ready_before_persistence",
+        "asr_ms": null,
+        "call_brief_ms": null,
+        "response_ready_ms": 7999,
+        "persistence_ms": 0.109,
+        "request_complete_ms": 7999.606,
+        "backend_total_ms": 7999.606,
+        "precomputed_parts": [
+          "persisted_facts"
+        ]
+      },
+      "lesson_trace": null
+    },
+    {
+      "customer": "Chị đồng ý giá hiện tại 4.890.000 đồng, mua một chiếc. Giao đến [address]",
+      "agent": "Dạ em cảm ơn chị [private]. Em đã tạo thành công đơn hàng máy lọc không khí SKU-AP-X cho chị với mã đơn là **[order_id]**. \n\nĐơn hàng có tổng tiền là 4.890.000đ (được miễn phí vận chuyển và tặng kèm màng lọc SKU-AP-FLT-X), thanh toán khi nhận hàng (COD) tại địa chỉ [address]",
+      "latency": {
+        "ttft_ms": 5615,
+        "total_ms": 5615,
+        "ttfa_ms": null,
+        "measurement_mode": "non_streaming",
+        "timing_boundary": "response_ready_before_persistence",
+        "asr_ms": null,
+        "call_brief_ms": null,
+        "response_ready_ms": 5615,
+        "persistence_ms": 0.125,
+        "request_complete_ms": 5614.734,
+        "backend_total_ms": 5614.734,
+        "precomputed_parts": [
+          "persisted_facts"
+        ]
+      },
+      "lesson_trace": null
+    }
+  ],
+  "generation_context": {
+    "round": 0,
+    "instruction_hash": "9d30a7093911a993d8545de8b61cc6dc8465de67b10fb62b27d9f1bafaf0badf",
+    "applied_patterns": {},
+    "lessons_loaded": false,
+    "lesson_sources": [],
+    "lesson_files": [],
+    "instruction_root": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round0\\instructions"
+  },
+  "evaluation_evidence": [
+    {
+      "turn_id": 1,
+      "agent_response": "Dạ em chào chị [private], em rất vui khi nhận được phản hồi từ chị ạ. Người nhà mình đã đồng ý rồi thì em xin phép hỗ trợ chị làm thủ tục tiếp theo nhé. \n\nKhông biết chị muốn em lên đơn đặt hàng cho sản phẩm hôm trước luôn hay chị cần em hỗ trợ thêm thông tin gì nữa không ạ?",
+      "tool_calls": [],
+      "sources": [],
+      "promotions": []
+    },
+    {
+      "turn_id": 2,
+      "agent_response": "Dạ chị [private], mẫu hôm trước em tư vấn cho mình là máy lọc không khí **SKU-AP-X** với giá là **4.890.000đ** (được miễn phí vận chuyển và tặng kèm màng lọc SKU-AP-FLT-X ạ). \n\nHôm nay sản phẩm này đang có sẵn hàng trong kho chị nhé. Chị có muốn em hỗ trợ lên đơn đặt hàng luôn cho mình không ạ?",
+      "tool_calls": [
+        {
+          "name": "catalog.search",
+          "args": {
+            "query": "Em nhắc lại mẫu và giá đã trao đổi giúp chị; hôm nay hàng có sẵn chưa?",
+            "on": "2026-10-17"
+          },
+          "result": {
+            "items": [],
+            "total": 0
+          }
+        },
+        {
+          "name": "pricing.get_quote",
+          "args": {
+            "on": "2026-10-17",
+            "customer_phone": "[private]",
+            "customer_id": "[private]",
+            "sku": "SKU-AP-X",
+            "qty": 1
+          },
+          "result": {
+            "sku": "SKU-AP-X",
+            "list_price_vnd": 4890000,
+            "final_price_vnd": 4890000,
+            "applied_promos": [
+              {
+                "promo_code": "COD-0",
+                "type": "freecod",
+                "discount_vnd": 0
+              },
+              {
+                "promo_code": "GIFT-FILTER",
+                "type": "gift",
+                "discount_vnd": 0,
+                "gift_sku": "SKU-AP-FLT-X"
+              }
+            ],
+            "expired_promos": [
+              "AP-SEP"
+            ],
+            "ineligible_promos": [
+              {
+                "promo_code": "AIR-2ND-50",
+                "reason": "min_qty"
+              },
+              {
+                "promo_code": "NAM-SHIP0",
+                "reason": "region"
+              },
+              {
+                "promo_code": "TRADE-IN-AP",
+                "reason": "requires_owned_sku"
+              }
+            ],
+            "not_applied_exclusive": [],
+            "freeship": true
+          }
+        },
+        {
+          "name": "inventory.check",
+          "args": {
+            "sku": "SKU-AP-X",
+            "on": "2026-10-17"
+          },
+          "result": {
+            "sku": "SKU-AP-X",
+            "found": true,
+            "in_stock": true,
+            "qty": 40,
+            "discontinued": false
+          }
+        }
+      ],
+      "sources": [],
+      "promotions": []
+    },
+    {
+      "turn_id": 3,
+      "agent_response": "Dạ em cảm ơn chị [private]. Em đã tạo thành công đơn hàng máy lọc không khí SKU-AP-X cho chị với mã đơn là **[order_id]**. \n\nĐơn hàng có tổng tiền là 4.890.000đ (được miễn phí vận chuyển và tặng kèm màng lọc SKU-AP-FLT-X), thanh toán khi nhận hàng (COD) tại địa chỉ [address]",
+      "tool_calls": [
+        {
+          "name": "inventory.check",
+          "args": {
+            "sku": "SKU-AP-X",
+            "on": "2026-10-17"
+          },
+          "result": {
+            "sku": "SKU-AP-X",
+            "found": true,
+            "in_stock": true,
+            "qty": 40,
+            "discontinued": false
+          }
+        },
+        {
+          "name": "pricing.get_quote",
+          "args": {
+            "on": "2026-10-17",
+            "customer_phone": "[private]",
+            "customer_id": "[private]",
+            "address": "[private]",
+            "sku": "SKU-AP-X",
+            "qty": 1
+          },
+          "result": {
+            "sku": "SKU-AP-X",
+            "list_price_vnd": 4890000,
+            "final_price_vnd": 4890000,
+            "applied_promos": [
+              {
+                "promo_code": "COD-0",
+                "type": "freecod",
+                "discount_vnd": 0
+              },
+              {
+                "promo_code": "GIFT-FILTER",
+                "type": "gift",
+                "discount_vnd": 0,
+                "gift_sku": "SKU-AP-FLT-X"
+              }
+            ],
+            "expired_promos": [
+              "AP-SEP"
+            ],
+            "ineligible_promos": [
+              {
+                "promo_code": "AIR-2ND-50",
+                "reason": "min_qty"
+              },
+              {
+                "promo_code": "NAM-SHIP0",
+                "reason": "region"
+              },
+              {
+                "promo_code": "TRADE-IN-AP",
+                "reason": "requires_owned_sku"
+              }
+            ],
+            "not_applied_exclusive": [],
+            "freeship": true
+          }
+        },
+        {
+          "name": "order.create",
+          "args": {
+            "customer_phone": "[private]",
+            "customer_id": "[private]",
+            "address": "[private]",
+            "idempotency_key": "self-e10a00c12c284b82b47eb4199e8cbc85-SC-001-call_2:call_2:create:SKU-AP-X",
+            "sku": "SKU-AP-X",
+            "qty": 1,
+            "price_vnd": 4890000,
+            "promo_code": "COD-0",
+            "on": "2026-10-17",
+            "payment": "COD"
+          },
+          "result": {
+            "order_id": "[private]",
+            "status": "created",
+            "total_vnd": 4890000,
+            "needs_confirmation_call": true,
+            "estimated_delivery": "2026-10-20"
+          }
+        }
+      ],
+      "sources": [],
+      "promotions": []
+    }
+  ],
+  "job": {
+    "status": "done",
+    "job_id": "e0a93a26f0521b059c8fd6870432d5fa5f499ade3557acc43cf94bca9bf8b3d4",
+    "error": null
+  },
+  "learning": {
+    "job_id": "e0a93a26f0521b059c8fd6870432d5fa5f499ade3557acc43cf94bca9bf8b3d4",
+    "gaps": [],
+    "scope": "knowledge_gap_and_reflection_v1",
+    "evaluation_cases": [],
+    "out_of_scope": [],
+    "issue_reviews": [],
+    "detector_error": null,
+    "guardrails": {
+      "version": "learning_guardrails_v1",
+      "input_findings": [],
+      "blocked_lessons": [],
+      "blocked_sources": []
+    },
+    "detection": {
+      "candidate_count": 0,
+      "open_question_count": 0,
+      "processed_count": 0,
+      "skipped_unmatched_question": 0,
+      "skipped_over_limit": 0,
+      "scan": {
+        "turns_available": 3,
+        "turns_scanned": 3,
+        "requests": 3,
+        "errors": [],
+        "schema_retries": 0,
+        "skipped_over_limit": 0
+      },
+      "alignment_rejections": []
+    },
+    "outcome": "no_candidates",
+    "learning_duration_ms": 3228,
+    "learning_usage": {
+      "input_tokens": 3516,
+      "output_tokens": 18
+    }
+  },
+  "artifact_changes": []
+}

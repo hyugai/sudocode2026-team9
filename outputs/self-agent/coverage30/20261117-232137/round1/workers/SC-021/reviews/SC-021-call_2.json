@@ -1,0 +1,653 @@
+{
+  "schema_version": 1,
+  "guardrail_version": "learning_guardrails_v1",
+  "metadata": {
+    "evaluation_population": "single_session_no_baseline"
+  },
+  "warnings": [
+    "Chưa chạy judge: chỉ xem thay đổi câu trả lời và dấu vết lesson, chưa đánh giá cải thiện.",
+    "Không có cặp chấm hợp lệ: chưa thể kết luận cải thiện hay không có regression."
+  ],
+  "summary": {
+    "total_turns": 3,
+    "judged_pair_count": 0,
+    "round0_turns": 0,
+    "round1_turns": 3,
+    "stored_frozen_case_count": 0,
+    "injected_turns": 1,
+    "changed_answers": 0,
+    "counts": {
+      "improved_resolution": 0,
+      "safer_unresolved": 0,
+      "regression": 0,
+      "unchanged": 0,
+      "needs_review": 0,
+      "not_evaluated": 3,
+      "unpaired": 0,
+      "question_changed": 0,
+      "excluded": 0
+    }
+  },
+  "rows": [
+    {
+      "call": "SC-021/call_2",
+      "turn_id": 1,
+      "question": "Chị gọi lại chuyện hôm trước. Đơn OD600001 đã nhận hôm qua; sản phẩm hơi chật.",
+      "baseline_question": null,
+      "classification": "not_evaluated",
+      "case_id": null,
+      "gap_id": null,
+      "answer_changed": false,
+      "injected": true,
+      "lesson_trace": {
+        "lessons_loaded": 25,
+        "selected_lessons": [
+          {
+            "id": "515c421124f6b3312adad4f15c8f4440e7f3b61d194c2fab38b632c3468485ea",
+            "hash": "eb4cfea3ac7b78f8b1cee6ea6cd6ff589f7cb09fd5a43a00c0d60e53e5754c81",
+            "mechanism": "knowledge_gap"
+          },
+          {
+            "id": "65937ee9eef2c4d974bef3006d8de98f5b9b9b10c16ff5760d49d6e188a9241e",
+            "hash": "91350f240162b4483ce53673eee782a9312256a594edaea6ce1e4964ad422cba",
+            "mechanism": "knowledge_gap"
+          },
+          {
+            "id": "067cab30799242ca80db4b2157296d7f5a22ba5d647108378c9b389e961cbf1b",
+            "hash": "dfdf9a416d03aa36b483f8b6f47a61d41541634993a94e95f9dd04bb8e2b9d1d",
+            "mechanism": "knowledge_gap"
+          }
+        ],
+        "injected": true,
+        "mode": "memory_only",
+        "response_modified": false,
+        "routing": "selected",
+        "routing_ms": 2812.86,
+        "routing_usage": {
+          "input_tokens": 4866,
+          "output_tokens": 192
+        },
+        "guardrails": {
+          "version": "learning_guardrails_v1",
+          "blocked_lessons": []
+        },
+        "injected_chars": 1617,
+        "injected_lesson_count": 3,
+        "wrapper_total_ms": 7898.201
+      },
+      "round0": {
+        "answer": null,
+        "verdict": {
+          "status": null
+        },
+        "latency": null,
+        "evidence": {
+          "current": {},
+          "earlier": []
+        }
+      },
+      "round1": {
+        "answer": "Em chào chị [private] ạ. Em đã kiểm tra mã đơn OD600001 trên hệ thống nhưng hiện tại chưa thấy thông tin chi tiết của đơn hàng này. \n\nChị cho em hỏi sản phẩm chị nhận được là mẫu nào và chị đang muốn đổi sang size bao nhiêu để em hỗ trợ kiểm tra quy định đổi trả giúp chị nhé?",
+        "verdict": {
+          "status": null
+        },
+        "latency": {
+          "ttft_ms": 5085,
+          "total_ms": 5085,
+          "ttfa_ms": null,
+          "measurement_mode": "non_streaming",
+          "timing_boundary": "response_ready_before_persistence",
+          "asr_ms": null,
+          "call_brief_ms": 3102,
+          "response_ready_ms": 5085,
+          "persistence_ms": 0.106,
+          "request_complete_ms": 5085.204,
+          "backend_total_ms": 5085.204,
+          "precomputed_parts": [
+            "persisted_facts"
+          ]
+        },
+        "evidence": {
+          "current": {
+            "turn_id": 1,
+            "agent_response": "Em chào chị [private] ạ. Em đã kiểm tra mã đơn OD600001 trên hệ thống nhưng hiện tại chưa thấy thông tin chi tiết của đơn hàng này. \n\nChị cho em hỏi sản phẩm chị nhận được là mẫu nào và chị đang muốn đổi sang size bao nhiêu để em hỗ trợ kiểm tra quy định đổi trả giúp chị nhé?",
+            "tool_calls": [
+              {
+                "name": "order.status",
+                "args": {
+                  "order_id": "[private]"
+                },
+                "result": {
+                  "orders": []
+                }
+              }
+            ],
+            "sources": [],
+            "promotions": []
+          },
+          "earlier": []
+        }
+      }
+    },
+    {
+      "call": "SC-021/call_2",
+      "turn_id": 2,
+      "question": "Chị muốn đổi từ size 38 sang 39, giữ màu cũ. Đây là lần đổi đầu tiên; hàng còn nguyên tem, hộp và chưa sử dụng.",
+      "baseline_question": null,
+      "classification": "not_evaluated",
+      "case_id": null,
+      "gap_id": null,
+      "answer_changed": false,
+      "injected": false,
+      "lesson_trace": {
+        "lessons_loaded": 25,
+        "selected_lessons": [],
+        "injected": false,
+        "mode": "memory_only",
+        "response_modified": false,
+        "routing": "no_match",
+        "routing_ms": 2328.465,
+        "routing_usage": {
+          "input_tokens": 5134,
+          "output_tokens": 13
+        },
+        "wrapper_total_ms": 7650.614
+      },
+      "round0": {
+        "answer": null,
+        "verdict": {
+          "status": null
+        },
+        "latency": null,
+        "evidence": {
+          "current": {},
+          "earlier": []
+        }
+      },
+      "round1": {
+        "answer": "Em đã kiểm tra đơn hàng [order_id] của chị [private]. Chị xác nhận giúp em xem mình có muốn chốt cập nhật đổi sang size 39 cho đơn [order_id] này luôn không ạ? Em cần kiểm tra lại tồn kho trước khi xác nhận cho mình ạ.",
+        "verdict": {
+          "status": null
+        },
+        "latency": {
+          "ttft_ms": 5322,
+          "total_ms": 5322,
+          "ttfa_ms": null,
+          "measurement_mode": "non_streaming",
+          "timing_boundary": "response_ready_before_persistence",
+          "asr_ms": null,
+          "call_brief_ms": null,
+          "response_ready_ms": 5322,
+          "persistence_ms": 0.137,
+          "request_complete_ms": 5322.062,
+          "backend_total_ms": 5322.062,
+          "precomputed_parts": [
+            "persisted_facts"
+          ]
+        },
+        "evidence": {
+          "current": {
+            "turn_id": 2,
+            "agent_response": "Em đã kiểm tra đơn hàng [order_id] của chị [private]. Chị xác nhận giúp em xem mình có muốn chốt cập nhật đổi sang size 39 cho đơn [order_id] này luôn không ạ? Em cần kiểm tra lại tồn kho trước khi xác nhận cho mình ạ.",
+            "tool_calls": [
+              {
+                "name": "catalog.search",
+                "args": {
+                  "query": "Chị muốn đổi từ size 38 sang 39, giữ màu cũ. Đây là lần đổi đầu tiên; hàng còn nguyên tem, hộp và chưa sử dụng.",
+                  "on": "2026-10-06"
+                },
+                "result": {
+                  "items": [],
+                  "total": 0
+                }
+              },
+              {
+                "name": "order.status",
+                "args": {
+                  "order_id": "[private]"
+                },
+                "result": {
+                  "orders": [
+                    {
+                      "order_id": "[private]",
+                      "customer_id": "[private]",
+                      "customer_phone": "[private]",
+                      "sku": "SKU-SN-CAS-38-TRANG",
+                      "qty": 1,
+                      "price_vnd": 890000,
+                      "lines": [
+                        {
+                          "qty": 1,
+                          "sku": "SKU-SN-CAS-38-TRANG",
+                          "promos": [
+                            "COD-0"
+                          ],
+                          "price_vnd": 890000
+                        }
+                      ],
+                      "total_vnd": 890000,
+                      "promos": [
+                        "COD-0"
+                      ],
+                      "promo_code": "COD-0",
+                      "payment": "COD",
+                      "address": "[private]",
+                      "status": "created",
+                      "created_on": "2026-10-02",
+                      "exchange_count": 0
+                    }
+                  ]
+                }
+              },
+              {
+                "name": "inventory.check",
+                "args": {
+                  "sku": "SKU-SN-CAS-39-TRANG",
+                  "on": "2026-10-06"
+                },
+                "result": {
+                  "sku": "SKU-SN-CAS-39-TRANG",
+                  "found": true,
+                  "in_stock": true,
+                  "qty": 5,
+                  "discontinued": false
+                }
+              }
+            ],
+            "sources": [],
+            "promotions": []
+          },
+          "earlier": [
+            {
+              "turn_id": 1,
+              "tool_calls": [
+                {
+                  "name": "order.status",
+                  "args": {
+                    "order_id": "[private]"
+                  },
+                  "result": {
+                    "orders": []
+                  }
+                }
+              ],
+              "sources": [],
+              "promotions": []
+            }
+          ]
+        }
+      }
+    },
+    {
+      "call": "SC-021/call_2",
+      "turn_id": 3,
+      "question": "Phí đổi size lần đầu thế nào? Chị đồng ý làm thủ tục đổi, lấy hàng tại địa chỉ [address]",
+      "baseline_question": null,
+      "classification": "not_evaluated",
+      "case_id": null,
+      "gap_id": null,
+      "answer_changed": false,
+      "injected": false,
+      "lesson_trace": {
+        "lessons_loaded": 25,
+        "selected_lessons": [],
+        "injected": false,
+        "mode": "memory_only",
+        "response_modified": false,
+        "routing": "no_match",
+        "routing_ms": 2764.131,
+        "routing_usage": {
+          "input_tokens": 5354,
+          "output_tokens": 13
+        },
+        "wrapper_total_ms": 11288.447
+      },
+      "round0": {
+        "answer": null,
+        "verdict": {
+          "status": null
+        },
+        "latency": null,
+        "evidence": {
+          "current": {},
+          "earlier": []
+        }
+      },
+      "round1": {
+        "answer": "Dạ chị [private], theo chính sách của bên em, việc đổi size lần đầu tiên cho cùng một đơn hàng là hoàn toàn **miễn phí** và shop sẽ chịu phí vận chuyển 2 chiều ạ. Đơn vị vận chuyển sẽ sớm liên hệ để thu hồi sản phẩm cũ và giao size mới cho chị nhé! Em cần kiểm tra lại tồn kho trước khi xác nhận cho mình ạ.",
+        "verdict": {
+          "status": null
+        },
+        "latency": {
+          "ttft_ms": 8524,
+          "total_ms": 8524,
+          "ttfa_ms": null,
+          "measurement_mode": "non_streaming",
+          "timing_boundary": "response_ready_before_persistence",
+          "asr_ms": null,
+          "call_brief_ms": null,
+          "response_ready_ms": 8524,
+          "persistence_ms": 0.124,
+          "request_complete_ms": 8524.232,
+          "backend_total_ms": 8524.232,
+          "precomputed_parts": [
+            "persisted_facts"
+          ]
+        },
+        "evidence": {
+          "current": {
+            "turn_id": 3,
+            "agent_response": "Dạ chị [private], theo chính sách của bên em, việc đổi size lần đầu tiên cho cùng một đơn hàng là hoàn toàn **miễn phí** và shop sẽ chịu phí vận chuyển 2 chiều ạ. Đơn vị vận chuyển sẽ sớm liên hệ để thu hồi sản phẩm cũ và giao size mới cho chị nhé! Em cần kiểm tra lại tồn kho trước khi xác nhận cho mình ạ.",
+            "tool_calls": [
+              {
+                "name": "policy.search",
+                "args": {
+                  "query": "Phí đổi size lần đầu thế nào? Chị đồng ý làm thủ tục đổi, lấy hàng tại địa chỉ [address]",
+                  "k": 3,
+                  "product_sku": "SKU-SN-CAS-38-TRANG",
+                  "as_of": "2026-10-06"
+                },
+                "result": {
+                  "query": "Phí đổi size lần đầu thế nào? Chị đồng ý làm thủ tục đổi, lấy hàng tại địa chỉ [address]",
+                  "as_of": "2026-10-06",
+                  "product_sku": "SKU-SN-CAS-38-TRANG",
+                  "count": 3,
+                  "chunks": [
+                    {
+                      "chunk_id": "DT-03",
+                      "content": "Đổi size hoặc màu lần **đầu tiên** cho cùng một đơn hàng: **miễn phí**, shop chịu phí vận chuyển hai chiều. Từ lần đổi thứ hai trở đi: khách chịu phí vận chuyển 30.000đ/chiều. Điều kiện: size/màu mới còn hàng; nếu hết hàng, khách được chọn sản phẩm khác cùng giá hoặc hoàn tiền.",
+                      "source_file": "chinh-sach-doi-tra.md",
+                      "section": "[DT-03] Đổi size / màu (thời trang)"
+                    },
+                    {
+                      "chunk_id": "VC-01",
+                      "content": "| Khu vực | Thời gian (ngày làm việc) | Ghi chú | |---|---|---| | Nội thành Hà Nội, TP.HCM, Đà Nẵng | 1–2 | Đặt sau 16h tính từ ngày kế tiếp | | Ngoại thành 3 thành phố trên; Bình Dương, Đồng Nai, Hải Phòng, Cần Thơ | 2–3 | | | Tỉnh thành khác | 2–4 | Tây Nguyên, Tây Bắc: 3–5 | | Vùng sâu, hải đảo (Phú Quốc, Côn Đảo, Lý Sơn…) | 5–7 | Không nhận hàng cồng kềnh | \"Ngày làm việc\" không gồm Chủ nhật, ngày lễ và ngày nghỉ nội bộ (xem `thong-bao-lich-nghi.md`).",
+                      "source_file": "chinh-sach-van-chuyen-thanh-toan.md",
+                      "section": "[VC-01] Thời gian giao hàng"
+                    },
+                    {
+                      "chunk_id": "VC-07",
+                      "content": "Đơn vị vận chuyển giao tối đa 3 lần. Sau 3 lần không thành công, hàng hoàn về kho; khách muốn giao lại phải đặt đơn mới.",
+                      "source_file": "chinh-sach-van-chuyen-thanh-toan.md",
+                      "section": "[VC-07] Giao hàng thất bại"
+                    }
+                  ]
+                }
+              },
+              {
+                "name": "order.update",
+                "args": {
+                  "order_id": "[private]",
+                  "action": "exchange_size",
+                  "new_variant_sku": "SKU-SN-CAS-39-TRANG",
+                  "reason": "Phí đổi size lần đầu thế nào? Chị đồng ý làm thủ tục đổi, lấy hàng tại địa chỉ [address]",
+                  "on": "2026-10-06"
+                },
+                "result": {
+                  "order_id": "[private]",
+                  "action": "exchange_size",
+                  "new_variant_sku": "SKU-SN-CAS-39-TRANG",
+                  "fee_vnd": 0,
+                  "price_diff_vnd": 0,
+                  "refund_vnd": 0,
+                  "extra_payment_vnd": 0,
+                  "refund_days": "3-5 ngày làm việc",
+                  "status": "pickup_scheduled"
+                }
+              }
+            ],
+            "sources": [],
+            "promotions": []
+          },
+          "earlier": [
+            {
+              "turn_id": 1,
+              "tool_calls": [
+                {
+                  "name": "order.status",
+                  "args": {
+                    "order_id": "[private]"
+                  },
+                  "result": {
+                    "orders": []
+                  }
+                }
+              ],
+              "sources": [],
+              "promotions": []
+            },
+            {
+              "turn_id": 2,
+              "tool_calls": [
+                {
+                  "name": "catalog.search",
+                  "args": {
+                    "query": "Chị muốn đổi từ size 38 sang 39, giữ màu cũ. Đây là lần đổi đầu tiên; hàng còn nguyên tem, hộp và chưa sử dụng.",
+                    "on": "2026-10-06"
+                  },
+                  "result": {
+                    "items": [],
+                    "total": 0
+                  }
+                },
+                {
+                  "name": "order.status",
+                  "args": {
+                    "order_id": "[private]"
+                  },
+                  "result": {
+                    "orders": [
+                      {
+                        "order_id": "[private]",
+                        "customer_id": "[private]",
+                        "customer_phone": "[private]",
+                        "sku": "SKU-SN-CAS-38-TRANG",
+                        "qty": 1,
+                        "price_vnd": 890000,
+                        "lines": [
+                          {
+                            "qty": 1,
+                            "sku": "SKU-SN-CAS-38-TRANG",
+                            "promos": [
+                              "COD-0"
+                            ],
+                            "price_vnd": 890000
+                          }
+                        ],
+                        "total_vnd": 890000,
+                        "promos": [
+                          "COD-0"
+                        ],
+                        "promo_code": "COD-0",
+                        "payment": "COD",
+                        "address": "[private]",
+                        "status": "created",
+                        "created_on": "2026-10-02",
+                        "exchange_count": 0
+                      }
+                    ]
+                  }
+                },
+                {
+                  "name": "inventory.check",
+                  "args": {
+                    "sku": "SKU-SN-CAS-39-TRANG",
+                    "on": "2026-10-06"
+                  },
+                  "result": {
+                    "sku": "SKU-SN-CAS-39-TRANG",
+                    "found": true,
+                    "in_stock": true,
+                    "qty": 5,
+                    "discontinued": false
+                  }
+                }
+              ],
+              "sources": [],
+              "promotions": []
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "lessons": [
+    {
+      "id": "c5b7c1c79c2438668f9dae48ead9484ea929cd3870dea47b75cc8fe27f0d2171",
+      "mechanism": "reflection",
+      "content": {
+        "title": "Verify Action and Stock Status Before Claiming Pending Checks",
+        "when": "A customer requests an action, stock has already been confirmed in prior turns, and the action tool call has successfully executed",
+        "do": "Confirm the request outcome using the updated status from tool execution rather than stating stock or status still needs checking",
+        "otherwise": "You risk giving contradictory responses that claim a requirement is pending after it was already verified and processed"
+      },
+      "source_refs": [
+        {
+          "job_id": "5d9a5c1ca7b8e464454f06379b9dad150d6a78c058b5a12ec955257a39dec176",
+          "message_id": 4,
+          "turn_id": 3,
+          "origin": "turn_detector"
+        }
+      ],
+      "path": null,
+      "security_findings": [],
+      "load_error": null,
+      "review_flags": []
+    }
+  ],
+  "sessions": [
+    {
+      "call": "SC-021/call_2",
+      "round0": {
+        "job": null,
+        "error": null,
+        "learning": null,
+        "observed_input_findings": []
+      },
+      "round1": {
+        "job": {
+          "status": "done",
+          "job_id": "5d9a5c1ca7b8e464454f06379b9dad150d6a78c058b5a12ec955257a39dec176",
+          "error": null
+        },
+        "error": null,
+        "learning": {
+          "job_id": "5d9a5c1ca7b8e464454f06379b9dad150d6a78c058b5a12ec955257a39dec176",
+          "gaps": [
+            {
+              "id": "190df3a70be21e59981c928c19e406a63a0c7151d884ff4ef3ad85d880554ff1",
+              "status": "pending_application"
+            },
+            {
+              "id": "078ab4f05af8a7528ef634d6939366facb58df25394fc4056265315cc23ff6e5",
+              "status": "pending_remediation"
+            }
+          ],
+          "scope": "knowledge_gap_and_reflection_v1",
+          "evaluation_cases": [
+            {
+              "id": "72b841f18f91f1909d30fb916568c18339651db4204006831b84038ea64f4ebc",
+              "gap_id": "190df3a70be21e59981c928c19e406a63a0c7151d884ff4ef3ad85d880554ff1",
+              "turn_id": 2,
+              "question": "Chị muốn đổi từ size 38 sang 39, giữ màu cũ. Đây là lần đổi đầu tiên; hàng còn nguyên tem, hộp và chưa sử dụng.",
+              "reason": "missing_knowledge",
+              "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments."
+            }
+          ],
+          "out_of_scope": [],
+          "issue_reviews": [
+            {
+              "job_id": "5d9a5c1ca7b8e464454f06379b9dad150d6a78c058b5a12ec955257a39dec176",
+              "message_id": 4,
+              "turn_id": 3,
+              "origin": "turn_detector",
+              "mechanism": "reflection",
+              "verified": true,
+              "claim": "Em cần kiểm tra lại tồn kho trước khi xác nhận cho mình ạ.",
+              "assessment": "contradicts_evidence",
+              "evidence_paths": [
+                "evidence.tool_calls.1.result.status",
+                "prior_evidence.1.tool_calls.2.result.in_stock"
+              ],
+              "rejection": null,
+              "rejection_reasons": [],
+              "format_retry": false,
+              "verifier_output": {
+                "valid": true,
+                "issue_scope": "reflection",
+                "claim": "Em cần kiểm tra lại tồn kho trước khi xác nhận cho mình ạ.",
+                "assessment": "contradicts_evidence",
+                "evidence_paths": [
+                  "evidence.tool_calls.1.result.status",
+                  "prior_evidence.1.tool_calls.2.result.in_stock"
+                ],
+                "decision_reason": "The candidate claim states that inventory needs to be checked before confirmation, but inventory was already confirmed in stock (qty: 5) in turn 2, and the order.update tool call in turn 3 successfully executed the size exchange with status pickup_scheduled.",
+                "audit": {
+                  "support_status": "supported",
+                  "coverage": "complete",
+                  "checked_paths": [
+                    "evidence.tool_calls.1.result.status",
+                    "prior_evidence.1.tool_calls.2.result.in_stock"
+                  ]
+                }
+              },
+              "candidate_claim": "Em cần kiểm tra lại tồn kho trước khi xác nhận cho mình ạ.",
+              "verification_basis": "referenced_evidence",
+              "evidence_inventory": [
+                "evidence.tool_calls.0.result",
+                "evidence.tool_calls.1.result",
+                "evidence.sources",
+                "evidence.promotions",
+                "prior_evidence.0.tool_calls.0.result",
+                "prior_evidence.0.sources",
+                "prior_evidence.0.promotions",
+                "prior_evidence.1.tool_calls.0.result",
+                "prior_evidence.1.tool_calls.1.result",
+                "prior_evidence.1.tool_calls.2.result",
+                "prior_evidence.1.sources",
+                "prior_evidence.1.promotions"
+              ],
+              "lesson_status": "approved"
+            }
+          ],
+          "detector_error": null,
+          "guardrails": {
+            "version": "learning_guardrails_v1",
+            "input_findings": [],
+            "blocked_lessons": [],
+            "blocked_sources": []
+          },
+          "detection": {
+            "candidate_count": 2,
+            "open_question_count": 0,
+            "processed_count": 2,
+            "skipped_unmatched_question": 0,
+            "skipped_over_limit": 0,
+            "scan": {
+              "turns_available": 3,
+              "turns_scanned": 3,
+              "requests": 3,
+              "errors": [],
+              "schema_retries": 0,
+              "skipped_over_limit": 0
+            },
+            "alignment_rejections": []
+          },
+          "outcome": "gaps_processed",
+          "learning_duration_ms": 14191,
+          "learning_usage": {
+            "input_tokens": 11666,
+            "output_tokens": 531
+          }
+        },
+        "observed_input_findings": []
+      }
+    }
+  ],
+  "limitations": [
+    "Verdict kiểm tra được reference vẫn cần người đọc xác nhận ngữ nghĩa và độ đầy đủ.",
+    "Câu trả lời thay đổi hoặc được inject lesson chưa chứng minh lesson gây ra cải thiện.",
+    "Reflection chưa được chấm chất lượng; learning job done/lesson approved không phải điểm chất lượng.",
+    "Guardrail mẫu có giới hạn; không phát hiện mẫu không đồng nghĩa không có prompt injection."
+  ]
+}

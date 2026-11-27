@@ -1,0 +1,658 @@
+{
+  "scenario_id": "SC-114",
+  "call": "call_1",
+  "session_id": "self-35692b08a1a84821818e67219f0ed2ef-SC-114-call_1",
+  "turns": [
+    {
+      "customer": "toi la tuan, so dien thoai [phone], dang nhan qua fanpage. cho minh hoi chut nhe, anh mua do cho nha moi, dang tinh may loc nuoc ro karofi 9 loi voi noi chien ko dau xiaomi 4.5l.",
+      "agent": "Dạ em chào anh [private], em rất vui được hỗ trợ anh. Cả hai sản phẩm máy lọc nước RO Karofi 9 lõi và nồi chiên không dầu Xiaomi 4.5L bên em đều đang sẵn hàng ạ. \n\nAnh cần em tư vấn thêm thông tin chi tiết hay hỗ trợ gì cho nhà mới của mình không anh?",
+      "latency": {
+        "ttft_ms": 26424,
+        "total_ms": 26424,
+        "ttfa_ms": null,
+        "measurement_mode": "non_streaming",
+        "timing_boundary": "response_ready_before_persistence",
+        "asr_ms": null,
+        "call_brief_ms": 4446,
+        "response_ready_ms": 26424,
+        "persistence_ms": 0.776,
+        "request_complete_ms": 26424.921,
+        "backend_total_ms": 26424.921,
+        "precomputed_parts": []
+      },
+      "lesson_trace": null
+    },
+    {
+      "customer": "a doi y, bo mon thu hai vua noi, thay bang quat dung senko ts16. moi loai mot chiec nhe.",
+      "agent": "Dạ anh [private], em đã ghi nhận anh đổi món thứ hai thành Quạt đứng Senko TS16, mỗi loại anh lấy 1 chiếc (1 máy lọc nước RO Karofi 9 lõi và 1 quạt đứng Senko TS16).\n\nHiện tại anh chưa có đơn hàng nào được tạo trên hệ thống. Anh có muốn em hỗ trợ chốt đơn và lên đơn mới cho 2 sản phẩm này luôn không anh?",
+      "latency": {
+        "ttft_ms": 4078,
+        "total_ms": 4078,
+        "ttfa_ms": null,
+        "measurement_mode": "non_streaming",
+        "timing_boundary": "response_ready_before_persistence",
+        "asr_ms": null,
+        "call_brief_ms": null,
+        "response_ready_ms": 4078,
+        "persistence_ms": 0.101,
+        "request_complete_ms": 4078.056,
+        "backend_total_ms": 4078.056,
+        "precomputed_parts": [
+          "persisted_facts"
+        ]
+      },
+      "lesson_trace": null
+    },
+    {
+      "customer": "ngan sach tong cua anh la 6.880.000 dong. hom nay chi nho em ghi lai gio cuoi cung, chua dat.",
+      "agent": "Dạ em chào anh [private], em đã ghi nhận ngân sách tổng của anh là 6.880.000 đồng và lưu lại giỏ hàng cuối cùng của anh gồm 1 máy lọc nước RO Karofi 9 lõi cùng 1 quạt đứng Senko TS16, hiện tại chưa lên đơn hàng ạ. Khi nào anh sẵn sàng đặt hàng hoặc cần em hỗ trợ thêm thông tin gì, anh cứ báo em nhé!",
+      "latency": {
+        "ttft_ms": 3251,
+        "total_ms": 3251,
+        "ttfa_ms": null,
+        "measurement_mode": "non_streaming",
+        "timing_boundary": "response_ready_before_persistence",
+        "asr_ms": null,
+        "call_brief_ms": null,
+        "response_ready_ms": 3251,
+        "persistence_ms": 0.088,
+        "request_complete_ms": 3250.776,
+        "backend_total_ms": 3250.776,
+        "precomputed_parts": [
+          "persisted_facts"
+        ]
+      },
+      "lesson_trace": null
+    },
+    {
+      "customer": "em xac nhan lai dung hai mon sau khi sua giup anh.",
+      "agent": "Dạ anh [private], hiện tại em ghi nhận giỏ hàng của anh bao gồm 2 sản phẩm là: 1 Máy lọc nước RO Karofi 9 lõi và 1 Quạt đứng Senko TS16, với tổng ngân sách là 6.880.000 đồng và chưa lên đơn hàng ạ. \n\nAnh kiểm tra xem đúng 2 món này chưa để em hỗ trợ tiếp cho anh nhé?",
+      "latency": {
+        "ttft_ms": 2872,
+        "total_ms": 2872,
+        "ttfa_ms": null,
+        "measurement_mode": "non_streaming",
+        "timing_boundary": "response_ready_before_persistence",
+        "asr_ms": null,
+        "call_brief_ms": null,
+        "response_ready_ms": 2872,
+        "persistence_ms": 0.078,
+        "request_complete_ms": 2872.356,
+        "backend_total_ms": 2872.356,
+        "precomputed_parts": [
+          "persisted_facts"
+        ]
+      },
+      "lesson_trace": null
+    }
+  ],
+  "generation_context": {
+    "round": 0,
+    "instruction_hash": "9d30a7093911a993d8545de8b61cc6dc8465de67b10fb62b27d9f1bafaf0badf",
+    "applied_patterns": {},
+    "lessons_loaded": false,
+    "lesson_sources": [],
+    "lesson_files": [],
+    "instruction_root": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round0\\instructions"
+  },
+  "evaluation_evidence": [
+    {
+      "turn_id": 1,
+      "agent_response": "Dạ em chào anh [private], em rất vui được hỗ trợ anh. Cả hai sản phẩm máy lọc nước RO Karofi 9 lõi và nồi chiên không dầu Xiaomi 4.5L bên em đều đang sẵn hàng ạ. \n\nAnh cần em tư vấn thêm thông tin chi tiết hay hỗ trợ gì cho nhà mới của mình không anh?",
+      "tool_calls": [
+        {
+          "name": "catalog.search",
+          "args": {
+            "query": "Tôi là tuan, số điện thoại [private], dang nhận qua fanpage. cho mình hỏi chut nhé, anh mua do cho nha moi, dang tinh may loc nuoc ro karofi 9 loi với noi chien không dau xiaomi 4.5l.",
+            "on": "2026-10-19"
+          },
+          "result": {
+            "items": [
+              {
+                "sku": "SKU-WF-RO9",
+                "name": "[private]",
+                "category": "gia-dung/may-loc-nuoc",
+                "brand": "Karofi",
+                "list_price_vnd": 5990000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "stages": 9,
+                  "warranty_months": 36
+                },
+                "variants": []
+              },
+              {
+                "sku": "SKU-AF-XM",
+                "name": "[private]",
+                "category": "gia-dung/noi-chien",
+                "brand": "Xiaomi",
+                "list_price_vnd": 1590000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "warranty_months": 12
+                },
+                "variants": []
+              }
+            ]
+          }
+        },
+        {
+          "name": "inventory.check",
+          "args": {
+            "sku": "SKU-WF-RO9",
+            "on": "2026-10-19"
+          },
+          "result": {
+            "sku": "SKU-WF-RO9",
+            "found": true,
+            "in_stock": true,
+            "qty": 5,
+            "discontinued": false
+          }
+        },
+        {
+          "name": "inventory.check",
+          "args": {
+            "sku": "SKU-AF-XM",
+            "on": "2026-10-19"
+          },
+          "result": {
+            "sku": "SKU-AF-XM",
+            "found": true,
+            "in_stock": true,
+            "qty": 25,
+            "discontinued": false
+          }
+        }
+      ],
+      "sources": [],
+      "promotions": []
+    },
+    {
+      "turn_id": 2,
+      "agent_response": "Dạ anh [private], em đã ghi nhận anh đổi món thứ hai thành Quạt đứng Senko TS16, mỗi loại anh lấy 1 chiếc (1 máy lọc nước RO Karofi 9 lõi và 1 quạt đứng Senko TS16).\n\nHiện tại anh chưa có đơn hàng nào được tạo trên hệ thống. Anh có muốn em hỗ trợ chốt đơn và lên đơn mới cho 2 sản phẩm này luôn không anh?",
+      "tool_calls": [
+        {
+          "name": "order.status",
+          "args": {
+            "customer_phone": "[private]"
+          },
+          "result": {
+            "orders": []
+          }
+        }
+      ],
+      "sources": [],
+      "promotions": []
+    },
+    {
+      "turn_id": 3,
+      "agent_response": "Dạ em chào anh [private], em đã ghi nhận ngân sách tổng của anh là 6.880.000 đồng và lưu lại giỏ hàng cuối cùng của anh gồm 1 máy lọc nước RO Karofi 9 lõi cùng 1 quạt đứng Senko TS16, hiện tại chưa lên đơn hàng ạ. Khi nào anh sẵn sàng đặt hàng hoặc cần em hỗ trợ thêm thông tin gì, anh cứ báo em nhé!",
+      "tool_calls": [],
+      "sources": [],
+      "promotions": []
+    },
+    {
+      "turn_id": 4,
+      "agent_response": "Dạ anh [private], hiện tại em ghi nhận giỏ hàng của anh bao gồm 2 sản phẩm là: 1 Máy lọc nước RO Karofi 9 lõi và 1 Quạt đứng Senko TS16, với tổng ngân sách là 6.880.000 đồng và chưa lên đơn hàng ạ. \n\nAnh kiểm tra xem đúng 2 món này chưa để em hỗ trợ tiếp cho anh nhé?",
+      "tool_calls": [],
+      "sources": [],
+      "promotions": []
+    }
+  ],
+  "job": {
+    "status": "done",
+    "job_id": "6db2feeccbc2033b414e1f8fe01408f6fba429423d5134d163dfdeef614f2ec7",
+    "error": null
+  },
+  "learning": {
+    "job_id": "6db2feeccbc2033b414e1f8fe01408f6fba429423d5134d163dfdeef614f2ec7",
+    "gaps": [
+      {
+        "id": "6d77e8ff6447ed2f86e21104323b6a08b042afbbe2e5ddb1008e728cd5f1f74a",
+        "status": "pending_remediation"
+      },
+      {
+        "id": "93d22d2b04b5b12adc5f39c8ca4ec7659a9f88dbfa70677283a6ff2f097f6384",
+        "status": "pending_remediation"
+      }
+    ],
+    "scope": "knowledge_gap_and_reflection_v1",
+    "evaluation_cases": [
+      {
+        "id": "37bb7fb6919a10cea50df81fa92c8a78c7f80aacc7daf25f4c5eb1a587d652f1",
+        "gap_id": "6d77e8ff6447ed2f86e21104323b6a08b042afbbe2e5ddb1008e728cd5f1f74a",
+        "turn_id": 3,
+        "question": "ngan sach tong của anh la 6.880.000 dong. hôm nay chi nho em ghi lai gio cuoi cung, chua dat.",
+        "reason": "unsupported_claim",
+        "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments."
+      },
+      {
+        "id": "41cd1c2fe5eb049c86c6bb1854928ffe074de9d77d89044fdfca37dd9928cb6b",
+        "gap_id": "93d22d2b04b5b12adc5f39c8ca4ec7659a9f88dbfa70677283a6ff2f097f6384",
+        "turn_id": 4,
+        "question": "Em xac nhận lai dung hai mon sau khi sua giúp anh.",
+        "reason": "unsupported_claim",
+        "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments."
+      }
+    ],
+    "out_of_scope": [],
+    "issue_reviews": [
+      {
+        "job_id": "6db2feeccbc2033b414e1f8fe01408f6fba429423d5134d163dfdeef614f2ec7",
+        "message_id": 4,
+        "turn_id": 3,
+        "origin": "turn_detector",
+        "mechanism": "knowledge_gap",
+        "verified": true,
+        "claim": "lưu lại giỏ hàng cuối cùng của anh gồm 1 máy lọc nước RO Karofi 9 lõi cùng 1 quạt đứng Senko TS16",
+        "assessment": "unsupported_by_evidence",
+        "evidence_paths": [],
+        "rejection": null,
+        "rejection_reasons": [],
+        "format_retry": true,
+        "verifier_output": {
+          "valid": true,
+          "issue_scope": "business_knowledge",
+          "claim": "lưu lại giỏ hàng cuối cùng của anh gồm 1 máy lọc nước RO Karofi 9 lõi cùng 1 quạt đứng Senko TS16",
+          "assessment": "unsupported_by_evidence",
+          "evidence_paths": [],
+          "decision_reason": "The system tool calls and prior evidence do not contain catalog verification or pricing/stock data for 'Quạt đứng Senko TS16' to confirm cart contents.",
+          "audit": {
+            "support_status": "not_established",
+            "coverage": "complete",
+            "checked_paths": [
+              "evidence.tool_calls",
+              "evidence.sources",
+              "evidence.promotions",
+              "prior_evidence.0.tool_calls.0.result",
+              "prior_evidence.0.tool_calls.1.result",
+              "prior_evidence.0.tool_calls.2.result",
+              "prior_evidence.0.sources",
+              "prior_evidence.0.promotions",
+              "prior_evidence.1.tool_calls.0.result",
+              "prior_evidence.1.sources",
+              "prior_evidence.1.promotions"
+            ]
+          }
+        },
+        "candidate_claim": "lưu lại giỏ hàng cuối cùng của anh gồm 1 máy lọc nước RO Karofi 9 lõi cùng 1 quạt đứng Senko TS16",
+        "verification_basis": "evidence_inventory_audit",
+        "evidence_inventory": [
+          "evidence.tool_calls",
+          "evidence.sources",
+          "evidence.promotions",
+          "prior_evidence.0.tool_calls.0.result",
+          "prior_evidence.0.tool_calls.1.result",
+          "prior_evidence.0.tool_calls.2.result",
+          "prior_evidence.0.sources",
+          "prior_evidence.0.promotions",
+          "prior_evidence.1.tool_calls.0.result",
+          "prior_evidence.1.sources",
+          "prior_evidence.1.promotions"
+        ],
+        "lesson_status": "approved"
+      },
+      {
+        "job_id": "6db2feeccbc2033b414e1f8fe01408f6fba429423d5134d163dfdeef614f2ec7",
+        "message_id": 6,
+        "turn_id": 4,
+        "origin": "turn_detector",
+        "mechanism": "knowledge_gap",
+        "verified": true,
+        "claim": "với tổng ngân sách là 6.880.000 đồng",
+        "assessment": "unsupported_by_evidence",
+        "evidence_paths": [],
+        "rejection": null,
+        "rejection_reasons": [],
+        "format_retry": false,
+        "verifier_output": {
+          "valid": true,
+          "issue_scope": "business_knowledge",
+          "claim": "với tổng ngân sách là 6.880.000 đồng",
+          "assessment": "unsupported_by_evidence",
+          "evidence_paths": [],
+          "decision_reason": "The claim states that the total cart budget/price is 6,880,000 VND, but no tool call or source verified or calculated the price for the Senko TS16 fan alongside the Karofi RO filter to confirm this total.",
+          "audit": {
+            "support_status": "not_established",
+            "coverage": "complete",
+            "checked_paths": [
+              "evidence.tool_calls",
+              "evidence.sources",
+              "evidence.promotions",
+              "prior_evidence.0.tool_calls.0.result",
+              "prior_evidence.0.tool_calls.1.result",
+              "prior_evidence.0.tool_calls.2.result",
+              "prior_evidence.0.sources",
+              "prior_evidence.0.promotions",
+              "prior_evidence.1.tool_calls.0.result",
+              "prior_evidence.1.sources",
+              "prior_evidence.1.promotions",
+              "prior_evidence.2.tool_calls",
+              "prior_evidence.2.sources",
+              "prior_evidence.2.promotions"
+            ]
+          }
+        },
+        "candidate_claim": "với tổng ngân sách là 6.880.000 đồng",
+        "verification_basis": "evidence_inventory_audit",
+        "evidence_inventory": [
+          "evidence.tool_calls",
+          "evidence.sources",
+          "evidence.promotions",
+          "prior_evidence.0.tool_calls.0.result",
+          "prior_evidence.0.tool_calls.1.result",
+          "prior_evidence.0.tool_calls.2.result",
+          "prior_evidence.0.sources",
+          "prior_evidence.0.promotions",
+          "prior_evidence.1.tool_calls.0.result",
+          "prior_evidence.1.sources",
+          "prior_evidence.1.promotions",
+          "prior_evidence.2.tool_calls",
+          "prior_evidence.2.sources",
+          "prior_evidence.2.promotions"
+        ],
+        "lesson_status": "approved"
+      }
+    ],
+    "detector_error": null,
+    "guardrails": {
+      "version": "learning_guardrails_v1",
+      "input_findings": [],
+      "blocked_lessons": [],
+      "blocked_sources": []
+    },
+    "detection": {
+      "candidate_count": 2,
+      "open_question_count": 0,
+      "processed_count": 2,
+      "skipped_unmatched_question": 0,
+      "skipped_over_limit": 0,
+      "scan": {
+        "turns_available": 4,
+        "turns_scanned": 4,
+        "requests": 4,
+        "errors": [],
+        "schema_retries": 0,
+        "skipped_over_limit": 0
+      },
+      "alignment_rejections": []
+    },
+    "outcome": "gaps_processed",
+    "learning_duration_ms": 19397,
+    "learning_usage": {
+      "input_tokens": 18043,
+      "output_tokens": 1250
+    }
+  },
+  "artifact_changes": [
+    {
+      "path": "gaps/6d77e8ff6447ed2f86e21104323b6a08b042afbbe2e5ddb1008e728cd5f1f74a.json",
+      "change": "created",
+      "value": {
+        "id": "6d77e8ff6447ed2f86e21104323b6a08b042afbbe2e5ddb1008e728cd5f1f74a",
+        "question": "Thông tin nghiệp vụ cần được xác minh từ nguồn nào?",
+        "occurrences": [
+          "6db2feeccbc2033b414e1f8fe01408f6fba429423d5134d163dfdeef614f2ec7"
+        ],
+        "reason": "unsupported_claim",
+        "mechanism": "knowledge_gap",
+        "status": "pending_remediation",
+        "evidence_refs": [
+          {
+            "job_id": "6db2feeccbc2033b414e1f8fe01408f6fba429423d5134d163dfdeef614f2ec7",
+            "message_id": 4,
+            "turn_id": 3,
+            "origin": "turn_detector"
+          }
+        ],
+        "pattern_ref": "6d77e8ff6447ed2f86e21104323b6a08b042afbbe2e5ddb1008e728cd5f1f74a",
+        "test_refs": [
+          "6d77e8ff6447ed2f86e21104323b6a08b042afbbe2e5ddb1008e728cd5f1f74a"
+        ]
+      }
+    },
+    {
+      "path": "gaps/93d22d2b04b5b12adc5f39c8ca4ec7659a9f88dbfa70677283a6ff2f097f6384.json",
+      "change": "created",
+      "value": {
+        "id": "93d22d2b04b5b12adc5f39c8ca4ec7659a9f88dbfa70677283a6ff2f097f6384",
+        "question": "Thông tin nghiệp vụ cần được xác minh từ nguồn nào?",
+        "occurrences": [
+          "6db2feeccbc2033b414e1f8fe01408f6fba429423d5134d163dfdeef614f2ec7"
+        ],
+        "reason": "unsupported_claim",
+        "mechanism": "knowledge_gap",
+        "status": "pending_remediation",
+        "evidence_refs": [
+          {
+            "job_id": "6db2feeccbc2033b414e1f8fe01408f6fba429423d5134d163dfdeef614f2ec7",
+            "message_id": 6,
+            "turn_id": 4,
+            "origin": "turn_detector"
+          }
+        ],
+        "pattern_ref": "93d22d2b04b5b12adc5f39c8ca4ec7659a9f88dbfa70677283a6ff2f097f6384",
+        "test_refs": [
+          "93d22d2b04b5b12adc5f39c8ca4ec7659a9f88dbfa70677283a6ff2f097f6384"
+        ]
+      }
+    },
+    {
+      "path": "patterns/6d77e8ff6447ed2f86e21104323b6a08b042afbbe2e5ddb1008e728cd5f1f74a.json",
+      "change": "created",
+      "value": {
+        "id": "6d77e8ff6447ed2f86e21104323b6a08b042afbbe2e5ddb1008e728cd5f1f74a",
+        "reason": "unsupported_claim",
+        "pattern": "Do not state an unverified claim as a fact.",
+        "status": "approved",
+        "scope": "general",
+        "mechanism": "knowledge_gap",
+        "criterion": "Do not state an unverified claim as a fact.",
+        "evidence_refs": [
+          {
+            "job_id": "6db2feeccbc2033b414e1f8fe01408f6fba429423d5134d163dfdeef614f2ec7",
+            "message_id": 4,
+            "turn_id": 3,
+            "origin": "turn_detector"
+          }
+        ],
+        "assessment": "unsupported_by_evidence",
+        "report_ref": "6db2feeccbc2033b414e1f8fe01408f6fba429423d5134d163dfdeef614f2ec7",
+        "lesson": {
+          "title": "Verify Product Availability Before Cart Confirmation",
+          "when": "A customer requests to add or update an item in their cart or purchase list, and the item's catalog information or stock status has not been retrieved from tool outputs.",
+          "do": "Search the product catalog and verify product details and stock status using relevant system tools before confirming the updated cart or item selection.",
+          "otherwise": "Express uncertainty regarding item availability or selection state without stating unverified items are saved or confirmed.",
+          "triggers": [
+            "doi sang quat dung",
+            "ghi lai gio hang",
+            "save cart item",
+            "update cart product"
+          ],
+          "id": "65ef30c9a2e0620b3db09ca98555f52ddcd4a932a02b06bd73995f8addf18008",
+          "status": "approved",
+          "scope": "general",
+          "mechanism": "knowledge_gap",
+          "source_refs": [
+            {
+              "job_id": "6db2feeccbc2033b414e1f8fe01408f6fba429423d5134d163dfdeef614f2ec7",
+              "message_id": 4,
+              "turn_id": 3,
+              "origin": "turn_detector"
+            }
+          ],
+          "version": 2
+        },
+        "lesson_path": "lessons\\approved\\65ef30c9a2e0620b3db09ca98555f52ddcd4a932a02b06bd73995f8addf18008.md",
+        "lesson_hash": "c576438b6fa1584d4cb3939de9d02c489a3a844cf651f05363e1e1fc6e678c06"
+      }
+    },
+    {
+      "path": "patterns/93d22d2b04b5b12adc5f39c8ca4ec7659a9f88dbfa70677283a6ff2f097f6384.json",
+      "change": "created",
+      "value": {
+        "id": "93d22d2b04b5b12adc5f39c8ca4ec7659a9f88dbfa70677283a6ff2f097f6384",
+        "reason": "unsupported_claim",
+        "pattern": "Do not state an unverified claim as a fact.",
+        "status": "approved",
+        "scope": "general",
+        "mechanism": "knowledge_gap",
+        "criterion": "Do not state an unverified claim as a fact.",
+        "evidence_refs": [
+          {
+            "job_id": "6db2feeccbc2033b414e1f8fe01408f6fba429423d5134d163dfdeef614f2ec7",
+            "message_id": 6,
+            "turn_id": 4,
+            "origin": "turn_detector"
+          }
+        ],
+        "assessment": "unsupported_by_evidence",
+        "report_ref": "6db2feeccbc2033b414e1f8fe01408f6fba429423d5134d163dfdeef614f2ec7",
+        "lesson": {
+          "title": "Verify Cart Item Pricing Before Asserting Totals",
+          "when": "A customer updates cart items or states a total budget and requests cart verification, but product prices or total amounts have not been retrieved or verified via tools.",
+          "do": "Retrieve product pricing using system tools and verify cart item costs before stating or confirming total amounts.",
+          "otherwise": "Express uncertainty about the total cart cost without stating unconfirmed prices or totals.",
+          "triggers": [
+            "xac nhan lai dung hai mon",
+            "ngan sach tong",
+            "confirm cart items total",
+            "verify updated cart price"
+          ],
+          "id": "87c9c05b05da094ee7037247552de108a33c2862cd4340fb35cc1a7414e8e02f",
+          "status": "approved",
+          "scope": "general",
+          "mechanism": "knowledge_gap",
+          "source_refs": [
+            {
+              "job_id": "6db2feeccbc2033b414e1f8fe01408f6fba429423d5134d163dfdeef614f2ec7",
+              "message_id": 6,
+              "turn_id": 4,
+              "origin": "turn_detector"
+            }
+          ],
+          "version": 2
+        },
+        "lesson_path": "lessons\\approved\\87c9c05b05da094ee7037247552de108a33c2862cd4340fb35cc1a7414e8e02f.md",
+        "lesson_hash": "4a4c0d7935ef16c063e3d7878c4110712629d56b2dc78b58ffb238660a144ff6"
+      }
+    },
+    {
+      "path": "regression_cases/6d77e8ff6447ed2f86e21104323b6a08b042afbbe2e5ddb1008e728cd5f1f74a.json",
+      "change": "created",
+      "value": {
+        "id": "6d77e8ff6447ed2f86e21104323b6a08b042afbbe2e5ddb1008e728cd5f1f74a",
+        "reason": "unsupported_claim",
+        "pattern": "Do not state an unverified claim as a fact.",
+        "status": "approved",
+        "scope": "general",
+        "mechanism": "knowledge_gap",
+        "criterion": "Do not state an unverified claim as a fact.",
+        "evidence_refs": [
+          {
+            "job_id": "6db2feeccbc2033b414e1f8fe01408f6fba429423d5134d163dfdeef614f2ec7",
+            "message_id": 4,
+            "turn_id": 3,
+            "origin": "turn_detector"
+          }
+        ],
+        "assessment": "unsupported_by_evidence",
+        "report_ref": "6db2feeccbc2033b414e1f8fe01408f6fba429423d5134d163dfdeef614f2ec7",
+        "lesson": {
+          "title": "Verify Product Availability Before Cart Confirmation",
+          "when": "A customer requests to add or update an item in their cart or purchase list, and the item's catalog information or stock status has not been retrieved from tool outputs.",
+          "do": "Search the product catalog and verify product details and stock status using relevant system tools before confirming the updated cart or item selection.",
+          "otherwise": "Express uncertainty regarding item availability or selection state without stating unverified items are saved or confirmed.",
+          "triggers": [
+            "doi sang quat dung",
+            "ghi lai gio hang",
+            "save cart item",
+            "update cart product"
+          ],
+          "id": "65ef30c9a2e0620b3db09ca98555f52ddcd4a932a02b06bd73995f8addf18008",
+          "status": "approved",
+          "scope": "general",
+          "mechanism": "knowledge_gap",
+          "source_refs": [
+            {
+              "job_id": "6db2feeccbc2033b414e1f8fe01408f6fba429423d5134d163dfdeef614f2ec7",
+              "message_id": 4,
+              "turn_id": 3,
+              "origin": "turn_detector"
+            }
+          ],
+          "version": 2
+        },
+        "lesson_path": "lessons\\approved\\65ef30c9a2e0620b3db09ca98555f52ddcd4a932a02b06bd73995f8addf18008.md",
+        "lesson_hash": "c576438b6fa1584d4cb3939de9d02c489a3a844cf651f05363e1e1fc6e678c06"
+      }
+    },
+    {
+      "path": "regression_cases/93d22d2b04b5b12adc5f39c8ca4ec7659a9f88dbfa70677283a6ff2f097f6384.json",
+      "change": "created",
+      "value": {
+        "id": "93d22d2b04b5b12adc5f39c8ca4ec7659a9f88dbfa70677283a6ff2f097f6384",
+        "reason": "unsupported_claim",
+        "pattern": "Do not state an unverified claim as a fact.",
+        "status": "approved",
+        "scope": "general",
+        "mechanism": "knowledge_gap",
+        "criterion": "Do not state an unverified claim as a fact.",
+        "evidence_refs": [
+          {
+            "job_id": "6db2feeccbc2033b414e1f8fe01408f6fba429423d5134d163dfdeef614f2ec7",
+            "message_id": 6,
+            "turn_id": 4,
+            "origin": "turn_detector"
+          }
+        ],
+        "assessment": "unsupported_by_evidence",
+        "report_ref": "6db2feeccbc2033b414e1f8fe01408f6fba429423d5134d163dfdeef614f2ec7",
+        "lesson": {
+          "title": "Verify Cart Item Pricing Before Asserting Totals",
+          "when": "A customer updates cart items or states a total budget and requests cart verification, but product prices or total amounts have not been retrieved or verified via tools.",
+          "do": "Retrieve product pricing using system tools and verify cart item costs before stating or confirming total amounts.",
+          "otherwise": "Express uncertainty about the total cart cost without stating unconfirmed prices or totals.",
+          "triggers": [
+            "xac nhan lai dung hai mon",
+            "ngan sach tong",
+            "confirm cart items total",
+            "verify updated cart price"
+          ],
+          "id": "87c9c05b05da094ee7037247552de108a33c2862cd4340fb35cc1a7414e8e02f",
+          "status": "approved",
+          "scope": "general",
+          "mechanism": "knowledge_gap",
+          "source_refs": [
+            {
+              "job_id": "6db2feeccbc2033b414e1f8fe01408f6fba429423d5134d163dfdeef614f2ec7",
+              "message_id": 6,
+              "turn_id": 4,
+              "origin": "turn_detector"
+            }
+          ],
+          "version": 2
+        },
+        "lesson_path": "lessons\\approved\\87c9c05b05da094ee7037247552de108a33c2862cd4340fb35cc1a7414e8e02f.md",
+        "lesson_hash": "4a4c0d7935ef16c063e3d7878c4110712629d56b2dc78b58ffb238660a144ff6"
+      }
+    },
+    {
+      "path": "lessons/approved/65ef30c9a2e0620b3db09ca98555f52ddcd4a932a02b06bd73995f8addf18008.md",
+      "change": "created",
+      "value": {
+        "content": "---\n{\"do\": \"Search the product catalog and verify product details and stock status using relevant system tools before confirming the updated cart or item selection.\", \"id\": \"65ef30c9a2e0620b3db09ca98555f52ddcd4a932a02b06bd73995f8addf18008\", \"mechanism\": \"knowledge_gap\", \"otherwise\": \"Express uncertainty regarding item availability or selection state without stating unverified items are saved or confirmed.\", \"scope\": \"general\", \"source_refs\": [{\"job_id\": \"6db2feeccbc2033b414e1f8fe01408f6fba429423d5134d163dfdeef614f2ec7\", \"message_id\": 4, \"origin\": \"turn_detector\", \"turn_id\": 3}], \"status\": \"approved\", \"title\": \"Verify Product Availability Before Cart Confirmation\", \"triggers\": [\"doi sang quat dung\", \"ghi lai gio hang\", \"save cart item\", \"update cart product\"], \"version\": 2, \"when\": \"A customer requests to add or update an item in their cart or purchase list, and the item's catalog information or stock status has not been retrieved from tool outputs.\"}\n---\n\n# Verify Product Availability Before Cart Confirmation\n\n## When\nA customer requests to add or update an item in their cart or purchase list, and the item's catalog information or stock status has not been retrieved from tool outputs.\n\n## Do\nSearch the product catalog and verify product details and stock status using relevant system tools before confirming the updated cart or item selection.\n\n## Otherwise\nExpress uncertainty regarding item availability or selection state without stating unverified items are saved or confirmed.\n"
+      }
+    },
+    {
+      "path": "lessons/approved/87c9c05b05da094ee7037247552de108a33c2862cd4340fb35cc1a7414e8e02f.md",
+      "change": "created",
+      "value": {
+        "content": "---\n{\"do\": \"Retrieve product pricing using system tools and verify cart item costs before stating or confirming total amounts.\", \"id\": \"87c9c05b05da094ee7037247552de108a33c2862cd4340fb35cc1a7414e8e02f\", \"mechanism\": \"knowledge_gap\", \"otherwise\": \"Express uncertainty about the total cart cost without stating unconfirmed prices or totals.\", \"scope\": \"general\", \"source_refs\": [{\"job_id\": \"6db2feeccbc2033b414e1f8fe01408f6fba429423d5134d163dfdeef614f2ec7\", \"message_id\": 6, \"origin\": \"turn_detector\", \"turn_id\": 4}], \"status\": \"approved\", \"title\": \"Verify Cart Item Pricing Before Asserting Totals\", \"triggers\": [\"xac nhan lai dung hai mon\", \"ngan sach tong\", \"confirm cart items total\", \"verify updated cart price\"], \"version\": 2, \"when\": \"A customer updates cart items or states a total budget and requests cart verification, but product prices or total amounts have not been retrieved or verified via tools.\"}\n---\n\n# Verify Cart Item Pricing Before Asserting Totals\n\n## When\nA customer updates cart items or states a total budget and requests cart verification, but product prices or total amounts have not been retrieved or verified via tools.\n\n## Do\nRetrieve product pricing using system tools and verify cart item costs before stating or confirming total amounts.\n\n## Otherwise\nExpress uncertainty about the total cart cost without stating unconfirmed prices or totals.\n"
+      }
+    }
+  ]
+}

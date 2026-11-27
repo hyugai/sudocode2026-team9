@@ -1,0 +1,221 @@
+{
+  "id": "b397c86dbec833591a56ff6cf0ab0b0c186ccc95fa8f28d3fbcc57f260cf9af4",
+  "status": "done",
+  "attempts": 1,
+  "snapshot": {
+    "session": "e49d742a7d6f7b22690bd20362ad873d1b4b4c5038bf4652bdb742f2e24db5d5",
+    "revision": 3,
+    "messages": [
+      {
+        "message_id": 0,
+        "role": "customer",
+        "content": "Anh gọi tiếp về món đã hỏi, người nhà đã đồng ý rồi."
+      },
+      {
+        "message_id": 1,
+        "role": "agent",
+        "content": "Dạ em chào anh [private]! Rất vui vì người nhà anh đã đồng ý với mẫu tai nghe AirPod Pro (SKU-AP-PRO) mà em đã tư vấn cho anh trước đó ạ.\n\nBây giờ anh muốn em hỗ trợ lên đơn hàng cho mình luôn đúng không ạ? Anh cho em xin địa chỉ [address]"
+      },
+      {
+        "message_id": 2,
+        "role": "customer",
+        "content": "Em nhắc lại mẫu và giá đã trao đổi giúp anh; hôm nay hàng có sẵn chưa?"
+      },
+      {
+        "message_id": 3,
+        "role": "agent",
+        "content": "Dạ, sản phẩm em đã tư vấn cho anh là tai nghe AirPod Pro (SKU-AP-PRO). Giá hiện tại của sản phẩm là 7.690.000đ (đã áp dụng ưu đãi giảm 300.000đ từ mã AIR-OCT). \n\nHôm nay bên em đang có sẵn hàng anh nhé. Anh có muốn em hỗ trợ lên đơn hàng cho mình luôn không ạ?"
+      },
+      {
+        "message_id": 4,
+        "role": "customer",
+        "content": "Anh đồng ý giá hiện tại 7.690.000 đồng, mua một chiếc. Giao đến [address]"
+      },
+      {
+        "message_id": 5,
+        "role": "agent",
+        "content": "Dạ em cảm ơn anh [private] ạ. Em đã lên thành công đơn hàng tai nghe AirPods Pro (SKU-AP-PRO) cho anh với mã đơn hàng là **[order_id]**. \n\nThông tin đơn hàng của anh:\n- **Số lượng:** 01 chiếc\n- **Tổng thanh toán (COD):** 7.690.000đ (đã áp dụng ưu đãi giảm 300.000đ và miễn phí vận chuyển)\n- **Địa chỉ [address]\n- **Dự kiến giao hàng:** Ngày 24/10/2026\n\nBên em sẽ sớm liên hệ xác nhận và giao hàng đến cho anh nhé. Em cảm ơn anh đã ủng hộ cửa hàng ạ!"
+      }
+    ],
+    "open_questions": [],
+    "feedback": [],
+    "evidence_coverage": "per_turn_evidence",
+    "workflow_version": 4,
+    "turn_evidence": [
+      {
+        "turn_id": 1,
+        "agent_response": "Dạ em chào anh [private]! Rất vui vì người nhà anh đã đồng ý với mẫu tai nghe AirPod Pro (SKU-AP-PRO) mà em đã tư vấn cho anh trước đó ạ.\n\nBây giờ anh muốn em hỗ trợ lên đơn hàng cho mình luôn đúng không ạ? Anh cho em xin địa chỉ [address]",
+        "tool_calls": [],
+        "sources": [],
+        "promotions": []
+      },
+      {
+        "turn_id": 2,
+        "agent_response": "Dạ, sản phẩm em đã tư vấn cho anh là tai nghe AirPod Pro (SKU-AP-PRO). Giá hiện tại của sản phẩm là 7.690.000đ (đã áp dụng ưu đãi giảm 300.000đ từ mã AIR-OCT). \n\nHôm nay bên em đang có sẵn hàng anh nhé. Anh có muốn em hỗ trợ lên đơn hàng cho mình luôn không ạ?",
+        "tool_calls": [
+          {
+            "name": "catalog.search",
+            "args": {
+              "query": "Em nhắc lại mẫu và giá đã trao đổi giúp anh; hôm nay hàng có sẵn chưa?",
+              "on": "2026-10-22"
+            },
+            "result": {
+              "items": [],
+              "total": 0
+            }
+          },
+          {
+            "name": "pricing.get_quote",
+            "args": {
+              "on": "2026-10-22",
+              "customer_phone": "[private]",
+              "customer_id": "[private]",
+              "sku": "SKU-AP-PRO",
+              "qty": 1
+            },
+            "result": {
+              "sku": "SKU-AP-PRO",
+              "list_price_vnd": 7990000,
+              "final_price_vnd": 7690000,
+              "applied_promos": [
+                {
+                  "promo_code": "COD-0",
+                  "type": "freecod",
+                  "discount_vnd": 0
+                },
+                {
+                  "promo_code": "AIR-OCT",
+                  "type": "fixed",
+                  "discount_vnd": 300000
+                }
+              ],
+              "expired_promos": [],
+              "ineligible_promos": [
+                {
+                  "promo_code": "AIR-2ND-50",
+                  "reason": "min_qty"
+                },
+                {
+                  "promo_code": "[private]-SHIP0",
+                  "reason": "region"
+                },
+                {
+                  "promo_code": "TRADE-IN-AP",
+                  "reason": "requires_owned_sku"
+                }
+              ],
+              "not_applied_exclusive": [],
+              "freeship": true
+            }
+          },
+          {
+            "name": "inventory.check",
+            "args": {
+              "sku": "SKU-AP-PRO",
+              "on": "2026-10-22"
+            },
+            "result": {
+              "sku": "SKU-AP-PRO",
+              "found": true,
+              "in_stock": true,
+              "qty": 8,
+              "discontinued": false
+            }
+          }
+        ],
+        "sources": [],
+        "promotions": []
+      },
+      {
+        "turn_id": 3,
+        "agent_response": "Dạ em cảm ơn anh [private] ạ. Em đã lên thành công đơn hàng tai nghe AirPods Pro (SKU-AP-PRO) cho anh với mã đơn hàng là **[order_id]**. \n\nThông tin đơn hàng của anh:\n- **Số lượng:** 01 chiếc\n- **Tổng thanh toán (COD):** 7.690.000đ (đã áp dụng ưu đãi giảm 300.000đ và miễn phí vận chuyển)\n- **Địa chỉ [address]\n- **Dự kiến giao hàng:** Ngày 24/10/2026\n\nBên em sẽ sớm liên hệ xác nhận và giao hàng đến cho anh nhé. Em cảm ơn anh đã ủng hộ cửa hàng ạ!",
+        "tool_calls": [
+          {
+            "name": "inventory.check",
+            "args": {
+              "sku": "SKU-AP-PRO",
+              "on": "2026-10-22"
+            },
+            "result": {
+              "sku": "SKU-AP-PRO",
+              "found": true,
+              "in_stock": true,
+              "qty": 8,
+              "discontinued": false
+            }
+          },
+          {
+            "name": "pricing.get_quote",
+            "args": {
+              "on": "2026-10-22",
+              "customer_phone": "[private]",
+              "customer_id": "[private]",
+              "address": "[private]",
+              "sku": "SKU-AP-PRO",
+              "qty": 1
+            },
+            "result": {
+              "sku": "SKU-AP-PRO",
+              "list_price_vnd": 7990000,
+              "final_price_vnd": 7690000,
+              "applied_promos": [
+                {
+                  "promo_code": "COD-0",
+                  "type": "freecod",
+                  "discount_vnd": 0
+                },
+                {
+                  "promo_code": "AIR-OCT",
+                  "type": "fixed",
+                  "discount_vnd": 300000
+                }
+              ],
+              "expired_promos": [],
+              "ineligible_promos": [
+                {
+                  "promo_code": "AIR-2ND-50",
+                  "reason": "min_qty"
+                },
+                {
+                  "promo_code": "[private]-SHIP0",
+                  "reason": "region"
+                },
+                {
+                  "promo_code": "TRADE-IN-AP",
+                  "reason": "requires_owned_sku"
+                }
+              ],
+              "not_applied_exclusive": [],
+              "freeship": true
+            }
+          },
+          {
+            "name": "order.create",
+            "args": {
+              "customer_phone": "[private]",
+              "customer_id": "[private]",
+              "address": "[private]",
+              "idempotency_key": "self-a757e6dd800443c2a5219cbacc935ede-SC-006-call_2:call_2:create:SKU-AP-PRO",
+              "sku": "SKU-AP-PRO",
+              "qty": 1,
+              "price_vnd": 7690000,
+              "promo_code": "AIR-OCT",
+              "on": "2026-10-22",
+              "payment": "COD"
+            },
+            "result": {
+              "order_id": "[private]",
+              "status": "created",
+              "total_vnd": 7690000,
+              "needs_confirmation_call": true,
+              "estimated_delivery": "2026-10-24"
+            }
+          }
+        ],
+        "sources": [],
+        "promotions": []
+      }
+    ]
+  },
+  "error": null
+}

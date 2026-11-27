@@ -1,0 +1,93 @@
+{
+  "id": "e08c6a4dfacceb087dcffbeebbe302a25178389c8e6c0b1dfeebc8205e9a1c5f",
+  "status": "done",
+  "attempts": 1,
+  "snapshot": {
+    "session": "ce99e419f588144d10b360428b92e3f2b730ac722d324c14d64d61a561311b31",
+    "revision": 3,
+    "messages": [
+      {
+        "message_id": 0,
+        "role": "customer",
+        "content": "Tôi là [private], số điện thoại [private], đang nhắn qua Zalo OA. Chị muốn tiếp tục phần tư vấn lần trước. Câu hỏi cụ thể lần trước em còn lưu chứ?"
+      },
+      {
+        "message_id": 1,
+        "role": "agent",
+        "content": "Dạ em còn lưu câu hỏi lần trước: “ten ky thuat vien da kiem dinh chinh chiec se giao cho tôi là ai?”. Hiện hệ thống không có thông tin xác nhận cho đúng chiếc hàng sẽ giao, nên em chưa thể trả lời chính xác ạ."
+      },
+      {
+        "message_id": 2,
+        "role": "customer",
+        "content": "Em nhắc lại câu hỏi đó và cho chị biết đã có nguồn xác nhận chưa. Đừng đoán theo sản phẩm khác."
+      },
+      {
+        "message_id": 3,
+        "role": "agent",
+        "content": "Dạ em còn lưu câu hỏi lần trước: “ten ky thuat vien da kiem dinh chinh chiec se giao cho tôi là ai?”. Hiện hệ thống không có thông tin xác nhận cho đúng chiếc hàng sẽ giao, nên em chưa thể trả lời chính xác ạ."
+      },
+      {
+        "message_id": 4,
+        "role": "customer",
+        "content": "Nếu chưa có thông tin thì chị chờ, chưa mua và không cần chuyển máy."
+      },
+      {
+        "message_id": 5,
+        "role": "agent",
+        "content": "Dạ em còn lưu câu hỏi lần trước: “ten ky thuat vien da kiem dinh chinh chiec se giao cho tôi là ai?”. Hiện hệ thống không có thông tin xác nhận cho đúng chiếc hàng sẽ giao, nên em chưa thể trả lời chính xác ạ."
+      }
+    ],
+    "open_questions": [
+      "ten ky thuat vien da kiem dinh chinh chiec se giao cho tôi là ai?"
+    ],
+    "feedback": [],
+    "evidence_coverage": "per_turn_evidence",
+    "workflow_version": 4,
+    "turn_evidence": [
+      {
+        "turn_id": 1,
+        "agent_response": "Dạ em còn lưu câu hỏi lần trước: “ten ky thuat vien da kiem dinh chinh chiec se giao cho tôi là ai?”. Hiện hệ thống không có thông tin xác nhận cho đúng chiếc hàng sẽ giao, nên em chưa thể trả lời chính xác ạ.",
+        "tool_calls": [],
+        "sources": [],
+        "promotions": []
+      },
+      {
+        "turn_id": 2,
+        "agent_response": "Dạ em còn lưu câu hỏi lần trước: “ten ky thuat vien da kiem dinh chinh chiec se giao cho tôi là ai?”. Hiện hệ thống không có thông tin xác nhận cho đúng chiếc hàng sẽ giao, nên em chưa thể trả lời chính xác ạ.",
+        "tool_calls": [
+          {
+            "name": "order.status",
+            "args": {
+              "customer_phone": "[private]"
+            },
+            "result": {
+              "orders": []
+            }
+          }
+        ],
+        "sources": [],
+        "promotions": []
+      },
+      {
+        "turn_id": 3,
+        "agent_response": "Dạ em còn lưu câu hỏi lần trước: “ten ky thuat vien da kiem dinh chinh chiec se giao cho tôi là ai?”. Hiện hệ thống không có thông tin xác nhận cho đúng chiếc hàng sẽ giao, nên em chưa thể trả lời chính xác ạ.",
+        "tool_calls": [
+          {
+            "name": "catalog.search",
+            "args": {
+              "query": "Nếu chưa có thông tin thì chị chờ, chưa mua và không cần chuyển máy.",
+              "on": "2026-10-21"
+            },
+            "result": {
+              "items": [],
+              "total": 0
+            }
+          }
+        ],
+        "sources": [],
+        "promotions": []
+      }
+    ]
+  },
+  "error": null
+}

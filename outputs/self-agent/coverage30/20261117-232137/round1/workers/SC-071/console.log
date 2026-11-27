@@ -1,0 +1,103 @@
+[11/17/26 23:51:45] INFO     Processing request of type           server.py:733
+                             ListToolsRequest                                  
+[11/17/26 23:51:46] INFO     Processing request of type           server.py:733
+                             ListToolsRequest                                  
+[11/17/26 23:51:46] INFO     Processing request of type           server.py:733
+                             ListToolsRequest                                  
+Direct use of automatic function calling (AFC) in AsyncModels.generate_content is not recommended. Instead, we recommend to use AFC in AsyncChat.send_message. Similarly, direct use of AFC in AsyncModels.generate_content_stream is not recommended. Instead, we recommend to use AFC in AsyncChat.send_message_stream.
+[11/17/26 23:52:11] INFO     Processing request of type           server.py:733
+                             CallToolRequest                                   
+[11/17/26 23:52:12] INFO     Processing request of type           server.py:733
+                             CallToolRequest                                   
+[11/17/26 23:52:19] INFO     Processing request of type           server.py:733
+                             CallToolRequest                                   
+[11/17/26 23:52:43] INFO     Processing request of type           server.py:733
+                             CallToolRequest                                   
+[11/17/26 23:52:50] INFO     Processing request of type           server.py:733
+                             CallToolRequest                                   
+[11/17/26 23:52:58] INFO     Processing request of type           server.py:733
+                             CallToolRequest                                   
+                    INFO     Describing index 'policy-telesale'  indexes.py:231
+[11/17/26 23:52:59] INFO     HTTP Request: GET                  _client.py:1025
+                             https://api.pinecone.io/indexes/po                
+                             licy-telesale "HTTP/1.1 200 OK"                   
+                    INFO     Index client created for host      __init__.py:195
+                             https://policy-telesale-kvtrojy.sv                
+                             c.aped-4627-b74a.pinecone.io                      
+                    INFO     Connected to Pinecone policy      knowledge.py:173
+                             index policy-telesale                             
+                    INFO     Searching namespace 'policy-prod' __init__.py:1490
+                             with top_k=20                                     
+Round 1: loaded 2 patterns from this round 0; lessons_loaded=True
+
+==================================================
+STARTING DEEP AGENT RUN: Tôi là Hà, số điện thoại 0930048764, đang nhắn qua Zalo OA. Shop ơi, chị đang quan tâm Máy lọc không khí AirPure X.
+==================================================
+   -> Context: scope=turn, prompt_chars=2199, recent_messages=0, allowed_tools=[]
+   -> Model request estimate: ~2478 input tokens (system=4448 chars, messages=2984 chars, tools=0 chars, visible_tools=0)
+   -> Agent Response: Dạ em chào chị Hà, em rất vui được hỗ trợ chị qua Zalo. Sản phẩm Máy lọc không khí AirPure X bên em hiện đang có sẵn hàng chị nhé. 
+
+Máy sử dụng màng lọc HEPA H13 giúp lọc bụi mịn PM2.5 rất tốt, phù hợp cho phòng diện tích khoảng 25m² và có chế độ vận hành êm ái khi ngủ, cùng bảo hành chính hãng 24 tháng ạ.
+
+Chị Hà đang muốn tư vấn thêm thông tin gì về máy hay muốn hỗ trợ đặt hàng luôn ạ?
+
+DEEP AGENT RUN COMPLETED!
+==================================================
+
+
+==================================================
+STARTING DEEP AGENT RUN: Mã sê-ri chính xác của chiếc sẽ giao cho tôi là gì?
+==================================================
+   -> Context: scope=turn, prompt_chars=2193, recent_messages=2, allowed_tools=['check_inventory', 'search_catalog']
+   -> Model request estimate: ~3039 input tokens (system=4448 chars, messages=3475 chars, tools=1193 chars, visible_tools=2)
+   -> Agent Response: Dạ về câu hỏi của mình: “Mã sê-ri chính xác của chiếc sẽ giao cho tôi là gì?”. Hiện hệ thống không có thông tin xác nhận cho đúng chiếc hàng sẽ giao, nên em chưa thể trả lời chính xác ạ.
+
+DEEP AGENT RUN COMPLETED!
+==================================================
+
+
+==================================================
+STARTING DEEP AGENT RUN: Nếu hồ sơ không có thì em nói rõ giúp chị; chưa đặt hàng.
+==================================================
+   -> Context: scope=turn, prompt_chars=1807, recent_messages=2, allowed_tools=[]
+   -> Model request estimate: ~2382 input tokens (system=4448 chars, messages=2696 chars, tools=0 chars, visible_tools=0)
+   -> Agent Response: Dạ em còn lưu câu hỏi lần trước: “Mã sê-ri chính xác của chiếc sẽ giao cho tôi là gì?”. Hiện hệ thống không có thông tin xác nhận cho đúng chiếc hàng sẽ giao, nên em chưa thể trả lời chính xác ạ.
+
+DEEP AGENT RUN COMPLETED!
+==================================================
+
+SC-071/call_1: job=done, changed=1; D:\DOCUMENT\School\SUDO\sudo_code_2026-group_9\outputs\self-agent\coverage30\20261117-232137\round1\workers\SC-071\SC-071-call_1.json
+
+==================================================
+STARTING DEEP AGENT RUN: Tôi là Hà, số điện thoại 0930048764, đã nhắn qua Zalo OA. Chị gọi lại chuyện hôm trước. Câu hỏi cụ thể lần trước em còn lưu chứ?
+==================================================
+   -> Context: scope=turn, prompt_chars=1656, recent_messages=0, allowed_tools=['search_customer_memory_archive']
+   -> Model request estimate: ~2550 input tokens (system=4448 chars, messages=3201 chars, tools=0 chars, visible_tools=0)
+   -> Agent Response: Dạ em còn lưu câu hỏi lần trước: “Mã sê-ri chính xác của chiếc sẽ giao cho tôi là gì?”. Hiện hệ thống không có thông tin xác nhận cho đúng chiếc hàng sẽ giao, nên em chưa thể trả lời chính xác ạ.
+
+DEEP AGENT RUN COMPLETED!
+==================================================
+
+
+==================================================
+STARTING DEEP AGENT RUN: Em nhắc lại câu hỏi đó và cho chị biết đã có nguồn xác nhận chưa. Đừng đoán theo sản phẩm khác.
+==================================================
+   -> Context: scope=turn, prompt_chars=2062, recent_messages=2, allowed_tools=[]
+   -> Model request estimate: ~2170 input tokens (system=4448 chars, messages=2062 chars, tools=0 chars, visible_tools=0)
+   -> Agent Response: Dạ em còn lưu câu hỏi lần trước: “Mã sê-ri chính xác của chiếc sẽ giao cho tôi là gì?”. Hiện hệ thống không có thông tin xác nhận cho đúng chiếc hàng sẽ giao, nên em chưa thể trả lời chính xác ạ.
+
+DEEP AGENT RUN COMPLETED!
+==================================================
+
+
+==================================================
+STARTING DEEP AGENT RUN: Nếu chưa có thông tin thì chị chờ, chưa mua và không cần chuyển máy.
+==================================================
+   -> Context: scope=turn, prompt_chars=2099, recent_messages=2, allowed_tools=['check_inventory', 'search_catalog']
+   -> Model request estimate: ~2878 input tokens (system=4448 chars, messages=2991 chars, tools=1193 chars, visible_tools=2)
+   -> Agent Response: Dạ em còn lưu câu hỏi lần trước: “Mã sê-ri chính xác của chiếc sẽ giao cho tôi là gì?”. Hiện hệ thống không có thông tin xác nhận cho đúng chiếc hàng sẽ giao, nên em chưa thể trả lời chính xác ạ.
+
+DEEP AGENT RUN COMPLETED!
+==================================================
+
+SC-071/call_2: job=done, changed=2; D:\DOCUMENT\School\SUDO\sudo_code_2026-group_9\outputs\self-agent\coverage30\20261117-232137\round1\workers\SC-071\SC-071-call_2.json

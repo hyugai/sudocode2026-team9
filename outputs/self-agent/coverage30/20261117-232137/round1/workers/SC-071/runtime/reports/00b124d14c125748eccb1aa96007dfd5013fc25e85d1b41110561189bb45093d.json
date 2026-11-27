@@ -1,0 +1,51 @@
+{
+  "job_id": "00b124d14c125748eccb1aa96007dfd5013fc25e85d1b41110561189bb45093d",
+  "gaps": [
+    {
+      "id": "2a4a5d845594e8f9ab9ae5af021f0d569ba7b8d4f5561aab09a0cf07c93edf07",
+      "status": "pending_evidence"
+    }
+  ],
+  "scope": "knowledge_gap_and_reflection_v1",
+  "evaluation_cases": [
+    {
+      "id": "6c01f5b39e50a2bc04dc222567dd68bcd8989f2bc177565e1cb979b8dc69f61e",
+      "gap_id": "2a4a5d845594e8f9ab9ae5af021f0d569ba7b8d4f5561aab09a0cf07c93edf07",
+      "turn_id": 2,
+      "question": "Mã sê-ri chính xác của chiếc sẽ giao cho tôi là gì?",
+      "reason": "missing_knowledge",
+      "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments."
+    }
+  ],
+  "out_of_scope": [],
+  "issue_reviews": [],
+  "detector_error": null,
+  "guardrails": {
+    "version": "learning_guardrails_v1",
+    "input_findings": [],
+    "blocked_lessons": [],
+    "blocked_sources": []
+  },
+  "detection": {
+    "candidate_count": 1,
+    "open_question_count": 1,
+    "processed_count": 1,
+    "skipped_unmatched_question": 0,
+    "skipped_over_limit": 0,
+    "scan": {
+      "turns_available": 3,
+      "turns_scanned": 3,
+      "requests": 3,
+      "errors": [],
+      "schema_retries": 0,
+      "skipped_over_limit": 0
+    },
+    "alignment_rejections": []
+  },
+  "outcome": "gaps_processed",
+  "learning_duration_ms": 3832,
+  "learning_usage": {
+    "input_tokens": 3505,
+    "output_tokens": 56
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "id": "c6b1104031d0df90ad2ed65132de098d9611cad1551b3c72c20e00a5880c978b",
+  "reason": "unsupported_claim",
+  "pattern": "Do not state an unverified claim as a fact.",
+  "status": "approved",
+  "scope": "general",
+  "mechanism": "knowledge_gap",
+  "criterion": "Do not state an unverified claim as a fact.",
+  "evidence_refs": [
+    {
+      "job_id": "9bb33284f85d1dcbd5990d33456948f47561889c9a8d64ebca806776b2f03ceb",
+      "message_id": 2,
+      "turn_id": 2,
+      "origin": "turn_detector"
+    }
+  ],
+  "assessment": "contradicts_evidence",
+  "report_ref": "9bb33284f85d1dcbd5990d33456948f47561889c9a8d64ebca806776b2f03ceb",
+  "lesson": {
+    "title": "State Inventory Result Correctly After Check",
+    "when": "A tool call has already checked inventory and returned stock availability during the current turn",
+    "do": "Acknowledge the stock status using the completed tool result instead of claiming inventory still needs to be checked",
+    "otherwise": "Express uncertainty about stock availability until the official source or tool provides the answer",
+    "triggers": [
+      "kiểm tra tồn kho",
+      "đổi size",
+      "inventory check",
+      "đã kiểm tra kho"
+    ],
+    "id": "cbcfc99e307a660db7c3aee916aa806062dbbb4f91cde47f9f06f18742c95fe0",
+    "status": "approved",
+    "scope": "general",
+    "mechanism": "knowledge_gap",
+    "source_refs": [
+      {
+        "job_id": "9bb33284f85d1dcbd5990d33456948f47561889c9a8d64ebca806776b2f03ceb",
+        "message_id": 2,
+        "turn_id": 2,
+        "origin": "turn_detector"
+      }
+    ],
+    "version": 2
+  },
+  "lesson_path": "lessons\\approved\\cbcfc99e307a660db7c3aee916aa806062dbbb4f91cde47f9f06f18742c95fe0.md",
+  "lesson_hash": "42a464b0400fa31f63101018c1980e4adff16fc0efe0c35b33d6677ba20cc470"
+}

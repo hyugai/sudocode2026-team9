@@ -1,0 +1,91 @@
+{
+  "job_id": "b397c86dbec833591a56ff6cf0ab0b0c186ccc95fa8f28d3fbcc57f260cf9af4",
+  "gaps": [
+    {
+      "id": "e9ddc8d9c6037aae4162f87400ea018bbdae6571576e789b23b5f57f7671f7b3",
+      "status": "pending_remediation"
+    }
+  ],
+  "scope": "knowledge_gap_and_reflection_v1",
+  "evaluation_cases": [
+    {
+      "id": "e436c2cb362d8026d064635113141c12b04e2a0bb1ec31612820b547e5592566",
+      "gap_id": "e9ddc8d9c6037aae4162f87400ea018bbdae6571576e789b23b5f57f7671f7b3",
+      "turn_id": 1,
+      "question": "Anh gọi tiếp về món đã hỏi, người nhà đã đồng ý rồi.",
+      "reason": "unsupported_claim",
+      "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments."
+    }
+  ],
+  "out_of_scope": [],
+  "issue_reviews": [
+    {
+      "job_id": "b397c86dbec833591a56ff6cf0ab0b0c186ccc95fa8f28d3fbcc57f260cf9af4",
+      "message_id": 0,
+      "turn_id": 1,
+      "origin": "turn_detector",
+      "mechanism": "knowledge_gap",
+      "verified": true,
+      "claim": "Rất vui vì người nhà anh đã đồng ý với mẫu tai nghe AirPod Pro (SKU-AP-PRO) mà em đã tư vấn cho anh trước đó ạ.",
+      "assessment": "unsupported_by_evidence",
+      "evidence_paths": [],
+      "rejection": null,
+      "rejection_reasons": [],
+      "format_retry": false,
+      "verifier_output": {
+        "valid": true,
+        "issue_scope": "business_knowledge",
+        "claim": "Rất vui vì người nhà anh đã đồng ý với mẫu tai nghe AirPod Pro (SKU-AP-PRO) mà em đã tư vấn cho anh trước đó ạ.",
+        "assessment": "unsupported_by_evidence",
+        "evidence_paths": [],
+        "decision_reason": "The agent specific product claim (AirPod Pro / SKU-AP-PRO) from a prior call is not supported by any tool calls, sources, or conversation history provided in the context.",
+        "audit": {
+          "support_status": "not_established",
+          "coverage": "complete",
+          "checked_paths": [
+            "evidence.tool_calls",
+            "evidence.sources",
+            "evidence.promotions"
+          ]
+        }
+      },
+      "candidate_claim": "Rất vui vì người nhà anh đã đồng ý với mẫu tai nghe AirPod Pro (SKU-AP-PRO) mà em đã tư vấn cho anh trước đó ạ.",
+      "verification_basis": "evidence_inventory_audit",
+      "evidence_inventory": [
+        "evidence.tool_calls",
+        "evidence.sources",
+        "evidence.promotions"
+      ],
+      "lesson_status": "approved"
+    }
+  ],
+  "detector_error": null,
+  "guardrails": {
+    "version": "learning_guardrails_v1",
+    "input_findings": [],
+    "blocked_lessons": [],
+    "blocked_sources": []
+  },
+  "detection": {
+    "candidate_count": 1,
+    "open_question_count": 0,
+    "processed_count": 1,
+    "skipped_unmatched_question": 0,
+    "skipped_over_limit": 0,
+    "scan": {
+      "turns_available": 3,
+      "turns_scanned": 3,
+      "requests": 3,
+      "errors": [],
+      "schema_retries": 0,
+      "skipped_over_limit": 0
+    },
+    "alignment_rejections": []
+  },
+  "outcome": "gaps_processed",
+  "learning_duration_ms": 8821,
+  "learning_usage": {
+    "input_tokens": 5585,
+    "output_tokens": 389
+  }
+}

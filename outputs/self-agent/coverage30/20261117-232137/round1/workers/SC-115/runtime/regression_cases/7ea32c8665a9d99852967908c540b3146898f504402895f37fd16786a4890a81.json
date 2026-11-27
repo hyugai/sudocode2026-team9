@@ -1,0 +1,46 @@
+{
+  "id": "7ea32c8665a9d99852967908c540b3146898f504402895f37fd16786a4890a81",
+  "reason": "reasoning_failure",
+  "pattern": "Check the answer against evidence and preserve all applicable conditions.",
+  "status": "approved",
+  "scope": "general",
+  "mechanism": "reflection",
+  "criterion": "Check the answer against evidence and preserve all applicable conditions.",
+  "evidence_refs": [
+    {
+      "job_id": "c93785c4fadac836a504b5aa3ea21087b1f50ed7770e5960c3a8794d0476fb6a",
+      "message_id": 6,
+      "turn_id": 4,
+      "origin": "turn_detector"
+    }
+  ],
+  "assessment": "context_mismatch",
+  "report_ref": "c93785c4fadac836a504b5aa3ea21087b1f50ed7770e5960c3a8794d0476fb6a",
+  "lesson": {
+    "title": "Exclude Cancelled Items During Order Creation",
+    "when": "the customer explicitly asks to exclude or remove a cancelled item from the final order",
+    "do": "verify the updated cart contents and create the order containing only the requested active items",
+    "otherwise": "express uncertainty about the updated cart composition and ask the customer to clarify the items to include before proceeding",
+    "triggers": [
+      "remove cancelled item",
+      "bỏ món đã hủy",
+      "exclude item from order",
+      "lên đơn bỏ món hủy"
+    ],
+    "id": "c8654348bff2001306a394bdaddedfa3021148111140c56445dbbb459aa43753",
+    "status": "approved",
+    "scope": "general",
+    "mechanism": "reflection",
+    "source_refs": [
+      {
+        "job_id": "c93785c4fadac836a504b5aa3ea21087b1f50ed7770e5960c3a8794d0476fb6a",
+        "message_id": 6,
+        "turn_id": 4,
+        "origin": "turn_detector"
+      }
+    ],
+    "version": 2
+  },
+  "lesson_path": "lessons\\approved\\c8654348bff2001306a394bdaddedfa3021148111140c56445dbbb459aa43753.md",
+  "lesson_hash": "dc4dce9c0898e7a1960788cfeabb8bd2487b97de3fb4150eb1f499d63e770e4f"
+}

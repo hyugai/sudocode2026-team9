@@ -1,0 +1,51 @@
+{
+  "job_id": "4542f1b8ea6d391c1061863d568c7c15e55d06cf6228c358640248fa29b92255",
+  "gaps": [
+    {
+      "id": "190df3a70be21e59981c928c19e406a63a0c7151d884ff4ef3ad85d880554ff1",
+      "status": "pending_evidence"
+    }
+  ],
+  "scope": "knowledge_gap_and_reflection_v1",
+  "evaluation_cases": [
+    {
+      "id": "2a55892bcac3f4b50262620da41862e7849c24360d4f09a664ee42e85c401895",
+      "gap_id": "190df3a70be21e59981c928c19e406a63a0c7151d884ff4ef3ad85d880554ff1",
+      "turn_id": 1,
+      "question": "Tôi là duc, số điện thoại [private], dang nhận qua fanpage. cho mình hỏi chut nhé, anh xem giày chay bo runlite 2 pro, size 41, màu xám con 1.352.000 dong theo run2-sale dung không?",
+      "reason": "missing_knowledge",
+      "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments."
+    }
+  ],
+  "out_of_scope": [],
+  "issue_reviews": [],
+  "detector_error": null,
+  "guardrails": {
+    "version": "learning_guardrails_v1",
+    "input_findings": [],
+    "blocked_lessons": [],
+    "blocked_sources": []
+  },
+  "detection": {
+    "candidate_count": 1,
+    "open_question_count": 0,
+    "processed_count": 1,
+    "skipped_unmatched_question": 0,
+    "skipped_over_limit": 0,
+    "scan": {
+      "turns_available": 3,
+      "turns_scanned": 3,
+      "requests": 3,
+      "errors": [],
+      "schema_retries": 0,
+      "skipped_over_limit": 0
+    },
+    "alignment_rejections": []
+  },
+  "outcome": "gaps_processed",
+  "learning_duration_ms": 8020,
+  "learning_usage": {
+    "input_tokens": 10538,
+    "output_tokens": 89
+  }
+}

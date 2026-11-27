@@ -1,0 +1,46 @@
+{
+  "id": "0c8b631b4fb487223de1988ffc4c07518a1c667b44b34c5cd5aaa26effdfafcf",
+  "reason": "unsupported_claim",
+  "pattern": "Do not state an unverified claim as a fact.",
+  "status": "approved",
+  "scope": "general",
+  "mechanism": "knowledge_gap",
+  "criterion": "Do not state an unverified claim as a fact.",
+  "evidence_refs": [
+    {
+      "job_id": "91c22c6a537edb819bf7965c4004f794b30a94c89134f0f5a905900f377f2f61",
+      "message_id": 6,
+      "turn_id": 4,
+      "origin": "turn_detector"
+    }
+  ],
+  "assessment": "unsupported_by_evidence",
+  "report_ref": "91c22c6a537edb819bf7965c4004f794b30a94c89134f0f5a905900f377f2f61",
+  "lesson": {
+    "title": "State Exact Voucher Rejection Reason",
+    "when": "A customer asks to apply a voucher code, and tool pricing results list the promo code under expired promotions rather than product-ineligible promotions.",
+    "do": "State clearly that the voucher program has expired.",
+    "otherwise": "State that information about the promo status is unverified.",
+    "triggers": [
+      "gift-filter",
+      "ma uu dai het han",
+      "het han voucher",
+      "expired promo code"
+    ],
+    "id": "8c16fd9ae1a9128ebced4e7006b1219e5a8dc6532d5d1646ad3dc5178f20cf98",
+    "status": "approved",
+    "scope": "general",
+    "mechanism": "knowledge_gap",
+    "source_refs": [
+      {
+        "job_id": "91c22c6a537edb819bf7965c4004f794b30a94c89134f0f5a905900f377f2f61",
+        "message_id": 6,
+        "turn_id": 4,
+        "origin": "turn_detector"
+      }
+    ],
+    "version": 2
+  },
+  "lesson_path": "lessons\\approved\\8c16fd9ae1a9128ebced4e7006b1219e5a8dc6532d5d1646ad3dc5178f20cf98.md",
+  "lesson_hash": "a4abdb1880b2160c5b70f27a5489723060542797eafed5d8679e51def21e4552"
+}

@@ -1,0 +1,46 @@
+{
+  "id": "97b6948c7ae86f698b4a637006ae302197e230228b37179ea151766555efda3a",
+  "reason": "unsupported_claim",
+  "pattern": "Do not state an unverified claim as a fact.",
+  "status": "approved",
+  "scope": "general",
+  "mechanism": "knowledge_gap",
+  "criterion": "Do not state an unverified claim as a fact.",
+  "evidence_refs": [
+    {
+      "job_id": "6f29a1c98cf8cc98db8461d30e0461ebc8f8db1286683de5cd18501ddc9eb1c4",
+      "message_id": 0,
+      "turn_id": 1,
+      "origin": "turn_detector"
+    }
+  ],
+  "assessment": "unsupported_by_evidence",
+  "report_ref": "6f29a1c98cf8cc98db8461d30e0461ebc8f8db1286683de5cd18501ddc9eb1c4",
+  "lesson": {
+    "title": "Avoid Inventing Past Promotional Prices",
+    "when": "Explaining why a promotional code has expired or why channel prices differ",
+    "do": "State only verified details present in tool outputs, such as promo expiration, without asserting specific past price amounts not supported by evidence",
+    "otherwise": "Express uncertainty about unverified past pricing instead of claiming specific prior figures",
+    "triggers": [
+      "giá kênh khác",
+      "mã giảm giá hết hạn",
+      "expired promo price",
+      "chênh lệch giá giữa các kênh"
+    ],
+    "id": "94e316736b3f6ea8bc8e21ce34d8bf6e14b4260e1a978fee33128b11f9351e3f",
+    "status": "approved",
+    "scope": "general",
+    "mechanism": "knowledge_gap",
+    "source_refs": [
+      {
+        "job_id": "6f29a1c98cf8cc98db8461d30e0461ebc8f8db1286683de5cd18501ddc9eb1c4",
+        "message_id": 0,
+        "turn_id": 1,
+        "origin": "turn_detector"
+      }
+    ],
+    "version": 2
+  },
+  "lesson_path": "lessons\\approved\\94e316736b3f6ea8bc8e21ce34d8bf6e14b4260e1a978fee33128b11f9351e3f.md",
+  "lesson_hash": "60dec2604a12ad8c57f2042bb47762df738fb8d54a8c75b3ee2ee6a32dec5c3a"
+}

@@ -1,0 +1,46 @@
+{
+  "id": "6d77e8ff6447ed2f86e21104323b6a08b042afbbe2e5ddb1008e728cd5f1f74a",
+  "reason": "unsupported_claim",
+  "pattern": "Do not state an unverified claim as a fact.",
+  "status": "approved",
+  "scope": "general",
+  "mechanism": "knowledge_gap",
+  "criterion": "Do not state an unverified claim as a fact.",
+  "evidence_refs": [
+    {
+      "job_id": "6db2feeccbc2033b414e1f8fe01408f6fba429423d5134d163dfdeef614f2ec7",
+      "message_id": 4,
+      "turn_id": 3,
+      "origin": "turn_detector"
+    }
+  ],
+  "assessment": "unsupported_by_evidence",
+  "report_ref": "6db2feeccbc2033b414e1f8fe01408f6fba429423d5134d163dfdeef614f2ec7",
+  "lesson": {
+    "title": "Verify Product Availability Before Cart Confirmation",
+    "when": "A customer requests to add or update an item in their cart or purchase list, and the item's catalog information or stock status has not been retrieved from tool outputs.",
+    "do": "Search the product catalog and verify product details and stock status using relevant system tools before confirming the updated cart or item selection.",
+    "otherwise": "Express uncertainty regarding item availability or selection state without stating unverified items are saved or confirmed.",
+    "triggers": [
+      "doi sang quat dung",
+      "ghi lai gio hang",
+      "save cart item",
+      "update cart product"
+    ],
+    "id": "65ef30c9a2e0620b3db09ca98555f52ddcd4a932a02b06bd73995f8addf18008",
+    "status": "approved",
+    "scope": "general",
+    "mechanism": "knowledge_gap",
+    "source_refs": [
+      {
+        "job_id": "6db2feeccbc2033b414e1f8fe01408f6fba429423d5134d163dfdeef614f2ec7",
+        "message_id": 4,
+        "turn_id": 3,
+        "origin": "turn_detector"
+      }
+    ],
+    "version": 2
+  },
+  "lesson_path": "lessons\\approved\\65ef30c9a2e0620b3db09ca98555f52ddcd4a932a02b06bd73995f8addf18008.md",
+  "lesson_hash": "c576438b6fa1584d4cb3939de9d02c489a3a844cf651f05363e1e1fc6e678c06"
+}

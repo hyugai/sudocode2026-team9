@@ -1,0 +1,508 @@
+{
+  "status": "failed",
+  "scenario_count": 30,
+  "scenario_ids": [
+    "SC-001",
+    "SC-003",
+    "SC-006",
+    "SC-012",
+    "SC-019",
+    "SC-021",
+    "SC-026",
+    "SC-031",
+    "SC-032",
+    "SC-041",
+    "SC-044",
+    "SC-045",
+    "SC-051",
+    "SC-054",
+    "SC-062",
+    "SC-066",
+    "SC-071",
+    "SC-074",
+    "SC-075",
+    "SC-081",
+    "SC-084",
+    "SC-085",
+    "SC-091",
+    "SC-095",
+    "SC-101",
+    "SC-104",
+    "SC-110",
+    "SC-111",
+    "SC-114",
+    "SC-115"
+  ],
+  "workers": 2,
+  "rounds": {
+    "round0": {
+      "scenarios": [
+        {
+          "scenario_id": "SC-001",
+          "status": "done",
+          "output": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round0\\workers\\SC-001",
+          "learning_root": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round0\\workers\\learning-memory\\SC-001",
+          "exit_code": 0
+        },
+        {
+          "scenario_id": "SC-003",
+          "status": "done",
+          "output": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round0\\workers\\SC-003",
+          "learning_root": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round0\\workers\\learning-memory\\SC-003",
+          "exit_code": 0
+        },
+        {
+          "scenario_id": "SC-006",
+          "status": "done",
+          "output": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round0\\workers\\SC-006",
+          "learning_root": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round0\\workers\\learning-memory\\SC-006",
+          "exit_code": 0
+        },
+        {
+          "scenario_id": "SC-012",
+          "status": "done",
+          "output": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round0\\workers\\SC-012",
+          "learning_root": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round0\\workers\\learning-memory\\SC-012",
+          "exit_code": 0
+        },
+        {
+          "scenario_id": "SC-019",
+          "status": "done",
+          "output": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round0\\workers\\SC-019",
+          "learning_root": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round0\\workers\\learning-memory\\SC-019",
+          "exit_code": 0
+        },
+        {
+          "scenario_id": "SC-021",
+          "status": "done",
+          "output": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round0\\workers\\SC-021",
+          "learning_root": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round0\\workers\\learning-memory\\SC-021",
+          "exit_code": 0
+        },
+        {
+          "scenario_id": "SC-026",
+          "status": "done",
+          "output": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round0\\workers\\SC-026",
+          "learning_root": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round0\\workers\\learning-memory\\SC-026",
+          "exit_code": 0
+        },
+        {
+          "scenario_id": "SC-031",
+          "status": "done",
+          "output": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round0\\workers\\SC-031",
+          "learning_root": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round0\\workers\\learning-memory\\SC-031",
+          "exit_code": 0
+        },
+        {
+          "scenario_id": "SC-032",
+          "status": "done",
+          "output": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round0\\workers\\SC-032",
+          "learning_root": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round0\\workers\\learning-memory\\SC-032",
+          "exit_code": 0
+        },
+        {
+          "scenario_id": "SC-041",
+          "status": "done",
+          "output": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round0\\workers\\SC-041",
+          "learning_root": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round0\\workers\\learning-memory\\SC-041",
+          "exit_code": 0
+        },
+        {
+          "scenario_id": "SC-044",
+          "status": "done",
+          "output": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round0\\workers\\SC-044",
+          "learning_root": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round0\\workers\\learning-memory\\SC-044",
+          "exit_code": 0
+        },
+        {
+          "scenario_id": "SC-045",
+          "status": "done",
+          "output": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round0\\workers\\SC-045",
+          "learning_root": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round0\\workers\\learning-memory\\SC-045",
+          "exit_code": 0
+        },
+        {
+          "scenario_id": "SC-051",
+          "status": "done",
+          "output": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round0\\workers\\SC-051",
+          "learning_root": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round0\\workers\\learning-memory\\SC-051",
+          "exit_code": 0
+        },
+        {
+          "scenario_id": "SC-054",
+          "status": "done",
+          "output": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round0\\workers\\SC-054",
+          "learning_root": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round0\\workers\\learning-memory\\SC-054",
+          "exit_code": 0
+        },
+        {
+          "scenario_id": "SC-062",
+          "status": "done",
+          "output": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round0\\workers\\SC-062",
+          "learning_root": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round0\\workers\\learning-memory\\SC-062",
+          "exit_code": 0
+        },
+        {
+          "scenario_id": "SC-066",
+          "status": "done",
+          "output": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round0\\workers\\SC-066",
+          "learning_root": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round0\\workers\\learning-memory\\SC-066",
+          "exit_code": 0
+        },
+        {
+          "scenario_id": "SC-071",
+          "status": "done",
+          "output": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round0\\workers\\SC-071",
+          "learning_root": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round0\\workers\\learning-memory\\SC-071",
+          "exit_code": 0
+        },
+        {
+          "scenario_id": "SC-074",
+          "status": "done",
+          "output": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round0\\workers\\SC-074",
+          "learning_root": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round0\\workers\\learning-memory\\SC-074",
+          "exit_code": 0
+        },
+        {
+          "scenario_id": "SC-075",
+          "status": "done",
+          "output": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round0\\workers\\SC-075",
+          "learning_root": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round0\\workers\\learning-memory\\SC-075",
+          "exit_code": 0
+        },
+        {
+          "scenario_id": "SC-081",
+          "status": "done",
+          "output": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round0\\workers\\SC-081",
+          "learning_root": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round0\\workers\\learning-memory\\SC-081",
+          "exit_code": 0
+        },
+        {
+          "scenario_id": "SC-084",
+          "status": "done",
+          "output": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round0\\workers\\SC-084",
+          "learning_root": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round0\\workers\\learning-memory\\SC-084",
+          "exit_code": 0
+        },
+        {
+          "scenario_id": "SC-085",
+          "status": "done",
+          "output": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round0\\workers\\SC-085",
+          "learning_root": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round0\\workers\\learning-memory\\SC-085",
+          "exit_code": 0
+        },
+        {
+          "scenario_id": "SC-091",
+          "status": "done",
+          "output": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round0\\workers\\SC-091",
+          "learning_root": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round0\\workers\\learning-memory\\SC-091",
+          "exit_code": 0
+        },
+        {
+          "scenario_id": "SC-095",
+          "status": "done",
+          "output": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round0\\workers\\SC-095",
+          "learning_root": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round0\\workers\\learning-memory\\SC-095",
+          "exit_code": 0
+        },
+        {
+          "scenario_id": "SC-101",
+          "status": "done",
+          "output": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round0\\workers\\SC-101",
+          "learning_root": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round0\\workers\\learning-memory\\SC-101",
+          "exit_code": 0
+        },
+        {
+          "scenario_id": "SC-104",
+          "status": "done",
+          "output": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round0\\workers\\SC-104",
+          "learning_root": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round0\\workers\\learning-memory\\SC-104",
+          "exit_code": 0
+        },
+        {
+          "scenario_id": "SC-110",
+          "status": "done",
+          "output": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round0\\workers\\SC-110",
+          "learning_root": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round0\\workers\\learning-memory\\SC-110",
+          "exit_code": 0
+        },
+        {
+          "scenario_id": "SC-111",
+          "status": "done",
+          "output": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round0\\workers\\SC-111",
+          "learning_root": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round0\\workers\\learning-memory\\SC-111",
+          "exit_code": 0
+        },
+        {
+          "scenario_id": "SC-114",
+          "status": "done",
+          "output": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round0\\workers\\SC-114",
+          "learning_root": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round0\\workers\\learning-memory\\SC-114",
+          "exit_code": 0
+        },
+        {
+          "scenario_id": "SC-115",
+          "status": "done",
+          "output": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round0\\workers\\SC-115",
+          "learning_root": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round0\\workers\\learning-memory\\SC-115",
+          "exit_code": 0
+        }
+      ],
+      "diagnostics": {
+        "sessions": 63,
+        "completed_learning_jobs": 63,
+        "detector_failures": 0,
+        "detected_candidates": 43,
+        "turns_scanned": 202,
+        "reviewed_issues": 34,
+        "verified_issues": 31,
+        "verified_per_reviewed": 0.9117647058823529,
+        "inventory_verified_issues": 29,
+        "alignment_rejections": 0,
+        "rejections": {
+          "evidence_authority_or_scope_not_verified": 1,
+          "verifier_rejected_issue": 2
+        },
+        "approved_lessons": 25,
+        "pending_lessons": 4,
+        "injected_turns": 0
+      }
+    },
+    "round1": {
+      "scenarios": [
+        {
+          "scenario_id": "SC-001",
+          "status": "done",
+          "output": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round1\\workers\\SC-001",
+          "learning_root": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round1\\workers\\learning-memory\\SC-001",
+          "exit_code": 0
+        },
+        {
+          "scenario_id": "SC-003",
+          "status": "done",
+          "output": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round1\\workers\\SC-003",
+          "learning_root": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round1\\workers\\learning-memory\\SC-003",
+          "exit_code": 0
+        },
+        {
+          "scenario_id": "SC-006",
+          "status": "done",
+          "output": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round1\\workers\\SC-006",
+          "learning_root": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round1\\workers\\learning-memory\\SC-006",
+          "exit_code": 0
+        },
+        {
+          "scenario_id": "SC-012",
+          "status": "done",
+          "output": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round1\\workers\\SC-012",
+          "learning_root": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round1\\workers\\learning-memory\\SC-012",
+          "exit_code": 0
+        },
+        {
+          "scenario_id": "SC-019",
+          "status": "done",
+          "output": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round1\\workers\\SC-019",
+          "learning_root": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round1\\workers\\learning-memory\\SC-019",
+          "exit_code": 0
+        },
+        {
+          "scenario_id": "SC-021",
+          "status": "done",
+          "output": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round1\\workers\\SC-021",
+          "learning_root": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round1\\workers\\learning-memory\\SC-021",
+          "exit_code": 0
+        },
+        {
+          "scenario_id": "SC-026",
+          "status": "done",
+          "output": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round1\\workers\\SC-026",
+          "learning_root": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round1\\workers\\learning-memory\\SC-026",
+          "exit_code": 0
+        },
+        {
+          "scenario_id": "SC-031",
+          "status": "done",
+          "output": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round1\\workers\\SC-031",
+          "learning_root": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round1\\workers\\learning-memory\\SC-031",
+          "exit_code": 0
+        },
+        {
+          "scenario_id": "SC-032",
+          "status": "done",
+          "output": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round1\\workers\\SC-032",
+          "learning_root": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round1\\workers\\learning-memory\\SC-032",
+          "exit_code": 0
+        },
+        {
+          "scenario_id": "SC-041",
+          "status": "done",
+          "output": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round1\\workers\\SC-041",
+          "learning_root": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round1\\workers\\learning-memory\\SC-041",
+          "exit_code": 0
+        },
+        {
+          "scenario_id": "SC-044",
+          "status": "done",
+          "output": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round1\\workers\\SC-044",
+          "learning_root": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round1\\workers\\learning-memory\\SC-044",
+          "exit_code": 0
+        },
+        {
+          "scenario_id": "SC-045",
+          "status": "done",
+          "output": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round1\\workers\\SC-045",
+          "learning_root": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round1\\workers\\learning-memory\\SC-045",
+          "exit_code": 0
+        },
+        {
+          "scenario_id": "SC-051",
+          "status": "done",
+          "output": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round1\\workers\\SC-051",
+          "learning_root": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round1\\workers\\learning-memory\\SC-051",
+          "exit_code": 0
+        },
+        {
+          "scenario_id": "SC-054",
+          "status": "done",
+          "output": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round1\\workers\\SC-054",
+          "learning_root": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round1\\workers\\learning-memory\\SC-054",
+          "exit_code": 0
+        },
+        {
+          "scenario_id": "SC-062",
+          "status": "done",
+          "output": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round1\\workers\\SC-062",
+          "learning_root": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round1\\workers\\learning-memory\\SC-062",
+          "exit_code": 0
+        },
+        {
+          "scenario_id": "SC-066",
+          "status": "done",
+          "output": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round1\\workers\\SC-066",
+          "learning_root": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round1\\workers\\learning-memory\\SC-066",
+          "exit_code": 0
+        },
+        {
+          "scenario_id": "SC-071",
+          "status": "done",
+          "output": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round1\\workers\\SC-071",
+          "learning_root": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round1\\workers\\learning-memory\\SC-071",
+          "exit_code": 0
+        },
+        {
+          "scenario_id": "SC-074",
+          "status": "done",
+          "output": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round1\\workers\\SC-074",
+          "learning_root": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round1\\workers\\learning-memory\\SC-074",
+          "exit_code": 0
+        },
+        {
+          "scenario_id": "SC-075",
+          "status": "done",
+          "output": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round1\\workers\\SC-075",
+          "learning_root": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round1\\workers\\learning-memory\\SC-075",
+          "exit_code": 0
+        },
+        {
+          "scenario_id": "SC-081",
+          "status": "done",
+          "output": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round1\\workers\\SC-081",
+          "learning_root": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round1\\workers\\learning-memory\\SC-081",
+          "exit_code": 0
+        },
+        {
+          "scenario_id": "SC-084",
+          "status": "done",
+          "output": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round1\\workers\\SC-084",
+          "learning_root": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round1\\workers\\learning-memory\\SC-084",
+          "exit_code": 0
+        },
+        {
+          "scenario_id": "SC-085",
+          "status": "done",
+          "output": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round1\\workers\\SC-085",
+          "learning_root": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round1\\workers\\learning-memory\\SC-085",
+          "exit_code": 0
+        },
+        {
+          "scenario_id": "SC-091",
+          "status": "done",
+          "output": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round1\\workers\\SC-091",
+          "learning_root": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round1\\workers\\learning-memory\\SC-091",
+          "exit_code": 0
+        },
+        {
+          "scenario_id": "SC-095",
+          "status": "done",
+          "output": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round1\\workers\\SC-095",
+          "learning_root": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round1\\workers\\learning-memory\\SC-095",
+          "exit_code": 0
+        },
+        {
+          "scenario_id": "SC-101",
+          "status": "done",
+          "output": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round1\\workers\\SC-101",
+          "learning_root": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round1\\workers\\learning-memory\\SC-101",
+          "exit_code": 0
+        },
+        {
+          "scenario_id": "SC-104",
+          "status": "done",
+          "output": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round1\\workers\\SC-104",
+          "learning_root": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round1\\workers\\learning-memory\\SC-104",
+          "exit_code": 0
+        },
+        {
+          "scenario_id": "SC-110",
+          "status": "done",
+          "output": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round1\\workers\\SC-110",
+          "learning_root": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round1\\workers\\learning-memory\\SC-110",
+          "exit_code": 0
+        },
+        {
+          "scenario_id": "SC-111",
+          "status": "done",
+          "output": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round1\\workers\\SC-111",
+          "learning_root": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round1\\workers\\learning-memory\\SC-111",
+          "exit_code": 0
+        },
+        {
+          "scenario_id": "SC-114",
+          "status": "done",
+          "output": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round1\\workers\\SC-114",
+          "learning_root": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round1\\workers\\learning-memory\\SC-114",
+          "exit_code": 0
+        },
+        {
+          "scenario_id": "SC-115",
+          "status": "done",
+          "output": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round1\\workers\\SC-115",
+          "learning_root": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round1\\workers\\learning-memory\\SC-115",
+          "exit_code": 0
+        }
+      ],
+      "diagnostics": {
+        "sessions": 63,
+        "completed_learning_jobs": 63,
+        "detector_failures": 0,
+        "detected_candidates": 46,
+        "turns_scanned": 202,
+        "reviewed_issues": 34,
+        "verified_issues": 32,
+        "verified_per_reviewed": 0.9411764705882353,
+        "inventory_verified_issues": 28,
+        "alignment_rejections": 0,
+        "rejections": {
+          "verifier_rejected_issue": 2
+        },
+        "approved_lessons": 23,
+        "pending_lessons": 6,
+        "injected_turns": 122
+      }
+    }
+  },
+  "learning_applied": true,
+  "warnings": [],
+  "limitation": "Round 1 shares only frozen lessons from all round-0 scenarios. Two rounds alone do not isolate sampling variance or prove unseen generalization.",
+  "error": "ValueError"
+}

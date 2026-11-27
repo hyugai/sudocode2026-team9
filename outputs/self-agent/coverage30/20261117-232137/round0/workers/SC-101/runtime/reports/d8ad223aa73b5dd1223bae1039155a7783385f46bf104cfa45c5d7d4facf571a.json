@@ -1,0 +1,91 @@
+{
+  "job_id": "d8ad223aa73b5dd1223bae1039155a7783385f46bf104cfa45c5d7d4facf571a",
+  "gaps": [
+    {
+      "id": "d3803d576fcc04307599bfeffd8e82f9005b398cefa6dd367fdd95006b93f429",
+      "status": "pending_remediation"
+    }
+  ],
+  "scope": "knowledge_gap_and_reflection_v1",
+  "evaluation_cases": [
+    {
+      "id": "7563e0d6e504ccd4a76cf25dc1b5fadf1a6485fa5b1a50f4308b7b4ce58794df",
+      "gap_id": "d3803d576fcc04307599bfeffd8e82f9005b398cefa6dd367fdd95006b93f429",
+      "turn_id": 1,
+      "question": "Tôi là [private], số điện thoại [private], đã nhắn qua Zalo OA. Chị gọi lại chuyện hôm trước, người nhà đồng ý đổi máy rồi.",
+      "reason": "unsupported_claim",
+      "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments."
+    }
+  ],
+  "out_of_scope": [],
+  "issue_reviews": [
+    {
+      "job_id": "d8ad223aa73b5dd1223bae1039155a7783385f46bf104cfa45c5d7d4facf571a",
+      "message_id": 0,
+      "turn_id": 1,
+      "origin": "turn_detector",
+      "mechanism": "knowledge_gap",
+      "verified": true,
+      "claim": "Dạ em chào chị [private], em nhớ thông tin đơn hàng máy lọc không khí mã OD188213 của chị rồi ạ. Hôm trước chị em mình có trao đổi về việc đổi sang mẫu mới (SKU-AP-X).",
+      "assessment": "unsupported_by_evidence",
+      "evidence_paths": [],
+      "rejection": null,
+      "rejection_reasons": [],
+      "format_retry": false,
+      "verifier_output": {
+        "valid": true,
+        "issue_scope": "business_knowledge",
+        "claim": "Dạ em chào chị [private], em nhớ thông tin đơn hàng máy lọc không khí mã OD188213 của chị rồi ạ. Hôm trước chị em mình có trao đổi về việc đổi sang mẫu mới (SKU-AP-X).",
+        "assessment": "unsupported_by_evidence",
+        "evidence_paths": [],
+        "decision_reason": "The claim asserts a specific prior conversation about exchanging order OD188213 for model SKU-AP-X, but no evidence source or conversation history supports this prior interaction fact.",
+        "audit": {
+          "support_status": "not_established",
+          "coverage": "complete",
+          "checked_paths": [
+            "evidence.tool_calls.0.result",
+            "evidence.sources",
+            "evidence.promotions"
+          ]
+        }
+      },
+      "candidate_claim": "Dạ em chào chị [private], em nhớ thông tin đơn hàng máy lọc không khí mã OD188213 của chị rồi ạ. Hôm trước chị em mình có trao đổi về việc đổi sang mẫu mới (SKU-AP-X).",
+      "verification_basis": "evidence_inventory_audit",
+      "evidence_inventory": [
+        "evidence.tool_calls.0.result",
+        "evidence.sources",
+        "evidence.promotions"
+      ],
+      "lesson_status": "approved"
+    }
+  ],
+  "detector_error": null,
+  "guardrails": {
+    "version": "learning_guardrails_v1",
+    "input_findings": [],
+    "blocked_lessons": [],
+    "blocked_sources": []
+  },
+  "detection": {
+    "candidate_count": 1,
+    "open_question_count": 0,
+    "processed_count": 1,
+    "skipped_unmatched_question": 0,
+    "skipped_over_limit": 0,
+    "scan": {
+      "turns_available": 3,
+      "turns_scanned": 3,
+      "requests": 3,
+      "errors": [],
+      "schema_retries": 0,
+      "skipped_over_limit": 0
+    },
+    "alignment_rejections": []
+  },
+  "outcome": "gaps_processed",
+  "learning_duration_ms": 8781,
+  "learning_usage": {
+    "input_tokens": 8036,
+    "output_tokens": 405
+  }
+}

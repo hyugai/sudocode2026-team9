@@ -1,0 +1,100 @@
+{
+  "job_id": "9a2ebcf8889de6e023bed8697687ed73b11ef093cc22eabb7aa22b69cb1065f6",
+  "gaps": [
+    {
+      "id": "1d754478380d1dcd40de378d80d28f32b6647322a75e8d5503e6e2e06b6b169f",
+      "status": "pending_remediation"
+    }
+  ],
+  "scope": "knowledge_gap_and_reflection_v1",
+  "evaluation_cases": [
+    {
+      "id": "6576ce8c684208bb4c47f66bf64055c4779d7e1c4ab1f2c64b5cb26f343cd615",
+      "gap_id": "1d754478380d1dcd40de378d80d28f32b6647322a75e8d5503e6e2e06b6b169f",
+      "turn_id": 2,
+      "question": "Giá 4.890.000 đồng thì chị đồng ý. Địa chỉ [address]",
+      "reason": "unsupported_claim",
+      "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments."
+    }
+  ],
+  "out_of_scope": [],
+  "issue_reviews": [
+    {
+      "job_id": "9a2ebcf8889de6e023bed8697687ed73b11ef093cc22eabb7aa22b69cb1065f6",
+      "message_id": 2,
+      "turn_id": 2,
+      "origin": "turn_detector",
+      "mechanism": "knowledge_gap",
+      "verified": true,
+      "claim": "ở cuộc gọi trước em đã hỗ trợ lên thành công đơn hàng **[order_id]** cho máy lọc không khí (SKU-AP-X) với giá 4.890.000 VNĐ, giao đến [address]",
+      "assessment": "contradicts_evidence",
+      "evidence_paths": [
+        "prior_evidence.0.tool_calls.3.result.order_id"
+      ],
+      "rejection": null,
+      "rejection_reasons": [],
+      "format_retry": false,
+      "verifier_output": {
+        "valid": true,
+        "issue_scope": "business_knowledge",
+        "claim": "ở cuộc gọi trước em đã hỗ trợ lên thành công đơn hàng **[order_id]** cho máy lọc không khí (SKU-AP-X) với giá 4.890.000 VNĐ, giao đến [address]",
+        "assessment": "contradicts_evidence",
+        "evidence_paths": [
+          "prior_evidence.0.tool_calls.3.result.order_id"
+        ],
+        "decision_reason": "The agent claims the order was successfully placed in a previous call, but turn 1 of the current session shows that order.create was executed during turn 1 of this call context.",
+        "audit": {
+          "support_status": "contradicted",
+          "coverage": "complete",
+          "checked_paths": [
+            "prior_evidence.0.tool_calls.3.result"
+          ]
+        }
+      },
+      "candidate_claim": "ở cuộc gọi trước em đã hỗ trợ lên thành công đơn hàng **[order_id]** cho máy lọc không khí (SKU-AP-X) với giá 4.890.000 VNĐ, giao đến [address]",
+      "verification_basis": "referenced_evidence",
+      "evidence_inventory": [
+        "evidence.tool_calls.0.result",
+        "evidence.tool_calls.1.result",
+        "evidence.sources",
+        "evidence.promotions",
+        "prior_evidence.0.tool_calls.0.result",
+        "prior_evidence.0.tool_calls.1.result",
+        "prior_evidence.0.tool_calls.2.result",
+        "prior_evidence.0.tool_calls.3.result",
+        "prior_evidence.0.sources",
+        "prior_evidence.0.promotions"
+      ],
+      "lesson_status": "approved"
+    }
+  ],
+  "detector_error": null,
+  "guardrails": {
+    "version": "learning_guardrails_v1",
+    "input_findings": [],
+    "blocked_lessons": [],
+    "blocked_sources": []
+  },
+  "detection": {
+    "candidate_count": 1,
+    "open_question_count": 0,
+    "processed_count": 1,
+    "skipped_unmatched_question": 0,
+    "skipped_over_limit": 0,
+    "scan": {
+      "turns_available": 2,
+      "turns_scanned": 2,
+      "requests": 2,
+      "errors": [],
+      "schema_retries": 0,
+      "skipped_over_limit": 0
+    },
+    "alignment_rejections": []
+  },
+  "outcome": "gaps_processed",
+  "learning_duration_ms": 9193,
+  "learning_usage": {
+    "input_tokens": 8922,
+    "output_tokens": 433
+  }
+}

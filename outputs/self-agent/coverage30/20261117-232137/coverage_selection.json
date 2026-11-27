@@ -1,0 +1,672 @@
+{
+  "schema_version": 1,
+  "name": "self_learning_coverage30_v1",
+  "source_directory": "dataset/main/scenarios_complete",
+  "selection_method": "Purposive coverage selection from SC-001 through SC-120, fixed before the new run; no selection by model outcome.",
+  "evaluation_scope": "Seen-scenario two-round experiment; not a held-out or population-weighted sample.",
+  "coverage_groups": [
+    {
+      "id": "consultation_stock",
+      "label": "Tư vấn, chờ người nhà và thay đổi tồn kho",
+      "scenario_ids": [
+        "SC-001",
+        "SC-003",
+        "SC-006"
+      ]
+    },
+    {
+      "id": "promotion_expiry",
+      "label": "Hết hạn khuyến mãi và giải thích giá cũ/mới",
+      "scenario_ids": [
+        "SC-012",
+        "SC-019"
+      ]
+    },
+    {
+      "id": "size_exchange",
+      "label": "Đổi size sau mua, giày và áo",
+      "scenario_ids": [
+        "SC-021",
+        "SC-026"
+      ]
+    },
+    {
+      "id": "policy_version",
+      "label": "Phân biệt chính sách cũ/hiện hành, khách chưa mua",
+      "scenario_ids": [
+        "SC-031",
+        "SC-032"
+      ]
+    },
+    {
+      "id": "three_calls",
+      "label": "Ba lần liên hệ, nhớ context, ASR và chính sách cũ",
+      "scenario_ids": [
+        "SC-041",
+        "SC-044",
+        "SC-045"
+      ]
+    },
+    {
+      "id": "fanpage_hotline",
+      "label": "Nối Fanpage sang hotline, teencode và chính sách cũ",
+      "scenario_ids": [
+        "SC-051",
+        "SC-054"
+      ]
+    },
+    {
+      "id": "out_of_scope",
+      "label": "Ngoài phạm vi tư vấn, chuyển người phụ trách và mã hết hạn",
+      "scenario_ids": [
+        "SC-062",
+        "SC-066"
+      ]
+    },
+    {
+      "id": "missing_unit_evidence",
+      "label": "Thông tin từng chiếc chưa có nguồn, ASR và chính sách cũ",
+      "scenario_ids": [
+        "SC-071",
+        "SC-074",
+        "SC-075"
+      ]
+    },
+    {
+      "id": "cross_channel_price",
+      "label": "Mâu thuẫn giá đa kênh, teencode và chính sách cũ",
+      "scenario_ids": [
+        "SC-081",
+        "SC-084",
+        "SC-085"
+      ]
+    },
+    {
+      "id": "shared_identity",
+      "label": "Hai người chung số, phân tách hồ sơ và chính sách cũ",
+      "scenario_ids": [
+        "SC-091",
+        "SC-095"
+      ]
+    },
+    {
+      "id": "returning_customer",
+      "label": "Khách lâu quay lại, SKU cũ, địa chỉ, thu cũ đổi mới",
+      "scenario_ids": [
+        "SC-101",
+        "SC-104",
+        "SC-110"
+      ]
+    },
+    {
+      "id": "basket_revision",
+      "label": "Giỏ nhiều món, sửa lựa chọn, teencode và chính sách cũ",
+      "scenario_ids": [
+        "SC-111",
+        "SC-114",
+        "SC-115"
+      ]
+    }
+  ],
+  "summary": {
+    "scenario_count": 30,
+    "persona_count": 12,
+    "hard_case_label_count_including_standard": 13,
+    "sessions_per_round": 63,
+    "customer_turns_per_round": 202,
+    "persona_counts": {
+      "khach_do_du_hoi_nguoi_nha": 3,
+      "khach_so_gia": 2,
+      "khach_da_mua_doi_size": 2,
+      "khach_hoi_nhieu_khong_mua": 2,
+      "khach_goi_lan_3_het_kien_nhan": 3,
+      "khach_da_kenh_fb_hotline": 2,
+      "khach_ngoai_pham_vi_chuyen_may": 2,
+      "khach_hoi_ngoai_tai_lieu": 3,
+      "khach_da_kenh_mau_thuan": 3,
+      "hai_nguoi_chung_sdt": 2,
+      "khach_quay_lai_sau_8_thang": 3,
+      "khach_mua_nhieu_mon": 3
+    },
+    "hard_case_counts": {
+      "standard": 1,
+      "het_hang_luc_tu_van_nhap_lai_truoc_khi_chot": 2,
+      "doi_khuyen_mai_het_han": 4,
+      "doi_size_sau_khi_nhan_hang": 2,
+      "phien_ban_chinh_sach_cu": 8,
+      "goi_lan_ba_mat_kien_nhan": 1,
+      "asr_loi_va_teencode": 6,
+      "cau_hoi_y_te_can_chuyen_may": 1,
+      "cau_hoi_ngoai_tai_lieu": 1,
+      "gia_da_kenh_thay_doi_theo_khuyen_mai": 1,
+      "hai_nguoi_chung_sdt": 1,
+      "khach_cu_ttl_sku_ngung_ban": 1,
+      "doi_y_gio_hang_nhieu_mon": 1
+    },
+    "channels": [
+      "chat_fanpage",
+      "hotline",
+      "zalo_oa"
+    ],
+    "input_modes": [
+      "asr_noisy",
+      "chat_teencode",
+      "clean"
+    ]
+  },
+  "limitations": [
+    "Covers every current persona/hard_case label, not every product, wording or combination.",
+    "Some scenarios share a customer or template; do not treat all turns as independent observations.",
+    "ASR-noisy inputs are replayed text, not end-to-end audio recognition tests.",
+    "Reflection, identity, handoff and tool actions need separate/manual review beyond the current knowledge-gap judge.",
+    "This subset is not an adversarial prompt-injection benchmark."
+  ],
+  "scenarios": [
+    {
+      "scenario_id": "SC-001",
+      "coverage_group": "consultation_stock",
+      "selection_reason": "Mẫu đối chứng luồng tư vấn bình thường; chưa đồng ý mua thì không tự tạo đơn.",
+      "persona": "khach_do_du_hoi_nguoi_nha",
+      "hard_case": null,
+      "channels": [
+        "hotline"
+      ],
+      "input_modes": [
+        "clean"
+      ],
+      "session_count": 2,
+      "customer_turn_count": 6,
+      "source_sha256": "621d484d48c488ff60a479534df132ccecee559b127a94307bb3e5005457c519"
+    },
+    {
+      "scenario_id": "SC-003",
+      "coverage_group": "consultation_stock",
+      "selection_reason": "Sản phẩm hết hàng ở lần đầu, cần kiểm tra lại khi khách quay lại.",
+      "persona": "khach_do_du_hoi_nguoi_nha",
+      "hard_case": "het_hang_luc_tu_van_nhap_lai_truoc_khi_chot",
+      "channels": [
+        "hotline"
+      ],
+      "input_modes": [
+        "clean"
+      ],
+      "session_count": 2,
+      "customer_turn_count": 6,
+      "source_sha256": "58b892cab0fd1fd3cdc8668ab1816b8f4c1c94cfb5091d6bc81221cd482720e8"
+    },
+    {
+      "scenario_id": "SC-006",
+      "coverage_group": "consultation_stock",
+      "selection_reason": "Kiểm tra biến động tồn kho trên mẫu máy khác, không suy diễn từ lần trước.",
+      "persona": "khach_do_du_hoi_nguoi_nha",
+      "hard_case": "het_hang_luc_tu_van_nhap_lai_truoc_khi_chot",
+      "channels": [
+        "hotline"
+      ],
+      "input_modes": [
+        "clean"
+      ],
+      "session_count": 2,
+      "customer_turn_count": 6,
+      "source_sha256": "5efe49ac1a45e729c234f4ae844c49d0b1206595077ae714b181c47829d0fae9"
+    },
+    {
+      "scenario_id": "SC-012",
+      "coverage_group": "promotion_expiry",
+      "selection_reason": "Giữ một case neo với run trước; xác minh ngày kết thúc và giải thích giá thay đổi.",
+      "persona": "khach_so_gia",
+      "hard_case": "doi_khuyen_mai_het_han",
+      "channels": [
+        "hotline"
+      ],
+      "input_modes": [
+        "clean"
+      ],
+      "session_count": 2,
+      "customer_turn_count": 6,
+      "source_sha256": "87ce828d3b7c9b80f27cfcab088eed9ba4609afeeb634fee3588c4e57320cbe7"
+    },
+    {
+      "scenario_id": "SC-019",
+      "coverage_group": "promotion_expiry",
+      "selection_reason": "Biến thể cách diễn đạt/xưng hô của cùng tình huống giá để kiểm tra tính nhất quán.",
+      "persona": "khach_so_gia",
+      "hard_case": "doi_khuyen_mai_het_han",
+      "channels": [
+        "hotline"
+      ],
+      "input_modes": [
+        "clean"
+      ],
+      "session_count": 2,
+      "customer_turn_count": 6,
+      "source_sha256": "c7e87c0567d47b587b8d0474982031493f3fabd31afc3493d6d5ec9791207819"
+    },
+    {
+      "scenario_id": "SC-021",
+      "coverage_group": "size_exchange",
+      "selection_reason": "Đổi size giày sau mua; kiểm tra điều kiện, phí và đơn đã tạo.",
+      "persona": "khach_da_mua_doi_size",
+      "hard_case": "doi_size_sau_khi_nhan_hang",
+      "channels": [
+        "hotline"
+      ],
+      "input_modes": [
+        "clean"
+      ],
+      "session_count": 2,
+      "customer_turn_count": 6,
+      "source_sha256": "ab81f3ed8971d8c329dba6f5ff13d1ff04a02b91e37a7d61fc46769394a3d32a"
+    },
+    {
+      "scenario_id": "SC-026",
+      "coverage_group": "size_exchange",
+      "selection_reason": "Đổi size áo, giữ màu; khác nhóm sản phẩm và hệ size với giày.",
+      "persona": "khach_da_mua_doi_size",
+      "hard_case": "doi_size_sau_khi_nhan_hang",
+      "channels": [
+        "hotline"
+      ],
+      "input_modes": [
+        "clean"
+      ],
+      "session_count": 2,
+      "customer_turn_count": 6,
+      "source_sha256": "78705b729d28b92f8bb7a2ad73b11e6bcc86c5cb625d94d57ff90d76eff10294"
+    },
+    {
+      "scenario_id": "SC-031",
+      "coverage_group": "policy_version",
+      "selection_reason": "Khách dẫn bài cũ về thời hạn/phí đổi size; vẫn chưa đồng ý đặt đơn.",
+      "persona": "khach_hoi_nhieu_khong_mua",
+      "hard_case": "phien_ban_chinh_sach_cu",
+      "channels": [
+        "hotline"
+      ],
+      "input_modes": [
+        "clean"
+      ],
+      "session_count": 2,
+      "customer_turn_count": 7,
+      "source_sha256": "90fd8a9ca493fb25d1aa36e66afbbaceadca4dd8f4f14f1a321ceefec08d0abe"
+    },
+    {
+      "scenario_id": "SC-032",
+      "coverage_group": "policy_version",
+      "selection_reason": "Cùng vấn đề phiên bản chính sách trên áo; kiểm tra không gắn lesson vào riêng giày.",
+      "persona": "khach_hoi_nhieu_khong_mua",
+      "hard_case": "phien_ban_chinh_sach_cu",
+      "channels": [
+        "hotline"
+      ],
+      "input_modes": [
+        "clean"
+      ],
+      "session_count": 2,
+      "customer_turn_count": 7,
+      "source_sha256": "0aa851126d4fee225cc2365f9bad0f46e0c41d32f81f6fd72fb1e1df32d7d85c"
+    },
+    {
+      "scenario_id": "SC-041",
+      "coverage_group": "three_calls",
+      "selection_reason": "Giữ sản phẩm, địa chỉ và thanh toán qua ba call, không hỏi lại vô ích.",
+      "persona": "khach_goi_lan_3_het_kien_nhan",
+      "hard_case": "goi_lan_ba_mat_kien_nhan",
+      "channels": [
+        "hotline"
+      ],
+      "input_modes": [
+        "clean"
+      ],
+      "session_count": 3,
+      "customer_turn_count": 7,
+      "source_sha256": "52f9ee768b00700dd004d1794b25f1a77e42476ad3efbfdad3b87be692e340aa"
+    },
+    {
+      "scenario_id": "SC-044",
+      "coverage_group": "three_calls",
+      "selection_reason": "Chuỗi ba call có text ASR nhiễu, trên sản phẩm khác.",
+      "persona": "khach_goi_lan_3_het_kien_nhan",
+      "hard_case": "asr_loi_va_teencode",
+      "channels": [
+        "hotline"
+      ],
+      "input_modes": [
+        "asr_noisy",
+        "clean"
+      ],
+      "session_count": 3,
+      "customer_turn_count": 7,
+      "source_sha256": "fdd50b2c31b8107ad035b53dd0821df5b8888b682fe6e1c3d5ddf05e80779f45"
+    },
+    {
+      "scenario_id": "SC-045",
+      "coverage_group": "three_calls",
+      "selection_reason": "Chuỗi ba call có câu hỏi chính sách cũ chen giữa luồng chốt.",
+      "persona": "khach_goi_lan_3_het_kien_nhan",
+      "hard_case": "phien_ban_chinh_sach_cu",
+      "channels": [
+        "hotline"
+      ],
+      "input_modes": [
+        "clean"
+      ],
+      "session_count": 3,
+      "customer_turn_count": 8,
+      "source_sha256": "bc118747c2d3c9c4868a72782bdeb858c2e47918571f75a4a6e4e4d684166c69"
+    },
+    {
+      "scenario_id": "SC-051",
+      "coverage_group": "fanpage_hotline",
+      "selection_reason": "Fanpage teencode sang hotline, tiếp nối sản phẩm và giá đã hỏi.",
+      "persona": "khach_da_kenh_fb_hotline",
+      "hard_case": "asr_loi_va_teencode",
+      "channels": [
+        "chat_fanpage",
+        "hotline"
+      ],
+      "input_modes": [
+        "chat_teencode",
+        "clean"
+      ],
+      "session_count": 2,
+      "customer_turn_count": 6,
+      "source_sha256": "1af9719fad618d6a1e683a1cf4103ac068d44b0749a6d0229cdb335cd1eb56c6"
+    },
+    {
+      "scenario_id": "SC-054",
+      "coverage_group": "fanpage_hotline",
+      "selection_reason": "Fanpage teencode kèm câu hỏi phiên bản chính sách cũ.",
+      "persona": "khach_da_kenh_fb_hotline",
+      "hard_case": "phien_ban_chinh_sach_cu",
+      "channels": [
+        "chat_fanpage",
+        "hotline"
+      ],
+      "input_modes": [
+        "chat_teencode",
+        "clean"
+      ],
+      "session_count": 2,
+      "customer_turn_count": 7,
+      "source_sha256": "4eec5c8bc256cb29be650f76fa571c084351431f62b23fce21ce7c0ab6fe483e"
+    },
+    {
+      "scenario_id": "SC-062",
+      "coverage_group": "out_of_scope",
+      "selection_reason": "Câu hỏi sau phẫu thuật vượt phạm vi; chuyển người phụ trách có bàn giao.",
+      "persona": "khach_ngoai_pham_vi_chuyen_may",
+      "hard_case": "cau_hoi_y_te_can_chuyen_may",
+      "channels": [
+        "hotline",
+        "zalo_oa"
+      ],
+      "input_modes": [
+        "clean"
+      ],
+      "session_count": 2,
+      "customer_turn_count": 6,
+      "source_sha256": "301e404837956d789829c01ad41aafa7ad88f9b347f844f406f5fa7e8569eb0b"
+    },
+    {
+      "scenario_id": "SC-066",
+      "coverage_group": "out_of_scope",
+      "selection_reason": "Câu hỏi ngoài phạm vi kết hợp yêu cầu dùng mã khuyến mãi hết hạn.",
+      "persona": "khach_ngoai_pham_vi_chuyen_may",
+      "hard_case": "doi_khuyen_mai_het_han",
+      "channels": [
+        "chat_fanpage",
+        "zalo_oa"
+      ],
+      "input_modes": [
+        "clean"
+      ],
+      "session_count": 2,
+      "customer_turn_count": 7,
+      "source_sha256": "2f92d536757c0e9e37a32e3b8d5301ea06fa28623b8ec2eb89dcc715ef64cdcf"
+    },
+    {
+      "scenario_id": "SC-071",
+      "coverage_group": "missing_unit_evidence",
+      "selection_reason": "Khách hỏi sê-ri chính xác từng chiếc, không thể suy ra từ thông tin model.",
+      "persona": "khach_hoi_ngoai_tai_lieu",
+      "hard_case": "cau_hoi_ngoai_tai_lieu",
+      "channels": [
+        "zalo_oa",
+        "hotline"
+      ],
+      "input_modes": [
+        "clean"
+      ],
+      "session_count": 2,
+      "customer_turn_count": 6,
+      "source_sha256": "73f22ecec7f64ed9f67d1600da99d76eb7c47545b9b3a1a1701c94522e090781"
+    },
+    {
+      "scenario_id": "SC-074",
+      "coverage_group": "missing_unit_evidence",
+      "selection_reason": "Câu hỏi cấp từng chiếc với text ASR nhiễu và tiếp nối qua kênh khác.",
+      "persona": "khach_hoi_ngoai_tai_lieu",
+      "hard_case": "asr_loi_va_teencode",
+      "channels": [
+        "hotline",
+        "zalo_oa"
+      ],
+      "input_modes": [
+        "asr_noisy",
+        "clean"
+      ],
+      "session_count": 2,
+      "customer_turn_count": 6,
+      "source_sha256": "669a01920e962d4cb28ea281e953e2e5f06b73b9ff6fa29bdc8379fdcbd18de0"
+    },
+    {
+      "scenario_id": "SC-075",
+      "coverage_group": "missing_unit_evidence",
+      "selection_reason": "Câu hỏi mã kiểm tra chất lượng riêng kết hợp chính sách cũ; tách hai loại thiếu sót.",
+      "persona": "khach_hoi_ngoai_tai_lieu",
+      "hard_case": "phien_ban_chinh_sach_cu",
+      "channels": [
+        "chat_fanpage",
+        "hotline"
+      ],
+      "input_modes": [
+        "clean"
+      ],
+      "session_count": 2,
+      "customer_turn_count": 7,
+      "source_sha256": "74d4989cc8097a6b908b24f0468b6da0f826d6ad54deba7b2ea29d798f56673a"
+    },
+    {
+      "scenario_id": "SC-081",
+      "coverage_group": "cross_channel_price",
+      "selection_reason": "Đối chiếu giá khuyến mãi và giá hiện hành khi khách chuyển kênh.",
+      "persona": "khach_da_kenh_mau_thuan",
+      "hard_case": "gia_da_kenh_thay_doi_theo_khuyen_mai",
+      "channels": [
+        "chat_fanpage",
+        "hotline"
+      ],
+      "input_modes": [
+        "clean"
+      ],
+      "session_count": 2,
+      "customer_turn_count": 6,
+      "source_sha256": "c7eed297b20e7452f299252837b15cf4d9e4513eb0c070064689590982be2919"
+    },
+    {
+      "scenario_id": "SC-084",
+      "coverage_group": "cross_channel_price",
+      "selection_reason": "Tình huống giá đa kênh với teencode và biến thể sản phẩm khác.",
+      "persona": "khach_da_kenh_mau_thuan",
+      "hard_case": "asr_loi_va_teencode",
+      "channels": [
+        "chat_fanpage",
+        "zalo_oa"
+      ],
+      "input_modes": [
+        "chat_teencode",
+        "clean"
+      ],
+      "session_count": 2,
+      "customer_turn_count": 6,
+      "source_sha256": "6b7ff27442c11e920b5b90bdf72a5dc2c7c1ea9b85dd555f68d11b9a9871da95"
+    },
+    {
+      "scenario_id": "SC-085",
+      "coverage_group": "cross_channel_price",
+      "selection_reason": "Giải thích giá đa kênh đồng thời xử lý câu hỏi chính sách cũ.",
+      "persona": "khach_da_kenh_mau_thuan",
+      "hard_case": "phien_ban_chinh_sach_cu",
+      "channels": [
+        "zalo_oa",
+        "chat_fanpage"
+      ],
+      "input_modes": [
+        "clean"
+      ],
+      "session_count": 2,
+      "customer_turn_count": 7,
+      "source_sha256": "ff7a1f9c66cd96173c46f714dc47fdabc7bd0fce11535975836e87a6c3250a20"
+    },
+    {
+      "scenario_id": "SC-091",
+      "coverage_group": "shared_identity",
+      "selection_reason": "Người thân dùng chung số điện thoại nhưng nhu cầu và hồ sơ phải tách riêng.",
+      "persona": "hai_nguoi_chung_sdt",
+      "hard_case": "hai_nguoi_chung_sdt",
+      "channels": [
+        "zalo_oa",
+        "chat_fanpage"
+      ],
+      "input_modes": [
+        "clean"
+      ],
+      "session_count": 2,
+      "customer_turn_count": 6,
+      "source_sha256": "fb629cbc825e6ff1325dc349980f9f6205ca41f1345f23fc7e0cd053f54208e6"
+    },
+    {
+      "scenario_id": "SC-095",
+      "coverage_group": "shared_identity",
+      "selection_reason": "Cùng rủi ro nhận diện kèm câu hỏi chính sách cũ, trên sản phẩm khác.",
+      "persona": "hai_nguoi_chung_sdt",
+      "hard_case": "phien_ban_chinh_sach_cu",
+      "channels": [
+        "zalo_oa",
+        "hotline"
+      ],
+      "input_modes": [
+        "clean"
+      ],
+      "session_count": 2,
+      "customer_turn_count": 7,
+      "source_sha256": "2d1900f7750984dc342275e94db797c025253c9d5ada38083b06518353b97afa"
+    },
+    {
+      "scenario_id": "SC-101",
+      "coverage_group": "returning_customer",
+      "selection_reason": "Khách quay lại sau nhiều tháng; đơn cũ, SKU cũ, thu cũ đổi mới và địa chỉ mới.",
+      "persona": "khach_quay_lai_sau_8_thang",
+      "hard_case": "khach_cu_ttl_sku_ngung_ban",
+      "channels": [
+        "zalo_oa",
+        "hotline"
+      ],
+      "input_modes": [
+        "clean"
+      ],
+      "session_count": 2,
+      "customer_turn_count": 7,
+      "source_sha256": "34c34e2b539aaa037dd16eead6486fbc5c1895862774e59c9f4fa7b4bd102d35"
+    },
+    {
+      "scenario_id": "SC-104",
+      "coverage_group": "returning_customer",
+      "selection_reason": "Luồng khách cũ với text ASR nhiễu, không phục hồi nhầm địa chỉ cũ.",
+      "persona": "khach_quay_lai_sau_8_thang",
+      "hard_case": "asr_loi_va_teencode",
+      "channels": [
+        "hotline",
+        "zalo_oa"
+      ],
+      "input_modes": [
+        "asr_noisy",
+        "clean"
+      ],
+      "session_count": 2,
+      "customer_turn_count": 7,
+      "source_sha256": "b575254a43d1e689d65c10768eed49288fee0c29095d6456118dbebf24e72185"
+    },
+    {
+      "scenario_id": "SC-110",
+      "coverage_group": "returning_customer",
+      "selection_reason": "Khách cũ, ASR nhiễu và mã quà tặng hết hạn; không cộng ưu đãi không còn hiệu lực.",
+      "persona": "khach_quay_lai_sau_8_thang",
+      "hard_case": "doi_khuyen_mai_het_han",
+      "channels": [
+        "hotline",
+        "zalo_oa"
+      ],
+      "input_modes": [
+        "asr_noisy",
+        "clean"
+      ],
+      "session_count": 2,
+      "customer_turn_count": 8,
+      "source_sha256": "8dd00a8e9bf6c6f046e86c55a92dc0514c44b1115982f6753ba609b0d2c69dd4"
+    },
+    {
+      "scenario_id": "SC-111",
+      "coverage_group": "basket_revision",
+      "selection_reason": "Sửa món thứ hai trong giỏ, lưu giỏ cuối và chốt đúng sau chuyển kênh.",
+      "persona": "khach_mua_nhieu_mon",
+      "hard_case": "doi_y_gio_hang_nhieu_mon",
+      "channels": [
+        "chat_fanpage",
+        "hotline"
+      ],
+      "input_modes": [
+        "clean"
+      ],
+      "session_count": 2,
+      "customer_turn_count": 8,
+      "source_sha256": "a45dbd53c97cc82124f4a5ecafe6a0eb022eb5e6e6ee99d8547dd32097c42b39"
+    },
+    {
+      "scenario_id": "SC-114",
+      "coverage_group": "basket_revision",
+      "selection_reason": "Giỏ nhiều món với teencode, đổi sản phẩm khác mẫu chuẩn.",
+      "persona": "khach_mua_nhieu_mon",
+      "hard_case": "asr_loi_va_teencode",
+      "channels": [
+        "chat_fanpage",
+        "zalo_oa"
+      ],
+      "input_modes": [
+        "chat_teencode",
+        "clean"
+      ],
+      "session_count": 2,
+      "customer_turn_count": 8,
+      "source_sha256": "afb72b0893c8962801303f2d53624ec32a5c0d2a46ae4b6bf5af52bbf6f2ef54"
+    },
+    {
+      "scenario_id": "SC-115",
+      "coverage_group": "basket_revision",
+      "selection_reason": "Giỏ nhiều món kèm câu hỏi chính sách cũ; không làm mất yêu cầu sửa giỏ.",
+      "persona": "khach_mua_nhieu_mon",
+      "hard_case": "phien_ban_chinh_sach_cu",
+      "channels": [
+        "zalo_oa",
+        "chat_fanpage"
+      ],
+      "input_modes": [
+        "clean"
+      ],
+      "session_count": 2,
+      "customer_turn_count": 9,
+      "source_sha256": "4f75c9ef545cbc20ef5a09b61ee378cadb5fbb1648fcc42012b8eeef4dbf432b"
+    }
+  ]
+}

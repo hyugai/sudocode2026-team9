@@ -1,0 +1,177 @@
+{
+  "id": "0fce900d47fec1039ed4213d8c5ffb0ae17dcf48f404e0a23421ded01458e404",
+  "status": "done",
+  "attempts": 1,
+  "snapshot": {
+    "session": "1497bf0ffaecf8f1892ac2570182271d33d5c20f4476d12bbfcd12f4c12842a0",
+    "revision": 3,
+    "messages": [
+      {
+        "message_id": 0,
+        "role": "customer",
+        "content": "Chào shop, anh xem Máy lọc không khí AirPure X đang còn 4.390.000 đồng nhờ AP-SEP, đúng không?"
+      },
+      {
+        "message_id": 1,
+        "role": "agent",
+        "content": "Dạ em chào anh [private], đúng rồi ạ! Hôm nay bên em đang áp dụng mã ưu đãi AP-SEP giảm 500.000đ cho sản phẩm Máy lọc không khí AirPure X (giá gốc 4.890.000đ), nên giá thanh toán cuối cùng chỉ còn 4.390.000đ và được miễn phí vận chuyển ạ.\n\nSản phẩm hiện đang có sẵn hàng. Anh có muốn em hỗ trợ lên đơn đặt hàng luôn cho mình không ạ?"
+      },
+      {
+        "message_id": 2,
+        "role": "customer",
+        "content": "Anh ưu tiên giá, ngân sách tối đa 4.990.000 đồng. Ưu đãi này hết ngày 30/09 phải không?"
+      },
+      {
+        "message_id": 3,
+        "role": "agent",
+        "content": "Dạ anh [private], máy lọc không khí AirPure X hiện đang có giá ưu đãi là 4.390.000đ (nằm trong ngân sách 4.990.000đ của anh) nhờ áp dụng mã AP-SEP giảm 500.000đ ạ. \n\nVề thời gian áp dụng, thông tin hiện tại thể hiện mã giảm giá AP-SEP đang hoạt động tốt cho đơn hàng hôm nay, nhưng hệ thống bên em chưa có thời hạn kết thúc cụ thể của mã này nên em chưa thể xác nhận chính xác mã có kéo dài đến ngày 30/09 hay không ạ.\n\nSản phẩm đang có giá rất tốt, anh có muốn em hỗ trợ đặt hàng luôn hôm nay để giữ mức giá ưu đãi này không ạ?"
+      },
+      {
+        "message_id": 4,
+        "role": "customer",
+        "content": "Chưa mua ngay đâu em, anh cần cân nhắc thêm."
+      },
+      {
+        "message_id": 5,
+        "role": "agent",
+        "content": "Dạ em hiểu rồi ạ, anh [private] cứ cân nhắc thêm cho thoải mái nhé. Khi nào cần hỗ trợ thông tin hoặc đặt hàng, anh cứ báo em nha. \n\nEm chúc anh một ngày tốt lành ạ!"
+      }
+    ],
+    "open_questions": [],
+    "feedback": [],
+    "evidence_coverage": "per_turn_evidence",
+    "workflow_version": 4,
+    "turn_evidence": [
+      {
+        "turn_id": 1,
+        "agent_response": "Dạ em chào anh [private], đúng rồi ạ! Hôm nay bên em đang áp dụng mã ưu đãi AP-SEP giảm 500.000đ cho sản phẩm Máy lọc không khí AirPure X (giá gốc 4.890.000đ), nên giá thanh toán cuối cùng chỉ còn 4.390.000đ và được miễn phí vận chuyển ạ.\n\nSản phẩm hiện đang có sẵn hàng. Anh có muốn em hỗ trợ lên đơn đặt hàng luôn cho mình không ạ?",
+        "tool_calls": [
+          {
+            "name": "catalog.search",
+            "args": {
+              "query": "Máy lọc không khí AirPure X",
+              "on": "2026-09-21"
+            },
+            "result": {
+              "items": [
+                {
+                  "sku": "SKU-AP-X",
+                  "name": "[private]",
+                  "category": "gia-dung/may-loc-khong-khi",
+                  "brand": "AirPure",
+                  "list_price_vnd": 4890000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "features": "HEPA H13, cảm biến PM2.5, chế độ ngủ",
+                    "room_area_m2": 25,
+                    "child_safe_lock": false,
+                    "warranty_months": 24
+                  },
+                  "variants": []
+                }
+              ],
+              "total": 1
+            }
+          },
+          {
+            "name": "inventory.check",
+            "args": {
+              "sku": "SKU-AP-X",
+              "on": "2026-09-21"
+            },
+            "result": {
+              "sku": "SKU-AP-X",
+              "found": true,
+              "in_stock": true,
+              "qty": 40,
+              "discontinued": false
+            }
+          },
+          {
+            "name": "pricing.get_quote",
+            "args": {
+              "on": "2026-09-21",
+              "customer_phone": "[private]",
+              "customer_id": "[private]",
+              "sku": "SKU-AP-X",
+              "qty": 1
+            },
+            "result": {
+              "sku": "SKU-AP-X",
+              "list_price_vnd": 4890000,
+              "final_price_vnd": 4390000,
+              "applied_promos": [
+                {
+                  "promo_code": "COD-0",
+                  "type": "freecod",
+                  "discount_vnd": 0
+                },
+                {
+                  "promo_code": "AP-SEP",
+                  "type": "fixed",
+                  "discount_vnd": 500000
+                }
+              ],
+              "expired_promos": [],
+              "ineligible_promos": [
+                {
+                  "promo_code": "TRADE-IN-AP",
+                  "reason": "requires_owned_sku"
+                }
+              ],
+              "not_applied_exclusive": [],
+              "freeship": true
+            }
+          }
+        ],
+        "sources": [
+          {
+            "sku": "SKU-AP-X",
+            "name": "[private]",
+            "category": "gia-dung/may-loc-khong-khi",
+            "brand": "AirPure",
+            "list_price_vnd": 4890000.0,
+            "discontinued": false,
+            "successor_sku": null,
+            "attributes": {
+              "features": "HEPA H13, cảm biến PM2.5, chế độ ngủ",
+              "room_area_m2": 25,
+              "child_safe_lock": false,
+              "warranty_months": 24
+            },
+            "variants": []
+          }
+        ],
+        "promotions": []
+      },
+      {
+        "turn_id": 2,
+        "agent_response": "Dạ anh [private], máy lọc không khí AirPure X hiện đang có giá ưu đãi là 4.390.000đ (nằm trong ngân sách 4.990.000đ của anh) nhờ áp dụng mã AP-SEP giảm 500.000đ ạ. \n\nVề thời gian áp dụng, thông tin hiện tại thể hiện mã giảm giá AP-SEP đang hoạt động tốt cho đơn hàng hôm nay, nhưng hệ thống bên em chưa có thời hạn kết thúc cụ thể của mã này nên em chưa thể xác nhận chính xác mã có kéo dài đến ngày 30/09 hay không ạ.\n\nSản phẩm đang có giá rất tốt, anh có muốn em hỗ trợ đặt hàng luôn hôm nay để giữ mức giá ưu đãi này không ạ?",
+        "tool_calls": [
+          {
+            "name": "catalog.search",
+            "args": {
+              "query": "Anh ưu tiên giá, ngân sách tối đa 4.990.000 đồng. Ưu đãi này hết ngày 30/09 phải không?",
+              "on": "2026-09-21"
+            },
+            "result": {
+              "items": [],
+              "total": 0
+            }
+          }
+        ],
+        "sources": [],
+        "promotions": []
+      },
+      {
+        "turn_id": 3,
+        "agent_response": "Dạ em hiểu rồi ạ, anh [private] cứ cân nhắc thêm cho thoải mái nhé. Khi nào cần hỗ trợ thông tin hoặc đặt hàng, anh cứ báo em nha. \n\nEm chúc anh một ngày tốt lành ạ!",
+        "tool_calls": [],
+        "sources": [],
+        "promotions": []
+      }
+    ]
+  },
+  "error": null
+}

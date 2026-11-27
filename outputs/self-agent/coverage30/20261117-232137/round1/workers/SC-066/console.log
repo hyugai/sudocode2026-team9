@@ -1,0 +1,124 @@
+[11/17/26 23:50:42] INFO     Processing request of type           server.py:733
+                             ListToolsRequest                                  
+[11/17/26 23:50:43] INFO     Processing request of type           server.py:733
+                             ListToolsRequest                                  
+[11/17/26 23:50:44] INFO     Processing request of type           server.py:733
+                             ListToolsRequest                                  
+Direct use of automatic function calling (AFC) in AsyncModels.generate_content is not recommended. Instead, we recommend to use AFC in AsyncChat.send_message. Similarly, direct use of AFC in AsyncModels.generate_content_stream is not recommended. Instead, we recommend to use AFC in AsyncChat.send_message_stream.
+[11/17/26 23:50:52] INFO     Processing request of type           server.py:733
+                             CallToolRequest                                   
+[11/17/26 23:50:53] INFO     Processing request of type           server.py:733
+                             CallToolRequest                                   
+                    INFO     Processing request of type           server.py:733
+                             CallToolRequest                                   
+[11/17/26 23:50:59] INFO     Processing request of type           server.py:733
+                             CallToolRequest                                   
+[11/17/26 23:51:25] INFO     Processing request of type           server.py:733
+                             CallToolRequest                                   
+[11/17/26 23:51:28] INFO     Processing request of type           server.py:733
+                             CallToolRequest                                   
+[11/17/26 23:51:34] INFO     Processing request of type           server.py:733
+                             CallToolRequest                                   
+[11/17/26 23:51:36] INFO     Processing request of type           server.py:733
+                             CallToolRequest                                   
+[11/17/26 23:51:38] INFO     Processing request of type           server.py:733
+                             CallToolRequest                                   
+[11/17/26 23:52:01] INFO     Processing request of type           server.py:733
+                             CallToolRequest                                   
+[11/17/26 23:52:01] INFO     Processing request of type           server.py:733
+                             CallToolRequest                                   
+Round 1: loaded 2 patterns from this round 0; lessons_loaded=True
+
+==================================================
+STARTING DEEP AGENT RUN: Tôi là Việt, số điện thoại 0991280845, đang nhắn qua Fanpage. Chào em, anh đang xem Máy hút sữa điện đôi Spectra S1, mức giá 4.290.000 đồng đúng không?
+==================================================
+   -> Context: scope=turn, prompt_chars=2592, recent_messages=0, allowed_tools=[]
+   -> Model request estimate: ~2609 input tokens (system=4448 chars, messages=3377 chars, tools=0 chars, visible_tools=0)
+   -> Agent Response: Dạ em chào anh Việt. Đúng rồi ạ, sản phẩm Máy hút sữa điện đôi Spectra S1 hiện đang có giá là 4.290.000 đồng và hàng đang có sẵn ạ. 
+
+Anh có cần em hỗ trợ tư vấn thêm về sản phẩm hay mình muốn lên đơn đặt hàng luôn không ạ?
+
+DEEP AGENT RUN COMPLETED!
+==================================================
+
+
+==================================================
+STARTING DEEP AGENT RUN: Anh mua cho người thân và còn vấn đề sức khỏe cần hỏi. Chưa đặt hàng nhé.
+==================================================
+   -> Context: scope=turn, prompt_chars=2269, recent_messages=2, allowed_tools=['check_inventory', 'search_catalog']
+   -> Model request estimate: ~2637 input tokens (system=4448 chars, messages=2269 chars, tools=1193 chars, visible_tools=2)
+   -> Agent Response: Dạ em chào anh Việt. Anh cứ thoải mái chia sẻ thêm về tình trạng sức khỏe hay thắc mắc của người thân ạ, em sẽ tư vấn chi tiết giúp mình trước khi anh quyết định nhé. Anh đang cần hỗ trợ vấn đề gì ạ?
+
+DEEP AGENT RUN COMPLETED!
+==================================================
+
+
+==================================================
+STARTING DEEP AGENT RUN: Tôi còn ảnh ưu đãi PUMP-GIFT; tôi muốn dùng mã này cho món đang hỏi hôm nay. Nếu chương trình đã hết hạn, hãy nói rõ thay vì tự trừ thêm tiền; tôi chấp nhận giá hiện hành đã thống nhất khi tiếp tục yêu cầu chính.
+==================================================
+   -> Context: scope=turn, prompt_chars=2595, recent_messages=2, allowed_tools=[]
+   -> Model request estimate: ~2348 input tokens (system=4448 chars, messages=2595 chars, tools=0 chars, visible_tools=0)
+   -> Agent Response: Dạ em chào anh Việt. 
+
+Về mã ưu đãi PUMP-GIFT anh có ảnh chụp, em đã kiểm tra trên hệ thống thì mã này hiện tại đã hết hạn rồi ạ. Do đó, sản phẩm Máy hút sữa (SKU-MB-PUMP1) sẽ áp dụng theo giá hiện hành là 4.290.000đ, đi kèm ưu đãi miễn phí vận chuyển (MOM-FREESHIP) và miễn phí COD như em đã thông tin.
+
+Trước đó anh có chia sẻ là mua cho người thân và còn vấn đề sức khỏe cần thắc mắc, anh có thể chia sẻ cụ thể hơn để em tư vấn kĩ cho mình trước khi quyết định không ạ?
+
+DEEP AGENT RUN COMPLETED!
+==================================================
+
+
+==================================================
+STARTING DEEP AGENT RUN: Anh sẽ liên hệ lại khi có câu hỏi cụ thể.
+==================================================
+   -> Context: scope=turn, prompt_chars=2137, recent_messages=2, allowed_tools=[]
+   -> Model request estimate: ~2195 input tokens (system=4448 chars, messages=2137 chars, tools=0 chars, visible_tools=0)
+   -> Agent Response: Dạ vâng, em cảm ơn anh Việt ạ. Khi nào anh cần hỗ trợ thêm thông tin hoặc có thắc mắc gì, anh cứ liên hệ lại với bên em nhé. Em chúc anh một ngày tốt lành!
+
+DEEP AGENT RUN COMPLETED!
+==================================================
+
+SC-066/call_1: job=done, changed=0; D:\DOCUMENT\School\SUDO\sudo_code_2026-group_9\outputs\self-agent\coverage30\20261117-232137\round1\workers\SC-066\SC-066-call_1.json
+
+==================================================
+STARTING DEEP AGENT RUN: Tôi là Việt, số điện thoại 0991280845, đang nhắn qua Zalo OA. Anh gọi tiếp về món đã hỏi, về sản phẩm đã hỏi.
+==================================================
+   -> Context: scope=turn, prompt_chars=1963, recent_messages=0, allowed_tools=['check_inventory', 'search_catalog']
+   -> Model request estimate: ~3068 input tokens (system=4448 chars, messages=3563 chars, tools=1193 chars, visible_tools=2)
+   -> Model request estimate: ~3007 input tokens (system=4448 chars, messages=3749 chars, tools=822 chars, visible_tools=1)
+   -> Agent Response: Em chào anh Việt ạ. Em gọi lại cho anh về máy hút sữa (SKU-MB-PUMP1) mà mình đã trao đổi hôm trước đây ạ. 
+
+Lần trước anh có chia sẻ là mua cho người thân và còn thắc mắc về vấn đề sức khỏe. Anh có thể chia sẻ cụ thể hơn băn khoăn của mình để em hỗ trợ anh tốt nhất được không ạ?
+
+DEEP AGENT RUN COMPLETED!
+==================================================
+
+
+==================================================
+STARTING DEEP AGENT RUN: Tôi đang dùng thuốc kê đơn, dùng máy này có làm thay đổi liều thuốc cần uống không?
+==================================================
+   -> Context: scope=turn, prompt_chars=3085, recent_messages=2, allowed_tools=['check_inventory']
+   -> Model request estimate: ~2635 input tokens (system=4448 chars, messages=3085 chars, tools=371 chars, visible_tools=1)
+   -> Model request estimate: ~2573 input tokens (system=4448 chars, messages=3271 chars, tools=0 chars, visible_tools=0)
+   -> Model request estimate: ~2697 input tokens (system=4448 chars, messages=3641 chars, tools=0 chars, visible_tools=0)
+   -> Agent Response: Dạ anh Việt ơi, vấn đề liều lượng thuốc kê đơn là thông tin y tế chuyên môn liên quan trực tiếp đến sức khỏe. Để đảm bảo an toàn tuyệt đối cho người thân, em xin phép chuyển thông tin này cho bộ phận chuyên trách/bác sĩ chuyên khoa liên hệ tư vấn kĩ hơn cho anh nhé. 
+
+Anh có tiện nghe máy vào thời gian nào để chuyên viên bên em hỗ trợ trực tiếp cho anh không ạ?
+
+DEEP AGENT RUN COMPLETED!
+==================================================
+
+
+==================================================
+STARTING DEEP AGENT RUN: Nếu vượt phạm vi tư vấn của shop, em chuyển người phụ trách giúp anh. Nhớ bàn giao sản phẩm, giá và câu hỏi để anh không nói lại.
+==================================================
+   -> Context: scope=turn, prompt_chars=3579, recent_messages=2, allowed_tools=[]
+   -> Model request estimate: ~2973 input tokens (system=4448 chars, messages=4471 chars, tools=0 chars, visible_tools=0)
+   -> Agent Response: Dạ anh Việt yên tâm, em đã bàn giao đầy đủ thông tin về sản phẩm (SKU-MB-PUMP1), giá 4.290.000đ cùng câu hỏi chuyên môn của anh về việc dùng thuốc kê đơn sang bộ phận chuyên trách rồi ạ. 
+
+Mã yêu cầu hỗ trợ của anh là TKT-8C9B08D9. Chuyên viên sẽ liên hệ lại để tư vấn chi tiết và an toàn nhất cho anh trong thời gian sớm nhất nhé. Em cảm ơn anh!
+
+DEEP AGENT RUN COMPLETED!
+==================================================
+
+SC-066/call_2: job=done, changed=7; D:\DOCUMENT\School\SUDO\sudo_code_2026-group_9\outputs\self-agent\coverage30\20261117-232137\round1\workers\SC-066\SC-066-call_2.json

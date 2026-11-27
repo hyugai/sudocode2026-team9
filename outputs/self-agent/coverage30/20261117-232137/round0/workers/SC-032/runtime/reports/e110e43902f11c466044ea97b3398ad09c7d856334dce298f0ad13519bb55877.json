@@ -1,0 +1,91 @@
+{
+  "job_id": "e110e43902f11c466044ea97b3398ad09c7d856334dce298f0ad13519bb55877",
+  "gaps": [
+    {
+      "id": "cd2fe0321127d8f5c7d54af123dc8865aa478ec6ba6f9f96039b6b0af8139eb7",
+      "status": "pending_remediation"
+    }
+  ],
+  "scope": "knowledge_gap_and_reflection_v1",
+  "evaluation_cases": [
+    {
+      "id": "a08ef3a86bd48def5bcaf07b04b00a0b022dd5166dc7cb478386dfc1d113a7e2",
+      "gap_id": "cd2fe0321127d8f5c7d54af123dc8865aa478ec6ba6f9f96039b6b0af8139eb7",
+      "turn_id": 1,
+      "question": "Anh liên hệ lại theo lịch, vẫn đang cân nhắc món đã hỏi.",
+      "reason": "unsupported_claim",
+      "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments."
+    }
+  ],
+  "out_of_scope": [],
+  "issue_reviews": [
+    {
+      "job_id": "e110e43902f11c466044ea97b3398ad09c7d856334dce298f0ad13519bb55877",
+      "message_id": 0,
+      "turn_id": 1,
+      "origin": "turn_detector",
+      "mechanism": "knowledge_gap",
+      "verified": true,
+      "claim": "Lần trước anh có băn khoăn về điều kiện đổi size cho mẫu áo khoác (SKU-JK-WND-M-NAVY)",
+      "assessment": "unsupported_by_evidence",
+      "evidence_paths": [],
+      "rejection": null,
+      "rejection_reasons": [],
+      "format_retry": false,
+      "verifier_output": {
+        "valid": true,
+        "issue_scope": "business_knowledge",
+        "claim": "Lần trước anh có băn khoăn về điều kiện đổi size cho mẫu áo khoác (SKU-JK-WND-M-NAVY)",
+        "assessment": "unsupported_by_evidence",
+        "evidence_paths": [],
+        "decision_reason": "The agent claims specific details about a previous customer inquiry and SKU without any supporting tool calls, sources, or prior conversation evidence.",
+        "audit": {
+          "support_status": "not_established",
+          "coverage": "complete",
+          "checked_paths": [
+            "evidence.tool_calls",
+            "evidence.sources",
+            "evidence.promotions"
+          ]
+        }
+      },
+      "candidate_claim": "Lần trước anh có băn khoăn về điều kiện đổi size cho mẫu áo khoác (SKU-JK-WND-M-NAVY)",
+      "verification_basis": "evidence_inventory_audit",
+      "evidence_inventory": [
+        "evidence.tool_calls",
+        "evidence.sources",
+        "evidence.promotions"
+      ],
+      "lesson_status": "approved"
+    }
+  ],
+  "detector_error": null,
+  "guardrails": {
+    "version": "learning_guardrails_v1",
+    "input_findings": [],
+    "blocked_lessons": [],
+    "blocked_sources": []
+  },
+  "detection": {
+    "candidate_count": 1,
+    "open_question_count": 0,
+    "processed_count": 1,
+    "skipped_unmatched_question": 0,
+    "skipped_over_limit": 0,
+    "scan": {
+      "turns_available": 4,
+      "turns_scanned": 4,
+      "requests": 4,
+      "errors": [],
+      "schema_retries": 0,
+      "skipped_over_limit": 0
+    },
+    "alignment_rejections": []
+  },
+  "outcome": "gaps_processed",
+  "learning_duration_ms": 11579,
+  "learning_usage": {
+    "input_tokens": 8099,
+    "output_tokens": 324
+  }
+}

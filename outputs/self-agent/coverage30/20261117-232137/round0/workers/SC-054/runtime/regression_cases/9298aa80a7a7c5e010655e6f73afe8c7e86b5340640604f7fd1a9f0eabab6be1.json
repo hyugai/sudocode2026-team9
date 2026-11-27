@@ -1,0 +1,46 @@
+{
+  "id": "9298aa80a7a7c5e010655e6f73afe8c7e86b5340640604f7fd1a9f0eabab6be1",
+  "reason": "unsupported_claim",
+  "pattern": "Do not state an unverified claim as a fact.",
+  "status": "approved",
+  "scope": "general",
+  "mechanism": "knowledge_gap",
+  "criterion": "Do not state an unverified claim as a fact.",
+  "evidence_refs": [
+    {
+      "job_id": "08e63328de2d39afabb9033fdaaba321216d349caec40ab7818283ecd3e551f9",
+      "message_id": 0,
+      "turn_id": 1,
+      "origin": "turn_detector"
+    }
+  ],
+  "assessment": "unsupported_by_evidence",
+  "report_ref": "08e63328de2d39afabb9033fdaaba321216d349caec40ab7818283ecd3e551f9",
+  "lesson": {
+    "title": "Verify Customer Chat History Before Claiming",
+    "when": "the user asks whether their prior chat history or interaction details are retained on the system",
+    "do": "state that information cannot be confirmed if official retrieved context or policy sources lack proof of the customer's prior interaction history",
+    "otherwise": "state uncertainty about the chat history rather than inventing past interactions or product interest",
+    "triggers": [
+      "bên em còn nội dung chat không",
+      "tra cứu lịch sử trao đổi",
+      "kiểm tra tin nhắn fanpage",
+      "check chat history"
+    ],
+    "id": "3cd3c42741e4f384bb677359c92e310266b7dbcbda3a0012abd57fdb0347c01e",
+    "status": "approved",
+    "scope": "general",
+    "mechanism": "knowledge_gap",
+    "source_refs": [
+      {
+        "job_id": "08e63328de2d39afabb9033fdaaba321216d349caec40ab7818283ecd3e551f9",
+        "message_id": 0,
+        "turn_id": 1,
+        "origin": "turn_detector"
+      }
+    ],
+    "version": 2
+  },
+  "lesson_path": "lessons\\approved\\3cd3c42741e4f384bb677359c92e310266b7dbcbda3a0012abd57fdb0347c01e.md",
+  "lesson_hash": "69a0eb02f8552e58812c9527556e29c9ff8e0cc2fff99a5a52488c72b3cf79a2"
+}

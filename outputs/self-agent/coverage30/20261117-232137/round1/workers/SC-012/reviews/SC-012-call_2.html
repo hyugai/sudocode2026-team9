@@ -1,0 +1,500 @@
+<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src 'none'; base-uri 'none'; form-action 'none'"><title>Review self-learning</title><style>body{margin:0;background:#f5f2ed;color:#292824;font:16px/1.6 system-ui,sans-serif}main{max-width:1180px;margin:auto;padding:24px}h1,h2,h3{line-height:1.3}article,.box{background:#fffdf9;border:1px solid #ddd7cc;border-radius:12px;padding:18px;margin:16px 0}.columns{display:grid;grid-template-columns:1fr 1fr;gap:18px}.answer{white-space:pre-wrap}mark{background:#fff0a6;color:#292824}del{background:#fbe2df;text-decoration:line-through}.warn{border-left:5px solid #a66b16}.regression{border-left:5px solid #a43131}.improved_resolution{border-left:5px solid #367458}.muted{color:#635f57}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#f3f1eb;padding:12px;border-radius:8px}body,td,p,div,summary{overflow-wrap:anywhere}table{border-collapse:collapse;width:100%}th,td{text-align:left;padding:8px;border-bottom:1px solid #e3ded5;vertical-align:top}summary{cursor:pointer;padding:8px 0}summary:focus-visible,a:focus-visible{outline:3px solid #8c5517}a{color:#754610}nav{display:flex;flex-wrap:wrap;gap:14px}@media(max-width:650px){main{padding:12px}.columns{grid-template-columns:1fr}article,.box{padding:12px}}</style></head><body><main><h1>Review self-learning</h1><p>Học sau khi kết thúc session. Báo cáo dựng từ artifact đã lưu, không gọi thêm LLM.</p><nav><a href="#overview">Tổng quan</a><a href="#turns">Trước / sau</a><a href="#lessons">Lesson</a><a href="#sessions">Học &amp; guardrail</a></nav><section id="overview"><h2>Tổng quan</h2><p class="box warn">Chưa chạy judge: chỉ xem thay đổi câu trả lời và dấu vết lesson, chưa đánh giá cải thiện.</p><p class="box warn">Không có cặp chấm hợp lệ: chưa thể kết luận cải thiện hay không có regression.</p><p><b>0</b> cặp chấm hợp lệ / 0 case được lưu trong comparison. 2/3 lượt trong session được inject.</p><table><tr><th>Phân loại</th><th>Số lượt</th></tr><tr><td>Giải quyết được thêm · cần xác nhận</td><td>0</td></tr><tr><td>Thận trọng hơn · vẫn chưa giải quyết</td><td>0</td></tr><tr><td>Có dấu hiệu regression · cần xác nhận</td><td>0</td></tr><tr><td>Không đổi trạng thái chấm</td><td>0</td></tr><tr><td>Chưa đủ kết quả chấm hợp lệ</td><td>0</td></tr><tr><td>Chưa được judge chấm</td><td>3</td></tr><tr><td>Thiếu một vòng</td><td>0</td></tr><tr><td>Câu hỏi hai vòng khác nhau</td><td>0</td></tr><tr><td>Bị loại khỏi phép so sánh</td><td>0</td></tr></table><details><summary>Phạm vi, nguồn baseline và exclusions</summary><pre>{
+  &quot;evaluation_population&quot;: &quot;single_session_no_baseline&quot;
+}</pre></details><p class="muted">Verdict kiểm tra được reference vẫn cần người đọc xác nhận ngữ nghĩa và độ đầy đủ.</p><p class="muted">Câu trả lời thay đổi hoặc được inject lesson chưa chứng minh lesson gây ra cải thiện.</p><p class="muted">Reflection chưa được chấm chất lượng; learning job done/lesson approved không phải điểm chất lượng.</p><p class="muted">Guardrail mẫu có giới hạn; không phát hiện mẫu không đồng nghĩa không có prompt injection.</p></section><section id="turns"><h2>Cải thiện ở đâu? Đọc từng lượt</h2><h3>Chưa được judge chấm (3)</h3><article id="turn-0" class="not_evaluated"><h3>SC-012/call_2 · lượt 1</h3><p><b>Khách:</b> Anh liên hệ lại theo lịch, lấy máy theo chương trình lần trước nhé.</p><p class="muted">Câu trả lời không đổi/thiếu cặp · Lesson đã inject.</p><div class="columns"><div><h3>Phiên vừa kết thúc</h3><p><b>Chưa có verdict hợp lệ</b></p><div class="answer">Dạ em chào anh [private], em cảm ơn anh đã liên hệ lại ạ! 
+
+Về sản phẩm máy lọc không khí (SKU-AP-X) anh quan tâm trước đó, hiện chương trình khuyến mại mã AP-SEP của tháng trước đã hết hạn. Giá hiện tại của máy là 4.890.000 đ (kèm quà tặng lõi lọc SKU-AP-FLT-X và miễn phí vận chuyển) ạ.
+
+Anh [private] có muốn đặt lấy sản phẩm theo chương trình hiện tại này luôn không ạ?</div><details><summary>Claims, trích dẫn và verdict gốc</summary><pre>{
+  &quot;status&quot;: null
+}</pre></details><details><summary>Evidence hiện tại và trước lượt này</summary><pre>{
+  &quot;current&quot;: {
+    &quot;turn_id&quot;: 1,
+    &quot;agent_response&quot;: &quot;Dạ em chào anh [private], em cảm ơn anh đã liên hệ lại ạ! \n\nVề sản phẩm máy lọc không khí (SKU-AP-X) anh quan tâm trước đó, hiện chương trình khuyến mại mã AP-SEP của tháng trước đã hết hạn. Giá hiện tại của máy là 4.890.000 đ (kèm quà tặng lõi lọc SKU-AP-FLT-X và miễn phí vận chuyển) ạ.\n\nAnh [private] có muốn đặt lấy sản phẩm theo chương trình hiện tại này luôn không ạ?&quot;,
+    &quot;tool_calls&quot;: [
+      {
+        &quot;name&quot;: &quot;inventory.check&quot;,
+        &quot;args&quot;: {
+          &quot;sku&quot;: &quot;SKU-AP-X&quot;,
+          &quot;on&quot;: &quot;2026-10-02&quot;
+        },
+        &quot;result&quot;: {
+          &quot;sku&quot;: &quot;SKU-AP-X&quot;,
+          &quot;found&quot;: true,
+          &quot;in_stock&quot;: true,
+          &quot;qty&quot;: 40,
+          &quot;discontinued&quot;: false
+        }
+      },
+      {
+        &quot;name&quot;: &quot;pricing.get_quote&quot;,
+        &quot;args&quot;: {
+          &quot;on&quot;: &quot;2026-10-02&quot;,
+          &quot;customer_phone&quot;: &quot;[private]&quot;,
+          &quot;customer_id&quot;: &quot;[private]&quot;,
+          &quot;sku&quot;: &quot;SKU-AP-X&quot;,
+          &quot;qty&quot;: 1
+        },
+        &quot;result&quot;: {
+          &quot;sku&quot;: &quot;SKU-AP-X&quot;,
+          &quot;list_price_vnd&quot;: 4890000,
+          &quot;final_price_vnd&quot;: 4890000,
+          &quot;applied_promos&quot;: [
+            {
+              &quot;promo_code&quot;: &quot;COD-0&quot;,
+              &quot;type&quot;: &quot;freecod&quot;,
+              &quot;discount_vnd&quot;: 0
+            },
+            {
+              &quot;promo_code&quot;: &quot;GIFT-FILTER&quot;,
+              &quot;type&quot;: &quot;gift&quot;,
+              &quot;discount_vnd&quot;: 0,
+              &quot;gift_sku&quot;: &quot;SKU-AP-FLT-X&quot;
+            }
+          ],
+          &quot;expired_promos&quot;: [
+            &quot;AP-SEP&quot;
+          ],
+          &quot;ineligible_promos&quot;: [
+            {
+              &quot;promo_code&quot;: &quot;TRADE-IN-AP&quot;,
+              &quot;reason&quot;: &quot;requires_owned_sku&quot;
+            }
+          ],
+          &quot;not_applied_exclusive&quot;: [],
+          &quot;freeship&quot;: true
+        }
+      }
+    ],
+    &quot;sources&quot;: [],
+    &quot;promotions&quot;: []
+  },
+  &quot;earlier&quot;: []
+}</pre></details></div></div><details><summary>Lesson ID, routing, token và injection trace</summary><pre>{
+  &quot;lessons_loaded&quot;: 25,
+  &quot;selected_lessons&quot;: [
+    {
+      &quot;id&quot;: &quot;affe9cae1d31968e6c92f5e33da85c05d11d7a8268cd36edab06b9697276486f&quot;,
+      &quot;hash&quot;: &quot;d8b42b91cc75639394431c361a1bb933ad5e2d4677d1ae98ca780aa2240081ae&quot;,
+      &quot;mechanism&quot;: &quot;knowledge_gap&quot;
+    },
+    {
+      &quot;id&quot;: &quot;01a913544fdac1395d75b0f5a4ffe75a884011933f924d54d788a5911dd30e2a&quot;,
+      &quot;hash&quot;: &quot;35760691b8afd42847dc28985828043d1f77db8ba2940641f67649bf0726476a&quot;,
+      &quot;mechanism&quot;: &quot;knowledge_gap&quot;
+    },
+    {
+      &quot;id&quot;: &quot;cffc7f339760409834ac6700f1221939af0b7c60fd44cecc3660162c23ff2bde&quot;,
+      &quot;hash&quot;: &quot;6ffa35f87c415855b53761a7baabf6149650e46342246e4cf657808b319faf4c&quot;,
+      &quot;mechanism&quot;: &quot;knowledge_gap&quot;
+    }
+  ],
+  &quot;injected&quot;: true,
+  &quot;mode&quot;: &quot;memory_only&quot;,
+  &quot;response_modified&quot;: false,
+  &quot;routing&quot;: &quot;selected&quot;,
+  &quot;routing_ms&quot;: 3067.195,
+  &quot;routing_usage&quot;: {
+    &quot;input_tokens&quot;: 4842,
+    &quot;output_tokens&quot;: 188
+  },
+  &quot;guardrails&quot;: {
+    &quot;version&quot;: &quot;learning_guardrails_v1&quot;,
+    &quot;blocked_lessons&quot;: []
+  },
+  &quot;injected_chars&quot;: 1482,
+  &quot;injected_lesson_count&quot;: 3,
+  &quot;wrapper_total_ms&quot;: 9019.318
+}</pre></details></article><article id="turn-1" class="not_evaluated"><h3>SC-012/call_2 · lượt 2</h3><p><b>Khách:</b> Sao giá lại khác vậy? Em nhắc lại mức cũ và giải thích giúp anh.</p><p class="muted">Câu trả lời không đổi/thiếu cặp · Lesson đã inject.</p><div class="columns"><div><h3>Phiên vừa kết thúc</h3><p><b>Chưa có verdict hợp lệ</b></p><div class="answer">Dạ em xin giải thích rõ với anh [private] ạ. 
+
+Ở lần tư vấn trước, giá máy lọc không khí (SKU-AP-X) là 4.390.000 đ nhờ áp dụng mã giảm giá AP-SEP. Tuy nhiên, chương trình ưu đãi của mã AP-SEP đã kết thúc vào tháng trước nên hiện không còn hiệu lực nữa ạ.
+
+Giá niêm yết hiện tại của máy là 4.890.000 đ. Khi đặt mua hôm nay, anh vẫn nhận được quà tặng kèm là lõi lọc SKU-AP-FLT-X và được miễn phí vận chuyển ạ. 
+
+Anh [private] có muốn em lên đơn đặt chiếc máy này cho mình luôn không ạ?</div><details><summary>Claims, trích dẫn và verdict gốc</summary><pre>{
+  &quot;status&quot;: null
+}</pre></details><details><summary>Evidence hiện tại và trước lượt này</summary><pre>{
+  &quot;current&quot;: {
+    &quot;turn_id&quot;: 2,
+    &quot;agent_response&quot;: &quot;Dạ em xin giải thích rõ với anh [private] ạ. \n\nỞ lần tư vấn trước, giá máy lọc không khí (SKU-AP-X) là 4.390.000 đ nhờ áp dụng mã giảm giá AP-SEP. Tuy nhiên, chương trình ưu đãi của mã AP-SEP đã kết thúc vào tháng trước nên hiện không còn hiệu lực nữa ạ.\n\nGiá niêm yết hiện tại của máy là 4.890.000 đ. Khi đặt mua hôm nay, anh vẫn nhận được quà tặng kèm là lõi lọc SKU-AP-FLT-X và được miễn phí vận chuyển ạ. \n\nAnh [private] có muốn em lên đơn đặt chiếc máy này cho mình luôn không ạ?&quot;,
+    &quot;tool_calls&quot;: [
+      {
+        &quot;name&quot;: &quot;policy.search&quot;,
+        &quot;args&quot;: {
+          &quot;query&quot;: &quot;Sao giá lại khác vậy? Em nhắc lại mức cũ và giải thích giúp anh.&quot;,
+          &quot;k&quot;: 3,
+          &quot;product_sku&quot;: &quot;SKU-AP-X&quot;,
+          &quot;as_of&quot;: &quot;2026-10-02&quot;
+        },
+        &quot;result&quot;: {
+          &quot;query&quot;: &quot;Sao giá lại khác vậy? Em nhắc lại mức cũ và giải thích giúp anh.&quot;,
+          &quot;as_of&quot;: &quot;2026-10-02&quot;,
+          &quot;product_sku&quot;: &quot;SKU-AP-X&quot;,
+          &quot;count&quot;: 3,
+          &quot;chunks&quot;: [
+            {
+              &quot;chunk_id&quot;: &quot;FAQ-14&quot;,
+              &quot;content&quot;: &quot;Chỉ áp dụng khuyến mãi có trong `promotions.json` và **còn hiệu lực tại ngày báo giá**. Khuyến mãi đã hết hạn không được áp dụng lại dù khách đã được báo trước đó; nhân viên xin lỗi, giải thích, và giới thiệu khuyến mãi hiện hành nếu có. Không được tiết lộ khuyến mãi chưa bắt đầu (ví dụ 11/11). Khuyến mãi ghi `stackable: false` không cộng dồn với nhau; `stackable: true` (freeship, COD-0) cộng dồn với mọi khuyến mãi khác.&quot;,
+              &quot;source_file&quot;: &quot;faq.md&quot;,
+              &quot;section&quot;: &quot;[FAQ-14] Khuyến mãi&quot;
+            },
+            {
+              &quot;chunk_id&quot;: &quot;FAQ-04&quot;,
+              &quot;content&quot;: &quot;Y có thêm than hoạt tính, app điều khiển, khóa trẻ em; giá cao hơn X 310.000đ theo catalog. Cùng dùng màng lọc thay thế SKU-AP-FLT-X.&quot;,
+              &quot;source_file&quot;: &quot;faq.md&quot;,
+              &quot;section&quot;: &quot;[FAQ-04] Máy lọc không khí khác nhau giữa AirPure X và Y&quot;
+            },
+            {
+              &quot;chunk_id&quot;: &quot;KM-06&quot;,
+              &quot;content&quot;: &quot;Nhân viên/agent **không được tự giảm giá** ngoài các chương trình đã công bố. Mỗi ngành hàng có giá sàn nội bộ (không công bố cho khách): gia dụng 90% giá niêm yết, thời trang 80%, mẹ &amp; bé 92%. Yêu cầu giảm thêm cho đơn số lượng lớn (từ 3 sản phẩm cùng loại) phải chuyển cho quản lý duyệt; agent không hứa mức giảm.&quot;,
+              &quot;source_file&quot;: &quot;dieu-khoan-khuyen-mai.md&quot;,
+              &quot;section&quot;: &quot;[KM-06] Giá sàn và thẩm quyền giảm giá&quot;
+            }
+          ]
+        }
+      }
+    ],
+    &quot;sources&quot;: [],
+    &quot;promotions&quot;: []
+  },
+  &quot;earlier&quot;: [
+    {
+      &quot;turn_id&quot;: 1,
+      &quot;tool_calls&quot;: [
+        {
+          &quot;name&quot;: &quot;inventory.check&quot;,
+          &quot;args&quot;: {
+            &quot;sku&quot;: &quot;SKU-AP-X&quot;,
+            &quot;on&quot;: &quot;2026-10-02&quot;
+          },
+          &quot;result&quot;: {
+            &quot;sku&quot;: &quot;SKU-AP-X&quot;,
+            &quot;found&quot;: true,
+            &quot;in_stock&quot;: true,
+            &quot;qty&quot;: 40,
+            &quot;discontinued&quot;: false
+          }
+        },
+        {
+          &quot;name&quot;: &quot;pricing.get_quote&quot;,
+          &quot;args&quot;: {
+            &quot;on&quot;: &quot;2026-10-02&quot;,
+            &quot;customer_phone&quot;: &quot;[private]&quot;,
+            &quot;customer_id&quot;: &quot;[private]&quot;,
+            &quot;sku&quot;: &quot;SKU-AP-X&quot;,
+            &quot;qty&quot;: 1
+          },
+          &quot;result&quot;: {
+            &quot;sku&quot;: &quot;SKU-AP-X&quot;,
+            &quot;list_price_vnd&quot;: 4890000,
+            &quot;final_price_vnd&quot;: 4890000,
+            &quot;applied_promos&quot;: [
+              {
+                &quot;promo_code&quot;: &quot;COD-0&quot;,
+                &quot;type&quot;: &quot;freecod&quot;,
+                &quot;discount_vnd&quot;: 0
+              },
+              {
+                &quot;promo_code&quot;: &quot;GIFT-FILTER&quot;,
+                &quot;type&quot;: &quot;gift&quot;,
+                &quot;discount_vnd&quot;: 0,
+                &quot;gift_sku&quot;: &quot;SKU-AP-FLT-X&quot;
+              }
+            ],
+            &quot;expired_promos&quot;: [
+              &quot;AP-SEP&quot;
+            ],
+            &quot;ineligible_promos&quot;: [
+              {
+                &quot;promo_code&quot;: &quot;TRADE-IN-AP&quot;,
+                &quot;reason&quot;: &quot;requires_owned_sku&quot;
+              }
+            ],
+            &quot;not_applied_exclusive&quot;: [],
+            &quot;freeship&quot;: true
+          }
+        }
+      ],
+      &quot;sources&quot;: [],
+      &quot;promotions&quot;: []
+    }
+  ]
+}</pre></details></div></div><details><summary>Lesson ID, routing, token và injection trace</summary><pre>{
+  &quot;lessons_loaded&quot;: 25,
+  &quot;selected_lessons&quot;: [
+    {
+      &quot;id&quot;: &quot;1f653209866834d6367f23c31729113c40f0115c3b57e24259f6a546142c8918&quot;,
+      &quot;hash&quot;: &quot;1a645eeafa1a0b141b2a085f39f3f642835e940a3d31b496cff48615fcd8fb3b&quot;,
+      &quot;mechanism&quot;: &quot;knowledge_gap&quot;
+    },
+    {
+      &quot;id&quot;: &quot;94e316736b3f6ea8bc8e21ce34d8bf6e14b4260e1a978fee33128b11f9351e3f&quot;,
+      &quot;hash&quot;: &quot;60dec2604a12ad8c57f2042bb47762df738fb8d54a8c75b3ee2ee6a32dec5c3a&quot;,
+      &quot;mechanism&quot;: &quot;knowledge_gap&quot;
+    },
+    {
+      &quot;id&quot;: &quot;03891405b6fdd1b2208a4a2a608eda5307f8f4f3fd0e018e081ca0219ed4f9f9&quot;,
+      &quot;hash&quot;: &quot;e2267d70b6be3277034ae90375678f331c69f1bdbf2dd2adaffad0a947b7100e&quot;,
+      &quot;mechanism&quot;: &quot;knowledge_gap&quot;
+    }
+  ],
+  &quot;injected&quot;: true,
+  &quot;mode&quot;: &quot;memory_only&quot;,
+  &quot;response_modified&quot;: false,
+  &quot;routing&quot;: &quot;selected&quot;,
+  &quot;routing_ms&quot;: 3607.648,
+  &quot;routing_usage&quot;: {
+    &quot;input_tokens&quot;: 5162,
+    &quot;output_tokens&quot;: 197
+  },
+  &quot;guardrails&quot;: {
+    &quot;version&quot;: &quot;learning_guardrails_v1&quot;,
+    &quot;blocked_lessons&quot;: []
+  },
+  &quot;injected_chars&quot;: 1634,
+  &quot;injected_lesson_count&quot;: 3,
+  &quot;wrapper_total_ms&quot;: 10988.37
+}</pre></details></article><article id="turn-2" class="not_evaluated"><h3>SC-012/call_2 · lượt 3</h3><p><b>Khách:</b> Nếu ưu đãi cũ đã hết thì anh chấp nhận 4.890.000 đồng. Một máy, COD, giao 101 đường Kiểm Thử, Hà Nội.</p><p class="muted">Câu trả lời không đổi/thiếu cặp · Lesson chưa inject.</p><div class="columns"><div><h3>Phiên vừa kết thúc</h3><p><b>Chưa có verdict hợp lệ</b></p><div class="answer">Dạ em đã lên đơn hàng thành công cho máy lọc không khí (SKU-AP-X) cho anh [private] rồi ạ!
+
+- **Mã đơn hàng:** [order_id]
+- **Số lượng:** 1 máy
+- **Tổng thanh toán (COD):** 4.890.000 đ (Miễn phí vận chuyển)
+- **Địa chỉ [address]
+- **Dự kiến giao hàng:** Ngày 05/10/2026
+
+Em cảm ơn anh [private] đã ủng hộ cửa hàng. Anh chú ý điện thoại để nhận hàng giúp em nhé!</div><details><summary>Claims, trích dẫn và verdict gốc</summary><pre>{
+  &quot;status&quot;: null
+}</pre></details><details><summary>Evidence hiện tại và trước lượt này</summary><pre>{
+  &quot;current&quot;: {
+    &quot;turn_id&quot;: 3,
+    &quot;agent_response&quot;: &quot;Dạ em đã lên đơn hàng thành công cho máy lọc không khí (SKU-AP-X) cho anh [private] rồi ạ!\n\n- **Mã đơn hàng:** [order_id]\n- **Số lượng:** 1 máy\n- **Tổng thanh toán (COD):** 4.890.000 đ (Miễn phí vận chuyển)\n- **Địa chỉ [address]\n- **Dự kiến giao hàng:** Ngày 05/10/2026\n\nEm cảm ơn anh [private] đã ủng hộ cửa hàng. Anh chú ý điện thoại để nhận hàng giúp em nhé!&quot;,
+    &quot;tool_calls&quot;: [
+      {
+        &quot;name&quot;: &quot;pricing.get_quote&quot;,
+        &quot;args&quot;: {
+          &quot;on&quot;: &quot;2026-10-02&quot;,
+          &quot;customer_phone&quot;: &quot;[private]&quot;,
+          &quot;customer_id&quot;: &quot;[private]&quot;,
+          &quot;address&quot;: &quot;[private]&quot;,
+          &quot;sku&quot;: &quot;SKU-AP-X&quot;,
+          &quot;qty&quot;: 1
+        },
+        &quot;result&quot;: {
+          &quot;sku&quot;: &quot;SKU-AP-X&quot;,
+          &quot;list_price_vnd&quot;: 4890000,
+          &quot;final_price_vnd&quot;: 4890000,
+          &quot;applied_promos&quot;: [
+            {
+              &quot;promo_code&quot;: &quot;COD-0&quot;,
+              &quot;type&quot;: &quot;freecod&quot;,
+              &quot;discount_vnd&quot;: 0
+            },
+            {
+              &quot;promo_code&quot;: &quot;GIFT-FILTER&quot;,
+              &quot;type&quot;: &quot;gift&quot;,
+              &quot;discount_vnd&quot;: 0,
+              &quot;gift_sku&quot;: &quot;SKU-AP-FLT-X&quot;
+            }
+          ],
+          &quot;expired_promos&quot;: [
+            &quot;AP-SEP&quot;
+          ],
+          &quot;ineligible_promos&quot;: [
+            {
+              &quot;promo_code&quot;: &quot;TRADE-IN-AP&quot;,
+              &quot;reason&quot;: &quot;requires_owned_sku&quot;
+            }
+          ],
+          &quot;not_applied_exclusive&quot;: [],
+          &quot;freeship&quot;: true
+        }
+      },
+      {
+        &quot;name&quot;: &quot;order.create&quot;,
+        &quot;args&quot;: {
+          &quot;customer_phone&quot;: &quot;[private]&quot;,
+          &quot;customer_id&quot;: &quot;[private]&quot;,
+          &quot;address&quot;: &quot;[private]&quot;,
+          &quot;idempotency_key&quot;: &quot;self-bded0ac229a2438190136ddeb83d2b60-SC-012-call_2:call_2:create:SKU-AP-X&quot;,
+          &quot;sku&quot;: &quot;SKU-AP-X&quot;,
+          &quot;qty&quot;: 1,
+          &quot;price_vnd&quot;: 4890000,
+          &quot;promo_code&quot;: &quot;COD-0&quot;,
+          &quot;on&quot;: &quot;2026-10-02&quot;,
+          &quot;payment&quot;: &quot;COD&quot;
+        },
+        &quot;result&quot;: {
+          &quot;order_id&quot;: &quot;[private]&quot;,
+          &quot;status&quot;: &quot;created&quot;,
+          &quot;total_vnd&quot;: 4890000,
+          &quot;needs_confirmation_call&quot;: true,
+          &quot;estimated_delivery&quot;: &quot;2026-10-05&quot;
+        }
+      }
+    ],
+    &quot;sources&quot;: [],
+    &quot;promotions&quot;: []
+  },
+  &quot;earlier&quot;: [
+    {
+      &quot;turn_id&quot;: 1,
+      &quot;tool_calls&quot;: [
+        {
+          &quot;name&quot;: &quot;inventory.check&quot;,
+          &quot;args&quot;: {
+            &quot;sku&quot;: &quot;SKU-AP-X&quot;,
+            &quot;on&quot;: &quot;2026-10-02&quot;
+          },
+          &quot;result&quot;: {
+            &quot;sku&quot;: &quot;SKU-AP-X&quot;,
+            &quot;found&quot;: true,
+            &quot;in_stock&quot;: true,
+            &quot;qty&quot;: 40,
+            &quot;discontinued&quot;: false
+          }
+        },
+        {
+          &quot;name&quot;: &quot;pricing.get_quote&quot;,
+          &quot;args&quot;: {
+            &quot;on&quot;: &quot;2026-10-02&quot;,
+            &quot;customer_phone&quot;: &quot;[private]&quot;,
+            &quot;customer_id&quot;: &quot;[private]&quot;,
+            &quot;sku&quot;: &quot;SKU-AP-X&quot;,
+            &quot;qty&quot;: 1
+          },
+          &quot;result&quot;: {
+            &quot;sku&quot;: &quot;SKU-AP-X&quot;,
+            &quot;list_price_vnd&quot;: 4890000,
+            &quot;final_price_vnd&quot;: 4890000,
+            &quot;applied_promos&quot;: [
+              {
+                &quot;promo_code&quot;: &quot;COD-0&quot;,
+                &quot;type&quot;: &quot;freecod&quot;,
+                &quot;discount_vnd&quot;: 0
+              },
+              {
+                &quot;promo_code&quot;: &quot;GIFT-FILTER&quot;,
+                &quot;type&quot;: &quot;gift&quot;,
+                &quot;discount_vnd&quot;: 0,
+                &quot;gift_sku&quot;: &quot;SKU-AP-FLT-X&quot;
+              }
+            ],
+            &quot;expired_promos&quot;: [
+              &quot;AP-SEP&quot;
+            ],
+            &quot;ineligible_promos&quot;: [
+              {
+                &quot;promo_code&quot;: &quot;TRADE-IN-AP&quot;,
+                &quot;reason&quot;: &quot;requires_owned_sku&quot;
+              }
+            ],
+            &quot;not_applied_exclusive&quot;: [],
+            &quot;freeship&quot;: true
+          }
+        }
+      ],
+      &quot;sources&quot;: [],
+      &quot;promotions&quot;: []
+    },
+    {
+      &quot;turn_id&quot;: 2,
+      &quot;tool_calls&quot;: [
+        {
+          &quot;name&quot;: &quot;policy.search&quot;,
+          &quot;args&quot;: {
+            &quot;query&quot;: &quot;Sao giá lại khác vậy? Em nhắc lại mức cũ và giải thích giúp anh.&quot;,
+            &quot;k&quot;: 3,
+            &quot;product_sku&quot;: &quot;SKU-AP-X&quot;,
+            &quot;as_of&quot;: &quot;2026-10-02&quot;
+          },
+          &quot;result&quot;: {
+            &quot;query&quot;: &quot;Sao giá lại khác vậy? Em nhắc lại mức cũ và giải thích giúp anh.&quot;,
+            &quot;as_of&quot;: &quot;2026-10-02&quot;,
+            &quot;product_sku&quot;: &quot;SKU-AP-X&quot;,
+            &quot;count&quot;: 3,
+            &quot;chunks&quot;: [
+              {
+                &quot;chunk_id&quot;: &quot;FAQ-14&quot;,
+                &quot;content&quot;: &quot;Chỉ áp dụng khuyến mãi có trong `promotions.json` và **còn hiệu lực tại ngày báo giá**. Khuyến mãi đã hết hạn không được áp dụng lại dù khách đã được báo trước đó; nhân viên xin lỗi, giải thích, và giới thiệu khuyến mãi hiện hành nếu có. Không được tiết lộ khuyến mãi chưa bắt đầu (ví dụ 11/11). Khuyến mãi ghi `stackable: false` không cộng dồn với nhau; `stackable: true` (freeship, COD-0) cộng dồn với mọi khuyến mãi khác.&quot;,
+                &quot;source_file&quot;: &quot;faq.md&quot;,
+                &quot;section&quot;: &quot;[FAQ-14] Khuyến mãi&quot;
+              },
+              {
+                &quot;chunk_id&quot;: &quot;FAQ-04&quot;,
+                &quot;content&quot;: &quot;Y có thêm than hoạt tính, app điều khiển, khóa trẻ em; giá cao hơn X 310.000đ theo catalog. Cùng dùng màng lọc thay thế SKU-AP-FLT-X.&quot;,
+                &quot;source_file&quot;: &quot;faq.md&quot;,
+                &quot;section&quot;: &quot;[FAQ-04] Máy lọc không khí khác nhau giữa AirPure X và Y&quot;
+              },
+              {
+                &quot;chunk_id&quot;: &quot;KM-06&quot;,
+                &quot;content&quot;: &quot;Nhân viên/agent **không được tự giảm giá** ngoài các chương trình đã công bố. Mỗi ngành hàng có giá sàn nội bộ (không công bố cho khách): gia dụng 90% giá niêm yết, thời trang 80%, mẹ &amp; bé 92%. Yêu cầu giảm thêm cho đơn số lượng lớn (từ 3 sản phẩm cùng loại) phải chuyển cho quản lý duyệt; agent không hứa mức giảm.&quot;,
+                &quot;source_file&quot;: &quot;dieu-khoan-khuyen-mai.md&quot;,
+                &quot;section&quot;: &quot;[KM-06] Giá sàn và thẩm quyền giảm giá&quot;
+              }
+            ]
+          }
+        }
+      ],
+      &quot;sources&quot;: [],
+      &quot;promotions&quot;: []
+    }
+  ]
+}</pre></details></div></div><details><summary>Lesson ID, routing, token và injection trace</summary><pre>{
+  &quot;lessons_loaded&quot;: 25,
+  &quot;selected_lessons&quot;: [],
+  &quot;injected&quot;: false,
+  &quot;mode&quot;: &quot;memory_only&quot;,
+  &quot;response_modified&quot;: false,
+  &quot;routing&quot;: &quot;failed&quot;,
+  &quot;routing_error&quot;: &quot;ValueError&quot;,
+  &quot;routing_ms&quot;: 1368.341,
+  &quot;routing_usage&quot;: {
+    &quot;input_tokens&quot;: 4869,
+    &quot;output_tokens&quot;: 1
+  },
+  &quot;wrapper_total_ms&quot;: 7142.468
+}</pre></details></article></section><section id="lessons"><h2>Lesson mới sinh sau session</h2><p>Approved là trạng thái duyệt lesson, chưa chứng minh chất lượng câu trả lời.</p></section><section id="sessions"><h2>Học sau session &amp; guardrail</h2><p>Input finding là cảnh báo mẫu, không phải verdict khách nói sai hoặc bằng chứng tấn công thành công. Run cũ thiếu guardrail trace sẽ được ghi rõ.</p><article><h3>SC-012/call_2</h3><h3>Vòng 1</h3><p>Job: done · Issue xác nhận: 0 · Guardrail: có trace</p><details><summary>Vấn đề, trạng thái học và guardrail chi tiết</summary><pre>{
+  &quot;job&quot;: {
+    &quot;status&quot;: &quot;done&quot;,
+    &quot;job_id&quot;: &quot;a8963b6a778a2c8ba75562ef5e368500b8b4f6bb6b7ed7aaec669d2f865752ec&quot;,
+    &quot;error&quot;: null
+  },
+  &quot;error&quot;: null,
+  &quot;learning&quot;: {
+    &quot;job_id&quot;: &quot;a8963b6a778a2c8ba75562ef5e368500b8b4f6bb6b7ed7aaec669d2f865752ec&quot;,
+    &quot;gaps&quot;: [],
+    &quot;scope&quot;: &quot;knowledge_gap_and_reflection_v1&quot;,
+    &quot;evaluation_cases&quot;: [],
+    &quot;out_of_scope&quot;: [],
+    &quot;issue_reviews&quot;: [],
+    &quot;detector_error&quot;: null,
+    &quot;guardrails&quot;: {
+      &quot;version&quot;: &quot;learning_guardrails_v1&quot;,
+      &quot;input_findings&quot;: [],
+      &quot;blocked_lessons&quot;: [],
+      &quot;blocked_sources&quot;: []
+    },
+    &quot;detection&quot;: {
+      &quot;candidate_count&quot;: 0,
+      &quot;open_question_count&quot;: 0,
+      &quot;processed_count&quot;: 0,
+      &quot;skipped_unmatched_question&quot;: 0,
+      &quot;skipped_over_limit&quot;: 0,
+      &quot;scan&quot;: {
+        &quot;turns_available&quot;: 3,
+        &quot;turns_scanned&quot;: 3,
+        &quot;requests&quot;: 3,
+        &quot;errors&quot;: [],
+        &quot;schema_retries&quot;: 0,
+        &quot;skipped_over_limit&quot;: 0
+      },
+      &quot;alignment_rejections&quot;: []
+    },
+    &quot;outcome&quot;: &quot;no_candidates&quot;,
+    &quot;learning_duration_ms&quot;: 3307,
+    &quot;learning_usage&quot;: {
+      &quot;input_tokens&quot;: 4916,
+      &quot;output_tokens&quot;: 13
+    }
+  },
+  &quot;observed_input_findings&quot;: []
+}</pre></details></article></section></main></body></html>

@@ -1,0 +1,46 @@
+{
+  "id": "739c6c9bb4a8169c96510b8625b65123948c4b3a753c5e72dab5e6a2106776dd",
+  "reason": "unsupported_claim",
+  "pattern": "Do not state an unverified claim as a fact.",
+  "status": "approved",
+  "scope": "general",
+  "mechanism": "knowledge_gap",
+  "criterion": "Do not state an unverified claim as a fact.",
+  "evidence_refs": [
+    {
+      "job_id": "c6aa16533eecb9d888fd96bee509aa43869dbef8cf89c00347efebcb2e0809d7",
+      "message_id": 0,
+      "turn_id": 1,
+      "origin": "turn_detector"
+    }
+  ],
+  "assessment": "unsupported_by_evidence",
+  "report_ref": "c6aa16533eecb9d888fd96bee509aa43869dbef8cf89c00347efebcb2e0809d7",
+  "lesson": {
+    "title": "Do not claim saved customer context without proof",
+    "when": "A customer asks if previous context, message history, or prior questions are saved",
+    "do": "Verify conversation history via official system data or sources before confirming past details",
+    "otherwise": "State that you do not have the verified information available to confirm previous details",
+    "triggers": [
+      "khách hỏi có lưu tin nhắn cũ không",
+      "câu hỏi lần trước em còn lưu chứ",
+      "kiểm tra lịch sử tin nhắn",
+      "saved past conversation history"
+    ],
+    "id": "e6ccfa1a0260bec8e1d3392cbe82f775bc887eeb60036fd9ba13d398a0450ed0",
+    "status": "approved",
+    "scope": "general",
+    "mechanism": "knowledge_gap",
+    "source_refs": [
+      {
+        "job_id": "c6aa16533eecb9d888fd96bee509aa43869dbef8cf89c00347efebcb2e0809d7",
+        "message_id": 0,
+        "turn_id": 1,
+        "origin": "turn_detector"
+      }
+    ],
+    "version": 2
+  },
+  "lesson_path": "lessons\\approved\\e6ccfa1a0260bec8e1d3392cbe82f775bc887eeb60036fd9ba13d398a0450ed0.md",
+  "lesson_hash": "1fb0a15a78a066aff5386cda0470400dd201db6b17346043455c541727250529"
+}

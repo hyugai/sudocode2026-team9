@@ -1,0 +1,706 @@
+{
+  "schema_version": 1,
+  "guardrail_version": "learning_guardrails_v1",
+  "metadata": {
+    "evaluation_population": "single_session_no_baseline"
+  },
+  "warnings": [
+    "Chưa chạy judge: chỉ xem thay đổi câu trả lời và dấu vết lesson, chưa đánh giá cải thiện.",
+    "Không có cặp chấm hợp lệ: chưa thể kết luận cải thiện hay không có regression."
+  ],
+  "summary": {
+    "total_turns": 3,
+    "judged_pair_count": 0,
+    "round0_turns": 0,
+    "round1_turns": 3,
+    "stored_frozen_case_count": 0,
+    "injected_turns": 1,
+    "changed_answers": 0,
+    "counts": {
+      "improved_resolution": 0,
+      "safer_unresolved": 0,
+      "regression": 0,
+      "unchanged": 0,
+      "needs_review": 0,
+      "not_evaluated": 3,
+      "unpaired": 0,
+      "question_changed": 0,
+      "excluded": 0
+    }
+  },
+  "rows": [
+    {
+      "call": "SC-021/call_1",
+      "turn_id": 1,
+      "question": "Alo em, chị lấy Giày sneaker Urban Classic, size 38, màu trắng.",
+      "baseline_question": null,
+      "classification": "not_evaluated",
+      "case_id": null,
+      "gap_id": null,
+      "answer_changed": false,
+      "injected": true,
+      "lesson_trace": {
+        "lessons_loaded": 25,
+        "selected_lessons": [
+          {
+            "id": "65ef30c9a2e0620b3db09ca98555f52ddcd4a932a02b06bd73995f8addf18008",
+            "hash": "c576438b6fa1584d4cb3939de9d02c489a3a844cf651f05363e1e1fc6e678c06",
+            "mechanism": "knowledge_gap"
+          },
+          {
+            "id": "6b279393ba00d688163b02eb4600ee2bf0f957d5ad048d71703e46ba140bb722",
+            "hash": "fc26a1f20867c6924ba69ae0c06dfaa18ad587346a624b48685484b5a90dde4c",
+            "mechanism": "knowledge_gap"
+          },
+          {
+            "id": "7beaea49d57761bd76ac9969b03a3453a5adfa4b39eecdd21ddf7edb8e5c9d13",
+            "hash": "7ec249cbbc1c1d3e2dafd45c6c3a40ca64a590036a6507f65a68de1d8176b590",
+            "mechanism": "knowledge_gap"
+          }
+        ],
+        "injected": true,
+        "mode": "memory_only",
+        "response_modified": false,
+        "routing": "selected",
+        "routing_ms": 4025.634,
+        "routing_usage": {
+          "input_tokens": 4848,
+          "output_tokens": 183
+        },
+        "guardrails": {
+          "version": "learning_guardrails_v1",
+          "blocked_lessons": []
+        },
+        "injected_chars": 1838,
+        "injected_lesson_count": 3,
+        "wrapper_total_ms": 12568.203
+      },
+      "round0": {
+        "answer": null,
+        "verdict": {
+          "status": null
+        },
+        "latency": null,
+        "evidence": {
+          "current": {},
+          "earlier": []
+        }
+      },
+      "round1": {
+        "answer": "Dạ em chào chị [private], em đã ghi nhận chị chọn Giày sneaker Urban Classic size 38 màu trắng ạ. Sản phẩm này hiện đang có sẵn hàng. \n\nDạ chị muốn em giao hàng về địa chỉ [address]",
+        "verdict": {
+          "status": null
+        },
+        "latency": {
+          "ttft_ms": 8542,
+          "total_ms": 8542,
+          "ttfa_ms": null,
+          "measurement_mode": "non_streaming",
+          "timing_boundary": "response_ready_before_persistence",
+          "asr_ms": null,
+          "call_brief_ms": 3372,
+          "response_ready_ms": 8542,
+          "persistence_ms": 0.61,
+          "request_complete_ms": 8542.433,
+          "backend_total_ms": 8542.433,
+          "precomputed_parts": []
+        },
+        "evidence": {
+          "current": {
+            "turn_id": 1,
+            "agent_response": "Dạ em chào chị [private], em đã ghi nhận chị chọn Giày sneaker Urban Classic size 38 màu trắng ạ. Sản phẩm này hiện đang có sẵn hàng. \n\nDạ chị muốn em giao hàng về địa chỉ [address]",
+            "tool_calls": [
+              {
+                "name": "catalog.search",
+                "args": {
+                  "query": "Giày sneaker Urban Classic size 38 màu trắng",
+                  "on": "2026-10-02"
+                },
+                "result": {
+                  "items": [
+                    {
+                      "sku": "SKU-SN-CAS",
+                      "name": "[private]",
+                      "category": "thoi-trang/giay",
+                      "brand": "Urban",
+                      "list_price_vnd": 890000.0,
+                      "discontinued": false,
+                      "successor_sku": null,
+                      "attributes": {
+                        "material": "vải lưới + đế EVA",
+                        "return_days": 7
+                      },
+                      "variants": [
+                        {
+                          "variant_sku": "SKU-SN-CAS-38-TRANG",
+                          "size": "38",
+                          "color": "trang",
+                          "price_delta": 0,
+                          "price_delta_vnd": 0
+                        }
+                      ]
+                    }
+                  ]
+                }
+              },
+              {
+                "name": "inventory.check",
+                "args": {
+                  "sku": "SKU-SN-CAS-38-TRANG",
+                  "on": "2026-10-02"
+                },
+                "result": {
+                  "sku": "SKU-SN-CAS-38-TRANG",
+                  "found": true,
+                  "in_stock": true,
+                  "qty": 5,
+                  "discontinued": false
+                }
+              },
+              {
+                "name": "pricing.get_quote",
+                "args": {
+                  "on": "2026-10-02",
+                  "customer_phone": "[private]",
+                  "customer_id": "[private]",
+                  "sku": "SKU-SN-CAS-38-TRANG",
+                  "qty": 1
+                },
+                "result": {
+                  "sku": "SKU-SN-CAS-38-TRANG",
+                  "list_price_vnd": 890000,
+                  "final_price_vnd": 890000,
+                  "applied_promos": [
+                    {
+                      "promo_code": "COD-0",
+                      "type": "freecod",
+                      "discount_vnd": 0
+                    }
+                  ],
+                  "expired_promos": [],
+                  "ineligible_promos": [],
+                  "not_applied_exclusive": [],
+                  "freeship": false
+                }
+              }
+            ],
+            "sources": [],
+            "promotions": []
+          },
+          "earlier": []
+        }
+      }
+    },
+    {
+      "call": "SC-021/call_1",
+      "turn_id": 2,
+      "question": "Chị đồng ý 890.000 đồng cho một sản phẩm. Địa chỉ [address]",
+      "baseline_question": null,
+      "classification": "not_evaluated",
+      "case_id": null,
+      "gap_id": null,
+      "answer_changed": false,
+      "injected": false,
+      "lesson_trace": {
+        "lessons_loaded": 25,
+        "selected_lessons": [],
+        "injected": false,
+        "mode": "memory_only",
+        "response_modified": false,
+        "routing": "no_match",
+        "routing_ms": 3007.188,
+        "routing_usage": {
+          "input_tokens": 5040,
+          "output_tokens": 13
+        },
+        "wrapper_total_ms": 10062.278
+      },
+      "round0": {
+        "answer": null,
+        "verdict": {
+          "status": null
+        },
+        "latency": null,
+        "evidence": {
+          "current": {},
+          "earlier": []
+        }
+      },
+      "round1": {
+        "answer": "Dạ em cảm ơn chị [private]. Em đã lên thành công đơn hàng cho chị với sản phẩm Giày sneaker Urban Classic size 38 màu trắng. \n\nMã đơn hàng của chị là **[order_id]**, tổng tiền là 890.000 đồng và chị sẽ thanh toán COD khi nhận hàng tại địa chỉ [address]",
+        "verdict": {
+          "status": null
+        },
+        "latency": {
+          "ttft_ms": 7055,
+          "total_ms": 7055,
+          "ttfa_ms": null,
+          "measurement_mode": "non_streaming",
+          "timing_boundary": "response_ready_before_persistence",
+          "asr_ms": null,
+          "call_brief_ms": null,
+          "response_ready_ms": 7055,
+          "persistence_ms": 0.212,
+          "request_complete_ms": 7054.996,
+          "backend_total_ms": 7054.996,
+          "precomputed_parts": [
+            "persisted_facts"
+          ]
+        },
+        "evidence": {
+          "current": {
+            "turn_id": 2,
+            "agent_response": "Dạ em cảm ơn chị [private]. Em đã lên thành công đơn hàng cho chị với sản phẩm Giày sneaker Urban Classic size 38 màu trắng. \n\nMã đơn hàng của chị là **[order_id]**, tổng tiền là 890.000 đồng và chị sẽ thanh toán COD khi nhận hàng tại địa chỉ [address]",
+            "tool_calls": [
+              {
+                "name": "pricing.get_quote",
+                "args": {
+                  "on": "2026-10-02",
+                  "customer_phone": "[private]",
+                  "customer_id": "[private]",
+                  "address": "[private]",
+                  "sku": "SKU-SN-CAS-38-TRANG",
+                  "qty": 1
+                },
+                "result": {
+                  "sku": "SKU-SN-CAS-38-TRANG",
+                  "list_price_vnd": 890000,
+                  "final_price_vnd": 890000,
+                  "applied_promos": [
+                    {
+                      "promo_code": "COD-0",
+                      "type": "freecod",
+                      "discount_vnd": 0
+                    }
+                  ],
+                  "expired_promos": [],
+                  "ineligible_promos": [],
+                  "not_applied_exclusive": [],
+                  "freeship": false
+                }
+              },
+              {
+                "name": "order.create",
+                "args": {
+                  "customer_phone": "[private]",
+                  "customer_id": "[private]",
+                  "address": "[private]",
+                  "idempotency_key": "self-7c8f549e9b974760ae295bef7bdd65f7-SC-021-call_1:call_1:create:SKU-SN-CAS-38-TRANG",
+                  "sku": "SKU-SN-CAS-38-TRANG",
+                  "qty": 1,
+                  "price_vnd": 890000,
+                  "promo_code": "COD-0",
+                  "on": "2026-10-02",
+                  "payment": "COD"
+                },
+                "result": {
+                  "order_id": "[private]",
+                  "status": "created",
+                  "total_vnd": 890000,
+                  "needs_confirmation_call": false,
+                  "estimated_delivery": "2026-10-05"
+                }
+              }
+            ],
+            "sources": [],
+            "promotions": []
+          },
+          "earlier": [
+            {
+              "turn_id": 1,
+              "tool_calls": [
+                {
+                  "name": "catalog.search",
+                  "args": {
+                    "query": "Giày sneaker Urban Classic size 38 màu trắng",
+                    "on": "2026-10-02"
+                  },
+                  "result": {
+                    "items": [
+                      {
+                        "sku": "SKU-SN-CAS",
+                        "name": "[private]",
+                        "category": "thoi-trang/giay",
+                        "brand": "Urban",
+                        "list_price_vnd": 890000.0,
+                        "discontinued": false,
+                        "successor_sku": null,
+                        "attributes": {
+                          "material": "vải lưới + đế EVA",
+                          "return_days": 7
+                        },
+                        "variants": [
+                          {
+                            "variant_sku": "SKU-SN-CAS-38-TRANG",
+                            "size": "38",
+                            "color": "trang",
+                            "price_delta": 0,
+                            "price_delta_vnd": 0
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                },
+                {
+                  "name": "inventory.check",
+                  "args": {
+                    "sku": "SKU-SN-CAS-38-TRANG",
+                    "on": "2026-10-02"
+                  },
+                  "result": {
+                    "sku": "SKU-SN-CAS-38-TRANG",
+                    "found": true,
+                    "in_stock": true,
+                    "qty": 5,
+                    "discontinued": false
+                  }
+                },
+                {
+                  "name": "pricing.get_quote",
+                  "args": {
+                    "on": "2026-10-02",
+                    "customer_phone": "[private]",
+                    "customer_id": "[private]",
+                    "sku": "SKU-SN-CAS-38-TRANG",
+                    "qty": 1
+                  },
+                  "result": {
+                    "sku": "SKU-SN-CAS-38-TRANG",
+                    "list_price_vnd": 890000,
+                    "final_price_vnd": 890000,
+                    "applied_promos": [
+                      {
+                        "promo_code": "COD-0",
+                        "type": "freecod",
+                        "discount_vnd": 0
+                      }
+                    ],
+                    "expired_promos": [],
+                    "ineligible_promos": [],
+                    "not_applied_exclusive": [],
+                    "freeship": false
+                  }
+                }
+              ],
+              "sources": [],
+              "promotions": []
+            }
+          ]
+        }
+      }
+    },
+    {
+      "call": "SC-021/call_1",
+      "turn_id": 3,
+      "question": "Em tạo đơn giúp chị và đọc mã đơn để chị lưu nhé.",
+      "baseline_question": null,
+      "classification": "not_evaluated",
+      "case_id": null,
+      "gap_id": null,
+      "answer_changed": false,
+      "injected": false,
+      "lesson_trace": {
+        "lessons_loaded": 25,
+        "selected_lessons": [],
+        "injected": false,
+        "mode": "memory_only",
+        "response_modified": false,
+        "routing": "failed",
+        "routing_error": "ValueError",
+        "routing_ms": 1392.572,
+        "routing_usage": {
+          "input_tokens": 4693,
+          "output_tokens": 1
+        },
+        "wrapper_total_ms": 5628.693
+      },
+      "round0": {
+        "answer": null,
+        "verdict": {
+          "status": null
+        },
+        "latency": null,
+        "evidence": {
+          "current": {},
+          "earlier": []
+        }
+      },
+      "round1": {
+        "answer": "Dạ chị [private] ơi, đơn hàng cho sản phẩm Giày sneaker Urban Classic size 38 màu trắng của chị đã được tạo thành công rồi ạ. \n\nMã đơn hàng của chị là **[order_id]**. \n\nTổng tiền là 890.000 đồng, thanh toán COD khi nhận hàng tại địa chỉ [address]",
+        "verdict": {
+          "status": null
+        },
+        "latency": {
+          "ttft_ms": 4236,
+          "total_ms": 4236,
+          "ttfa_ms": null,
+          "measurement_mode": "non_streaming",
+          "timing_boundary": "response_ready_before_persistence",
+          "asr_ms": null,
+          "call_brief_ms": null,
+          "response_ready_ms": 4236,
+          "persistence_ms": 0.113,
+          "request_complete_ms": 4236.046,
+          "backend_total_ms": 4236.046,
+          "precomputed_parts": [
+            "persisted_facts"
+          ]
+        },
+        "evidence": {
+          "current": {
+            "turn_id": 3,
+            "agent_response": "Dạ chị [private] ơi, đơn hàng cho sản phẩm Giày sneaker Urban Classic size 38 màu trắng của chị đã được tạo thành công rồi ạ. \n\nMã đơn hàng của chị là **[order_id]**. \n\nTổng tiền là 890.000 đồng, thanh toán COD khi nhận hàng tại địa chỉ [address]",
+            "tool_calls": [
+              {
+                "name": "inventory.check",
+                "args": {
+                  "sku": "SKU-SN-CAS-38-TRANG",
+                  "on": "2026-10-02"
+                },
+                "result": {
+                  "sku": "SKU-SN-CAS-38-TRANG",
+                  "found": true,
+                  "in_stock": true,
+                  "qty": 5,
+                  "discontinued": false
+                }
+              },
+              {
+                "name": "pricing.get_quote",
+                "args": {
+                  "on": "2026-10-02",
+                  "customer_phone": "[private]",
+                  "customer_id": "[private]",
+                  "address": "[private]",
+                  "sku": "SKU-SN-CAS-38-TRANG",
+                  "qty": 1
+                },
+                "result": {
+                  "sku": "SKU-SN-CAS-38-TRANG",
+                  "list_price_vnd": 890000,
+                  "final_price_vnd": 890000,
+                  "applied_promos": [
+                    {
+                      "promo_code": "COD-0",
+                      "type": "freecod",
+                      "discount_vnd": 0
+                    }
+                  ],
+                  "expired_promos": [],
+                  "ineligible_promos": [],
+                  "not_applied_exclusive": [],
+                  "freeship": false
+                }
+              }
+            ],
+            "sources": [],
+            "promotions": []
+          },
+          "earlier": [
+            {
+              "turn_id": 1,
+              "tool_calls": [
+                {
+                  "name": "catalog.search",
+                  "args": {
+                    "query": "Giày sneaker Urban Classic size 38 màu trắng",
+                    "on": "2026-10-02"
+                  },
+                  "result": {
+                    "items": [
+                      {
+                        "sku": "SKU-SN-CAS",
+                        "name": "[private]",
+                        "category": "thoi-trang/giay",
+                        "brand": "Urban",
+                        "list_price_vnd": 890000.0,
+                        "discontinued": false,
+                        "successor_sku": null,
+                        "attributes": {
+                          "material": "vải lưới + đế EVA",
+                          "return_days": 7
+                        },
+                        "variants": [
+                          {
+                            "variant_sku": "SKU-SN-CAS-38-TRANG",
+                            "size": "38",
+                            "color": "trang",
+                            "price_delta": 0,
+                            "price_delta_vnd": 0
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                },
+                {
+                  "name": "inventory.check",
+                  "args": {
+                    "sku": "SKU-SN-CAS-38-TRANG",
+                    "on": "2026-10-02"
+                  },
+                  "result": {
+                    "sku": "SKU-SN-CAS-38-TRANG",
+                    "found": true,
+                    "in_stock": true,
+                    "qty": 5,
+                    "discontinued": false
+                  }
+                },
+                {
+                  "name": "pricing.get_quote",
+                  "args": {
+                    "on": "2026-10-02",
+                    "customer_phone": "[private]",
+                    "customer_id": "[private]",
+                    "sku": "SKU-SN-CAS-38-TRANG",
+                    "qty": 1
+                  },
+                  "result": {
+                    "sku": "SKU-SN-CAS-38-TRANG",
+                    "list_price_vnd": 890000,
+                    "final_price_vnd": 890000,
+                    "applied_promos": [
+                      {
+                        "promo_code": "COD-0",
+                        "type": "freecod",
+                        "discount_vnd": 0
+                      }
+                    ],
+                    "expired_promos": [],
+                    "ineligible_promos": [],
+                    "not_applied_exclusive": [],
+                    "freeship": false
+                  }
+                }
+              ],
+              "sources": [],
+              "promotions": []
+            },
+            {
+              "turn_id": 2,
+              "tool_calls": [
+                {
+                  "name": "pricing.get_quote",
+                  "args": {
+                    "on": "2026-10-02",
+                    "customer_phone": "[private]",
+                    "customer_id": "[private]",
+                    "address": "[private]",
+                    "sku": "SKU-SN-CAS-38-TRANG",
+                    "qty": 1
+                  },
+                  "result": {
+                    "sku": "SKU-SN-CAS-38-TRANG",
+                    "list_price_vnd": 890000,
+                    "final_price_vnd": 890000,
+                    "applied_promos": [
+                      {
+                        "promo_code": "COD-0",
+                        "type": "freecod",
+                        "discount_vnd": 0
+                      }
+                    ],
+                    "expired_promos": [],
+                    "ineligible_promos": [],
+                    "not_applied_exclusive": [],
+                    "freeship": false
+                  }
+                },
+                {
+                  "name": "order.create",
+                  "args": {
+                    "customer_phone": "[private]",
+                    "customer_id": "[private]",
+                    "address": "[private]",
+                    "idempotency_key": "self-7c8f549e9b974760ae295bef7bdd65f7-SC-021-call_1:call_1:create:SKU-SN-CAS-38-TRANG",
+                    "sku": "SKU-SN-CAS-38-TRANG",
+                    "qty": 1,
+                    "price_vnd": 890000,
+                    "promo_code": "COD-0",
+                    "on": "2026-10-02",
+                    "payment": "COD"
+                  },
+                  "result": {
+                    "order_id": "[private]",
+                    "status": "created",
+                    "total_vnd": 890000,
+                    "needs_confirmation_call": false,
+                    "estimated_delivery": "2026-10-05"
+                  }
+                }
+              ],
+              "sources": [],
+              "promotions": []
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "lessons": [],
+  "sessions": [
+    {
+      "call": "SC-021/call_1",
+      "round0": {
+        "job": null,
+        "error": null,
+        "learning": null,
+        "observed_input_findings": []
+      },
+      "round1": {
+        "job": {
+          "status": "done",
+          "job_id": "6ba2931e5e3bd432649ebcd414e8c9f89a387e865e3fac2d0ec01de56c132633",
+          "error": null
+        },
+        "error": null,
+        "learning": {
+          "job_id": "6ba2931e5e3bd432649ebcd414e8c9f89a387e865e3fac2d0ec01de56c132633",
+          "gaps": [],
+          "scope": "knowledge_gap_and_reflection_v1",
+          "evaluation_cases": [],
+          "out_of_scope": [],
+          "issue_reviews": [],
+          "detector_error": null,
+          "guardrails": {
+            "version": "learning_guardrails_v1",
+            "input_findings": [],
+            "blocked_lessons": [],
+            "blocked_sources": []
+          },
+          "detection": {
+            "candidate_count": 0,
+            "open_question_count": 0,
+            "processed_count": 0,
+            "skipped_unmatched_question": 0,
+            "skipped_over_limit": 0,
+            "scan": {
+              "turns_available": 3,
+              "turns_scanned": 3,
+              "requests": 3,
+              "errors": [],
+              "schema_retries": 0,
+              "skipped_over_limit": 0
+            },
+            "alignment_rejections": []
+          },
+          "outcome": "no_candidates",
+          "learning_duration_ms": 3401,
+          "learning_usage": {
+            "input_tokens": 4441,
+            "output_tokens": 13
+          }
+        },
+        "observed_input_findings": []
+      }
+    }
+  ],
+  "limitations": [
+    "Verdict kiểm tra được reference vẫn cần người đọc xác nhận ngữ nghĩa và độ đầy đủ.",
+    "Câu trả lời thay đổi hoặc được inject lesson chưa chứng minh lesson gây ra cải thiện.",
+    "Reflection chưa được chấm chất lượng; learning job done/lesson approved không phải điểm chất lượng.",
+    "Guardrail mẫu có giới hạn; không phát hiện mẫu không đồng nghĩa không có prompt injection."
+  ]
+}

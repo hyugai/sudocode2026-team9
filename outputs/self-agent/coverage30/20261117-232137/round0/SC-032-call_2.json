@@ -1,0 +1,433 @@
+{
+  "scenario_id": "SC-032",
+  "call": "call_2",
+  "session_id": "self-46b3ccbd5c844c6ca55bbd848736b6b4-SC-032-call_2",
+  "turns": [
+    {
+      "customer": "Anh liên hệ lại theo lịch, vẫn đang cân nhắc món đã hỏi.",
+      "agent": "Dạ em chào anh [private], em gọi lại theo đúng lịch hẹn ạ. Lần trước anh có băn khoăn về điều kiện đổi size cho mẫu áo khoác (SKU-JK-WND-M-NAVY), hiện tại anh đã sẵn sàng chốt đơn hay cần em hỗ trợ thêm thông tin gì nữa không ạ?",
+      "latency": {
+        "ttft_ms": 4401,
+        "total_ms": 4401,
+        "ttfa_ms": null,
+        "measurement_mode": "non_streaming",
+        "timing_boundary": "response_ready_before_persistence",
+        "asr_ms": null,
+        "call_brief_ms": 2859,
+        "response_ready_ms": 4401,
+        "persistence_ms": 0.092,
+        "request_complete_ms": 4401.454,
+        "backend_total_ms": 4401.454,
+        "precomputed_parts": [
+          "persisted_facts"
+        ]
+      },
+      "lesson_trace": null
+    },
+    {
+      "customer": "Nếu mua mới hôm nay thì được đổi trong 14 ngày và mất phí 20 nghìn phải không? Hình như đó là bài cũ.",
+      "agent": "Dạ đúng rồi anh [private], đó là quy định cũ ạ. Theo chính sách hiện hành áp dụng cho đơn hàng mua mới từ tháng 10/2026, thời gian đổi trả đã được điều chỉnh thành **7 ngày** kể từ khi nhận hàng. \n\nĐặc biệt, nếu anh cần đổi size lần đầu thì bên em sẽ hỗ trợ **hoàn toàn miễn phí** (chính sách cũ có thu phí 20.000đ) anh nha. \n\nHiện tại mẫu áo khoác navy size M anh chọn đang có sẵn, anh có muốn em hỗ trợ chốt đơn giao về địa chỉ [address]",
+      "latency": {
+        "ttft_ms": 6535,
+        "total_ms": 6535,
+        "ttfa_ms": null,
+        "measurement_mode": "non_streaming",
+        "timing_boundary": "response_ready_before_persistence",
+        "asr_ms": null,
+        "call_brief_ms": null,
+        "response_ready_ms": 6535,
+        "persistence_ms": 0.09,
+        "request_complete_ms": 6535.439,
+        "backend_total_ms": 6535.439,
+        "precomputed_parts": [
+          "persisted_facts"
+        ]
+      },
+      "lesson_trace": null
+    },
+    {
+      "customer": "Nếu hàng chưa dùng, còn tem hộp và đổi size lần đầu thì chính sách hiện tại thế nào?",
+      "agent": "Dạ anh [private], theo chính sách hiện tại (áp dụng từ tháng 10/2026), sản phẩm còn nguyên tem hộp, chưa qua sử dụng và có hóa đơn/mã đơn hàng sẽ được hỗ trợ đổi trong vòng **7 ngày** kể từ khi nhận hàng. \n\nĐặc biệt, nếu anh đổi size lần đầu cho cùng một đơn hàng thì bên em sẽ hỗ trợ **hoàn toàn miễn phí** và chịu phí vận chuyển hai chiều ạ (điều kiện là size mới còn hàng). \n\nAnh có cần em hỗ trợ kiểm tra size hay lên đơn cho mình luôn không anh?",
+      "latency": {
+        "ttft_ms": 3547,
+        "total_ms": 3547,
+        "ttfa_ms": null,
+        "measurement_mode": "non_streaming",
+        "timing_boundary": "response_ready_before_persistence",
+        "asr_ms": null,
+        "call_brief_ms": null,
+        "response_ready_ms": 3547,
+        "persistence_ms": 0.094,
+        "request_complete_ms": 3547.309,
+        "backend_total_ms": 3547.309,
+        "precomputed_parts": [
+          "persisted_facts"
+        ]
+      },
+      "lesson_trace": null
+    },
+    {
+      "customer": "Anh hiểu rồi, để xem thêm; chưa lên đơn và chưa hẹn gọi lại nhé.",
+      "agent": "Dạ em cảm ơn anh [private]. Anh cứ xem thêm thoải mái ạ. Khi nào anh cần hỗ trợ tư vấn hay đặt hàng thì cứ báo em nhé. Em chúc anh một ngày tốt lành!",
+      "latency": {
+        "ttft_ms": 2926,
+        "total_ms": 2926,
+        "ttfa_ms": null,
+        "measurement_mode": "non_streaming",
+        "timing_boundary": "response_ready_before_persistence",
+        "asr_ms": null,
+        "call_brief_ms": null,
+        "response_ready_ms": 2926,
+        "persistence_ms": 0.091,
+        "request_complete_ms": 2925.919,
+        "backend_total_ms": 2925.919,
+        "precomputed_parts": [
+          "persisted_facts"
+        ]
+      },
+      "lesson_trace": null
+    }
+  ],
+  "generation_context": {
+    "round": 0,
+    "instruction_hash": "9d30a7093911a993d8545de8b61cc6dc8465de67b10fb62b27d9f1bafaf0badf",
+    "applied_patterns": {},
+    "lessons_loaded": false,
+    "lesson_sources": [],
+    "lesson_files": [],
+    "instruction_root": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round0\\instructions"
+  },
+  "evaluation_evidence": [
+    {
+      "turn_id": 1,
+      "agent_response": "Dạ em chào anh [private], em gọi lại theo đúng lịch hẹn ạ. Lần trước anh có băn khoăn về điều kiện đổi size cho mẫu áo khoác (SKU-JK-WND-M-NAVY), hiện tại anh đã sẵn sàng chốt đơn hay cần em hỗ trợ thêm thông tin gì nữa không ạ?",
+      "tool_calls": [],
+      "sources": [],
+      "promotions": []
+    },
+    {
+      "turn_id": 2,
+      "agent_response": "Dạ đúng rồi anh [private], đó là quy định cũ ạ. Theo chính sách hiện hành áp dụng cho đơn hàng mua mới từ tháng 10/2026, thời gian đổi trả đã được điều chỉnh thành **7 ngày** kể từ khi nhận hàng. \n\nĐặc biệt, nếu anh cần đổi size lần đầu thì bên em sẽ hỗ trợ **hoàn toàn miễn phí** (chính sách cũ có thu phí 20.000đ) anh nha. \n\nHiện tại mẫu áo khoác navy size M anh chọn đang có sẵn, anh có muốn em hỗ trợ chốt đơn giao về địa chỉ [address]",
+      "tool_calls": [
+        {
+          "name": "policy.search",
+          "args": {
+            "query": "Nếu mua mới hôm nay thì được đổi trong 14 ngày và mất phí 20 nghìn phải không? Hình như đó là bài cũ.",
+            "k": 3,
+            "product_sku": "SKU-JK-WND-M-NAVY",
+            "as_of": "2026-10-19"
+          },
+          "result": {
+            "query": "Nếu mua mới hôm nay thì được đổi trong 14 ngày và mất phí 20 nghìn phải không? Hình như đó là bài cũ.",
+            "as_of": "2026-10-19",
+            "product_sku": "SKU-JK-WND-M-NAVY",
+            "count": 3,
+            "chunks": [
+              {
+                "chunk_id": "DT-06",
+                "content": "Sản phẩm hư hỏng do người dùng (rơi vỡ, vào nước, dùng sai điện áp). Sản phẩm mua trong chương trình xả kho ghi rõ \"không đổi trả\". Quá 7 ngày kể từ ngày nhận (trừ lỗi nhà sản xuất).",
+                "source_file": "chinh-sach-doi-tra.md",
+                "section": "[DT-06] Trường hợp không được đổi trả"
+              },
+              {
+                "chunk_id": "CL-01",
+                "content": "Thay thế phiên bản 2026-06. Thay đổi: thời hạn đổi trả 14 → **7 ngày**; đổi size lần đầu **miễn phí** (trước: 20.000đ); hoàn tiền 7 → **3–5 ngày làm việc**; lỗi nhà sản xuất đổi mới 15 → **30 ngày** (gia dụng, mẹ & bé). Đơn tạo trước 01/10/2026 vẫn áp dụng bản cũ.",
+                "source_file": "changelog.md",
+                "section": "[CL-01] 01/10/2026 — Chính sách đổi trả phiên bản 2026-10"
+              },
+              {
+                "chunk_id": "DT-01",
+                "content": "Khách hàng được đổi hoặc trả sản phẩm trong vòng **7 ngày** kể từ ngày nhận hàng (tính theo ngày ký nhận trên đơn vận chuyển). Với ngành hàng gia dụng và mẹ & bé có lỗi kỹ thuật từ nhà sản xuất, thời hạn đổi mới là **30 ngày**.",
+                "source_file": "chinh-sach-doi-tra.md",
+                "section": "[DT-01] Thời hạn đổi trả"
+              }
+            ]
+          }
+        }
+      ],
+      "sources": [],
+      "promotions": []
+    },
+    {
+      "turn_id": 3,
+      "agent_response": "Dạ anh [private], theo chính sách hiện tại (áp dụng từ tháng 10/2026), sản phẩm còn nguyên tem hộp, chưa qua sử dụng và có hóa đơn/mã đơn hàng sẽ được hỗ trợ đổi trong vòng **7 ngày** kể từ khi nhận hàng. \n\nĐặc biệt, nếu anh đổi size lần đầu cho cùng một đơn hàng thì bên em sẽ hỗ trợ **hoàn toàn miễn phí** và chịu phí vận chuyển hai chiều ạ (điều kiện là size mới còn hàng). \n\nAnh có cần em hỗ trợ kiểm tra size hay lên đơn cho mình luôn không anh?",
+      "tool_calls": [
+        {
+          "name": "policy.search",
+          "args": {
+            "query": "Nếu hàng chưa dùng, còn tem hộp và đổi size lần đầu thì chính sách hiện tại thế nào?",
+            "k": 3,
+            "product_sku": "SKU-JK-WND-M-NAVY",
+            "as_of": "2026-10-19"
+          },
+          "result": {
+            "query": "Nếu hàng chưa dùng, còn tem hộp và đổi size lần đầu thì chính sách hiện tại thế nào?",
+            "as_of": "2026-10-19",
+            "product_sku": "SKU-JK-WND-M-NAVY",
+            "count": 3,
+            "chunks": [
+              {
+                "chunk_id": "DT-02",
+                "content": "Sản phẩm còn nguyên tem, nhãn, hộp, chưa qua sử dụng (giày/áo chưa giặt, chưa có dấu hiệu mòn đế). Có hóa đơn hoặc mã đơn hàng. Sản phẩm thuộc nhóm đồ lót, bình sữa, núm ti đã bóc seal **không** được đổi trả vì lý do vệ sinh.",
+                "source_file": "chinh-sach-doi-tra.md",
+                "section": "[DT-02] Điều kiện đổi trả"
+              },
+              {
+                "chunk_id": "CL-01",
+                "content": "Thay thế phiên bản 2026-06. Thay đổi: thời hạn đổi trả 14 → **7 ngày**; đổi size lần đầu **miễn phí** (trước: 20.000đ); hoàn tiền 7 → **3–5 ngày làm việc**; lỗi nhà sản xuất đổi mới 15 → **30 ngày** (gia dụng, mẹ & bé). Đơn tạo trước 01/10/2026 vẫn áp dụng bản cũ.",
+                "source_file": "changelog.md",
+                "section": "[CL-01] 01/10/2026 — Chính sách đổi trả phiên bản 2026-10"
+              },
+              {
+                "chunk_id": "DT-03",
+                "content": "Đổi size hoặc màu lần **đầu tiên** cho cùng một đơn hàng: **miễn phí**, shop chịu phí vận chuyển hai chiều. Từ lần đổi thứ hai trở đi: khách chịu phí vận chuyển 30.000đ/chiều. Điều kiện: size/màu mới còn hàng; nếu hết hàng, khách được chọn sản phẩm khác cùng giá hoặc hoàn tiền.",
+                "source_file": "chinh-sach-doi-tra.md",
+                "section": "[DT-03] Đổi size / màu (thời trang)"
+              }
+            ]
+          }
+        }
+      ],
+      "sources": [],
+      "promotions": []
+    },
+    {
+      "turn_id": 4,
+      "agent_response": "Dạ em cảm ơn anh [private]. Anh cứ xem thêm thoải mái ạ. Khi nào anh cần hỗ trợ tư vấn hay đặt hàng thì cứ báo em nhé. Em chúc anh một ngày tốt lành!",
+      "tool_calls": [],
+      "sources": [],
+      "promotions": []
+    }
+  ],
+  "job": {
+    "status": "done",
+    "job_id": "e110e43902f11c466044ea97b3398ad09c7d856334dce298f0ad13519bb55877",
+    "error": null
+  },
+  "learning": {
+    "job_id": "e110e43902f11c466044ea97b3398ad09c7d856334dce298f0ad13519bb55877",
+    "gaps": [
+      {
+        "id": "cd2fe0321127d8f5c7d54af123dc8865aa478ec6ba6f9f96039b6b0af8139eb7",
+        "status": "pending_remediation"
+      }
+    ],
+    "scope": "knowledge_gap_and_reflection_v1",
+    "evaluation_cases": [
+      {
+        "id": "a08ef3a86bd48def5bcaf07b04b00a0b022dd5166dc7cb478386dfc1d113a7e2",
+        "gap_id": "cd2fe0321127d8f5c7d54af123dc8865aa478ec6ba6f9f96039b6b0af8139eb7",
+        "turn_id": 1,
+        "question": "Anh liên hệ lại theo lịch, vẫn đang cân nhắc món đã hỏi.",
+        "reason": "unsupported_claim",
+        "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments."
+      }
+    ],
+    "out_of_scope": [],
+    "issue_reviews": [
+      {
+        "job_id": "e110e43902f11c466044ea97b3398ad09c7d856334dce298f0ad13519bb55877",
+        "message_id": 0,
+        "turn_id": 1,
+        "origin": "turn_detector",
+        "mechanism": "knowledge_gap",
+        "verified": true,
+        "claim": "Lần trước anh có băn khoăn về điều kiện đổi size cho mẫu áo khoác (SKU-JK-WND-M-NAVY)",
+        "assessment": "unsupported_by_evidence",
+        "evidence_paths": [],
+        "rejection": null,
+        "rejection_reasons": [],
+        "format_retry": false,
+        "verifier_output": {
+          "valid": true,
+          "issue_scope": "business_knowledge",
+          "claim": "Lần trước anh có băn khoăn về điều kiện đổi size cho mẫu áo khoác (SKU-JK-WND-M-NAVY)",
+          "assessment": "unsupported_by_evidence",
+          "evidence_paths": [],
+          "decision_reason": "The agent claims specific details about a previous customer inquiry and SKU without any supporting tool calls, sources, or prior conversation evidence.",
+          "audit": {
+            "support_status": "not_established",
+            "coverage": "complete",
+            "checked_paths": [
+              "evidence.tool_calls",
+              "evidence.sources",
+              "evidence.promotions"
+            ]
+          }
+        },
+        "candidate_claim": "Lần trước anh có băn khoăn về điều kiện đổi size cho mẫu áo khoác (SKU-JK-WND-M-NAVY)",
+        "verification_basis": "evidence_inventory_audit",
+        "evidence_inventory": [
+          "evidence.tool_calls",
+          "evidence.sources",
+          "evidence.promotions"
+        ],
+        "lesson_status": "approved"
+      }
+    ],
+    "detector_error": null,
+    "guardrails": {
+      "version": "learning_guardrails_v1",
+      "input_findings": [],
+      "blocked_lessons": [],
+      "blocked_sources": []
+    },
+    "detection": {
+      "candidate_count": 1,
+      "open_question_count": 0,
+      "processed_count": 1,
+      "skipped_unmatched_question": 0,
+      "skipped_over_limit": 0,
+      "scan": {
+        "turns_available": 4,
+        "turns_scanned": 4,
+        "requests": 4,
+        "errors": [],
+        "schema_retries": 0,
+        "skipped_over_limit": 0
+      },
+      "alignment_rejections": []
+    },
+    "outcome": "gaps_processed",
+    "learning_duration_ms": 11579,
+    "learning_usage": {
+      "input_tokens": 8099,
+      "output_tokens": 324
+    }
+  },
+  "artifact_changes": [
+    {
+      "path": "gaps/cd2fe0321127d8f5c7d54af123dc8865aa478ec6ba6f9f96039b6b0af8139eb7.json",
+      "change": "created",
+      "value": {
+        "id": "cd2fe0321127d8f5c7d54af123dc8865aa478ec6ba6f9f96039b6b0af8139eb7",
+        "question": "Thông tin nghiệp vụ cần được xác minh từ nguồn nào?",
+        "occurrences": [
+          "e110e43902f11c466044ea97b3398ad09c7d856334dce298f0ad13519bb55877"
+        ],
+        "reason": "unsupported_claim",
+        "mechanism": "knowledge_gap",
+        "status": "pending_remediation",
+        "evidence_refs": [
+          {
+            "job_id": "e110e43902f11c466044ea97b3398ad09c7d856334dce298f0ad13519bb55877",
+            "message_id": 0,
+            "turn_id": 1,
+            "origin": "turn_detector"
+          }
+        ],
+        "pattern_ref": "cd2fe0321127d8f5c7d54af123dc8865aa478ec6ba6f9f96039b6b0af8139eb7",
+        "test_refs": [
+          "cd2fe0321127d8f5c7d54af123dc8865aa478ec6ba6f9f96039b6b0af8139eb7"
+        ]
+      }
+    },
+    {
+      "path": "patterns/cd2fe0321127d8f5c7d54af123dc8865aa478ec6ba6f9f96039b6b0af8139eb7.json",
+      "change": "created",
+      "value": {
+        "id": "cd2fe0321127d8f5c7d54af123dc8865aa478ec6ba6f9f96039b6b0af8139eb7",
+        "reason": "unsupported_claim",
+        "pattern": "Do not state an unverified claim as a fact.",
+        "status": "approved",
+        "scope": "general",
+        "mechanism": "knowledge_gap",
+        "criterion": "Do not state an unverified claim as a fact.",
+        "evidence_refs": [
+          {
+            "job_id": "e110e43902f11c466044ea97b3398ad09c7d856334dce298f0ad13519bb55877",
+            "message_id": 0,
+            "turn_id": 1,
+            "origin": "turn_detector"
+          }
+        ],
+        "assessment": "unsupported_by_evidence",
+        "report_ref": "e110e43902f11c466044ea97b3398ad09c7d856334dce298f0ad13519bb55877",
+        "lesson": {
+          "title": "Verify Customer Context Before Claiming Prior Details",
+          "when": "A customer mentions following up on a previous inquiry but prior transcript or system evidence for specific details is missing",
+          "do": "Acknowledge the follow-up generally and ask the customer to clarify their specific question or product of interest",
+          "otherwise": "State specific prior details or product SKUs without verified evidence",
+          "triggers": [
+            "follow up without prior evidence",
+            "missing previous inquiry details",
+            "unsupported customer context claim",
+            "anh lien he lai theo lich"
+          ],
+          "id": "affe9cae1d31968e6c92f5e33da85c05d11d7a8268cd36edab06b9697276486f",
+          "status": "approved",
+          "scope": "general",
+          "mechanism": "knowledge_gap",
+          "source_refs": [
+            {
+              "job_id": "e110e43902f11c466044ea97b3398ad09c7d856334dce298f0ad13519bb55877",
+              "message_id": 0,
+              "turn_id": 1,
+              "origin": "turn_detector"
+            }
+          ],
+          "version": 2
+        },
+        "lesson_path": "lessons\\approved\\affe9cae1d31968e6c92f5e33da85c05d11d7a8268cd36edab06b9697276486f.md",
+        "lesson_hash": "d8b42b91cc75639394431c361a1bb933ad5e2d4677d1ae98ca780aa2240081ae"
+      }
+    },
+    {
+      "path": "regression_cases/cd2fe0321127d8f5c7d54af123dc8865aa478ec6ba6f9f96039b6b0af8139eb7.json",
+      "change": "created",
+      "value": {
+        "id": "cd2fe0321127d8f5c7d54af123dc8865aa478ec6ba6f9f96039b6b0af8139eb7",
+        "reason": "unsupported_claim",
+        "pattern": "Do not state an unverified claim as a fact.",
+        "status": "approved",
+        "scope": "general",
+        "mechanism": "knowledge_gap",
+        "criterion": "Do not state an unverified claim as a fact.",
+        "evidence_refs": [
+          {
+            "job_id": "e110e43902f11c466044ea97b3398ad09c7d856334dce298f0ad13519bb55877",
+            "message_id": 0,
+            "turn_id": 1,
+            "origin": "turn_detector"
+          }
+        ],
+        "assessment": "unsupported_by_evidence",
+        "report_ref": "e110e43902f11c466044ea97b3398ad09c7d856334dce298f0ad13519bb55877",
+        "lesson": {
+          "title": "Verify Customer Context Before Claiming Prior Details",
+          "when": "A customer mentions following up on a previous inquiry but prior transcript or system evidence for specific details is missing",
+          "do": "Acknowledge the follow-up generally and ask the customer to clarify their specific question or product of interest",
+          "otherwise": "State specific prior details or product SKUs without verified evidence",
+          "triggers": [
+            "follow up without prior evidence",
+            "missing previous inquiry details",
+            "unsupported customer context claim",
+            "anh lien he lai theo lich"
+          ],
+          "id": "affe9cae1d31968e6c92f5e33da85c05d11d7a8268cd36edab06b9697276486f",
+          "status": "approved",
+          "scope": "general",
+          "mechanism": "knowledge_gap",
+          "source_refs": [
+            {
+              "job_id": "e110e43902f11c466044ea97b3398ad09c7d856334dce298f0ad13519bb55877",
+              "message_id": 0,
+              "turn_id": 1,
+              "origin": "turn_detector"
+            }
+          ],
+          "version": 2
+        },
+        "lesson_path": "lessons\\approved\\affe9cae1d31968e6c92f5e33da85c05d11d7a8268cd36edab06b9697276486f.md",
+        "lesson_hash": "d8b42b91cc75639394431c361a1bb933ad5e2d4677d1ae98ca780aa2240081ae"
+      }
+    },
+    {
+      "path": "lessons/approved/affe9cae1d31968e6c92f5e33da85c05d11d7a8268cd36edab06b9697276486f.md",
+      "change": "created",
+      "value": {
+        "content": "---\n{\"do\": \"Acknowledge the follow-up generally and ask the customer to clarify their specific question or product of interest\", \"id\": \"affe9cae1d31968e6c92f5e33da85c05d11d7a8268cd36edab06b9697276486f\", \"mechanism\": \"knowledge_gap\", \"otherwise\": \"State specific prior details or product SKUs without verified evidence\", \"scope\": \"general\", \"source_refs\": [{\"job_id\": \"e110e43902f11c466044ea97b3398ad09c7d856334dce298f0ad13519bb55877\", \"message_id\": 0, \"origin\": \"turn_detector\", \"turn_id\": 1}], \"status\": \"approved\", \"title\": \"Verify Customer Context Before Claiming Prior Details\", \"triggers\": [\"follow up without prior evidence\", \"missing previous inquiry details\", \"unsupported customer context claim\", \"anh lien he lai theo lich\"], \"version\": 2, \"when\": \"A customer mentions following up on a previous inquiry but prior transcript or system evidence for specific details is missing\"}\n---\n\n# Verify Customer Context Before Claiming Prior Details\n\n## When\nA customer mentions following up on a previous inquiry but prior transcript or system evidence for specific details is missing\n\n## Do\nAcknowledge the follow-up generally and ask the customer to clarify their specific question or product of interest\n\n## Otherwise\nState specific prior details or product SKUs without verified evidence\n"
+      }
+    }
+  ]
+}

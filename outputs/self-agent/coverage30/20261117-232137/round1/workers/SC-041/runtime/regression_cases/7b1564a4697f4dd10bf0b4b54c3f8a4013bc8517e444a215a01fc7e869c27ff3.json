@@ -1,0 +1,46 @@
+{
+  "id": "7b1564a4697f4dd10bf0b4b54c3f8a4013bc8517e444a215a01fc7e869c27ff3",
+  "reason": "unsupported_claim",
+  "pattern": "Do not state an unverified claim as a fact.",
+  "status": "approved",
+  "scope": "general",
+  "mechanism": "knowledge_gap",
+  "criterion": "Do not state an unverified claim as a fact.",
+  "evidence_refs": [
+    {
+      "job_id": "20a24571f0768b695365bef0f86f2b864cc1705d78fe25c0eeda2c80812f03bf",
+      "message_id": 0,
+      "turn_id": 1,
+      "origin": "turn_detector"
+    }
+  ],
+  "assessment": "unsupported_by_evidence",
+  "report_ref": "20a24571f0768b695365bef0f86f2b864cc1705d78fe25c0eeda2c80812f03bf",
+  "lesson": {
+    "title": "Do not assume past product details without evidence",
+    "when": "Checking past customer conversations or orders returns empty results and the product SKU is not established in context",
+    "do": "Ask the customer directly to confirm or specify the exact product model instead of mentioning a specific SKU",
+    "otherwise": "Express uncertainty about past product details and ask for clarification without asserting unsupported SKUs",
+    "triggers": [
+      "không có lịch sử đơn hàng",
+      "order history empty",
+      "unsupported SKU assertion",
+      "tra cứu đơn hàng rỗng"
+    ],
+    "id": "6a348d4187e61b90ad950d79ffb5cbd7903bbab394af828c8d943400ad64f881",
+    "status": "approved",
+    "scope": "general",
+    "mechanism": "knowledge_gap",
+    "source_refs": [
+      {
+        "job_id": "20a24571f0768b695365bef0f86f2b864cc1705d78fe25c0eeda2c80812f03bf",
+        "message_id": 0,
+        "turn_id": 1,
+        "origin": "turn_detector"
+      }
+    ],
+    "version": 2
+  },
+  "lesson_path": "lessons\\approved\\6a348d4187e61b90ad950d79ffb5cbd7903bbab394af828c8d943400ad64f881.md",
+  "lesson_hash": "a978d1914e91e2f1913b89ef288084f3dbbe1387ec0b73fee1c467ff10dd9758"
+}

@@ -1,0 +1,46 @@
+{
+  "id": "1d754478380d1dcd40de378d80d28f32b6647322a75e8d5503e6e2e06b6b169f",
+  "reason": "unsupported_claim",
+  "pattern": "Do not state an unverified claim as a fact.",
+  "status": "approved",
+  "scope": "general",
+  "mechanism": "knowledge_gap",
+  "criterion": "Do not state an unverified claim as a fact.",
+  "evidence_refs": [
+    {
+      "job_id": "9a2ebcf8889de6e023bed8697687ed73b11ef093cc22eabb7aa22b69cb1065f6",
+      "message_id": 2,
+      "turn_id": 2,
+      "origin": "turn_detector"
+    }
+  ],
+  "assessment": "contradicts_evidence",
+  "report_ref": "9a2ebcf8889de6e023bed8697687ed73b11ef093cc22eabb7aa22b69cb1065f6",
+  "lesson": {
+    "title": "State Order Creation Context Accurately",
+    "when": "Referencing the creation of an order that was executed in the current session",
+    "do": "State that the order was created during the current conversation rather than claiming it occurred in a previous call",
+    "otherwise": "Express uncertainty about when the order was created without asserting unverified past interactions",
+    "triggers": [
+      "order created previous call",
+      "đơn hàng cuộc gọi trước",
+      "order creation turn context",
+      "lên đơn cuộc gọi cũ"
+    ],
+    "id": "51f6e31d09f2872f09e7d6b4c0229167e70011561262e2d6d9bad496ba919409",
+    "status": "approved",
+    "scope": "general",
+    "mechanism": "knowledge_gap",
+    "source_refs": [
+      {
+        "job_id": "9a2ebcf8889de6e023bed8697687ed73b11ef093cc22eabb7aa22b69cb1065f6",
+        "message_id": 2,
+        "turn_id": 2,
+        "origin": "turn_detector"
+      }
+    ],
+    "version": 2
+  },
+  "lesson_path": "lessons\\approved\\51f6e31d09f2872f09e7d6b4c0229167e70011561262e2d6d9bad496ba919409.md",
+  "lesson_hash": "18b726942a6cd6d5184e2d7ff9fe8785d0cee2e44ef9eb6bd02e51265c0cda82"
+}

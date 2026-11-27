@@ -1,0 +1,980 @@
+{
+  "schema_version": 1,
+  "guardrail_version": "learning_guardrails_v1",
+  "metadata": {
+    "evaluation_population": "single_session_no_baseline"
+  },
+  "warnings": [
+    "Chưa chạy judge: chỉ xem thay đổi câu trả lời và dấu vết lesson, chưa đánh giá cải thiện.",
+    "Không có cặp chấm hợp lệ: chưa thể kết luận cải thiện hay không có regression."
+  ],
+  "summary": {
+    "total_turns": 4,
+    "judged_pair_count": 0,
+    "round0_turns": 0,
+    "round1_turns": 4,
+    "stored_frozen_case_count": 0,
+    "injected_turns": 0,
+    "changed_answers": 0,
+    "counts": {
+      "improved_resolution": 0,
+      "safer_unresolved": 0,
+      "regression": 0,
+      "unchanged": 0,
+      "needs_review": 0,
+      "not_evaluated": 4,
+      "unpaired": 0,
+      "question_changed": 0,
+      "excluded": 0
+    }
+  },
+  "rows": [
+    {
+      "call": "SC-111/call_1",
+      "turn_id": 1,
+      "question": "Tôi là [private], số điện thoại [phone], đang nhắn qua Fanpage. Shop ơi, anh mua đồ cho nhà mới, đang tính Nồi chiên không dầu Philips 6.2L với Quạt đứng Senko TS16.",
+      "baseline_question": null,
+      "classification": "not_evaluated",
+      "case_id": null,
+      "gap_id": null,
+      "answer_changed": false,
+      "injected": false,
+      "lesson_trace": {},
+      "round0": {
+        "answer": null,
+        "verdict": {
+          "status": null
+        },
+        "latency": null,
+        "evidence": {
+          "current": {},
+          "earlier": []
+        }
+      },
+      "round1": {
+        "answer": "Em chào anh [private] ạ. Chúc mừng anh sắp chuyển sang nhà mới nhé!\n\nCả hai sản phẩm Nồi chiên không dầu Philips 6.2L và Quạt đứng Senko TS16 bên em đều đang sẵn hàng đầy đủ để phục vụ anh. \n\nKhông biết anh cần em tư vấn thêm thông tin chi tiết của sản phẩm nào hay muốn hỗ trợ lên đơn hàng luôn ạ?",
+        "verdict": {
+          "status": null
+        },
+        "latency": {
+          "ttft_ms": 11564,
+          "total_ms": 11564,
+          "ttfa_ms": null,
+          "measurement_mode": "non_streaming",
+          "timing_boundary": "response_ready_before_persistence",
+          "asr_ms": null,
+          "call_brief_ms": 6137,
+          "response_ready_ms": 11564,
+          "persistence_ms": 0.802,
+          "request_complete_ms": 11564.724,
+          "backend_total_ms": 11564.724,
+          "precomputed_parts": []
+        },
+        "evidence": {
+          "current": {
+            "turn_id": 1,
+            "agent_response": "Em chào anh [private] ạ. Chúc mừng anh sắp chuyển sang nhà mới nhé!\n\nCả hai sản phẩm Nồi chiên không dầu Philips 6.2L và Quạt đứng Senko TS16 bên em đều đang sẵn hàng đầy đủ để phục vụ anh. \n\nKhông biết anh cần em tư vấn thêm thông tin chi tiết của sản phẩm nào hay muốn hỗ trợ lên đơn hàng luôn ạ?",
+            "tool_calls": [
+              {
+                "name": "catalog.search",
+                "args": {
+                  "query": "Tôi là [private], số điện thoại [private], đang nhắn qua Fanpage. Shop ơi, anh mua đồ cho nhà mới, đang tính Nồi chiên không dầu Philips 6.2L với Quạt đứng Senko TS16.",
+                  "on": "2026-10-15"
+                },
+                "result": {
+                  "items": [
+                    {
+                      "sku": "SKU-AF-6L",
+                      "name": "[private]",
+                      "category": "gia-dung/noi-chien",
+                      "brand": "Philips",
+                      "list_price_vnd": 3990000.0,
+                      "discontinued": false,
+                      "successor_sku": null,
+                      "attributes": {
+                        "warranty_months": 12
+                      },
+                      "variants": []
+                    },
+                    {
+                      "sku": "SKU-FAN-SEN",
+                      "name": "[private]",
+                      "category": "gia-dung/quat",
+                      "brand": "Senko",
+                      "list_price_vnd": 590000.0,
+                      "discontinued": false,
+                      "successor_sku": null,
+                      "attributes": {
+                        "warranty_months": 12
+                      },
+                      "variants": []
+                    }
+                  ]
+                }
+              },
+              {
+                "name": "inventory.check",
+                "args": {
+                  "sku": "SKU-AF-6L",
+                  "on": "2026-10-15"
+                },
+                "result": {
+                  "sku": "SKU-AF-6L",
+                  "found": true,
+                  "in_stock": true,
+                  "qty": 25,
+                  "discontinued": false
+                }
+              },
+              {
+                "name": "inventory.check",
+                "args": {
+                  "sku": "SKU-FAN-SEN",
+                  "on": "2026-10-15"
+                },
+                "result": {
+                  "sku": "SKU-FAN-SEN",
+                  "found": true,
+                  "in_stock": true,
+                  "qty": 30,
+                  "discontinued": false
+                }
+              }
+            ],
+            "sources": [
+              {
+                "sku": "SKU-AF-6L",
+                "name": "[private]",
+                "category": "gia-dung/noi-chien",
+                "brand": "Philips",
+                "list_price_vnd": 3990000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "warranty_months": 12
+                },
+                "variants": []
+              },
+              {
+                "sku": "SKU-AF-6L",
+                "name": "[private]",
+                "category": "gia-dung/noi-chien",
+                "brand": "Philips",
+                "list_price_vnd": 3990000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "warranty_months": 12
+                },
+                "variants": []
+              }
+            ],
+            "promotions": []
+          },
+          "earlier": []
+        }
+      }
+    },
+    {
+      "call": "SC-111/call_1",
+      "turn_id": 2,
+      "question": "À đổi ý, bỏ món thứ hai vừa nói, thay bằng Quạt đứng DC inverter Panasonic F-409. Mỗi loại một chiếc nhé.",
+      "baseline_question": null,
+      "classification": "not_evaluated",
+      "case_id": null,
+      "gap_id": null,
+      "answer_changed": false,
+      "injected": false,
+      "lesson_trace": {},
+      "round0": {
+        "answer": null,
+        "verdict": {
+          "status": null
+        },
+        "latency": null,
+        "evidence": {
+          "current": {},
+          "earlier": []
+        }
+      },
+      "round1": {
+        "answer": "Dạ em đã cập nhật lại danh sách chọn của anh [private] gồm: 01 Nồi chiên không dầu Philips 6.2L và 01 Quạt đứng DC inverter Panasonic F-409 (sản phẩm này bên em đang có sẵn hàng ạ). \n\nAnh cho em xin địa chỉ [address]",
+        "verdict": {
+          "status": null
+        },
+        "latency": {
+          "ttft_ms": 3845,
+          "total_ms": 3845,
+          "ttfa_ms": null,
+          "measurement_mode": "non_streaming",
+          "timing_boundary": "response_ready_before_persistence",
+          "asr_ms": null,
+          "call_brief_ms": null,
+          "response_ready_ms": 3845,
+          "persistence_ms": 0.334,
+          "request_complete_ms": 3845.475,
+          "backend_total_ms": 3845.475,
+          "precomputed_parts": [
+            "persisted_facts"
+          ]
+        },
+        "evidence": {
+          "current": {
+            "turn_id": 2,
+            "agent_response": "Dạ em đã cập nhật lại danh sách chọn của anh [private] gồm: 01 Nồi chiên không dầu Philips 6.2L và 01 Quạt đứng DC inverter Panasonic F-409 (sản phẩm này bên em đang có sẵn hàng ạ). \n\nAnh cho em xin địa chỉ [address]",
+            "tool_calls": [
+              {
+                "name": "catalog.search",
+                "args": {
+                  "query": "Quạt đứng DC inverter Panasonic F-409",
+                  "on": "2026-10-15"
+                },
+                "result": {
+                  "items": [
+                    {
+                      "sku": "SKU-FAN-DC1",
+                      "name": "[private]",
+                      "category": "gia-dung/quat",
+                      "brand": "Panasonic",
+                      "list_price_vnd": 2450000.0,
+                      "discontinued": false,
+                      "successor_sku": null,
+                      "attributes": {
+                        "warranty_months": 12
+                      },
+                      "variants": []
+                    }
+                  ],
+                  "total": 1
+                }
+              },
+              {
+                "name": "inventory.check",
+                "args": {
+                  "sku": "SKU-FAN-DC1",
+                  "on": "2026-10-15"
+                },
+                "result": {
+                  "sku": "SKU-FAN-DC1",
+                  "found": true,
+                  "in_stock": true,
+                  "qty": 30,
+                  "discontinued": false
+                }
+              }
+            ],
+            "sources": [],
+            "promotions": []
+          },
+          "earlier": [
+            {
+              "turn_id": 1,
+              "tool_calls": [
+                {
+                  "name": "catalog.search",
+                  "args": {
+                    "query": "Tôi là [private], số điện thoại [private], đang nhắn qua Fanpage. Shop ơi, anh mua đồ cho nhà mới, đang tính Nồi chiên không dầu Philips 6.2L với Quạt đứng Senko TS16.",
+                    "on": "2026-10-15"
+                  },
+                  "result": {
+                    "items": [
+                      {
+                        "sku": "SKU-AF-6L",
+                        "name": "[private]",
+                        "category": "gia-dung/noi-chien",
+                        "brand": "Philips",
+                        "list_price_vnd": 3990000.0,
+                        "discontinued": false,
+                        "successor_sku": null,
+                        "attributes": {
+                          "warranty_months": 12
+                        },
+                        "variants": []
+                      },
+                      {
+                        "sku": "SKU-FAN-SEN",
+                        "name": "[private]",
+                        "category": "gia-dung/quat",
+                        "brand": "Senko",
+                        "list_price_vnd": 590000.0,
+                        "discontinued": false,
+                        "successor_sku": null,
+                        "attributes": {
+                          "warranty_months": 12
+                        },
+                        "variants": []
+                      }
+                    ]
+                  }
+                },
+                {
+                  "name": "inventory.check",
+                  "args": {
+                    "sku": "SKU-AF-6L",
+                    "on": "2026-10-15"
+                  },
+                  "result": {
+                    "sku": "SKU-AF-6L",
+                    "found": true,
+                    "in_stock": true,
+                    "qty": 25,
+                    "discontinued": false
+                  }
+                },
+                {
+                  "name": "inventory.check",
+                  "args": {
+                    "sku": "SKU-FAN-SEN",
+                    "on": "2026-10-15"
+                  },
+                  "result": {
+                    "sku": "SKU-FAN-SEN",
+                    "found": true,
+                    "in_stock": true,
+                    "qty": 30,
+                    "discontinued": false
+                  }
+                }
+              ],
+              "sources": [
+                {
+                  "sku": "SKU-AF-6L",
+                  "name": "[private]",
+                  "category": "gia-dung/noi-chien",
+                  "brand": "Philips",
+                  "list_price_vnd": 3990000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "warranty_months": 12
+                  },
+                  "variants": []
+                },
+                {
+                  "sku": "SKU-AF-6L",
+                  "name": "[private]",
+                  "category": "gia-dung/noi-chien",
+                  "brand": "Philips",
+                  "list_price_vnd": 3990000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "warranty_months": 12
+                  },
+                  "variants": []
+                }
+              ],
+              "promotions": []
+            }
+          ]
+        }
+      }
+    },
+    {
+      "call": "SC-111/call_1",
+      "turn_id": 3,
+      "question": "Ngân sách tổng của anh là 6.740.000 đồng. Hôm nay chỉ nhờ em ghi lại giỏ cuối cùng, chưa đặt.",
+      "baseline_question": null,
+      "classification": "not_evaluated",
+      "case_id": null,
+      "gap_id": null,
+      "answer_changed": false,
+      "injected": false,
+      "lesson_trace": {},
+      "round0": {
+        "answer": null,
+        "verdict": {
+          "status": null
+        },
+        "latency": null,
+        "evidence": {
+          "current": {},
+          "earlier": []
+        }
+      },
+      "round1": {
+        "answer": "Dạ em ghi nhận thông tin ngân sách của anh [private] là 6.740.000 đồng và ghi lại danh sách giỏ hàng cuối cùng gồm:\n- 01 Nồi chiên không dầu Philips 6.2L\n- 01 Quạt đứng DC inverter Panasonic F-409\n\nTổng giá trị giỏ hàng hiện tại là 6.440.000 đồng, hoàn toàn nằm trong ngân sách của anh ạ. Em đã lưu lại thông tin và chưa lên đơn. Khi nào anh muốn tiến hành đặt hàng thì cứ báo em nhé!",
+        "verdict": {
+          "status": null
+        },
+        "latency": {
+          "ttft_ms": 6355,
+          "total_ms": 6355,
+          "ttfa_ms": null,
+          "measurement_mode": "non_streaming",
+          "timing_boundary": "response_ready_before_persistence",
+          "asr_ms": null,
+          "call_brief_ms": null,
+          "response_ready_ms": 6355,
+          "persistence_ms": 0.138,
+          "request_complete_ms": 6355.329,
+          "backend_total_ms": 6355.329,
+          "precomputed_parts": [
+            "persisted_facts"
+          ]
+        },
+        "evidence": {
+          "current": {
+            "turn_id": 3,
+            "agent_response": "Dạ em ghi nhận thông tin ngân sách của anh [private] là 6.740.000 đồng và ghi lại danh sách giỏ hàng cuối cùng gồm:\n- 01 Nồi chiên không dầu Philips 6.2L\n- 01 Quạt đứng DC inverter Panasonic F-409\n\nTổng giá trị giỏ hàng hiện tại là 6.440.000 đồng, hoàn toàn nằm trong ngân sách của anh ạ. Em đã lưu lại thông tin và chưa lên đơn. Khi nào anh muốn tiến hành đặt hàng thì cứ báo em nhé!",
+            "tool_calls": [
+              {
+                "name": "pricing.quote_order",
+                "args": {
+                  "on": "2026-10-15",
+                  "customer_phone": "[private]",
+                  "customer_id": "[private]",
+                  "lines": [
+                    {
+                      "sku": "SKU-AF-6L",
+                      "qty": 1
+                    },
+                    {
+                      "sku": "SKU-FAN-DC1",
+                      "qty": 1
+                    }
+                  ]
+                },
+                "result": {
+                  "units": [
+                    {
+                      "unit": 1,
+                      "line": 0,
+                      "sku": "SKU-AF-6L",
+                      "list_price_vnd": 3990000,
+                      "final_price_vnd": 3990000,
+                      "applied_promos": []
+                    },
+                    {
+                      "unit": 2,
+                      "line": 1,
+                      "sku": "SKU-FAN-DC1",
+                      "list_price_vnd": 2450000,
+                      "final_price_vnd": 2450000,
+                      "applied_promos": []
+                    }
+                  ],
+                  "lines": [
+                    {
+                      "sku": "SKU-AF-6L",
+                      "qty": 1,
+                      "unit_prices_vnd": [
+                        3990000
+                      ],
+                      "line_total_vnd": 3990000
+                    },
+                    {
+                      "sku": "SKU-FAN-DC1",
+                      "qty": 1,
+                      "unit_prices_vnd": [
+                        2450000
+                      ],
+                      "line_total_vnd": 2450000
+                    }
+                  ],
+                  "total_vnd": 6440000,
+                  "order_promos": [
+                    {
+                      "promo_code": "COD-0",
+                      "type": "freecod",
+                      "discount_vnd": 0
+                    }
+                  ],
+                  "freeship": true,
+                  "note": "Khi giá trong một dòng khác nhau (VD 2 máy cùng SKU, 1 máy được giảm 50%), tạo đơn bằng mỗi máy một dòng qty=1."
+                }
+              }
+            ],
+            "sources": [],
+            "promotions": []
+          },
+          "earlier": [
+            {
+              "turn_id": 1,
+              "tool_calls": [
+                {
+                  "name": "catalog.search",
+                  "args": {
+                    "query": "Tôi là [private], số điện thoại [private], đang nhắn qua Fanpage. Shop ơi, anh mua đồ cho nhà mới, đang tính Nồi chiên không dầu Philips 6.2L với Quạt đứng Senko TS16.",
+                    "on": "2026-10-15"
+                  },
+                  "result": {
+                    "items": [
+                      {
+                        "sku": "SKU-AF-6L",
+                        "name": "[private]",
+                        "category": "gia-dung/noi-chien",
+                        "brand": "Philips",
+                        "list_price_vnd": 3990000.0,
+                        "discontinued": false,
+                        "successor_sku": null,
+                        "attributes": {
+                          "warranty_months": 12
+                        },
+                        "variants": []
+                      },
+                      {
+                        "sku": "SKU-FAN-SEN",
+                        "name": "[private]",
+                        "category": "gia-dung/quat",
+                        "brand": "Senko",
+                        "list_price_vnd": 590000.0,
+                        "discontinued": false,
+                        "successor_sku": null,
+                        "attributes": {
+                          "warranty_months": 12
+                        },
+                        "variants": []
+                      }
+                    ]
+                  }
+                },
+                {
+                  "name": "inventory.check",
+                  "args": {
+                    "sku": "SKU-AF-6L",
+                    "on": "2026-10-15"
+                  },
+                  "result": {
+                    "sku": "SKU-AF-6L",
+                    "found": true,
+                    "in_stock": true,
+                    "qty": 25,
+                    "discontinued": false
+                  }
+                },
+                {
+                  "name": "inventory.check",
+                  "args": {
+                    "sku": "SKU-FAN-SEN",
+                    "on": "2026-10-15"
+                  },
+                  "result": {
+                    "sku": "SKU-FAN-SEN",
+                    "found": true,
+                    "in_stock": true,
+                    "qty": 30,
+                    "discontinued": false
+                  }
+                }
+              ],
+              "sources": [
+                {
+                  "sku": "SKU-AF-6L",
+                  "name": "[private]",
+                  "category": "gia-dung/noi-chien",
+                  "brand": "Philips",
+                  "list_price_vnd": 3990000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "warranty_months": 12
+                  },
+                  "variants": []
+                },
+                {
+                  "sku": "SKU-AF-6L",
+                  "name": "[private]",
+                  "category": "gia-dung/noi-chien",
+                  "brand": "Philips",
+                  "list_price_vnd": 3990000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "warranty_months": 12
+                  },
+                  "variants": []
+                }
+              ],
+              "promotions": []
+            },
+            {
+              "turn_id": 2,
+              "tool_calls": [
+                {
+                  "name": "catalog.search",
+                  "args": {
+                    "query": "Quạt đứng DC inverter Panasonic F-409",
+                    "on": "2026-10-15"
+                  },
+                  "result": {
+                    "items": [
+                      {
+                        "sku": "SKU-FAN-DC1",
+                        "name": "[private]",
+                        "category": "gia-dung/quat",
+                        "brand": "Panasonic",
+                        "list_price_vnd": 2450000.0,
+                        "discontinued": false,
+                        "successor_sku": null,
+                        "attributes": {
+                          "warranty_months": 12
+                        },
+                        "variants": []
+                      }
+                    ],
+                    "total": 1
+                  }
+                },
+                {
+                  "name": "inventory.check",
+                  "args": {
+                    "sku": "SKU-FAN-DC1",
+                    "on": "2026-10-15"
+                  },
+                  "result": {
+                    "sku": "SKU-FAN-DC1",
+                    "found": true,
+                    "in_stock": true,
+                    "qty": 30,
+                    "discontinued": false
+                  }
+                }
+              ],
+              "sources": [],
+              "promotions": []
+            }
+          ]
+        }
+      }
+    },
+    {
+      "call": "SC-111/call_1",
+      "turn_id": 4,
+      "question": "Em xác nhận lại đúng hai món sau khi sửa giúp anh.",
+      "baseline_question": null,
+      "classification": "not_evaluated",
+      "case_id": null,
+      "gap_id": null,
+      "answer_changed": false,
+      "injected": false,
+      "lesson_trace": {},
+      "round0": {
+        "answer": null,
+        "verdict": {
+          "status": null
+        },
+        "latency": null,
+        "evidence": {
+          "current": {},
+          "earlier": []
+        }
+      },
+      "round1": {
+        "answer": "Dạ giỏ hàng cuối cùng của mình gồm:\n1. Nồi chiên không dầu Philips 6.2L\n2. Quạt đứng DC inverter Panasonic F-409\nEm đã ghi nhận đúng 2 món này ạ.",
+        "verdict": {
+          "status": null
+        },
+        "latency": {
+          "ttft_ms": 4610,
+          "total_ms": 4610,
+          "ttfa_ms": null,
+          "measurement_mode": "non_streaming",
+          "timing_boundary": "response_ready_before_persistence",
+          "asr_ms": null,
+          "call_brief_ms": null,
+          "response_ready_ms": 4610,
+          "persistence_ms": 0.116,
+          "request_complete_ms": 4609.625,
+          "backend_total_ms": 4609.625,
+          "precomputed_parts": [
+            "persisted_facts"
+          ]
+        },
+        "evidence": {
+          "current": {
+            "turn_id": 4,
+            "agent_response": "Dạ giỏ hàng cuối cùng của mình gồm:\n1. Nồi chiên không dầu Philips 6.2L\n2. Quạt đứng DC inverter Panasonic F-409\nEm đã ghi nhận đúng 2 món này ạ.",
+            "tool_calls": [],
+            "sources": [],
+            "promotions": []
+          },
+          "earlier": [
+            {
+              "turn_id": 1,
+              "tool_calls": [
+                {
+                  "name": "catalog.search",
+                  "args": {
+                    "query": "Tôi là [private], số điện thoại [private], đang nhắn qua Fanpage. Shop ơi, anh mua đồ cho nhà mới, đang tính Nồi chiên không dầu Philips 6.2L với Quạt đứng Senko TS16.",
+                    "on": "2026-10-15"
+                  },
+                  "result": {
+                    "items": [
+                      {
+                        "sku": "SKU-AF-6L",
+                        "name": "[private]",
+                        "category": "gia-dung/noi-chien",
+                        "brand": "Philips",
+                        "list_price_vnd": 3990000.0,
+                        "discontinued": false,
+                        "successor_sku": null,
+                        "attributes": {
+                          "warranty_months": 12
+                        },
+                        "variants": []
+                      },
+                      {
+                        "sku": "SKU-FAN-SEN",
+                        "name": "[private]",
+                        "category": "gia-dung/quat",
+                        "brand": "Senko",
+                        "list_price_vnd": 590000.0,
+                        "discontinued": false,
+                        "successor_sku": null,
+                        "attributes": {
+                          "warranty_months": 12
+                        },
+                        "variants": []
+                      }
+                    ]
+                  }
+                },
+                {
+                  "name": "inventory.check",
+                  "args": {
+                    "sku": "SKU-AF-6L",
+                    "on": "2026-10-15"
+                  },
+                  "result": {
+                    "sku": "SKU-AF-6L",
+                    "found": true,
+                    "in_stock": true,
+                    "qty": 25,
+                    "discontinued": false
+                  }
+                },
+                {
+                  "name": "inventory.check",
+                  "args": {
+                    "sku": "SKU-FAN-SEN",
+                    "on": "2026-10-15"
+                  },
+                  "result": {
+                    "sku": "SKU-FAN-SEN",
+                    "found": true,
+                    "in_stock": true,
+                    "qty": 30,
+                    "discontinued": false
+                  }
+                }
+              ],
+              "sources": [
+                {
+                  "sku": "SKU-AF-6L",
+                  "name": "[private]",
+                  "category": "gia-dung/noi-chien",
+                  "brand": "Philips",
+                  "list_price_vnd": 3990000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "warranty_months": 12
+                  },
+                  "variants": []
+                },
+                {
+                  "sku": "SKU-AF-6L",
+                  "name": "[private]",
+                  "category": "gia-dung/noi-chien",
+                  "brand": "Philips",
+                  "list_price_vnd": 3990000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "warranty_months": 12
+                  },
+                  "variants": []
+                }
+              ],
+              "promotions": []
+            },
+            {
+              "turn_id": 2,
+              "tool_calls": [
+                {
+                  "name": "catalog.search",
+                  "args": {
+                    "query": "Quạt đứng DC inverter Panasonic F-409",
+                    "on": "2026-10-15"
+                  },
+                  "result": {
+                    "items": [
+                      {
+                        "sku": "SKU-FAN-DC1",
+                        "name": "[private]",
+                        "category": "gia-dung/quat",
+                        "brand": "Panasonic",
+                        "list_price_vnd": 2450000.0,
+                        "discontinued": false,
+                        "successor_sku": null,
+                        "attributes": {
+                          "warranty_months": 12
+                        },
+                        "variants": []
+                      }
+                    ],
+                    "total": 1
+                  }
+                },
+                {
+                  "name": "inventory.check",
+                  "args": {
+                    "sku": "SKU-FAN-DC1",
+                    "on": "2026-10-15"
+                  },
+                  "result": {
+                    "sku": "SKU-FAN-DC1",
+                    "found": true,
+                    "in_stock": true,
+                    "qty": 30,
+                    "discontinued": false
+                  }
+                }
+              ],
+              "sources": [],
+              "promotions": []
+            },
+            {
+              "turn_id": 3,
+              "tool_calls": [
+                {
+                  "name": "pricing.quote_order",
+                  "args": {
+                    "on": "2026-10-15",
+                    "customer_phone": "[private]",
+                    "customer_id": "[private]",
+                    "lines": [
+                      {
+                        "sku": "SKU-AF-6L",
+                        "qty": 1
+                      },
+                      {
+                        "sku": "SKU-FAN-DC1",
+                        "qty": 1
+                      }
+                    ]
+                  },
+                  "result": {
+                    "units": [
+                      {
+                        "unit": 1,
+                        "line": 0,
+                        "sku": "SKU-AF-6L",
+                        "list_price_vnd": 3990000,
+                        "final_price_vnd": 3990000,
+                        "applied_promos": []
+                      },
+                      {
+                        "unit": 2,
+                        "line": 1,
+                        "sku": "SKU-FAN-DC1",
+                        "list_price_vnd": 2450000,
+                        "final_price_vnd": 2450000,
+                        "applied_promos": []
+                      }
+                    ],
+                    "lines": [
+                      {
+                        "sku": "SKU-AF-6L",
+                        "qty": 1,
+                        "unit_prices_vnd": [
+                          3990000
+                        ],
+                        "line_total_vnd": 3990000
+                      },
+                      {
+                        "sku": "SKU-FAN-DC1",
+                        "qty": 1,
+                        "unit_prices_vnd": [
+                          2450000
+                        ],
+                        "line_total_vnd": 2450000
+                      }
+                    ],
+                    "total_vnd": 6440000,
+                    "order_promos": [
+                      {
+                        "promo_code": "COD-0",
+                        "type": "freecod",
+                        "discount_vnd": 0
+                      }
+                    ],
+                    "freeship": true,
+                    "note": "Khi giá trong một dòng khác nhau (VD 2 máy cùng SKU, 1 máy được giảm 50%), tạo đơn bằng mỗi máy một dòng qty=1."
+                  }
+                }
+              ],
+              "sources": [],
+              "promotions": []
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "lessons": [],
+  "sessions": [
+    {
+      "call": "SC-111/call_1",
+      "round0": {
+        "job": null,
+        "error": null,
+        "learning": null,
+        "observed_input_findings": []
+      },
+      "round1": {
+        "job": {
+          "status": "done",
+          "job_id": "77299085d9723023c1827ef654cfa55940b524cf39a46d6ead18924fcfd4bd13",
+          "error": null
+        },
+        "error": null,
+        "learning": {
+          "job_id": "77299085d9723023c1827ef654cfa55940b524cf39a46d6ead18924fcfd4bd13",
+          "gaps": [],
+          "scope": "knowledge_gap_and_reflection_v1",
+          "evaluation_cases": [],
+          "out_of_scope": [],
+          "issue_reviews": [],
+          "detector_error": null,
+          "guardrails": {
+            "version": "learning_guardrails_v1",
+            "input_findings": [],
+            "blocked_lessons": [],
+            "blocked_sources": []
+          },
+          "detection": {
+            "candidate_count": 0,
+            "open_question_count": 0,
+            "processed_count": 0,
+            "skipped_unmatched_question": 0,
+            "skipped_over_limit": 0,
+            "scan": {
+              "turns_available": 4,
+              "turns_scanned": 4,
+              "requests": 4,
+              "errors": [],
+              "schema_retries": 0,
+              "skipped_over_limit": 0
+            },
+            "alignment_rejections": []
+          },
+          "outcome": "no_candidates",
+          "learning_duration_ms": 4951,
+          "learning_usage": {
+            "input_tokens": 7191,
+            "output_tokens": 14
+          }
+        },
+        "observed_input_findings": []
+      }
+    }
+  ],
+  "limitations": [
+    "Verdict kiểm tra được reference vẫn cần người đọc xác nhận ngữ nghĩa và độ đầy đủ.",
+    "Câu trả lời thay đổi hoặc được inject lesson chưa chứng minh lesson gây ra cải thiện.",
+    "Reflection chưa được chấm chất lượng; learning job done/lesson approved không phải điểm chất lượng.",
+    "Guardrail mẫu có giới hạn; không phát hiện mẫu không đồng nghĩa không có prompt injection."
+  ]
+}

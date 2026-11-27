@@ -1,0 +1,109 @@
+{
+  "job_id": "5d9a5c1ca7b8e464454f06379b9dad150d6a78c058b5a12ec955257a39dec176",
+  "gaps": [
+    {
+      "id": "190df3a70be21e59981c928c19e406a63a0c7151d884ff4ef3ad85d880554ff1",
+      "status": "pending_application"
+    },
+    {
+      "id": "078ab4f05af8a7528ef634d6939366facb58df25394fc4056265315cc23ff6e5",
+      "status": "pending_remediation"
+    }
+  ],
+  "scope": "knowledge_gap_and_reflection_v1",
+  "evaluation_cases": [
+    {
+      "id": "72b841f18f91f1909d30fb916568c18339651db4204006831b84038ea64f4ebc",
+      "gap_id": "190df3a70be21e59981c928c19e406a63a0c7151d884ff4ef3ad85d880554ff1",
+      "turn_id": 2,
+      "question": "Chị muốn đổi từ size 38 sang 39, giữ màu cũ. Đây là lần đổi đầu tiên; hàng còn nguyên tem, hộp và chưa sử dụng.",
+      "reason": "missing_knowledge",
+      "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments."
+    }
+  ],
+  "out_of_scope": [],
+  "issue_reviews": [
+    {
+      "job_id": "5d9a5c1ca7b8e464454f06379b9dad150d6a78c058b5a12ec955257a39dec176",
+      "message_id": 4,
+      "turn_id": 3,
+      "origin": "turn_detector",
+      "mechanism": "reflection",
+      "verified": true,
+      "claim": "Em cần kiểm tra lại tồn kho trước khi xác nhận cho mình ạ.",
+      "assessment": "contradicts_evidence",
+      "evidence_paths": [
+        "evidence.tool_calls.1.result.status",
+        "prior_evidence.1.tool_calls.2.result.in_stock"
+      ],
+      "rejection": null,
+      "rejection_reasons": [],
+      "format_retry": false,
+      "verifier_output": {
+        "valid": true,
+        "issue_scope": "reflection",
+        "claim": "Em cần kiểm tra lại tồn kho trước khi xác nhận cho mình ạ.",
+        "assessment": "contradicts_evidence",
+        "evidence_paths": [
+          "evidence.tool_calls.1.result.status",
+          "prior_evidence.1.tool_calls.2.result.in_stock"
+        ],
+        "decision_reason": "The candidate claim states that inventory needs to be checked before confirmation, but inventory was already confirmed in stock (qty: 5) in turn 2, and the order.update tool call in turn 3 successfully executed the size exchange with status pickup_scheduled.",
+        "audit": {
+          "support_status": "supported",
+          "coverage": "complete",
+          "checked_paths": [
+            "evidence.tool_calls.1.result.status",
+            "prior_evidence.1.tool_calls.2.result.in_stock"
+          ]
+        }
+      },
+      "candidate_claim": "Em cần kiểm tra lại tồn kho trước khi xác nhận cho mình ạ.",
+      "verification_basis": "referenced_evidence",
+      "evidence_inventory": [
+        "evidence.tool_calls.0.result",
+        "evidence.tool_calls.1.result",
+        "evidence.sources",
+        "evidence.promotions",
+        "prior_evidence.0.tool_calls.0.result",
+        "prior_evidence.0.sources",
+        "prior_evidence.0.promotions",
+        "prior_evidence.1.tool_calls.0.result",
+        "prior_evidence.1.tool_calls.1.result",
+        "prior_evidence.1.tool_calls.2.result",
+        "prior_evidence.1.sources",
+        "prior_evidence.1.promotions"
+      ],
+      "lesson_status": "approved"
+    }
+  ],
+  "detector_error": null,
+  "guardrails": {
+    "version": "learning_guardrails_v1",
+    "input_findings": [],
+    "blocked_lessons": [],
+    "blocked_sources": []
+  },
+  "detection": {
+    "candidate_count": 2,
+    "open_question_count": 0,
+    "processed_count": 2,
+    "skipped_unmatched_question": 0,
+    "skipped_over_limit": 0,
+    "scan": {
+      "turns_available": 3,
+      "turns_scanned": 3,
+      "requests": 3,
+      "errors": [],
+      "schema_retries": 0,
+      "skipped_over_limit": 0
+    },
+    "alignment_rejections": []
+  },
+  "outcome": "gaps_processed",
+  "learning_duration_ms": 14191,
+  "learning_usage": {
+    "input_tokens": 11666,
+    "output_tokens": 531
+  }
+}

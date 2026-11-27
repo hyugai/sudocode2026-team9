@@ -1,0 +1,99 @@
+{
+  "job_id": "4926885ddf152fb32999367950bbb994e4e0d3b4e8be81a09779bb909f5e79da",
+  "gaps": [
+    {
+      "id": "92e277b68b7c4168004982e48b9d49501b616fad46461dd54b4e96100cb9e40d",
+      "status": "pending_remediation"
+    }
+  ],
+  "scope": "knowledge_gap_and_reflection_v1",
+  "evaluation_cases": [
+    {
+      "id": "8c7f7b477299bb531ba7a5945d062db33faedbd06d4b5bf9356e337d034f6e89",
+      "gap_id": "92e277b68b7c4168004982e48b9d49501b616fad46461dd54b4e96100cb9e40d",
+      "turn_id": 2,
+      "question": "Chị muốn em nhắc lại giá cũ, xin lỗi và giải thích rõ chương trình nào đã thay đổi.",
+      "reason": "unsupported_claim",
+      "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments."
+    }
+  ],
+  "out_of_scope": [],
+  "issue_reviews": [
+    {
+      "job_id": "4926885ddf152fb32999367950bbb994e4e0d3b4e8be81a09779bb909f5e79da",
+      "message_id": 2,
+      "turn_id": 2,
+      "origin": "turn_detector",
+      "mechanism": "knowledge_gap",
+      "verified": true,
+      "claim": "Trước đó, đôi giày Giày chạy bộ RUN2 (màu đen, size 38) có giá là 1.352.000 đ khi áp dụng mã giảm giá **RUN2-SALE**.",
+      "assessment": "unsupported_by_evidence",
+      "evidence_paths": [],
+      "rejection": null,
+      "rejection_reasons": [],
+      "format_retry": false,
+      "verifier_output": {
+        "valid": true,
+        "issue_scope": "business_knowledge",
+        "claim": "Trước đó, đôi giày Giày chạy bộ RUN2 (màu đen, size 38) có giá là 1.352.000 đ khi áp dụng mã giảm giá **RUN2-SALE**.",
+        "assessment": "unsupported_by_evidence",
+        "evidence_paths": [],
+        "decision_reason": "The system tool results only list RUN2-SALE as an expired promo code without specifying the exact discount amount or old price of 1.352.000 đ.",
+        "audit": {
+          "support_status": "not_established",
+          "coverage": "complete",
+          "checked_paths": [
+            "evidence.tool_calls",
+            "evidence.sources",
+            "evidence.promotions",
+            "prior_evidence.0.tool_calls.0.result",
+            "prior_evidence.0.tool_calls.1.result",
+            "prior_evidence.0.sources",
+            "prior_evidence.0.promotions"
+          ]
+        }
+      },
+      "candidate_claim": "Trước đó, đôi giày Giày chạy bộ RUN2 (màu đen, size 38) có giá là 1.352.000 đ khi áp dụng mã giảm giá **RUN2-SALE**.",
+      "verification_basis": "evidence_inventory_audit",
+      "evidence_inventory": [
+        "evidence.tool_calls",
+        "evidence.sources",
+        "evidence.promotions",
+        "prior_evidence.0.tool_calls.0.result",
+        "prior_evidence.0.tool_calls.1.result",
+        "prior_evidence.0.sources",
+        "prior_evidence.0.promotions"
+      ],
+      "lesson_status": "approved"
+    }
+  ],
+  "detector_error": null,
+  "guardrails": {
+    "version": "learning_guardrails_v1",
+    "input_findings": [],
+    "blocked_lessons": [],
+    "blocked_sources": []
+  },
+  "detection": {
+    "candidate_count": 1,
+    "open_question_count": 0,
+    "processed_count": 1,
+    "skipped_unmatched_question": 0,
+    "skipped_over_limit": 0,
+    "scan": {
+      "turns_available": 3,
+      "turns_scanned": 3,
+      "requests": 3,
+      "errors": [],
+      "schema_retries": 0,
+      "skipped_over_limit": 0
+    },
+    "alignment_rejections": []
+  },
+  "outcome": "gaps_processed",
+  "learning_duration_ms": 10550,
+  "learning_usage": {
+    "input_tokens": 8244,
+    "output_tokens": 445
+  }
+}

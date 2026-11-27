@@ -1,0 +1,1601 @@
+{
+  "method": "Frozen question-level knowledge-gap evaluation with checked source references",
+  "scope": "knowledge_gap_v1",
+  "knowledge_gap_quality": {
+    "frozen_case_count": 38,
+    "verified_pair_count": 0,
+    "question_alias_count": 14,
+    "needs_review_pair_count": 38,
+    "round0": {
+      "resolved": 0,
+      "safely_unresolved": 0,
+      "unsupported": 0
+    },
+    "round1": {
+      "resolved": 0,
+      "safely_unresolved": 0,
+      "unsupported": 0
+    },
+    "transitions": {},
+    "newly_resolved": 0,
+    "stopped_unsupported": 0,
+    "regressed_to_unsupported": 0,
+    "lost_resolution": 0,
+    "manual_review_case_ids": [
+      "6056612f05971a5e1deb6f0029c89edc45a405494e88418eacaa207b4eecbfce",
+      "2c0862a7adc9673e4037214fcd489c70bf42e0ade131e008b38fb131a2e4044d",
+      "54ae23c282440d52bd672269c9d1031ec4286982e6b9fe1e70ba1024c8128ecb",
+      "6b3f6123a9161087739fa03e9b7f9251527b4513906f6d3008591f732c136d2d",
+      "df6878f44df8fff11d934d34f6de2cc0e2b984972dacc455beb8b1ca12be6bc4",
+      "ad5de0720b0277214f86ce56922b933cc46824077b2f5218038f0c7fb6accc54",
+      "595180c44418701434040e2483cc4fb6101b5e6de0bace9865695e313847bce5",
+      "4f040d63924f20aef3c30ee57b550aa7acb7cd520b35b9eef3840d1c69e7e744",
+      "a08ef3a86bd48def5bcaf07b04b00a0b022dd5166dc7cb478386dfc1d113a7e2",
+      "100d689f2e606e88a7d19195d63c8ffed9783795d186385ce1d0d6b4ce95cd6b",
+      "8fc0c34af34d9d377cecef57abe0f0161f090f5520c2f09799ffeae082ae0457",
+      "5ff909644998935cf39805a34dc336d3d8d525ffbe1deac11c622068124fa7fa",
+      "e8ce0af97c9d279135bcdf79b817c3a0c2117a619ad4b7a206d081f75296868a",
+      "3842e91fce1b8114f38e70644f328d12c4a114c856f0ee617683a0e3266c761a",
+      "c4d97bfdded9a5012f716ea27fe2dc4061e2dd8aab731d1347e65fb60d775b1e",
+      "6eaa7e5bb89e347db05e88c3203f52776766919fe026eccc94e966856c6c3b00",
+      "23836226e27bd3c61cfaef07f82eaa06f82f3cb6726408708f45ec0efd6e5717",
+      "1493987cbfdc767513bace318e2874f596fde7724d549a2454890640723ce266",
+      "200d4ecc30870270b848b7228509723f51516ccce1535190d39f7600315e6355",
+      "ec5bf6716ef2486c378ed0fca62b6ffa2741da09b2db882b573f9182ddb5bd97",
+      "95d4de3d07ee0bda2468652e114bb26d2ab854b0a3352ca078f06186d73fc347",
+      "b0adbd2c962b75986d7846c488b594a4bad48b86b78cf174b055513c3340551a",
+      "e20220c105b30ff1dfcbce9bf8eb1d88797baf95a12917d367823817d1e78c2f",
+      "196601ad1d049c787026332466e0d357624a0f57e44d89716f6c65b4bcc3d9de",
+      "d4fc92cd0c480f16c1b167b354d660bf0783b9a8bb0f24cb53fabe6c03919812",
+      "5761a75e075ecc573f8019e412d2413820ab549a4c936bbf0a47b88045605db7",
+      "33c9a909b6173276bad959317a65e59edc79c4e10de862472090c482d9238fa6",
+      "7563e0d6e504ccd4a76cf25dc1b5fadf1a6485fa5b1a50f4308b7b4ce58794df",
+      "ac05d9caf6724ce375d5208723dd08663d5c90eff2d796459b31215060d27f8f",
+      "301cd7cd9d571d1537e0982cef2d835e50fd9043bd8cb22d243e340c51e7246d",
+      "71c6efc8a5ca645e74a864fc336e420df3a60204f0211f5e8960c1eb068fd3df",
+      "21bc80bd40df8b1d92a726f9661cc0990e6eabd5dc47291455d91b20f8ddb21c",
+      "37bb7fb6919a10cea50df81fa92c8a78c7f80aacc7daf25f4c5eb1a587d652f1",
+      "41cd1c2fe5eb049c86c6bb1854928ffe074de9d77d89044fdfca37dd9928cb6b",
+      "43c11581cacba17c382241f70578a4e0ce48f551f70c4109c39901d7db233102",
+      "61fee9c6d3f0d1471922ec56bd7b56e1bdc88d42b07cc502e61bb32cb93abb4a",
+      "2904f73d2d41a1acdb887523f4e3ef0de1531aab6a5bf07c6d29ab436b7a2408",
+      "ead01483a63eadb25deaee7f42fa7efc939eaeae5dd7cf43b08a7cb94b1ff73d"
+    ],
+    "details": [
+      {
+        "case_id": "6056612f05971a5e1deb6f0029c89edc45a405494e88418eacaa207b4eecbfce",
+        "gap_id": "386538c4668feef5a674f41c209d7f1ee4027779799c59047e030be5125ce904",
+        "call": "SC-006/call_2",
+        "turn_id": 1,
+        "question": "Anh gọi tiếp về món đã hỏi, người nhà đã đồng ý rồi.",
+        "frozen_question": "Anh gọi tiếp về món đã hỏi, người nhà đã đồng ý rồi.",
+        "question_alignment": {
+          "mode": "exact",
+          "source": "exact_text",
+          "actual_input_equal_across_rounds": true
+        },
+        "round0": {
+          "status": null,
+          "verification": "needs_review",
+          "requires_human_review": true,
+          "error": "'status'",
+          "judge_output": {
+            "judge_error": "ConnectError"
+          }
+        },
+        "round1": {
+          "status": null,
+          "verification": "needs_review",
+          "requires_human_review": true,
+          "error": "'status'",
+          "judge_output": {
+            "judge_error": "ConnectError"
+          }
+        }
+      },
+      {
+        "case_id": "2c0862a7adc9673e4037214fcd489c70bf42e0ade131e008b38fb131a2e4044d",
+        "gap_id": "fe66fd00c093489108e8a98f38f6add924c0958b432092c00443152a599580b4",
+        "call": "SC-012/call_1",
+        "turn_id": 2,
+        "question": "Anh ưu tiên giá, ngân sách tối đa 4.990.000 đồng. Ưu đãi này hết ngày 30/09 phải không?",
+        "frozen_question": "Anh ưu tiên giá, ngân sách tối đa 4.990.000 đồng. Ưu đãi này hết ngày 30/09 phải không?",
+        "question_alignment": {
+          "mode": "exact",
+          "source": "exact_text",
+          "actual_input_equal_across_rounds": true
+        },
+        "round0": {
+          "status": null,
+          "verification": "needs_review",
+          "requires_human_review": true,
+          "error": "'status'",
+          "judge_output": {
+            "judge_error": "ConnectError"
+          }
+        },
+        "round1": {
+          "status": null,
+          "verification": "needs_review",
+          "requires_human_review": true,
+          "error": "'status'",
+          "judge_output": {
+            "judge_error": "ConnectError"
+          }
+        }
+      },
+      {
+        "case_id": "54ae23c282440d52bd672269c9d1031ec4286982e6b9fe1e70ba1024c8128ecb",
+        "gap_id": "c8541bcf63d0360d3bce30ac56cf4d795b83922809eca3bd6ad56a2481b82d95",
+        "call": "SC-012/call_1",
+        "turn_id": 3,
+        "question": "Chưa mua ngay đâu em, anh cần cân nhắc thêm.",
+        "frozen_question": "Chưa mua ngay đâu em, anh cần cân nhắc thêm.",
+        "question_alignment": {
+          "mode": "exact",
+          "source": "exact_text",
+          "actual_input_equal_across_rounds": true
+        },
+        "round0": {
+          "status": null,
+          "verification": "needs_review",
+          "requires_human_review": true,
+          "error": "'status'",
+          "judge_output": {
+            "judge_error": "ConnectError"
+          }
+        },
+        "round1": {
+          "status": null,
+          "verification": "needs_review",
+          "requires_human_review": true,
+          "error": "'status'",
+          "judge_output": {
+            "judge_error": "ConnectError"
+          }
+        }
+      },
+      {
+        "case_id": "6b3f6123a9161087739fa03e9b7f9251527b4513906f6d3008591f732c136d2d",
+        "gap_id": "4cb5864cfecfe6494694e5a70b426381af66e416c4f340796b31a56ae0c5531e",
+        "call": "SC-012/call_2",
+        "turn_id": 2,
+        "question": "Sao giá lại khác vậy? Em nhắc lại mức cũ và giải thích giúp anh.",
+        "frozen_question": "Sao giá lại khác vậy? Em nhắc lại mức cũ và giải thích giúp anh.",
+        "question_alignment": {
+          "mode": "exact",
+          "source": "exact_text",
+          "actual_input_equal_across_rounds": true
+        },
+        "round0": {
+          "status": null,
+          "verification": "needs_review",
+          "requires_human_review": true,
+          "error": "'status'",
+          "judge_output": {
+            "judge_error": "ConnectError"
+          }
+        },
+        "round1": {
+          "status": null,
+          "verification": "needs_review",
+          "requires_human_review": true,
+          "error": "'status'",
+          "judge_output": {
+            "judge_error": "ConnectError"
+          }
+        }
+      },
+      {
+        "case_id": "df6878f44df8fff11d934d34f6de2cc0e2b984972dacc455beb8b1ca12be6bc4",
+        "gap_id": "7ef335d147da97f11eb8346bf3feeeb91809c12454e07256ff7b66551d5ca1f5",
+        "call": "SC-019/call_1",
+        "turn_id": 2,
+        "question": "Chị ưu tiên giá, ngân sách tối đa 4.990.000 đồng. Ưu đãi này hết ngày 30/09 phải không?",
+        "frozen_question": "Chị ưu tiên giá, ngân sách tối đa 4.990.000 đồng. Ưu đãi này hết ngày 30/09 phải không?",
+        "question_alignment": {
+          "mode": "exact",
+          "source": "exact_text",
+          "actual_input_equal_across_rounds": true
+        },
+        "round0": {
+          "status": null,
+          "verification": "needs_review",
+          "requires_human_review": true,
+          "error": "'status'",
+          "judge_output": {
+            "judge_error": "ConnectError"
+          }
+        },
+        "round1": {
+          "status": null,
+          "verification": "needs_review",
+          "requires_human_review": true,
+          "error": "'status'",
+          "judge_output": {
+            "judge_error": "ConnectError"
+          }
+        }
+      },
+      {
+        "case_id": "ad5de0720b0277214f86ce56922b933cc46824077b2f5218038f0c7fb6accc54",
+        "gap_id": "5e65bb0cdd177bcf3e1f6f94c454759ac6813cd190c19d9b5d5daeeb87ed072e",
+        "call": "SC-019/call_1",
+        "turn_id": 3,
+        "question": "Chưa mua ngay đâu em, chị cần cân nhắc thêm.",
+        "frozen_question": "Chưa mua ngay đâu em, chị cần cân nhắc thêm.",
+        "question_alignment": {
+          "mode": "exact",
+          "source": "exact_text",
+          "actual_input_equal_across_rounds": true
+        },
+        "round0": {
+          "status": null,
+          "verification": "needs_review",
+          "requires_human_review": true,
+          "error": "'status'",
+          "judge_output": {
+            "judge_error": "ConnectError"
+          }
+        },
+        "round1": {
+          "status": null,
+          "verification": "needs_review",
+          "requires_human_review": true,
+          "error": "'status'",
+          "judge_output": {
+            "judge_error": "ConnectError"
+          }
+        }
+      },
+      {
+        "case_id": "595180c44418701434040e2483cc4fb6101b5e6de0bace9865695e313847bce5",
+        "gap_id": "e0fc8292e7f785cf58fdb4df5b49da6a2b1f2228d3eb696df3eb61d72052bbf4",
+        "call": "SC-026/call_2",
+        "turn_id": 1,
+        "question": "Anh gọi tiếp về món đã hỏi. Đơn OD600001 đã nhận hôm qua; sản phẩm hơi chật.",
+        "frozen_question": "Anh gọi tiếp về món đã hỏi. Đơn OD600001 đã nhận hôm qua; sản phẩm hơi chật.",
+        "question_alignment": {
+          "mode": "exact",
+          "source": "exact_text",
+          "actual_input_equal_across_rounds": true
+        },
+        "round0": {
+          "status": null,
+          "verification": "needs_review",
+          "requires_human_review": true,
+          "error": "'status'",
+          "judge_output": {
+            "judge_error": "ConnectError"
+          }
+        },
+        "round1": {
+          "status": null,
+          "verification": "needs_review",
+          "requires_human_review": true,
+          "error": "'status'",
+          "judge_output": {
+            "judge_error": "ConnectError"
+          }
+        }
+      },
+      {
+        "case_id": "4f040d63924f20aef3c30ee57b550aa7acb7cd520b35b9eef3840d1c69e7e744",
+        "gap_id": "030740da8e075223ac89a531849f982f132011d2e0d9d0238fff372e7d6d2b15",
+        "call": "SC-031/call_2",
+        "turn_id": 1,
+        "question": "Chị gọi lại chuyện hôm trước, vẫn đang cân nhắc món đã hỏi.",
+        "frozen_question": "Chị gọi lại chuyện hôm trước, vẫn đang cân nhắc món đã hỏi.",
+        "question_alignment": {
+          "mode": "exact",
+          "source": "exact_text",
+          "actual_input_equal_across_rounds": true
+        },
+        "round0": {
+          "status": null,
+          "verification": "needs_review",
+          "requires_human_review": true,
+          "error": "'status'",
+          "judge_output": {
+            "judge_error": "ConnectError"
+          }
+        },
+        "round1": {
+          "status": null,
+          "verification": "needs_review",
+          "requires_human_review": true,
+          "error": "'status'",
+          "judge_output": {
+            "judge_error": "ConnectError"
+          }
+        }
+      },
+      {
+        "case_id": "a08ef3a86bd48def5bcaf07b04b00a0b022dd5166dc7cb478386dfc1d113a7e2",
+        "gap_id": "cd2fe0321127d8f5c7d54af123dc8865aa478ec6ba6f9f96039b6b0af8139eb7",
+        "call": "SC-032/call_2",
+        "turn_id": 1,
+        "question": "Anh liên hệ lại theo lịch, vẫn đang cân nhắc món đã hỏi.",
+        "frozen_question": "Anh liên hệ lại theo lịch, vẫn đang cân nhắc món đã hỏi.",
+        "question_alignment": {
+          "mode": "exact",
+          "source": "exact_text",
+          "actual_input_equal_across_rounds": true
+        },
+        "round0": {
+          "status": null,
+          "verification": "needs_review",
+          "requires_human_review": true,
+          "error": "'status'",
+          "judge_output": {
+            "judge_error": "ConnectError"
+          }
+        },
+        "round1": {
+          "status": null,
+          "verification": "needs_review",
+          "requires_human_review": true,
+          "error": "'status'",
+          "judge_output": {
+            "judge_error": "ConnectError"
+          }
+        }
+      },
+      {
+        "case_id": "100d689f2e606e88a7d19195d63c8ffed9783795d186385ce1d0d6b4ce95cd6b",
+        "gap_id": "b7f69b20e2c0e24193162b3f34acc7e277b1929307d54548c5e67acdee61ea30",
+        "call": "SC-041/call_2",
+        "turn_id": 1,
+        "question": "Chị gọi lại chuyện hôm trước. Mẫu, số lượng, địa chỉ [address]",
+        "frozen_question": "Chị gọi lại chuyện hôm trước. Mẫu, số lượng, địa chỉ [address]",
+        "question_alignment": {
+          "mode": "exact",
+          "source": "exact_text",
+          "actual_input_equal_across_rounds": true
+        },
+        "round0": {
+          "status": null,
+          "verification": "needs_review",
+          "requires_human_review": true,
+          "error": "'status'",
+          "judge_output": {
+            "judge_error": "ConnectError"
+          }
+        },
+        "round1": {
+          "status": null,
+          "verification": "needs_review",
+          "requires_human_review": true,
+          "error": "'status'",
+          "judge_output": {
+            "judge_error": "ConnectError"
+          }
+        }
+      },
+      {
+        "case_id": "8fc0c34af34d9d377cecef57abe0f0161f090f5520c2f09799ffeae082ae0457",
+        "gap_id": "85d8954991cf5f9c9a36ec67917032d4a88d71c4e4e34fb0b694d41eaf118095",
+        "call": "SC-041/call_3",
+        "turn_id": 2,
+        "question": "Giá 4.890.000 đồng thì chị đồng ý. Địa chỉ [address]",
+        "frozen_question": "Giá 4.890.000 đồng thì chị đồng ý. Địa chỉ [address]",
+        "question_alignment": {
+          "mode": "exact",
+          "source": "exact_text",
+          "actual_input_equal_across_rounds": true
+        },
+        "round0": {
+          "status": null,
+          "verification": "needs_review",
+          "requires_human_review": true,
+          "error": "'status'",
+          "judge_output": {
+            "judge_error": "ConnectError"
+          }
+        },
+        "round1": {
+          "status": null,
+          "verification": "needs_review",
+          "requires_human_review": true,
+          "error": "'status'",
+          "judge_output": {
+            "judge_error": "ConnectError"
+          }
+        }
+      },
+      {
+        "case_id": "5ff909644998935cf39805a34dc336d3d8d525ffbe1deac11c622068124fa7fa",
+        "gap_id": "a0e017d3d8cd493cc138c495398b891fa771f6cae7467f9c1efbb6ae2ca3960e",
+        "call": "SC-044/call_2",
+        "turn_id": 1,
+        "question": "Anh muốn tiếp tục phần tư vấn lần trước. Mẫu, số lượng, địa chỉ [address]",
+        "frozen_question": "Anh muốn tiếp tục phần tư vấn lần trước. Mẫu, số lượng, địa chỉ [address]",
+        "question_alignment": {
+          "mode": "exact",
+          "source": "exact_text",
+          "actual_input_equal_across_rounds": true
+        },
+        "round0": {
+          "status": null,
+          "verification": "needs_review",
+          "requires_human_review": true,
+          "error": "'status'",
+          "judge_output": {
+            "judge_error": "ConnectError"
+          }
+        },
+        "round1": {
+          "status": null,
+          "verification": "needs_review",
+          "requires_human_review": true,
+          "error": "'status'",
+          "judge_output": {
+            "judge_error": "ConnectError"
+          }
+        }
+      },
+      {
+        "case_id": "e8ce0af97c9d279135bcdf79b817c3a0c2117a619ad4b7a206d081f75296868a",
+        "gap_id": "8b87a1857fd34d0350c417483f84d320078aa50f3429342588c9ad7d1ea7e24d",
+        "call": "SC-051/call_2",
+        "turn_id": 2,
+        "question": "Em nhắc lại mẫu và giá đã báo trong chat giúp nhé.",
+        "frozen_question": "Em nhắc lại mẫu và giá đã báo trong chat giúp nhé.",
+        "question_alignment": {
+          "mode": "exact",
+          "source": "exact_text",
+          "actual_input_equal_across_rounds": true
+        },
+        "round0": {
+          "status": null,
+          "verification": "needs_review",
+          "requires_human_review": true,
+          "error": "'status'",
+          "judge_output": {
+            "judge_error": "ConnectError"
+          }
+        },
+        "round1": {
+          "status": null,
+          "verification": "needs_review",
+          "requires_human_review": true,
+          "error": "'status'",
+          "judge_output": {
+            "judge_error": "ConnectError"
+          }
+        }
+      },
+      {
+        "case_id": "3842e91fce1b8114f38e70644f328d12c4a114c856f0ee617683a0e3266c761a",
+        "gap_id": "9298aa80a7a7c5e010655e6f73afe8c7e86b5340640604f7fd1a9f0eabab6be1",
+        "call": "SC-054/call_2",
+        "turn_id": 1,
+        "question": "Tôi là [private], số điện thoại [phone], đã nhắn qua Fanpage. Anh [private] đây, đã nhắn Fanpage bằng số này. Bên em còn nội dung chat không?",
+        "frozen_question": "Tôi là [private], số điện thoại [private], đã nhắn qua Fanpage. Anh [private] đây, đã nhắn Fanpage bằng số này. Bên em còn nội dung chat không?",
+        "question_alignment": {
+          "mode": "recorded_alias",
+          "source": "round0.learning.evaluation_cases",
+          "actual_input_equal_across_rounds": true
+        },
+        "round0": {
+          "status": null,
+          "verification": "needs_review",
+          "requires_human_review": true,
+          "error": "'status'",
+          "judge_output": {
+            "judge_error": "ConnectError"
+          }
+        },
+        "round1": {
+          "status": null,
+          "verification": "needs_review",
+          "requires_human_review": true,
+          "error": "'status'",
+          "judge_output": {
+            "judge_error": "ConnectError"
+          }
+        }
+      },
+      {
+        "case_id": "c4d97bfdded9a5012f716ea27fe2dc4061e2dd8aab731d1347e65fb60d775b1e",
+        "gap_id": "2a4a5d845594e8f9ab9ae5af021f0d569ba7b8d4f5561aab09a0cf07c93edf07",
+        "call": "SC-071/call_1",
+        "turn_id": 2,
+        "question": "Mã sê-ri chính xác của chiếc sẽ giao cho tôi là gì?",
+        "frozen_question": "Mã sê-ri chính xác của chiếc sẽ giao cho tôi là gì?",
+        "question_alignment": {
+          "mode": "exact",
+          "source": "exact_text",
+          "actual_input_equal_across_rounds": true
+        },
+        "round0": {
+          "status": null,
+          "verification": "needs_review",
+          "requires_human_review": true,
+          "error": "'status'",
+          "judge_output": {
+            "judge_error": "ConnectError"
+          }
+        },
+        "round1": {
+          "status": null,
+          "verification": "needs_review",
+          "requires_human_review": true,
+          "error": "'status'",
+          "judge_output": {
+            "judge_error": "ConnectError"
+          }
+        }
+      },
+      {
+        "case_id": "6eaa7e5bb89e347db05e88c3203f52776766919fe026eccc94e966856c6c3b00",
+        "gap_id": "fdabffeb147722a4f1f8dc9dc53bc3845d8a3db51703afb0b610c17ae49795f8",
+        "call": "SC-071/call_2",
+        "turn_id": 2,
+        "question": "Em nhắc lại câu hỏi đó và cho chị biết đã có nguồn xác nhận chưa. Đừng đoán theo sản phẩm khác.",
+        "frozen_question": "Em nhắc lại câu hỏi đó và cho chị biết đã có nguồn xác nhận chưa. Đừng đoán theo sản phẩm khác.",
+        "question_alignment": {
+          "mode": "exact",
+          "source": "exact_text",
+          "actual_input_equal_across_rounds": true
+        },
+        "round0": {
+          "status": null,
+          "verification": "needs_review",
+          "requires_human_review": true,
+          "error": "'status'",
+          "judge_output": {
+            "judge_error": "ConnectError"
+          }
+        },
+        "round1": {
+          "status": null,
+          "verification": "needs_review",
+          "requires_human_review": true,
+          "error": "'status'",
+          "judge_output": {
+            "judge_error": "ConnectError"
+          }
+        }
+      },
+      {
+        "case_id": "23836226e27bd3c61cfaef07f82eaa06f82f3cb6726408708f45ec0efd6e5717",
+        "gap_id": "fdabffeb147722a4f1f8dc9dc53bc3845d8a3db51703afb0b610c17ae49795f8",
+        "call": "SC-074/call_1",
+        "turn_id": 2,
+        "question": "ten ky thuat vien da kiem dinh chinh chiec se giao cho toi la ai?",
+        "frozen_question": "ten ky thuat vien da kiem dinh chinh chiec se giao cho tôi là ai?",
+        "question_alignment": {
+          "mode": "recorded_alias",
+          "source": "round0.learning.evaluation_cases",
+          "actual_input_equal_across_rounds": true
+        },
+        "round0": {
+          "status": null,
+          "verification": "needs_review",
+          "requires_human_review": true,
+          "error": "'status'",
+          "judge_output": {
+            "judge_error": "ConnectError"
+          }
+        },
+        "round1": {
+          "status": null,
+          "verification": "needs_review",
+          "requires_human_review": true,
+          "error": "'status'",
+          "judge_output": {
+            "judge_error": "ConnectError"
+          }
+        }
+      },
+      {
+        "case_id": "1493987cbfdc767513bace318e2874f596fde7724d549a2454890640723ce266",
+        "gap_id": "02c7a5e0ae4b8b0a4da1b6ae9ad904df8223f9c57d341a481b6c1d45d0b38d41",
+        "call": "SC-074/call_2",
+        "turn_id": 1,
+        "question": "Tôi là [private], số điện thoại [phone], đang nhắn qua Zalo OA. Chị muốn tiếp tục phần tư vấn lần trước. Câu hỏi cụ thể lần trước em còn lưu chứ?",
+        "frozen_question": "Tôi là [private], số điện thoại [private], đang nhắn qua Zalo OA. Chị muốn tiếp tục phần tư vấn lần trước. Câu hỏi cụ thể lần trước em còn lưu chứ?",
+        "question_alignment": {
+          "mode": "recorded_alias",
+          "source": "round0.learning.evaluation_cases",
+          "actual_input_equal_across_rounds": true
+        },
+        "round0": {
+          "status": null,
+          "verification": "needs_review",
+          "requires_human_review": true,
+          "error": "'status'",
+          "judge_output": {
+            "judge_error": "ConnectError"
+          }
+        },
+        "round1": {
+          "status": null,
+          "verification": "needs_review",
+          "requires_human_review": true,
+          "error": "'status'",
+          "judge_output": {
+            "judge_error": "ConnectError"
+          }
+        }
+      },
+      {
+        "case_id": "200d4ecc30870270b848b7228509723f51516ccce1535190d39f7600315e6355",
+        "gap_id": "fdabffeb147722a4f1f8dc9dc53bc3845d8a3db51703afb0b610c17ae49795f8",
+        "call": "SC-074/call_2",
+        "turn_id": 2,
+        "question": "Em nhắc lại câu hỏi đó và cho chị biết đã có nguồn xác nhận chưa. Đừng đoán theo sản phẩm khác.",
+        "frozen_question": "Em nhắc lại câu hỏi đó và cho chị biết đã có nguồn xác nhận chưa. Đừng đoán theo sản phẩm khác.",
+        "question_alignment": {
+          "mode": "exact",
+          "source": "exact_text",
+          "actual_input_equal_across_rounds": true
+        },
+        "round0": {
+          "status": null,
+          "verification": "needs_review",
+          "requires_human_review": true,
+          "error": "'status'",
+          "judge_output": {
+            "judge_error": "ConnectError"
+          }
+        },
+        "round1": {
+          "status": null,
+          "verification": "needs_review",
+          "requires_human_review": true,
+          "error": "'status'",
+          "judge_output": {
+            "judge_error": "ConnectError"
+          }
+        }
+      },
+      {
+        "case_id": "ec5bf6716ef2486c378ed0fca62b6ffa2741da09b2db882b573f9182ddb5bd97",
+        "gap_id": "2a4a5d845594e8f9ab9ae5af021f0d569ba7b8d4f5561aab09a0cf07c93edf07",
+        "call": "SC-075/call_1",
+        "turn_id": 2,
+        "question": "Chiếc sẽ giao có mã biên bản kiểm tra chất lượng riêng là gì?",
+        "frozen_question": "Chiếc sẽ giao có mã biên bản kiểm tra chất lượng riêng là gì?",
+        "question_alignment": {
+          "mode": "exact",
+          "source": "exact_text",
+          "actual_input_equal_across_rounds": true
+        },
+        "round0": {
+          "status": null,
+          "verification": "needs_review",
+          "requires_human_review": true,
+          "error": "'status'",
+          "judge_output": {
+            "judge_error": "ConnectError"
+          }
+        },
+        "round1": {
+          "status": null,
+          "verification": "needs_review",
+          "requires_human_review": true,
+          "error": "'status'",
+          "judge_output": {
+            "judge_error": "ConnectError"
+          }
+        }
+      },
+      {
+        "case_id": "95d4de3d07ee0bda2468652e114bb26d2ab854b0a3352ca078f06186d73fc347",
+        "gap_id": "fdabffeb147722a4f1f8dc9dc53bc3845d8a3db51703afb0b610c17ae49795f8",
+        "call": "SC-075/call_2",
+        "turn_id": 2,
+        "question": "Em nhắc lại câu hỏi đó và cho anh biết đã có nguồn xác nhận chưa. Đừng đoán theo sản phẩm khác.",
+        "frozen_question": "Em nhắc lại câu hỏi đó và cho anh biết đã có nguồn xác nhận chưa. Đừng đoán theo sản phẩm khác.",
+        "question_alignment": {
+          "mode": "exact",
+          "source": "exact_text",
+          "actual_input_equal_across_rounds": true
+        },
+        "round0": {
+          "status": null,
+          "verification": "needs_review",
+          "requires_human_review": true,
+          "error": "'status'",
+          "judge_output": {
+            "judge_error": "ConnectError"
+          }
+        },
+        "round1": {
+          "status": null,
+          "verification": "needs_review",
+          "requires_human_review": true,
+          "error": "'status'",
+          "judge_output": {
+            "judge_error": "ConnectError"
+          }
+        }
+      },
+      {
+        "case_id": "b0adbd2c962b75986d7846c488b594a4bad48b86b78cf174b055513c3340551a",
+        "gap_id": "190df3a70be21e59981c928c19e406a63a0c7151d884ff4ef3ad85d880554ff1",
+        "call": "SC-084/call_1",
+        "turn_id": 1,
+        "question": "toi la duc, so dien thoai [phone], dang nhan qua fanpage. cho minh hoi chut nhe, anh xem giay chay bo runlite 2 pro, size 41, mau xam con 1.352.000 dong theo run2-sale dung ko?",
+        "frozen_question": "Tôi là duc, số điện thoại [private], dang nhận qua fanpage. cho mình hỏi chut nhé, anh xem giày chay bo runlite 2 pro, size 41, màu xám con 1.352.000 dong theo run2-sale dung không?",
+        "question_alignment": {
+          "mode": "recorded_alias",
+          "source": "round0.learning.evaluation_cases",
+          "actual_input_equal_across_rounds": true
+        },
+        "round0": {
+          "status": null,
+          "verification": "needs_review",
+          "requires_human_review": true,
+          "error": "'status'",
+          "judge_output": {
+            "judge_error": "ConnectError"
+          }
+        },
+        "round1": {
+          "status": null,
+          "verification": "needs_review",
+          "requires_human_review": true,
+          "error": "'status'",
+          "judge_output": {
+            "judge_error": "ConnectError"
+          }
+        }
+      },
+      {
+        "case_id": "e20220c105b30ff1dfcbce9bf8eb1d88797baf95a12917d367823817d1e78c2f",
+        "gap_id": "87a7cae8ba8ce7e8b0134737bd189a50f211fb9978ccbaad280b4a042efafe54",
+        "call": "SC-084/call_1",
+        "turn_id": 3,
+        "question": "anh chua mua ngay, de can nhac them.",
+        "frozen_question": "Anh chua mua ngay, de cần nhac them.",
+        "question_alignment": {
+          "mode": "recorded_alias",
+          "source": "round0.learning.evaluation_cases",
+          "actual_input_equal_across_rounds": true
+        },
+        "round0": {
+          "status": null,
+          "verification": "needs_review",
+          "requires_human_review": true,
+          "error": "'status'",
+          "judge_output": {
+            "judge_error": "ConnectError"
+          }
+        },
+        "round1": {
+          "status": null,
+          "verification": "needs_review",
+          "requires_human_review": true,
+          "error": "'status'",
+          "judge_output": {
+            "judge_error": "ConnectError"
+          }
+        }
+      },
+      {
+        "case_id": "196601ad1d049c787026332466e0d357624a0f57e44d89716f6c65b4bcc3d9de",
+        "gap_id": "9f3c093085e116dad02e773b4187093c6c459a98b7335e8f685055ef8d71f239",
+        "call": "SC-084/call_2",
+        "turn_id": 2,
+        "question": "Anh muốn em nhắc lại giá cũ, xin lỗi và giải thích rõ chương trình nào đã thay đổi.",
+        "frozen_question": "Anh muốn em nhắc lại giá cũ, xin lỗi và giải thích rõ chương trình nào đã thay đổi.",
+        "question_alignment": {
+          "mode": "exact",
+          "source": "exact_text",
+          "actual_input_equal_across_rounds": true
+        },
+        "round0": {
+          "status": null,
+          "verification": "needs_review",
+          "requires_human_review": true,
+          "error": "'status'",
+          "judge_output": {
+            "judge_error": "ConnectError"
+          }
+        },
+        "round1": {
+          "status": null,
+          "verification": "needs_review",
+          "requires_human_review": true,
+          "error": "'status'",
+          "judge_output": {
+            "judge_error": "ConnectError"
+          }
+        }
+      },
+      {
+        "case_id": "d4fc92cd0c480f16c1b167b354d660bf0783b9a8bb0f24cb53fabe6c03919812",
+        "gap_id": "97b6948c7ae86f698b4a637006ae302197e230228b37179ea151766555efda3a",
+        "call": "SC-085/call_2",
+        "turn_id": 1,
+        "question": "Tôi là [private], số điện thoại [phone], đang nhắn qua Fanpage. Chị [private], đã nhắn Zalo OA. Sao giá ở kênh này khác mức đã báo trong chat?",
+        "frozen_question": "Tôi là [private], số điện thoại [private], đang nhắn qua Fanpage. Chị [private], đã nhắn Zalo OA. Sao giá ở kênh này khác mức đã báo trong chat?",
+        "question_alignment": {
+          "mode": "recorded_alias",
+          "source": "round0.learning.evaluation_cases",
+          "actual_input_equal_across_rounds": true
+        },
+        "round0": {
+          "status": null,
+          "verification": "needs_review",
+          "requires_human_review": true,
+          "error": "'status'",
+          "judge_output": {
+            "judge_error": "ConnectError"
+          }
+        },
+        "round1": {
+          "status": null,
+          "verification": "needs_review",
+          "requires_human_review": true,
+          "error": "'status'",
+          "judge_output": {
+            "judge_error": "ConnectError"
+          }
+        }
+      },
+      {
+        "case_id": "5761a75e075ecc573f8019e412d2413820ab549a4c936bbf0a47b88045605db7",
+        "gap_id": "a45ad3e7ffa95b791a8700464d19d315f7bc63acc02435307172dded324e1e4f",
+        "call": "SC-091/call_2",
+        "turn_id": 1,
+        "question": "Tôi là [private], số điện thoại [phone], đang nhắn qua Fanpage. Chị [private] đây, chị liên hệ lại chuyện hôm trước. Em nhắc đúng món của chị nhé, đừng lấy nhu cầu của mẹ.",
+        "frozen_question": "Tôi là [private], số điện thoại [private], đang nhắn qua Fanpage. Chị [private] đây, chị liên hệ lại chuyện hôm trước. Em nhắc đúng món của chị nhé, đừng lấy nhu cầu của mẹ.",
+        "question_alignment": {
+          "mode": "recorded_alias",
+          "source": "round0.learning.evaluation_cases",
+          "actual_input_equal_across_rounds": true
+        },
+        "round0": {
+          "status": null,
+          "verification": "needs_review",
+          "requires_human_review": true,
+          "error": "'status'",
+          "judge_output": {
+            "judge_error": "ConnectError"
+          }
+        },
+        "round1": {
+          "status": null,
+          "verification": "needs_review",
+          "requires_human_review": true,
+          "error": "'status'",
+          "judge_output": {
+            "judge_error": "ConnectError"
+          }
+        }
+      },
+      {
+        "case_id": "33c9a909b6173276bad959317a65e59edc79c4e10de862472090c482d9238fa6",
+        "gap_id": "0bdb6614c71bdc0485110ae00e0ead9063519b10a4317ce0df934476a03c6fc2",
+        "call": "SC-095/call_2",
+        "turn_id": 1,
+        "question": "Tôi là [private], số điện thoại [phone], đã nhắn qua Zalo OA. Chị [private] đây, chị đã cân nhắc xong rồi. Em nhắc đúng món của chị nhé, đừng lấy nhu cầu của mẹ.",
+        "frozen_question": "Tôi là [private], số điện thoại [private], đã nhắn qua Zalo OA. Chị [private] đây, chị đã cân nhắc xong rồi. Em nhắc đúng món của chị nhé, đừng lấy nhu cầu của mẹ.",
+        "question_alignment": {
+          "mode": "recorded_alias",
+          "source": "round0.learning.evaluation_cases",
+          "actual_input_equal_across_rounds": true
+        },
+        "round0": {
+          "status": null,
+          "verification": "needs_review",
+          "requires_human_review": true,
+          "error": "'status'",
+          "judge_output": {
+            "judge_error": "ConnectError"
+          }
+        },
+        "round1": {
+          "status": null,
+          "verification": "needs_review",
+          "requires_human_review": true,
+          "error": "'status'",
+          "judge_output": {
+            "judge_error": "ConnectError"
+          }
+        }
+      },
+      {
+        "case_id": "7563e0d6e504ccd4a76cf25dc1b5fadf1a6485fa5b1a50f4308b7b4ce58794df",
+        "gap_id": "d3803d576fcc04307599bfeffd8e82f9005b398cefa6dd367fdd95006b93f429",
+        "call": "SC-101/call_2",
+        "turn_id": 1,
+        "question": "Tôi là [private], số điện thoại [phone], đã nhắn qua Zalo OA. Chị gọi lại chuyện hôm trước, người nhà đồng ý đổi máy rồi.",
+        "frozen_question": "Tôi là [private], số điện thoại [private], đã nhắn qua Zalo OA. Chị gọi lại chuyện hôm trước, người nhà đồng ý đổi máy rồi.",
+        "question_alignment": {
+          "mode": "recorded_alias",
+          "source": "round0.learning.evaluation_cases",
+          "actual_input_equal_across_rounds": true
+        },
+        "round0": {
+          "status": null,
+          "verification": "needs_review",
+          "requires_human_review": true,
+          "error": "'status'",
+          "judge_output": {
+            "judge_error": "ConnectError"
+          }
+        },
+        "round1": {
+          "status": null,
+          "verification": "needs_review",
+          "requires_human_review": true,
+          "error": "'status'",
+          "judge_output": {
+            "judge_error": "ConnectError"
+          }
+        }
+      },
+      {
+        "case_id": "ac05d9caf6724ce375d5208723dd08663d5c90eff2d796459b31215060d27f8f",
+        "gap_id": "809e317ccd2eb2a66ff10d73aa8a9b8e167f23901ac9fe090e498c0bd37aed2a",
+        "call": "SC-104/call_2",
+        "turn_id": 1,
+        "question": "Tôi là [private], số điện thoại [phone], đang nhắn qua Zalo OA. Chị muốn tiếp tục phần tư vấn lần trước, người nhà đồng ý đổi máy rồi.",
+        "frozen_question": "Tôi là [private], số điện thoại [private], đang nhắn qua Zalo OA. Chị muốn tiếp tục phần tư vấn lần trước, người nhà đồng ý đổi máy rồi.",
+        "question_alignment": {
+          "mode": "recorded_alias",
+          "source": "round0.learning.evaluation_cases",
+          "actual_input_equal_across_rounds": true
+        },
+        "round0": {
+          "status": null,
+          "verification": "needs_review",
+          "requires_human_review": true,
+          "error": "'status'",
+          "judge_output": {
+            "judge_error": "ConnectError"
+          }
+        },
+        "round1": {
+          "status": null,
+          "verification": "needs_review",
+          "requires_human_review": true,
+          "error": "'status'",
+          "judge_output": {
+            "judge_error": "ConnectError"
+          }
+        }
+      },
+      {
+        "case_id": "301cd7cd9d571d1537e0982cef2d835e50fd9043bd8cb22d243e340c51e7246d",
+        "gap_id": "d9eb9cd68d2cb75188336a8bd59fab7eb5d622a72af20a057a7afc2a3ba4ff19",
+        "call": "SC-104/call_2",
+        "turn_id": 2,
+        "question": "Em nhắc lại máy mới, giá sau thu cũ đổi mới và dùng địa chỉ [address]",
+        "frozen_question": "Em nhắc lại máy mới, giá sau thu cũ đổi mới và dùng địa chỉ [address]",
+        "question_alignment": {
+          "mode": "exact",
+          "source": "exact_text",
+          "actual_input_equal_across_rounds": true
+        },
+        "round0": {
+          "status": null,
+          "verification": "needs_review",
+          "requires_human_review": true,
+          "error": "'status'",
+          "judge_output": {
+            "judge_error": "ConnectError"
+          }
+        },
+        "round1": {
+          "status": null,
+          "verification": "needs_review",
+          "requires_human_review": true,
+          "error": "'status'",
+          "judge_output": {
+            "judge_error": "ConnectError"
+          }
+        }
+      },
+      {
+        "case_id": "71c6efc8a5ca645e74a864fc336e420df3a60204f0211f5e8960c1eb068fd3df",
+        "gap_id": "d91bf10a12efc47aac3d44d675e9d05161fea770d423d39c9e8a0b39179a96e0",
+        "call": "SC-110/call_2",
+        "turn_id": 2,
+        "question": "Em nhắc lại máy mới, giá sau thu cũ đổi mới và dùng địa chỉ [address]",
+        "frozen_question": "Em nhắc lại máy mới, giá sau thu cũ đổi mới và dùng địa chỉ [address]",
+        "question_alignment": {
+          "mode": "exact",
+          "source": "exact_text",
+          "actual_input_equal_across_rounds": true
+        },
+        "round0": {
+          "status": null,
+          "verification": "needs_review",
+          "requires_human_review": true,
+          "error": "'status'",
+          "judge_output": {
+            "judge_error": "ConnectError"
+          }
+        },
+        "round1": {
+          "status": null,
+          "verification": "needs_review",
+          "requires_human_review": true,
+          "error": "'status'",
+          "judge_output": {
+            "judge_error": "ConnectError"
+          }
+        }
+      },
+      {
+        "case_id": "21bc80bd40df8b1d92a726f9661cc0990e6eabd5dc47291455d91b20f8ddb21c",
+        "gap_id": "fdabffeb147722a4f1f8dc9dc53bc3845d8a3db51703afb0b610c17ae49795f8",
+        "call": "SC-110/call_2",
+        "turn_id": 3,
+        "question": "Chị đồng ý 4.490.000 đồng, một máy, COD. Khi giao em thu máy cũ theo chương trình.",
+        "frozen_question": "Chị đồng ý 4.490.000 đồng, một máy, cod. Khi giao em thu máy cũ theo chương trình.",
+        "question_alignment": {
+          "mode": "recorded_alias",
+          "source": "round0.learning.evaluation_cases",
+          "actual_input_equal_across_rounds": true
+        },
+        "round0": {
+          "status": null,
+          "verification": "needs_review",
+          "requires_human_review": true,
+          "error": "'status'",
+          "judge_output": {
+            "judge_error": "ConnectError"
+          }
+        },
+        "round1": {
+          "status": null,
+          "verification": "needs_review",
+          "requires_human_review": true,
+          "error": "'status'",
+          "judge_output": {
+            "judge_error": "ConnectError"
+          }
+        }
+      },
+      {
+        "case_id": "37bb7fb6919a10cea50df81fa92c8a78c7f80aacc7daf25f4c5eb1a587d652f1",
+        "gap_id": "6d77e8ff6447ed2f86e21104323b6a08b042afbbe2e5ddb1008e728cd5f1f74a",
+        "call": "SC-114/call_1",
+        "turn_id": 3,
+        "question": "ngan sach tong cua anh la 6.880.000 dong. hom nay chi nho em ghi lai gio cuoi cung, chua dat.",
+        "frozen_question": "ngan sach tong của anh la 6.880.000 dong. hôm nay chi nho em ghi lai gio cuoi cung, chua dat.",
+        "question_alignment": {
+          "mode": "recorded_alias",
+          "source": "round0.learning.evaluation_cases",
+          "actual_input_equal_across_rounds": true
+        },
+        "round0": {
+          "status": null,
+          "verification": "needs_review",
+          "requires_human_review": true,
+          "error": "'status'",
+          "judge_output": {
+            "judge_error": "ConnectError"
+          }
+        },
+        "round1": {
+          "status": null,
+          "verification": "needs_review",
+          "requires_human_review": true,
+          "error": "'status'",
+          "judge_output": {
+            "judge_error": "ConnectError"
+          }
+        }
+      },
+      {
+        "case_id": "41cd1c2fe5eb049c86c6bb1854928ffe074de9d77d89044fdfca37dd9928cb6b",
+        "gap_id": "93d22d2b04b5b12adc5f39c8ca4ec7659a9f88dbfa70677283a6ff2f097f6384",
+        "call": "SC-114/call_1",
+        "turn_id": 4,
+        "question": "em xac nhan lai dung hai mon sau khi sua giup anh.",
+        "frozen_question": "Em xac nhận lai dung hai mon sau khi sua giúp anh.",
+        "question_alignment": {
+          "mode": "recorded_alias",
+          "source": "round0.learning.evaluation_cases",
+          "actual_input_equal_across_rounds": true
+        },
+        "round0": {
+          "status": null,
+          "verification": "needs_review",
+          "requires_human_review": true,
+          "error": "'status'",
+          "judge_output": {
+            "judge_error": "ConnectError"
+          }
+        },
+        "round1": {
+          "status": null,
+          "verification": "needs_review",
+          "requires_human_review": true,
+          "error": "'status'",
+          "judge_output": {
+            "judge_error": "ConnectError"
+          }
+        }
+      },
+      {
+        "case_id": "43c11581cacba17c382241f70578a4e0ce48f551f70c4109c39901d7db233102",
+        "gap_id": "58efe0c7de9ba8679dcab2859648730d98c05df06e33aad607f79af7a285e5d3",
+        "call": "SC-115/call_1",
+        "turn_id": 2,
+        "question": "À đổi ý, bỏ món thứ hai vừa nói, thay bằng Máy hâm sữa Fatz 4 chức năng. Mỗi loại một chiếc nhé.",
+        "frozen_question": "À đổi ý, bỏ món thứ hai vừa nói, thay bằng Máy hâm sữa Fatz 4 chức năng. Mỗi loại một chiếc nhé.",
+        "question_alignment": {
+          "mode": "exact",
+          "source": "exact_text",
+          "actual_input_equal_across_rounds": true
+        },
+        "round0": {
+          "status": null,
+          "verification": "needs_review",
+          "requires_human_review": true,
+          "error": "'status'",
+          "judge_output": {
+            "judge_error": "ConnectError"
+          }
+        },
+        "round1": {
+          "status": null,
+          "verification": "needs_review",
+          "requires_human_review": true,
+          "error": "'status'",
+          "judge_output": {
+            "judge_error": "ConnectError"
+          }
+        }
+      },
+      {
+        "case_id": "61fee9c6d3f0d1471922ec56bd7b56e1bdc88d42b07cc502e61bb32cb93abb4a",
+        "gap_id": "5907e3354af099f21f3ed097cf3eee1dd205358cc08bd99e73b275c343573e48",
+        "call": "SC-115/call_1",
+        "turn_id": 3,
+        "question": "Ngân sách tổng của chị là 2.680.000 đồng. Hôm nay chỉ nhờ em ghi lại giỏ cuối cùng, chưa đặt.",
+        "frozen_question": "Ngân sách tổng của chị là 2.680.000 đồng. Hôm nay chỉ nhờ em ghi lại giỏ cuối cùng, chưa đặt.",
+        "question_alignment": {
+          "mode": "exact",
+          "source": "exact_text",
+          "actual_input_equal_across_rounds": true
+        },
+        "round0": {
+          "status": null,
+          "verification": "needs_review",
+          "requires_human_review": true,
+          "error": "'status'",
+          "judge_output": {
+            "judge_error": "ConnectError"
+          }
+        },
+        "round1": {
+          "status": null,
+          "verification": "needs_review",
+          "requires_human_review": true,
+          "error": "'status'",
+          "judge_output": {
+            "judge_error": "ConnectError"
+          }
+        }
+      },
+      {
+        "case_id": "2904f73d2d41a1acdb887523f4e3ef0de1531aab6a5bf07c6d29ab436b7a2408",
+        "gap_id": "463022fc6e28237bb932c9d722c758bc67c90db08be2e6bd1ce5423330f39a07",
+        "call": "SC-115/call_2",
+        "turn_id": 2,
+        "question": "Tổng 2.380.000 đồng nằm trong ngân sách, mỗi món một chiếc, giao 104 đường Kiểm Thử, Đà Nẵng.",
+        "frozen_question": "Tổng 2.380.000 đồng nằm trong ngân sách, mỗi món một chiếc, giao 104 đường Kiểm Thử, Đà Nẵng.",
+        "question_alignment": {
+          "mode": "exact",
+          "source": "exact_text",
+          "actual_input_equal_across_rounds": true
+        },
+        "round0": {
+          "status": null,
+          "verification": "needs_review",
+          "requires_human_review": true,
+          "error": "'status'",
+          "judge_output": {
+            "judge_error": "ConnectError"
+          }
+        },
+        "round1": {
+          "status": null,
+          "verification": "needs_review",
+          "requires_human_review": true,
+          "error": "'status'",
+          "judge_output": {
+            "judge_error": "ConnectError"
+          }
+        }
+      },
+      {
+        "case_id": "ead01483a63eadb25deaee7f42fa7efc939eaeae5dd7cf43b08a7cb94b1ff73d",
+        "gap_id": "1ad31e78bf2534431c4d510f1ef4cb8bed9bd84c20d9ddd669a6250993d1e93a",
+        "call": "SC-115/call_2",
+        "turn_id": 3,
+        "question": "Chị chọn thanh toán COD.",
+        "frozen_question": "Chị chọn thanh toán cod.",
+        "question_alignment": {
+          "mode": "recorded_alias",
+          "source": "round0.learning.evaluation_cases",
+          "actual_input_equal_across_rounds": true
+        },
+        "round0": {
+          "status": null,
+          "verification": "needs_review",
+          "requires_human_review": true,
+          "error": "'status'",
+          "judge_output": {
+            "judge_error": "ConnectError"
+          }
+        },
+        "round1": {
+          "status": null,
+          "verification": "needs_review",
+          "requires_human_review": true,
+          "error": "'status'",
+          "judge_output": {
+            "judge_error": "ConnectError"
+          }
+        }
+      }
+    ],
+    "limitation": "Code checks reference integrity, not semantic entailment or claim coverage. Review all verdicts, especially improvements and regressions. Cases selected from round 0 do not estimate overall unseen quality."
+  },
+  "evaluation_population": "full_selected_dataset",
+  "excluded_scenarios": [],
+  "compared_scenarios": [
+    "SC-001",
+    "SC-003",
+    "SC-006",
+    "SC-012",
+    "SC-019",
+    "SC-021",
+    "SC-026",
+    "SC-031",
+    "SC-032",
+    "SC-041",
+    "SC-044",
+    "SC-045",
+    "SC-051",
+    "SC-054",
+    "SC-062",
+    "SC-066",
+    "SC-071",
+    "SC-074",
+    "SC-075",
+    "SC-081",
+    "SC-084",
+    "SC-085",
+    "SC-091",
+    "SC-095",
+    "SC-101",
+    "SC-104",
+    "SC-110",
+    "SC-111",
+    "SC-114",
+    "SC-115"
+  ],
+  "source_baseline": null,
+  "learning_scope": "knowledge_gap_and_reflection_v1",
+  "reflection": {
+    "approved_lessons_loaded": 2,
+    "quality_evaluated": false,
+    "note": "Reflection lessons may affect responses, but are not scored as knowledge-gap resolutions."
+  },
+  "lessons_loaded": true,
+  "learning_applied": true,
+  "learning_runtime": {
+    "total_turns": 202,
+    "routed_turns": 122,
+    "injected_turns": 122,
+    "routing_failures": 44,
+    "validation_not_invoked": 0,
+    "injection_trace_available": true
+  },
+  "lesson_sources": [
+    {
+      "pattern_id": "cee25c0d9bfcb44f534a7cc06f72d6844ccbfbd8846fd4e363086c4ff427ced0",
+      "job_id": "3c9aba8cefccf09a016fe2e6ee3578140780bdf501d462e6d209792679a89f5f",
+      "scenario_id": "SC-003",
+      "call": "call_1"
+    },
+    {
+      "pattern_id": "386538c4668feef5a674f41c209d7f1ee4027779799c59047e030be5125ce904",
+      "job_id": "e6d5dcc42d3307cbab859c1c31e8d8d3170887fef1e25f89a41f2f2790132519",
+      "scenario_id": "SC-006",
+      "call": "call_2"
+    },
+    {
+      "pattern_id": "c8541bcf63d0360d3bce30ac56cf4d795b83922809eca3bd6ad56a2481b82d95",
+      "job_id": "29560d2f478952272ead255c0b7034dd33448bb3b87365820ec5b90fb54b4126",
+      "scenario_id": "SC-012",
+      "call": "call_1"
+    },
+    {
+      "pattern_id": "fe66fd00c093489108e8a98f38f6add924c0958b432092c00443152a599580b4",
+      "job_id": "29560d2f478952272ead255c0b7034dd33448bb3b87365820ec5b90fb54b4126",
+      "scenario_id": "SC-012",
+      "call": "call_1"
+    },
+    {
+      "pattern_id": "4cb5864cfecfe6494694e5a70b426381af66e416c4f340796b31a56ae0c5531e",
+      "job_id": "d49d4adc843c44ab5161691a8adb279d2f2e9f75cb6b74e0020ae8d9ec186be3",
+      "scenario_id": "SC-012",
+      "call": "call_2"
+    },
+    {
+      "pattern_id": "7ef335d147da97f11eb8346bf3feeeb91809c12454e07256ff7b66551d5ca1f5",
+      "job_id": "b8e88dc12397744981c41f4e67d8a6db8af1c4032479a9ecb7b8be76a57aa0a5",
+      "scenario_id": "SC-019",
+      "call": "call_1"
+    },
+    {
+      "pattern_id": "e0fc8292e7f785cf58fdb4df5b49da6a2b1f2228d3eb696df3eb61d72052bbf4",
+      "job_id": "9f35c922d159f4e6888b84e0fa52eb9920af697ac72371ddf8201fa45d497761",
+      "scenario_id": "SC-026",
+      "call": "call_2"
+    },
+    {
+      "pattern_id": "030740da8e075223ac89a531849f982f132011d2e0d9d0238fff372e7d6d2b15",
+      "job_id": "c00902fa1419b5b558cdf371d877e1f30605afe637b516900f11b303a56144e4",
+      "scenario_id": "SC-031",
+      "call": "call_2"
+    },
+    {
+      "pattern_id": "cd2fe0321127d8f5c7d54af123dc8865aa478ec6ba6f9f96039b6b0af8139eb7",
+      "job_id": "e110e43902f11c466044ea97b3398ad09c7d856334dce298f0ad13519bb55877",
+      "scenario_id": "SC-032",
+      "call": "call_2"
+    },
+    {
+      "pattern_id": "b7f69b20e2c0e24193162b3f34acc7e277b1929307d54548c5e67acdee61ea30",
+      "job_id": "99b9f19efa550134751c0aefb1a8ef643f3ae947b5097b147f1b7ec2f2010c58",
+      "scenario_id": "SC-041",
+      "call": "call_2"
+    },
+    {
+      "pattern_id": "85d8954991cf5f9c9a36ec67917032d4a88d71c4e4e34fb0b694d41eaf118095",
+      "job_id": "d827a3f0d62f1bc219891f3b807739bd04017a76c78bfa5de4da07f24a9f3b2a",
+      "scenario_id": "SC-041",
+      "call": "call_3"
+    },
+    {
+      "pattern_id": "8b87a1857fd34d0350c417483f84d320078aa50f3429342588c9ad7d1ea7e24d",
+      "job_id": "7fd0b5fd036e3c9f4602f0339906a9bb1d8f37941e18e169076829b4019dafcc",
+      "scenario_id": "SC-051",
+      "call": "call_2"
+    },
+    {
+      "pattern_id": "9298aa80a7a7c5e010655e6f73afe8c7e86b5340640604f7fd1a9f0eabab6be1",
+      "job_id": "08e63328de2d39afabb9033fdaaba321216d349caec40ab7818283ecd3e551f9",
+      "scenario_id": "SC-054",
+      "call": "call_2"
+    },
+    {
+      "pattern_id": "02c7a5e0ae4b8b0a4da1b6ae9ad904df8223f9c57d341a481b6c1d45d0b38d41",
+      "job_id": "84db64a7e711d8ba9b346fadf76e7521ef381edabf32c31811fbb7f5ac86f61c",
+      "scenario_id": "SC-074",
+      "call": "call_2"
+    },
+    {
+      "pattern_id": "87a7cae8ba8ce7e8b0134737bd189a50f211fb9978ccbaad280b4a042efafe54",
+      "job_id": "5413a0c76530da5e34641b885e4226f520e2582f7427c64e7727a97e7edfab4f",
+      "scenario_id": "SC-084",
+      "call": "call_1"
+    },
+    {
+      "pattern_id": "97b6948c7ae86f698b4a637006ae302197e230228b37179ea151766555efda3a",
+      "job_id": "6f29a1c98cf8cc98db8461d30e0461ebc8f8db1286683de5cd18501ddc9eb1c4",
+      "scenario_id": "SC-085",
+      "call": "call_2"
+    },
+    {
+      "pattern_id": "a45ad3e7ffa95b791a8700464d19d315f7bc63acc02435307172dded324e1e4f",
+      "job_id": "61790e94c38f06f9c49abf49b6d39460eaaacf68feb9665b830be1d96c68a013",
+      "scenario_id": "SC-091",
+      "call": "call_2"
+    },
+    {
+      "pattern_id": "0bdb6614c71bdc0485110ae00e0ead9063519b10a4317ce0df934476a03c6fc2",
+      "job_id": "65daad45cf0c9160d1cb3402c5c1ac94d41109edc388d61615a92639bc340c29",
+      "scenario_id": "SC-095",
+      "call": "call_2"
+    },
+    {
+      "pattern_id": "d3803d576fcc04307599bfeffd8e82f9005b398cefa6dd367fdd95006b93f429",
+      "job_id": "d8ad223aa73b5dd1223bae1039155a7783385f46bf104cfa45c5d7d4facf571a",
+      "scenario_id": "SC-101",
+      "call": "call_2"
+    },
+    {
+      "pattern_id": "809e317ccd2eb2a66ff10d73aa8a9b8e167f23901ac9fe090e498c0bd37aed2a",
+      "job_id": "e8b1ec7a4d5ccc7005d575724e613818c45309b0c5271211cc96ff9e4102ee87",
+      "scenario_id": "SC-104",
+      "call": "call_2"
+    },
+    {
+      "pattern_id": "d9eb9cd68d2cb75188336a8bd59fab7eb5d622a72af20a057a7afc2a3ba4ff19",
+      "job_id": "e8b1ec7a4d5ccc7005d575724e613818c45309b0c5271211cc96ff9e4102ee87",
+      "scenario_id": "SC-104",
+      "call": "call_2"
+    },
+    {
+      "pattern_id": "6d77e8ff6447ed2f86e21104323b6a08b042afbbe2e5ddb1008e728cd5f1f74a",
+      "job_id": "6db2feeccbc2033b414e1f8fe01408f6fba429423d5134d163dfdeef614f2ec7",
+      "scenario_id": "SC-114",
+      "call": "call_1"
+    },
+    {
+      "pattern_id": "93d22d2b04b5b12adc5f39c8ca4ec7659a9f88dbfa70677283a6ff2f097f6384",
+      "job_id": "6db2feeccbc2033b414e1f8fe01408f6fba429423d5134d163dfdeef614f2ec7",
+      "scenario_id": "SC-114",
+      "call": "call_1"
+    },
+    {
+      "pattern_id": "c5fd5f7e8e502c3231bef3f245b2eadb9b1438d18b28788e45fafc6967d7fb94",
+      "job_id": "7ee8ab79dcd48bce360b0d72d695d26818ae83bd8d0c5a0754f0cf114e889f07",
+      "scenario_id": "SC-114",
+      "call": "call_2"
+    },
+    {
+      "pattern_id": "58efe0c7de9ba8679dcab2859648730d98c05df06e33aad607f79af7a285e5d3",
+      "job_id": "caefb64fa427dbd76044a7093dc4783a360cb862f345c0717651890f627404c4",
+      "scenario_id": "SC-115",
+      "call": "call_1"
+    },
+    {
+      "pattern_id": "5907e3354af099f21f3ed097cf3eee1dd205358cc08bd99e73b275c343573e48",
+      "job_id": "caefb64fa427dbd76044a7093dc4783a360cb862f345c0717651890f627404c4",
+      "scenario_id": "SC-115",
+      "call": "call_1"
+    },
+    {
+      "pattern_id": "463022fc6e28237bb932c9d722c758bc67c90db08be2e6bd1ce5423330f39a07",
+      "job_id": "c5529f86ff40e4de69bc4d48802f3437cc6f256f60ae16397642218adb52aa6b",
+      "scenario_id": "SC-115",
+      "call": "call_2"
+    }
+  ],
+  "detector_failures": [
+    0,
+    0
+  ],
+  "evaluation_usage": {
+    "input_tokens": 0,
+    "output_tokens": 0
+  },
+  "review_report_hashes": {
+    "round0": {
+      "SC-001/call_1": "ed9a5c528d42fc96019add70234dcf21d7b6a666b28d0c5ba465a7a1e335c383",
+      "SC-001/call_2": "bf265b488c54842e5c6eacb870513e9609423ff473083083ba812dc61572582b",
+      "SC-003/call_1": "6f8c27d456dce0da188caf7d96ba1731c655ec93fd9f500149e600280ba2ec72",
+      "SC-003/call_2": "3b3f9c8274c9bb7adb5b29717b967c8dcaedce0f44cad5b398bc2b528e1ab956",
+      "SC-006/call_1": "5c116513e0e754f54d268e96a0903ca2b879c2909bb02f4d83163beedfbed064",
+      "SC-006/call_2": "bb0f9395af38cec8ec9dd59d87d0fca37909f4f3c537a98dee59a9114e7bce15",
+      "SC-012/call_1": "0c10372db458951a0efbbc3d00d1828df04cb6d8cfeb430fd7a14a26884fc51c",
+      "SC-012/call_2": "4523f90399e3a379b904be3f4e319ca3d343130aec50250a23a5f12f2496292b",
+      "SC-019/call_1": "0b020b2800c282d9dbf5eaae00133023c8fe63c93861bf014275c7540e9715de",
+      "SC-019/call_2": "3afbd304d32040db4445593b766d1842dbf973eaee1aaf0e28c50960bc227821",
+      "SC-021/call_1": "a6bfc6cd9c5a7a36f07e038f44fa5c44d2458fefd8068b81b22b3d83e063165c",
+      "SC-021/call_2": "f5043fb417e0a40452fc4064658e97e5f49b816b7b6f075df9fd118394991bc1",
+      "SC-026/call_1": "34e4a97f01e11a296b2fe8270fc7fe5848252083d8643f1cea61ed270a982016",
+      "SC-026/call_2": "9428747c10de0f86ea9bb4b27ce0287a83eb09cc63ebad1efb183ea60f5ae781",
+      "SC-031/call_1": "3b6927c5acefe8167e879be864ff8b23fb564ac925c11c584ca7dfd31d30566d",
+      "SC-031/call_2": "489b723cdf707065b78230f93c979605c99a27640c6385af08732ff3d767af5b",
+      "SC-032/call_1": "3bf616a49c2db5833c0a9091c2061eac2cbcce886a30eaffea0d92d7fa71293a",
+      "SC-032/call_2": "f44ec00fa0e9e44a4ecabd205cfab97fca188288ee93c63a811dcdbb5e7dd5ae",
+      "SC-041/call_1": "4f1fd448c8b16ca7ff58a5724cbcd139137eaf6c7337a6905dfbefb64e0e6ac8",
+      "SC-041/call_2": "a5acd93d7bcfdb0b44c331abc20506e5c6f89e6ae3bbbf900b44e78e9df9079b",
+      "SC-041/call_3": "7ce03416b701821d408bf03a5eb470edc1e03bab97c0d24c67c99918bed280e8",
+      "SC-044/call_1": "da02fb1069421de900463bcf7d82169f6fb1b73759f5a1680f66d4a8d258db76",
+      "SC-044/call_2": "51766ee0ceed272065597d742d14c742fe46fa1914cdb5df1faf541107a0787f",
+      "SC-044/call_3": "cba1753edcc35b2e688d3abfe016d90c09ecb9047261efee22d17acfec359f06",
+      "SC-045/call_1": "5b8b8d1548a7309641da75ca6dac2afe11c7dbe68bb6825ea386eb214bc884ac",
+      "SC-045/call_2": "7d1dab6de94c919d68ba08d377da82ce973fc76cb7448e853d396c4bbeb895db",
+      "SC-045/call_3": "cc9945867ff94101b6e2ca8a6eab611fe183ebef7a6e64fbbd6179f440603ad3",
+      "SC-051/call_1": "ea09e8ec2f081383bf0d1e262dd3b4cb9064e9c02cdfaee5ef1f0002c024c7c4",
+      "SC-051/call_2": "1f1d4f82a7e68344e299f61612a299573134dc79f9afd8dc73cb96ce69f15bb0",
+      "SC-054/call_1": "4d16d2423448e6d5c226b110f58331dd2c1e6557282be07a2ce249e572779ec6",
+      "SC-054/call_2": "7fbbfc27a30bb2d41c055f0a614cb6d18b6f5827b3ccc434f853f904e5b34e9b",
+      "SC-062/call_1": "1847b6e0af475a9e0f1bb8dc2d3ad70e28ded3907e75fb836710ea03a9a443d6",
+      "SC-062/call_2": "bceefb8a409778c2cfc539660a931f6ee6ad0fadc4b57ffa10a57ee875a3e889",
+      "SC-066/call_1": "f8660a92b88124fe0385a991df9b12e758a44ef03e24a4e800bf582fb919102a",
+      "SC-066/call_2": "8afc06f22c8443ddf2c5c52d51d71e80114af8194ac09fdc5b89ffa9535bad29",
+      "SC-071/call_1": "b5b094857418be5c89012a0f75231717737e5516e6674782315d7fe6bdbd94b9",
+      "SC-071/call_2": "d8cb4d2ad9ed4cc8987c29ececde924b7ed24f8d4037a6e06d55b4bc337aa93c",
+      "SC-074/call_1": "c2ee091b6053e7bc9cdf4df882120f2c915954c54dd16bc96eacd7f5850785c1",
+      "SC-074/call_2": "b7c0bfbd789f0abbec52d53a14aeb49513a984660b0a894f8bf432d396c6972c",
+      "SC-075/call_1": "e1b1c61c02fd5b0373c601a9e00aeaee621765b945fa3d2ed84ebe35482fc12d",
+      "SC-075/call_2": "1e429d5a164b0e6651dfc700e0f861c5d0b9d2ffb11c07867fb020efe550c12d",
+      "SC-081/call_1": "fcd033e98648c0c6b6a2c24b2b869ee73e648e74a6dae58c92952b9dd12440c2",
+      "SC-081/call_2": "df658352ccd72139975650f8685bbfb342266cb9ea307dddab3c6551a023eb80",
+      "SC-084/call_1": "aa10035055ee1dc78bb9591d961b36961d572b7ffc36f595765058ada5ae0bd9",
+      "SC-084/call_2": "850acd450f15ce4fbf67559e91aa0e0c9b4bbe537714d7d345ef7015bb5d8931",
+      "SC-085/call_1": "c209af0bd5617723fe29930c6bb5b77ba0e9f24d2df1407a02bfabd18c829eee",
+      "SC-085/call_2": "82276aeddaf6242594d5593ba77f09257770fece726debf43cf19437b66b8a37",
+      "SC-091/call_1": "e4418a91c1f3cdba83df8203f30128c57fb0c7a694d9c4a86b30a505a1f8e764",
+      "SC-091/call_2": "42e64238d61264c6fed3859e0c8c26706e26ecb78557591ac3ee920c7640f095",
+      "SC-095/call_1": "edc1d99f5eb3f013d180b6c30ab89b25d6756660a3d86f7edadc5d00909d87e6",
+      "SC-095/call_2": "a56492b17dab94de4329f5dc2f65175999583d1d6c7169b824f70f4a9ce10aec",
+      "SC-101/call_1": "f5e57654109916cb4becd85f3c801af2ecd7ec15df7be43adcc63d0e4546c198",
+      "SC-101/call_2": "359eec45b63bea340ab93016f9cfbc9532615e87d9443dff74ccc47c99447692",
+      "SC-104/call_1": "3ed03582b58f4484572211b8234451e9c1fa7283142f11afb8071b2e5bebb302",
+      "SC-104/call_2": "a45f105313b1c07e285d6c78f5b9e50189f7351edca2c4acccc165d7c10d1ca7",
+      "SC-110/call_1": "f1a3999ad5b5f05e5fd5b40bbacc1d689c9c44d22babfa98e87212633e696910",
+      "SC-110/call_2": "404410b893b31a318eace20c0fa32cab2f6434c0eea366af0b0caf88f56c7ce5",
+      "SC-111/call_1": "1c345f2c4538d55e7ff753a37ed8c3b7e8c5489701592fa60ce657505e3e0f51",
+      "SC-111/call_2": "38520da7f48cec71e262f5d8c54389c585054d62f76d3abee137971ba32c297e",
+      "SC-114/call_1": "c07108c838db9f47a7376ef75291af166563603c9050a4e6b817db8db1ae548d",
+      "SC-114/call_2": "fabea4e48a19a603ee99ccef8d7c89a758c839339ea16b933bea25b1acc1ae6f",
+      "SC-115/call_1": "ae588c4f9150f420b1e872221c78b55b24abd9eba388e901e902fec936980b52",
+      "SC-115/call_2": "2274b05eb692248f24fd6eefcf96ace76699badd3aba6dc1c77c51b3d37219ac"
+    },
+    "round1": {
+      "SC-001/call_1": "37305b8eeeaeb1c3d863c2e2862967c3c5e2731d0ad0ddd1591cd52ff68a519b",
+      "SC-001/call_2": "7991075697b3d0389ec9f0b7b01ed2af316965ef9b063d4c0e77a707958f53b9",
+      "SC-003/call_1": "875d18275976216bd92a45be7aea8b55734d63aba95b78a7298ada3ccd970396",
+      "SC-003/call_2": "9990070a8bdf4da37f3fbb004fd63cfef069a2a2e783109962682e75f3e36000",
+      "SC-006/call_1": "fc5e66d37287a377f8877bea9fbee624ee5cd8dc8dd6623b29ab8609b2d46541",
+      "SC-006/call_2": "763cd7bb5513f11e384660eeba4d4e151b8199265749621b163b819e273109ed",
+      "SC-012/call_1": "20be114930159403066b8dbbbcecab5227c33a8af5c35a299b46bf50457e1fc4",
+      "SC-012/call_2": "2be422ffd78b7a6ae6533d10a2de621df9157abfc9a21d4fca57164ac9378faa",
+      "SC-019/call_1": "fcd3a497281b2b064a9029d1ff5fb4d1075050e667bd47f82741880adf23523a",
+      "SC-019/call_2": "35eaf1465ab1ca1671249ffb902e8d08f77836e3563c7d47269316fafbd5c08f",
+      "SC-021/call_1": "1f1134d532f38ee95a12437549c9139cdcc7bf6b82b21d0e7cfeb0e0a0d3bd66",
+      "SC-021/call_2": "6772c541e3a4a47831cdea424c44cc53b57b89e620f83b36aba3def61fa04eb5",
+      "SC-026/call_1": "e57a838240a43e6193e7c545d0b6a827e23d44546475132e7c0a6106b195a319",
+      "SC-026/call_2": "d2265e42b1f01789ce0ce7c40983e16e333d4d0889a75d1056a8c95f336ee74d",
+      "SC-031/call_1": "445733e7f08f18d20e0cd0dd7fb0c1ccef4a6fcfa436f62207d66ddde6c122ab",
+      "SC-031/call_2": "b4eaceca0499c934888e18e4d293005cf5a20ebe71a6870eb291dbe855565c1b",
+      "SC-032/call_1": "c5ef777df7abb32701e9b9b671467cfb36f6c0ccc617f6512c12c1f585d8b93c",
+      "SC-032/call_2": "a7fda5c5ddfc9e034bfdf844fa24afbf2c5b90357424d56232e8b36cb9db3bef",
+      "SC-041/call_1": "d245c2f647880bdaa0ca63d107d79c017673925bb3eb4996a3b9f93615c7131c",
+      "SC-041/call_2": "b8c3c10f7b12eeb862cc487078434a353846f1a4cef8c1f203c2d830af65294e",
+      "SC-041/call_3": "9ae32cb3bc9c77a2520fa049fb662a343f07fae5656c8ced587057639157bb42",
+      "SC-044/call_1": "9361bfcc9bf4c1fc7ac215b636e59d1c503f5ce1884178fb7874f77ab384a136",
+      "SC-044/call_2": "235de18ceee7963e473a021abac945e9e0ff1ac6f4a584ac99bce855b7f673f9",
+      "SC-044/call_3": "0b95cecf4355f532b4359b3b07fa41b8881be04e20a9533349fb8ef89517b6c3",
+      "SC-045/call_1": "a62a9f9c6fe4d6fea6443d2bc827d1da8ef1516c2b98365e9ba5044e0e66da0e",
+      "SC-045/call_2": "91b83ee37c1132a78f49bf7ddc59bea78abee6fbec57fbe4dff6a0ea33052957",
+      "SC-045/call_3": "cbb831f7e5bc6614d77e87271addf25532982ad463698dfa2296835e0ba88098",
+      "SC-051/call_1": "24279e3d0ecf4377574f51c9e26f9c4f50f654c2c9cb42b70dacaec3e3b7be6e",
+      "SC-051/call_2": "2e38213d76685f3898d0193098177913f26b7be5b8ba1bd27c309bdf3d890fef",
+      "SC-054/call_1": "7763225183618dd220431ca7e47bc0fd798c3aaed7a6adefa2a3c02491dc451e",
+      "SC-054/call_2": "fbb1007c43391431c2f5dc5d5aabd07910519415f3232036588120e31792001e",
+      "SC-062/call_1": "6c36ca85133f698ce0c36f63544c0de66fcbae4bbc3576c3772294f87c1104bf",
+      "SC-062/call_2": "fd4726a71513fe9fbf3a0144b79a3b4d8d37a0456730a233f9f73e7785ce328d",
+      "SC-066/call_1": "7bae9a6997d62c9a42bf5f268326814cf4924f3f30ab2809e61d3f62f70a71de",
+      "SC-066/call_2": "887b8f5fc9f64a7186cb86aafc380a25d8116001c81c2ec316e14f6900aa7956",
+      "SC-071/call_1": "f9e29f3d67adf18eb423d64f42b112b082c0cef8e61eace768ea692ecfa1ffbe",
+      "SC-071/call_2": "265dff9c7717e128d1195effdf8203d214fb65bd62b4f19d892291b369c06822",
+      "SC-074/call_1": "6a43277fdfbd36a6864f80d881b6a2c3dfa1105c117aa1beb3605d7b1cdf3ddf",
+      "SC-074/call_2": "458f852e8363997e1ad06fd09104fed72c0794aef6466d6c26be83d40dea8c97",
+      "SC-075/call_1": "43e82769e3973f00e1df0cc41988d5ee1444e3a58d6e6bceac3483824bb28cd0",
+      "SC-075/call_2": "8ed2f9f677494afd563e0c5d9624667143a20885e646919cca4bf45abdcf0be7",
+      "SC-081/call_1": "3713176cd6eab85f2709cd15d6c07c8453704578a89f5b3b2f9f59700786602e",
+      "SC-081/call_2": "511ec1e556709bd779af0a6492f9242519e6ed849fcd3a465fa10a170df8e237",
+      "SC-084/call_1": "02f899c1ff94afd3cd6b41515c42b06155d3258f0a04910c3207e5f2f909260b",
+      "SC-084/call_2": "65c61d190f4cd2443a48a603f1585022df3f7dc1954bc65248645b9b14426680",
+      "SC-085/call_1": "ffecbc04f1e40c2e6917991ec54d2774839054607dff6d8e9bb576bb406e45d9",
+      "SC-085/call_2": "ed6d21c1938bfdbb38260a4b26ed5b3a4919070e5a45b9a4b207fe2f67d5b720",
+      "SC-091/call_1": "f2ca96d8105988d375693fc5b65116f573ecc1e468b07933cd16298a13348f1b",
+      "SC-091/call_2": "c171b0168a451b39153b0a8dbb4b5b85a91be627a3e7390f47137abe00680e12",
+      "SC-095/call_1": "daea5979a35ea1d93c8bf91bdf4314f9ce0da5149361aa56f605bd4f1bd5a682",
+      "SC-095/call_2": "df41665cb81c119f3cc524f81c61a351c4f57d961abc314c36c7dae3774661ed",
+      "SC-101/call_1": "4a03ae87ec1ce581fbb69cf7b7553026129beb81e40dc823ce798b5e734fd627",
+      "SC-101/call_2": "988af4b3ec22dc2e4c18f178088ca62bf31aa610d60f59cfe2fc349500180c8f",
+      "SC-104/call_1": "c4ee63e473767b505448c4abf591f4426bcd260d8da70c716a5e0e5352eb2f1b",
+      "SC-104/call_2": "4097408dfb82f49686b7e6829e73c2a0cc508effba5addd6f7c09250a1956676",
+      "SC-110/call_1": "17a6335f921055b50d041010721e231f8c058ab2c92bdd923c87116b5e830bff",
+      "SC-110/call_2": "94258f93dd908ef7b3a4fe54b963d95bfa47db18c191a291adafb6a8a35f3d6b",
+      "SC-111/call_1": "3ec3a145711b09dabd700951e7083f01668053c190856e9761838e1c289d40ea",
+      "SC-111/call_2": "50a3b23be09aff399672f18001b3044ca2c8f542e897408a070269fb8b70d03d",
+      "SC-114/call_1": "ecbc1aad9a7c7b24013e371425d1955af3c2d3dbbde104c7723be3b62283959c",
+      "SC-114/call_2": "efaafe441264c56197bc345fb441d09d5c2548a4225db7a6c927020708e21e81",
+      "SC-115/call_1": "a1567b9f2330f156c33786c4588f35b4b031ff9660b2233575b638cc489a4d0f",
+      "SC-115/call_2": "a02e4957a5227db6c0df1eb1a260c5a140785e7211533a277d1065057766f8d3"
+    }
+  }
+}

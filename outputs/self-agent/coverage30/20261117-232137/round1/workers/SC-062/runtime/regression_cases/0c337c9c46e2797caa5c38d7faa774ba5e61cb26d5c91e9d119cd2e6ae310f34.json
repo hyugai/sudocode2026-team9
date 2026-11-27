@@ -1,0 +1,46 @@
+{
+  "id": "0c337c9c46e2797caa5c38d7faa774ba5e61cb26d5c91e9d119cd2e6ae310f34",
+  "reason": "unsupported_claim",
+  "pattern": "Do not state an unverified claim as a fact.",
+  "status": "approved",
+  "scope": "general",
+  "mechanism": "knowledge_gap",
+  "criterion": "Do not state an unverified claim as a fact.",
+  "evidence_refs": [
+    {
+      "job_id": "aa58e66c7576c73d68b53ce52658adae9abf8901cb543086245d20eee97cb94f",
+      "message_id": 0,
+      "turn_id": 1,
+      "origin": "turn_detector"
+    }
+  ],
+  "assessment": "unsupported_by_evidence",
+  "report_ref": "aa58e66c7576c73d68b53ce52658adae9abf8901cb543086245d20eee97cb94f",
+  "lesson": {
+    "title": "State Unknown Product And Callback History As Uncertain",
+    "when": "A user mentions a scheduled callback or product inquiry without documented sources or context for the specific product or appointment",
+    "do": "Acknowledge the outreach using only verified source details and express uncertainty about unverified specifics",
+    "otherwise": "Avoid assuming specific SKUs, product names, or scheduled context not backed by evidence",
+    "triggers": [
+      "nhắn qua Zalo OA",
+      "liên hệ lại theo lịch",
+      "hỏi về sản phẩm",
+      "callback context missing SKU"
+    ],
+    "id": "81fd57ebc481930e412b2148c9e060a24208a0d9a63d1c038e50ddfa4c3fd487",
+    "status": "approved",
+    "scope": "general",
+    "mechanism": "knowledge_gap",
+    "source_refs": [
+      {
+        "job_id": "aa58e66c7576c73d68b53ce52658adae9abf8901cb543086245d20eee97cb94f",
+        "message_id": 0,
+        "turn_id": 1,
+        "origin": "turn_detector"
+      }
+    ],
+    "version": 2
+  },
+  "lesson_path": "lessons\\approved\\81fd57ebc481930e412b2148c9e060a24208a0d9a63d1c038e50ddfa4c3fd487.md",
+  "lesson_hash": "1705d2fe364f27d84eaeb6298b49a00d5184c81bbc3ff3ca97de806a1ab1fb54"
+}

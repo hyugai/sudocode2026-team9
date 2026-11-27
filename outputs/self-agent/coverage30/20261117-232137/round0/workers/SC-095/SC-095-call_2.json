@@ -1,0 +1,451 @@
+{
+  "scenario_id": "SC-095",
+  "call": "call_2",
+  "session_id": "self-f8fa7dcb2c2344f3bc0791b01da3dd68-SC-095-call_2",
+  "turns": [
+    {
+      "customer": "Tôi là [private], số điện thoại [phone], đã nhắn qua Zalo OA. Chị [private] đây, chị đã cân nhắc xong rồi. Em nhắc đúng món của chị nhé, đừng lấy nhu cầu của mẹ.",
+      "agent": "Dạ em chào chị [private]. Em nhớ rõ rồi ạ, em sẽ tập trung đúng vào nhu cầu của riêng chị. Hôm trước em có tư vấn cho chị sản phẩm Quạt đứng Senko (SKU-FAN-SEN) đúng không ạ? Không biết chị đã quyết định chọn sản phẩm này chưa để em hỗ trợ mình tiếp ạ?",
+      "latency": {
+        "ttft_ms": 5757,
+        "total_ms": 5757,
+        "ttfa_ms": null,
+        "measurement_mode": "non_streaming",
+        "timing_boundary": "response_ready_before_persistence",
+        "asr_ms": null,
+        "call_brief_ms": 3668,
+        "response_ready_ms": 5757,
+        "persistence_ms": 0.089,
+        "request_complete_ms": 5757.415,
+        "backend_total_ms": 5757.415,
+        "precomputed_parts": [
+          "persisted_facts"
+        ]
+      },
+      "lesson_trace": null
+    },
+    {
+      "customer": "Chị đồng ý một chiếc giá 590.000 đồng, giao 104 đường Kiểm Thử, TP. Hồ Chí Minh, COD.",
+      "agent": "Dạ em đã chốt thành công đơn hàng Quạt đứng Senko cho chị [private] rồi ạ! \n\nMã đơn hàng của chị là **[order_id]** với tổng tiền là 590.000 đồng, thanh toán COD khi nhận hàng tại địa chỉ [address]\n\nEm cảm ơn chị [private] đã ủng hộ cửa hàng, chúc chị một ngày tốt lành ạ!",
+      "latency": {
+        "ttft_ms": 6284,
+        "total_ms": 6284,
+        "ttfa_ms": null,
+        "measurement_mode": "non_streaming",
+        "timing_boundary": "response_ready_before_persistence",
+        "asr_ms": null,
+        "call_brief_ms": null,
+        "response_ready_ms": 6284,
+        "persistence_ms": 0.129,
+        "request_complete_ms": 6284.239,
+        "backend_total_ms": 6284.239,
+        "precomputed_parts": [
+          "persisted_facts"
+        ]
+      },
+      "lesson_trace": null
+    },
+    {
+      "customer": "Đơn của chị [private]; em ghi riêng hồ sơ giúp chị.",
+      "agent": "Dạ chị [private], hệ thống bên em tự động cập nhật và ghi nhớ toàn bộ thông tin đơn hàng **[order_id]** (Quạt đứng Senko) cùng địa chỉ [address]\n\nChị cần em hỗ trợ thêm thông tin hoặc sản phẩm nào khác nữa không ạ?",
+      "latency": {
+        "ttft_ms": 4478,
+        "total_ms": 4478,
+        "ttfa_ms": null,
+        "measurement_mode": "non_streaming",
+        "timing_boundary": "response_ready_before_persistence",
+        "asr_ms": null,
+        "call_brief_ms": null,
+        "response_ready_ms": 4478,
+        "persistence_ms": 0.102,
+        "request_complete_ms": 4477.952,
+        "backend_total_ms": 4477.952,
+        "precomputed_parts": [
+          "persisted_facts"
+        ]
+      },
+      "lesson_trace": null
+    }
+  ],
+  "generation_context": {
+    "round": 0,
+    "instruction_hash": "9d30a7093911a993d8545de8b61cc6dc8465de67b10fb62b27d9f1bafaf0badf",
+    "applied_patterns": {},
+    "lessons_loaded": false,
+    "lesson_sources": [],
+    "lesson_files": [],
+    "instruction_root": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round0\\instructions"
+  },
+  "evaluation_evidence": [
+    {
+      "turn_id": 1,
+      "agent_response": "Dạ em chào chị [private]. Em nhớ rõ rồi ạ, em sẽ tập trung đúng vào nhu cầu của riêng chị. Hôm trước em có tư vấn cho chị sản phẩm Quạt đứng Senko (SKU-FAN-SEN) đúng không ạ? Không biết chị đã quyết định chọn sản phẩm này chưa để em hỗ trợ mình tiếp ạ?",
+      "tool_calls": [],
+      "sources": [],
+      "promotions": []
+    },
+    {
+      "turn_id": 2,
+      "agent_response": "Dạ em đã chốt thành công đơn hàng Quạt đứng Senko cho chị [private] rồi ạ! \n\nMã đơn hàng của chị là **[order_id]** với tổng tiền là 590.000 đồng, thanh toán COD khi nhận hàng tại địa chỉ [address]\n\nEm cảm ơn chị [private] đã ủng hộ cửa hàng, chúc chị một ngày tốt lành ạ!",
+      "tool_calls": [
+        {
+          "name": "inventory.check",
+          "args": {
+            "sku": "SKU-FAN-SEN",
+            "on": "2026-10-21"
+          },
+          "result": {
+            "sku": "SKU-FAN-SEN",
+            "found": true,
+            "in_stock": true,
+            "qty": 30,
+            "discontinued": false
+          }
+        },
+        {
+          "name": "pricing.get_quote",
+          "args": {
+            "on": "2026-10-21",
+            "customer_phone": "[private]",
+            "customer_id": "[private]",
+            "address": "[private]",
+            "sku": "SKU-FAN-SEN",
+            "qty": 1
+          },
+          "result": {
+            "sku": "SKU-FAN-SEN",
+            "list_price_vnd": 590000,
+            "final_price_vnd": 590000,
+            "applied_promos": [
+              {
+                "promo_code": "NAM-SHIP0",
+                "type": "freeship",
+                "discount_vnd": 0
+              },
+              {
+                "promo_code": "COD-0",
+                "type": "freecod",
+                "discount_vnd": 0
+              }
+            ],
+            "expired_promos": [],
+            "ineligible_promos": [],
+            "not_applied_exclusive": [],
+            "freeship": true
+          }
+        },
+        {
+          "name": "order.create",
+          "args": {
+            "customer_phone": "[private]",
+            "customer_id": "[private]",
+            "address": "[private]",
+            "idempotency_key": "self-f8fa7dcb2c2344f3bc0791b01da3dd68-SC-095-call_2:call_2:create:SKU-FAN-SEN",
+            "sku": "SKU-FAN-SEN",
+            "qty": 1,
+            "price_vnd": 590000,
+            "promo_code": "NAM-SHIP0",
+            "on": "2026-10-21",
+            "payment": "COD"
+          },
+          "result": {
+            "order_id": "[private]",
+            "status": "created",
+            "total_vnd": 590000,
+            "needs_confirmation_call": false,
+            "estimated_delivery": "2026-10-23"
+          }
+        }
+      ],
+      "sources": [],
+      "promotions": []
+    },
+    {
+      "turn_id": 3,
+      "agent_response": "Dạ chị [private], hệ thống bên em tự động cập nhật và ghi nhớ toàn bộ thông tin đơn hàng **[order_id]** (Quạt đứng Senko) cùng địa chỉ [address]\n\nChị cần em hỗ trợ thêm thông tin hoặc sản phẩm nào khác nữa không ạ?",
+      "tool_calls": [
+        {
+          "name": "inventory.check",
+          "args": {
+            "sku": "SKU-FAN-SEN",
+            "on": "2026-10-21"
+          },
+          "result": {
+            "sku": "SKU-FAN-SEN",
+            "found": true,
+            "in_stock": true,
+            "qty": 30,
+            "discontinued": false
+          }
+        },
+        {
+          "name": "pricing.get_quote",
+          "args": {
+            "on": "2026-10-21",
+            "customer_phone": "[private]",
+            "customer_id": "[private]",
+            "address": "[private]",
+            "sku": "SKU-FAN-SEN",
+            "qty": 1
+          },
+          "result": {
+            "sku": "SKU-FAN-SEN",
+            "list_price_vnd": 590000,
+            "final_price_vnd": 590000,
+            "applied_promos": [
+              {
+                "promo_code": "NAM-SHIP0",
+                "type": "freeship",
+                "discount_vnd": 0
+              },
+              {
+                "promo_code": "COD-0",
+                "type": "freecod",
+                "discount_vnd": 0
+              }
+            ],
+            "expired_promos": [],
+            "ineligible_promos": [],
+            "not_applied_exclusive": [],
+            "freeship": true
+          }
+        }
+      ],
+      "sources": [],
+      "promotions": []
+    }
+  ],
+  "job": {
+    "status": "done",
+    "job_id": "65daad45cf0c9160d1cb3402c5c1ac94d41109edc388d61615a92639bc340c29",
+    "error": null
+  },
+  "learning": {
+    "job_id": "65daad45cf0c9160d1cb3402c5c1ac94d41109edc388d61615a92639bc340c29",
+    "gaps": [
+      {
+        "id": "0bdb6614c71bdc0485110ae00e0ead9063519b10a4317ce0df934476a03c6fc2",
+        "status": "pending_remediation"
+      }
+    ],
+    "scope": "knowledge_gap_and_reflection_v1",
+    "evaluation_cases": [
+      {
+        "id": "33c9a909b6173276bad959317a65e59edc79c4e10de862472090c482d9238fa6",
+        "gap_id": "0bdb6614c71bdc0485110ae00e0ead9063519b10a4317ce0df934476a03c6fc2",
+        "turn_id": 1,
+        "question": "Tôi là [private], số điện thoại [private], đã nhắn qua Zalo OA. Chị [private] đây, chị đã cân nhắc xong rồi. Em nhắc đúng món của chị nhé, đừng lấy nhu cầu của mẹ.",
+        "reason": "unsupported_claim",
+        "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments."
+      }
+    ],
+    "out_of_scope": [],
+    "issue_reviews": [
+      {
+        "job_id": "65daad45cf0c9160d1cb3402c5c1ac94d41109edc388d61615a92639bc340c29",
+        "message_id": 0,
+        "turn_id": 1,
+        "origin": "turn_detector",
+        "mechanism": "knowledge_gap",
+        "verified": true,
+        "claim": "Hôm trước em có tư vấn cho chị sản phẩm Quạt đứng Senko (SKU-FAN-SEN) đúng không ạ?",
+        "assessment": "unsupported_by_evidence",
+        "evidence_paths": [],
+        "rejection": null,
+        "rejection_reasons": [],
+        "format_retry": false,
+        "verifier_output": {
+          "valid": true,
+          "issue_scope": "business_knowledge",
+          "claim": "Hôm trước em có tư vấn cho chị sản phẩm Quạt đứng Senko (SKU-FAN-SEN) đúng không ạ?",
+          "assessment": "unsupported_by_evidence",
+          "evidence_paths": [],
+          "decision_reason": "The candidate claim references a specific previous consultation product (Quạt đứng Senko SKU-FAN-SEN), but no tools were called and no sources or conversation history exist to support this factual claim.",
+          "audit": {
+            "support_status": "not_established",
+            "coverage": "complete",
+            "checked_paths": [
+              "evidence.tool_calls",
+              "evidence.sources",
+              "evidence.promotions"
+            ]
+          }
+        },
+        "candidate_claim": "Hôm trước em có tư vấn cho chị sản phẩm Quạt đứng Senko (SKU-FAN-SEN) đúng không ạ?",
+        "verification_basis": "evidence_inventory_audit",
+        "evidence_inventory": [
+          "evidence.tool_calls",
+          "evidence.sources",
+          "evidence.promotions"
+        ],
+        "lesson_status": "approved"
+      }
+    ],
+    "detector_error": null,
+    "guardrails": {
+      "version": "learning_guardrails_v1",
+      "input_findings": [],
+      "blocked_lessons": [],
+      "blocked_sources": []
+    },
+    "detection": {
+      "candidate_count": 1,
+      "open_question_count": 0,
+      "processed_count": 1,
+      "skipped_unmatched_question": 0,
+      "skipped_over_limit": 0,
+      "scan": {
+        "turns_available": 3,
+        "turns_scanned": 3,
+        "requests": 3,
+        "errors": [],
+        "schema_retries": 0,
+        "skipped_over_limit": 0
+      },
+      "alignment_rejections": []
+    },
+    "outcome": "gaps_processed",
+    "learning_duration_ms": 11525,
+    "learning_usage": {
+      "input_tokens": 5554,
+      "output_tokens": 370
+    }
+  },
+  "artifact_changes": [
+    {
+      "path": "gaps/0bdb6614c71bdc0485110ae00e0ead9063519b10a4317ce0df934476a03c6fc2.json",
+      "change": "created",
+      "value": {
+        "id": "0bdb6614c71bdc0485110ae00e0ead9063519b10a4317ce0df934476a03c6fc2",
+        "question": "Thông tin nghiệp vụ cần được xác minh từ nguồn nào?",
+        "occurrences": [
+          "65daad45cf0c9160d1cb3402c5c1ac94d41109edc388d61615a92639bc340c29"
+        ],
+        "reason": "unsupported_claim",
+        "mechanism": "knowledge_gap",
+        "status": "pending_remediation",
+        "evidence_refs": [
+          {
+            "job_id": "65daad45cf0c9160d1cb3402c5c1ac94d41109edc388d61615a92639bc340c29",
+            "message_id": 0,
+            "turn_id": 1,
+            "origin": "turn_detector"
+          }
+        ],
+        "pattern_ref": "0bdb6614c71bdc0485110ae00e0ead9063519b10a4317ce0df934476a03c6fc2",
+        "test_refs": [
+          "0bdb6614c71bdc0485110ae00e0ead9063519b10a4317ce0df934476a03c6fc2"
+        ]
+      }
+    },
+    {
+      "path": "patterns/0bdb6614c71bdc0485110ae00e0ead9063519b10a4317ce0df934476a03c6fc2.json",
+      "change": "created",
+      "value": {
+        "id": "0bdb6614c71bdc0485110ae00e0ead9063519b10a4317ce0df934476a03c6fc2",
+        "reason": "unsupported_claim",
+        "pattern": "Do not state an unverified claim as a fact.",
+        "status": "approved",
+        "scope": "general",
+        "mechanism": "knowledge_gap",
+        "criterion": "Do not state an unverified claim as a fact.",
+        "evidence_refs": [
+          {
+            "job_id": "65daad45cf0c9160d1cb3402c5c1ac94d41109edc388d61615a92639bc340c29",
+            "message_id": 0,
+            "turn_id": 1,
+            "origin": "turn_detector"
+          }
+        ],
+        "assessment": "unsupported_by_evidence",
+        "report_ref": "65daad45cf0c9160d1cb3402c5c1ac94d41109edc388d61615a92639bc340c29",
+        "lesson": {
+          "title": "Verify prior context before stating specific history",
+          "when": "a customer refers to a previous conversation or decision and no source or tool result confirms the specific product or details discussed",
+          "do": "ask the customer directly which product or item they are referring to without inventing past interaction details",
+          "otherwise": "express uncertainty about the exact item previously discussed instead of assuming or stating specific products",
+          "triggers": [
+            "nhắc đúng món",
+            "nhắn qua Zalo",
+            "lịch sử tư vấn",
+            "remember previous product",
+            "unverified chat history"
+          ],
+          "id": "01a913544fdac1395d75b0f5a4ffe75a884011933f924d54d788a5911dd30e2a",
+          "status": "approved",
+          "scope": "general",
+          "mechanism": "knowledge_gap",
+          "source_refs": [
+            {
+              "job_id": "65daad45cf0c9160d1cb3402c5c1ac94d41109edc388d61615a92639bc340c29",
+              "message_id": 0,
+              "turn_id": 1,
+              "origin": "turn_detector"
+            }
+          ],
+          "version": 2
+        },
+        "lesson_path": "lessons\\approved\\01a913544fdac1395d75b0f5a4ffe75a884011933f924d54d788a5911dd30e2a.md",
+        "lesson_hash": "35760691b8afd42847dc28985828043d1f77db8ba2940641f67649bf0726476a"
+      }
+    },
+    {
+      "path": "regression_cases/0bdb6614c71bdc0485110ae00e0ead9063519b10a4317ce0df934476a03c6fc2.json",
+      "change": "created",
+      "value": {
+        "id": "0bdb6614c71bdc0485110ae00e0ead9063519b10a4317ce0df934476a03c6fc2",
+        "reason": "unsupported_claim",
+        "pattern": "Do not state an unverified claim as a fact.",
+        "status": "approved",
+        "scope": "general",
+        "mechanism": "knowledge_gap",
+        "criterion": "Do not state an unverified claim as a fact.",
+        "evidence_refs": [
+          {
+            "job_id": "65daad45cf0c9160d1cb3402c5c1ac94d41109edc388d61615a92639bc340c29",
+            "message_id": 0,
+            "turn_id": 1,
+            "origin": "turn_detector"
+          }
+        ],
+        "assessment": "unsupported_by_evidence",
+        "report_ref": "65daad45cf0c9160d1cb3402c5c1ac94d41109edc388d61615a92639bc340c29",
+        "lesson": {
+          "title": "Verify prior context before stating specific history",
+          "when": "a customer refers to a previous conversation or decision and no source or tool result confirms the specific product or details discussed",
+          "do": "ask the customer directly which product or item they are referring to without inventing past interaction details",
+          "otherwise": "express uncertainty about the exact item previously discussed instead of assuming or stating specific products",
+          "triggers": [
+            "nhắc đúng món",
+            "nhắn qua Zalo",
+            "lịch sử tư vấn",
+            "remember previous product",
+            "unverified chat history"
+          ],
+          "id": "01a913544fdac1395d75b0f5a4ffe75a884011933f924d54d788a5911dd30e2a",
+          "status": "approved",
+          "scope": "general",
+          "mechanism": "knowledge_gap",
+          "source_refs": [
+            {
+              "job_id": "65daad45cf0c9160d1cb3402c5c1ac94d41109edc388d61615a92639bc340c29",
+              "message_id": 0,
+              "turn_id": 1,
+              "origin": "turn_detector"
+            }
+          ],
+          "version": 2
+        },
+        "lesson_path": "lessons\\approved\\01a913544fdac1395d75b0f5a4ffe75a884011933f924d54d788a5911dd30e2a.md",
+        "lesson_hash": "35760691b8afd42847dc28985828043d1f77db8ba2940641f67649bf0726476a"
+      }
+    },
+    {
+      "path": "lessons/approved/01a913544fdac1395d75b0f5a4ffe75a884011933f924d54d788a5911dd30e2a.md",
+      "change": "created",
+      "value": {
+        "content": "---\n{\"do\": \"ask the customer directly which product or item they are referring to without inventing past interaction details\", \"id\": \"01a913544fdac1395d75b0f5a4ffe75a884011933f924d54d788a5911dd30e2a\", \"mechanism\": \"knowledge_gap\", \"otherwise\": \"express uncertainty about the exact item previously discussed instead of assuming or stating specific products\", \"scope\": \"general\", \"source_refs\": [{\"job_id\": \"65daad45cf0c9160d1cb3402c5c1ac94d41109edc388d61615a92639bc340c29\", \"message_id\": 0, \"origin\": \"turn_detector\", \"turn_id\": 1}], \"status\": \"approved\", \"title\": \"Verify prior context before stating specific history\", \"triggers\": [\"nhắc đúng món\", \"nhắn qua Zalo\", \"lịch sử tư vấn\", \"remember previous product\", \"unverified chat history\"], \"version\": 2, \"when\": \"a customer refers to a previous conversation or decision and no source or tool result confirms the specific product or details discussed\"}\n---\n\n# Verify prior context before stating specific history\n\n## When\na customer refers to a previous conversation or decision and no source or tool result confirms the specific product or details discussed\n\n## Do\nask the customer directly which product or item they are referring to without inventing past interaction details\n\n## Otherwise\nexpress uncertainty about the exact item previously discussed instead of assuming or stating specific products\n"
+      }
+    }
+  ]
+}

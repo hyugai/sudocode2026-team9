@@ -1,0 +1,211 @@
+{
+  "id": "9a2ebcf8889de6e023bed8697687ed73b11ef093cc22eabb7aa22b69cb1065f6",
+  "status": "done",
+  "attempts": 1,
+  "snapshot": {
+    "session": "835fb04505aa36d935cbff7b02ffeed2e301a595e4c5e63fa2bcb72268a7a3ad",
+    "revision": 2,
+    "messages": [
+      {
+        "message_id": 0,
+        "role": "customer",
+        "content": "Chị gọi lần thứ ba rồi. Chốt một chiếc như đã trao đổi nhé."
+      },
+      {
+        "message_id": 1,
+        "role": "agent",
+        "content": "Dạ em chào chị [private], em đã lên thành công đơn hàng cho sản phẩm máy lọc không khí (mã SKU-AP-X) với số lượng 1 chiếc theo đúng thông tin của chị rồi ạ.\n\nMã đơn hàng của chị là **[order_id]**, tổng thanh toán là 4.890.000 VNĐ (thanh toán khi nhận hàng COD) và dự kiến giao đến [address]\n\nEm cảm ơn chị đã ủng hộ cửa hàng ạ!"
+      },
+      {
+        "message_id": 2,
+        "role": "customer",
+        "content": "Giá 4.890.000 đồng thì chị đồng ý. Địa chỉ [address]"
+      },
+      {
+        "message_id": 3,
+        "role": "agent",
+        "content": "Dạ chị [private] ơi, ở cuộc gọi trước em đã hỗ trợ lên thành công đơn hàng **[order_id]** cho máy lọc không khí (SKU-AP-X) với giá 4.890.000 VNĐ, giao đến [address]\n\nHiện tại đơn hàng này đã được ghi nhận trên hệ thống, chị có cần em hỗ trợ thêm thông tin gì khác cho đơn hàng này nữa không ạ?"
+      }
+    ],
+    "open_questions": [],
+    "feedback": [],
+    "evidence_coverage": "per_turn_evidence",
+    "workflow_version": 4,
+    "turn_evidence": [
+      {
+        "turn_id": 1,
+        "agent_response": "Dạ em chào chị [private], em đã lên thành công đơn hàng cho sản phẩm máy lọc không khí (mã SKU-AP-X) với số lượng 1 chiếc theo đúng thông tin của chị rồi ạ.\n\nMã đơn hàng của chị là **[order_id]**, tổng thanh toán là 4.890.000 VNĐ (thanh toán khi nhận hàng COD) và dự kiến giao đến [address]\n\nEm cảm ơn chị đã ủng hộ cửa hàng ạ!",
+        "tool_calls": [
+          {
+            "name": "inventory.check",
+            "args": {
+              "sku": "SKU-AP-X",
+              "on": "2026-10-19"
+            },
+            "result": {
+              "sku": "SKU-AP-X",
+              "found": true,
+              "in_stock": true,
+              "qty": 40,
+              "discontinued": false
+            }
+          },
+          {
+            "name": "order.status",
+            "args": {
+              "customer_phone": "[private]"
+            },
+            "result": {
+              "orders": []
+            }
+          },
+          {
+            "name": "pricing.get_quote",
+            "args": {
+              "on": "2026-10-19",
+              "customer_phone": "[private]",
+              "customer_id": "[private]",
+              "address": "[private]",
+              "sku": "SKU-AP-X",
+              "qty": 1
+            },
+            "result": {
+              "sku": "SKU-AP-X",
+              "list_price_vnd": 4890000,
+              "final_price_vnd": 4890000,
+              "applied_promos": [
+                {
+                  "promo_code": "NAM-SHIP0",
+                  "type": "freeship",
+                  "discount_vnd": 0
+                },
+                {
+                  "promo_code": "COD-0",
+                  "type": "freecod",
+                  "discount_vnd": 0
+                },
+                {
+                  "promo_code": "GIFT-FILTER",
+                  "type": "gift",
+                  "discount_vnd": 0,
+                  "gift_sku": "SKU-AP-FLT-X"
+                }
+              ],
+              "expired_promos": [
+                "AP-SEP"
+              ],
+              "ineligible_promos": [
+                {
+                  "promo_code": "AIR-2ND-50",
+                  "reason": "min_qty"
+                },
+                {
+                  "promo_code": "TRADE-IN-AP",
+                  "reason": "requires_owned_sku"
+                }
+              ],
+              "not_applied_exclusive": [],
+              "freeship": true
+            }
+          },
+          {
+            "name": "order.create",
+            "args": {
+              "customer_phone": "[private]",
+              "customer_id": "[private]",
+              "address": "[private]",
+              "idempotency_key": "self-95c8871ea87f46eca0c625ba78b4148c-SC-041-call_3:call_3:create:SKU-AP-X",
+              "sku": "SKU-AP-X",
+              "qty": 1,
+              "price_vnd": 4890000,
+              "promo_code": "NAM-SHIP0",
+              "on": "2026-10-19",
+              "payment": "COD"
+            },
+            "result": {
+              "order_id": "[private]",
+              "status": "created",
+              "total_vnd": 4890000,
+              "needs_confirmation_call": true,
+              "estimated_delivery": "2026-10-21"
+            }
+          }
+        ],
+        "sources": [],
+        "promotions": []
+      },
+      {
+        "turn_id": 2,
+        "agent_response": "Dạ chị [private] ơi, ở cuộc gọi trước em đã hỗ trợ lên thành công đơn hàng **[order_id]** cho máy lọc không khí (SKU-AP-X) với giá 4.890.000 VNĐ, giao đến [address]\n\nHiện tại đơn hàng này đã được ghi nhận trên hệ thống, chị có cần em hỗ trợ thêm thông tin gì khác cho đơn hàng này nữa không ạ?",
+        "tool_calls": [
+          {
+            "name": "inventory.check",
+            "args": {
+              "sku": "SKU-AP-X",
+              "on": "2026-10-19"
+            },
+            "result": {
+              "sku": "SKU-AP-X",
+              "found": true,
+              "in_stock": true,
+              "qty": 40,
+              "discontinued": false
+            }
+          },
+          {
+            "name": "pricing.get_quote",
+            "args": {
+              "on": "2026-10-19",
+              "customer_phone": "[private]",
+              "customer_id": "[private]",
+              "address": "[private]",
+              "sku": "SKU-AP-X",
+              "qty": 1
+            },
+            "result": {
+              "sku": "SKU-AP-X",
+              "list_price_vnd": 4890000,
+              "final_price_vnd": 4890000,
+              "applied_promos": [
+                {
+                  "promo_code": "NAM-SHIP0",
+                  "type": "freeship",
+                  "discount_vnd": 0
+                },
+                {
+                  "promo_code": "COD-0",
+                  "type": "freecod",
+                  "discount_vnd": 0
+                },
+                {
+                  "promo_code": "GIFT-FILTER",
+                  "type": "gift",
+                  "discount_vnd": 0,
+                  "gift_sku": "SKU-AP-FLT-X"
+                }
+              ],
+              "expired_promos": [
+                "AP-SEP"
+              ],
+              "ineligible_promos": [
+                {
+                  "promo_code": "AIR-2ND-50",
+                  "reason": "min_qty"
+                },
+                {
+                  "promo_code": "TRADE-IN-AP",
+                  "reason": "requires_owned_sku"
+                }
+              ],
+              "not_applied_exclusive": [],
+              "freeship": true
+            }
+          }
+        ],
+        "sources": [],
+        "promotions": []
+      }
+    ]
+  },
+  "error": null
+}

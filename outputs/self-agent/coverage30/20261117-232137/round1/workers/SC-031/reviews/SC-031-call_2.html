@@ -1,0 +1,464 @@
+<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src 'none'; base-uri 'none'; form-action 'none'"><title>Review self-learning</title><style>body{margin:0;background:#f5f2ed;color:#292824;font:16px/1.6 system-ui,sans-serif}main{max-width:1180px;margin:auto;padding:24px}h1,h2,h3{line-height:1.3}article,.box{background:#fffdf9;border:1px solid #ddd7cc;border-radius:12px;padding:18px;margin:16px 0}.columns{display:grid;grid-template-columns:1fr 1fr;gap:18px}.answer{white-space:pre-wrap}mark{background:#fff0a6;color:#292824}del{background:#fbe2df;text-decoration:line-through}.warn{border-left:5px solid #a66b16}.regression{border-left:5px solid #a43131}.improved_resolution{border-left:5px solid #367458}.muted{color:#635f57}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#f3f1eb;padding:12px;border-radius:8px}body,td,p,div,summary{overflow-wrap:anywhere}table{border-collapse:collapse;width:100%}th,td{text-align:left;padding:8px;border-bottom:1px solid #e3ded5;vertical-align:top}summary{cursor:pointer;padding:8px 0}summary:focus-visible,a:focus-visible{outline:3px solid #8c5517}a{color:#754610}nav{display:flex;flex-wrap:wrap;gap:14px}@media(max-width:650px){main{padding:12px}.columns{grid-template-columns:1fr}article,.box{padding:12px}}</style></head><body><main><h1>Review self-learning</h1><p>Học sau khi kết thúc session. Báo cáo dựng từ artifact đã lưu, không gọi thêm LLM.</p><nav><a href="#overview">Tổng quan</a><a href="#turns">Trước / sau</a><a href="#lessons">Lesson</a><a href="#sessions">Học &amp; guardrail</a></nav><section id="overview"><h2>Tổng quan</h2><p class="box warn">Chưa chạy judge: chỉ xem thay đổi câu trả lời và dấu vết lesson, chưa đánh giá cải thiện.</p><p class="box warn">Không có cặp chấm hợp lệ: chưa thể kết luận cải thiện hay không có regression.</p><p><b>0</b> cặp chấm hợp lệ / 0 case được lưu trong comparison. 2/4 lượt trong session được inject.</p><table><tr><th>Phân loại</th><th>Số lượt</th></tr><tr><td>Giải quyết được thêm · cần xác nhận</td><td>0</td></tr><tr><td>Thận trọng hơn · vẫn chưa giải quyết</td><td>0</td></tr><tr><td>Có dấu hiệu regression · cần xác nhận</td><td>0</td></tr><tr><td>Không đổi trạng thái chấm</td><td>0</td></tr><tr><td>Chưa đủ kết quả chấm hợp lệ</td><td>0</td></tr><tr><td>Chưa được judge chấm</td><td>4</td></tr><tr><td>Thiếu một vòng</td><td>0</td></tr><tr><td>Câu hỏi hai vòng khác nhau</td><td>0</td></tr><tr><td>Bị loại khỏi phép so sánh</td><td>0</td></tr></table><details><summary>Phạm vi, nguồn baseline và exclusions</summary><pre>{
+  &quot;evaluation_population&quot;: &quot;single_session_no_baseline&quot;
+}</pre></details><p class="muted">Verdict kiểm tra được reference vẫn cần người đọc xác nhận ngữ nghĩa và độ đầy đủ.</p><p class="muted">Câu trả lời thay đổi hoặc được inject lesson chưa chứng minh lesson gây ra cải thiện.</p><p class="muted">Reflection chưa được chấm chất lượng; learning job done/lesson approved không phải điểm chất lượng.</p><p class="muted">Guardrail mẫu có giới hạn; không phát hiện mẫu không đồng nghĩa không có prompt injection.</p></section><section id="turns"><h2>Cải thiện ở đâu? Đọc từng lượt</h2><h3>Chưa được judge chấm (4)</h3><article id="turn-0" class="not_evaluated"><h3>SC-031/call_2 · lượt 1</h3><p><b>Khách:</b> Chị gọi lại chuyện hôm trước, vẫn đang cân nhắc món đã hỏi.</p><p class="muted">Câu trả lời không đổi/thiếu cặp · Lesson đã inject.</p><div class="columns"><div><h3>Phiên vừa kết thúc</h3><p><b>Chưa có verdict hợp lệ</b></p><div class="answer">Dạ em chào chị [private] ạ! Em nhớ hôm trước chị có đang quan tâm đến sản phẩm đôi giày Sneaker (mã SKU-SN-CAS) và còn lăn tăn về điều kiện đổi size đúng không chị?
+
+Không biết chị có cần em hỗ trợ thêm thông tin gì về quy định đổi size để mình yên tâm lựa chọn không ạ?</div><details><summary>Claims, trích dẫn và verdict gốc</summary><pre>{
+  &quot;status&quot;: null
+}</pre></details><details><summary>Evidence hiện tại và trước lượt này</summary><pre>{
+  &quot;current&quot;: {
+    &quot;turn_id&quot;: 1,
+    &quot;agent_response&quot;: &quot;Dạ em chào chị [private] ạ! Em nhớ hôm trước chị có đang quan tâm đến sản phẩm đôi giày Sneaker (mã SKU-SN-CAS) và còn lăn tăn về điều kiện đổi size đúng không chị?\n\nKhông biết chị có cần em hỗ trợ thêm thông tin gì về quy định đổi size để mình yên tâm lựa chọn không ạ?&quot;,
+    &quot;tool_calls&quot;: [],
+    &quot;sources&quot;: [],
+    &quot;promotions&quot;: []
+  },
+  &quot;earlier&quot;: []
+}</pre></details></div></div><details><summary>Lesson ID, routing, token và injection trace</summary><pre>{
+  &quot;lessons_loaded&quot;: 25,
+  &quot;selected_lessons&quot;: [
+    {
+      &quot;id&quot;: &quot;cffc7f339760409834ac6700f1221939af0b7c60fd44cecc3660162c23ff2bde&quot;,
+      &quot;hash&quot;: &quot;6ffa35f87c415855b53761a7baabf6149650e46342246e4cf657808b319faf4c&quot;,
+      &quot;mechanism&quot;: &quot;knowledge_gap&quot;
+    },
+    {
+      &quot;id&quot;: &quot;515c421124f6b3312adad4f15c8f4440e7f3b61d194c2fab38b632c3468485ea&quot;,
+      &quot;hash&quot;: &quot;eb4cfea3ac7b78f8b1cee6ea6cd6ff589f7cb09fd5a43a00c0d60e53e5754c81&quot;,
+      &quot;mechanism&quot;: &quot;knowledge_gap&quot;
+    },
+    {
+      &quot;id&quot;: &quot;b3c5394ec732ed77e5c0ace9714e42e935c8f1ded760a87c535aca4365ff098e&quot;,
+      &quot;hash&quot;: &quot;bdf01bb453db50e77e3a480afa92057627679f6f5011988610dce7affcfe64d0&quot;,
+      &quot;mechanism&quot;: &quot;knowledge_gap&quot;
+    }
+  ],
+  &quot;injected&quot;: true,
+  &quot;mode&quot;: &quot;memory_only&quot;,
+  &quot;response_modified&quot;: false,
+  &quot;routing&quot;: &quot;selected&quot;,
+  &quot;routing_ms&quot;: 4172.734,
+  &quot;routing_usage&quot;: {
+    &quot;input_tokens&quot;: 4842,
+    &quot;output_tokens&quot;: 187
+  },
+  &quot;guardrails&quot;: {
+    &quot;version&quot;: &quot;learning_guardrails_v1&quot;,
+    &quot;blocked_lessons&quot;: []
+  },
+  &quot;injected_chars&quot;: 1505,
+  &quot;injected_lesson_count&quot;: 3,
+  &quot;wrapper_total_ms&quot;: 8669.645
+}</pre></details></article><article id="turn-1" class="not_evaluated"><h3>SC-031/call_2 · lượt 2</h3><p><b>Khách:</b> Nếu mua mới hôm nay thì được đổi trong 14 ngày và mất phí 20 nghìn phải không? Hình như đó là bài cũ.</p><p class="muted">Câu trả lời không đổi/thiếu cặp · Lesson chưa inject.</p><div class="columns"><div><h3>Phiên vừa kết thúc</h3><p><b>Chưa có verdict hợp lệ</b></p><div class="answer">Dạ em chào chị [private] ạ! Đúng như chị nhớ đấy ạ, chính sách cũ trước đây áp dụng đổi trong 14 ngày và phí 20.000đ. 
+
+Theo chính sách mới áp dụng từ ngày 01/10/2026, nếu chị mua hôm nay thì thời hạn đổi trả là trong vòng 7 ngày kể từ khi nhận hàng. Đặc biệt, chị sẽ được đổi size lần đầu hoàn toàn **miễn phí** ạ. 
+
+Chị [private] có muốn em hỗ trợ lên đơn cho đôi Sneaker này luôn không chị?</div><details><summary>Claims, trích dẫn và verdict gốc</summary><pre>{
+  &quot;status&quot;: null
+}</pre></details><details><summary>Evidence hiện tại và trước lượt này</summary><pre>{
+  &quot;current&quot;: {
+    &quot;turn_id&quot;: 2,
+    &quot;agent_response&quot;: &quot;Dạ em chào chị [private] ạ! Đúng như chị nhớ đấy ạ, chính sách cũ trước đây áp dụng đổi trong 14 ngày và phí 20.000đ. \n\nTheo chính sách mới áp dụng từ ngày 01/10/2026, nếu chị mua hôm nay thì thời hạn đổi trả là trong vòng 7 ngày kể từ khi nhận hàng. Đặc biệt, chị sẽ được đổi size lần đầu hoàn toàn **miễn phí** ạ. \n\nChị [private] có muốn em hỗ trợ lên đơn cho đôi Sneaker này luôn không chị?&quot;,
+    &quot;tool_calls&quot;: [
+      {
+        &quot;name&quot;: &quot;policy.search&quot;,
+        &quot;args&quot;: {
+          &quot;query&quot;: &quot;Nếu mua mới hôm nay thì được đổi trong 14 ngày và mất phí 20 nghìn phải không? Hình như đó là bài cũ.&quot;,
+          &quot;k&quot;: 3,
+          &quot;product_sku&quot;: &quot;SKU-SN-CAS-40-DEN&quot;,
+          &quot;as_of&quot;: &quot;2026-10-17&quot;
+        },
+        &quot;result&quot;: {
+          &quot;query&quot;: &quot;Nếu mua mới hôm nay thì được đổi trong 14 ngày và mất phí 20 nghìn phải không? Hình như đó là bài cũ.&quot;,
+          &quot;as_of&quot;: &quot;2026-10-17&quot;,
+          &quot;product_sku&quot;: &quot;SKU-SN-CAS-40-DEN&quot;,
+          &quot;count&quot;: 3,
+          &quot;chunks&quot;: [
+            {
+              &quot;chunk_id&quot;: &quot;DT-06&quot;,
+              &quot;content&quot;: &quot;Sản phẩm hư hỏng do người dùng (rơi vỡ, vào nước, dùng sai điện áp). Sản phẩm mua trong chương trình xả kho ghi rõ \&quot;không đổi trả\&quot;. Quá 7 ngày kể từ ngày nhận (trừ lỗi nhà sản xuất).&quot;,
+              &quot;source_file&quot;: &quot;chinh-sach-doi-tra.md&quot;,
+              &quot;section&quot;: &quot;[DT-06] Trường hợp không được đổi trả&quot;
+            },
+            {
+              &quot;chunk_id&quot;: &quot;CL-01&quot;,
+              &quot;content&quot;: &quot;Thay thế phiên bản 2026-06. Thay đổi: thời hạn đổi trả 14 → **7 ngày**; đổi size lần đầu **miễn phí** (trước: 20.000đ); hoàn tiền 7 → **3–5 ngày làm việc**; lỗi nhà sản xuất đổi mới 15 → **30 ngày** (gia dụng, mẹ &amp; bé). Đơn tạo trước 01/10/2026 vẫn áp dụng bản cũ.&quot;,
+              &quot;source_file&quot;: &quot;changelog.md&quot;,
+              &quot;section&quot;: &quot;[CL-01] 01/10/2026 — Chính sách đổi trả phiên bản 2026-10&quot;
+            },
+            {
+              &quot;chunk_id&quot;: &quot;DT-01&quot;,
+              &quot;content&quot;: &quot;Khách hàng được đổi hoặc trả sản phẩm trong vòng **7 ngày** kể từ ngày nhận hàng (tính theo ngày ký nhận trên đơn vận chuyển). Với ngành hàng gia dụng và mẹ &amp; bé có lỗi kỹ thuật từ nhà sản xuất, thời hạn đổi mới là **30 ngày**.&quot;,
+              &quot;source_file&quot;: &quot;chinh-sach-doi-tra.md&quot;,
+              &quot;section&quot;: &quot;[DT-01] Thời hạn đổi trả&quot;
+            }
+          ]
+        }
+      }
+    ],
+    &quot;sources&quot;: [],
+    &quot;promotions&quot;: []
+  },
+  &quot;earlier&quot;: [
+    {
+      &quot;turn_id&quot;: 1,
+      &quot;tool_calls&quot;: [],
+      &quot;sources&quot;: [],
+      &quot;promotions&quot;: []
+    }
+  ]
+}</pre></details></div></div><details><summary>Lesson ID, routing, token và injection trace</summary><pre>{
+  &quot;lessons_loaded&quot;: 25,
+  &quot;selected_lessons&quot;: [],
+  &quot;injected&quot;: false,
+  &quot;mode&quot;: &quot;memory_only&quot;,
+  &quot;response_modified&quot;: false,
+  &quot;routing&quot;: &quot;failed&quot;,
+  &quot;routing_error&quot;: &quot;ValueError&quot;,
+  &quot;routing_ms&quot;: 1944.658,
+  &quot;routing_usage&quot;: {
+    &quot;input_tokens&quot;: 4610,
+    &quot;output_tokens&quot;: 1
+  },
+  &quot;wrapper_total_ms&quot;: 9304.41
+}</pre></details></article><article id="turn-2" class="not_evaluated"><h3>SC-031/call_2 · lượt 3</h3><p><b>Khách:</b> Nếu hàng chưa dùng, còn tem hộp và đổi size lần đầu thì chính sách hiện tại thế nào?</p><p class="muted">Câu trả lời không đổi/thiếu cặp · Lesson chưa inject.</p><div class="columns"><div><h3>Phiên vừa kết thúc</h3><p><b>Chưa có verdict hợp lệ</b></p><div class="answer">Dạ chị [private], theo chính sách mới áp dụng từ ngày 01/10/2026, sản phẩm còn nguyên tem hộp, chưa qua sử dụng và có hóa đơn/mã đơn hàng sẽ được đổi trả trong vòng 7 ngày kể từ khi nhận hàng ạ. 
+
+Đặc biệt, lần đổi size đầu tiên cho cùng một đơn hàng sẽ được **miễn phí hoàn toàn** (shop chịu phí ship hai chiều) nếu size mới còn hàng ạ. 
+
+Chị có muốn em hỗ trợ kiểm tra size hoặc chốt đơn cho mẫu giày chị đang xem luôn không ạ?</div><details><summary>Claims, trích dẫn và verdict gốc</summary><pre>{
+  &quot;status&quot;: null
+}</pre></details><details><summary>Evidence hiện tại và trước lượt này</summary><pre>{
+  &quot;current&quot;: {
+    &quot;turn_id&quot;: 3,
+    &quot;agent_response&quot;: &quot;Dạ chị [private], theo chính sách mới áp dụng từ ngày 01/10/2026, sản phẩm còn nguyên tem hộp, chưa qua sử dụng và có hóa đơn/mã đơn hàng sẽ được đổi trả trong vòng 7 ngày kể từ khi nhận hàng ạ. \n\nĐặc biệt, lần đổi size đầu tiên cho cùng một đơn hàng sẽ được **miễn phí hoàn toàn** (shop chịu phí ship hai chiều) nếu size mới còn hàng ạ. \n\nChị có muốn em hỗ trợ kiểm tra size hoặc chốt đơn cho mẫu giày chị đang xem luôn không ạ?&quot;,
+    &quot;tool_calls&quot;: [
+      {
+        &quot;name&quot;: &quot;policy.search&quot;,
+        &quot;args&quot;: {
+          &quot;query&quot;: &quot;Nếu hàng chưa dùng, còn tem hộp và đổi size lần đầu thì chính sách hiện tại thế nào?&quot;,
+          &quot;k&quot;: 3,
+          &quot;product_sku&quot;: &quot;SKU-SN-CAS-40-DEN&quot;,
+          &quot;as_of&quot;: &quot;2026-10-17&quot;
+        },
+        &quot;result&quot;: {
+          &quot;query&quot;: &quot;Nếu hàng chưa dùng, còn tem hộp và đổi size lần đầu thì chính sách hiện tại thế nào?&quot;,
+          &quot;as_of&quot;: &quot;2026-10-17&quot;,
+          &quot;product_sku&quot;: &quot;SKU-SN-CAS-40-DEN&quot;,
+          &quot;count&quot;: 3,
+          &quot;chunks&quot;: [
+            {
+              &quot;chunk_id&quot;: &quot;DT-02&quot;,
+              &quot;content&quot;: &quot;Sản phẩm còn nguyên tem, nhãn, hộp, chưa qua sử dụng (giày/áo chưa giặt, chưa có dấu hiệu mòn đế). Có hóa đơn hoặc mã đơn hàng. Sản phẩm thuộc nhóm đồ lót, bình sữa, núm ti đã bóc seal **không** được đổi trả vì lý do vệ sinh.&quot;,
+              &quot;source_file&quot;: &quot;chinh-sach-doi-tra.md&quot;,
+              &quot;section&quot;: &quot;[DT-02] Điều kiện đổi trả&quot;
+            },
+            {
+              &quot;chunk_id&quot;: &quot;CL-01&quot;,
+              &quot;content&quot;: &quot;Thay thế phiên bản 2026-06. Thay đổi: thời hạn đổi trả 14 → **7 ngày**; đổi size lần đầu **miễn phí** (trước: 20.000đ); hoàn tiền 7 → **3–5 ngày làm việc**; lỗi nhà sản xuất đổi mới 15 → **30 ngày** (gia dụng, mẹ &amp; bé). Đơn tạo trước 01/10/2026 vẫn áp dụng bản cũ.&quot;,
+              &quot;source_file&quot;: &quot;changelog.md&quot;,
+              &quot;section&quot;: &quot;[CL-01] 01/10/2026 — Chính sách đổi trả phiên bản 2026-10&quot;
+            },
+            {
+              &quot;chunk_id&quot;: &quot;DT-03&quot;,
+              &quot;content&quot;: &quot;Đổi size hoặc màu lần **đầu tiên** cho cùng một đơn hàng: **miễn phí**, shop chịu phí vận chuyển hai chiều. Từ lần đổi thứ hai trở đi: khách chịu phí vận chuyển 30.000đ/chiều. Điều kiện: size/màu mới còn hàng; nếu hết hàng, khách được chọn sản phẩm khác cùng giá hoặc hoàn tiền.&quot;,
+              &quot;source_file&quot;: &quot;chinh-sach-doi-tra.md&quot;,
+              &quot;section&quot;: &quot;[DT-03] Đổi size / màu (thời [private])&quot;
+            }
+          ]
+        }
+      }
+    ],
+    &quot;sources&quot;: [],
+    &quot;promotions&quot;: []
+  },
+  &quot;earlier&quot;: [
+    {
+      &quot;turn_id&quot;: 1,
+      &quot;tool_calls&quot;: [],
+      &quot;sources&quot;: [],
+      &quot;promotions&quot;: []
+    },
+    {
+      &quot;turn_id&quot;: 2,
+      &quot;tool_calls&quot;: [
+        {
+          &quot;name&quot;: &quot;policy.search&quot;,
+          &quot;args&quot;: {
+            &quot;query&quot;: &quot;Nếu mua mới hôm nay thì được đổi trong 14 ngày và mất phí 20 nghìn phải không? Hình như đó là bài cũ.&quot;,
+            &quot;k&quot;: 3,
+            &quot;product_sku&quot;: &quot;SKU-SN-CAS-40-DEN&quot;,
+            &quot;as_of&quot;: &quot;2026-10-17&quot;
+          },
+          &quot;result&quot;: {
+            &quot;query&quot;: &quot;Nếu mua mới hôm nay thì được đổi trong 14 ngày và mất phí 20 nghìn phải không? Hình như đó là bài cũ.&quot;,
+            &quot;as_of&quot;: &quot;2026-10-17&quot;,
+            &quot;product_sku&quot;: &quot;SKU-SN-CAS-40-DEN&quot;,
+            &quot;count&quot;: 3,
+            &quot;chunks&quot;: [
+              {
+                &quot;chunk_id&quot;: &quot;DT-06&quot;,
+                &quot;content&quot;: &quot;Sản phẩm hư hỏng do người dùng (rơi vỡ, vào nước, dùng sai điện áp). Sản phẩm mua trong chương trình xả kho ghi rõ \&quot;không đổi trả\&quot;. Quá 7 ngày kể từ ngày nhận (trừ lỗi nhà sản xuất).&quot;,
+                &quot;source_file&quot;: &quot;chinh-sach-doi-tra.md&quot;,
+                &quot;section&quot;: &quot;[DT-06] Trường hợp không được đổi trả&quot;
+              },
+              {
+                &quot;chunk_id&quot;: &quot;CL-01&quot;,
+                &quot;content&quot;: &quot;Thay thế phiên bản 2026-06. Thay đổi: thời hạn đổi trả 14 → **7 ngày**; đổi size lần đầu **miễn phí** (trước: 20.000đ); hoàn tiền 7 → **3–5 ngày làm việc**; lỗi nhà sản xuất đổi mới 15 → **30 ngày** (gia dụng, mẹ &amp; bé). Đơn tạo trước 01/10/2026 vẫn áp dụng bản cũ.&quot;,
+                &quot;source_file&quot;: &quot;changelog.md&quot;,
+                &quot;section&quot;: &quot;[CL-01] 01/10/2026 — Chính sách đổi trả phiên bản 2026-10&quot;
+              },
+              {
+                &quot;chunk_id&quot;: &quot;DT-01&quot;,
+                &quot;content&quot;: &quot;Khách hàng được đổi hoặc trả sản phẩm trong vòng **7 ngày** kể từ ngày nhận hàng (tính theo ngày ký nhận trên đơn vận chuyển). Với ngành hàng gia dụng và mẹ &amp; bé có lỗi kỹ thuật từ nhà sản xuất, thời hạn đổi mới là **30 ngày**.&quot;,
+                &quot;source_file&quot;: &quot;chinh-sach-doi-tra.md&quot;,
+                &quot;section&quot;: &quot;[DT-01] Thời hạn đổi trả&quot;
+              }
+            ]
+          }
+        }
+      ],
+      &quot;sources&quot;: [],
+      &quot;promotions&quot;: []
+    }
+  ]
+}</pre></details></div></div><details><summary>Lesson ID, routing, token và injection trace</summary><pre>{
+  &quot;lessons_loaded&quot;: 25,
+  &quot;selected_lessons&quot;: [],
+  &quot;injected&quot;: false,
+  &quot;mode&quot;: &quot;memory_only&quot;,
+  &quot;response_modified&quot;: false,
+  &quot;routing&quot;: &quot;failed&quot;,
+  &quot;routing_error&quot;: &quot;ValueError&quot;,
+  &quot;routing_ms&quot;: 1035.305,
+  &quot;routing_usage&quot;: {
+    &quot;input_tokens&quot;: 4783,
+    &quot;output_tokens&quot;: 1
+  },
+  &quot;wrapper_total_ms&quot;: 5052.882
+}</pre></details></article><article id="turn-3" class="not_evaluated"><h3>SC-031/call_2 · lượt 4</h3><p><b>Khách:</b> Chị hiểu rồi, để xem thêm; chưa lên đơn và chưa hẹn gọi lại nhé.</p><p class="muted">Câu trả lời không đổi/thiếu cặp · Lesson đã inject.</p><div class="columns"><div><h3>Phiên vừa kết thúc</h3><p><b>Chưa có verdict hợp lệ</b></p><div class="answer">Dạ em hiểu rồi ạ. Chị cứ xem thêm nhé, khi nào cần hỗ trợ hoặc lên đơn thì chị cứ báo em nha. Em chúc chị một ngày tốt lành ạ!</div><details><summary>Claims, trích dẫn và verdict gốc</summary><pre>{
+  &quot;status&quot;: null
+}</pre></details><details><summary>Evidence hiện tại và trước lượt này</summary><pre>{
+  &quot;current&quot;: {
+    &quot;turn_id&quot;: 4,
+    &quot;agent_response&quot;: &quot;Dạ em hiểu rồi ạ. Chị cứ xem thêm nhé, khi nào cần hỗ trợ hoặc lên đơn thì chị cứ báo em nha. Em chúc chị một ngày tốt lành ạ!&quot;,
+    &quot;tool_calls&quot;: [],
+    &quot;sources&quot;: [],
+    &quot;promotions&quot;: []
+  },
+  &quot;earlier&quot;: [
+    {
+      &quot;turn_id&quot;: 1,
+      &quot;tool_calls&quot;: [],
+      &quot;sources&quot;: [],
+      &quot;promotions&quot;: []
+    },
+    {
+      &quot;turn_id&quot;: 2,
+      &quot;tool_calls&quot;: [
+        {
+          &quot;name&quot;: &quot;policy.search&quot;,
+          &quot;args&quot;: {
+            &quot;query&quot;: &quot;Nếu mua mới hôm nay thì được đổi trong 14 ngày và mất phí 20 nghìn phải không? Hình như đó là bài cũ.&quot;,
+            &quot;k&quot;: 3,
+            &quot;product_sku&quot;: &quot;SKU-SN-CAS-40-DEN&quot;,
+            &quot;as_of&quot;: &quot;2026-10-17&quot;
+          },
+          &quot;result&quot;: {
+            &quot;query&quot;: &quot;Nếu mua mới hôm nay thì được đổi trong 14 ngày và mất phí 20 nghìn phải không? Hình như đó là bài cũ.&quot;,
+            &quot;as_of&quot;: &quot;2026-10-17&quot;,
+            &quot;product_sku&quot;: &quot;SKU-SN-CAS-40-DEN&quot;,
+            &quot;count&quot;: 3,
+            &quot;chunks&quot;: [
+              {
+                &quot;chunk_id&quot;: &quot;DT-06&quot;,
+                &quot;content&quot;: &quot;Sản phẩm hư hỏng do người dùng (rơi vỡ, vào nước, dùng sai điện áp). Sản phẩm mua trong chương trình xả kho ghi rõ \&quot;không đổi trả\&quot;. Quá 7 ngày kể từ ngày nhận (trừ lỗi nhà sản xuất).&quot;,
+                &quot;source_file&quot;: &quot;chinh-sach-doi-tra.md&quot;,
+                &quot;section&quot;: &quot;[DT-06] Trường hợp không được đổi trả&quot;
+              },
+              {
+                &quot;chunk_id&quot;: &quot;CL-01&quot;,
+                &quot;content&quot;: &quot;Thay thế phiên bản 2026-06. Thay đổi: thời hạn đổi trả 14 → **7 ngày**; đổi size lần đầu **miễn phí** (trước: 20.000đ); hoàn tiền 7 → **3–5 ngày làm việc**; lỗi nhà sản xuất đổi mới 15 → **30 ngày** (gia dụng, mẹ &amp; bé). Đơn tạo trước 01/10/2026 vẫn áp dụng bản cũ.&quot;,
+                &quot;source_file&quot;: &quot;changelog.md&quot;,
+                &quot;section&quot;: &quot;[CL-01] 01/10/2026 — Chính sách đổi trả phiên bản 2026-10&quot;
+              },
+              {
+                &quot;chunk_id&quot;: &quot;DT-01&quot;,
+                &quot;content&quot;: &quot;Khách hàng được đổi hoặc trả sản phẩm trong vòng **7 ngày** kể từ ngày nhận hàng (tính theo ngày ký nhận trên đơn vận chuyển). Với ngành hàng gia dụng và mẹ &amp; bé có lỗi kỹ thuật từ nhà sản xuất, thời hạn đổi mới là **30 ngày**.&quot;,
+                &quot;source_file&quot;: &quot;chinh-sach-doi-tra.md&quot;,
+                &quot;section&quot;: &quot;[DT-01] Thời hạn đổi trả&quot;
+              }
+            ]
+          }
+        }
+      ],
+      &quot;sources&quot;: [],
+      &quot;promotions&quot;: []
+    },
+    {
+      &quot;turn_id&quot;: 3,
+      &quot;tool_calls&quot;: [
+        {
+          &quot;name&quot;: &quot;policy.search&quot;,
+          &quot;args&quot;: {
+            &quot;query&quot;: &quot;Nếu hàng chưa dùng, còn tem hộp và đổi size lần đầu thì chính sách hiện tại thế nào?&quot;,
+            &quot;k&quot;: 3,
+            &quot;product_sku&quot;: &quot;SKU-SN-CAS-40-DEN&quot;,
+            &quot;as_of&quot;: &quot;2026-10-17&quot;
+          },
+          &quot;result&quot;: {
+            &quot;query&quot;: &quot;Nếu hàng chưa dùng, còn tem hộp và đổi size lần đầu thì chính sách hiện tại thế nào?&quot;,
+            &quot;as_of&quot;: &quot;2026-10-17&quot;,
+            &quot;product_sku&quot;: &quot;SKU-SN-CAS-40-DEN&quot;,
+            &quot;count&quot;: 3,
+            &quot;chunks&quot;: [
+              {
+                &quot;chunk_id&quot;: &quot;DT-02&quot;,
+                &quot;content&quot;: &quot;Sản phẩm còn nguyên tem, nhãn, hộp, chưa qua sử dụng (giày/áo chưa giặt, chưa có dấu hiệu mòn đế). Có hóa đơn hoặc mã đơn hàng. Sản phẩm thuộc nhóm đồ lót, bình sữa, núm ti đã bóc seal **không** được đổi trả vì lý do vệ sinh.&quot;,
+                &quot;source_file&quot;: &quot;chinh-sach-doi-tra.md&quot;,
+                &quot;section&quot;: &quot;[DT-02] Điều kiện đổi trả&quot;
+              },
+              {
+                &quot;chunk_id&quot;: &quot;CL-01&quot;,
+                &quot;content&quot;: &quot;Thay thế phiên bản 2026-06. Thay đổi: thời hạn đổi trả 14 → **7 ngày**; đổi size lần đầu **miễn phí** (trước: 20.000đ); hoàn tiền 7 → **3–5 ngày làm việc**; lỗi nhà sản xuất đổi mới 15 → **30 ngày** (gia dụng, mẹ &amp; bé). Đơn tạo trước 01/10/2026 vẫn áp dụng bản cũ.&quot;,
+                &quot;source_file&quot;: &quot;changelog.md&quot;,
+                &quot;section&quot;: &quot;[CL-01] 01/10/2026 — Chính sách đổi trả phiên bản 2026-10&quot;
+              },
+              {
+                &quot;chunk_id&quot;: &quot;DT-03&quot;,
+                &quot;content&quot;: &quot;Đổi size hoặc màu lần **đầu tiên** cho cùng một đơn hàng: **miễn phí**, shop chịu phí vận chuyển hai chiều. Từ lần đổi thứ hai trở đi: khách chịu phí vận chuyển 30.000đ/chiều. Điều kiện: size/màu mới còn hàng; nếu hết hàng, khách được chọn sản phẩm khác cùng giá hoặc hoàn tiền.&quot;,
+                &quot;source_file&quot;: &quot;chinh-sach-doi-tra.md&quot;,
+                &quot;section&quot;: &quot;[DT-03] Đổi size / màu (thời [private])&quot;
+              }
+            ]
+          }
+        }
+      ],
+      &quot;sources&quot;: [],
+      &quot;promotions&quot;: []
+    }
+  ]
+}</pre></details></div></div><details><summary>Lesson ID, routing, token và injection trace</summary><pre>{
+  &quot;lessons_loaded&quot;: 25,
+  &quot;selected_lessons&quot;: [
+    {
+      &quot;id&quot;: &quot;2428465dd6aebd918b246b218ea61f077e2a4a03ca7a10bb6c10ca1cd078d1a6&quot;,
+      &quot;hash&quot;: &quot;a6ef6e56d1a0afa44afce603254ba8380a79684f4316ec30047adabc7375818d&quot;,
+      &quot;mechanism&quot;: &quot;knowledge_gap&quot;
+    }
+  ],
+  &quot;injected&quot;: true,
+  &quot;mode&quot;: &quot;memory_only&quot;,
+  &quot;response_modified&quot;: false,
+  &quot;routing&quot;: &quot;selected&quot;,
+  &quot;routing_ms&quot;: 2456.384,
+  &quot;routing_usage&quot;: {
+    &quot;input_tokens&quot;: 5562,
+    &quot;output_tokens&quot;: 69
+  },
+  &quot;guardrails&quot;: {
+    &quot;version&quot;: &quot;learning_guardrails_v1&quot;,
+    &quot;blocked_lessons&quot;: []
+  },
+  &quot;injected_chars&quot;: 892,
+  &quot;injected_lesson_count&quot;: 1,
+  &quot;wrapper_total_ms&quot;: 6263.578
+}</pre></details></article></section><section id="lessons"><h2>Lesson mới sinh sau session</h2><p>Approved là trạng thái duyệt lesson, chưa chứng minh chất lượng câu trả lời.</p></section><section id="sessions"><h2>Học sau session &amp; guardrail</h2><p>Input finding là cảnh báo mẫu, không phải verdict khách nói sai hoặc bằng chứng tấn công thành công. Run cũ thiếu guardrail trace sẽ được ghi rõ.</p><article><h3>SC-031/call_2</h3><h3>Vòng 1</h3><p>Job: done · Issue xác nhận: 0 · Guardrail: có trace</p><details><summary>Vấn đề, trạng thái học và guardrail chi tiết</summary><pre>{
+  &quot;job&quot;: {
+    &quot;status&quot;: &quot;done&quot;,
+    &quot;job_id&quot;: &quot;b2651fe0b69dbf51052daf66364ac0095ee9a36c08810eccb86572e8a22c3735&quot;,
+    &quot;error&quot;: null
+  },
+  &quot;error&quot;: null,
+  &quot;learning&quot;: {
+    &quot;job_id&quot;: &quot;b2651fe0b69dbf51052daf66364ac0095ee9a36c08810eccb86572e8a22c3735&quot;,
+    &quot;gaps&quot;: [
+      {
+        &quot;id&quot;: &quot;f21d7811fb4c8d2495a30c2376aa082ec55b5df5aac36087f98578727845246f&quot;,
+        &quot;status&quot;: &quot;pending_evidence&quot;
+      }
+    ],
+    &quot;scope&quot;: &quot;knowledge_gap_and_reflection_v1&quot;,
+    &quot;evaluation_cases&quot;: [
+      {
+        &quot;id&quot;: &quot;470db8c90449e75664639a0ea138428bfd88db21554400122d4e6d69e0d820ef&quot;,
+        &quot;gap_id&quot;: &quot;f21d7811fb4c8d2495a30c2376aa082ec55b5df5aac36087f98578727845246f&quot;,
+        &quot;turn_id&quot;: 1,
+        &quot;question&quot;: &quot;Chị gọi lại chuyện hôm trước, vẫn đang cân nhắc món đã hỏi.&quot;,
+        &quot;reason&quot;: &quot;unsupported_claim&quot;,
+        &quot;criterion&quot;: &quot;Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments.&quot;
+      }
+    ],
+    &quot;out_of_scope&quot;: [],
+    &quot;issue_reviews&quot;: [
+      {
+        &quot;job_id&quot;: &quot;b2651fe0b69dbf51052daf66364ac0095ee9a36c08810eccb86572e8a22c3735&quot;,
+        &quot;message_id&quot;: 0,
+        &quot;turn_id&quot;: 1,
+        &quot;origin&quot;: &quot;turn_detector&quot;,
+        &quot;mechanism&quot;: &quot;knowledge_gap&quot;,
+        &quot;verified&quot;: false,
+        &quot;claim&quot;: &quot;quy định đổi size để mình yên tâm lựa chọn&quot;,
+        &quot;assessment&quot;: null,
+        &quot;evidence_paths&quot;: [],
+        &quot;rejection&quot;: &quot;missing_or_invalid_claim_evidence&quot;,
+        &quot;rejection_reasons&quot;: [
+          &quot;verifier_rejected_issue&quot;
+        ],
+        &quot;format_retry&quot;: false,
+        &quot;verifier_output&quot;: {
+          &quot;valid&quot;: false,
+          &quot;issue_scope&quot;: &quot;business_knowledge&quot;,
+          &quot;claim&quot;: &quot;quy định đổi size để mình yên tâm lựa chọn&quot;,
+          &quot;assessment&quot;: &quot;unsupported_by_evidence&quot;,
+          &quot;evidence_paths&quot;: [],
+          &quot;decision_reason&quot;: &quot;The agent asking if the customer needs further information about the size exchange policy is a conversational follow-up offer, not a factual business policy claim requiring verification.&quot;,
+          &quot;audit&quot;: {
+            &quot;support_status&quot;: &quot;not_established&quot;,
+            &quot;coverage&quot;: &quot;complete&quot;,
+            &quot;checked_paths&quot;: [
+              &quot;evidence.tool_calls&quot;,
+              &quot;evidence.sources&quot;,
+              &quot;evidence.promotions&quot;
+            ]
+          }
+        },
+        &quot;candidate_claim&quot;: &quot;quy định đổi size để mình yên tâm lựa chọn&quot;,
+        &quot;verification_basis&quot;: null,
+        &quot;evidence_inventory&quot;: [
+          &quot;evidence.tool_calls&quot;,
+          &quot;evidence.sources&quot;,
+          &quot;evidence.promotions&quot;
+        ]
+      }
+    ],
+    &quot;detector_error&quot;: null,
+    &quot;guardrails&quot;: {
+      &quot;version&quot;: &quot;learning_guardrails_v1&quot;,
+      &quot;input_findings&quot;: [],
+      &quot;blocked_lessons&quot;: [],
+      &quot;blocked_sources&quot;: []
+    },
+    &quot;detection&quot;: {
+      &quot;candidate_count&quot;: 1,
+      &quot;open_question_count&quot;: 0,
+      &quot;processed_count&quot;: 1,
+      &quot;skipped_unmatched_question&quot;: 0,
+      &quot;skipped_over_limit&quot;: 0,
+      &quot;scan&quot;: {
+        &quot;turns_available&quot;: 4,
+        &quot;turns_scanned&quot;: 4,
+        &quot;requests&quot;: 4,
+        &quot;errors&quot;: [],
+        &quot;schema_retries&quot;: 0,
+        &quot;skipped_over_limit&quot;: 0
+      },
+      &quot;alignment_rejections&quot;: []
+    },
+    &quot;outcome&quot;: &quot;gaps_processed&quot;,
+    &quot;learning_duration_ms&quot;: 21973,
+    &quot;learning_usage&quot;: {
+      &quot;input_tokens&quot;: 6802,
+      &quot;output_tokens&quot;: 189
+    }
+  },
+  &quot;observed_input_findings&quot;: []
+}</pre></details></article></section></main></body></html>

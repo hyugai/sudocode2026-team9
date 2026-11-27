@@ -1,0 +1,97 @@
+{
+  "job_id": "12b9ba25e754faa718a227a82bc4e9fd9ebadfd0481213520d6c6c5fff227fed",
+  "gaps": [
+    {
+      "id": "2ba33729d993fbc0af4e0e4d1dd5d667f853fa7bc4bc954d61a69bc72bc687f0",
+      "status": "pending_evidence"
+    }
+  ],
+  "scope": "knowledge_gap_and_reflection_v1",
+  "evaluation_cases": [],
+  "out_of_scope": [],
+  "issue_reviews": [
+    {
+      "job_id": "12b9ba25e754faa718a227a82bc4e9fd9ebadfd0481213520d6c6c5fff227fed",
+      "message_id": 4,
+      "turn_id": 3,
+      "origin": "turn_detector",
+      "mechanism": "reflection",
+      "verified": false,
+      "claim": "Dạ, đơn hàng cho Áo khoác gió Windbreak (size M, màu be) của anh đã được lên thành công trước đó rồi ạ.",
+      "assessment": null,
+      "evidence_paths": [],
+      "rejection": "missing_or_invalid_claim_evidence",
+      "rejection_reasons": [
+        "evidence_authority_or_scope_not_verified"
+      ],
+      "format_retry": false,
+      "verifier_output": {
+        "valid": true,
+        "issue_scope": "reflection",
+        "claim": "Dạ, đơn hàng cho Áo khoác gió Windbreak (size M, màu be) của anh đã được lên thành công trước đó rồi ạ.",
+        "assessment": "contradicts_evidence",
+        "evidence_paths": [
+          "evidence.tool_calls.0.name",
+          "evidence.tool_calls.1.name"
+        ],
+        "decision_reason": "The agent redundantly called inventory.check and pricing.get_quote in turn 3 despite the order already being created in turn 2, making the tool execution unnecessary.",
+        "audit": {
+          "support_status": "supported",
+          "coverage": "complete",
+          "checked_paths": [
+            "evidence.tool_calls.0.name",
+            "evidence.tool_calls.1.name",
+            "prior_evidence.1.tool_calls.2.result"
+          ]
+        }
+      },
+      "candidate_claim": "Dạ, đơn hàng cho Áo khoác gió Windbreak (size M, màu be) của anh đã được lên thành công trước đó rồi ạ.",
+      "verification_basis": null,
+      "evidence_inventory": [
+        "evidence.tool_calls.0.result",
+        "evidence.tool_calls.1.result",
+        "evidence.sources",
+        "evidence.promotions",
+        "prior_evidence.0.tool_calls.0.result",
+        "prior_evidence.0.tool_calls.1.result",
+        "prior_evidence.0.tool_calls.2.result",
+        "prior_evidence.0.sources",
+        "prior_evidence.0.promotions",
+        "prior_evidence.1.tool_calls.0.result",
+        "prior_evidence.1.tool_calls.1.result",
+        "prior_evidence.1.tool_calls.2.result",
+        "prior_evidence.1.sources",
+        "prior_evidence.1.promotions"
+      ]
+    }
+  ],
+  "detector_error": null,
+  "guardrails": {
+    "version": "learning_guardrails_v1",
+    "input_findings": [],
+    "blocked_lessons": [],
+    "blocked_sources": []
+  },
+  "detection": {
+    "candidate_count": 1,
+    "open_question_count": 0,
+    "processed_count": 1,
+    "skipped_unmatched_question": 0,
+    "skipped_over_limit": 0,
+    "scan": {
+      "turns_available": 3,
+      "turns_scanned": 3,
+      "requests": 3,
+      "errors": [],
+      "schema_retries": 0,
+      "skipped_over_limit": 0
+    },
+    "alignment_rejections": []
+  },
+  "outcome": "gaps_processed",
+  "learning_duration_ms": 6296,
+  "learning_usage": {
+    "input_tokens": 8804,
+    "output_tokens": 295
+  }
+}

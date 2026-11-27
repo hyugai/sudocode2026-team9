@@ -1,0 +1,91 @@
+{
+  "job_id": "e844e4ff829fea47ada16ba72038ee522fcdfbe6c0edb91526312914cb2cb382",
+  "gaps": [
+    {
+      "id": "bda55be5717b7d3239ed44ed484935a5a1c972b3c053ef54f075b1d09c226a45",
+      "status": "pending_remediation"
+    }
+  ],
+  "scope": "knowledge_gap_and_reflection_v1",
+  "evaluation_cases": [
+    {
+      "id": "9bbdd3a4d8c30d3ca78dc0b63968e2ce8e3c8233e571efb2a6cc1217f21f2605",
+      "gap_id": "bda55be5717b7d3239ed44ed484935a5a1c972b3c053ef54f075b1d09c226a45",
+      "turn_id": 1,
+      "question": "Tôi là [private], số điện thoại [private], đã nhắn qua Zalo OA. Chị [private] đây, chị đã cân nhắc xong rồi. Em nhắc đúng món của chị nhé, đừng lấy nhu cầu của mẹ.",
+      "reason": "unsupported_claim",
+      "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments."
+    }
+  ],
+  "out_of_scope": [],
+  "issue_reviews": [
+    {
+      "job_id": "e844e4ff829fea47ada16ba72038ee522fcdfbe6c0edb91526312914cb2cb382",
+      "message_id": 0,
+      "turn_id": 1,
+      "origin": "turn_detector",
+      "mechanism": "knowledge_gap",
+      "verified": true,
+      "claim": "Lần trước em có tư vấn cho chị sản phẩm Quạt đứng Senko (SKU-FAN-SEN) đúng không chị?",
+      "assessment": "unsupported_by_evidence",
+      "evidence_paths": [],
+      "rejection": null,
+      "rejection_reasons": [],
+      "format_retry": false,
+      "verifier_output": {
+        "valid": true,
+        "issue_scope": "business_knowledge",
+        "claim": "Lần trước em có tư vấn cho chị sản phẩm Quạt đứng Senko (SKU-FAN-SEN) đúng không chị?",
+        "assessment": "unsupported_by_evidence",
+        "evidence_paths": [],
+        "decision_reason": "There are no tool calls, sources, or conversation history available in the provided evidence to support the claim that the agent previously consulted SKU-FAN-SEN for this customer.",
+        "audit": {
+          "support_status": "not_established",
+          "coverage": "complete",
+          "checked_paths": [
+            "evidence.tool_calls",
+            "evidence.sources",
+            "evidence.promotions"
+          ]
+        }
+      },
+      "candidate_claim": "Lần trước em có tư vấn cho chị sản phẩm Quạt đứng Senko (SKU-FAN-SEN) đúng không chị?",
+      "verification_basis": "evidence_inventory_audit",
+      "evidence_inventory": [
+        "evidence.tool_calls",
+        "evidence.sources",
+        "evidence.promotions"
+      ],
+      "lesson_status": "approved"
+    }
+  ],
+  "detector_error": null,
+  "guardrails": {
+    "version": "learning_guardrails_v1",
+    "input_findings": [],
+    "blocked_lessons": [],
+    "blocked_sources": []
+  },
+  "detection": {
+    "candidate_count": 1,
+    "open_question_count": 0,
+    "processed_count": 1,
+    "skipped_unmatched_question": 0,
+    "skipped_over_limit": 0,
+    "scan": {
+      "turns_available": 3,
+      "turns_scanned": 3,
+      "requests": 3,
+      "errors": [],
+      "schema_retries": 0,
+      "skipped_over_limit": 0
+    },
+    "alignment_rejections": []
+  },
+  "outcome": "gaps_processed",
+  "learning_duration_ms": 9581,
+  "learning_usage": {
+    "input_tokens": 5592,
+    "output_tokens": 319
+  }
+}

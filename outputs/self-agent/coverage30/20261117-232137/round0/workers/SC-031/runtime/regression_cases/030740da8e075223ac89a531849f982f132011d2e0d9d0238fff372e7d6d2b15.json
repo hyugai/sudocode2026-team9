@@ -1,0 +1,47 @@
+{
+  "id": "030740da8e075223ac89a531849f982f132011d2e0d9d0238fff372e7d6d2b15",
+  "reason": "unsupported_claim",
+  "pattern": "Do not state an unverified claim as a fact.",
+  "status": "approved",
+  "scope": "general",
+  "mechanism": "knowledge_gap",
+  "criterion": "Do not state an unverified claim as a fact.",
+  "evidence_refs": [
+    {
+      "job_id": "c00902fa1419b5b558cdf371d877e1f30605afe637b516900f11b303a56144e4",
+      "message_id": 0,
+      "turn_id": 1,
+      "origin": "turn_detector"
+    }
+  ],
+  "assessment": "unsupported_by_evidence",
+  "report_ref": "c00902fa1419b5b558cdf371d877e1f30605afe637b516900f11b303a56144e4",
+  "lesson": {
+    "title": "Do Not Assume Prior Product Details",
+    "when": "A customer vaguely references a previous conversation or product inquiry without prior record evidence",
+    "do": "Ask the customer directly which product or topic they are considering",
+    "otherwise": "State clearly that the specific details of the prior inquiry are unavailable",
+    "triggers": [
+      "hôm trước",
+      "cân nhắc món đã hỏi",
+      "gọi lại chuyện hôm trước",
+      "previous conversation",
+      "vague follow-up"
+    ],
+    "id": "cffc7f339760409834ac6700f1221939af0b7c60fd44cecc3660162c23ff2bde",
+    "status": "approved",
+    "scope": "general",
+    "mechanism": "knowledge_gap",
+    "source_refs": [
+      {
+        "job_id": "c00902fa1419b5b558cdf371d877e1f30605afe637b516900f11b303a56144e4",
+        "message_id": 0,
+        "turn_id": 1,
+        "origin": "turn_detector"
+      }
+    ],
+    "version": 2
+  },
+  "lesson_path": "lessons\\approved\\cffc7f339760409834ac6700f1221939af0b7c60fd44cecc3660162c23ff2bde.md",
+  "lesson_hash": "6ffa35f87c415855b53761a7baabf6149650e46342246e4cf657808b319faf4c"
+}

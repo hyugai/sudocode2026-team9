@@ -1,0 +1,187 @@
+{
+  "id": "63ddf68f6294d73ffc144ac3591bd6155ccade2f8678242cc5bba7577b37db72",
+  "status": "done",
+  "attempts": 1,
+  "snapshot": {
+    "session": "27bac9652af6066fbc158cadef014972ca5af831fc095484068d64af07e0fbb5",
+    "revision": 3,
+    "messages": [
+      {
+        "message_id": 0,
+        "role": "customer",
+        "content": "Tôi là [private], số điện thoại [private], đang nhắn qua Zalo OA. Chị liên hệ lại như đã hẹn, người nhà đồng ý đổi máy rồi."
+      },
+      {
+        "message_id": 1,
+        "role": "agent",
+        "content": "Dạ em chào chị [private]! Em rất vui khi nhận được phản hồi từ chị. \n\nDạ hiện tại đơn hàng đơn hàng cũ **OD188213** của chị với sản phẩm máy lọc không khí (mã SKU-AP-X-2024) đã được ghi nhận giao thành công. Chị cho em hỏi người nhà mình đã thống nhất muốn đổi sang mẫu máy cụ thể nào để em hỗ trợ kiểm tra và làm thủ tục đổi máy cho chị ngay ạ?"
+      },
+      {
+        "message_id": 2,
+        "role": "customer",
+        "content": "Em nhắc lại máy mới, giá sau thu cũ đổi mới và dùng địa chỉ [address]"
+      },
+      {
+        "message_id": 3,
+        "role": "agent",
+        "content": "Dạ chị [private], sản phẩm mới mình chọn đổi là máy lọc không khí **SKU-AP-X**. Giá hiện tại sau khi áp dụng chương trình thu cũ đổi mới (mã TRADE-IN-AP giảm 400.000đ) là **4.490.000đ** ạ.\n\nTuy nhiên, em kiểm tra trên hệ thống thì chưa lưu lại thông tin địa chỉ [address]"
+      },
+      {
+        "message_id": 4,
+        "role": "customer",
+        "content": "Chị đồng ý 4.490.000 đồng, một máy, cod. Khi giao em thu máy cũ theo chương trình."
+      },
+      {
+        "message_id": 5,
+        "role": "agent",
+        "content": "Dạ em cảm ơn chị [private] đã xác nhận đặt hàng máy lọc không khí SKU-AP-X với giá 4.490.000đ thanh toán COD ạ. \n\nDo thông tin địa chỉ [address]"
+      }
+    ],
+    "open_questions": [],
+    "feedback": [],
+    "evidence_coverage": "per_turn_evidence",
+    "workflow_version": 4,
+    "turn_evidence": [
+      {
+        "turn_id": 1,
+        "agent_response": "Dạ em chào chị [private]! Em rất vui khi nhận được phản hồi từ chị. \n\nDạ hiện tại đơn hàng đơn hàng cũ **OD188213** của chị với sản phẩm máy lọc không khí (mã SKU-AP-X-2024) đã được ghi nhận giao thành công. Chị cho em hỏi người nhà mình đã thống nhất muốn đổi sang mẫu máy cụ thể nào để em hỗ trợ kiểm tra và làm thủ tục đổi máy cho chị ngay ạ?",
+        "tool_calls": [
+          {
+            "name": "order.status",
+            "args": {
+              "order_id": "[private]"
+            },
+            "result": {
+              "orders": [
+                {
+                  "order_id": "[private]",
+                  "customer_id": "[private]",
+                  "customer_phone": "[private]",
+                  "sku": "SKU-AP-X-2024",
+                  "qty": 1,
+                  "price_vnd": 4290000,
+                  "lines": [
+                    {
+                      "sku": "SKU-AP-X-2024",
+                      "qty": 1,
+                      "price_vnd": 4290000
+                    }
+                  ],
+                  "total_vnd": 4290000,
+                  "promos": [],
+                  "promo_code": null,
+                  "payment": "COD",
+                  "address": "[private]",
+                  "status": "delivered",
+                  "created_on": "2026-02-17",
+                  "exchange_count": 0
+                }
+              ]
+            }
+          }
+        ],
+        "sources": [],
+        "promotions": []
+      },
+      {
+        "turn_id": 2,
+        "agent_response": "Dạ chị [private], sản phẩm mới mình chọn đổi là máy lọc không khí **SKU-AP-X**. Giá hiện tại sau khi áp dụng chương trình thu cũ đổi mới (mã TRADE-IN-AP giảm 400.000đ) là **4.490.000đ** ạ.\n\nTuy nhiên, em kiểm tra trên hệ thống thì chưa lưu lại thông tin địa chỉ [address]",
+        "tool_calls": [
+          {
+            "name": "catalog.search",
+            "args": {
+              "query": "Em nhắc lại máy mới, giá sau thu cũ đổi mới và dùng địa chỉ [address]",
+              "on": "2026-10-29"
+            },
+            "result": {
+              "items": [],
+              "total": 0
+            }
+          },
+          {
+            "name": "pricing.get_quote",
+            "args": {
+              "on": "2026-10-29",
+              "customer_phone": "[private]",
+              "customer_id": "[private]",
+              "sku": "SKU-AP-X",
+              "qty": 1
+            },
+            "result": {
+              "sku": "SKU-AP-X",
+              "list_price_vnd": 4890000,
+              "final_price_vnd": 4490000,
+              "applied_promos": [
+                {
+                  "promo_code": "COD-0",
+                  "type": "freecod",
+                  "discount_vnd": 0
+                },
+                {
+                  "promo_code": "TRADE-IN-AP",
+                  "type": "fixed",
+                  "discount_vnd": 400000
+                }
+              ],
+              "expired_promos": [
+                "GIFT-FILTER",
+                "AP-SEP"
+              ],
+              "ineligible_promos": [
+                {
+                  "promo_code": "AIR-2ND-50",
+                  "reason": "min_qty"
+                },
+                {
+                  "promo_code": "NAM-SHIP0",
+                  "reason": "region"
+                }
+              ],
+              "not_applied_exclusive": [],
+              "freeship": true
+            }
+          },
+          {
+            "name": "inventory.check",
+            "args": {
+              "on": "2026-10-29",
+              "sku": "SKU-AP-X"
+            },
+            "result": {
+              "sku": "SKU-AP-X",
+              "found": true,
+              "in_stock": true,
+              "qty": 40,
+              "discontinued": false
+            }
+          }
+        ],
+        "sources": [],
+        "promotions": []
+      },
+      {
+        "turn_id": 3,
+        "agent_response": "Dạ em cảm ơn chị [private] đã xác nhận đặt hàng máy lọc không khí SKU-AP-X với giá 4.490.000đ thanh toán COD ạ. \n\nDo thông tin địa chỉ [address]",
+        "tool_calls": [
+          {
+            "name": "inventory.check",
+            "args": {
+              "sku": "SKU-AP-X",
+              "on": "2026-10-29"
+            },
+            "result": {
+              "sku": "SKU-AP-X",
+              "found": true,
+              "in_stock": true,
+              "qty": 40,
+              "discontinued": false
+            }
+          }
+        ],
+        "sources": [],
+        "promotions": []
+      }
+    ]
+  },
+  "error": null
+}

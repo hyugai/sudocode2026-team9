@@ -1,0 +1,46 @@
+{
+  "id": "87a7cae8ba8ce7e8b0134737bd189a50f211fb9978ccbaad280b4a042efafe54",
+  "reason": "unsupported_claim",
+  "pattern": "Do not state an unverified claim as a fact.",
+  "status": "approved",
+  "scope": "general",
+  "mechanism": "knowledge_gap",
+  "criterion": "Do not state an unverified claim as a fact.",
+  "evidence_refs": [
+    {
+      "job_id": "5413a0c76530da5e34641b885e4226f520e2582f7427c64e7727a97e7edfab4f",
+      "message_id": 4,
+      "turn_id": 3,
+      "origin": "turn_detector"
+    }
+  ],
+  "assessment": "unsupported_by_evidence",
+  "report_ref": "5413a0c76530da5e34641b885e4226f520e2582f7427c64e7727a97e7edfab4f",
+  "lesson": {
+    "title": "Avoid Claiming System Record Saved Without System Confirmation",
+    "when": "A customer asks to note or hold product details and contact information, but no system tool or record action confirms it has been saved.",
+    "do": "Acknowledge the customer's choice and offer help for when they return, without stating that the details have been recorded in the system.",
+    "otherwise": "Express uncertainty about system logging capabilities rather than claiming information has been saved.",
+    "triggers": [
+      "giu thong tin",
+      "ghi nhan tren he thong",
+      "note customer info",
+      "save details to system"
+    ],
+    "id": "2428465dd6aebd918b246b218ea61f077e2a4a03ca7a10bb6c10ca1cd078d1a6",
+    "status": "approved",
+    "scope": "general",
+    "mechanism": "knowledge_gap",
+    "source_refs": [
+      {
+        "job_id": "5413a0c76530da5e34641b885e4226f520e2582f7427c64e7727a97e7edfab4f",
+        "message_id": 4,
+        "turn_id": 3,
+        "origin": "turn_detector"
+      }
+    ],
+    "version": 2
+  },
+  "lesson_path": "lessons\\approved\\2428465dd6aebd918b246b218ea61f077e2a4a03ca7a10bb6c10ca1cd078d1a6.md",
+  "lesson_hash": "a6ef6e56d1a0afa44afce603254ba8380a79684f4316ec30047adabc7375818d"
+}

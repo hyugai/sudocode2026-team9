@@ -1,0 +1,46 @@
+{
+  "id": "92e277b68b7c4168004982e48b9d49501b616fad46461dd54b4e96100cb9e40d",
+  "reason": "unsupported_claim",
+  "pattern": "Do not state an unverified claim as a fact.",
+  "status": "approved",
+  "scope": "general",
+  "mechanism": "knowledge_gap",
+  "criterion": "Do not state an unverified claim as a fact.",
+  "evidence_refs": [
+    {
+      "job_id": "4926885ddf152fb32999367950bbb994e4e0d3b4e8be81a09779bb909f5e79da",
+      "message_id": 2,
+      "turn_id": 2,
+      "origin": "turn_detector"
+    }
+  ],
+  "assessment": "unsupported_by_evidence",
+  "report_ref": "4926885ddf152fb32999367950bbb994e4e0d3b4e8be81a09779bb909f5e79da",
+  "lesson": {
+    "title": "Verify Historical Promo Discount Amounts Before Stating Past Prices",
+    "when": "Asked to state a past discounted price or promo calculation, but available tools and sources only indicate that a promo code expired without detailing its historical discount value",
+    "do": "Acknowledge the expired promo code using verified data and explain current pricing, without stating an unverified historical price or discount amount",
+    "otherwise": "Express uncertainty regarding the exact past price or discount amount from the expired promotion",
+    "triggers": [
+      "giá cũ mã hết hạn",
+      "expired promo old price",
+      "nhắc lại giá cũ",
+      "past discount price missing"
+    ],
+    "id": "2ee76a21e10212202c7d8eed572aabc71a85c7d11c5e81cc0cc135e4b8702abd",
+    "status": "approved",
+    "scope": "general",
+    "mechanism": "knowledge_gap",
+    "source_refs": [
+      {
+        "job_id": "4926885ddf152fb32999367950bbb994e4e0d3b4e8be81a09779bb909f5e79da",
+        "message_id": 2,
+        "turn_id": 2,
+        "origin": "turn_detector"
+      }
+    ],
+    "version": 2
+  },
+  "lesson_path": "lessons\\approved\\2ee76a21e10212202c7d8eed572aabc71a85c7d11c5e81cc0cc135e4b8702abd.md",
+  "lesson_hash": "b660afa1ab6ad7b06e07702a1678d3e3a775e2534c99cedee8efb59a7695d02b"
+}

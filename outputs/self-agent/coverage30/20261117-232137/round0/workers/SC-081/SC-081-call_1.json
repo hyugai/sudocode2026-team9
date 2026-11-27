@@ -1,0 +1,674 @@
+{
+  "scenario_id": "SC-081",
+  "call": "call_1",
+  "session_id": "self-7f9ee5e0b75548f5abd7d476a835d06b-SC-081-call_1",
+  "turns": [
+    {
+      "customer": "Tôi là [private], số điện thoại [phone], đang nhắn qua Fanpage. Shop ơi, chị xem Giày chạy bộ RunLite 2 Pro, size 38, màu đen còn 1.352.000 đồng theo RUN2-SALE đúng không?",
+      "agent": "Dạ em chào chị [private]. Đúng rồi ạ, sản phẩm Giày chạy bộ RunLite 2 Pro size 38 màu đen hiện đang có giá là 1.352.000 VNĐ khi áp dụng mã ưu đãi RUN2-SALE, và sản phẩm hiện đang sẵn hàng ạ. \n\nChị có muốn em lên đơn đặt hàng cho mình luôn không chị?",
+      "latency": {
+        "ttft_ms": 9893,
+        "total_ms": 9893,
+        "ttfa_ms": null,
+        "measurement_mode": "non_streaming",
+        "timing_boundary": "response_ready_before_persistence",
+        "asr_ms": null,
+        "call_brief_ms": 3948,
+        "response_ready_ms": 9893,
+        "persistence_ms": 0.76,
+        "request_complete_ms": 9893.684,
+        "backend_total_ms": 9893.684,
+        "precomputed_parts": []
+      },
+      "lesson_trace": null
+    },
+    {
+      "customer": "Số điện thoại của chị là [phone]. Giữ giúp thông tin mẫu và size để chị liên hệ lại.",
+      "agent": "Dạ em đã ghi nhận thông tin mẫu Giày chạy bộ RunLite 2 Pro, size 38, màu đen cùng số điện thoại [SĐT ĐÃ ẨN] của chị [private] rồi ạ. Khi nào tiện chị cứ liên hệ lại, em sẽ hỗ trợ mình lên đơn ngay nhé! Em cảm ơn chị.",
+      "latency": {
+        "ttft_ms": 15659,
+        "total_ms": 15659,
+        "ttfa_ms": null,
+        "measurement_mode": "non_streaming",
+        "timing_boundary": "response_ready_before_persistence",
+        "asr_ms": null,
+        "call_brief_ms": null,
+        "response_ready_ms": 15659,
+        "persistence_ms": 0.119,
+        "request_complete_ms": 15659.014,
+        "backend_total_ms": 15659.014,
+        "precomputed_parts": [
+          "persisted_facts"
+        ]
+      },
+      "lesson_trace": null
+    },
+    {
+      "customer": "Chị chưa mua ngay, để cân nhắc thêm.",
+      "agent": "Dạ vâng, em hoàn toàn hiểu ạ. Em đã lưu lại thông tin mẫu Giày chạy bộ RunLite 2 Pro (size 38, màu đen) cho chị [private] rồi. Khi nào chị suy nghĩ xong và sẵn sàng đặt hàng thì cứ báo lại với em nhé. Em cảm ơn chị và chúc chị một ngày tốt lành ạ!",
+      "latency": {
+        "ttft_ms": 2979,
+        "total_ms": 2979,
+        "ttfa_ms": null,
+        "measurement_mode": "non_streaming",
+        "timing_boundary": "response_ready_before_persistence",
+        "asr_ms": null,
+        "call_brief_ms": null,
+        "response_ready_ms": 2979,
+        "persistence_ms": 0.101,
+        "request_complete_ms": 2979.56,
+        "backend_total_ms": 2979.56,
+        "precomputed_parts": [
+          "persisted_facts"
+        ]
+      },
+      "lesson_trace": null
+    }
+  ],
+  "generation_context": {
+    "round": 0,
+    "instruction_hash": "9d30a7093911a993d8545de8b61cc6dc8465de67b10fb62b27d9f1bafaf0badf",
+    "applied_patterns": {},
+    "lessons_loaded": false,
+    "lesson_sources": [],
+    "lesson_files": [],
+    "instruction_root": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round0\\instructions"
+  },
+  "evaluation_evidence": [
+    {
+      "turn_id": 1,
+      "agent_response": "Dạ em chào chị [private]. Đúng rồi ạ, sản phẩm Giày chạy bộ RunLite 2 Pro size 38 màu đen hiện đang có giá là 1.352.000 VNĐ khi áp dụng mã ưu đãi RUN2-SALE, và sản phẩm hiện đang sẵn hàng ạ. \n\nChị có muốn em lên đơn đặt hàng cho mình luôn không chị?",
+      "tool_calls": [
+        {
+          "name": "catalog.search",
+          "args": {
+            "query": "Giày chạy bộ RunLite 2 Pro size 38 màu đen",
+            "on": "2026-09-26"
+          },
+          "result": {
+            "items": [
+              {
+                "sku": "SKU-SN-RUN2",
+                "name": "[private]",
+                "category": "thoi-trang/giay",
+                "brand": "RunLite",
+                "list_price_vnd": 1690000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "material": "vải lưới + đế EVA",
+                  "return_days": 7
+                },
+                "variants": [
+                  {
+                    "variant_sku": "SKU-SN-RUN2-38-DEN",
+                    "size": "38",
+                    "color": "den",
+                    "price_delta": 0,
+                    "price_delta_vnd": 0
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "inventory.check",
+          "args": {
+            "sku": "SKU-SN-RUN2-38-DEN",
+            "on": "2026-09-26"
+          },
+          "result": {
+            "sku": "SKU-SN-RUN2-38-DEN",
+            "found": true,
+            "in_stock": true,
+            "qty": 5,
+            "discontinued": false
+          }
+        },
+        {
+          "name": "pricing.get_quote",
+          "args": {
+            "on": "2026-09-26",
+            "customer_phone": "[private]",
+            "customer_id": "[private]",
+            "sku": "SKU-SN-RUN2-38-DEN",
+            "qty": 1
+          },
+          "result": {
+            "sku": "SKU-SN-RUN2-38-DEN",
+            "list_price_vnd": 1690000,
+            "final_price_vnd": 1352000,
+            "applied_promos": [
+              {
+                "promo_code": "COD-0",
+                "type": "freecod",
+                "discount_vnd": 0
+              },
+              {
+                "promo_code": "RUN2-SALE",
+                "type": "percent",
+                "discount_vnd": 338000
+              }
+            ],
+            "expired_promos": [],
+            "ineligible_promos": [],
+            "not_applied_exclusive": [],
+            "freeship": false
+          }
+        }
+      ],
+      "sources": [
+        {
+          "sku": "SKU-SN-RUN2",
+          "name": "[private]",
+          "category": "thoi-trang/giay",
+          "brand": "RunLite",
+          "list_price_vnd": 1690000.0,
+          "discontinued": false,
+          "successor_sku": null,
+          "attributes": {
+            "material": "vải lưới + đế EVA",
+            "return_days": 7
+          },
+          "variants": [
+            {
+              "variant_sku": "SKU-SN-RUN2-38-DEN",
+              "size": "38",
+              "color": "den",
+              "price_delta": 0,
+              "price_delta_vnd": 0
+            },
+            {
+              "variant_sku": "SKU-SN-RUN2-38-TRANG",
+              "size": "38",
+              "color": "trang",
+              "price_delta": 0,
+              "price_delta_vnd": 0
+            },
+            {
+              "variant_sku": "SKU-SN-RUN2-38-XAM",
+              "size": "38",
+              "color": "xam",
+              "price_delta": 0,
+              "price_delta_vnd": 0
+            },
+            {
+              "variant_sku": "SKU-SN-RUN2-39-DEN",
+              "size": "39",
+              "color": "den",
+              "price_delta": 0,
+              "price_delta_vnd": 0
+            },
+            {
+              "variant_sku": "SKU-SN-RUN2-39-TRANG",
+              "size": "39",
+              "color": "trang",
+              "price_delta": 0,
+              "price_delta_vnd": 0
+            },
+            {
+              "variant_sku": "SKU-SN-RUN2-39-XAM",
+              "size": "39",
+              "color": "xam",
+              "price_delta": 0,
+              "price_delta_vnd": 0
+            },
+            {
+              "variant_sku": "SKU-SN-RUN2-40-DEN",
+              "size": "40",
+              "color": "den",
+              "price_delta": 0,
+              "price_delta_vnd": 0
+            },
+            {
+              "variant_sku": "SKU-SN-RUN2-40-TRANG",
+              "size": "40",
+              "color": "trang",
+              "price_delta": 0,
+              "price_delta_vnd": 0
+            },
+            {
+              "variant_sku": "SKU-SN-RUN2-40-XAM",
+              "size": "40",
+              "color": "xam",
+              "price_delta": 0,
+              "price_delta_vnd": 0
+            },
+            {
+              "variant_sku": "SKU-SN-RUN2-41-DEN",
+              "size": "41",
+              "color": "den",
+              "price_delta": 0,
+              "price_delta_vnd": 0
+            },
+            {
+              "variant_sku": "SKU-SN-RUN2-41-TRANG",
+              "size": "41",
+              "color": "trang",
+              "price_delta": 0,
+              "price_delta_vnd": 0
+            },
+            {
+              "variant_sku": "SKU-SN-RUN2-41-XAM",
+              "size": "41",
+              "color": "xam",
+              "price_delta": 0,
+              "price_delta_vnd": 0
+            },
+            {
+              "variant_sku": "SKU-SN-RUN2-42-DEN",
+              "size": "42",
+              "color": "den",
+              "price_delta": 0,
+              "price_delta_vnd": 0
+            },
+            {
+              "variant_sku": "SKU-SN-RUN2-42-TRANG",
+              "size": "42",
+              "color": "trang",
+              "price_delta": 0,
+              "price_delta_vnd": 0
+            },
+            {
+              "variant_sku": "SKU-SN-RUN2-42-XAM",
+              "size": "42",
+              "color": "xam",
+              "price_delta": 0,
+              "price_delta_vnd": 0
+            },
+            {
+              "variant_sku": "SKU-SN-RUN2-43-DEN",
+              "size": "43",
+              "color": "den",
+              "price_delta": 50000.0,
+              "price_delta_vnd": 50000
+            },
+            {
+              "variant_sku": "SKU-SN-RUN2-43-TRANG",
+              "size": "43",
+              "color": "trang",
+              "price_delta": 50000.0,
+              "price_delta_vnd": 50000
+            },
+            {
+              "variant_sku": "SKU-SN-RUN2-43-XAM",
+              "size": "43",
+              "color": "xam",
+              "price_delta": 50000.0,
+              "price_delta_vnd": 50000
+            }
+          ]
+        }
+      ],
+      "promotions": []
+    },
+    {
+      "turn_id": 2,
+      "agent_response": "Dạ em đã ghi nhận thông tin mẫu Giày chạy bộ RunLite 2 Pro, size 38, màu đen cùng số điện thoại [SĐT ĐÃ ẨN] của chị [private] rồi ạ. Khi nào tiện chị cứ liên hệ lại, em sẽ hỗ trợ mình lên đơn ngay nhé! Em cảm ơn chị.",
+      "tool_calls": [
+        {
+          "name": "catalog.search",
+          "args": {
+            "query": "Số điện thoại của chị là [private]. Giữ giúp thông tin mẫu và size để chị liên hệ lại.",
+            "on": "2026-09-26"
+          },
+          "result": {
+            "items": [],
+            "total": 0
+          }
+        },
+        {
+          "name": "inventory.check",
+          "args": {
+            "on": "2026-09-26",
+            "sku": "SKU-SN-RUN2-38-DEN"
+          },
+          "result": {
+            "sku": "SKU-SN-RUN2-38-DEN",
+            "found": true,
+            "in_stock": true,
+            "qty": 5,
+            "discontinued": false
+          }
+        }
+      ],
+      "sources": [
+        {
+          "sku": "SKU-SN-RUN2",
+          "name": "[private]",
+          "category": "thoi-trang/giay",
+          "brand": "RunLite",
+          "list_price_vnd": 1690000.0,
+          "discontinued": false,
+          "successor_sku": null,
+          "attributes": {
+            "material": "vải lưới + đế EVA",
+            "return_days": 7
+          },
+          "variants": [
+            {
+              "variant_sku": "SKU-SN-RUN2-38-DEN",
+              "size": "38",
+              "color": "den",
+              "price_delta": 0,
+              "price_delta_vnd": 0
+            },
+            {
+              "variant_sku": "SKU-SN-RUN2-38-TRANG",
+              "size": "38",
+              "color": "trang",
+              "price_delta": 0,
+              "price_delta_vnd": 0
+            },
+            {
+              "variant_sku": "SKU-SN-RUN2-38-XAM",
+              "size": "38",
+              "color": "xam",
+              "price_delta": 0,
+              "price_delta_vnd": 0
+            },
+            {
+              "variant_sku": "SKU-SN-RUN2-39-DEN",
+              "size": "39",
+              "color": "den",
+              "price_delta": 0,
+              "price_delta_vnd": 0
+            },
+            {
+              "variant_sku": "SKU-SN-RUN2-39-TRANG",
+              "size": "39",
+              "color": "trang",
+              "price_delta": 0,
+              "price_delta_vnd": 0
+            },
+            {
+              "variant_sku": "SKU-SN-RUN2-39-XAM",
+              "size": "39",
+              "color": "xam",
+              "price_delta": 0,
+              "price_delta_vnd": 0
+            },
+            {
+              "variant_sku": "SKU-SN-RUN2-40-DEN",
+              "size": "40",
+              "color": "den",
+              "price_delta": 0,
+              "price_delta_vnd": 0
+            },
+            {
+              "variant_sku": "SKU-SN-RUN2-40-TRANG",
+              "size": "40",
+              "color": "trang",
+              "price_delta": 0,
+              "price_delta_vnd": 0
+            },
+            {
+              "variant_sku": "SKU-SN-RUN2-40-XAM",
+              "size": "40",
+              "color": "xam",
+              "price_delta": 0,
+              "price_delta_vnd": 0
+            },
+            {
+              "variant_sku": "SKU-SN-RUN2-41-DEN",
+              "size": "41",
+              "color": "den",
+              "price_delta": 0,
+              "price_delta_vnd": 0
+            },
+            {
+              "variant_sku": "SKU-SN-RUN2-41-TRANG",
+              "size": "41",
+              "color": "trang",
+              "price_delta": 0,
+              "price_delta_vnd": 0
+            },
+            {
+              "variant_sku": "SKU-SN-RUN2-41-XAM",
+              "size": "41",
+              "color": "xam",
+              "price_delta": 0,
+              "price_delta_vnd": 0
+            },
+            {
+              "variant_sku": "SKU-SN-RUN2-42-DEN",
+              "size": "42",
+              "color": "den",
+              "price_delta": 0,
+              "price_delta_vnd": 0
+            },
+            {
+              "variant_sku": "SKU-SN-RUN2-42-TRANG",
+              "size": "42",
+              "color": "trang",
+              "price_delta": 0,
+              "price_delta_vnd": 0
+            },
+            {
+              "variant_sku": "SKU-SN-RUN2-42-XAM",
+              "size": "42",
+              "color": "xam",
+              "price_delta": 0,
+              "price_delta_vnd": 0
+            },
+            {
+              "variant_sku": "SKU-SN-RUN2-43-DEN",
+              "size": "43",
+              "color": "den",
+              "price_delta": 50000.0,
+              "price_delta_vnd": 50000
+            },
+            {
+              "variant_sku": "SKU-SN-RUN2-43-TRANG",
+              "size": "43",
+              "color": "trang",
+              "price_delta": 50000.0,
+              "price_delta_vnd": 50000
+            },
+            {
+              "variant_sku": "SKU-SN-RUN2-43-XAM",
+              "size": "43",
+              "color": "xam",
+              "price_delta": 50000.0,
+              "price_delta_vnd": 50000
+            }
+          ]
+        }
+      ],
+      "promotions": []
+    },
+    {
+      "turn_id": 3,
+      "agent_response": "Dạ vâng, em hoàn toàn hiểu ạ. Em đã lưu lại thông tin mẫu Giày chạy bộ RunLite 2 Pro (size 38, màu đen) cho chị [private] rồi. Khi nào chị suy nghĩ xong và sẵn sàng đặt hàng thì cứ báo lại với em nhé. Em cảm ơn chị và chúc chị một ngày tốt lành ạ!",
+      "tool_calls": [],
+      "sources": [
+        {
+          "sku": "SKU-SN-RUN2",
+          "name": "[private]",
+          "category": "thoi-trang/giay",
+          "brand": "RunLite",
+          "list_price_vnd": 1690000.0,
+          "discontinued": false,
+          "successor_sku": null,
+          "attributes": {
+            "material": "vải lưới + đế EVA",
+            "return_days": 7
+          },
+          "variants": [
+            {
+              "variant_sku": "SKU-SN-RUN2-38-DEN",
+              "size": "38",
+              "color": "den",
+              "price_delta": 0,
+              "price_delta_vnd": 0
+            },
+            {
+              "variant_sku": "SKU-SN-RUN2-38-TRANG",
+              "size": "38",
+              "color": "trang",
+              "price_delta": 0,
+              "price_delta_vnd": 0
+            },
+            {
+              "variant_sku": "SKU-SN-RUN2-38-XAM",
+              "size": "38",
+              "color": "xam",
+              "price_delta": 0,
+              "price_delta_vnd": 0
+            },
+            {
+              "variant_sku": "SKU-SN-RUN2-39-DEN",
+              "size": "39",
+              "color": "den",
+              "price_delta": 0,
+              "price_delta_vnd": 0
+            },
+            {
+              "variant_sku": "SKU-SN-RUN2-39-TRANG",
+              "size": "39",
+              "color": "trang",
+              "price_delta": 0,
+              "price_delta_vnd": 0
+            },
+            {
+              "variant_sku": "SKU-SN-RUN2-39-XAM",
+              "size": "39",
+              "color": "xam",
+              "price_delta": 0,
+              "price_delta_vnd": 0
+            },
+            {
+              "variant_sku": "SKU-SN-RUN2-40-DEN",
+              "size": "40",
+              "color": "den",
+              "price_delta": 0,
+              "price_delta_vnd": 0
+            },
+            {
+              "variant_sku": "SKU-SN-RUN2-40-TRANG",
+              "size": "40",
+              "color": "trang",
+              "price_delta": 0,
+              "price_delta_vnd": 0
+            },
+            {
+              "variant_sku": "SKU-SN-RUN2-40-XAM",
+              "size": "40",
+              "color": "xam",
+              "price_delta": 0,
+              "price_delta_vnd": 0
+            },
+            {
+              "variant_sku": "SKU-SN-RUN2-41-DEN",
+              "size": "41",
+              "color": "den",
+              "price_delta": 0,
+              "price_delta_vnd": 0
+            },
+            {
+              "variant_sku": "SKU-SN-RUN2-41-TRANG",
+              "size": "41",
+              "color": "trang",
+              "price_delta": 0,
+              "price_delta_vnd": 0
+            },
+            {
+              "variant_sku": "SKU-SN-RUN2-41-XAM",
+              "size": "41",
+              "color": "xam",
+              "price_delta": 0,
+              "price_delta_vnd": 0
+            },
+            {
+              "variant_sku": "SKU-SN-RUN2-42-DEN",
+              "size": "42",
+              "color": "den",
+              "price_delta": 0,
+              "price_delta_vnd": 0
+            },
+            {
+              "variant_sku": "SKU-SN-RUN2-42-TRANG",
+              "size": "42",
+              "color": "trang",
+              "price_delta": 0,
+              "price_delta_vnd": 0
+            },
+            {
+              "variant_sku": "SKU-SN-RUN2-42-XAM",
+              "size": "42",
+              "color": "xam",
+              "price_delta": 0,
+              "price_delta_vnd": 0
+            },
+            {
+              "variant_sku": "SKU-SN-RUN2-43-DEN",
+              "size": "43",
+              "color": "den",
+              "price_delta": 50000.0,
+              "price_delta_vnd": 50000
+            },
+            {
+              "variant_sku": "SKU-SN-RUN2-43-TRANG",
+              "size": "43",
+              "color": "trang",
+              "price_delta": 50000.0,
+              "price_delta_vnd": 50000
+            },
+            {
+              "variant_sku": "SKU-SN-RUN2-43-XAM",
+              "size": "43",
+              "color": "xam",
+              "price_delta": 50000.0,
+              "price_delta_vnd": 50000
+            }
+          ]
+        }
+      ],
+      "promotions": []
+    }
+  ],
+  "job": {
+    "status": "done",
+    "job_id": "a015e920f64783d09dd1f9ccb042dffcf82e4c7d3c5769a15a0a9db544e70100",
+    "error": null
+  },
+  "learning": {
+    "job_id": "a015e920f64783d09dd1f9ccb042dffcf82e4c7d3c5769a15a0a9db544e70100",
+    "gaps": [],
+    "scope": "knowledge_gap_and_reflection_v1",
+    "evaluation_cases": [],
+    "out_of_scope": [],
+    "issue_reviews": [],
+    "detector_error": null,
+    "guardrails": {
+      "version": "learning_guardrails_v1",
+      "input_findings": [],
+      "blocked_lessons": [],
+      "blocked_sources": []
+    },
+    "detection": {
+      "candidate_count": 0,
+      "open_question_count": 0,
+      "processed_count": 0,
+      "skipped_unmatched_question": 0,
+      "skipped_over_limit": 0,
+      "scan": {
+        "turns_available": 3,
+        "turns_scanned": 3,
+        "requests": 3,
+        "errors": [],
+        "schema_retries": 0,
+        "skipped_over_limit": 0
+      },
+      "alignment_rejections": []
+    },
+    "outcome": "no_candidates",
+    "learning_duration_ms": 6139,
+    "learning_usage": {
+      "input_tokens": 10266,
+      "output_tokens": 8
+    }
+  },
+  "artifact_changes": []
+}

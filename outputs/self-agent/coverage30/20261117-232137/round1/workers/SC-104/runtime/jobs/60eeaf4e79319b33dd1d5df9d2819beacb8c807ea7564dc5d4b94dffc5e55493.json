@@ -1,0 +1,290 @@
+{
+  "id": "60eeaf4e79319b33dd1d5df9d2819beacb8c807ea7564dc5d4b94dffc5e55493",
+  "status": "done",
+  "attempts": 1,
+  "snapshot": {
+    "session": "217eff522ea483729b338d69c8dc688a0dbdc3729fa81fe2b587cc221216f814",
+    "revision": 4,
+    "messages": [
+      {
+        "message_id": 0,
+        "role": "customer",
+        "content": "Chi [private] day. hỏi thang hai chi mua airpure x ban 2024 của shop, gio muốn doi may."
+      },
+      {
+        "message_id": 1,
+        "role": "agent",
+        "content": "Dạ em chào chị [private]! Em đã kiểm tra thấy đơn hàng OD188213 sản phẩm AirPure X bản 2024 của chị mua ngày 17/02/2026. \n\nDạ không biết máy đang gặp vấn đề gì hay chị đang muốn đổi sang mẫu sản phẩm nào khác ạ? Chị chia sẻ thêm thông tin để em hỗ trợ chị tốt nhất nhé!"
+      },
+      {
+        "message_id": 2,
+        "role": "customer",
+        "content": "Chi dang xem may loc không khi airpure x. với may cu trong don od188213, chị có được ap thu cu doi moi không?"
+      },
+      {
+        "message_id": 3,
+        "role": "agent",
+        "content": "Dạ được chị [private] nhé! Theo chính sách thu cũ đổi mới (KM-09), vì chị đã mua máy AirPure X (đơn OD188213), chị sẽ được hỗ trợ trừ 400.000đ trực tiếp khi nâng cấp sang máy mới. Chị cũng không cần lo lắng về tình trạng máy cũ vì bên em không bắt buộc máy phải còn hoạt động, và đơn vị vận chuyển sẽ thu lại máy cũ ngay khi giao máy mới cho chị ạ.\n\nChị có muốn em tư vấn thêm về mẫu máy mới hay hỗ trợ chị đăng ký tham gia chương trình này luôn không chị?"
+      },
+      {
+        "message_id": 4,
+        "role": "customer",
+        "content": "Chi xem giá sau uu dai la 4.490.000 dong. địa chỉ [address]; gio giao 103 duong kiem thu, ha noi."
+      },
+      {
+        "message_id": 5,
+        "role": "agent",
+        "content": "Dạ em ghi nhận địa chỉ [address]\n\nVề giá sản phẩm máy lọc không khí AirPure X, đúng như chị vừa xem, sau khi áp dụng chương trình Thu cũ đổi mới hỗ trợ 400.000đ từ máy cũ của chị, giá hiện tại chính xác là 4.490.000đ và được miễn phí vận chuyển ạ.\n\nChị [private] có muốn em tiến hành lên đơn hàng mới giao về địa chỉ [address]"
+      },
+      {
+        "message_id": 6,
+        "role": "customer",
+        "content": "Chị con hỏi nguoi nha, gọi lại luc 10 gio ngay 2026-10-27 nhé."
+      },
+      {
+        "message_id": 7,
+        "role": "agent",
+        "content": "Dạ vâng, em đã hẹn lịch gọi lại cho chị [private] vào lúc 10:00 sáng ngày 27/10/2026 rồi ạ. Chị cứ trao đổi thêm với người nhà nhé. Em cảm ơn chị và chúc chị một ngày tốt lành ạ!"
+      }
+    ],
+    "open_questions": [],
+    "feedback": [],
+    "evidence_coverage": "per_turn_evidence",
+    "workflow_version": 4,
+    "turn_evidence": [
+      {
+        "turn_id": 1,
+        "agent_response": "Dạ em chào chị [private]! Em đã kiểm tra thấy đơn hàng OD188213 sản phẩm AirPure X bản 2024 của chị mua ngày 17/02/2026. \n\nDạ không biết máy đang gặp vấn đề gì hay chị đang muốn đổi sang mẫu sản phẩm nào khác ạ? Chị chia sẻ thêm thông tin để em hỗ trợ chị tốt nhất nhé!",
+        "tool_calls": [
+          {
+            "name": "order.status",
+            "args": {
+              "customer_phone": "[private]"
+            },
+            "result": {
+              "orders": [
+                {
+                  "order_id": "[private]",
+                  "customer_id": "[private]",
+                  "customer_phone": "[private]",
+                  "sku": "SKU-AP-X-2024",
+                  "qty": 1,
+                  "price_vnd": 4290000,
+                  "lines": [
+                    {
+                      "sku": "SKU-AP-X-2024",
+                      "qty": 1,
+                      "price_vnd": 4290000
+                    }
+                  ],
+                  "total_vnd": 4290000,
+                  "promos": [],
+                  "promo_code": null,
+                  "payment": "COD",
+                  "address": "[private]",
+                  "status": "delivered",
+                  "created_on": "2026-02-17",
+                  "exchange_count": 0
+                }
+              ]
+            }
+          }
+        ],
+        "sources": [],
+        "promotions": []
+      },
+      {
+        "turn_id": 2,
+        "agent_response": "Dạ được chị [private] nhé! Theo chính sách thu cũ đổi mới (KM-09), vì chị đã mua máy AirPure X (đơn OD188213), chị sẽ được hỗ trợ trừ 400.000đ trực tiếp khi nâng cấp sang máy mới. Chị cũng không cần lo lắng về tình trạng máy cũ vì bên em không bắt buộc máy phải còn hoạt động, và đơn vị vận chuyển sẽ thu lại máy cũ ngay khi giao máy mới cho chị ạ.\n\nChị có muốn em tư vấn thêm về mẫu máy mới hay hỗ trợ chị đăng ký tham gia chương trình này luôn không chị?",
+        "tool_calls": [
+          {
+            "name": "policy.search",
+            "args": {
+              "query": "Chi dang xem may loc không khi airpure x. với may cu trong don od188213, chị có được ap thu cu doi moi không?",
+              "k": 3,
+              "as_of": "2026-10-24"
+            },
+            "result": {
+              "query": "Chi dang xem may loc không khi airpure x. với may cu trong don od188213, chị có được ap thu cu doi moi không?",
+              "as_of": "2026-10-24",
+              "product_sku": null,
+              "count": 3,
+              "chunks": [
+                {
+                  "chunk_id": "KM-09",
+                  "content": "TRADE-IN-AP: khách có đơn đã giao chứa SKU-AP-X-2024 trong CRM được trừ 400.000đ khi mua AirPure X/Y/Pro; máy cũ do đơn vị vận chuyển thu khi giao máy mới; không yêu cầu máy cũ còn hoạt động. Không cộng với AIR-OCT.",
+                  "source_file": "dieu-khoan-khuyen-mai.md",
+                  "section": "[KM-09] Thu cũ đổi mới"
+                },
+                {
+                  "chunk_id": "FAQ-04",
+                  "content": "Y có thêm than hoạt tính, app điều khiển, khóa trẻ em; giá cao hơn X 310.000đ theo catalog. Cùng dùng màng lọc thay thế SKU-AP-FLT-X.",
+                  "source_file": "faq.md",
+                  "section": "[FAQ-04] Máy lọc không khí khác nhau giữa AirPure X và Y"
+                },
+                {
+                  "chunk_id": "",
+                  "content": "CADR tối thiểu nên ≥ 5 lần thể tích phòng mỗi giờ; với phòng trần 2,7 m, công thức nhanh: diện tích (m²) × 13,5 ≈ CADR tối thiểu. Phòng có thú cưng nên chọn máy có lớp lọc thô rời để vệ sinh (AirPure Y, Pro, Samsung AX40). Độ ồn dưới 30 dB ở mức thấp nhất là phù hợp phòng ngủ: AirPure Mini, X, Y, Pro, Samsung AX40 đạt; Xiaomi 4 Lite/4 Pro ở mức 32 dB.",
+                  "source_file": "spec-gia-dung.md",
+                  "section": "[SP-AIR-02] Lưu ý khi tư vấn máy lọc không khí"
+                }
+              ]
+            }
+          },
+          {
+            "name": "catalog.search",
+            "args": {
+              "query": "may loc không khi airpure x",
+              "on": "2026-10-24"
+            },
+            "result": {
+              "items": [
+                {
+                  "sku": "SKU-AP-X",
+                  "name": "[private]",
+                  "category": "gia-dung/may-loc-khong-khi",
+                  "brand": "AirPure",
+                  "list_price_vnd": 4890000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "features": "HEPA H13, cảm biến PM2.5, chế độ ngủ",
+                    "room_area_m2": 25,
+                    "child_safe_lock": false,
+                    "warranty_months": 24
+                  },
+                  "variants": []
+                }
+              ]
+            }
+          },
+          {
+            "name": "inventory.check",
+            "args": {
+              "sku": "SKU-AP-X",
+              "on": "2026-10-24"
+            },
+            "result": {
+              "sku": "SKU-AP-X",
+              "found": true,
+              "in_stock": true,
+              "qty": 40,
+              "discontinued": false
+            }
+          }
+        ],
+        "sources": [],
+        "promotions": []
+      },
+      {
+        "turn_id": 3,
+        "agent_response": "Dạ em ghi nhận địa chỉ [address]\n\nVề giá sản phẩm máy lọc không khí AirPure X, đúng như chị vừa xem, sau khi áp dụng chương trình Thu cũ đổi mới hỗ trợ 400.000đ từ máy cũ của chị, giá hiện tại chính xác là 4.490.000đ và được miễn phí vận chuyển ạ.\n\nChị [private] có muốn em tiến hành lên đơn hàng mới giao về địa chỉ [address]",
+        "tool_calls": [
+          {
+            "name": "order.status",
+            "args": {
+              "order_id": "[private]"
+            },
+            "result": {
+              "orders": [
+                {
+                  "order_id": "[private]",
+                  "customer_id": "[private]",
+                  "customer_phone": "[private]",
+                  "sku": "SKU-AP-X-2024",
+                  "qty": 1,
+                  "price_vnd": 4290000,
+                  "lines": [
+                    {
+                      "sku": "SKU-AP-X-2024",
+                      "qty": 1,
+                      "price_vnd": 4290000
+                    }
+                  ],
+                  "total_vnd": 4290000,
+                  "promos": [],
+                  "promo_code": null,
+                  "payment": "COD",
+                  "address": "[private]",
+                  "status": "delivered",
+                  "created_on": "2026-02-17",
+                  "exchange_count": 0
+                }
+              ]
+            }
+          },
+          {
+            "name": "pricing.get_quote",
+            "args": {
+              "on": "2026-10-24",
+              "customer_phone": "[private]",
+              "customer_id": "[private]",
+              "sku": "SKU-AP-X",
+              "qty": 1
+            },
+            "result": {
+              "sku": "SKU-AP-X",
+              "list_price_vnd": 4890000,
+              "final_price_vnd": 4490000,
+              "applied_promos": [
+                {
+                  "promo_code": "COD-0",
+                  "type": "freecod",
+                  "discount_vnd": 0
+                },
+                {
+                  "promo_code": "TRADE-IN-AP",
+                  "type": "fixed",
+                  "discount_vnd": 400000
+                }
+              ],
+              "expired_promos": [
+                "GIFT-FILTER",
+                "AP-SEP"
+              ],
+              "ineligible_promos": [
+                {
+                  "promo_code": "AIR-2ND-50",
+                  "reason": "min_qty"
+                },
+                {
+                  "promo_code": "NAM-SHIP0",
+                  "reason": "region"
+                }
+              ],
+              "not_applied_exclusive": [],
+              "freeship": true
+            }
+          }
+        ],
+        "sources": [],
+        "promotions": []
+      },
+      {
+        "turn_id": 4,
+        "agent_response": "Dạ vâng, em đã hẹn lịch gọi lại cho chị [private] vào lúc 10:00 sáng ngày 27/10/2026 rồi ạ. Chị cứ trao đổi thêm với người nhà nhé. Em cảm ơn chị và chúc chị một ngày tốt lành ạ!",
+        "tool_calls": [
+          {
+            "name": "schedule.callback",
+            "args": {
+              "customer_phone": "[private]",
+              "callback_at": "2026-10-27T10:00",
+              "note": "Chị con hỏi nguoi nha, gọi lại luc 10 gio ngay 2026-10-27 nhé.",
+              "on": "2026-10-24"
+            },
+            "result": {
+              "callback_id": "CB-B379EC",
+              "customer_phone": "[private]",
+              "callback_at": "2026-10-27T10:00",
+              "moved_from": null,
+              "note": "Chị con hỏi nguoi nha, gọi lại luc 10 gio ngay 2026-10-27 nhé."
+            }
+          }
+        ],
+        "sources": [],
+        "promotions": []
+      }
+    ]
+  },
+  "error": null
+}

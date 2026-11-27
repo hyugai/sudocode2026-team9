@@ -1,0 +1,26 @@
+{
+  "id": "2a4a5d845594e8f9ab9ae5af021f0d569ba7b8d4f5561aab09a0cf07c93edf07",
+  "question": "Thông tin từng chiếc hàng cần bằng chứng riêng nào?",
+  "occurrences": [
+    "00b124d14c125748eccb1aa96007dfd5013fc25e85d1b41110561189bb45093d",
+    "ec38cd5963296cc7fb2b6c1ef15b668df781b2e9f7c94d8e30c411a4df9c278f"
+  ],
+  "reason": "missing_knowledge",
+  "mechanism": "knowledge_gap",
+  "status": "pending_evidence",
+  "evidence_refs": [
+    {
+      "job_id": "00b124d14c125748eccb1aa96007dfd5013fc25e85d1b41110561189bb45093d",
+      "message_id": 2,
+      "turn_id": 2,
+      "origin": "open_questions"
+    },
+    {
+      "job_id": "ec38cd5963296cc7fb2b6c1ef15b668df781b2e9f7c94d8e30c411a4df9c278f",
+      "message_id": null,
+      "turn_id": null,
+      "origin": "open_questions"
+    }
+  ],
+  "required_source": "unit_specific_evidence"
+}

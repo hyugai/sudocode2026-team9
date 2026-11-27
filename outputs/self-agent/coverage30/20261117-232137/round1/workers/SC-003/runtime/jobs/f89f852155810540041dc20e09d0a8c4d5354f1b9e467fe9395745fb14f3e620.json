@@ -1,0 +1,215 @@
+{
+  "id": "f89f852155810540041dc20e09d0a8c4d5354f1b9e467fe9395745fb14f3e620",
+  "status": "done",
+  "attempts": 1,
+  "snapshot": {
+    "session": "8f34d4aaca004b5763ebd1ca5403d45cb7429213de6e3ed7e0010241cf160e11",
+    "revision": 3,
+    "messages": [
+      {
+        "message_id": 0,
+        "role": "customer",
+        "content": "Chị quay lại để chốt việc đang hỏi, người nhà đã đồng ý rồi."
+      },
+      {
+        "message_id": 1,
+        "role": "agent",
+        "content": "Dạ em chào chị [private], em rất vui khi nhận được phản hồi từ chị ạ. \n\nChị cho em hỏi là mình quyết định chốt lấy mẫu máy Xiaomi mà em đã tư vấn đúng không chị? Chị xác nhận giúp em để em hỗ trợ mình lên đơn nhé."
+      },
+      {
+        "message_id": 2,
+        "role": "customer",
+        "content": "Em nhắc lại mẫu và giá đã trao đổi giúp chị; hôm nay hàng có sẵn chưa?"
+      },
+      {
+        "message_id": 3,
+        "role": "agent",
+        "content": "Dạ mẫu em đã tư vấn cho chị [private] là máy Xiaomi (mã SKU-XM-4P) với giá hiện tại là 5.490.000đ ạ. \n\nHôm nay sản phẩm này đang có sẵn hàng tại kho bên em rồi ạ. Chị có muốn em hỗ trợ lên đơn cho mình luôn không chị?"
+      },
+      {
+        "message_id": 4,
+        "role": "customer",
+        "content": "Chị đồng ý giá hiện tại 5.490.000 đồng, mua một chiếc. Giao đến [address]"
+      },
+      {
+        "message_id": 5,
+        "role": "agent",
+        "content": "Dạ em đã lên đơn thành công cho chị [private] sản phẩm máy Xiaomi (mã SKU-XM-4P) với giá 5.490.000đ rồi ạ. Mã đơn hàng của chị là [order_id], dự kiến giao đến [address]"
+      }
+    ],
+    "open_questions": [],
+    "feedback": [],
+    "evidence_coverage": "per_turn_evidence",
+    "workflow_version": 4,
+    "turn_evidence": [
+      {
+        "turn_id": 1,
+        "agent_response": "Dạ em chào chị [private], em rất vui khi nhận được phản hồi từ chị ạ. \n\nChị cho em hỏi là mình quyết định chốt lấy mẫu máy Xiaomi mà em đã tư vấn đúng không chị? Chị xác nhận giúp em để em hỗ trợ mình lên đơn nhé.",
+        "tool_calls": [],
+        "sources": [],
+        "promotions": []
+      },
+      {
+        "turn_id": 2,
+        "agent_response": "Dạ mẫu em đã tư vấn cho chị [private] là máy Xiaomi (mã SKU-XM-4P) với giá hiện tại là 5.490.000đ ạ. \n\nHôm nay sản phẩm này đang có sẵn hàng tại kho bên em rồi ạ. Chị có muốn em hỗ trợ lên đơn cho mình luôn không chị?",
+        "tool_calls": [
+          {
+            "name": "catalog.search",
+            "args": {
+              "query": "Em nhắc lại mẫu và giá đã trao đổi giúp chị; hôm nay hàng có sẵn chưa?",
+              "on": "2026-10-20"
+            },
+            "result": {
+              "items": [],
+              "total": 0
+            }
+          },
+          {
+            "name": "pricing.get_quote",
+            "args": {
+              "on": "2026-10-20",
+              "customer_phone": "[private]",
+              "customer_id": "[private]",
+              "sku": "SKU-XM-4P",
+              "qty": 1
+            },
+            "result": {
+              "sku": "SKU-XM-4P",
+              "list_price_vnd": 5490000,
+              "final_price_vnd": 5490000,
+              "applied_promos": [
+                {
+                  "promo_code": "COD-0",
+                  "type": "freecod",
+                  "discount_vnd": 0
+                },
+                {
+                  "promo_code": "XM-COMBO",
+                  "type": "gift",
+                  "discount_vnd": 0,
+                  "gift_sku": "SKU-XM-FLT"
+                }
+              ],
+              "expired_promos": [],
+              "ineligible_promos": [
+                {
+                  "promo_code": "AIR-2ND-50",
+                  "reason": "min_qty"
+                },
+                {
+                  "promo_code": "NAM-SHIP0",
+                  "reason": "region"
+                }
+              ],
+              "not_applied_exclusive": [],
+              "freeship": true
+            }
+          },
+          {
+            "name": "inventory.check",
+            "args": {
+              "sku": "SKU-XM-4P",
+              "on": "2026-10-20"
+            },
+            "result": {
+              "sku": "SKU-XM-4P",
+              "found": true,
+              "in_stock": true,
+              "qty": 20,
+              "discontinued": false
+            }
+          }
+        ],
+        "sources": [],
+        "promotions": []
+      },
+      {
+        "turn_id": 3,
+        "agent_response": "Dạ em đã lên đơn thành công cho chị [private] sản phẩm máy Xiaomi (mã SKU-XM-4P) với giá 5.490.000đ rồi ạ. Mã đơn hàng của chị là [order_id], dự kiến giao đến [address]",
+        "tool_calls": [
+          {
+            "name": "inventory.check",
+            "args": {
+              "sku": "SKU-XM-4P",
+              "on": "2026-10-20"
+            },
+            "result": {
+              "sku": "SKU-XM-4P",
+              "found": true,
+              "in_stock": true,
+              "qty": 20,
+              "discontinued": false
+            }
+          },
+          {
+            "name": "pricing.get_quote",
+            "args": {
+              "on": "2026-10-20",
+              "customer_phone": "[private]",
+              "customer_id": "[private]",
+              "address": "[private]",
+              "sku": "SKU-XM-4P",
+              "qty": 1
+            },
+            "result": {
+              "sku": "SKU-XM-4P",
+              "list_price_vnd": 5490000,
+              "final_price_vnd": 5490000,
+              "applied_promos": [
+                {
+                  "promo_code": "COD-0",
+                  "type": "freecod",
+                  "discount_vnd": 0
+                },
+                {
+                  "promo_code": "XM-COMBO",
+                  "type": "gift",
+                  "discount_vnd": 0,
+                  "gift_sku": "SKU-XM-FLT"
+                }
+              ],
+              "expired_promos": [],
+              "ineligible_promos": [
+                {
+                  "promo_code": "AIR-2ND-50",
+                  "reason": "min_qty"
+                },
+                {
+                  "promo_code": "NAM-SHIP0",
+                  "reason": "region"
+                }
+              ],
+              "not_applied_exclusive": [],
+              "freeship": true
+            }
+          },
+          {
+            "name": "order.create",
+            "args": {
+              "customer_phone": "[private]",
+              "customer_id": "[private]",
+              "address": "[private]",
+              "idempotency_key": "self-b7d5fd7215534897ab30441f8f2378c2-SC-003-call_2:call_2:create:SKU-XM-4P",
+              "sku": "SKU-XM-4P",
+              "qty": 1,
+              "price_vnd": 5490000,
+              "promo_code": "COD-0",
+              "on": "2026-10-20",
+              "payment": "COD"
+            },
+            "result": {
+              "order_id": "[private]",
+              "status": "created",
+              "total_vnd": 5490000,
+              "needs_confirmation_call": true,
+              "estimated_delivery": "2026-10-22"
+            }
+          }
+        ],
+        "sources": [],
+        "promotions": []
+      }
+    ]
+  },
+  "error": null
+}

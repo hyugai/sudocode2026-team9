@@ -1,0 +1,119 @@
+{
+  "job_id": "5413a0c76530da5e34641b885e4226f520e2582f7427c64e7727a97e7edfab4f",
+  "gaps": [
+    {
+      "id": "190df3a70be21e59981c928c19e406a63a0c7151d884ff4ef3ad85d880554ff1",
+      "status": "pending_evidence"
+    },
+    {
+      "id": "87a7cae8ba8ce7e8b0134737bd189a50f211fb9978ccbaad280b4a042efafe54",
+      "status": "pending_remediation"
+    }
+  ],
+  "scope": "knowledge_gap_and_reflection_v1",
+  "evaluation_cases": [
+    {
+      "id": "b0adbd2c962b75986d7846c488b594a4bad48b86b78cf174b055513c3340551a",
+      "gap_id": "190df3a70be21e59981c928c19e406a63a0c7151d884ff4ef3ad85d880554ff1",
+      "turn_id": 1,
+      "question": "Tôi là duc, số điện thoại [private], dang nhận qua fanpage. cho mình hỏi chut nhé, anh xem giày chay bo runlite 2 pro, size 41, màu xám con 1.352.000 dong theo run2-sale dung không?",
+      "reason": "missing_knowledge",
+      "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments."
+    },
+    {
+      "id": "e20220c105b30ff1dfcbce9bf8eb1d88797baf95a12917d367823817d1e78c2f",
+      "gap_id": "87a7cae8ba8ce7e8b0134737bd189a50f211fb9978ccbaad280b4a042efafe54",
+      "turn_id": 3,
+      "question": "Anh chua mua ngay, de cần nhac them.",
+      "reason": "unsupported_claim",
+      "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments."
+    }
+  ],
+  "out_of_scope": [],
+  "issue_reviews": [
+    {
+      "job_id": "5413a0c76530da5e34641b885e4226f520e2582f7427c64e7727a97e7edfab4f",
+      "message_id": 4,
+      "turn_id": 3,
+      "origin": "turn_detector",
+      "mechanism": "knowledge_gap",
+      "verified": true,
+      "claim": "Em đã ghi nhận lại thông tin mẫu giày RunLite 2 Pro màu xám, size 41 cùng SĐT của anh trên hệ thống rồi.",
+      "assessment": "unsupported_by_evidence",
+      "evidence_paths": [],
+      "rejection": null,
+      "rejection_reasons": [],
+      "format_retry": false,
+      "verifier_output": {
+        "valid": true,
+        "issue_scope": "business_knowledge",
+        "claim": "Em đã ghi nhận lại thông tin mẫu giày RunLite 2 Pro màu xám, size 41 cùng SĐT của anh trên hệ thống rồi.",
+        "assessment": "unsupported_by_evidence",
+        "evidence_paths": [],
+        "decision_reason": "There is no tool call or system evidence confirming that the customer's selection and contact information were saved to a system/CRM record.",
+        "audit": {
+          "support_status": "not_established",
+          "coverage": "complete",
+          "checked_paths": [
+            "prior_evidence.0.tool_calls.0.result",
+            "prior_evidence.0.tool_calls.1.result",
+            "prior_evidence.0.sources",
+            "prior_evidence.0.promotions",
+            "prior_evidence.1.tool_calls.0.result",
+            "prior_evidence.1.tool_calls.1.result",
+            "prior_evidence.1.sources",
+            "prior_evidence.1.promotions",
+            "evidence.tool_calls",
+            "evidence.sources",
+            "evidence.promotions"
+          ]
+        }
+      },
+      "candidate_claim": "Em đã ghi nhận lại thông tin mẫu giày RunLite 2 Pro màu xám, size 41 cùng SĐT của anh trên hệ thống rồi.",
+      "verification_basis": "evidence_inventory_audit",
+      "evidence_inventory": [
+        "evidence.tool_calls",
+        "evidence.sources",
+        "evidence.promotions",
+        "prior_evidence.0.tool_calls.0.result",
+        "prior_evidence.0.tool_calls.1.result",
+        "prior_evidence.0.sources",
+        "prior_evidence.0.promotions",
+        "prior_evidence.1.tool_calls.0.result",
+        "prior_evidence.1.tool_calls.1.result",
+        "prior_evidence.1.sources",
+        "prior_evidence.1.promotions"
+      ],
+      "lesson_status": "approved"
+    }
+  ],
+  "detector_error": null,
+  "guardrails": {
+    "version": "learning_guardrails_v1",
+    "input_findings": [],
+    "blocked_lessons": [],
+    "blocked_sources": []
+  },
+  "detection": {
+    "candidate_count": 2,
+    "open_question_count": 0,
+    "processed_count": 2,
+    "skipped_unmatched_question": 0,
+    "skipped_over_limit": 0,
+    "scan": {
+      "turns_available": 3,
+      "turns_scanned": 3,
+      "requests": 3,
+      "errors": [],
+      "schema_retries": 0,
+      "skipped_over_limit": 0
+    },
+    "alignment_rejections": []
+  },
+  "outcome": "gaps_processed",
+  "learning_duration_ms": 17302,
+  "learning_usage": {
+    "input_tokens": 9110,
+    "output_tokens": 584
+  }
+}

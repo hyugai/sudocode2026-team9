@@ -1,0 +1,731 @@
+<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src 'none'; base-uri 'none'; form-action 'none'"><title>Review self-learning</title><style>body{margin:0;background:#f5f2ed;color:#292824;font:16px/1.6 system-ui,sans-serif}main{max-width:1180px;margin:auto;padding:24px}h1,h2,h3{line-height:1.3}article,.box{background:#fffdf9;border:1px solid #ddd7cc;border-radius:12px;padding:18px;margin:16px 0}.columns{display:grid;grid-template-columns:1fr 1fr;gap:18px}.answer{white-space:pre-wrap}mark{background:#fff0a6;color:#292824}del{background:#fbe2df;text-decoration:line-through}.warn{border-left:5px solid #a66b16}.regression{border-left:5px solid #a43131}.improved_resolution{border-left:5px solid #367458}.muted{color:#635f57}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#f3f1eb;padding:12px;border-radius:8px}body,td,p,div,summary{overflow-wrap:anywhere}table{border-collapse:collapse;width:100%}th,td{text-align:left;padding:8px;border-bottom:1px solid #e3ded5;vertical-align:top}summary{cursor:pointer;padding:8px 0}summary:focus-visible,a:focus-visible{outline:3px solid #8c5517}a{color:#754610}nav{display:flex;flex-wrap:wrap;gap:14px}@media(max-width:650px){main{padding:12px}.columns{grid-template-columns:1fr}article,.box{padding:12px}}</style></head><body><main><h1>Review self-learning</h1><p>Học sau khi kết thúc session. Báo cáo dựng từ artifact đã lưu, không gọi thêm LLM.</p><nav><a href="#overview">Tổng quan</a><a href="#turns">Trước / sau</a><a href="#lessons">Lesson</a><a href="#sessions">Học &amp; guardrail</a></nav><section id="overview"><h2>Tổng quan</h2><p class="box warn">Chưa chạy judge: chỉ xem thay đổi câu trả lời và dấu vết lesson, chưa đánh giá cải thiện.</p><p class="box warn">Không có cặp chấm hợp lệ: chưa thể kết luận cải thiện hay không có regression.</p><p><b>0</b> cặp chấm hợp lệ / 0 case được lưu trong comparison. 0/4 lượt trong session được inject.</p><table><tr><th>Phân loại</th><th>Số lượt</th></tr><tr><td>Giải quyết được thêm · cần xác nhận</td><td>0</td></tr><tr><td>Thận trọng hơn · vẫn chưa giải quyết</td><td>0</td></tr><tr><td>Có dấu hiệu regression · cần xác nhận</td><td>0</td></tr><tr><td>Không đổi trạng thái chấm</td><td>0</td></tr><tr><td>Chưa đủ kết quả chấm hợp lệ</td><td>0</td></tr><tr><td>Chưa được judge chấm</td><td>4</td></tr><tr><td>Thiếu một vòng</td><td>0</td></tr><tr><td>Câu hỏi hai vòng khác nhau</td><td>0</td></tr><tr><td>Bị loại khỏi phép so sánh</td><td>0</td></tr></table><details><summary>Phạm vi, nguồn baseline và exclusions</summary><pre>{
+  &quot;evaluation_population&quot;: &quot;single_session_no_baseline&quot;
+}</pre></details><p class="muted">Verdict kiểm tra được reference vẫn cần người đọc xác nhận ngữ nghĩa và độ đầy đủ.</p><p class="muted">Câu trả lời thay đổi hoặc được inject lesson chưa chứng minh lesson gây ra cải thiện.</p><p class="muted">Reflection chưa được chấm chất lượng; learning job done/lesson approved không phải điểm chất lượng.</p><p class="muted">Guardrail mẫu có giới hạn; không phát hiện mẫu không đồng nghĩa không có prompt injection.</p></section><section id="turns"><h2>Cải thiện ở đâu? Đọc từng lượt</h2><h3>Chưa được judge chấm (4)</h3><article id="turn-0" class="not_evaluated"><h3>SC-115/call_2 · lượt 1</h3><p><b>Khách:</b> Tôi là [private], số điện thoại [phone], đang nhắn qua Fanpage. Chị đã cân nhắc xong rồi. Em nhắc đúng hai món cuối cùng sau khi sửa và tổng tiền nhé.</p><p class="muted">Câu trả lời không đổi/thiếu cặp · Lesson chưa inject.</p><div class="columns"><div><h3>Phiên vừa kết thúc</h3><p><b>Chưa có verdict hợp lệ</b></p><div class="answer">Dạ em chưa xác minh đủ giỏ hàng và giá hiện tại, nên chưa thể báo tổng tiền chính xác ạ.</div><details><summary>Claims, trích dẫn và verdict gốc</summary><pre>{
+  &quot;status&quot;: null
+}</pre></details><details><summary>Evidence hiện tại và trước lượt này</summary><pre>{
+  &quot;current&quot;: {
+    &quot;turn_id&quot;: 1,
+    &quot;agent_response&quot;: &quot;Dạ em chưa xác minh đủ giỏ hàng và giá hiện tại, nên chưa thể báo tổng tiền chính xác ạ.&quot;,
+    &quot;tool_calls&quot;: [
+      {
+        &quot;name&quot;: &quot;catalog.search&quot;,
+        &quot;args&quot;: {
+          &quot;query&quot;: &quot;Tôi là [private], số điện thoại [private], đang nhắn qua Fanpage. Chị đã cân nhắc xong rồi. Em nhắc đúng hai món cuối cùng sau khi sửa và tổng tiền nhé.&quot;,
+          &quot;on&quot;: &quot;2026-10-21&quot;
+        },
+        &quot;result&quot;: {
+          &quot;items&quot;: [],
+          &quot;total&quot;: 0
+        }
+      },
+      {
+        &quot;name&quot;: &quot;catalog.search&quot;,
+        &quot;args&quot;: {
+          &quot;query&quot;: &quot;quạt&quot;,
+          &quot;on&quot;: &quot;2026-10-21&quot;
+        },
+        &quot;result&quot;: {
+          &quot;items&quot;: [
+            {
+              &quot;sku&quot;: &quot;SKU-FAN-DC1&quot;,
+              &quot;name&quot;: &quot;[private]&quot;,
+              &quot;category&quot;: &quot;gia-dung/quat&quot;,
+              &quot;brand&quot;: &quot;Panasonic&quot;,
+              &quot;list_price_vnd&quot;: 2450000.0,
+              &quot;discontinued&quot;: false,
+              &quot;successor_sku&quot;: null,
+              &quot;attributes&quot;: {
+                &quot;warranty_months&quot;: 12
+              },
+              &quot;variants&quot;: []
+            },
+            {
+              &quot;sku&quot;: &quot;SKU-FAN-SEN&quot;,
+              &quot;name&quot;: &quot;[private]&quot;,
+              &quot;category&quot;: &quot;gia-dung/quat&quot;,
+              &quot;brand&quot;: &quot;Senko&quot;,
+              &quot;list_price_vnd&quot;: 590000.0,
+              &quot;discontinued&quot;: false,
+              &quot;successor_sku&quot;: null,
+              &quot;attributes&quot;: {
+                &quot;warranty_months&quot;: 12
+              },
+              &quot;variants&quot;: []
+            },
+            {
+              &quot;sku&quot;: &quot;SKU-FAN-TWR&quot;,
+              &quot;name&quot;: &quot;[private]&quot;,
+              &quot;category&quot;: &quot;gia-dung/quat&quot;,
+              &quot;brand&quot;: &quot;Xiaomi&quot;,
+              &quot;list_price_vnd&quot;: 1790000.0,
+              &quot;discontinued&quot;: false,
+              &quot;successor_sku&quot;: null,
+              &quot;attributes&quot;: {
+                &quot;warranty_months&quot;: 12
+              },
+              &quot;variants&quot;: []
+            }
+          ],
+          &quot;total&quot;: 3
+        }
+      }
+    ],
+    &quot;sources&quot;: [],
+    &quot;promotions&quot;: []
+  },
+  &quot;earlier&quot;: []
+}</pre></details></div></div><details><summary>Lesson ID, routing, token và injection trace</summary><pre>{}</pre></details></article><article id="turn-1" class="not_evaluated"><h3>SC-115/call_2 · lượt 2</h3><p><b>Khách:</b> Tổng 2.380.000 đồng nằm trong ngân sách, mỗi món một chiếc, giao 104 đường Kiểm Thử, Đà Nẵng.</p><p class="muted">Câu trả lời không đổi/thiếu cặp · Lesson chưa inject.</p><div class="columns"><div><h3>Phiên vừa kết thúc</h3><p><b>Chưa có verdict hợp lệ</b></p><div class="answer">Dạ em chào chị [private], 
+
+Theo thông tin giỏ hàng thì hiện tại em thấy đang có sản phẩm Quạt đứng Senko (SKU-FAN-SEN) với giá 590.000 đồng/chiếc. Tuy nhiên, trước đó chị có đề cập đến 2 món sau khi sửa, nên em chưa rõ món thứ hai chị muốn lấy là sản phẩm nào ạ? 
+
+Chị xác nhận lại giúp em tên hoặc mã sản phẩm thứ hai để em kiểm tra chính xác tổng tiền và lên đơn giao về 104 đường Kiểm Thử, Đà Nẵng cho chị nhé!</div><details><summary>Claims, trích dẫn và verdict gốc</summary><pre>{
+  &quot;status&quot;: null
+}</pre></details><details><summary>Evidence hiện tại và trước lượt này</summary><pre>{
+  &quot;current&quot;: {
+    &quot;turn_id&quot;: 2,
+    &quot;agent_response&quot;: &quot;Dạ em chào chị [private], \n\nTheo thông tin giỏ hàng thì hiện tại em thấy đang có sản phẩm Quạt đứng Senko (SKU-FAN-SEN) với giá 590.000 đồng/chiếc. Tuy nhiên, trước đó chị có đề cập đến 2 món sau khi sửa, nên em chưa rõ món thứ hai chị muốn lấy là sản phẩm nào ạ? \n\nChị xác nhận lại giúp em tên hoặc mã sản phẩm thứ hai để em kiểm tra chính xác tổng tiền và lên đơn giao về 104 đường Kiểm Thử, Đà Nẵng cho chị nhé!&quot;,
+    &quot;tool_calls&quot;: [
+      {
+        &quot;name&quot;: &quot;pricing.get_quote&quot;,
+        &quot;args&quot;: {
+          &quot;on&quot;: &quot;2026-10-21&quot;,
+          &quot;customer_phone&quot;: &quot;[private]&quot;,
+          &quot;customer_id&quot;: &quot;[private]&quot;,
+          &quot;address&quot;: &quot;[private]&quot;,
+          &quot;sku&quot;: &quot;SKU-FAN-SEN&quot;,
+          &quot;qty&quot;: 1
+        },
+        &quot;result&quot;: {
+          &quot;sku&quot;: &quot;SKU-FAN-SEN&quot;,
+          &quot;list_price_vnd&quot;: 590000,
+          &quot;final_price_vnd&quot;: 590000,
+          &quot;applied_promos&quot;: [
+            {
+              &quot;promo_code&quot;: &quot;COD-0&quot;,
+              &quot;type&quot;: &quot;freecod&quot;,
+              &quot;discount_vnd&quot;: 0
+            }
+          ],
+          &quot;expired_promos&quot;: [],
+          &quot;ineligible_promos&quot;: [
+            {
+              &quot;promo_code&quot;: &quot;NAM-SHIP0&quot;,
+              &quot;reason&quot;: &quot;region&quot;
+            }
+          ],
+          &quot;not_applied_exclusive&quot;: [],
+          &quot;freeship&quot;: false
+        }
+      }
+    ],
+    &quot;sources&quot;: [],
+    &quot;promotions&quot;: []
+  },
+  &quot;earlier&quot;: [
+    {
+      &quot;turn_id&quot;: 1,
+      &quot;tool_calls&quot;: [
+        {
+          &quot;name&quot;: &quot;catalog.search&quot;,
+          &quot;args&quot;: {
+            &quot;query&quot;: &quot;Tôi là [private], số điện thoại [private], đang nhắn qua Fanpage. Chị đã cân nhắc xong rồi. Em nhắc đúng hai món cuối cùng sau khi sửa và tổng tiền nhé.&quot;,
+            &quot;on&quot;: &quot;2026-10-21&quot;
+          },
+          &quot;result&quot;: {
+            &quot;items&quot;: [],
+            &quot;total&quot;: 0
+          }
+        },
+        {
+          &quot;name&quot;: &quot;catalog.search&quot;,
+          &quot;args&quot;: {
+            &quot;query&quot;: &quot;quạt&quot;,
+            &quot;on&quot;: &quot;2026-10-21&quot;
+          },
+          &quot;result&quot;: {
+            &quot;items&quot;: [
+              {
+                &quot;sku&quot;: &quot;SKU-FAN-DC1&quot;,
+                &quot;name&quot;: &quot;[private]&quot;,
+                &quot;category&quot;: &quot;gia-dung/quat&quot;,
+                &quot;brand&quot;: &quot;Panasonic&quot;,
+                &quot;list_price_vnd&quot;: 2450000.0,
+                &quot;discontinued&quot;: false,
+                &quot;successor_sku&quot;: null,
+                &quot;attributes&quot;: {
+                  &quot;warranty_months&quot;: 12
+                },
+                &quot;variants&quot;: []
+              },
+              {
+                &quot;sku&quot;: &quot;SKU-FAN-SEN&quot;,
+                &quot;name&quot;: &quot;[private]&quot;,
+                &quot;category&quot;: &quot;gia-dung/quat&quot;,
+                &quot;brand&quot;: &quot;Senko&quot;,
+                &quot;list_price_vnd&quot;: 590000.0,
+                &quot;discontinued&quot;: false,
+                &quot;successor_sku&quot;: null,
+                &quot;attributes&quot;: {
+                  &quot;warranty_months&quot;: 12
+                },
+                &quot;variants&quot;: []
+              },
+              {
+                &quot;sku&quot;: &quot;SKU-FAN-TWR&quot;,
+                &quot;name&quot;: &quot;[private]&quot;,
+                &quot;category&quot;: &quot;gia-dung/quat&quot;,
+                &quot;brand&quot;: &quot;Xiaomi&quot;,
+                &quot;list_price_vnd&quot;: 1790000.0,
+                &quot;discontinued&quot;: false,
+                &quot;successor_sku&quot;: null,
+                &quot;attributes&quot;: {
+                  &quot;warranty_months&quot;: 12
+                },
+                &quot;variants&quot;: []
+              }
+            ],
+            &quot;total&quot;: 3
+          }
+        }
+      ],
+      &quot;sources&quot;: [],
+      &quot;promotions&quot;: []
+    }
+  ]
+}</pre></details></div></div><details><summary>Lesson ID, routing, token và injection trace</summary><pre>{}</pre></details></article><article id="turn-2" class="not_evaluated"><h3>SC-115/call_2 · lượt 3</h3><p><b>Khách:</b> Chị chọn thanh toán COD.</p><p class="muted">Câu trả lời không đổi/thiếu cặp · Lesson chưa inject.</p><div class="columns"><div><h3>Phiên vừa kết thúc</h3><p><b>Chưa có verdict hợp lệ</b></p><div class="answer">Dạ em cảm ơn chị [private] đã chọn hình thức thanh toán COD ạ. 
+
+Hiện tại em ghi nhận thông tin giao hàng đến địa chỉ [address]</div><details><summary>Claims, trích dẫn và verdict gốc</summary><pre>{
+  &quot;status&quot;: null
+}</pre></details><details><summary>Evidence hiện tại và trước lượt này</summary><pre>{
+  &quot;current&quot;: {
+    &quot;turn_id&quot;: 3,
+    &quot;agent_response&quot;: &quot;Dạ em cảm ơn chị [private] đã chọn hình thức thanh toán COD ạ. \n\nHiện tại em ghi nhận thông tin giao hàng đến địa chỉ [address]&quot;,
+    &quot;tool_calls&quot;: [],
+    &quot;sources&quot;: [],
+    &quot;promotions&quot;: []
+  },
+  &quot;earlier&quot;: [
+    {
+      &quot;turn_id&quot;: 1,
+      &quot;tool_calls&quot;: [
+        {
+          &quot;name&quot;: &quot;catalog.search&quot;,
+          &quot;args&quot;: {
+            &quot;query&quot;: &quot;Tôi là [private], số điện thoại [private], đang nhắn qua Fanpage. Chị đã cân nhắc xong rồi. Em nhắc đúng hai món cuối cùng sau khi sửa và tổng tiền nhé.&quot;,
+            &quot;on&quot;: &quot;2026-10-21&quot;
+          },
+          &quot;result&quot;: {
+            &quot;items&quot;: [],
+            &quot;total&quot;: 0
+          }
+        },
+        {
+          &quot;name&quot;: &quot;catalog.search&quot;,
+          &quot;args&quot;: {
+            &quot;query&quot;: &quot;quạt&quot;,
+            &quot;on&quot;: &quot;2026-10-21&quot;
+          },
+          &quot;result&quot;: {
+            &quot;items&quot;: [
+              {
+                &quot;sku&quot;: &quot;SKU-FAN-DC1&quot;,
+                &quot;name&quot;: &quot;[private]&quot;,
+                &quot;category&quot;: &quot;gia-dung/quat&quot;,
+                &quot;brand&quot;: &quot;Panasonic&quot;,
+                &quot;list_price_vnd&quot;: 2450000.0,
+                &quot;discontinued&quot;: false,
+                &quot;successor_sku&quot;: null,
+                &quot;attributes&quot;: {
+                  &quot;warranty_months&quot;: 12
+                },
+                &quot;variants&quot;: []
+              },
+              {
+                &quot;sku&quot;: &quot;SKU-FAN-SEN&quot;,
+                &quot;name&quot;: &quot;[private]&quot;,
+                &quot;category&quot;: &quot;gia-dung/quat&quot;,
+                &quot;brand&quot;: &quot;Senko&quot;,
+                &quot;list_price_vnd&quot;: 590000.0,
+                &quot;discontinued&quot;: false,
+                &quot;successor_sku&quot;: null,
+                &quot;attributes&quot;: {
+                  &quot;warranty_months&quot;: 12
+                },
+                &quot;variants&quot;: []
+              },
+              {
+                &quot;sku&quot;: &quot;SKU-FAN-TWR&quot;,
+                &quot;name&quot;: &quot;[private]&quot;,
+                &quot;category&quot;: &quot;gia-dung/quat&quot;,
+                &quot;brand&quot;: &quot;Xiaomi&quot;,
+                &quot;list_price_vnd&quot;: 1790000.0,
+                &quot;discontinued&quot;: false,
+                &quot;successor_sku&quot;: null,
+                &quot;attributes&quot;: {
+                  &quot;warranty_months&quot;: 12
+                },
+                &quot;variants&quot;: []
+              }
+            ],
+            &quot;total&quot;: 3
+          }
+        }
+      ],
+      &quot;sources&quot;: [],
+      &quot;promotions&quot;: []
+    },
+    {
+      &quot;turn_id&quot;: 2,
+      &quot;tool_calls&quot;: [
+        {
+          &quot;name&quot;: &quot;pricing.get_quote&quot;,
+          &quot;args&quot;: {
+            &quot;on&quot;: &quot;2026-10-21&quot;,
+            &quot;customer_phone&quot;: &quot;[private]&quot;,
+            &quot;customer_id&quot;: &quot;[private]&quot;,
+            &quot;address&quot;: &quot;[private]&quot;,
+            &quot;sku&quot;: &quot;SKU-FAN-SEN&quot;,
+            &quot;qty&quot;: 1
+          },
+          &quot;result&quot;: {
+            &quot;sku&quot;: &quot;SKU-FAN-SEN&quot;,
+            &quot;list_price_vnd&quot;: 590000,
+            &quot;final_price_vnd&quot;: 590000,
+            &quot;applied_promos&quot;: [
+              {
+                &quot;promo_code&quot;: &quot;COD-0&quot;,
+                &quot;type&quot;: &quot;freecod&quot;,
+                &quot;discount_vnd&quot;: 0
+              }
+            ],
+            &quot;expired_promos&quot;: [],
+            &quot;ineligible_promos&quot;: [
+              {
+                &quot;promo_code&quot;: &quot;NAM-SHIP0&quot;,
+                &quot;reason&quot;: &quot;region&quot;
+              }
+            ],
+            &quot;not_applied_exclusive&quot;: [],
+            &quot;freeship&quot;: false
+          }
+        }
+      ],
+      &quot;sources&quot;: [],
+      &quot;promotions&quot;: []
+    }
+  ]
+}</pre></details></div></div><details><summary>Lesson ID, routing, token và injection trace</summary><pre>{}</pre></details></article><article id="turn-3" class="not_evaluated"><h3>SC-115/call_2 · lượt 4</h3><p><b>Khách:</b> Em lên đơn đúng giỏ cuối cùng, bỏ món Quạt đứng Senko TS16 đã hủy nhé.</p><p class="muted">Câu trả lời không đổi/thiếu cặp · Lesson chưa inject.</p><div class="columns"><div><h3>Phiên vừa kết thúc</h3><p><b>Chưa có verdict hợp lệ</b></p><div class="answer">Dạ em đã tạo thành công đơn hàng cho chị [private] với sản phẩm Quạt đứng Senko TS16 (tổng tiền 590.000 đ), giao đến [address]
+
+Mã đơn hàng của chị là **[order_id]**, dự kiến giao vào ngày 23/10/2026. Chị cần em hỗ trợ thêm thông tin gì nữa không ạ?</div><details><summary>Claims, trích dẫn và verdict gốc</summary><pre>{
+  &quot;status&quot;: null
+}</pre></details><details><summary>Evidence hiện tại và trước lượt này</summary><pre>{
+  &quot;current&quot;: {
+    &quot;turn_id&quot;: 4,
+    &quot;agent_response&quot;: &quot;Dạ em đã tạo thành công đơn hàng cho chị [private] với sản phẩm Quạt đứng Senko TS16 (tổng tiền 590.000 đ), giao đến [address]\n\nMã đơn hàng của chị là **[order_id]**, dự kiến giao vào ngày 23/10/2026. Chị cần em hỗ trợ thêm thông tin gì nữa không ạ?&quot;,
+    &quot;tool_calls&quot;: [
+      {
+        &quot;name&quot;: &quot;inventory.check&quot;,
+        &quot;args&quot;: {
+          &quot;sku&quot;: &quot;SKU-FAN-SEN&quot;,
+          &quot;on&quot;: &quot;2026-10-21&quot;
+        },
+        &quot;result&quot;: {
+          &quot;sku&quot;: &quot;SKU-FAN-SEN&quot;,
+          &quot;found&quot;: true,
+          &quot;in_stock&quot;: true,
+          &quot;qty&quot;: 30,
+          &quot;discontinued&quot;: false
+        }
+      },
+      {
+        &quot;name&quot;: &quot;order.create&quot;,
+        &quot;args&quot;: {
+          &quot;customer_phone&quot;: &quot;[private]&quot;,
+          &quot;customer_id&quot;: &quot;[private]&quot;,
+          &quot;address&quot;: &quot;[private]&quot;,
+          &quot;idempotency_key&quot;: &quot;self-9968f7db355b450b86ee6fb2cc8e0e82-SC-115-call_2:call_2:create:SKU-FAN-SEN&quot;,
+          &quot;sku&quot;: &quot;SKU-FAN-SEN&quot;,
+          &quot;qty&quot;: 1,
+          &quot;price_vnd&quot;: 590000,
+          &quot;promo_code&quot;: &quot;COD-0&quot;,
+          &quot;on&quot;: &quot;2026-10-21&quot;,
+          &quot;payment&quot;: &quot;COD&quot;
+        },
+        &quot;result&quot;: {
+          &quot;order_id&quot;: &quot;[private]&quot;,
+          &quot;status&quot;: &quot;created&quot;,
+          &quot;total_vnd&quot;: 590000,
+          &quot;needs_confirmation_call&quot;: false,
+          &quot;estimated_delivery&quot;: &quot;2026-10-23&quot;
+        }
+      }
+    ],
+    &quot;sources&quot;: [],
+    &quot;promotions&quot;: []
+  },
+  &quot;earlier&quot;: [
+    {
+      &quot;turn_id&quot;: 1,
+      &quot;tool_calls&quot;: [
+        {
+          &quot;name&quot;: &quot;catalog.search&quot;,
+          &quot;args&quot;: {
+            &quot;query&quot;: &quot;Tôi là [private], số điện thoại [private], đang nhắn qua Fanpage. Chị đã cân nhắc xong rồi. Em nhắc đúng hai món cuối cùng sau khi sửa và tổng tiền nhé.&quot;,
+            &quot;on&quot;: &quot;2026-10-21&quot;
+          },
+          &quot;result&quot;: {
+            &quot;items&quot;: [],
+            &quot;total&quot;: 0
+          }
+        },
+        {
+          &quot;name&quot;: &quot;catalog.search&quot;,
+          &quot;args&quot;: {
+            &quot;query&quot;: &quot;quạt&quot;,
+            &quot;on&quot;: &quot;2026-10-21&quot;
+          },
+          &quot;result&quot;: {
+            &quot;items&quot;: [
+              {
+                &quot;sku&quot;: &quot;SKU-FAN-DC1&quot;,
+                &quot;name&quot;: &quot;[private]&quot;,
+                &quot;category&quot;: &quot;gia-dung/quat&quot;,
+                &quot;brand&quot;: &quot;Panasonic&quot;,
+                &quot;list_price_vnd&quot;: 2450000.0,
+                &quot;discontinued&quot;: false,
+                &quot;successor_sku&quot;: null,
+                &quot;attributes&quot;: {
+                  &quot;warranty_months&quot;: 12
+                },
+                &quot;variants&quot;: []
+              },
+              {
+                &quot;sku&quot;: &quot;SKU-FAN-SEN&quot;,
+                &quot;name&quot;: &quot;[private]&quot;,
+                &quot;category&quot;: &quot;gia-dung/quat&quot;,
+                &quot;brand&quot;: &quot;Senko&quot;,
+                &quot;list_price_vnd&quot;: 590000.0,
+                &quot;discontinued&quot;: false,
+                &quot;successor_sku&quot;: null,
+                &quot;attributes&quot;: {
+                  &quot;warranty_months&quot;: 12
+                },
+                &quot;variants&quot;: []
+              },
+              {
+                &quot;sku&quot;: &quot;SKU-FAN-TWR&quot;,
+                &quot;name&quot;: &quot;[private]&quot;,
+                &quot;category&quot;: &quot;gia-dung/quat&quot;,
+                &quot;brand&quot;: &quot;Xiaomi&quot;,
+                &quot;list_price_vnd&quot;: 1790000.0,
+                &quot;discontinued&quot;: false,
+                &quot;successor_sku&quot;: null,
+                &quot;attributes&quot;: {
+                  &quot;warranty_months&quot;: 12
+                },
+                &quot;variants&quot;: []
+              }
+            ],
+            &quot;total&quot;: 3
+          }
+        }
+      ],
+      &quot;sources&quot;: [],
+      &quot;promotions&quot;: []
+    },
+    {
+      &quot;turn_id&quot;: 2,
+      &quot;tool_calls&quot;: [
+        {
+          &quot;name&quot;: &quot;pricing.get_quote&quot;,
+          &quot;args&quot;: {
+            &quot;on&quot;: &quot;2026-10-21&quot;,
+            &quot;customer_phone&quot;: &quot;[private]&quot;,
+            &quot;customer_id&quot;: &quot;[private]&quot;,
+            &quot;address&quot;: &quot;[private]&quot;,
+            &quot;sku&quot;: &quot;SKU-FAN-SEN&quot;,
+            &quot;qty&quot;: 1
+          },
+          &quot;result&quot;: {
+            &quot;sku&quot;: &quot;SKU-FAN-SEN&quot;,
+            &quot;list_price_vnd&quot;: 590000,
+            &quot;final_price_vnd&quot;: 590000,
+            &quot;applied_promos&quot;: [
+              {
+                &quot;promo_code&quot;: &quot;COD-0&quot;,
+                &quot;type&quot;: &quot;freecod&quot;,
+                &quot;discount_vnd&quot;: 0
+              }
+            ],
+            &quot;expired_promos&quot;: [],
+            &quot;ineligible_promos&quot;: [
+              {
+                &quot;promo_code&quot;: &quot;NAM-SHIP0&quot;,
+                &quot;reason&quot;: &quot;region&quot;
+              }
+            ],
+            &quot;not_applied_exclusive&quot;: [],
+            &quot;freeship&quot;: false
+          }
+        }
+      ],
+      &quot;sources&quot;: [],
+      &quot;promotions&quot;: []
+    },
+    {
+      &quot;turn_id&quot;: 3,
+      &quot;tool_calls&quot;: [],
+      &quot;sources&quot;: [],
+      &quot;promotions&quot;: []
+    }
+  ]
+}</pre></details></div></div><details><summary>Lesson ID, routing, token và injection trace</summary><pre>{}</pre></details></article></section><section id="lessons"><h2>Lesson mới sinh sau session</h2><p>Approved là trạng thái duyệt lesson, chưa chứng minh chất lượng câu trả lời.</p><article id="lesson-0"><h3>Verify Shopping Cart Contents Before Stating Cart Items</h3><p><b>When:</b> A customer asks to confirm or check items in their cart, but source evidence does not establish the contents of their cart</p><p><b>Do:</b> Search and verify the actual cart contents using source tools before claiming specific items are in the cart</p><p><b>Otherwise:</b> State uncertainty regarding the current cart contents instead of asserting specific products are present</p><p>Inject tại: Chưa thấy trong trace</p><details><summary>ID, nguồn sinh và kiểm tra guardrail</summary><pre>{
+  &quot;id&quot;: &quot;06ff1b4965779534fc63d85a8f5b0897b62bfd328afb826884b3154de024352a&quot;,
+  &quot;mechanism&quot;: &quot;knowledge_gap&quot;,
+  &quot;content&quot;: {
+    &quot;title&quot;: &quot;Verify Shopping Cart Contents Before Stating Cart Items&quot;,
+    &quot;when&quot;: &quot;A customer asks to confirm or check items in their cart, but source evidence does not establish the contents of their cart&quot;,
+    &quot;do&quot;: &quot;Search and verify the actual cart contents using source tools before claiming specific items are in the cart&quot;,
+    &quot;otherwise&quot;: &quot;State uncertainty regarding the current cart contents instead of asserting specific products are present&quot;
+  },
+  &quot;source_refs&quot;: [
+    {
+      &quot;job_id&quot;: &quot;c5529f86ff40e4de69bc4d48802f3437cc6f256f60ae16397642218adb52aa6b&quot;,
+      &quot;message_id&quot;: 2,
+      &quot;turn_id&quot;: 2,
+      &quot;origin&quot;: &quot;turn_detector&quot;
+    }
+  ],
+  &quot;path&quot;: null,
+  &quot;security_findings&quot;: [],
+  &quot;load_error&quot;: null,
+  &quot;review_flags&quot;: []
+}</pre></details></article></section><section id="sessions"><h2>Học sau session &amp; guardrail</h2><p>Input finding là cảnh báo mẫu, không phải verdict khách nói sai hoặc bằng chứng tấn công thành công. Run cũ thiếu guardrail trace sẽ được ghi rõ.</p><article><h3>SC-115/call_2</h3><h3>Vòng 1</h3><p>Job: done · Issue xác nhận: 2 · Guardrail: có trace</p><details><summary>Vấn đề, trạng thái học và guardrail chi tiết</summary><pre>{
+  &quot;job&quot;: {
+    &quot;status&quot;: &quot;done&quot;,
+    &quot;job_id&quot;: &quot;c5529f86ff40e4de69bc4d48802f3437cc6f256f60ae16397642218adb52aa6b&quot;,
+    &quot;error&quot;: null
+  },
+  &quot;error&quot;: null,
+  &quot;learning&quot;: {
+    &quot;job_id&quot;: &quot;c5529f86ff40e4de69bc4d48802f3437cc6f256f60ae16397642218adb52aa6b&quot;,
+    &quot;gaps&quot;: [
+      {
+        &quot;id&quot;: &quot;463022fc6e28237bb932c9d722c758bc67c90db08be2e6bd1ce5423330f39a07&quot;,
+        &quot;status&quot;: &quot;pending_remediation&quot;
+      },
+      {
+        &quot;id&quot;: &quot;1ad31e78bf2534431c4d510f1ef4cb8bed9bd84c20d9ddd669a6250993d1e93a&quot;,
+        &quot;status&quot;: &quot;pending_remediation&quot;
+      },
+      {
+        &quot;id&quot;: &quot;61b3e2411c2e9357028e31bc9f9d89beb01f5925feac9772c171c8d433dbe3fc&quot;,
+        &quot;status&quot;: &quot;pending_evidence&quot;
+      }
+    ],
+    &quot;scope&quot;: &quot;knowledge_gap_and_reflection_v1&quot;,
+    &quot;evaluation_cases&quot;: [
+      {
+        &quot;id&quot;: &quot;2904f73d2d41a1acdb887523f4e3ef0de1531aab6a5bf07c6d29ab436b7a2408&quot;,
+        &quot;gap_id&quot;: &quot;463022fc6e28237bb932c9d722c758bc67c90db08be2e6bd1ce5423330f39a07&quot;,
+        &quot;turn_id&quot;: 2,
+        &quot;question&quot;: &quot;Tổng 2.380.000 đồng nằm trong ngân sách, mỗi món một chiếc, giao 104 đường Kiểm Thử, Đà Nẵng.&quot;,
+        &quot;reason&quot;: &quot;unsupported_claim&quot;,
+        &quot;criterion&quot;: &quot;Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments.&quot;
+      },
+      {
+        &quot;id&quot;: &quot;ead01483a63eadb25deaee7f42fa7efc939eaeae5dd7cf43b08a7cb94b1ff73d&quot;,
+        &quot;gap_id&quot;: &quot;1ad31e78bf2534431c4d510f1ef4cb8bed9bd84c20d9ddd669a6250993d1e93a&quot;,
+        &quot;turn_id&quot;: 3,
+        &quot;question&quot;: &quot;Chị chọn thanh toán cod.&quot;,
+        &quot;reason&quot;: &quot;unsupported_claim&quot;,
+        &quot;criterion&quot;: &quot;Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments.&quot;
+      }
+    ],
+    &quot;out_of_scope&quot;: [],
+    &quot;issue_reviews&quot;: [
+      {
+        &quot;job_id&quot;: &quot;c5529f86ff40e4de69bc4d48802f3437cc6f256f60ae16397642218adb52aa6b&quot;,
+        &quot;message_id&quot;: 2,
+        &quot;turn_id&quot;: 2,
+        &quot;origin&quot;: &quot;turn_detector&quot;,
+        &quot;mechanism&quot;: &quot;knowledge_gap&quot;,
+        &quot;verified&quot;: true,
+        &quot;claim&quot;: &quot;Theo thông tin giỏ hàng thì hiện tại em thấy đang có sản phẩm Quạt đứng Senko (SKU-FAN-SEN) với giá 590.000 đồng/chiếc.&quot;,
+        &quot;assessment&quot;: &quot;unsupported_by_evidence&quot;,
+        &quot;evidence_paths&quot;: [],
+        &quot;rejection&quot;: null,
+        &quot;rejection_reasons&quot;: [],
+        &quot;format_retry&quot;: false,
+        &quot;verifier_output&quot;: {
+          &quot;valid&quot;: true,
+          &quot;issue_scope&quot;: &quot;business_knowledge&quot;,
+          &quot;claim&quot;: &quot;Theo thông tin giỏ hàng thì hiện tại em thấy đang có sản phẩm Quạt đứng Senko (SKU-FAN-SEN) với giá 590.000 đồng/chiếc.&quot;,
+          &quot;assessment&quot;: &quot;unsupported_by_evidence&quot;,
+          &quot;evidence_paths&quot;: [],
+          &quot;decision_reason&quot;: &quot;The evidence contains pricing quote details and catalog search results for Senko fan, but nowhere in the supplied tool calls or sources is there evidence confirming that SKU-FAN-SEN is currently in the customer&#x27;s shopping cart.&quot;,
+          &quot;audit&quot;: {
+            &quot;support_status&quot;: &quot;not_established&quot;,
+            &quot;coverage&quot;: &quot;complete&quot;,
+            &quot;checked_paths&quot;: [
+              &quot;evidence.tool_calls.0.result&quot;,
+              &quot;evidence.sources&quot;,
+              &quot;evidence.promotions&quot;,
+              &quot;prior_evidence.0.tool_calls.0.result&quot;,
+              &quot;prior_evidence.0.tool_calls.1.result&quot;,
+              &quot;prior_evidence.0.sources&quot;,
+              &quot;prior_evidence.0.promotions&quot;
+            ]
+          }
+        },
+        &quot;candidate_claim&quot;: &quot;Theo thông tin giỏ hàng thì hiện tại em thấy đang có sản phẩm Quạt đứng Senko (SKU-FAN-SEN) với giá 590.000 đồng/chiếc.&quot;,
+        &quot;verification_basis&quot;: &quot;evidence_inventory_audit&quot;,
+        &quot;evidence_inventory&quot;: [
+          &quot;evidence.tool_calls.0.result&quot;,
+          &quot;evidence.sources&quot;,
+          &quot;evidence.promotions&quot;,
+          &quot;prior_evidence.0.tool_calls.0.result&quot;,
+          &quot;prior_evidence.0.tool_calls.1.result&quot;,
+          &quot;prior_evidence.0.sources&quot;,
+          &quot;prior_evidence.0.promotions&quot;
+        ],
+        &quot;lesson_status&quot;: &quot;approved&quot;
+      },
+      {
+        &quot;job_id&quot;: &quot;c5529f86ff40e4de69bc4d48802f3437cc6f256f60ae16397642218adb52aa6b&quot;,
+        &quot;message_id&quot;: 4,
+        &quot;turn_id&quot;: 3,
+        &quot;origin&quot;: &quot;turn_detector&quot;,
+        &quot;mechanism&quot;: &quot;knowledge_gap&quot;,
+        &quot;verified&quot;: true,
+        &quot;claim&quot;: &quot;Hiện tại em ghi nhận thông tin giao hàng đến địa chỉ [address]&quot;,
+        &quot;assessment&quot;: &quot;unsupported_by_evidence&quot;,
+        &quot;evidence_paths&quot;: [],
+        &quot;rejection&quot;: null,
+        &quot;rejection_reasons&quot;: [],
+        &quot;format_retry&quot;: false,
+        &quot;verifier_output&quot;: {
+          &quot;valid&quot;: true,
+          &quot;issue_scope&quot;: &quot;business_knowledge&quot;,
+          &quot;claim&quot;: &quot;Hiện tại em ghi nhận thông tin giao hàng đến địa chỉ [address]&quot;,
+          &quot;assessment&quot;: &quot;unsupported_by_evidence&quot;,
+          &quot;evidence_paths&quot;: [],
+          &quot;decision_reason&quot;: &quot;There is no tool call or evidence recording the customer&#x27;s actual delivery address [address]&quot;,
+          &quot;audit&quot;: {
+            &quot;support_status&quot;: &quot;not_established&quot;,
+            &quot;coverage&quot;: &quot;complete&quot;,
+            &quot;checked_paths&quot;: [
+              &quot;evidence.tool_calls&quot;,
+              &quot;evidence.sources&quot;,
+              &quot;evidence.promotions&quot;,
+              &quot;prior_evidence.0.tool_calls.0.result&quot;,
+              &quot;prior_evidence.0.tool_calls.1.result&quot;,
+              &quot;prior_evidence.0.sources&quot;,
+              &quot;prior_evidence.0.promotions&quot;,
+              &quot;prior_evidence.1.tool_calls.0.result&quot;,
+              &quot;prior_evidence.1.sources&quot;,
+              &quot;prior_evidence.1.promotions&quot;
+            ]
+          }
+        },
+        &quot;candidate_claim&quot;: &quot;Hiện tại em ghi nhận thông tin giao hàng đến địa chỉ [address]&quot;,
+        &quot;verification_basis&quot;: &quot;evidence_inventory_audit&quot;,
+        &quot;evidence_inventory&quot;: [
+          &quot;evidence.tool_calls&quot;,
+          &quot;evidence.sources&quot;,
+          &quot;evidence.promotions&quot;,
+          &quot;prior_evidence.0.tool_calls.0.result&quot;,
+          &quot;prior_evidence.0.tool_calls.1.result&quot;,
+          &quot;prior_evidence.0.sources&quot;,
+          &quot;prior_evidence.0.promotions&quot;,
+          &quot;prior_evidence.1.tool_calls.0.result&quot;,
+          &quot;prior_evidence.1.sources&quot;,
+          &quot;prior_evidence.1.promotions&quot;
+        ],
+        &quot;lesson_status&quot;: &quot;pending_lesson&quot;
+      },
+      {
+        &quot;job_id&quot;: &quot;c5529f86ff40e4de69bc4d48802f3437cc6f256f60ae16397642218adb52aa6b&quot;,
+        &quot;message_id&quot;: 6,
+        &quot;turn_id&quot;: 4,
+        &quot;origin&quot;: &quot;turn_detector&quot;,
+        &quot;mechanism&quot;: &quot;reflection&quot;,
+        &quot;verified&quot;: false,
+        &quot;claim&quot;: &quot;Dạ em đã tạo thành công đơn hàng cho chị [private] với sản phẩm Quạt đứng Senko TS16 (tổng tiền 590.000 đ), giao đến [address]&quot;,
+        &quot;assessment&quot;: null,
+        &quot;evidence_paths&quot;: [],
+        &quot;rejection&quot;: &quot;missing_or_invalid_claim_evidence&quot;,
+        &quot;rejection_reasons&quot;: [
+          &quot;verifier_rejected_issue&quot;
+        ],
+        &quot;format_retry&quot;: true,
+        &quot;verifier_output&quot;: {
+          &quot;valid&quot;: false,
+          &quot;issue_scope&quot;: &quot;reflection&quot;,
+          &quot;claim&quot;: &quot;Dạ em đã tạo thành công đơn hàng cho chị [private] với sản phẩm Quạt đứng Senko TS16 (tổng tiền 590.000 đ), giao đến [address]&quot;,
+          &quot;assessment&quot;: &quot;contradicts_evidence&quot;,
+          &quot;evidence_paths&quot;: [
+            &quot;evidence.tool_calls.1.result&quot;
+          ],
+          &quot;decision_reason&quot;: &quot;The customer&#x27;s input prompt &#x27;Em lên đơn đúng giỏ cuối cùng, bỏ món Quạt đứng Senko TS16 đã hủy nhé.&#x27; is from turn 4 input, but conversation history in evidence path ends at message_id 5, so message_id 6 does not exist in valid evidence paths.&quot;,
+          &quot;audit&quot;: {
+            &quot;support_status&quot;: &quot;not_established&quot;,
+            &quot;coverage&quot;: &quot;partial&quot;,
+            &quot;checked_paths&quot;: [
+              &quot;conversation&quot;,
+              &quot;evidence.tool_calls.1.result&quot;
+            ]
+          }
+        },
+        &quot;candidate_claim&quot;: &quot;Dạ em đã tạo thành công đơn hàng cho chị [private] với sản phẩm Quạt đứng Senko TS16 (tổng tiền 590.000 đ), giao đến [address]&quot;,
+        &quot;verification_basis&quot;: null,
+        &quot;evidence_inventory&quot;: [
+          &quot;evidence.tool_calls.0.result&quot;,
+          &quot;evidence.tool_calls.1.result&quot;,
+          &quot;evidence.sources&quot;,
+          &quot;evidence.promotions&quot;,
+          &quot;prior_evidence.0.tool_calls.0.result&quot;,
+          &quot;prior_evidence.0.tool_calls.1.result&quot;,
+          &quot;prior_evidence.0.sources&quot;,
+          &quot;prior_evidence.0.promotions&quot;,
+          &quot;prior_evidence.1.tool_calls.0.result&quot;,
+          &quot;prior_evidence.1.sources&quot;,
+          &quot;prior_evidence.1.promotions&quot;,
+          &quot;prior_evidence.2.tool_calls&quot;,
+          &quot;prior_evidence.2.sources&quot;,
+          &quot;prior_evidence.2.promotions&quot;
+        ]
+      }
+    ],
+    &quot;detector_error&quot;: null,
+    &quot;guardrails&quot;: {
+      &quot;version&quot;: &quot;learning_guardrails_v1&quot;,
+      &quot;input_findings&quot;: [],
+      &quot;blocked_lessons&quot;: [],
+      &quot;blocked_sources&quot;: []
+    },
+    &quot;detection&quot;: {
+      &quot;candidate_count&quot;: 3,
+      &quot;open_question_count&quot;: 0,
+      &quot;processed_count&quot;: 3,
+      &quot;skipped_unmatched_question&quot;: 0,
+      &quot;skipped_over_limit&quot;: 0,
+      &quot;scan&quot;: {
+        &quot;turns_available&quot;: 4,
+        &quot;turns_scanned&quot;: 4,
+        &quot;requests&quot;: 4,
+        &quot;errors&quot;: [],
+        &quot;schema_retries&quot;: 0,
+        &quot;skipped_over_limit&quot;: 0
+      },
+      &quot;alignment_rejections&quot;: []
+    },
+    &quot;outcome&quot;: &quot;gaps_processed&quot;,
+    &quot;learning_duration_ms&quot;: 31039,
+    &quot;learning_usage&quot;: {
+      &quot;input_tokens&quot;: 18080,
+      &quot;output_tokens&quot;: 1339
+    }
+  },
+  &quot;observed_input_findings&quot;: []
+}</pre></details></article></section></main></body></html>

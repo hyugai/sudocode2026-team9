@@ -1,0 +1,265 @@
+{
+  "scenario_id": "SC-091",
+  "call": "call_1",
+  "session_id": "self-9687c6580f704e4a94acb561a47ef0ef-SC-091-call_1",
+  "turns": [
+    {
+      "customer": "Tôi là [private], số điện thoại [phone], đang nhắn qua Zalo OA. Chị là [private], con cô Loan. Hai mẹ con dùng chung số này; hôm nay chị hỏi cho riêng chị.",
+      "agent": "Em chào chị [private] ạ. Em đã ghi nhận chị đang nhắn qua Zalo OA và hỏi thông tin cho riêng chị rồi ạ. Hôm nay chị đang cần em hỗ trợ tìm kiếm sản phẩm nào vậy chị?",
+      "latency": {
+        "ttft_ms": 24747,
+        "total_ms": 24747,
+        "ttfa_ms": null,
+        "measurement_mode": "non_streaming",
+        "timing_boundary": "response_ready_before_persistence",
+        "asr_ms": null,
+        "call_brief_ms": 23354,
+        "response_ready_ms": 24747,
+        "persistence_ms": 0.109,
+        "request_complete_ms": 24747.073,
+        "backend_total_ms": 24747.073,
+        "precomputed_parts": []
+      },
+      "lesson_trace": null
+    },
+    {
+      "customer": "Chị quan tâm Máy lọc không khí AirPure X, giá 4.890.000 đồng đúng không? Không phải món mẹ chị từng hỏi.",
+      "agent": "Dạ đúng rồi chị [private] ơi, sản phẩm Máy lọc không khí AirPure X hiện có giá chuẩn là 4.890.000 đồng ạ. \n\nSản phẩm đang sẵn hàng, được miễn phí vận chuyển và kèm quà tặng là 1 màng lọc thay thế (mã GIFT-FILTER) ạ. Chị có muốn em hỗ trợ tư vấn thêm về tính năng của máy hay đặt hàng luôn cho mình không chị?",
+      "latency": {
+        "ttft_ms": 5504,
+        "total_ms": 5504,
+        "ttfa_ms": null,
+        "measurement_mode": "non_streaming",
+        "timing_boundary": "response_ready_before_persistence",
+        "asr_ms": null,
+        "call_brief_ms": null,
+        "response_ready_ms": 5504,
+        "persistence_ms": 0.359,
+        "request_complete_ms": 5504.516,
+        "backend_total_ms": 5504.516,
+        "precomputed_parts": []
+      },
+      "lesson_trace": null
+    },
+    {
+      "customer": "Chị chưa mua ngay. Em lưu đúng hồ sơ [private] giúp chị nhé.",
+      "agent": "Dạ vâng, em đã lưu thông tin chị [private] chưa đặt hàng ngay rồi ạ. Khi nào chị cần tư vấn thêm hoặc quyết định đặt mua máy lọc không khí AirPure X, chị cứ liên hệ lại với em nhé. Em cảm ơn và chúc chị một ngày tốt lành ạ!",
+      "latency": {
+        "ttft_ms": 2972,
+        "total_ms": 2972,
+        "ttfa_ms": null,
+        "measurement_mode": "non_streaming",
+        "timing_boundary": "response_ready_before_persistence",
+        "asr_ms": null,
+        "call_brief_ms": null,
+        "response_ready_ms": 2972,
+        "persistence_ms": 0.08,
+        "request_complete_ms": 2972.164,
+        "backend_total_ms": 2972.164,
+        "precomputed_parts": [
+          "persisted_facts"
+        ]
+      },
+      "lesson_trace": null
+    }
+  ],
+  "generation_context": {
+    "round": 0,
+    "instruction_hash": "9d30a7093911a993d8545de8b61cc6dc8465de67b10fb62b27d9f1bafaf0badf",
+    "applied_patterns": {},
+    "lessons_loaded": false,
+    "lesson_sources": [],
+    "lesson_files": [],
+    "instruction_root": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round0\\instructions"
+  },
+  "evaluation_evidence": [
+    {
+      "turn_id": 1,
+      "agent_response": "Em chào chị [private] ạ. Em đã ghi nhận chị đang nhắn qua Zalo OA và hỏi thông tin cho riêng chị rồi ạ. Hôm nay chị đang cần em hỗ trợ tìm kiếm sản phẩm nào vậy chị?",
+      "tool_calls": [],
+      "sources": [],
+      "promotions": []
+    },
+    {
+      "turn_id": 2,
+      "agent_response": "Dạ đúng rồi chị [private] ơi, sản phẩm Máy lọc không khí AirPure X hiện có giá chuẩn là 4.890.000 đồng ạ. \n\nSản phẩm đang sẵn hàng, được miễn phí vận chuyển và kèm quà tặng là 1 màng lọc thay thế (mã GIFT-FILTER) ạ. Chị có muốn em hỗ trợ tư vấn thêm về tính năng của máy hay đặt hàng luôn cho mình không chị?",
+      "tool_calls": [
+        {
+          "name": "catalog.search",
+          "args": {
+            "query": "Máy lọc không khí AirPure X",
+            "on": "2026-10-15"
+          },
+          "result": {
+            "items": [
+              {
+                "sku": "SKU-AP-X",
+                "name": "[private]",
+                "category": "gia-[private]/may-loc-khong-khi",
+                "brand": "AirPure",
+                "list_price_vnd": 4890000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "features": "HEPA H13, cảm biến PM2.5, chế độ ngủ",
+                  "room_area_m2": 25,
+                  "child_safe_lock": false,
+                  "warranty_months": 24
+                },
+                "variants": []
+              }
+            ],
+            "total": 1
+          }
+        },
+        {
+          "name": "inventory.check",
+          "args": {
+            "sku": "SKU-AP-X",
+            "on": "2026-10-15"
+          },
+          "result": {
+            "sku": "SKU-AP-X",
+            "found": true,
+            "in_stock": true,
+            "qty": 40,
+            "discontinued": false
+          }
+        },
+        {
+          "name": "pricing.get_quote",
+          "args": {
+            "on": "2026-10-15",
+            "customer_phone": "[private]",
+            "customer_id": "[private]",
+            "sku": "SKU-AP-X",
+            "qty": 1
+          },
+          "result": {
+            "sku": "SKU-AP-X",
+            "list_price_vnd": 4890000,
+            "final_price_vnd": 4890000,
+            "applied_promos": [
+              {
+                "promo_code": "COD-0",
+                "type": "freecod",
+                "discount_vnd": 0
+              },
+              {
+                "promo_code": "GIFT-FILTER",
+                "type": "gift",
+                "discount_vnd": 0,
+                "gift_sku": "SKU-AP-FLT-X"
+              }
+            ],
+            "expired_promos": [
+              "AP-SEP"
+            ],
+            "ineligible_promos": [
+              {
+                "promo_code": "AIR-2ND-50",
+                "reason": "min_qty"
+              },
+              {
+                "promo_code": "NAM-SHIP0",
+                "reason": "region"
+              },
+              {
+                "promo_code": "TRADE-IN-AP",
+                "reason": "requires_owned_sku"
+              }
+            ],
+            "not_applied_exclusive": [],
+            "freeship": true
+          }
+        }
+      ],
+      "sources": [
+        {
+          "sku": "SKU-AP-X",
+          "name": "[private]",
+          "category": "gia-[private]/may-loc-khong-khi",
+          "brand": "AirPure",
+          "list_price_vnd": 4890000.0,
+          "discontinued": false,
+          "successor_sku": null,
+          "attributes": {
+            "features": "HEPA H13, cảm biến PM2.5, chế độ ngủ",
+            "room_area_m2": 25,
+            "child_safe_lock": false,
+            "warranty_months": 24
+          },
+          "variants": []
+        }
+      ],
+      "promotions": []
+    },
+    {
+      "turn_id": 3,
+      "agent_response": "Dạ vâng, em đã lưu thông tin chị [private] chưa đặt hàng ngay rồi ạ. Khi nào chị cần tư vấn thêm hoặc quyết định đặt mua máy lọc không khí AirPure X, chị cứ liên hệ lại với em nhé. Em cảm ơn và chúc chị một ngày tốt lành ạ!",
+      "tool_calls": [],
+      "sources": [
+        {
+          "sku": "SKU-AP-X",
+          "name": "[private]",
+          "category": "gia-[private]/may-loc-khong-khi",
+          "brand": "AirPure",
+          "list_price_vnd": 4890000.0,
+          "discontinued": false,
+          "successor_sku": null,
+          "attributes": {
+            "features": "HEPA H13, cảm biến PM2.5, chế độ ngủ",
+            "room_area_m2": 25,
+            "child_safe_lock": false,
+            "warranty_months": 24
+          },
+          "variants": []
+        }
+      ],
+      "promotions": []
+    }
+  ],
+  "job": {
+    "status": "done",
+    "job_id": "fbcf11b787de4ba27611c0f01565a71abed686fe7c99f19e84aa2eae8404c85f",
+    "error": null
+  },
+  "learning": {
+    "job_id": "fbcf11b787de4ba27611c0f01565a71abed686fe7c99f19e84aa2eae8404c85f",
+    "gaps": [],
+    "scope": "knowledge_gap_and_reflection_v1",
+    "evaluation_cases": [],
+    "out_of_scope": [],
+    "issue_reviews": [],
+    "detector_error": null,
+    "guardrails": {
+      "version": "learning_guardrails_v1",
+      "input_findings": [],
+      "blocked_lessons": [],
+      "blocked_sources": []
+    },
+    "detection": {
+      "candidate_count": 0,
+      "open_question_count": 0,
+      "processed_count": 0,
+      "skipped_unmatched_question": 0,
+      "skipped_over_limit": 0,
+      "scan": {
+        "turns_available": 3,
+        "turns_scanned": 3,
+        "requests": 3,
+        "errors": [],
+        "schema_retries": 0,
+        "skipped_over_limit": 0
+      },
+      "alignment_rejections": []
+    },
+    "outcome": "no_candidates",
+    "learning_duration_ms": 21248,
+    "learning_usage": {
+      "input_tokens": 3593,
+      "output_tokens": 18
+    }
+  },
+  "artifact_changes": []
+}

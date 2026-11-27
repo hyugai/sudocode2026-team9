@@ -1,0 +1,150 @@
+{
+  "job_id": "d827a3f0d62f1bc219891f3b807739bd04017a76c78bfa5de4da07f24a9f3b2a",
+  "gaps": [
+    {
+      "id": "85d8954991cf5f9c9a36ec67917032d4a88d71c4e4e34fb0b694d41eaf118095",
+      "status": "pending_remediation"
+    },
+    {
+      "id": "e5ac068d75ea30deddf2537bb7c6686a3521f0cf43b0b01379ac13b4198116f7",
+      "status": "pending_evidence"
+    }
+  ],
+  "scope": "knowledge_gap_and_reflection_v1",
+  "evaluation_cases": [
+    {
+      "id": "8fc0c34af34d9d377cecef57abe0f0161f090f5520c2f09799ffeae082ae0457",
+      "gap_id": "85d8954991cf5f9c9a36ec67917032d4a88d71c4e4e34fb0b694d41eaf118095",
+      "turn_id": 2,
+      "question": "Giá 4.890.000 đồng thì chị đồng ý. Địa chỉ [address]",
+      "reason": "unsupported_claim",
+      "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments."
+    }
+  ],
+  "out_of_scope": [],
+  "issue_reviews": [
+    {
+      "job_id": "d827a3f0d62f1bc219891f3b807739bd04017a76c78bfa5de4da07f24a9f3b2a",
+      "message_id": 2,
+      "turn_id": 2,
+      "origin": "turn_detector",
+      "mechanism": "knowledge_gap",
+      "verified": true,
+      "claim": "ở lần gọi trước em đã chốt thành công đơn hàng **[order_id]** cho chị rồi ạ.",
+      "assessment": "unsupported_by_evidence",
+      "evidence_paths": [],
+      "rejection": null,
+      "rejection_reasons": [],
+      "format_retry": false,
+      "verifier_output": {
+        "valid": true,
+        "issue_scope": "business_knowledge",
+        "claim": "ở lần gọi trước em đã chốt thành công đơn hàng **[order_id]** cho chị rồi ạ.",
+        "assessment": "unsupported_by_evidence",
+        "evidence_paths": [],
+        "decision_reason": "The evidence does not confirm that order [order_id] was successfully created during a prior call rather than in turn 1.",
+        "audit": {
+          "support_status": "not_established",
+          "coverage": "complete",
+          "checked_paths": [
+            "evidence.tool_calls.0.result",
+            "evidence.tool_calls.1.result",
+            "evidence.sources",
+            "evidence.promotions",
+            "prior_evidence.0.tool_calls.0.result",
+            "prior_evidence.0.tool_calls.1.result",
+            "prior_evidence.0.tool_calls.2.result",
+            "prior_evidence.0.tool_calls.3.result",
+            "prior_evidence.0.sources",
+            "prior_evidence.0.promotions"
+          ]
+        }
+      },
+      "candidate_claim": "ở lần gọi trước em đã chốt thành công đơn hàng [order_id] cho chị rồi ạ.",
+      "verification_basis": "evidence_inventory_audit",
+      "evidence_inventory": [
+        "evidence.tool_calls.0.result",
+        "evidence.tool_calls.1.result",
+        "evidence.sources",
+        "evidence.promotions",
+        "prior_evidence.0.tool_calls.0.result",
+        "prior_evidence.0.tool_calls.1.result",
+        "prior_evidence.0.tool_calls.2.result",
+        "prior_evidence.0.tool_calls.3.result",
+        "prior_evidence.0.sources",
+        "prior_evidence.0.promotions"
+      ],
+      "lesson_status": "approved"
+    },
+    {
+      "job_id": "d827a3f0d62f1bc219891f3b807739bd04017a76c78bfa5de4da07f24a9f3b2a",
+      "message_id": 2,
+      "turn_id": 2,
+      "origin": "turn_detector",
+      "mechanism": "knowledge_gap",
+      "verified": false,
+      "claim": "Đơn hàng 1 sản phẩm SKU-AP-X với giá 4.890.000đ (được miễn phí vận chuyển) sẽ được giao đến [address]",
+      "assessment": null,
+      "evidence_paths": [],
+      "rejection": "missing_or_invalid_claim_evidence",
+      "rejection_reasons": [
+        "verifier_rejected_issue"
+      ],
+      "format_retry": false,
+      "verifier_output": {
+        "valid": false,
+        "issue_scope": "business_knowledge",
+        "claim": "Đơn hàng 1 sản phẩm SKU-AP-X với giá 4.890.000đ (được miễn phí vận chuyển) sẽ được giao đến [address]",
+        "assessment": "contradicts_evidence",
+        "evidence_paths": [
+          "prior_evidence.0.tool_calls.3.result.order_id",
+          "prior_evidence.0.tool_calls.3.result.total_vnd"
+        ],
+        "decision_reason": "The claim is supported by prior evidence (order.create result shows order [order_id] created for SKU-AP-X at 4,890,000 VND with promo NAM-SHIP0 for freeship to [address[address]"
+      },
+      "candidate_claim": "Đơn hàng 1 sản phẩm SKU-AP-X với giá 4.890.000đ (được miễn phí vận chuyển) sẽ được giao đến [address]",
+      "verification_basis": null,
+      "evidence_inventory": [
+        "evidence.tool_calls.0.result",
+        "evidence.tool_calls.1.result",
+        "evidence.sources",
+        "evidence.promotions",
+        "prior_evidence.0.tool_calls.0.result",
+        "prior_evidence.0.tool_calls.1.result",
+        "prior_evidence.0.tool_calls.2.result",
+        "prior_evidence.0.tool_calls.3.result",
+        "prior_evidence.0.sources",
+        "prior_evidence.0.promotions"
+      ]
+    }
+  ],
+  "detector_error": null,
+  "guardrails": {
+    "version": "learning_guardrails_v1",
+    "input_findings": [],
+    "blocked_lessons": [],
+    "blocked_sources": []
+  },
+  "detection": {
+    "candidate_count": 2,
+    "open_question_count": 0,
+    "processed_count": 2,
+    "skipped_unmatched_question": 0,
+    "skipped_over_limit": 0,
+    "scan": {
+      "turns_available": 2,
+      "turns_scanned": 2,
+      "requests": 2,
+      "errors": [],
+      "schema_retries": 0,
+      "skipped_over_limit": 0
+    },
+    "alignment_rejections": []
+  },
+  "outcome": "gaps_processed",
+  "learning_duration_ms": 11030,
+  "learning_usage": {
+    "input_tokens": 10602,
+    "output_tokens": 668
+  }
+}

@@ -1,0 +1,158 @@
+{
+  "id": "c00902fa1419b5b558cdf371d877e1f30605afe637b516900f11b303a56144e4",
+  "status": "done",
+  "attempts": 1,
+  "snapshot": {
+    "session": "a6829ec3b11988fde8ad3620a56f0939a6f076ccb5659fb60241974b1cec0199",
+    "revision": 4,
+    "messages": [
+      {
+        "message_id": 0,
+        "role": "customer",
+        "content": "Chị gọi lại chuyện hôm trước, vẫn đang cân nhắc món đã hỏi."
+      },
+      {
+        "message_id": 1,
+        "role": "agent",
+        "content": "Em chào chị [private] ạ! Em nhớ hôm trước chị có đang cân nhắc mẫu giày Sneaker Casual (mã size 40 màu đen) và còn băn khoăn về điều kiện đổi size đúng không chị?\n\nKhông biết hiện tại chị đã sẵn sàng để em hỗ trợ tư vấn chi tiết hơn hoặc lên đơn cho chị chưa ạ?"
+      },
+      {
+        "message_id": 2,
+        "role": "customer",
+        "content": "Nếu mua mới hôm nay thì được đổi trong 14 ngày và mất phí 20 nghìn phải không? Hình như đó là bài cũ."
+      },
+      {
+        "message_id": 3,
+        "role": "agent",
+        "content": "Dạ chị [private] ơi, thông tin 14 ngày và phí 20.000đ đúng là quy định cũ rồi ạ. \n\nTheo chính sách cập nhật mới nhất từ ngày 01/10/2026, khi chị mua mới hôm nay, thời hạn đổi trả sẽ áp dụng trong vòng **7 ngày** kể từ ngày nhận hàng. Đặc biệt, chị sẽ được **miễn phí** đổi size lần đầu tiên ạ.\n\nChị có muốn em hỗ trợ lên đơn cho đôi Sneaker Casual size 40 màu đen này luôn không chị?"
+      },
+      {
+        "message_id": 4,
+        "role": "customer",
+        "content": "Nếu hàng chưa dùng, còn tem hộp và đổi size lần đầu thì chính sách hiện tại thế nào?"
+      },
+      {
+        "message_id": 5,
+        "role": "agent",
+        "content": "Dạ chị [private] ơi, với sản phẩm chưa qua sử dụng, còn nguyên tem hộp và có hóa đơn/mã đơn hàng thì hoàn toàn đủ điều kiện đổi trả ạ. \n\nTheo chính sách mới nhất, khi chị đổi size lần đầu tiên cho cùng đơn hàng thì sẽ được **miễn phí 100%** và shop sẽ chịu phí vận chuyển hai chiều ạ. Chị chỉ cần lưu ý là mình hỗ trợ đổi trong vòng **7 ngày** kể từ khi nhận hàng thôi ạ.\n\nChị có cần em hỗ trợ kiểm tra thêm thông tin gì về sản phẩm nữa không ạ?"
+      },
+      {
+        "message_id": 6,
+        "role": "customer",
+        "content": "Chị hiểu rồi, để xem thêm; chưa lên đơn và chưa hẹn gọi lại nhé."
+      },
+      {
+        "message_id": 7,
+        "role": "agent",
+        "content": "Dạ em hiểu rồi ạ. Chị [private] cứ xem thêm thoải mái nhé. Khi nào cần hỗ trợ thông tin hoặc đặt hàng, chị cứ liên hệ lại với bên em bất cứ lúc nào ạ. Em chúc chị một ngày vui vẻ!"
+      }
+    ],
+    "open_questions": [],
+    "feedback": [],
+    "evidence_coverage": "per_turn_evidence",
+    "workflow_version": 4,
+    "turn_evidence": [
+      {
+        "turn_id": 1,
+        "agent_response": "Em chào chị [private] ạ! Em nhớ hôm trước chị có đang cân nhắc mẫu giày Sneaker Casual (mã size 40 màu đen) và còn băn khoăn về điều kiện đổi size đúng không chị?\n\nKhông biết hiện tại chị đã sẵn sàng để em hỗ trợ tư vấn chi tiết hơn hoặc lên đơn cho chị chưa ạ?",
+        "tool_calls": [],
+        "sources": [],
+        "promotions": []
+      },
+      {
+        "turn_id": 2,
+        "agent_response": "Dạ chị [private] ơi, thông tin 14 ngày và phí 20.000đ đúng là quy định cũ rồi ạ. \n\nTheo chính sách cập nhật mới nhất từ ngày 01/10/2026, khi chị mua mới hôm nay, thời hạn đổi trả sẽ áp dụng trong vòng **7 ngày** kể từ ngày nhận hàng. Đặc biệt, chị sẽ được **miễn phí** đổi size lần đầu tiên ạ.\n\nChị có muốn em hỗ trợ lên đơn cho đôi Sneaker Casual size 40 màu đen này luôn không chị?",
+        "tool_calls": [
+          {
+            "name": "policy.search",
+            "args": {
+              "query": "Nếu mua mới hôm nay thì được đổi trong 14 ngày và mất phí 20 nghìn phải không? Hình như đó là bài cũ.",
+              "k": 3,
+              "product_sku": "SKU-SN-CAS-40-DEN",
+              "as_of": "2026-10-17"
+            },
+            "result": {
+              "query": "Nếu mua mới hôm nay thì được đổi trong 14 ngày và mất phí 20 nghìn phải không? Hình như đó là bài cũ.",
+              "as_of": "2026-10-17",
+              "product_sku": "SKU-SN-CAS-40-DEN",
+              "count": 3,
+              "chunks": [
+                {
+                  "chunk_id": "DT-06",
+                  "content": "Sản phẩm hư hỏng do người dùng (rơi vỡ, vào nước, dùng sai điện áp). Sản phẩm mua trong chương trình xả kho ghi rõ \"không đổi trả\". Quá 7 ngày kể từ ngày nhận (trừ lỗi nhà sản xuất).",
+                  "source_file": "chinh-sach-doi-tra.md",
+                  "section": "[DT-06] Trường hợp không được đổi trả"
+                },
+                {
+                  "chunk_id": "CL-01",
+                  "content": "Thay thế phiên bản 2026-06. Thay đổi: thời hạn đổi trả 14 → **7 ngày**; đổi size lần đầu **miễn phí** (trước: 20.000đ); hoàn tiền 7 → **3–5 ngày làm việc**; lỗi nhà sản xuất đổi mới 15 → **30 ngày** (gia dụng, mẹ & bé). Đơn tạo trước 01/10/2026 vẫn áp dụng bản cũ.",
+                  "source_file": "changelog.md",
+                  "section": "[CL-01] 01/10/2026 — Chính sách đổi trả phiên bản 2026-10"
+                },
+                {
+                  "chunk_id": "DT-01",
+                  "content": "Khách hàng được đổi hoặc trả sản phẩm trong vòng **7 ngày** kể từ ngày nhận hàng (tính theo ngày ký nhận trên đơn vận chuyển). Với ngành hàng gia dụng và mẹ & bé có lỗi kỹ thuật từ nhà sản xuất, thời hạn đổi mới là **30 ngày**.",
+                  "source_file": "chinh-sach-doi-tra.md",
+                  "section": "[DT-01] Thời hạn đổi trả"
+                }
+              ]
+            }
+          }
+        ],
+        "sources": [],
+        "promotions": []
+      },
+      {
+        "turn_id": 3,
+        "agent_response": "Dạ chị [private] ơi, với sản phẩm chưa qua sử dụng, còn nguyên tem hộp và có hóa đơn/mã đơn hàng thì hoàn toàn đủ điều kiện đổi trả ạ. \n\nTheo chính sách mới nhất, khi chị đổi size lần đầu tiên cho cùng đơn hàng thì sẽ được **miễn phí 100%** và shop sẽ chịu phí vận chuyển hai chiều ạ. Chị chỉ cần lưu ý là mình hỗ trợ đổi trong vòng **7 ngày** kể từ khi nhận hàng thôi ạ.\n\nChị có cần em hỗ trợ kiểm tra thêm thông tin gì về sản phẩm nữa không ạ?",
+        "tool_calls": [
+          {
+            "name": "policy.search",
+            "args": {
+              "query": "Nếu hàng chưa dùng, còn tem hộp và đổi size lần đầu thì chính sách hiện tại thế nào?",
+              "k": 3,
+              "product_sku": "SKU-SN-CAS-40-DEN",
+              "as_of": "2026-10-17"
+            },
+            "result": {
+              "query": "Nếu hàng chưa dùng, còn tem hộp và đổi size lần đầu thì chính sách hiện tại thế nào?",
+              "as_of": "2026-10-17",
+              "product_sku": "SKU-SN-CAS-40-DEN",
+              "count": 3,
+              "chunks": [
+                {
+                  "chunk_id": "DT-02",
+                  "content": "Sản phẩm còn nguyên tem, nhãn, hộp, chưa qua sử dụng (giày/áo chưa giặt, chưa có dấu hiệu mòn đế). Có hóa đơn hoặc mã đơn hàng. Sản phẩm thuộc nhóm đồ lót, bình sữa, núm ti đã bóc seal **không** được đổi trả vì lý do vệ sinh.",
+                  "source_file": "chinh-sach-doi-tra.md",
+                  "section": "[DT-02] Điều kiện đổi trả"
+                },
+                {
+                  "chunk_id": "CL-01",
+                  "content": "Thay thế phiên bản 2026-06. Thay đổi: thời hạn đổi trả 14 → **7 ngày**; đổi size lần đầu **miễn phí** (trước: 20.000đ); hoàn tiền 7 → **3–5 ngày làm việc**; lỗi nhà sản xuất đổi mới 15 → **30 ngày** (gia dụng, mẹ & bé). Đơn tạo trước 01/10/2026 vẫn áp dụng bản cũ.",
+                  "source_file": "changelog.md",
+                  "section": "[CL-01] 01/10/2026 — Chính sách đổi trả phiên bản 2026-10"
+                },
+                {
+                  "chunk_id": "DT-03",
+                  "content": "Đổi size hoặc màu lần **đầu tiên** cho cùng một đơn hàng: **miễn phí**, shop chịu phí vận chuyển hai chiều. Từ lần đổi thứ hai trở đi: khách chịu phí vận chuyển 30.000đ/chiều. Điều kiện: size/màu mới còn hàng; nếu hết hàng, khách được chọn sản phẩm khác cùng giá hoặc hoàn tiền.",
+                  "source_file": "chinh-sach-doi-tra.md",
+                  "section": "[DT-03] Đổi size / màu (thời [private])"
+                }
+              ]
+            }
+          }
+        ],
+        "sources": [],
+        "promotions": []
+      },
+      {
+        "turn_id": 4,
+        "agent_response": "Dạ em hiểu rồi ạ. Chị [private] cứ xem thêm thoải mái nhé. Khi nào cần hỗ trợ thông tin hoặc đặt hàng, chị cứ liên hệ lại với bên em bất cứ lúc nào ạ. Em chúc chị một ngày vui vẻ!",
+        "tool_calls": [],
+        "sources": [],
+        "promotions": []
+      }
+    ]
+  },
+  "error": null
+}

@@ -1,0 +1,22 @@
+{
+  "id": "d9eb9cd68d2cb75188336a8bd59fab7eb5d622a72af20a057a7afc2a3ba4ff19",
+  "question": "Đổi size và đổi trả áp dụng điều kiện nào?",
+  "occurrences": [
+    "e8b1ec7a4d5ccc7005d575724e613818c45309b0c5271211cc96ff9e4102ee87"
+  ],
+  "reason": "unsupported_claim",
+  "mechanism": "knowledge_gap",
+  "status": "pending_remediation",
+  "evidence_refs": [
+    {
+      "job_id": "e8b1ec7a4d5ccc7005d575724e613818c45309b0c5271211cc96ff9e4102ee87",
+      "message_id": 2,
+      "turn_id": 2,
+      "origin": "turn_detector"
+    }
+  ],
+  "pattern_ref": "d9eb9cd68d2cb75188336a8bd59fab7eb5d622a72af20a057a7afc2a3ba4ff19",
+  "test_refs": [
+    "d9eb9cd68d2cb75188336a8bd59fab7eb5d622a72af20a057a7afc2a3ba4ff19"
+  ]
+}

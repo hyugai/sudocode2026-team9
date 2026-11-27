@@ -1,0 +1,46 @@
+{
+  "id": "2a96a5c6b1bb70bb9595ae56f288a09ac26c7034213912ff908c2712ec975a41",
+  "reason": "unsupported_claim",
+  "pattern": "Do not state an unverified claim as a fact.",
+  "status": "approved",
+  "scope": "general",
+  "mechanism": "knowledge_gap",
+  "criterion": "Do not state an unverified claim as a fact.",
+  "evidence_refs": [
+    {
+      "job_id": "e08c6a4dfacceb087dcffbeebbe302a25178389c8e6c0b1dfeebc8205e9a1c5f",
+      "message_id": 0,
+      "turn_id": 1,
+      "origin": "turn_detector"
+    }
+  ],
+  "assessment": "unsupported_by_evidence",
+  "report_ref": "e08c6a4dfacceb087dcffbeebbe302a25178389c8e6c0b1dfeebc8205e9a1c5f",
+  "lesson": {
+    "title": "Verify stored customer history before claiming saved details",
+    "when": "A customer asks if their previous conversation history or specific question is saved and available in the system",
+    "do": "Check verified sources or tool outputs for historical logs before claiming knowledge of the customer's prior question",
+    "otherwise": "State clearly that the prior information is not available or verified, without making up or assuming past context",
+    "triggers": [
+      "hỏi về câu hỏi lần trước",
+      "kiểm tra lịch sử tư vấn Zalo OA",
+      "xác nhận thông tin cũ của khách hàng",
+      "previous question saved"
+    ],
+    "id": "e2fa0e15e8a7cbbb0df6f58d9e77759774f24cbeb1505c4e65ab2047761ade07",
+    "status": "approved",
+    "scope": "general",
+    "mechanism": "knowledge_gap",
+    "source_refs": [
+      {
+        "job_id": "e08c6a4dfacceb087dcffbeebbe302a25178389c8e6c0b1dfeebc8205e9a1c5f",
+        "message_id": 0,
+        "turn_id": 1,
+        "origin": "turn_detector"
+      }
+    ],
+    "version": 2
+  },
+  "lesson_path": "lessons\\approved\\e2fa0e15e8a7cbbb0df6f58d9e77759774f24cbeb1505c4e65ab2047761ade07.md",
+  "lesson_hash": "9c544fd8e50fb9cbddc0d24a41fb6f80d42a355c714e1a4299c6223fe4e27022"
+}

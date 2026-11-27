@@ -1,0 +1,46 @@
+{
+  "id": "58efe0c7de9ba8679dcab2859648730d98c05df06e33aad607f79af7a285e5d3",
+  "reason": "unsupported_claim",
+  "pattern": "Do not state an unverified claim as a fact.",
+  "status": "approved",
+  "scope": "general",
+  "mechanism": "knowledge_gap",
+  "criterion": "Do not state an unverified claim as a fact.",
+  "evidence_refs": [
+    {
+      "job_id": "caefb64fa427dbd76044a7093dc4783a360cb862f345c0717651890f627404c4",
+      "message_id": 2,
+      "turn_id": 2,
+      "origin": "turn_detector"
+    }
+  ],
+  "assessment": "unsupported_by_evidence",
+  "report_ref": "caefb64fa427dbd76044a7093dc4783a360cb862f345c0717651890f627404c4",
+  "lesson": {
+    "title": "Verify Product Request Before Confirming Order Changes",
+    "when": "A customer requests to add or change an item in their selection to a product that has not been retrieved from sources or catalog searches in the conversation.",
+    "do": "Search catalog sources to verify product existence, specifications, price, and availability before confirming the item update.",
+    "otherwise": "State that you need to check the product information first or express uncertainty regarding item availability.",
+    "triggers": [
+      "customer changes product choice",
+      "add new item to cart",
+      "đổi sang sản phẩm khác",
+      "thay bằng sản phẩm mới"
+    ],
+    "id": "6b279393ba00d688163b02eb4600ee2bf0f957d5ad048d71703e46ba140bb722",
+    "status": "approved",
+    "scope": "general",
+    "mechanism": "knowledge_gap",
+    "source_refs": [
+      {
+        "job_id": "caefb64fa427dbd76044a7093dc4783a360cb862f345c0717651890f627404c4",
+        "message_id": 2,
+        "turn_id": 2,
+        "origin": "turn_detector"
+      }
+    ],
+    "version": 2
+  },
+  "lesson_path": "lessons\\approved\\6b279393ba00d688163b02eb4600ee2bf0f957d5ad048d71703e46ba140bb722.md",
+  "lesson_hash": "fc26a1f20867c6924ba69ae0c06dfaa18ad587346a624b48685484b5a90dde4c"
+}

@@ -1,0 +1,148 @@
+{
+  "job_id": "20a24571f0768b695365bef0f86f2b864cc1705d78fe25c0eeda2c80812f03bf",
+  "gaps": [
+    {
+      "id": "7b1564a4697f4dd10bf0b4b54c3f8a4013bc8517e444a215a01fc7e869c27ff3",
+      "status": "pending_remediation"
+    },
+    {
+      "id": "ff9135283dcd7518f2c9d8bdbcc101091c384b3c6e36b1d168c7efcf72f843e0",
+      "status": "pending_remediation"
+    }
+  ],
+  "scope": "knowledge_gap_and_reflection_v1",
+  "evaluation_cases": [
+    {
+      "id": "5ca131b94047de05e8812c4c24454fce460dde4b35309b640931befa73ad54d3",
+      "gap_id": "7b1564a4697f4dd10bf0b4b54c3f8a4013bc8517e444a215a01fc7e869c27ff3",
+      "turn_id": 1,
+      "question": "Chị gọi lại chuyện hôm trước. Mẫu, số lượng, địa chỉ [address]",
+      "reason": "unsupported_claim",
+      "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments."
+    },
+    {
+      "id": "5181523d82a045b81e36d381966b832856d4d7a67e5a2c28882a793352267e6e",
+      "gap_id": "ff9135283dcd7518f2c9d8bdbcc101091c384b3c6e36b1d168c7efcf72f843e0",
+      "turn_id": 2,
+      "question": "Chị còn bận, em gọi lại lúc 10 giờ ngày 2026-10-19. Đừng bắt chị nói lại thông tin nữa nhé.",
+      "reason": "unsupported_claim",
+      "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments."
+    }
+  ],
+  "out_of_scope": [],
+  "issue_reviews": [
+    {
+      "job_id": "20a24571f0768b695365bef0f86f2b864cc1705d78fe25c0eeda2c80812f03bf",
+      "message_id": 0,
+      "turn_id": 1,
+      "origin": "turn_detector",
+      "mechanism": "knowledge_gap",
+      "verified": true,
+      "claim": "mẫu SKU-AP-X hôm trước",
+      "assessment": "unsupported_by_evidence",
+      "evidence_paths": [],
+      "rejection": null,
+      "rejection_reasons": [],
+      "format_retry": false,
+      "verifier_output": {
+        "valid": true,
+        "issue_scope": "business_knowledge",
+        "claim": "mẫu SKU-AP-X hôm trước",
+        "assessment": "unsupported_by_evidence",
+        "evidence_paths": [],
+        "decision_reason": "The tool call order.status returned an empty list of orders for the customer, so there is no evidence in the turn context or order history establishing that SKU-AP-X was the product previously ordered or discussed.",
+        "audit": {
+          "support_status": "not_established",
+          "coverage": "complete",
+          "checked_paths": [
+            "evidence.tool_calls.0.result",
+            "evidence.sources",
+            "evidence.promotions"
+          ]
+        }
+      },
+      "candidate_claim": "mẫu SKU-AP-X hôm trước",
+      "verification_basis": "evidence_inventory_audit",
+      "evidence_inventory": [
+        "evidence.tool_calls.0.result",
+        "evidence.sources",
+        "evidence.promotions"
+      ],
+      "lesson_status": "approved"
+    },
+    {
+      "job_id": "20a24571f0768b695365bef0f86f2b864cc1705d78fe25c0eeda2c80812f03bf",
+      "message_id": 2,
+      "turn_id": 2,
+      "origin": "turn_detector",
+      "mechanism": "knowledge_gap",
+      "verified": true,
+      "claim": "Tất cả thông tin về mẫu sản phẩm, địa chỉ [address]",
+      "assessment": "unsupported_by_evidence",
+      "evidence_paths": [],
+      "rejection": null,
+      "rejection_reasons": [],
+      "format_retry": false,
+      "verifier_output": {
+        "valid": true,
+        "issue_scope": "business_knowledge",
+        "claim": "Tất cả thông tin về mẫu sản phẩm, địa chỉ [address]",
+        "assessment": "unsupported_by_evidence",
+        "evidence_paths": [],
+        "decision_reason": "The agent claims that product model and address [address]",
+        "audit": {
+          "support_status": "not_established",
+          "coverage": "complete",
+          "checked_paths": [
+            "evidence.tool_calls.0.result",
+            "evidence.sources",
+            "evidence.promotions",
+            "prior_evidence.0.tool_calls.0.result",
+            "prior_evidence.0.sources",
+            "prior_evidence.0.promotions"
+          ]
+        }
+      },
+      "candidate_claim": "Tất cả thông tin về mẫu sản phẩm, địa chỉ [address]",
+      "verification_basis": "evidence_inventory_audit",
+      "evidence_inventory": [
+        "evidence.tool_calls.0.result",
+        "evidence.sources",
+        "evidence.promotions",
+        "prior_evidence.0.tool_calls.0.result",
+        "prior_evidence.0.sources",
+        "prior_evidence.0.promotions"
+      ],
+      "lesson_status": "pending_lesson"
+    }
+  ],
+  "detector_error": null,
+  "guardrails": {
+    "version": "learning_guardrails_v1",
+    "input_findings": [],
+    "blocked_lessons": [],
+    "blocked_sources": []
+  },
+  "detection": {
+    "candidate_count": 2,
+    "open_question_count": 0,
+    "processed_count": 2,
+    "skipped_unmatched_question": 0,
+    "skipped_over_limit": 0,
+    "scan": {
+      "turns_available": 2,
+      "turns_scanned": 2,
+      "requests": 2,
+      "errors": [],
+      "schema_retries": 0,
+      "skipped_over_limit": 0
+    },
+    "alignment_rejections": []
+  },
+  "outcome": "gaps_processed",
+  "learning_duration_ms": 11385,
+  "learning_usage": {
+    "input_tokens": 5859,
+    "output_tokens": 653
+  }
+}

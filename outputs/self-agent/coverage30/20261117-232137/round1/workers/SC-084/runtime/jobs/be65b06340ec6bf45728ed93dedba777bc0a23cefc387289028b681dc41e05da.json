@@ -1,0 +1,194 @@
+{
+  "id": "be65b06340ec6bf45728ed93dedba777bc0a23cefc387289028b681dc41e05da",
+  "status": "done",
+  "attempts": 1,
+  "snapshot": {
+    "session": "784927f4bbaeba130d471ecd0d81b909fb5f6440f736a91bd59486e7391e6231",
+    "revision": 3,
+    "messages": [
+      {
+        "message_id": 0,
+        "role": "customer",
+        "content": "Tôi là [private], số điện thoại [private], đang nhắn qua Zalo OA. Anh [private], đã nhắn Fanpage. Sao giá ở kênh này khác mức đã báo trong chat?"
+      },
+      {
+        "message_id": 1,
+        "role": "agent",
+        "content": "Dạ em chào anh [private]. Em rất tiếc vì sự chênh lệch giá giữa các kênh làm anh bận tâm ạ. \n\nTheo thông tin ghi nhận trên hệ thống hôm nay, mã giảm giá trước đó là `RUN2-SALE` đã hết hạn. Hiện tại, sản phẩm giày chạy bộ màu xám size 41 (SKU-SN-RUN2-41-XAM) đang áp dụng chương trình khuyến mãi mới với mã `RUN-10` (giảm 10%), nên mức giá hiện tại của sản phẩm là 1.521.000đ (giá gốc 1.690.000đ) ạ.\n\nAnh [private] có muốn em hỗ trợ lên đơn luôn với mức giá ưu đãi hiện tại này không ạ?"
+      },
+      {
+        "message_id": 2,
+        "role": "customer",
+        "content": "Anh muốn em nhắc lại giá cũ, xin lỗi và giải thích rõ chương trình nào đã thay đổi."
+      },
+      {
+        "message_id": 3,
+        "role": "agent",
+        "content": "Dạ em rất xin lỗi anh [private] vì sự chênh lệch giá và bất tiện này khiến anh bận tâm ạ. \n\nHiện tại trên hệ thống ghi nhận mã ưu đãi cũ `RUN2-SALE` đã hết hạn. Hôm nay (19/10/2026), mẫu giày chạy bộ size 41 màu xám (SKU-SN-RUN2-41-XAM) đang được áp dụng chương trình khuyến mãi mới với mã `RUN-10` giảm 169.000đ, nên giá thanh toán hiện tại là 1.521.000đ ạ. \n\nAnh [private] có muốn em hỗ trợ lên đơn theo chương trình ưu đãi mới này luôn không ạ?"
+      },
+      {
+        "message_id": 4,
+        "role": "customer",
+        "content": "Nếu giá đúng hôm nay là 1.521.000 đồng thì anh đồng ý một đôi theo size, màu đã hỏi. Giao 103 đường Kiểm Thử, TP. Hồ Chí Minh, cod."
+      },
+      {
+        "message_id": 5,
+        "role": "agent",
+        "content": "Dạ em đã tạo thành công đơn hàng cho anh [private] rồi ạ! \n\nThông tin đơn hàng của anh:\n- **Mã đơn hàng:** [order_id]\n- **Sản phẩm:** Giày chạy bộ size 41 màu xám (1 đôi)\n- **Giá thanh toán:** 1.521.000 đồng (đã áp dụng mã giảm giá `RUN-10`)\n- **Hình thức thanh toán:** Thanh toán khi nhận hàng (COD)\n- **Địa chỉ [address]\n- **Dự kiến giao hàng:** 21/10/2026\n\nEm cảm ơn anh đã ủng hộ cửa hàng. Anh cần em hỗ trợ thêm thông tin gì nữa không ạ?"
+      }
+    ],
+    "open_questions": [],
+    "feedback": [],
+    "evidence_coverage": "per_turn_evidence",
+    "workflow_version": 4,
+    "turn_evidence": [
+      {
+        "turn_id": 1,
+        "agent_response": "Dạ em chào anh [private]. Em rất tiếc vì sự chênh lệch giá giữa các kênh làm anh bận tâm ạ. \n\nTheo thông tin ghi nhận trên hệ thống hôm nay, mã giảm giá trước đó là `RUN2-SALE` đã hết hạn. Hiện tại, sản phẩm giày chạy bộ màu xám size 41 (SKU-SN-RUN2-41-XAM) đang áp dụng chương trình khuyến mãi mới với mã `RUN-10` (giảm 10%), nên mức giá hiện tại của sản phẩm là 1.521.000đ (giá gốc 1.690.000đ) ạ.\n\nAnh [private] có muốn em hỗ trợ lên đơn luôn với mức giá ưu đãi hiện tại này không ạ?",
+        "tool_calls": [
+          {
+            "name": "order.status",
+            "args": {
+              "customer_phone": "[private]"
+            },
+            "result": {
+              "orders": []
+            }
+          },
+          {
+            "name": "pricing.get_quote",
+            "args": {
+              "on": "2026-10-19",
+              "customer_phone": "[private]",
+              "customer_id": "[private]",
+              "sku": "SKU-SN-RUN2-41-XAM",
+              "qty": 1
+            },
+            "result": {
+              "sku": "SKU-SN-RUN2-41-XAM",
+              "list_price_vnd": 1690000,
+              "final_price_vnd": 1521000,
+              "applied_promos": [
+                {
+                  "promo_code": "COD-0",
+                  "type": "freecod",
+                  "discount_vnd": 0
+                },
+                {
+                  "promo_code": "RUN-10",
+                  "type": "percent",
+                  "discount_vnd": 169000
+                }
+              ],
+              "expired_promos": [
+                "RUN2-SALE"
+              ],
+              "ineligible_promos": [],
+              "not_applied_exclusive": [],
+              "freeship": false
+            }
+          }
+        ],
+        "sources": [],
+        "promotions": []
+      },
+      {
+        "turn_id": 2,
+        "agent_response": "Dạ em rất xin lỗi anh [private] vì sự chênh lệch giá và bất tiện này khiến anh bận tâm ạ. \n\nHiện tại trên hệ thống ghi nhận mã ưu đãi cũ `RUN2-SALE` đã hết hạn. Hôm nay (19/10/2026), mẫu giày chạy bộ size 41 màu xám (SKU-SN-RUN2-41-XAM) đang được áp dụng chương trình khuyến mãi mới với mã `RUN-10` giảm 169.000đ, nên giá thanh toán hiện tại là 1.521.000đ ạ. \n\nAnh [private] có muốn em hỗ trợ lên đơn theo chương trình ưu đãi mới này luôn không ạ?",
+        "tool_calls": [],
+        "sources": [],
+        "promotions": []
+      },
+      {
+        "turn_id": 3,
+        "agent_response": "Dạ em đã tạo thành công đơn hàng cho anh [private] rồi ạ! \n\nThông tin đơn hàng của anh:\n- **Mã đơn hàng:** [order_id]\n- **Sản phẩm:** Giày chạy bộ size 41 màu xám (1 đôi)\n- **Giá thanh toán:** 1.521.000 đồng (đã áp dụng mã giảm giá `RUN-10`)\n- **Hình thức thanh toán:** Thanh toán khi nhận hàng (COD)\n- **Địa chỉ [address]\n- **Dự kiến giao hàng:** 21/10/2026\n\nEm cảm ơn anh đã ủng hộ cửa hàng. Anh cần em hỗ trợ thêm thông tin gì nữa không ạ?",
+        "tool_calls": [
+          {
+            "name": "catalog.search",
+            "args": {
+              "query": "Nếu giá đúng hôm nay là 1.521.000 đồng thì anh đồng ý một đôi theo size, màu đã hỏi. Giao 103 đường Kiểm Thử, TP. Hồ Chí Minh, cod.",
+              "on": "2026-10-19"
+            },
+            "result": {
+              "items": [],
+              "total": 0
+            }
+          },
+          {
+            "name": "inventory.check",
+            "args": {
+              "sku": "SKU-SN-RUN2-41-XAM",
+              "on": "2026-10-19"
+            },
+            "result": {
+              "sku": "SKU-SN-RUN2-41-XAM",
+              "found": true,
+              "in_stock": true,
+              "qty": 9,
+              "discontinued": false
+            }
+          },
+          {
+            "name": "pricing.get_quote",
+            "args": {
+              "on": "2026-10-19",
+              "customer_phone": "[private]",
+              "customer_id": "[private]",
+              "address": "[private]",
+              "sku": "SKU-SN-RUN2-41-XAM",
+              "qty": 1
+            },
+            "result": {
+              "sku": "SKU-SN-RUN2-41-XAM",
+              "list_price_vnd": 1690000,
+              "final_price_vnd": 1521000,
+              "applied_promos": [
+                {
+                  "promo_code": "COD-0",
+                  "type": "freecod",
+                  "discount_vnd": 0
+                },
+                {
+                  "promo_code": "RUN-10",
+                  "type": "percent",
+                  "discount_vnd": 169000
+                }
+              ],
+              "expired_promos": [
+                "RUN2-SALE"
+              ],
+              "ineligible_promos": [],
+              "not_applied_exclusive": [],
+              "freeship": false
+            }
+          },
+          {
+            "name": "order.create",
+            "args": {
+              "customer_phone": "[private]",
+              "customer_id": "[private]",
+              "address": "[private]",
+              "idempotency_key": "self-e42a15fb4ffb454089ac94939901af98-SC-084-call_2:call_2:create:SKU-SN-RUN2-41-XAM",
+              "sku": "SKU-SN-RUN2-41-XAM",
+              "qty": 1,
+              "price_vnd": 1521000,
+              "promo_code": "RUN-10",
+              "on": "2026-10-19",
+              "payment": "COD"
+            },
+            "result": {
+              "order_id": "[private]",
+              "status": "created",
+              "total_vnd": 1521000,
+              "needs_confirmation_call": false,
+              "estimated_delivery": "2026-10-21"
+            }
+          }
+        ],
+        "sources": [],
+        "promotions": []
+      }
+    ]
+  },
+  "error": null
+}

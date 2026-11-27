@@ -1,0 +1,46 @@
+{
+  "id": "c5fd5f7e8e502c3231bef3f245b2eadb9b1438d18b28788e45fafc6967d7fb94",
+  "reason": "reasoning_failure",
+  "pattern": "Check the answer against evidence and preserve all applicable conditions.",
+  "status": "approved",
+  "scope": "general",
+  "mechanism": "reflection",
+  "criterion": "Check the answer against evidence and preserve all applicable conditions.",
+  "evidence_refs": [
+    {
+      "job_id": "7ee8ab79dcd48bce360b0d72d695d26818ae83bd8d0c5a0754f0cf114e889f07",
+      "message_id": 6,
+      "turn_id": 4,
+      "origin": "turn_detector"
+    }
+  ],
+  "assessment": "contradicts_evidence",
+  "report_ref": "7ee8ab79dcd48bce360b0d72d695d26818ae83bd8d0c5a0754f0cf114e889f07",
+  "lesson": {
+    "title": "Verify Customer Order Intent Before Refusing New Orders",
+    "when": "A customer explicitly requests to place an order for specific or remaining cart items",
+    "do": "Execute the required tools to quote and place the requested order based on the user's updated selection",
+    "otherwise": "Express uncertainty about the cart state without falsely claiming no new order will be created",
+    "triggers": [
+      "lên đơn giỏ hàng",
+      "bỏ món đã hủy lên đơn mới",
+      "place order for remaining cart items",
+      "customer asks to create order for remaining items"
+    ],
+    "id": "dc6ebfe25fabba3883481c83924143a5415eb8a7db3e874bc6addb0b5f2d2d71",
+    "status": "approved",
+    "scope": "general",
+    "mechanism": "reflection",
+    "source_refs": [
+      {
+        "job_id": "7ee8ab79dcd48bce360b0d72d695d26818ae83bd8d0c5a0754f0cf114e889f07",
+        "message_id": 6,
+        "turn_id": 4,
+        "origin": "turn_detector"
+      }
+    ],
+    "version": 2
+  },
+  "lesson_path": "lessons\\approved\\dc6ebfe25fabba3883481c83924143a5415eb8a7db3e874bc6addb0b5f2d2d71.md",
+  "lesson_hash": "e253023649f3f79ff5852a53ae2d4fbaf4c0b41674b024784fa035dd878638b3"
+}

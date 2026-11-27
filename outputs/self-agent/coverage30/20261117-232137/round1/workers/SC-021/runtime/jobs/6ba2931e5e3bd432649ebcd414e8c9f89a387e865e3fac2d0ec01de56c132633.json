@@ -1,0 +1,235 @@
+{
+  "id": "6ba2931e5e3bd432649ebcd414e8c9f89a387e865e3fac2d0ec01de56c132633",
+  "status": "done",
+  "attempts": 1,
+  "snapshot": {
+    "session": "b094362117b42c3b3cf4973378afff6ff91e380f58d11e72d77d8adc7f8efca7",
+    "revision": 3,
+    "messages": [
+      {
+        "message_id": 0,
+        "role": "customer",
+        "content": "Alo em, chị lấy Giày sneaker Urban Classic, size 38, màu trắng."
+      },
+      {
+        "message_id": 1,
+        "role": "agent",
+        "content": "Dạ em chào chị [private], em đã ghi nhận chị chọn Giày sneaker Urban Classic size 38 màu trắng ạ. Sản phẩm này hiện đang có sẵn hàng. \n\nDạ chị muốn em giao hàng về địa chỉ [address]"
+      },
+      {
+        "message_id": 2,
+        "role": "customer",
+        "content": "Chị đồng ý 890.000 đồng cho một sản phẩm. Địa chỉ [address]"
+      },
+      {
+        "message_id": 3,
+        "role": "agent",
+        "content": "Dạ em cảm ơn chị [private]. Em đã lên thành công đơn hàng cho chị với sản phẩm Giày sneaker Urban Classic size 38 màu trắng. \n\nMã đơn hàng của chị là **[order_id]**, tổng tiền là 890.000 đồng và chị sẽ thanh toán COD khi nhận hàng tại địa chỉ [address]"
+      },
+      {
+        "message_id": 4,
+        "role": "customer",
+        "content": "Em tạo đơn giúp chị và đọc mã đơn để chị lưu nhé."
+      },
+      {
+        "message_id": 5,
+        "role": "agent",
+        "content": "Dạ chị [private] ơi, đơn hàng cho sản phẩm Giày sneaker Urban Classic size 38 màu trắng của chị đã được tạo thành công rồi ạ. \n\nMã đơn hàng của chị là **[order_id]**. \n\nTổng tiền là 890.000 đồng, thanh toán COD khi nhận hàng tại địa chỉ [address]"
+      }
+    ],
+    "open_questions": [],
+    "feedback": [],
+    "evidence_coverage": "per_turn_evidence",
+    "workflow_version": 4,
+    "turn_evidence": [
+      {
+        "turn_id": 1,
+        "agent_response": "Dạ em chào chị [private], em đã ghi nhận chị chọn Giày sneaker Urban Classic size 38 màu trắng ạ. Sản phẩm này hiện đang có sẵn hàng. \n\nDạ chị muốn em giao hàng về địa chỉ [address]",
+        "tool_calls": [
+          {
+            "name": "catalog.search",
+            "args": {
+              "query": "Giày sneaker Urban Classic size 38 màu trắng",
+              "on": "2026-10-02"
+            },
+            "result": {
+              "items": [
+                {
+                  "sku": "SKU-SN-CAS",
+                  "name": "[private]",
+                  "category": "thoi-trang/giay",
+                  "brand": "Urban",
+                  "list_price_vnd": 890000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "material": "vải lưới + đế EVA",
+                    "return_days": 7
+                  },
+                  "variants": [
+                    {
+                      "variant_sku": "SKU-SN-CAS-38-TRANG",
+                      "size": "38",
+                      "color": "trang",
+                      "price_delta": 0,
+                      "price_delta_vnd": 0
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "inventory.check",
+            "args": {
+              "sku": "SKU-SN-CAS-38-TRANG",
+              "on": "2026-10-02"
+            },
+            "result": {
+              "sku": "SKU-SN-CAS-38-TRANG",
+              "found": true,
+              "in_stock": true,
+              "qty": 5,
+              "discontinued": false
+            }
+          },
+          {
+            "name": "pricing.get_quote",
+            "args": {
+              "on": "2026-10-02",
+              "customer_phone": "[private]",
+              "customer_id": "[private]",
+              "sku": "SKU-SN-CAS-38-TRANG",
+              "qty": 1
+            },
+            "result": {
+              "sku": "SKU-SN-CAS-38-TRANG",
+              "list_price_vnd": 890000,
+              "final_price_vnd": 890000,
+              "applied_promos": [
+                {
+                  "promo_code": "COD-0",
+                  "type": "freecod",
+                  "discount_vnd": 0
+                }
+              ],
+              "expired_promos": [],
+              "ineligible_promos": [],
+              "not_applied_exclusive": [],
+              "freeship": false
+            }
+          }
+        ],
+        "sources": [],
+        "promotions": []
+      },
+      {
+        "turn_id": 2,
+        "agent_response": "Dạ em cảm ơn chị [private]. Em đã lên thành công đơn hàng cho chị với sản phẩm Giày sneaker Urban Classic size 38 màu trắng. \n\nMã đơn hàng của chị là **[order_id]**, tổng tiền là 890.000 đồng và chị sẽ thanh toán COD khi nhận hàng tại địa chỉ [address]",
+        "tool_calls": [
+          {
+            "name": "pricing.get_quote",
+            "args": {
+              "on": "2026-10-02",
+              "customer_phone": "[private]",
+              "customer_id": "[private]",
+              "address": "[private]",
+              "sku": "SKU-SN-CAS-38-TRANG",
+              "qty": 1
+            },
+            "result": {
+              "sku": "SKU-SN-CAS-38-TRANG",
+              "list_price_vnd": 890000,
+              "final_price_vnd": 890000,
+              "applied_promos": [
+                {
+                  "promo_code": "COD-0",
+                  "type": "freecod",
+                  "discount_vnd": 0
+                }
+              ],
+              "expired_promos": [],
+              "ineligible_promos": [],
+              "not_applied_exclusive": [],
+              "freeship": false
+            }
+          },
+          {
+            "name": "order.create",
+            "args": {
+              "customer_phone": "[private]",
+              "customer_id": "[private]",
+              "address": "[private]",
+              "idempotency_key": "self-7c8f549e9b974760ae295bef7bdd65f7-SC-021-call_1:call_1:create:SKU-SN-CAS-38-TRANG",
+              "sku": "SKU-SN-CAS-38-TRANG",
+              "qty": 1,
+              "price_vnd": 890000,
+              "promo_code": "COD-0",
+              "on": "2026-10-02",
+              "payment": "COD"
+            },
+            "result": {
+              "order_id": "[private]",
+              "status": "created",
+              "total_vnd": 890000,
+              "needs_confirmation_call": false,
+              "estimated_delivery": "2026-10-05"
+            }
+          }
+        ],
+        "sources": [],
+        "promotions": []
+      },
+      {
+        "turn_id": 3,
+        "agent_response": "Dạ chị [private] ơi, đơn hàng cho sản phẩm Giày sneaker Urban Classic size 38 màu trắng của chị đã được tạo thành công rồi ạ. \n\nMã đơn hàng của chị là **[order_id]**. \n\nTổng tiền là 890.000 đồng, thanh toán COD khi nhận hàng tại địa chỉ [address]",
+        "tool_calls": [
+          {
+            "name": "inventory.check",
+            "args": {
+              "sku": "SKU-SN-CAS-38-TRANG",
+              "on": "2026-10-02"
+            },
+            "result": {
+              "sku": "SKU-SN-CAS-38-TRANG",
+              "found": true,
+              "in_stock": true,
+              "qty": 5,
+              "discontinued": false
+            }
+          },
+          {
+            "name": "pricing.get_quote",
+            "args": {
+              "on": "2026-10-02",
+              "customer_phone": "[private]",
+              "customer_id": "[private]",
+              "address": "[private]",
+              "sku": "SKU-SN-CAS-38-TRANG",
+              "qty": 1
+            },
+            "result": {
+              "sku": "SKU-SN-CAS-38-TRANG",
+              "list_price_vnd": 890000,
+              "final_price_vnd": 890000,
+              "applied_promos": [
+                {
+                  "promo_code": "COD-0",
+                  "type": "freecod",
+                  "discount_vnd": 0
+                }
+              ],
+              "expired_promos": [],
+              "ineligible_promos": [],
+              "not_applied_exclusive": [],
+              "freeship": false
+            }
+          }
+        ],
+        "sources": [],
+        "promotions": []
+      }
+    ]
+  },
+  "error": null
+}

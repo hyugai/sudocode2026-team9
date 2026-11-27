@@ -1,0 +1,222 @@
+{
+  "id": "a8963b6a778a2c8ba75562ef5e368500b8b4f6bb6b7ed7aaec669d2f865752ec",
+  "status": "done",
+  "attempts": 1,
+  "snapshot": {
+    "session": "41759e253b49dd9c67fb3106fe5b1110385f4214b020deaca1137b4c59b8c728",
+    "revision": 3,
+    "messages": [
+      {
+        "message_id": 0,
+        "role": "customer",
+        "content": "Anh liên hệ lại theo lịch, lấy máy theo chương trình lần trước nhé."
+      },
+      {
+        "message_id": 1,
+        "role": "agent",
+        "content": "Dạ em chào anh [private], em cảm ơn anh đã liên hệ lại ạ! \n\nVề sản phẩm máy lọc không khí (SKU-AP-X) anh quan tâm trước đó, hiện chương trình khuyến mại mã AP-SEP của tháng trước đã hết hạn. Giá hiện tại của máy là 4.890.000 đ (kèm quà tặng lõi lọc SKU-AP-FLT-X và miễn phí vận chuyển) ạ.\n\nAnh [private] có muốn đặt lấy sản phẩm theo chương trình hiện tại này luôn không ạ?"
+      },
+      {
+        "message_id": 2,
+        "role": "customer",
+        "content": "Sao giá lại khác vậy? Em nhắc lại mức cũ và giải thích giúp anh."
+      },
+      {
+        "message_id": 3,
+        "role": "agent",
+        "content": "Dạ em xin giải thích rõ với anh [private] ạ. \n\nỞ lần tư vấn trước, giá máy lọc không khí (SKU-AP-X) là 4.390.000 đ nhờ áp dụng mã giảm giá AP-SEP. Tuy nhiên, chương trình ưu đãi của mã AP-SEP đã kết thúc vào tháng trước nên hiện không còn hiệu lực nữa ạ.\n\nGiá niêm yết hiện tại của máy là 4.890.000 đ. Khi đặt mua hôm nay, anh vẫn nhận được quà tặng kèm là lõi lọc SKU-AP-FLT-X và được miễn phí vận chuyển ạ. \n\nAnh [private] có muốn em lên đơn đặt chiếc máy này cho mình luôn không ạ?"
+      },
+      {
+        "message_id": 4,
+        "role": "customer",
+        "content": "Nếu ưu đãi cũ đã hết thì anh chấp nhận 4.890.000 đồng. Một máy, cod, giao 101 đường Kiểm Thử, Hà Nội."
+      },
+      {
+        "message_id": 5,
+        "role": "agent",
+        "content": "Dạ em đã lên đơn hàng thành công cho máy lọc không khí (SKU-AP-X) cho anh [private] rồi ạ!\n\n- **Mã đơn hàng:** [order_id]\n- **Số lượng:** 1 máy\n- **Tổng thanh toán (COD):** 4.890.000 đ (Miễn phí vận chuyển)\n- **Địa chỉ [address]\n- **Dự kiến giao hàng:** Ngày 05/10/2026\n\nEm cảm ơn anh [private] đã ủng hộ cửa hàng. Anh chú ý điện thoại để nhận hàng giúp em nhé!"
+      }
+    ],
+    "open_questions": [],
+    "feedback": [],
+    "evidence_coverage": "per_turn_evidence",
+    "workflow_version": 4,
+    "turn_evidence": [
+      {
+        "turn_id": 1,
+        "agent_response": "Dạ em chào anh [private], em cảm ơn anh đã liên hệ lại ạ! \n\nVề sản phẩm máy lọc không khí (SKU-AP-X) anh quan tâm trước đó, hiện chương trình khuyến mại mã AP-SEP của tháng trước đã hết hạn. Giá hiện tại của máy là 4.890.000 đ (kèm quà tặng lõi lọc SKU-AP-FLT-X và miễn phí vận chuyển) ạ.\n\nAnh [private] có muốn đặt lấy sản phẩm theo chương trình hiện tại này luôn không ạ?",
+        "tool_calls": [
+          {
+            "name": "inventory.check",
+            "args": {
+              "sku": "SKU-AP-X",
+              "on": "2026-10-02"
+            },
+            "result": {
+              "sku": "SKU-AP-X",
+              "found": true,
+              "in_stock": true,
+              "qty": 40,
+              "discontinued": false
+            }
+          },
+          {
+            "name": "pricing.get_quote",
+            "args": {
+              "on": "2026-10-02",
+              "customer_phone": "[private]",
+              "customer_id": "[private]",
+              "sku": "SKU-AP-X",
+              "qty": 1
+            },
+            "result": {
+              "sku": "SKU-AP-X",
+              "list_price_vnd": 4890000,
+              "final_price_vnd": 4890000,
+              "applied_promos": [
+                {
+                  "promo_code": "COD-0",
+                  "type": "freecod",
+                  "discount_vnd": 0
+                },
+                {
+                  "promo_code": "GIFT-FILTER",
+                  "type": "gift",
+                  "discount_vnd": 0,
+                  "gift_sku": "SKU-AP-FLT-X"
+                }
+              ],
+              "expired_promos": [
+                "AP-SEP"
+              ],
+              "ineligible_promos": [
+                {
+                  "promo_code": "TRADE-IN-AP",
+                  "reason": "requires_owned_sku"
+                }
+              ],
+              "not_applied_exclusive": [],
+              "freeship": true
+            }
+          }
+        ],
+        "sources": [],
+        "promotions": []
+      },
+      {
+        "turn_id": 2,
+        "agent_response": "Dạ em xin giải thích rõ với anh [private] ạ. \n\nỞ lần tư vấn trước, giá máy lọc không khí (SKU-AP-X) là 4.390.000 đ nhờ áp dụng mã giảm giá AP-SEP. Tuy nhiên, chương trình ưu đãi của mã AP-SEP đã kết thúc vào tháng trước nên hiện không còn hiệu lực nữa ạ.\n\nGiá niêm yết hiện tại của máy là 4.890.000 đ. Khi đặt mua hôm nay, anh vẫn nhận được quà tặng kèm là lõi lọc SKU-AP-FLT-X và được miễn phí vận chuyển ạ. \n\nAnh [private] có muốn em lên đơn đặt chiếc máy này cho mình luôn không ạ?",
+        "tool_calls": [
+          {
+            "name": "policy.search",
+            "args": {
+              "query": "Sao giá lại khác vậy? Em nhắc lại mức cũ và giải thích giúp anh.",
+              "k": 3,
+              "product_sku": "SKU-AP-X",
+              "as_of": "2026-10-02"
+            },
+            "result": {
+              "query": "Sao giá lại khác vậy? Em nhắc lại mức cũ và giải thích giúp anh.",
+              "as_of": "2026-10-02",
+              "product_sku": "SKU-AP-X",
+              "count": 3,
+              "chunks": [
+                {
+                  "chunk_id": "FAQ-14",
+                  "content": "Chỉ áp dụng khuyến mãi có trong `promotions.json` và **còn hiệu lực tại ngày báo giá**. Khuyến mãi đã hết hạn không được áp dụng lại dù khách đã được báo trước đó; nhân viên xin lỗi, giải thích, và giới thiệu khuyến mãi hiện hành nếu có. Không được tiết lộ khuyến mãi chưa bắt đầu (ví dụ 11/11). Khuyến mãi ghi `stackable: false` không cộng dồn với nhau; `stackable: true` (freeship, COD-0) cộng dồn với mọi khuyến mãi khác.",
+                  "source_file": "faq.md",
+                  "section": "[FAQ-14] Khuyến mãi"
+                },
+                {
+                  "chunk_id": "FAQ-04",
+                  "content": "Y có thêm than hoạt tính, app điều khiển, khóa trẻ em; giá cao hơn X 310.000đ theo catalog. Cùng dùng màng lọc thay thế SKU-AP-FLT-X.",
+                  "source_file": "faq.md",
+                  "section": "[FAQ-04] Máy lọc không khí khác nhau giữa AirPure X và Y"
+                },
+                {
+                  "chunk_id": "KM-06",
+                  "content": "Nhân viên/agent **không được tự giảm giá** ngoài các chương trình đã công bố. Mỗi ngành hàng có giá sàn nội bộ (không công bố cho khách): gia dụng 90% giá niêm yết, thời trang 80%, mẹ & bé 92%. Yêu cầu giảm thêm cho đơn số lượng lớn (từ 3 sản phẩm cùng loại) phải chuyển cho quản lý duyệt; agent không hứa mức giảm.",
+                  "source_file": "dieu-khoan-khuyen-mai.md",
+                  "section": "[KM-06] Giá sàn và thẩm quyền giảm giá"
+                }
+              ]
+            }
+          }
+        ],
+        "sources": [],
+        "promotions": []
+      },
+      {
+        "turn_id": 3,
+        "agent_response": "Dạ em đã lên đơn hàng thành công cho máy lọc không khí (SKU-AP-X) cho anh [private] rồi ạ!\n\n- **Mã đơn hàng:** [order_id]\n- **Số lượng:** 1 máy\n- **Tổng thanh toán (COD):** 4.890.000 đ (Miễn phí vận chuyển)\n- **Địa chỉ [address]\n- **Dự kiến giao hàng:** Ngày 05/10/2026\n\nEm cảm ơn anh [private] đã ủng hộ cửa hàng. Anh chú ý điện thoại để nhận hàng giúp em nhé!",
+        "tool_calls": [
+          {
+            "name": "pricing.get_quote",
+            "args": {
+              "on": "2026-10-02",
+              "customer_phone": "[private]",
+              "customer_id": "[private]",
+              "address": "[private]",
+              "sku": "SKU-AP-X",
+              "qty": 1
+            },
+            "result": {
+              "sku": "SKU-AP-X",
+              "list_price_vnd": 4890000,
+              "final_price_vnd": 4890000,
+              "applied_promos": [
+                {
+                  "promo_code": "COD-0",
+                  "type": "freecod",
+                  "discount_vnd": 0
+                },
+                {
+                  "promo_code": "GIFT-FILTER",
+                  "type": "gift",
+                  "discount_vnd": 0,
+                  "gift_sku": "SKU-AP-FLT-X"
+                }
+              ],
+              "expired_promos": [
+                "AP-SEP"
+              ],
+              "ineligible_promos": [
+                {
+                  "promo_code": "TRADE-IN-AP",
+                  "reason": "requires_owned_sku"
+                }
+              ],
+              "not_applied_exclusive": [],
+              "freeship": true
+            }
+          },
+          {
+            "name": "order.create",
+            "args": {
+              "customer_phone": "[private]",
+              "customer_id": "[private]",
+              "address": "[private]",
+              "idempotency_key": "self-bded0ac229a2438190136ddeb83d2b60-SC-012-call_2:call_2:create:SKU-AP-X",
+              "sku": "SKU-AP-X",
+              "qty": 1,
+              "price_vnd": 4890000,
+              "promo_code": "COD-0",
+              "on": "2026-10-02",
+              "payment": "COD"
+            },
+            "result": {
+              "order_id": "[private]",
+              "status": "created",
+              "total_vnd": 4890000,
+              "needs_confirmation_call": true,
+              "estimated_delivery": "2026-10-05"
+            }
+          }
+        ],
+        "sources": [],
+        "promotions": []
+      }
+    ]
+  },
+  "error": null
+}

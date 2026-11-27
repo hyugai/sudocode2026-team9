@@ -1,0 +1,367 @@
+<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src 'none'; base-uri 'none'; form-action 'none'"><title>Review self-learning</title><style>body{margin:0;background:#f5f2ed;color:#292824;font:16px/1.6 system-ui,sans-serif}main{max-width:1180px;margin:auto;padding:24px}h1,h2,h3{line-height:1.3}article,.box{background:#fffdf9;border:1px solid #ddd7cc;border-radius:12px;padding:18px;margin:16px 0}.columns{display:grid;grid-template-columns:1fr 1fr;gap:18px}.answer{white-space:pre-wrap}mark{background:#fff0a6;color:#292824}del{background:#fbe2df;text-decoration:line-through}.warn{border-left:5px solid #a66b16}.regression{border-left:5px solid #a43131}.improved_resolution{border-left:5px solid #367458}.muted{color:#635f57}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#f3f1eb;padding:12px;border-radius:8px}body,td,p,div,summary{overflow-wrap:anywhere}table{border-collapse:collapse;width:100%}th,td{text-align:left;padding:8px;border-bottom:1px solid #e3ded5;vertical-align:top}summary{cursor:pointer;padding:8px 0}summary:focus-visible,a:focus-visible{outline:3px solid #8c5517}a{color:#754610}nav{display:flex;flex-wrap:wrap;gap:14px}@media(max-width:650px){main{padding:12px}.columns{grid-template-columns:1fr}article,.box{padding:12px}}</style></head><body><main><h1>Review self-learning</h1><p>Học sau khi kết thúc session. Báo cáo dựng từ artifact đã lưu, không gọi thêm LLM.</p><nav><a href="#overview">Tổng quan</a><a href="#turns">Trước / sau</a><a href="#lessons">Lesson</a><a href="#sessions">Học &amp; guardrail</a></nav><section id="overview"><h2>Tổng quan</h2><p class="box warn">Chưa chạy judge: chỉ xem thay đổi câu trả lời và dấu vết lesson, chưa đánh giá cải thiện.</p><p class="box warn">Không có cặp chấm hợp lệ: chưa thể kết luận cải thiện hay không có regression.</p><p><b>0</b> cặp chấm hợp lệ / 0 case được lưu trong comparison. 2/3 lượt trong session được inject.</p><table><tr><th>Phân loại</th><th>Số lượt</th></tr><tr><td>Giải quyết được thêm · cần xác nhận</td><td>0</td></tr><tr><td>Thận trọng hơn · vẫn chưa giải quyết</td><td>0</td></tr><tr><td>Có dấu hiệu regression · cần xác nhận</td><td>0</td></tr><tr><td>Không đổi trạng thái chấm</td><td>0</td></tr><tr><td>Chưa đủ kết quả chấm hợp lệ</td><td>0</td></tr><tr><td>Chưa được judge chấm</td><td>3</td></tr><tr><td>Thiếu một vòng</td><td>0</td></tr><tr><td>Câu hỏi hai vòng khác nhau</td><td>0</td></tr><tr><td>Bị loại khỏi phép so sánh</td><td>0</td></tr></table><details><summary>Phạm vi, nguồn baseline và exclusions</summary><pre>{
+  &quot;evaluation_population&quot;: &quot;single_session_no_baseline&quot;
+}</pre></details><p class="muted">Verdict kiểm tra được reference vẫn cần người đọc xác nhận ngữ nghĩa và độ đầy đủ.</p><p class="muted">Câu trả lời thay đổi hoặc được inject lesson chưa chứng minh lesson gây ra cải thiện.</p><p class="muted">Reflection chưa được chấm chất lượng; learning job done/lesson approved không phải điểm chất lượng.</p><p class="muted">Guardrail mẫu có giới hạn; không phát hiện mẫu không đồng nghĩa không có prompt injection.</p></section><section id="turns"><h2>Cải thiện ở đâu? Đọc từng lượt</h2><h3>Chưa được judge chấm (3)</h3><article id="turn-0" class="not_evaluated"><h3>SC-074/call_2 · lượt 1</h3><p><b>Khách:</b> Tôi là [private], số điện thoại [phone], đang nhắn qua Zalo OA. Chị muốn tiếp tục phần tư vấn lần trước. Câu hỏi cụ thể lần trước em còn lưu chứ?</p><p class="muted">Câu trả lời không đổi/thiếu cặp · Lesson đã inject.</p><div class="columns"><div><h3>Phiên vừa kết thúc</h3><p><b>Chưa có verdict hợp lệ</b></p><div class="answer">Dạ em còn lưu câu hỏi lần trước: “ten ky thuat vien da kiem dinh chinh chiec se giao cho tôi là ai?”. Hiện hệ thống không có thông tin xác nhận cho đúng chiếc hàng sẽ giao, nên em chưa thể trả lời chính xác ạ.</div><details><summary>Claims, trích dẫn và verdict gốc</summary><pre>{
+  &quot;status&quot;: null
+}</pre></details><details><summary>Evidence hiện tại và trước lượt này</summary><pre>{
+  &quot;current&quot;: {
+    &quot;turn_id&quot;: 1,
+    &quot;agent_response&quot;: &quot;Dạ em còn lưu câu hỏi lần trước: “ten ky thuat vien da kiem dinh chinh chiec se giao cho tôi là ai?”. Hiện hệ thống không có thông tin xác nhận cho đúng chiếc hàng sẽ giao, nên em chưa thể trả lời chính xác ạ.&quot;,
+    &quot;tool_calls&quot;: [],
+    &quot;sources&quot;: [],
+    &quot;promotions&quot;: []
+  },
+  &quot;earlier&quot;: []
+}</pre></details></div></div><details><summary>Lesson ID, routing, token và injection trace</summary><pre>{
+  &quot;lessons_loaded&quot;: 25,
+  &quot;selected_lessons&quot;: [
+    {
+      &quot;id&quot;: &quot;3cd3c42741e4f384bb677359c92e310266b7dbcbda3a0012abd57fdb0347c01e&quot;,
+      &quot;hash&quot;: &quot;69a0eb02f8552e58812c9527556e29c9ff8e0cc2fff99a5a52488c72b3cf79a2&quot;,
+      &quot;mechanism&quot;: &quot;knowledge_gap&quot;
+    },
+    {
+      &quot;id&quot;: &quot;6d3a903bb52f3a640c309b28927834d92f20386b301897d64d113e666ac598eb&quot;,
+      &quot;hash&quot;: &quot;bd7c1d98408e012643105ff779f8998825343efc3ad8d86909611a3ab07548bd&quot;,
+      &quot;mechanism&quot;: &quot;knowledge_gap&quot;
+    },
+    {
+      &quot;id&quot;: &quot;62b31704255689e0a0e9d302ff0dc99126722deddfe71f38a7843aa310652759&quot;,
+      &quot;hash&quot;: &quot;9c522bf9b3655447e3404b8afbd976dd4213afeb1800ad4b527bd9e0c0a645b4&quot;,
+      &quot;mechanism&quot;: &quot;knowledge_gap&quot;
+    }
+  ],
+  &quot;injected&quot;: true,
+  &quot;mode&quot;: &quot;memory_only&quot;,
+  &quot;response_modified&quot;: false,
+  &quot;routing&quot;: &quot;selected&quot;,
+  &quot;routing_ms&quot;: 5265.409,
+  &quot;routing_usage&quot;: {
+    &quot;input_tokens&quot;: 4888,
+    &quot;output_tokens&quot;: 191
+  },
+  &quot;guardrails&quot;: {
+    &quot;version&quot;: &quot;learning_guardrails_v1&quot;,
+    &quot;blocked_lessons&quot;: []
+  },
+  &quot;injected_chars&quot;: 1588,
+  &quot;injected_lesson_count&quot;: 3,
+  &quot;wrapper_total_ms&quot;: 11518.309
+}</pre></details></article><article id="turn-1" class="not_evaluated"><h3>SC-074/call_2 · lượt 2</h3><p><b>Khách:</b> Em nhắc lại câu hỏi đó và cho chị biết đã có nguồn xác nhận chưa. Đừng đoán theo sản phẩm khác.</p><p class="muted">Câu trả lời không đổi/thiếu cặp · Lesson chưa inject.</p><div class="columns"><div><h3>Phiên vừa kết thúc</h3><p><b>Chưa có verdict hợp lệ</b></p><div class="answer">Dạ em còn lưu câu hỏi lần trước: “ten ky thuat vien da kiem dinh chinh chiec se giao cho tôi là ai?”. Hiện hệ thống không có thông tin xác nhận cho đúng chiếc hàng sẽ giao, nên em chưa thể trả lời chính xác ạ.</div><details><summary>Claims, trích dẫn và verdict gốc</summary><pre>{
+  &quot;status&quot;: null
+}</pre></details><details><summary>Evidence hiện tại và trước lượt này</summary><pre>{
+  &quot;current&quot;: {
+    &quot;turn_id&quot;: 2,
+    &quot;agent_response&quot;: &quot;Dạ em còn lưu câu hỏi lần trước: “ten ky thuat vien da kiem dinh chinh chiec se giao cho tôi là ai?”. Hiện hệ thống không có thông tin xác nhận cho đúng chiếc hàng sẽ giao, nên em chưa thể trả lời chính xác ạ.&quot;,
+    &quot;tool_calls&quot;: [
+      {
+        &quot;name&quot;: &quot;order.status&quot;,
+        &quot;args&quot;: {
+          &quot;customer_phone&quot;: &quot;[private]&quot;
+        },
+        &quot;result&quot;: {
+          &quot;orders&quot;: []
+        }
+      }
+    ],
+    &quot;sources&quot;: [],
+    &quot;promotions&quot;: []
+  },
+  &quot;earlier&quot;: [
+    {
+      &quot;turn_id&quot;: 1,
+      &quot;tool_calls&quot;: [],
+      &quot;sources&quot;: [],
+      &quot;promotions&quot;: []
+    }
+  ]
+}</pre></details></div></div><details><summary>Lesson ID, routing, token và injection trace</summary><pre>{
+  &quot;lessons_loaded&quot;: 25,
+  &quot;selected_lessons&quot;: [],
+  &quot;injected&quot;: false,
+  &quot;mode&quot;: &quot;memory_only&quot;,
+  &quot;response_modified&quot;: false,
+  &quot;routing&quot;: &quot;failed&quot;,
+  &quot;routing_error&quot;: &quot;ValueError&quot;,
+  &quot;routing_ms&quot;: 1327.619,
+  &quot;routing_usage&quot;: {
+    &quot;input_tokens&quot;: 4607,
+    &quot;output_tokens&quot;: 1
+  },
+  &quot;wrapper_total_ms&quot;: 5804.623
+}</pre></details></article><article id="turn-2" class="not_evaluated"><h3>SC-074/call_2 · lượt 3</h3><p><b>Khách:</b> Nếu chưa có thông tin thì chị chờ, chưa mua và không cần chuyển máy.</p><p class="muted">Câu trả lời không đổi/thiếu cặp · Lesson đã inject.</p><div class="columns"><div><h3>Phiên vừa kết thúc</h3><p><b>Chưa có verdict hợp lệ</b></p><div class="answer">Dạ em còn lưu câu hỏi lần trước: “ten ky thuat vien da kiem dinh chinh chiec se giao cho tôi là ai?”. Hiện hệ thống không có thông tin xác nhận cho đúng chiếc hàng sẽ giao, nên em chưa thể trả lời chính xác ạ.</div><details><summary>Claims, trích dẫn và verdict gốc</summary><pre>{
+  &quot;status&quot;: null
+}</pre></details><details><summary>Evidence hiện tại và trước lượt này</summary><pre>{
+  &quot;current&quot;: {
+    &quot;turn_id&quot;: 3,
+    &quot;agent_response&quot;: &quot;Dạ em còn lưu câu hỏi lần trước: “ten ky thuat vien da kiem dinh chinh chiec se giao cho tôi là ai?”. Hiện hệ thống không có thông tin xác nhận cho đúng chiếc hàng sẽ giao, nên em chưa thể trả lời chính xác ạ.&quot;,
+    &quot;tool_calls&quot;: [
+      {
+        &quot;name&quot;: &quot;catalog.search&quot;,
+        &quot;args&quot;: {
+          &quot;query&quot;: &quot;Nếu chưa có thông tin thì chị chờ, chưa mua và không cần chuyển máy.&quot;,
+          &quot;on&quot;: &quot;2026-10-21&quot;
+        },
+        &quot;result&quot;: {
+          &quot;items&quot;: [],
+          &quot;total&quot;: 0
+        }
+      }
+    ],
+    &quot;sources&quot;: [],
+    &quot;promotions&quot;: []
+  },
+  &quot;earlier&quot;: [
+    {
+      &quot;turn_id&quot;: 1,
+      &quot;tool_calls&quot;: [],
+      &quot;sources&quot;: [],
+      &quot;promotions&quot;: []
+    },
+    {
+      &quot;turn_id&quot;: 2,
+      &quot;tool_calls&quot;: [
+        {
+          &quot;name&quot;: &quot;order.status&quot;,
+          &quot;args&quot;: {
+            &quot;customer_phone&quot;: &quot;[private]&quot;
+          },
+          &quot;result&quot;: {
+            &quot;orders&quot;: []
+          }
+        }
+      ],
+      &quot;sources&quot;: [],
+      &quot;promotions&quot;: []
+    }
+  ]
+}</pre></details></div></div><details><summary>Lesson ID, routing, token và injection trace</summary><pre>{
+  &quot;lessons_loaded&quot;: 25,
+  &quot;selected_lessons&quot;: [
+    {
+      &quot;id&quot;: &quot;2428465dd6aebd918b246b218ea61f077e2a4a03ca7a10bb6c10ca1cd078d1a6&quot;,
+      &quot;hash&quot;: &quot;a6ef6e56d1a0afa44afce603254ba8380a79684f4316ec30047adabc7375818d&quot;,
+      &quot;mechanism&quot;: &quot;knowledge_gap&quot;
+    },
+    {
+      &quot;id&quot;: &quot;e839841d39ba8ead00458782103f8efc1ca7f45a5a21fb69a75e661d206e7f56&quot;,
+      &quot;hash&quot;: &quot;815658651146ef9f2e80375f1a8354150ac994c3c1af0032f8e534a61f26ab6a&quot;,
+      &quot;mechanism&quot;: &quot;knowledge_gap&quot;
+    }
+  ],
+  &quot;injected&quot;: true,
+  &quot;mode&quot;: &quot;memory_only&quot;,
+  &quot;response_modified&quot;: false,
+  &quot;routing&quot;: &quot;selected&quot;,
+  &quot;routing_ms&quot;: 3373.542,
+  &quot;routing_usage&quot;: {
+    &quot;input_tokens&quot;: 5280,
+    &quot;output_tokens&quot;: 129
+  },
+  &quot;guardrails&quot;: {
+    &quot;version&quot;: &quot;learning_guardrails_v1&quot;,
+    &quot;blocked_lessons&quot;: []
+  },
+  &quot;injected_chars&quot;: 1289,
+  &quot;injected_lesson_count&quot;: 2,
+  &quot;wrapper_total_ms&quot;: 9097.741
+}</pre></details></article></section><section id="lessons"><h2>Lesson mới sinh sau session</h2><p>Approved là trạng thái duyệt lesson, chưa chứng minh chất lượng câu trả lời.</p><article id="lesson-0"><h3>Verify system status before claiming information availability</h3><p><b>When:</b> A customer asks about stored details or specific system records not supported by available sources</p><p><b>Do:</b> State clearly that the information cannot be verified from available records without asserting system capabilities or limitations</p><p><b>Otherwise:</b> Invent unsupported claims about system status or data availability</p><p>Inject tại: Chưa thấy trong trace</p><details><summary>ID, nguồn sinh và kiểm tra guardrail</summary><pre>{
+  &quot;id&quot;: &quot;2f76ef7f25d2559bfa0fc81e3b6c3108cc8b4e3f02909a800a6675066da5ec98&quot;,
+  &quot;mechanism&quot;: &quot;knowledge_gap&quot;,
+  &quot;content&quot;: {
+    &quot;title&quot;: &quot;Verify system status before claiming information availability&quot;,
+    &quot;when&quot;: &quot;A customer asks about stored details or specific system records not supported by available sources&quot;,
+    &quot;do&quot;: &quot;State clearly that the information cannot be verified from available records without asserting system capabilities or limitations&quot;,
+    &quot;otherwise&quot;: &quot;Invent unsupported claims about system status or data availability&quot;
+  },
+  &quot;source_refs&quot;: [
+    {
+      &quot;job_id&quot;: &quot;e08c6a4dfacceb087dcffbeebbe302a25178389c8e6c0b1dfeebc8205e9a1c5f&quot;,
+      &quot;message_id&quot;: 0,
+      &quot;turn_id&quot;: 1,
+      &quot;origin&quot;: &quot;turn_detector&quot;
+    }
+  ],
+  &quot;path&quot;: null,
+  &quot;security_findings&quot;: [],
+  &quot;load_error&quot;: null,
+  &quot;review_flags&quot;: []
+}</pre></details></article><article id="lesson-1"><h3>Verify stored customer history before claiming saved details</h3><p><b>When:</b> A customer asks if their previous conversation history or specific question is saved and available in the system</p><p><b>Do:</b> Check verified sources or tool outputs for historical logs before claiming knowledge of the customer&#x27;s prior question</p><p><b>Otherwise:</b> State clearly that the prior information is not available or verified, without making up or assuming past context</p><p>Inject tại: Chưa thấy trong trace</p><details><summary>ID, nguồn sinh và kiểm tra guardrail</summary><pre>{
+  &quot;id&quot;: &quot;e2fa0e15e8a7cbbb0df6f58d9e77759774f24cbeb1505c4e65ab2047761ade07&quot;,
+  &quot;mechanism&quot;: &quot;knowledge_gap&quot;,
+  &quot;content&quot;: {
+    &quot;title&quot;: &quot;Verify stored customer history before claiming saved details&quot;,
+    &quot;when&quot;: &quot;A customer asks if their previous conversation history or specific question is saved and available in the system&quot;,
+    &quot;do&quot;: &quot;Check verified sources or tool outputs for historical logs before claiming knowledge of the customer&#x27;s prior question&quot;,
+    &quot;otherwise&quot;: &quot;State clearly that the prior information is not available or verified, without making up or assuming past context&quot;
+  },
+  &quot;source_refs&quot;: [
+    {
+      &quot;job_id&quot;: &quot;e08c6a4dfacceb087dcffbeebbe302a25178389c8e6c0b1dfeebc8205e9a1c5f&quot;,
+      &quot;message_id&quot;: 0,
+      &quot;turn_id&quot;: 1,
+      &quot;origin&quot;: &quot;turn_detector&quot;
+    }
+  ],
+  &quot;path&quot;: null,
+  &quot;security_findings&quot;: [],
+  &quot;load_error&quot;: null,
+  &quot;review_flags&quot;: []
+}</pre></details></article></section><section id="sessions"><h2>Học sau session &amp; guardrail</h2><p>Input finding là cảnh báo mẫu, không phải verdict khách nói sai hoặc bằng chứng tấn công thành công. Run cũ thiếu guardrail trace sẽ được ghi rõ.</p><article><h3>SC-074/call_2</h3><h3>Vòng 1</h3><p>Job: done · Issue xác nhận: 2 · Guardrail: có trace</p><details><summary>Vấn đề, trạng thái học và guardrail chi tiết</summary><pre>{
+  &quot;job&quot;: {
+    &quot;status&quot;: &quot;done&quot;,
+    &quot;job_id&quot;: &quot;e08c6a4dfacceb087dcffbeebbe302a25178389c8e6c0b1dfeebc8205e9a1c5f&quot;,
+    &quot;error&quot;: null
+  },
+  &quot;error&quot;: null,
+  &quot;learning&quot;: {
+    &quot;job_id&quot;: &quot;e08c6a4dfacceb087dcffbeebbe302a25178389c8e6c0b1dfeebc8205e9a1c5f&quot;,
+    &quot;gaps&quot;: [
+      {
+        &quot;id&quot;: &quot;fdabffeb147722a4f1f8dc9dc53bc3845d8a3db51703afb0b610c17ae49795f8&quot;,
+        &quot;status&quot;: &quot;pending_evidence&quot;
+      },
+      {
+        &quot;id&quot;: &quot;2a96a5c6b1bb70bb9595ae56f288a09ac26c7034213912ff908c2712ec975a41&quot;,
+        &quot;status&quot;: &quot;pending_remediation&quot;
+      },
+      {
+        &quot;id&quot;: &quot;02c7a5e0ae4b8b0a4da1b6ae9ad904df8223f9c57d341a481b6c1d45d0b38d41&quot;,
+        &quot;status&quot;: &quot;pending_remediation&quot;
+      },
+      {
+        &quot;id&quot;: &quot;fdabffeb147722a4f1f8dc9dc53bc3845d8a3db51703afb0b610c17ae49795f8&quot;,
+        &quot;status&quot;: &quot;pending_evidence&quot;
+      }
+    ],
+    &quot;scope&quot;: &quot;knowledge_gap_and_reflection_v1&quot;,
+    &quot;evaluation_cases&quot;: [
+      {
+        &quot;id&quot;: &quot;92c32cba6d91a42bf33ef2c3ca74fa8286b41d2e74ec82db0ebac6d29516d02a&quot;,
+        &quot;gap_id&quot;: &quot;2a96a5c6b1bb70bb9595ae56f288a09ac26c7034213912ff908c2712ec975a41&quot;,
+        &quot;turn_id&quot;: 1,
+        &quot;question&quot;: &quot;Tôi là [private], số điện thoại [private], đang nhắn qua Zalo OA. Chị muốn tiếp tục phần tư vấn lần trước. Câu hỏi cụ thể lần trước em còn lưu chứ?&quot;,
+        &quot;reason&quot;: &quot;unsupported_claim&quot;,
+        &quot;criterion&quot;: &quot;Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments.&quot;
+      },
+      {
+        &quot;id&quot;: &quot;b710a3a8e8a2256cc5e93421addb1f16f147b21205870cb92f38861616c298a2&quot;,
+        &quot;gap_id&quot;: &quot;fdabffeb147722a4f1f8dc9dc53bc3845d8a3db51703afb0b610c17ae49795f8&quot;,
+        &quot;turn_id&quot;: 2,
+        &quot;question&quot;: &quot;Em nhắc lại câu hỏi đó và cho chị biết đã có nguồn xác nhận chưa. Đừng đoán theo sản phẩm khác.&quot;,
+        &quot;reason&quot;: &quot;missing_knowledge&quot;,
+        &quot;criterion&quot;: &quot;Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments.&quot;
+      }
+    ],
+    &quot;out_of_scope&quot;: [],
+    &quot;issue_reviews&quot;: [
+      {
+        &quot;job_id&quot;: &quot;e08c6a4dfacceb087dcffbeebbe302a25178389c8e6c0b1dfeebc8205e9a1c5f&quot;,
+        &quot;message_id&quot;: 0,
+        &quot;turn_id&quot;: 1,
+        &quot;origin&quot;: &quot;turn_detector&quot;,
+        &quot;mechanism&quot;: &quot;knowledge_gap&quot;,
+        &quot;verified&quot;: true,
+        &quot;claim&quot;: &quot;Dạ em còn lưu câu hỏi lần trước: “ten ky thuat vien da kiem dinh chinh chiec se giao cho tôi là ai?”&quot;,
+        &quot;assessment&quot;: &quot;unsupported_by_evidence&quot;,
+        &quot;evidence_paths&quot;: [],
+        &quot;rejection&quot;: null,
+        &quot;rejection_reasons&quot;: [],
+        &quot;format_retry&quot;: false,
+        &quot;verifier_output&quot;: {
+          &quot;valid&quot;: true,
+          &quot;issue_scope&quot;: &quot;business_knowledge&quot;,
+          &quot;claim&quot;: &quot;Dạ em còn lưu câu hỏi lần trước: “ten ky thuat vien da kiem dinh chinh chiec se giao cho tôi là ai?”&quot;,
+          &quot;assessment&quot;: &quot;unsupported_by_evidence&quot;,
+          &quot;evidence_paths&quot;: [],
+          &quot;decision_reason&quot;: &quot;There are no tool calls, sources, or prior context in the evidence to verify the customer&#x27;s previous question recorded in the system.&quot;,
+          &quot;audit&quot;: {
+            &quot;support_status&quot;: &quot;not_established&quot;,
+            &quot;coverage&quot;: &quot;complete&quot;,
+            &quot;checked_paths&quot;: [
+              &quot;evidence.tool_calls&quot;,
+              &quot;evidence.sources&quot;,
+              &quot;evidence.promotions&quot;
+            ]
+          }
+        },
+        &quot;candidate_claim&quot;: &quot;Dạ em còn lưu câu hỏi lần trước: “ten ky thuat vien da kiem dinh chinh chiec se giao cho tôi là ai?”&quot;,
+        &quot;verification_basis&quot;: &quot;evidence_inventory_audit&quot;,
+        &quot;evidence_inventory&quot;: [
+          &quot;evidence.tool_calls&quot;,
+          &quot;evidence.sources&quot;,
+          &quot;evidence.promotions&quot;
+        ],
+        &quot;lesson_status&quot;: &quot;approved&quot;
+      },
+      {
+        &quot;job_id&quot;: &quot;e08c6a4dfacceb087dcffbeebbe302a25178389c8e6c0b1dfeebc8205e9a1c5f&quot;,
+        &quot;message_id&quot;: 0,
+        &quot;turn_id&quot;: 1,
+        &quot;origin&quot;: &quot;turn_detector&quot;,
+        &quot;mechanism&quot;: &quot;knowledge_gap&quot;,
+        &quot;verified&quot;: true,
+        &quot;claim&quot;: &quot;Hiện hệ thống không có thông tin xác nhận cho đúng chiếc hàng sẽ giao, nên em chưa thể trả lời chính xác ạ.&quot;,
+        &quot;assessment&quot;: &quot;unsupported_by_evidence&quot;,
+        &quot;evidence_paths&quot;: [],
+        &quot;rejection&quot;: null,
+        &quot;rejection_reasons&quot;: [],
+        &quot;format_retry&quot;: false,
+        &quot;verifier_output&quot;: {
+          &quot;valid&quot;: true,
+          &quot;issue_scope&quot;: &quot;business_knowledge&quot;,
+          &quot;claim&quot;: &quot;Hiện hệ thống không có thông tin xác nhận cho đúng chiếc hàng sẽ giao, nên em chưa thể trả lời chính xác ạ.&quot;,
+          &quot;assessment&quot;: &quot;unsupported_by_evidence&quot;,
+          &quot;evidence_paths&quot;: [],
+          &quot;decision_reason&quot;: &quot;The claim regarding system limitations on technician information for the delivered item is not supported by any tool calls, sources, or prior evidence.&quot;,
+          &quot;audit&quot;: {
+            &quot;support_status&quot;: &quot;not_established&quot;,
+            &quot;coverage&quot;: &quot;complete&quot;,
+            &quot;checked_paths&quot;: [
+              &quot;evidence.tool_calls&quot;,
+              &quot;evidence.sources&quot;,
+              &quot;evidence.promotions&quot;
+            ]
+          }
+        },
+        &quot;candidate_claim&quot;: &quot;Hiện hệ thống không có thông tin xác nhận cho đúng chiếc hàng sẽ giao, nên em chưa thể trả lời chính xác ạ.&quot;,
+        &quot;verification_basis&quot;: &quot;evidence_inventory_audit&quot;,
+        &quot;evidence_inventory&quot;: [
+          &quot;evidence.tool_calls&quot;,
+          &quot;evidence.sources&quot;,
+          &quot;evidence.promotions&quot;
+        ],
+        &quot;lesson_status&quot;: &quot;approved&quot;
+      }
+    ],
+    &quot;detector_error&quot;: null,
+    &quot;guardrails&quot;: {
+      &quot;version&quot;: &quot;learning_guardrails_v1&quot;,
+      &quot;input_findings&quot;: [],
+      &quot;blocked_lessons&quot;: [],
+      &quot;blocked_sources&quot;: []
+    },
+    &quot;detection&quot;: {
+      &quot;candidate_count&quot;: 3,
+      &quot;open_question_count&quot;: 1,
+      &quot;processed_count&quot;: 4,
+      &quot;skipped_unmatched_question&quot;: 0,
+      &quot;skipped_over_limit&quot;: 0,
+      &quot;scan&quot;: {
+        &quot;turns_available&quot;: 3,
+        &quot;turns_scanned&quot;: 3,
+        &quot;requests&quot;: 3,
+        &quot;errors&quot;: [],
+        &quot;schema_retries&quot;: 0,
+        &quot;skipped_over_limit&quot;: 0
+      },
+      &quot;alignment_rejections&quot;: []
+    },
+    &quot;outcome&quot;: &quot;gaps_processed&quot;,
+    &quot;learning_duration_ms&quot;: 21183,
+    &quot;learning_usage&quot;: {
+      &quot;input_tokens&quot;: 7170,
+      &quot;output_tokens&quot;: 723
+    }
+  },
+  &quot;observed_input_findings&quot;: []
+}</pre></details></article></section></main></body></html>

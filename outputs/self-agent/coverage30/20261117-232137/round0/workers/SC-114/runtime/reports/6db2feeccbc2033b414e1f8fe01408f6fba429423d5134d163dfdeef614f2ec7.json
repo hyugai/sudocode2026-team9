@@ -1,0 +1,180 @@
+{
+  "job_id": "6db2feeccbc2033b414e1f8fe01408f6fba429423d5134d163dfdeef614f2ec7",
+  "gaps": [
+    {
+      "id": "6d77e8ff6447ed2f86e21104323b6a08b042afbbe2e5ddb1008e728cd5f1f74a",
+      "status": "pending_remediation"
+    },
+    {
+      "id": "93d22d2b04b5b12adc5f39c8ca4ec7659a9f88dbfa70677283a6ff2f097f6384",
+      "status": "pending_remediation"
+    }
+  ],
+  "scope": "knowledge_gap_and_reflection_v1",
+  "evaluation_cases": [
+    {
+      "id": "37bb7fb6919a10cea50df81fa92c8a78c7f80aacc7daf25f4c5eb1a587d652f1",
+      "gap_id": "6d77e8ff6447ed2f86e21104323b6a08b042afbbe2e5ddb1008e728cd5f1f74a",
+      "turn_id": 3,
+      "question": "ngan sach tong của anh la 6.880.000 dong. hôm nay chi nho em ghi lai gio cuoi cung, chua dat.",
+      "reason": "unsupported_claim",
+      "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments."
+    },
+    {
+      "id": "41cd1c2fe5eb049c86c6bb1854928ffe074de9d77d89044fdfca37dd9928cb6b",
+      "gap_id": "93d22d2b04b5b12adc5f39c8ca4ec7659a9f88dbfa70677283a6ff2f097f6384",
+      "turn_id": 4,
+      "question": "Em xac nhận lai dung hai mon sau khi sua giúp anh.",
+      "reason": "unsupported_claim",
+      "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments."
+    }
+  ],
+  "out_of_scope": [],
+  "issue_reviews": [
+    {
+      "job_id": "6db2feeccbc2033b414e1f8fe01408f6fba429423d5134d163dfdeef614f2ec7",
+      "message_id": 4,
+      "turn_id": 3,
+      "origin": "turn_detector",
+      "mechanism": "knowledge_gap",
+      "verified": true,
+      "claim": "lưu lại giỏ hàng cuối cùng của anh gồm 1 máy lọc nước RO Karofi 9 lõi cùng 1 quạt đứng Senko TS16",
+      "assessment": "unsupported_by_evidence",
+      "evidence_paths": [],
+      "rejection": null,
+      "rejection_reasons": [],
+      "format_retry": true,
+      "verifier_output": {
+        "valid": true,
+        "issue_scope": "business_knowledge",
+        "claim": "lưu lại giỏ hàng cuối cùng của anh gồm 1 máy lọc nước RO Karofi 9 lõi cùng 1 quạt đứng Senko TS16",
+        "assessment": "unsupported_by_evidence",
+        "evidence_paths": [],
+        "decision_reason": "The system tool calls and prior evidence do not contain catalog verification or pricing/stock data for 'Quạt đứng Senko TS16' to confirm cart contents.",
+        "audit": {
+          "support_status": "not_established",
+          "coverage": "complete",
+          "checked_paths": [
+            "evidence.tool_calls",
+            "evidence.sources",
+            "evidence.promotions",
+            "prior_evidence.0.tool_calls.0.result",
+            "prior_evidence.0.tool_calls.1.result",
+            "prior_evidence.0.tool_calls.2.result",
+            "prior_evidence.0.sources",
+            "prior_evidence.0.promotions",
+            "prior_evidence.1.tool_calls.0.result",
+            "prior_evidence.1.sources",
+            "prior_evidence.1.promotions"
+          ]
+        }
+      },
+      "candidate_claim": "lưu lại giỏ hàng cuối cùng của anh gồm 1 máy lọc nước RO Karofi 9 lõi cùng 1 quạt đứng Senko TS16",
+      "verification_basis": "evidence_inventory_audit",
+      "evidence_inventory": [
+        "evidence.tool_calls",
+        "evidence.sources",
+        "evidence.promotions",
+        "prior_evidence.0.tool_calls.0.result",
+        "prior_evidence.0.tool_calls.1.result",
+        "prior_evidence.0.tool_calls.2.result",
+        "prior_evidence.0.sources",
+        "prior_evidence.0.promotions",
+        "prior_evidence.1.tool_calls.0.result",
+        "prior_evidence.1.sources",
+        "prior_evidence.1.promotions"
+      ],
+      "lesson_status": "approved"
+    },
+    {
+      "job_id": "6db2feeccbc2033b414e1f8fe01408f6fba429423d5134d163dfdeef614f2ec7",
+      "message_id": 6,
+      "turn_id": 4,
+      "origin": "turn_detector",
+      "mechanism": "knowledge_gap",
+      "verified": true,
+      "claim": "với tổng ngân sách là 6.880.000 đồng",
+      "assessment": "unsupported_by_evidence",
+      "evidence_paths": [],
+      "rejection": null,
+      "rejection_reasons": [],
+      "format_retry": false,
+      "verifier_output": {
+        "valid": true,
+        "issue_scope": "business_knowledge",
+        "claim": "với tổng ngân sách là 6.880.000 đồng",
+        "assessment": "unsupported_by_evidence",
+        "evidence_paths": [],
+        "decision_reason": "The claim states that the total cart budget/price is 6,880,000 VND, but no tool call or source verified or calculated the price for the Senko TS16 fan alongside the Karofi RO filter to confirm this total.",
+        "audit": {
+          "support_status": "not_established",
+          "coverage": "complete",
+          "checked_paths": [
+            "evidence.tool_calls",
+            "evidence.sources",
+            "evidence.promotions",
+            "prior_evidence.0.tool_calls.0.result",
+            "prior_evidence.0.tool_calls.1.result",
+            "prior_evidence.0.tool_calls.2.result",
+            "prior_evidence.0.sources",
+            "prior_evidence.0.promotions",
+            "prior_evidence.1.tool_calls.0.result",
+            "prior_evidence.1.sources",
+            "prior_evidence.1.promotions",
+            "prior_evidence.2.tool_calls",
+            "prior_evidence.2.sources",
+            "prior_evidence.2.promotions"
+          ]
+        }
+      },
+      "candidate_claim": "với tổng ngân sách là 6.880.000 đồng",
+      "verification_basis": "evidence_inventory_audit",
+      "evidence_inventory": [
+        "evidence.tool_calls",
+        "evidence.sources",
+        "evidence.promotions",
+        "prior_evidence.0.tool_calls.0.result",
+        "prior_evidence.0.tool_calls.1.result",
+        "prior_evidence.0.tool_calls.2.result",
+        "prior_evidence.0.sources",
+        "prior_evidence.0.promotions",
+        "prior_evidence.1.tool_calls.0.result",
+        "prior_evidence.1.sources",
+        "prior_evidence.1.promotions",
+        "prior_evidence.2.tool_calls",
+        "prior_evidence.2.sources",
+        "prior_evidence.2.promotions"
+      ],
+      "lesson_status": "approved"
+    }
+  ],
+  "detector_error": null,
+  "guardrails": {
+    "version": "learning_guardrails_v1",
+    "input_findings": [],
+    "blocked_lessons": [],
+    "blocked_sources": []
+  },
+  "detection": {
+    "candidate_count": 2,
+    "open_question_count": 0,
+    "processed_count": 2,
+    "skipped_unmatched_question": 0,
+    "skipped_over_limit": 0,
+    "scan": {
+      "turns_available": 4,
+      "turns_scanned": 4,
+      "requests": 4,
+      "errors": [],
+      "schema_retries": 0,
+      "skipped_over_limit": 0
+    },
+    "alignment_rejections": []
+  },
+  "outcome": "gaps_processed",
+  "learning_duration_ms": 19397,
+  "learning_usage": {
+    "input_tokens": 18043,
+    "output_tokens": 1250
+  }
+}

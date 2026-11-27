@@ -1,0 +1,172 @@
+{
+  "scenario_id": "SC-044",
+  "call": "call_3",
+  "session_id": "self-8b8ae8ea2d9b4fedba6b32fbb80b8068-SC-044-call_3",
+  "turns": [
+    {
+      "customer": "Anh gọi lần thứ ba rồi. Chốt một chiếc như đã trao đổi nhé.",
+      "agent": "Dạ em cảm ơn anh [private] ạ. Em đã ghi nhận anh chốt lấy 1 chiếc quạt mát SKU-FAN-DC1 với giá 2.450.000đ và thanh toán khi nhận hàng (COD). \n\nHiện tại em chỉ còn thiếu địa chỉ [address]",
+      "latency": {
+        "ttft_ms": 6016,
+        "total_ms": 6016,
+        "ttfa_ms": null,
+        "measurement_mode": "non_streaming",
+        "timing_boundary": "response_ready_before_persistence",
+        "asr_ms": null,
+        "call_brief_ms": 3174,
+        "response_ready_ms": 6016,
+        "persistence_ms": 0.112,
+        "request_complete_ms": 6016.6,
+        "backend_total_ms": 6016.6,
+        "precomputed_parts": [
+          "persisted_facts"
+        ]
+      },
+      "lesson_trace": null
+    },
+    {
+      "customer": "Giá 2.450.000 đồng thì anh đồng ý. Địa chỉ [address]",
+      "agent": "Dạ vâng, em đã ghi nhận anh [private] chốt 1 chiếc quạt mát SKU-FAN-DC1 với giá 2.450.000đ và hình thức thanh toán COD rồi ạ. \n\nDo trong hệ thống của em hiện tại chưa lưu địa chỉ [address]",
+      "latency": {
+        "ttft_ms": 3196,
+        "total_ms": 3196,
+        "ttfa_ms": null,
+        "measurement_mode": "non_streaming",
+        "timing_boundary": "response_ready_before_persistence",
+        "asr_ms": null,
+        "call_brief_ms": null,
+        "response_ready_ms": 3196,
+        "persistence_ms": 0.092,
+        "request_complete_ms": 3196.17,
+        "backend_total_ms": 3196.17,
+        "precomputed_parts": [
+          "persisted_facts"
+        ]
+      },
+      "lesson_trace": null
+    }
+  ],
+  "generation_context": {
+    "round": 0,
+    "instruction_hash": "9d30a7093911a993d8545de8b61cc6dc8465de67b10fb62b27d9f1bafaf0badf",
+    "applied_patterns": {},
+    "lessons_loaded": false,
+    "lesson_sources": [],
+    "lesson_files": [],
+    "instruction_root": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round0\\instructions"
+  },
+  "evaluation_evidence": [
+    {
+      "turn_id": 1,
+      "agent_response": "Dạ em cảm ơn anh [private] ạ. Em đã ghi nhận anh chốt lấy 1 chiếc quạt mát SKU-FAN-DC1 với giá 2.450.000đ và thanh toán khi nhận hàng (COD). \n\nHiện tại em chỉ còn thiếu địa chỉ [address]",
+      "tool_calls": [
+        {
+          "name": "inventory.check",
+          "args": {
+            "sku": "SKU-FAN-DC1",
+            "on": "2026-10-23"
+          },
+          "result": {
+            "sku": "SKU-FAN-DC1",
+            "found": true,
+            "in_stock": true,
+            "qty": 30,
+            "discontinued": false
+          }
+        },
+        {
+          "name": "order.status",
+          "args": {
+            "customer_phone": "[private]"
+          },
+          "result": {
+            "orders": []
+          }
+        },
+        {
+          "name": "pricing.get_quote",
+          "args": {
+            "on": "2026-10-23",
+            "customer_phone": "[private]",
+            "customer_id": "[private]",
+            "sku": "SKU-FAN-DC1",
+            "qty": 1
+          },
+          "result": {
+            "sku": "SKU-FAN-DC1",
+            "list_price_vnd": 2450000,
+            "final_price_vnd": 2450000,
+            "applied_promos": [
+              {
+                "promo_code": "COD-0",
+                "type": "freecod",
+                "discount_vnd": 0
+              }
+            ],
+            "expired_promos": [],
+            "ineligible_promos": [
+              {
+                "promo_code": "NAM-SHIP0",
+                "reason": "region"
+              }
+            ],
+            "not_applied_exclusive": [],
+            "freeship": true
+          }
+        }
+      ],
+      "sources": [],
+      "promotions": []
+    },
+    {
+      "turn_id": 2,
+      "agent_response": "Dạ vâng, em đã ghi nhận anh [private] chốt 1 chiếc quạt mát SKU-FAN-DC1 với giá 2.450.000đ và hình thức thanh toán COD rồi ạ. \n\nDo trong hệ thống của em hiện tại chưa lưu địa chỉ [address]",
+      "tool_calls": [],
+      "sources": [],
+      "promotions": []
+    }
+  ],
+  "job": {
+    "status": "done",
+    "job_id": "fd95da9bce6a2bbdfd469e81ffd1fa0f5d82f1cdebfa61c94d91b61c514f20e0",
+    "error": null
+  },
+  "learning": {
+    "job_id": "fd95da9bce6a2bbdfd469e81ffd1fa0f5d82f1cdebfa61c94d91b61c514f20e0",
+    "gaps": [],
+    "scope": "knowledge_gap_and_reflection_v1",
+    "evaluation_cases": [],
+    "out_of_scope": [],
+    "issue_reviews": [],
+    "detector_error": null,
+    "guardrails": {
+      "version": "learning_guardrails_v1",
+      "input_findings": [],
+      "blocked_lessons": [],
+      "blocked_sources": []
+    },
+    "detection": {
+      "candidate_count": 0,
+      "open_question_count": 0,
+      "processed_count": 0,
+      "skipped_unmatched_question": 0,
+      "skipped_over_limit": 0,
+      "scan": {
+        "turns_available": 2,
+        "turns_scanned": 2,
+        "requests": 2,
+        "errors": [],
+        "schema_retries": 0,
+        "skipped_over_limit": 0
+      },
+      "alignment_rejections": []
+    },
+    "outcome": "no_candidates",
+    "learning_duration_ms": 2071,
+    "learning_usage": {
+      "input_tokens": 1774,
+      "output_tokens": 12
+    }
+  },
+  "artifact_changes": []
+}

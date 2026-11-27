@@ -1,0 +1,309 @@
+{
+  "scenario_id": "SC-021",
+  "call": "call_1",
+  "session_id": "self-25404f1e9aaa481599c5f3ef7b28665d-SC-021-call_1",
+  "turns": [
+    {
+      "customer": "Alo em, chị lấy Giày sneaker Urban Classic, size 38, màu trắng.",
+      "agent": "Dạ em chào chị [private], em đã ghi nhận chị lấy **Giày sneaker Urban Classic**, size 38, màu trắng (giá 890.000 đ) và sản phẩm hiện đang có sẵn hàng ạ.\n\nĐể em lên đơn cho chị luôn, chị cho em xin thông tin địa chỉ [address]",
+      "latency": {
+        "ttft_ms": 8372,
+        "total_ms": 8372,
+        "ttfa_ms": null,
+        "measurement_mode": "non_streaming",
+        "timing_boundary": "response_ready_before_persistence",
+        "asr_ms": null,
+        "call_brief_ms": 3310,
+        "response_ready_ms": 8372,
+        "persistence_ms": 0.601,
+        "request_complete_ms": 8372.998,
+        "backend_total_ms": 8372.998,
+        "precomputed_parts": []
+      },
+      "lesson_trace": null
+    },
+    {
+      "customer": "Chị đồng ý 890.000 đồng cho một sản phẩm. Địa chỉ [address]",
+      "agent": "Dạ em cảm ơn chị [private] ạ! Em đã lên thành công đơn hàng cho sản phẩm **Giày sneaker Urban Classic (size 38, màu trắng)** với mã đơn hàng là **[order_id]**. \n\nĐơn hàng có tổng tiền là 890.000 đồng, thanh toán khi nhận hàng (COD) tại địa chỉ [address]",
+      "latency": {
+        "ttft_ms": 6372,
+        "total_ms": 6372,
+        "ttfa_ms": null,
+        "measurement_mode": "non_streaming",
+        "timing_boundary": "response_ready_before_persistence",
+        "asr_ms": null,
+        "call_brief_ms": null,
+        "response_ready_ms": 6372,
+        "persistence_ms": 0.146,
+        "request_complete_ms": 6372.423,
+        "backend_total_ms": 6372.423,
+        "precomputed_parts": [
+          "persisted_facts"
+        ]
+      },
+      "lesson_trace": null
+    },
+    {
+      "customer": "Em tạo đơn giúp chị và đọc mã đơn để chị lưu nhé.",
+      "agent": "Dạ, đơn hàng cho sản phẩm Giày sneaker Urban Classic (size 38, màu trắng) của chị đã được tạo thành công rồi ạ. \n\nMã đơn hàng của chị là **[order_id]**, tổng tiền là 890.000 đồng, thanh toán COD tại địa chỉ [address]",
+      "latency": {
+        "ttft_ms": 3755,
+        "total_ms": 3755,
+        "ttfa_ms": null,
+        "measurement_mode": "non_streaming",
+        "timing_boundary": "response_ready_before_persistence",
+        "asr_ms": null,
+        "call_brief_ms": null,
+        "response_ready_ms": 3755,
+        "persistence_ms": 0.111,
+        "request_complete_ms": 3755.495,
+        "backend_total_ms": 3755.495,
+        "precomputed_parts": [
+          "persisted_facts"
+        ]
+      },
+      "lesson_trace": null
+    }
+  ],
+  "generation_context": {
+    "round": 0,
+    "instruction_hash": "9d30a7093911a993d8545de8b61cc6dc8465de67b10fb62b27d9f1bafaf0badf",
+    "applied_patterns": {},
+    "lessons_loaded": false,
+    "lesson_sources": [],
+    "lesson_files": [],
+    "instruction_root": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round0\\instructions"
+  },
+  "evaluation_evidence": [
+    {
+      "turn_id": 1,
+      "agent_response": "Dạ em chào chị [private], em đã ghi nhận chị lấy **Giày sneaker Urban Classic**, size 38, màu trắng (giá 890.000 đ) và sản phẩm hiện đang có sẵn hàng ạ.\n\nĐể em lên đơn cho chị luôn, chị cho em xin thông tin địa chỉ [address]",
+      "tool_calls": [
+        {
+          "name": "catalog.search",
+          "args": {
+            "query": "Giày sneaker Urban Classic size 38 màu trắng",
+            "on": "2026-10-02"
+          },
+          "result": {
+            "items": [
+              {
+                "sku": "SKU-SN-CAS",
+                "name": "[private]",
+                "category": "thoi-trang/giay",
+                "brand": "Urban",
+                "list_price_vnd": 890000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "material": "vải lưới + đế EVA",
+                  "return_days": 7
+                },
+                "variants": [
+                  {
+                    "variant_sku": "SKU-SN-CAS-38-TRANG",
+                    "size": "38",
+                    "color": "trang",
+                    "price_delta": 0,
+                    "price_delta_vnd": 0
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "inventory.check",
+          "args": {
+            "sku": "SKU-SN-CAS-38-TRANG",
+            "on": "2026-10-02"
+          },
+          "result": {
+            "sku": "SKU-SN-CAS-38-TRANG",
+            "found": true,
+            "in_stock": true,
+            "qty": 5,
+            "discontinued": false
+          }
+        },
+        {
+          "name": "pricing.get_quote",
+          "args": {
+            "on": "2026-10-02",
+            "customer_phone": "[private]",
+            "customer_id": "[private]",
+            "sku": "SKU-SN-CAS-38-TRANG",
+            "qty": 1
+          },
+          "result": {
+            "sku": "SKU-SN-CAS-38-TRANG",
+            "list_price_vnd": 890000,
+            "final_price_vnd": 890000,
+            "applied_promos": [
+              {
+                "promo_code": "COD-0",
+                "type": "freecod",
+                "discount_vnd": 0
+              }
+            ],
+            "expired_promos": [],
+            "ineligible_promos": [],
+            "not_applied_exclusive": [],
+            "freeship": false
+          }
+        }
+      ],
+      "sources": [],
+      "promotions": []
+    },
+    {
+      "turn_id": 2,
+      "agent_response": "Dạ em cảm ơn chị [private] ạ! Em đã lên thành công đơn hàng cho sản phẩm **Giày sneaker Urban Classic (size 38, màu trắng)** với mã đơn hàng là **[order_id]**. \n\nĐơn hàng có tổng tiền là 890.000 đồng, thanh toán khi nhận hàng (COD) tại địa chỉ [address]",
+      "tool_calls": [
+        {
+          "name": "pricing.get_quote",
+          "args": {
+            "on": "2026-10-02",
+            "customer_phone": "[private]",
+            "customer_id": "[private]",
+            "address": "[private]",
+            "sku": "SKU-SN-CAS-38-TRANG",
+            "qty": 1
+          },
+          "result": {
+            "sku": "SKU-SN-CAS-38-TRANG",
+            "list_price_vnd": 890000,
+            "final_price_vnd": 890000,
+            "applied_promos": [
+              {
+                "promo_code": "COD-0",
+                "type": "freecod",
+                "discount_vnd": 0
+              }
+            ],
+            "expired_promos": [],
+            "ineligible_promos": [],
+            "not_applied_exclusive": [],
+            "freeship": false
+          }
+        },
+        {
+          "name": "order.create",
+          "args": {
+            "customer_phone": "[private]",
+            "customer_id": "[private]",
+            "address": "[private]",
+            "idempotency_key": "self-25404f1e9aaa481599c5f3ef7b28665d-SC-021-call_1:call_1:create:SKU-SN-CAS-38-TRANG",
+            "sku": "SKU-SN-CAS-38-TRANG",
+            "qty": 1,
+            "price_vnd": 890000,
+            "promo_code": "COD-0",
+            "on": "2026-10-02",
+            "payment": "COD"
+          },
+          "result": {
+            "order_id": "[private]",
+            "status": "created",
+            "total_vnd": 890000,
+            "needs_confirmation_call": false,
+            "estimated_delivery": "2026-10-05"
+          }
+        }
+      ],
+      "sources": [],
+      "promotions": []
+    },
+    {
+      "turn_id": 3,
+      "agent_response": "Dạ, đơn hàng cho sản phẩm Giày sneaker Urban Classic (size 38, màu trắng) của chị đã được tạo thành công rồi ạ. \n\nMã đơn hàng của chị là **[order_id]**, tổng tiền là 890.000 đồng, thanh toán COD tại địa chỉ [address]",
+      "tool_calls": [
+        {
+          "name": "inventory.check",
+          "args": {
+            "sku": "SKU-SN-CAS-38-TRANG",
+            "on": "2026-10-02"
+          },
+          "result": {
+            "sku": "SKU-SN-CAS-38-TRANG",
+            "found": true,
+            "in_stock": true,
+            "qty": 5,
+            "discontinued": false
+          }
+        },
+        {
+          "name": "pricing.get_quote",
+          "args": {
+            "on": "2026-10-02",
+            "customer_phone": "[private]",
+            "customer_id": "[private]",
+            "address": "[private]",
+            "sku": "SKU-SN-CAS-38-TRANG",
+            "qty": 1
+          },
+          "result": {
+            "sku": "SKU-SN-CAS-38-TRANG",
+            "list_price_vnd": 890000,
+            "final_price_vnd": 890000,
+            "applied_promos": [
+              {
+                "promo_code": "COD-0",
+                "type": "freecod",
+                "discount_vnd": 0
+              }
+            ],
+            "expired_promos": [],
+            "ineligible_promos": [],
+            "not_applied_exclusive": [],
+            "freeship": false
+          }
+        }
+      ],
+      "sources": [],
+      "promotions": []
+    }
+  ],
+  "job": {
+    "status": "done",
+    "job_id": "4622dd8dccb63e27e924ac5dea109dfed23bd2dc26c107ead3b88ad0f80c1a9d",
+    "error": null
+  },
+  "learning": {
+    "job_id": "4622dd8dccb63e27e924ac5dea109dfed23bd2dc26c107ead3b88ad0f80c1a9d",
+    "gaps": [],
+    "scope": "knowledge_gap_and_reflection_v1",
+    "evaluation_cases": [],
+    "out_of_scope": [],
+    "issue_reviews": [],
+    "detector_error": null,
+    "guardrails": {
+      "version": "learning_guardrails_v1",
+      "input_findings": [],
+      "blocked_lessons": [],
+      "blocked_sources": []
+    },
+    "detection": {
+      "candidate_count": 0,
+      "open_question_count": 0,
+      "processed_count": 0,
+      "skipped_unmatched_question": 0,
+      "skipped_over_limit": 0,
+      "scan": {
+        "turns_available": 3,
+        "turns_scanned": 3,
+        "requests": 3,
+        "errors": [],
+        "schema_retries": 0,
+        "skipped_over_limit": 0
+      },
+      "alignment_rejections": []
+    },
+    "outcome": "no_candidates",
+    "learning_duration_ms": 3738,
+    "learning_usage": {
+      "input_tokens": 4511,
+      "output_tokens": 18
+    }
+  },
+  "artifact_changes": []
+}

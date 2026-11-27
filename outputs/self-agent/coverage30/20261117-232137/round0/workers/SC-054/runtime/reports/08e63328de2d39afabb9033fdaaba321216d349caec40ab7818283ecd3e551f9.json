@@ -1,0 +1,91 @@
+{
+  "job_id": "08e63328de2d39afabb9033fdaaba321216d349caec40ab7818283ecd3e551f9",
+  "gaps": [
+    {
+      "id": "9298aa80a7a7c5e010655e6f73afe8c7e86b5340640604f7fd1a9f0eabab6be1",
+      "status": "pending_remediation"
+    }
+  ],
+  "scope": "knowledge_gap_and_reflection_v1",
+  "evaluation_cases": [
+    {
+      "id": "3842e91fce1b8114f38e70644f328d12c4a114c856f0ee617683a0e3266c761a",
+      "gap_id": "9298aa80a7a7c5e010655e6f73afe8c7e86b5340640604f7fd1a9f0eabab6be1",
+      "turn_id": 1,
+      "question": "Tôi là [private], số điện thoại [private], đã nhắn qua Fanpage. Anh [private] đây, đã nhắn Fanpage bằng số này. Bên em còn nội dung chat không?",
+      "reason": "unsupported_claim",
+      "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments."
+    }
+  ],
+  "out_of_scope": [],
+  "issue_reviews": [
+    {
+      "job_id": "08e63328de2d39afabb9033fdaaba321216d349caec40ab7818283ecd3e551f9",
+      "message_id": 0,
+      "turn_id": 1,
+      "origin": "turn_detector",
+      "mechanism": "knowledge_gap",
+      "verified": true,
+      "claim": "Dạ em chào anh [private], em có thể tra cứu lịch sử trao đổi của anh trên hệ thống. \n\nTheo ghi nhận gần nhất, anh có quan tâm đến sản phẩm quạt trần (mã SKU-FAN-DC1).",
+      "assessment": "unsupported_by_evidence",
+      "evidence_paths": [],
+      "rejection": null,
+      "rejection_reasons": [],
+      "format_retry": false,
+      "verifier_output": {
+        "valid": true,
+        "issue_scope": "business_knowledge",
+        "claim": "Dạ em chào anh [private], em có thể tra cứu lịch sử trao đổi của anh trên hệ thống. \n\nTheo ghi nhận gần nhất, anh có quan tâm đến sản phẩm quạt trần (mã SKU-FAN-DC1).",
+        "assessment": "unsupported_by_evidence",
+        "evidence_paths": [],
+        "decision_reason": "No evidence or tool results confirm customer historical interactions or prior interest in ceiling fan SKU-FAN-DC1.",
+        "audit": {
+          "support_status": "not_established",
+          "coverage": "complete",
+          "checked_paths": [
+            "evidence.tool_calls.0.result",
+            "evidence.sources",
+            "evidence.promotions"
+          ]
+        }
+      },
+      "candidate_claim": "Dạ em chào anh [private], em có thể tra cứu lịch sử trao đổi của anh trên hệ thống. \n\nTheo ghi nhận gần nhất, anh có quan tâm đến sản phẩm quạt trần (mã SKU-FAN-DC1).",
+      "verification_basis": "evidence_inventory_audit",
+      "evidence_inventory": [
+        "evidence.tool_calls.0.result",
+        "evidence.sources",
+        "evidence.promotions"
+      ],
+      "lesson_status": "approved"
+    }
+  ],
+  "detector_error": null,
+  "guardrails": {
+    "version": "learning_guardrails_v1",
+    "input_findings": [],
+    "blocked_lessons": [],
+    "blocked_sources": []
+  },
+  "detection": {
+    "candidate_count": 1,
+    "open_question_count": 0,
+    "processed_count": 1,
+    "skipped_unmatched_question": 0,
+    "skipped_over_limit": 0,
+    "scan": {
+      "turns_available": 3,
+      "turns_scanned": 3,
+      "requests": 3,
+      "errors": [],
+      "schema_retries": 0,
+      "skipped_over_limit": 0
+    },
+    "alignment_rejections": []
+  },
+  "outcome": "gaps_processed",
+  "learning_duration_ms": 9514,
+  "learning_usage": {
+    "input_tokens": 8752,
+    "output_tokens": 445
+  }
+}

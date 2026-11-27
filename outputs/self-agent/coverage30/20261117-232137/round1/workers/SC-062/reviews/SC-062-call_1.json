@@ -1,0 +1,731 @@
+{
+  "schema_version": 1,
+  "guardrail_version": "learning_guardrails_v1",
+  "metadata": {
+    "evaluation_population": "single_session_no_baseline"
+  },
+  "warnings": [
+    "Chưa chạy judge: chỉ xem thay đổi câu trả lời và dấu vết lesson, chưa đánh giá cải thiện.",
+    "Không có cặp chấm hợp lệ: chưa thể kết luận cải thiện hay không có regression."
+  ],
+  "summary": {
+    "total_turns": 3,
+    "judged_pair_count": 0,
+    "round0_turns": 0,
+    "round1_turns": 3,
+    "stored_frozen_case_count": 0,
+    "injected_turns": 1,
+    "changed_answers": 0,
+    "counts": {
+      "improved_resolution": 0,
+      "safer_unresolved": 0,
+      "regression": 0,
+      "unchanged": 0,
+      "needs_review": 0,
+      "not_evaluated": 3,
+      "unpaired": 0,
+      "question_changed": 0,
+      "excluded": 0
+    }
+  },
+  "rows": [
+    {
+      "call": "SC-062/call_1",
+      "turn_id": 1,
+      "question": "Chào shop, anh đang xem Máy hút sữa điện đôi Medela Swing Maxi, mức giá 5.990.000 đồng đúng không?",
+      "baseline_question": null,
+      "classification": "not_evaluated",
+      "case_id": null,
+      "gap_id": null,
+      "answer_changed": false,
+      "injected": true,
+      "lesson_trace": {
+        "lessons_loaded": 25,
+        "selected_lessons": [
+          {
+            "id": "0e7e90c0ebef8ff9c32f68b6dc37e5e29d91f60a2b499f75ecd877036ecf29bb",
+            "hash": "0b334693cdf926b3101254ee7a690f2a2e7fc1eee39df75bb1acd210c2fa3838",
+            "mechanism": "knowledge_gap"
+          }
+        ],
+        "injected": true,
+        "mode": "memory_only",
+        "response_modified": false,
+        "routing": "selected",
+        "routing_ms": 3309.038,
+        "routing_usage": {
+          "input_tokens": 4874,
+          "output_tokens": 69
+        },
+        "guardrails": {
+          "version": "learning_guardrails_v1",
+          "blocked_lessons": []
+        },
+        "injected_chars": 785,
+        "injected_lesson_count": 1,
+        "wrapper_total_ms": 10925.491
+      },
+      "round0": {
+        "answer": null,
+        "verdict": {
+          "status": null
+        },
+        "latency": null,
+        "evidence": {
+          "current": {},
+          "earlier": []
+        }
+      },
+      "round1": {
+        "answer": "Dạ đúng rồi anh [private] ạ. Sản phẩm Máy hút sữa điện đôi Medela Swing Maxi hiện đang có giá là 5.990.000 đồng, bên em đang sẵn hàng và còn được miễn phí vận chuyển nữa ạ. \n\nAnh có cần em tư vấn thêm thông tin gì về máy hay hỗ trợ mình lên đơn luôn không anh?",
+        "verdict": {
+          "status": null
+        },
+        "latency": {
+          "ttft_ms": 7616,
+          "total_ms": 7616,
+          "ttfa_ms": null,
+          "measurement_mode": "non_streaming",
+          "timing_boundary": "response_ready_before_persistence",
+          "asr_ms": null,
+          "call_brief_ms": 3386,
+          "response_ready_ms": 7616,
+          "persistence_ms": 0.332,
+          "request_complete_ms": 7616.329,
+          "backend_total_ms": 7616.329,
+          "precomputed_parts": []
+        },
+        "evidence": {
+          "current": {
+            "turn_id": 1,
+            "agent_response": "Dạ đúng rồi anh [private] ạ. Sản phẩm Máy hút sữa điện đôi Medela Swing Maxi hiện đang có giá là 5.990.000 đồng, bên em đang sẵn hàng và còn được miễn phí vận chuyển nữa ạ. \n\nAnh có cần em tư vấn thêm thông tin gì về máy hay hỗ trợ mình lên đơn luôn không anh?",
+            "tool_calls": [
+              {
+                "name": "catalog.search",
+                "args": {
+                  "query": "Máy hút sữa điện đôi Medela Swing Maxi",
+                  "on": "2026-10-16"
+                },
+                "result": {
+                  "items": [
+                    {
+                      "sku": "SKU-MB-PUMP2",
+                      "name": "[private]",
+                      "category": "me-be",
+                      "brand": "Medela",
+                      "list_price_vnd": 5990000.0,
+                      "discontinued": false,
+                      "successor_sku": null,
+                      "attributes": {
+                        "warranty_months": 12
+                      },
+                      "variants": []
+                    }
+                  ],
+                  "total": 1
+                }
+              },
+              {
+                "name": "inventory.check",
+                "args": {
+                  "sku": "SKU-MB-PUMP2",
+                  "on": "2026-10-16"
+                },
+                "result": {
+                  "sku": "SKU-MB-PUMP2",
+                  "found": true,
+                  "in_stock": true,
+                  "qty": 18,
+                  "discontinued": false
+                }
+              },
+              {
+                "name": "pricing.get_quote",
+                "args": {
+                  "on": "2026-10-16",
+                  "customer_phone": "[private]",
+                  "customer_id": "[private]",
+                  "sku": "SKU-MB-PUMP2",
+                  "qty": 1
+                },
+                "result": {
+                  "sku": "SKU-MB-PUMP2",
+                  "list_price_vnd": 5990000,
+                  "final_price_vnd": 5990000,
+                  "applied_promos": [
+                    {
+                      "promo_code": "MOM-FREESHIP",
+                      "type": "freeship",
+                      "discount_vnd": 0
+                    },
+                    {
+                      "promo_code": "COD-0",
+                      "type": "freecod",
+                      "discount_vnd": 0
+                    }
+                  ],
+                  "expired_promos": [],
+                  "ineligible_promos": [],
+                  "not_applied_exclusive": [],
+                  "freeship": true
+                }
+              }
+            ],
+            "sources": [
+              {
+                "sku": "SKU-MB-PUMP2",
+                "name": "[private]",
+                "category": "me-be",
+                "brand": "Medela",
+                "list_price_vnd": 5990000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "warranty_months": 12
+                },
+                "variants": []
+              },
+              {
+                "sku": "SKU-MB-PUMP2",
+                "name": "[private]",
+                "category": "me-be",
+                "brand": "Medela",
+                "list_price_vnd": 5990000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "warranty_months": 12
+                },
+                "variants": []
+              }
+            ],
+            "promotions": []
+          },
+          "earlier": []
+        }
+      }
+    },
+    {
+      "call": "SC-062/call_1",
+      "turn_id": 2,
+      "question": "Anh mua cho người thân và còn vấn đề sức khỏe cần hỏi. Chưa đặt hàng nhé.",
+      "baseline_question": null,
+      "classification": "not_evaluated",
+      "case_id": null,
+      "gap_id": null,
+      "answer_changed": false,
+      "injected": false,
+      "lesson_trace": {
+        "lessons_loaded": 25,
+        "selected_lessons": [],
+        "injected": false,
+        "mode": "memory_only",
+        "response_modified": false,
+        "routing": "no_match",
+        "routing_ms": 2755.022,
+        "routing_usage": {
+          "input_tokens": 5112,
+          "output_tokens": 12
+        },
+        "wrapper_total_ms": 8164.842
+      },
+      "round0": {
+        "answer": null,
+        "verdict": {
+          "status": null
+        },
+        "latency": null,
+        "evidence": {
+          "current": {},
+          "earlier": []
+        }
+      },
+      "round1": {
+        "answer": "Dạ em hiểu rồi ạ, anh [private] cứ cân nhắc kỹ nhé. Anh có thể trao đổi với người thân hoặc tư vấn bác sĩ trước ạ. Khi nào cần em tư vấn thêm thông tin gì về máy Medela Swing Maxi hoặc hỗ trợ mình lên đơn, anh cứ liên hệ lại với em nhé!",
+        "verdict": {
+          "status": null
+        },
+        "latency": {
+          "ttft_ms": 5410,
+          "total_ms": 5410,
+          "ttfa_ms": null,
+          "measurement_mode": "non_streaming",
+          "timing_boundary": "response_ready_before_persistence",
+          "asr_ms": null,
+          "call_brief_ms": null,
+          "response_ready_ms": 5410,
+          "persistence_ms": 0.117,
+          "request_complete_ms": 5409.728,
+          "backend_total_ms": 5409.728,
+          "precomputed_parts": [
+            "persisted_facts"
+          ]
+        },
+        "evidence": {
+          "current": {
+            "turn_id": 2,
+            "agent_response": "Dạ em hiểu rồi ạ, anh [private] cứ cân nhắc kỹ nhé. Anh có thể trao đổi với người thân hoặc tư vấn bác sĩ trước ạ. Khi nào cần em tư vấn thêm thông tin gì về máy Medela Swing Maxi hoặc hỗ trợ mình lên đơn, anh cứ liên hệ lại với em nhé!",
+            "tool_calls": [
+              {
+                "name": "catalog.search",
+                "args": {
+                  "query": "Anh mua cho người thân và còn vấn đề sức khỏe cần hỏi. Chưa đặt hàng nhé.",
+                  "on": "2026-10-16"
+                },
+                "result": {
+                  "items": [],
+                  "total": 0
+                }
+              }
+            ],
+            "sources": [
+              {
+                "sku": "SKU-MB-PUMP2",
+                "name": "[private]",
+                "category": "me-be",
+                "brand": "Medela",
+                "list_price_vnd": 5990000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "warranty_months": 12
+                },
+                "variants": []
+              },
+              {
+                "sku": "SKU-MB-PUMP2",
+                "name": "[private]",
+                "category": "me-be",
+                "brand": "Medela",
+                "list_price_vnd": 5990000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "warranty_months": 12
+                },
+                "variants": []
+              }
+            ],
+            "promotions": []
+          },
+          "earlier": [
+            {
+              "turn_id": 1,
+              "tool_calls": [
+                {
+                  "name": "catalog.search",
+                  "args": {
+                    "query": "Máy hút sữa điện đôi Medela Swing Maxi",
+                    "on": "2026-10-16"
+                  },
+                  "result": {
+                    "items": [
+                      {
+                        "sku": "SKU-MB-PUMP2",
+                        "name": "[private]",
+                        "category": "me-be",
+                        "brand": "Medela",
+                        "list_price_vnd": 5990000.0,
+                        "discontinued": false,
+                        "successor_sku": null,
+                        "attributes": {
+                          "warranty_months": 12
+                        },
+                        "variants": []
+                      }
+                    ],
+                    "total": 1
+                  }
+                },
+                {
+                  "name": "inventory.check",
+                  "args": {
+                    "sku": "SKU-MB-PUMP2",
+                    "on": "2026-10-16"
+                  },
+                  "result": {
+                    "sku": "SKU-MB-PUMP2",
+                    "found": true,
+                    "in_stock": true,
+                    "qty": 18,
+                    "discontinued": false
+                  }
+                },
+                {
+                  "name": "pricing.get_quote",
+                  "args": {
+                    "on": "2026-10-16",
+                    "customer_phone": "[private]",
+                    "customer_id": "[private]",
+                    "sku": "SKU-MB-PUMP2",
+                    "qty": 1
+                  },
+                  "result": {
+                    "sku": "SKU-MB-PUMP2",
+                    "list_price_vnd": 5990000,
+                    "final_price_vnd": 5990000,
+                    "applied_promos": [
+                      {
+                        "promo_code": "MOM-FREESHIP",
+                        "type": "freeship",
+                        "discount_vnd": 0
+                      },
+                      {
+                        "promo_code": "COD-0",
+                        "type": "freecod",
+                        "discount_vnd": 0
+                      }
+                    ],
+                    "expired_promos": [],
+                    "ineligible_promos": [],
+                    "not_applied_exclusive": [],
+                    "freeship": true
+                  }
+                }
+              ],
+              "sources": [
+                {
+                  "sku": "SKU-MB-PUMP2",
+                  "name": "[private]",
+                  "category": "me-be",
+                  "brand": "Medela",
+                  "list_price_vnd": 5990000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "warranty_months": 12
+                  },
+                  "variants": []
+                },
+                {
+                  "sku": "SKU-MB-PUMP2",
+                  "name": "[private]",
+                  "category": "me-be",
+                  "brand": "Medela",
+                  "list_price_vnd": 5990000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "warranty_months": 12
+                  },
+                  "variants": []
+                }
+              ],
+              "promotions": []
+            }
+          ]
+        }
+      }
+    },
+    {
+      "call": "SC-062/call_1",
+      "turn_id": 3,
+      "question": "Anh sẽ liên hệ lại khi có câu hỏi cụ thể.",
+      "baseline_question": null,
+      "classification": "not_evaluated",
+      "case_id": null,
+      "gap_id": null,
+      "answer_changed": false,
+      "injected": false,
+      "lesson_trace": {
+        "lessons_loaded": 25,
+        "selected_lessons": [],
+        "injected": false,
+        "mode": "memory_only",
+        "response_modified": false,
+        "routing": "failed",
+        "routing_error": "ValueError",
+        "routing_ms": 1408.549,
+        "routing_usage": {
+          "input_tokens": 4714,
+          "output_tokens": 1
+        },
+        "wrapper_total_ms": 4267.731
+      },
+      "round0": {
+        "answer": null,
+        "verdict": {
+          "status": null
+        },
+        "latency": null,
+        "evidence": {
+          "current": {},
+          "earlier": []
+        }
+      },
+      "round1": {
+        "answer": "Dạ vâng, em cảm ơn anh [private] ạ. Khi nào anh và người thân cần thêm thông tin hoặc hỗ trợ gì khác, anh cứ liên hệ lại với em nhé. Em chúc anh và gia đình nhiều sức khỏe ạ!",
+        "verdict": {
+          "status": null
+        },
+        "latency": {
+          "ttft_ms": 2859,
+          "total_ms": 2859,
+          "ttfa_ms": null,
+          "measurement_mode": "non_streaming",
+          "timing_boundary": "response_ready_before_persistence",
+          "asr_ms": null,
+          "call_brief_ms": null,
+          "response_ready_ms": 2859,
+          "persistence_ms": 0.091,
+          "request_complete_ms": 2859.099,
+          "backend_total_ms": 2859.099,
+          "precomputed_parts": [
+            "persisted_facts"
+          ]
+        },
+        "evidence": {
+          "current": {
+            "turn_id": 3,
+            "agent_response": "Dạ vâng, em cảm ơn anh [private] ạ. Khi nào anh và người thân cần thêm thông tin hoặc hỗ trợ gì khác, anh cứ liên hệ lại với em nhé. Em chúc anh và gia đình nhiều sức khỏe ạ!",
+            "tool_calls": [],
+            "sources": [
+              {
+                "sku": "SKU-MB-PUMP2",
+                "name": "[private]",
+                "category": "me-be",
+                "brand": "Medela",
+                "list_price_vnd": 5990000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "warranty_months": 12
+                },
+                "variants": []
+              },
+              {
+                "sku": "SKU-MB-PUMP2",
+                "name": "[private]",
+                "category": "me-be",
+                "brand": "Medela",
+                "list_price_vnd": 5990000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "warranty_months": 12
+                },
+                "variants": []
+              }
+            ],
+            "promotions": []
+          },
+          "earlier": [
+            {
+              "turn_id": 1,
+              "tool_calls": [
+                {
+                  "name": "catalog.search",
+                  "args": {
+                    "query": "Máy hút sữa điện đôi Medela Swing Maxi",
+                    "on": "2026-10-16"
+                  },
+                  "result": {
+                    "items": [
+                      {
+                        "sku": "SKU-MB-PUMP2",
+                        "name": "[private]",
+                        "category": "me-be",
+                        "brand": "Medela",
+                        "list_price_vnd": 5990000.0,
+                        "discontinued": false,
+                        "successor_sku": null,
+                        "attributes": {
+                          "warranty_months": 12
+                        },
+                        "variants": []
+                      }
+                    ],
+                    "total": 1
+                  }
+                },
+                {
+                  "name": "inventory.check",
+                  "args": {
+                    "sku": "SKU-MB-PUMP2",
+                    "on": "2026-10-16"
+                  },
+                  "result": {
+                    "sku": "SKU-MB-PUMP2",
+                    "found": true,
+                    "in_stock": true,
+                    "qty": 18,
+                    "discontinued": false
+                  }
+                },
+                {
+                  "name": "pricing.get_quote",
+                  "args": {
+                    "on": "2026-10-16",
+                    "customer_phone": "[private]",
+                    "customer_id": "[private]",
+                    "sku": "SKU-MB-PUMP2",
+                    "qty": 1
+                  },
+                  "result": {
+                    "sku": "SKU-MB-PUMP2",
+                    "list_price_vnd": 5990000,
+                    "final_price_vnd": 5990000,
+                    "applied_promos": [
+                      {
+                        "promo_code": "MOM-FREESHIP",
+                        "type": "freeship",
+                        "discount_vnd": 0
+                      },
+                      {
+                        "promo_code": "COD-0",
+                        "type": "freecod",
+                        "discount_vnd": 0
+                      }
+                    ],
+                    "expired_promos": [],
+                    "ineligible_promos": [],
+                    "not_applied_exclusive": [],
+                    "freeship": true
+                  }
+                }
+              ],
+              "sources": [
+                {
+                  "sku": "SKU-MB-PUMP2",
+                  "name": "[private]",
+                  "category": "me-be",
+                  "brand": "Medela",
+                  "list_price_vnd": 5990000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "warranty_months": 12
+                  },
+                  "variants": []
+                },
+                {
+                  "sku": "SKU-MB-PUMP2",
+                  "name": "[private]",
+                  "category": "me-be",
+                  "brand": "Medela",
+                  "list_price_vnd": 5990000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "warranty_months": 12
+                  },
+                  "variants": []
+                }
+              ],
+              "promotions": []
+            },
+            {
+              "turn_id": 2,
+              "tool_calls": [
+                {
+                  "name": "catalog.search",
+                  "args": {
+                    "query": "Anh mua cho người thân và còn vấn đề sức khỏe cần hỏi. Chưa đặt hàng nhé.",
+                    "on": "2026-10-16"
+                  },
+                  "result": {
+                    "items": [],
+                    "total": 0
+                  }
+                }
+              ],
+              "sources": [
+                {
+                  "sku": "SKU-MB-PUMP2",
+                  "name": "[private]",
+                  "category": "me-be",
+                  "brand": "Medela",
+                  "list_price_vnd": 5990000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "warranty_months": 12
+                  },
+                  "variants": []
+                },
+                {
+                  "sku": "SKU-MB-PUMP2",
+                  "name": "[private]",
+                  "category": "me-be",
+                  "brand": "Medela",
+                  "list_price_vnd": 5990000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "warranty_months": 12
+                  },
+                  "variants": []
+                }
+              ],
+              "promotions": []
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "lessons": [],
+  "sessions": [
+    {
+      "call": "SC-062/call_1",
+      "round0": {
+        "job": null,
+        "error": null,
+        "learning": null,
+        "observed_input_findings": []
+      },
+      "round1": {
+        "job": {
+          "status": "done",
+          "job_id": "4224b7636a79109f5cace570c5b726f3a4779873ef69af98191f7f1dc40c0c59",
+          "error": null
+        },
+        "error": null,
+        "learning": {
+          "job_id": "4224b7636a79109f5cace570c5b726f3a4779873ef69af98191f7f1dc40c0c59",
+          "gaps": [],
+          "scope": "knowledge_gap_and_reflection_v1",
+          "evaluation_cases": [],
+          "out_of_scope": [],
+          "issue_reviews": [],
+          "detector_error": null,
+          "guardrails": {
+            "version": "learning_guardrails_v1",
+            "input_findings": [],
+            "blocked_lessons": [],
+            "blocked_sources": []
+          },
+          "detection": {
+            "candidate_count": 0,
+            "open_question_count": 0,
+            "processed_count": 0,
+            "skipped_unmatched_question": 0,
+            "skipped_over_limit": 0,
+            "scan": {
+              "turns_available": 3,
+              "turns_scanned": 3,
+              "requests": 3,
+              "errors": [],
+              "schema_retries": 0,
+              "skipped_over_limit": 0
+            },
+            "alignment_rejections": []
+          },
+          "outcome": "no_candidates",
+          "learning_duration_ms": 4226,
+          "learning_usage": {
+            "input_tokens": 4395,
+            "output_tokens": 18
+          }
+        },
+        "observed_input_findings": []
+      }
+    }
+  ],
+  "limitations": [
+    "Verdict kiểm tra được reference vẫn cần người đọc xác nhận ngữ nghĩa và độ đầy đủ.",
+    "Câu trả lời thay đổi hoặc được inject lesson chưa chứng minh lesson gây ra cải thiện.",
+    "Reflection chưa được chấm chất lượng; learning job done/lesson approved không phải điểm chất lượng.",
+    "Guardrail mẫu có giới hạn; không phát hiện mẫu không đồng nghĩa không có prompt injection."
+  ]
+}

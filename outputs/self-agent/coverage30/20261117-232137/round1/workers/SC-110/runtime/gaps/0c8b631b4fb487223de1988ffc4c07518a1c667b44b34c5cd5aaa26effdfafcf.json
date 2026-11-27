@@ -1,0 +1,22 @@
+{
+  "id": "0c8b631b4fb487223de1988ffc4c07518a1c667b44b34c5cd5aaa26effdfafcf",
+  "question": "Giá hiện tại cần được xác minh từ nguồn nào?",
+  "occurrences": [
+    "91c22c6a537edb819bf7965c4004f794b30a94c89134f0f5a905900f377f2f61"
+  ],
+  "reason": "unsupported_claim",
+  "mechanism": "knowledge_gap",
+  "status": "pending_remediation",
+  "evidence_refs": [
+    {
+      "job_id": "91c22c6a537edb819bf7965c4004f794b30a94c89134f0f5a905900f377f2f61",
+      "message_id": 6,
+      "turn_id": 4,
+      "origin": "turn_detector"
+    }
+  ],
+  "pattern_ref": "0c8b631b4fb487223de1988ffc4c07518a1c667b44b34c5cd5aaa26effdfafcf",
+  "test_refs": [
+    "0c8b631b4fb487223de1988ffc4c07518a1c667b44b34c5cd5aaa26effdfafcf"
+  ]
+}

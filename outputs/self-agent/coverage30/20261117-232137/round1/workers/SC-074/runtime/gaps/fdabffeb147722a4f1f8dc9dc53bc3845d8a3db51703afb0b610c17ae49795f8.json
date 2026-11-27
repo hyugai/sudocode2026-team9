@@ -1,0 +1,31 @@
+{
+  "id": "fdabffeb147722a4f1f8dc9dc53bc3845d8a3db51703afb0b610c17ae49795f8",
+  "question": "Thông tin nghiệp vụ cần được xác minh từ nguồn nào?",
+  "occurrences": [
+    "76d035ac7007a4054388be6008b7cbe3ecc0b2ca75283cb550f75b2f861c760b",
+    "e08c6a4dfacceb087dcffbeebbe302a25178389c8e6c0b1dfeebc8205e9a1c5f"
+  ],
+  "reason": "missing_knowledge",
+  "mechanism": "knowledge_gap",
+  "status": "pending_evidence",
+  "evidence_refs": [
+    {
+      "job_id": "76d035ac7007a4054388be6008b7cbe3ecc0b2ca75283cb550f75b2f861c760b",
+      "message_id": 2,
+      "turn_id": 2,
+      "origin": "open_questions"
+    },
+    {
+      "job_id": "e08c6a4dfacceb087dcffbeebbe302a25178389c8e6c0b1dfeebc8205e9a1c5f",
+      "message_id": null,
+      "turn_id": null,
+      "origin": "open_questions"
+    },
+    {
+      "job_id": "e08c6a4dfacceb087dcffbeebbe302a25178389c8e6c0b1dfeebc8205e9a1c5f",
+      "message_id": 2,
+      "turn_id": 2,
+      "origin": "turn_detector"
+    }
+  ]
+}

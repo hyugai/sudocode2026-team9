@@ -1,0 +1,79 @@
+{
+  "id": "20a24571f0768b695365bef0f86f2b864cc1705d78fe25c0eeda2c80812f03bf",
+  "status": "done",
+  "attempts": 1,
+  "snapshot": {
+    "session": "b252b7fac97032c1677a6caef0fcb77e74c92cf8e4b9d4a3ae43d5b0dc11cd29",
+    "revision": 2,
+    "messages": [
+      {
+        "message_id": 0,
+        "role": "customer",
+        "content": "Chị gọi lại chuyện hôm trước. Mẫu, số lượng, địa chỉ [address]"
+      },
+      {
+        "message_id": 1,
+        "role": "agent",
+        "content": "Dạ em chào chị [private], em nhớ thông tin đợt trước rồi ạ. \n\nTuy nhiên, câu \"giữ nguyên\" của chị là chị muốn đặt đơn hàng mới cho mẫu SKU-AP-X hôm trước hay chị muốn điều chỉnh một đơn hàng sẵn có ạ? Chị xác nhận lại giúp em để em hỗ trợ chị lên đơn/xử lý chính xác nha."
+      },
+      {
+        "message_id": 2,
+        "role": "customer",
+        "content": "Chị còn bận, em gọi lại lúc 10 giờ ngày 2026-10-19. Đừng bắt chị nói lại thông tin nữa nhé."
+      },
+      {
+        "message_id": 3,
+        "role": "agent",
+        "content": "Dạ em ghi nhận lịch hẹn rồi ạ. Em sẽ gọi lại cho chị [private] vào lúc 10:00 ngày 19/10/2026. \n\nTất cả thông tin về mẫu sản phẩm, địa chỉ [address]"
+      }
+    ],
+    "open_questions": [],
+    "feedback": [],
+    "evidence_coverage": "per_turn_evidence",
+    "workflow_version": 4,
+    "turn_evidence": [
+      {
+        "turn_id": 1,
+        "agent_response": "Dạ em chào chị [private], em nhớ thông tin đợt trước rồi ạ. \n\nTuy nhiên, câu \"giữ nguyên\" của chị là chị muốn đặt đơn hàng mới cho mẫu SKU-AP-X hôm trước hay chị muốn điều chỉnh một đơn hàng sẵn có ạ? Chị xác nhận lại giúp em để em hỗ trợ chị lên đơn/xử lý chính xác nha.",
+        "tool_calls": [
+          {
+            "name": "order.status",
+            "args": {
+              "customer_phone": "[private]"
+            },
+            "result": {
+              "orders": []
+            }
+          }
+        ],
+        "sources": [],
+        "promotions": []
+      },
+      {
+        "turn_id": 2,
+        "agent_response": "Dạ em ghi nhận lịch hẹn rồi ạ. Em sẽ gọi lại cho chị [private] vào lúc 10:00 ngày 19/10/2026. \n\nTất cả thông tin về mẫu sản phẩm, địa chỉ [address]",
+        "tool_calls": [
+          {
+            "name": "schedule.callback",
+            "args": {
+              "customer_phone": "[private]",
+              "callback_at": "2026-10-19T10:00",
+              "note": "Chị còn bận, em gọi lại lúc 10 giờ ngày 2026-10-19. Đừng bắt chị nói lại thông tin nữa nhé.",
+              "on": "2026-10-17"
+            },
+            "result": {
+              "callback_id": "CB-F2CCE7",
+              "customer_phone": "[private]",
+              "callback_at": "2026-10-19T10:00",
+              "moved_from": null,
+              "note": "Chị còn bận, em gọi lại lúc 10 giờ ngày 2026-10-19. Đừng bắt chị nói lại thông tin nữa nhé."
+            }
+          }
+        ],
+        "sources": [],
+        "promotions": []
+      }
+    ]
+  },
+  "error": null
+}

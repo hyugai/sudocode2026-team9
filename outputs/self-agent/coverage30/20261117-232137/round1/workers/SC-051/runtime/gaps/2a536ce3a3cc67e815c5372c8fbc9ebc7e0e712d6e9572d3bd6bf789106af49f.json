@@ -1,0 +1,22 @@
+{
+  "id": "2a536ce3a3cc67e815c5372c8fbc9ebc7e0e712d6e9572d3bd6bf789106af49f",
+  "question": "Thông tin nghiệp vụ cần được xác minh từ nguồn nào?",
+  "occurrences": [
+    "0edf0988d816019ee95e4782f1d2b7ab87b4165a448ffd1d8a108064c3830d1c"
+  ],
+  "reason": "unsupported_claim",
+  "mechanism": "knowledge_gap",
+  "status": "pending_remediation",
+  "evidence_refs": [
+    {
+      "job_id": "0edf0988d816019ee95e4782f1d2b7ab87b4165a448ffd1d8a108064c3830d1c",
+      "message_id": 0,
+      "turn_id": 1,
+      "origin": "turn_detector"
+    }
+  ],
+  "pattern_ref": "2a536ce3a3cc67e815c5372c8fbc9ebc7e0e712d6e9572d3bd6bf789106af49f",
+  "test_refs": [
+    "2a536ce3a3cc67e815c5372c8fbc9ebc7e0e712d6e9572d3bd6bf789106af49f"
+  ]
+}

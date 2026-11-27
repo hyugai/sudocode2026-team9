@@ -1,0 +1,485 @@
+{
+  "scenario_id": "SC-006",
+  "call": "call_2",
+  "session_id": "self-9f5f626cd9a14376bf1c729e4736eb38-SC-006-call_2",
+  "turns": [
+    {
+      "customer": "Anh gọi tiếp về món đã hỏi, người nhà đã đồng ý rồi.",
+      "agent": "Dạ em chào anh [private], tốt quá rồi ạ. Người nhà mình đã đồng ý món máy lọc không khí AirPods Max Pro rồi đúng không anh? \n\nAnh cho em xin địa chỉ [address]",
+      "latency": {
+        "ttft_ms": 4596,
+        "total_ms": 4596,
+        "ttfa_ms": null,
+        "measurement_mode": "non_streaming",
+        "timing_boundary": "response_ready_before_persistence",
+        "asr_ms": null,
+        "call_brief_ms": 3026,
+        "response_ready_ms": 4596,
+        "persistence_ms": 0.11,
+        "request_complete_ms": 4595.828,
+        "backend_total_ms": 4595.828,
+        "precomputed_parts": [
+          "persisted_facts"
+        ]
+      },
+      "lesson_trace": null
+    },
+    {
+      "customer": "Em nhắc lại mẫu và giá đã trao đổi giúp anh; hôm nay hàng có sẵn chưa?",
+      "agent": "Dạ, mẫu máy lọc không khí anh em mình trao đổi là **SKU-AP-PRO** với giá ưu đãi hôm nay là **7.690.000đ** (đã áp dụng mã giảm giá AIR-OCT). \n\nHiện tại sản phẩm **đang có sẵn hàng** trong kho ạ. Anh [private] muốn em hỗ trợ giao về địa chỉ [address]",
+      "latency": {
+        "ttft_ms": 8551,
+        "total_ms": 8551,
+        "ttfa_ms": null,
+        "measurement_mode": "non_streaming",
+        "timing_boundary": "response_ready_before_persistence",
+        "asr_ms": null,
+        "call_brief_ms": null,
+        "response_ready_ms": 8551,
+        "persistence_ms": 0.106,
+        "request_complete_ms": 8551.151,
+        "backend_total_ms": 8551.151,
+        "precomputed_parts": [
+          "persisted_facts"
+        ]
+      },
+      "lesson_trace": null
+    },
+    {
+      "customer": "Anh đồng ý giá hiện tại 7.690.000 đồng, mua một chiếc. Giao đến [address]",
+      "agent": "Dạ em đã lên đơn thành công cho anh [private] sản phẩm máy lọc không khí **SKU-AP-PRO** với giá **7.690.000đ** rồi ạ. \n\n- Mã đơn hàng: **[order_id]**\n- Địa chỉ [address]\n- Hình thức thanh toán: Thanh toán khi nhận hàng (COD)\n- Dự kiến giao hàng: Ngày 24/10/2026\n\nEm cảm ơn anh đã ủng hộ cửa hàng. Anh cần em hỗ trợ thêm thông tin gì khác nữa không ạ?",
+      "latency": {
+        "ttft_ms": 6285,
+        "total_ms": 6285,
+        "ttfa_ms": null,
+        "measurement_mode": "non_streaming",
+        "timing_boundary": "response_ready_before_persistence",
+        "asr_ms": null,
+        "call_brief_ms": null,
+        "response_ready_ms": 6285,
+        "persistence_ms": 0.152,
+        "request_complete_ms": 6285.577,
+        "backend_total_ms": 6285.577,
+        "precomputed_parts": [
+          "persisted_facts"
+        ]
+      },
+      "lesson_trace": null
+    }
+  ],
+  "generation_context": {
+    "round": 0,
+    "instruction_hash": "9d30a7093911a993d8545de8b61cc6dc8465de67b10fb62b27d9f1bafaf0badf",
+    "applied_patterns": {},
+    "lessons_loaded": false,
+    "lesson_sources": [],
+    "lesson_files": [],
+    "instruction_root": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round0\\instructions"
+  },
+  "evaluation_evidence": [
+    {
+      "turn_id": 1,
+      "agent_response": "Dạ em chào anh [private], tốt quá rồi ạ. Người nhà mình đã đồng ý món máy lọc không khí AirPods Max Pro rồi đúng không anh? \n\nAnh cho em xin địa chỉ [address]",
+      "tool_calls": [],
+      "sources": [],
+      "promotions": []
+    },
+    {
+      "turn_id": 2,
+      "agent_response": "Dạ, mẫu máy lọc không khí anh em mình trao đổi là **SKU-AP-PRO** với giá ưu đãi hôm nay là **7.690.000đ** (đã áp dụng mã giảm giá AIR-OCT). \n\nHiện tại sản phẩm **đang có sẵn hàng** trong kho ạ. Anh [private] muốn em hỗ trợ giao về địa chỉ [address]",
+      "tool_calls": [
+        {
+          "name": "catalog.search",
+          "args": {
+            "query": "Em nhắc lại mẫu và giá đã trao đổi giúp anh; hôm nay hàng có sẵn chưa?",
+            "on": "2026-10-22"
+          },
+          "result": {
+            "items": [],
+            "total": 0
+          }
+        },
+        {
+          "name": "pricing.get_quote",
+          "args": {
+            "on": "2026-10-22",
+            "customer_phone": "[private]",
+            "customer_id": "[private]",
+            "sku": "SKU-AP-PRO",
+            "qty": 1
+          },
+          "result": {
+            "sku": "SKU-AP-PRO",
+            "list_price_vnd": 7990000,
+            "final_price_vnd": 7690000,
+            "applied_promos": [
+              {
+                "promo_code": "COD-0",
+                "type": "freecod",
+                "discount_vnd": 0
+              },
+              {
+                "promo_code": "AIR-OCT",
+                "type": "fixed",
+                "discount_vnd": 300000
+              }
+            ],
+            "expired_promos": [],
+            "ineligible_promos": [
+              {
+                "promo_code": "AIR-2ND-50",
+                "reason": "min_qty"
+              },
+              {
+                "promo_code": "[private]-SHIP0",
+                "reason": "region"
+              },
+              {
+                "promo_code": "TRADE-IN-AP",
+                "reason": "requires_owned_sku"
+              }
+            ],
+            "not_applied_exclusive": [],
+            "freeship": true
+          }
+        },
+        {
+          "name": "inventory.check",
+          "args": {
+            "sku": "SKU-AP-PRO",
+            "on": "2026-10-22"
+          },
+          "result": {
+            "sku": "SKU-AP-PRO",
+            "found": true,
+            "in_stock": true,
+            "qty": 8,
+            "discontinued": false
+          }
+        }
+      ],
+      "sources": [],
+      "promotions": []
+    },
+    {
+      "turn_id": 3,
+      "agent_response": "Dạ em đã lên đơn thành công cho anh [private] sản phẩm máy lọc không khí **SKU-AP-PRO** với giá **7.690.000đ** rồi ạ. \n\n- Mã đơn hàng: **[order_id]**\n- Địa chỉ [address]\n- Hình thức thanh toán: Thanh toán khi nhận hàng (COD)\n- Dự kiến giao hàng: Ngày 24/10/2026\n\nEm cảm ơn anh đã ủng hộ cửa hàng. Anh cần em hỗ trợ thêm thông tin gì khác nữa không ạ?",
+      "tool_calls": [
+        {
+          "name": "inventory.check",
+          "args": {
+            "sku": "SKU-AP-PRO",
+            "on": "2026-10-22"
+          },
+          "result": {
+            "sku": "SKU-AP-PRO",
+            "found": true,
+            "in_stock": true,
+            "qty": 8,
+            "discontinued": false
+          }
+        },
+        {
+          "name": "pricing.get_quote",
+          "args": {
+            "on": "2026-10-22",
+            "customer_phone": "[private]",
+            "customer_id": "[private]",
+            "address": "[private]",
+            "sku": "SKU-AP-PRO",
+            "qty": 1
+          },
+          "result": {
+            "sku": "SKU-AP-PRO",
+            "list_price_vnd": 7990000,
+            "final_price_vnd": 7690000,
+            "applied_promos": [
+              {
+                "promo_code": "COD-0",
+                "type": "freecod",
+                "discount_vnd": 0
+              },
+              {
+                "promo_code": "AIR-OCT",
+                "type": "fixed",
+                "discount_vnd": 300000
+              }
+            ],
+            "expired_promos": [],
+            "ineligible_promos": [
+              {
+                "promo_code": "AIR-2ND-50",
+                "reason": "min_qty"
+              },
+              {
+                "promo_code": "[private]-SHIP0",
+                "reason": "region"
+              },
+              {
+                "promo_code": "TRADE-IN-AP",
+                "reason": "requires_owned_sku"
+              }
+            ],
+            "not_applied_exclusive": [],
+            "freeship": true
+          }
+        },
+        {
+          "name": "order.create",
+          "args": {
+            "customer_phone": "[private]",
+            "customer_id": "[private]",
+            "address": "[private]",
+            "idempotency_key": "self-9f5f626cd9a14376bf1c729e4736eb38-SC-006-call_2:call_2:create:SKU-AP-PRO",
+            "sku": "SKU-AP-PRO",
+            "qty": 1,
+            "price_vnd": 7690000,
+            "promo_code": "AIR-OCT",
+            "on": "2026-10-22",
+            "payment": "COD"
+          },
+          "result": {
+            "order_id": "[private]",
+            "status": "created",
+            "total_vnd": 7690000,
+            "needs_confirmation_call": true,
+            "estimated_delivery": "2026-10-24"
+          }
+        }
+      ],
+      "sources": [],
+      "promotions": []
+    }
+  ],
+  "job": {
+    "status": "done",
+    "job_id": "e6d5dcc42d3307cbab859c1c31e8d8d3170887fef1e25f89a41f2f2790132519",
+    "error": null
+  },
+  "learning": {
+    "job_id": "e6d5dcc42d3307cbab859c1c31e8d8d3170887fef1e25f89a41f2f2790132519",
+    "gaps": [
+      {
+        "id": "386538c4668feef5a674f41c209d7f1ee4027779799c59047e030be5125ce904",
+        "status": "pending_remediation"
+      }
+    ],
+    "scope": "knowledge_gap_and_reflection_v1",
+    "evaluation_cases": [
+      {
+        "id": "6056612f05971a5e1deb6f0029c89edc45a405494e88418eacaa207b4eecbfce",
+        "gap_id": "386538c4668feef5a674f41c209d7f1ee4027779799c59047e030be5125ce904",
+        "turn_id": 1,
+        "question": "Anh gọi tiếp về món đã hỏi, người nhà đã đồng ý rồi.",
+        "reason": "unsupported_claim",
+        "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments."
+      }
+    ],
+    "out_of_scope": [],
+    "issue_reviews": [
+      {
+        "job_id": "e6d5dcc42d3307cbab859c1c31e8d8d3170887fef1e25f89a41f2f2790132519",
+        "message_id": 0,
+        "turn_id": 1,
+        "origin": "turn_detector",
+        "mechanism": "knowledge_gap",
+        "verified": true,
+        "claim": "món máy lọc không khí AirPods Max Pro",
+        "assessment": "unsupported_by_evidence",
+        "evidence_paths": [],
+        "rejection": null,
+        "rejection_reasons": [],
+        "format_retry": false,
+        "verifier_output": {
+          "valid": true,
+          "issue_scope": "business_knowledge",
+          "claim": "món máy lọc không khí AirPods Max Pro",
+          "assessment": "unsupported_by_evidence",
+          "evidence_paths": [],
+          "decision_reason": "The claim regarding the product name 'món máy lọc không khí AirPods Max Pro' is unsupported as there are no tool calls, sources, or prior evidence confirming this product.",
+          "audit": {
+            "support_status": "not_established",
+            "coverage": "complete",
+            "checked_paths": [
+              "evidence.tool_calls",
+              "evidence.sources",
+              "evidence.promotions"
+            ]
+          }
+        },
+        "candidate_claim": "món máy lọc không khí AirPods Max Pro",
+        "verification_basis": "evidence_inventory_audit",
+        "evidence_inventory": [
+          "evidence.tool_calls",
+          "evidence.sources",
+          "evidence.promotions"
+        ],
+        "lesson_status": "approved"
+      }
+    ],
+    "detector_error": null,
+    "guardrails": {
+      "version": "learning_guardrails_v1",
+      "input_findings": [],
+      "blocked_lessons": [],
+      "blocked_sources": []
+    },
+    "detection": {
+      "candidate_count": 1,
+      "open_question_count": 0,
+      "processed_count": 1,
+      "skipped_unmatched_question": 0,
+      "skipped_over_limit": 0,
+      "scan": {
+        "turns_available": 3,
+        "turns_scanned": 3,
+        "requests": 3,
+        "errors": [],
+        "schema_retries": 0,
+        "skipped_over_limit": 0
+      },
+      "alignment_rejections": []
+    },
+    "outcome": "gaps_processed",
+    "learning_duration_ms": 8412,
+    "learning_usage": {
+      "input_tokens": 5160,
+      "output_tokens": 299
+    }
+  },
+  "artifact_changes": [
+    {
+      "path": "gaps/386538c4668feef5a674f41c209d7f1ee4027779799c59047e030be5125ce904.json",
+      "change": "created",
+      "value": {
+        "id": "386538c4668feef5a674f41c209d7f1ee4027779799c59047e030be5125ce904",
+        "question": "Thông tin nghiệp vụ cần được xác minh từ nguồn nào?",
+        "occurrences": [
+          "e6d5dcc42d3307cbab859c1c31e8d8d3170887fef1e25f89a41f2f2790132519"
+        ],
+        "reason": "unsupported_claim",
+        "mechanism": "knowledge_gap",
+        "status": "pending_remediation",
+        "evidence_refs": [
+          {
+            "job_id": "e6d5dcc42d3307cbab859c1c31e8d8d3170887fef1e25f89a41f2f2790132519",
+            "message_id": 0,
+            "turn_id": 1,
+            "origin": "turn_detector"
+          }
+        ],
+        "pattern_ref": "386538c4668feef5a674f41c209d7f1ee4027779799c59047e030be5125ce904",
+        "test_refs": [
+          "386538c4668feef5a674f41c209d7f1ee4027779799c59047e030be5125ce904"
+        ]
+      }
+    },
+    {
+      "path": "patterns/386538c4668feef5a674f41c209d7f1ee4027779799c59047e030be5125ce904.json",
+      "change": "created",
+      "value": {
+        "id": "386538c4668feef5a674f41c209d7f1ee4027779799c59047e030be5125ce904",
+        "reason": "unsupported_claim",
+        "pattern": "Do not state an unverified claim as a fact.",
+        "status": "approved",
+        "scope": "general",
+        "mechanism": "knowledge_gap",
+        "criterion": "Do not state an unverified claim as a fact.",
+        "evidence_refs": [
+          {
+            "job_id": "e6d5dcc42d3307cbab859c1c31e8d8d3170887fef1e25f89a41f2f2790132519",
+            "message_id": 0,
+            "turn_id": 1,
+            "origin": "turn_detector"
+          }
+        ],
+        "assessment": "unsupported_by_evidence",
+        "report_ref": "e6d5dcc42d3307cbab859c1c31e8d8d3170887fef1e25f89a41f2f2790132519",
+        "lesson": {
+          "title": "Verify Product Names from Verified Evidence",
+          "when": "a customer refers to a previously discussed item without naming it explicitly and there is no evidence establishing the exact product details",
+          "do": "ask the customer to confirm the specific product name or details before assuming or stating any product identity",
+          "otherwise": "state clearly that the product details are not available in the system context instead of guessing product names",
+          "triggers": [
+            "gọi tiếp về món đã hỏi",
+            "khách hỏi lại món cũ",
+            "unsupported product name",
+            "referencing previous product without context"
+          ],
+          "id": "b3c5394ec732ed77e5c0ace9714e42e935c8f1ded760a87c535aca4365ff098e",
+          "status": "approved",
+          "scope": "general",
+          "mechanism": "knowledge_gap",
+          "source_refs": [
+            {
+              "job_id": "e6d5dcc42d3307cbab859c1c31e8d8d3170887fef1e25f89a41f2f2790132519",
+              "message_id": 0,
+              "turn_id": 1,
+              "origin": "turn_detector"
+            }
+          ],
+          "version": 2
+        },
+        "lesson_path": "lessons\\approved\\b3c5394ec732ed77e5c0ace9714e42e935c8f1ded760a87c535aca4365ff098e.md",
+        "lesson_hash": "bdf01bb453db50e77e3a480afa92057627679f6f5011988610dce7affcfe64d0"
+      }
+    },
+    {
+      "path": "regression_cases/386538c4668feef5a674f41c209d7f1ee4027779799c59047e030be5125ce904.json",
+      "change": "created",
+      "value": {
+        "id": "386538c4668feef5a674f41c209d7f1ee4027779799c59047e030be5125ce904",
+        "reason": "unsupported_claim",
+        "pattern": "Do not state an unverified claim as a fact.",
+        "status": "approved",
+        "scope": "general",
+        "mechanism": "knowledge_gap",
+        "criterion": "Do not state an unverified claim as a fact.",
+        "evidence_refs": [
+          {
+            "job_id": "e6d5dcc42d3307cbab859c1c31e8d8d3170887fef1e25f89a41f2f2790132519",
+            "message_id": 0,
+            "turn_id": 1,
+            "origin": "turn_detector"
+          }
+        ],
+        "assessment": "unsupported_by_evidence",
+        "report_ref": "e6d5dcc42d3307cbab859c1c31e8d8d3170887fef1e25f89a41f2f2790132519",
+        "lesson": {
+          "title": "Verify Product Names from Verified Evidence",
+          "when": "a customer refers to a previously discussed item without naming it explicitly and there is no evidence establishing the exact product details",
+          "do": "ask the customer to confirm the specific product name or details before assuming or stating any product identity",
+          "otherwise": "state clearly that the product details are not available in the system context instead of guessing product names",
+          "triggers": [
+            "gọi tiếp về món đã hỏi",
+            "khách hỏi lại món cũ",
+            "unsupported product name",
+            "referencing previous product without context"
+          ],
+          "id": "b3c5394ec732ed77e5c0ace9714e42e935c8f1ded760a87c535aca4365ff098e",
+          "status": "approved",
+          "scope": "general",
+          "mechanism": "knowledge_gap",
+          "source_refs": [
+            {
+              "job_id": "e6d5dcc42d3307cbab859c1c31e8d8d3170887fef1e25f89a41f2f2790132519",
+              "message_id": 0,
+              "turn_id": 1,
+              "origin": "turn_detector"
+            }
+          ],
+          "version": 2
+        },
+        "lesson_path": "lessons\\approved\\b3c5394ec732ed77e5c0ace9714e42e935c8f1ded760a87c535aca4365ff098e.md",
+        "lesson_hash": "bdf01bb453db50e77e3a480afa92057627679f6f5011988610dce7affcfe64d0"
+      }
+    },
+    {
+      "path": "lessons/approved/b3c5394ec732ed77e5c0ace9714e42e935c8f1ded760a87c535aca4365ff098e.md",
+      "change": "created",
+      "value": {
+        "content": "---\n{\"do\": \"ask the customer to confirm the specific product name or details before assuming or stating any product identity\", \"id\": \"b3c5394ec732ed77e5c0ace9714e42e935c8f1ded760a87c535aca4365ff098e\", \"mechanism\": \"knowledge_gap\", \"otherwise\": \"state clearly that the product details are not available in the system context instead of guessing product names\", \"scope\": \"general\", \"source_refs\": [{\"job_id\": \"e6d5dcc42d3307cbab859c1c31e8d8d3170887fef1e25f89a41f2f2790132519\", \"message_id\": 0, \"origin\": \"turn_detector\", \"turn_id\": 1}], \"status\": \"approved\", \"title\": \"Verify Product Names from Verified Evidence\", \"triggers\": [\"gọi tiếp về món đã hỏi\", \"khách hỏi lại món cũ\", \"unsupported product name\", \"referencing previous product without context\"], \"version\": 2, \"when\": \"a customer refers to a previously discussed item without naming it explicitly and there is no evidence establishing the exact product details\"}\n---\n\n# Verify Product Names from Verified Evidence\n\n## When\na customer refers to a previously discussed item without naming it explicitly and there is no evidence establishing the exact product details\n\n## Do\nask the customer to confirm the specific product name or details before assuming or stating any product identity\n\n## Otherwise\nstate clearly that the product details are not available in the system context instead of guessing product names\n"
+      }
+    }
+  ]
+}

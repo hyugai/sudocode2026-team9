@@ -1,0 +1,46 @@
+{
+  "id": "7ef335d147da97f11eb8346bf3feeeb91809c12454e07256ff7b66551d5ca1f5",
+  "reason": "unsupported_claim",
+  "pattern": "Do not state an unverified claim as a fact.",
+  "status": "approved",
+  "scope": "general",
+  "mechanism": "knowledge_gap",
+  "criterion": "Do not state an unverified claim as a fact.",
+  "evidence_refs": [
+    {
+      "job_id": "b8e88dc12397744981c41f4e67d8a6db8af1c4032479a9ecb7b8be76a57aa0a5",
+      "message_id": 2,
+      "turn_id": 2,
+      "origin": "turn_detector"
+    }
+  ],
+  "assessment": "unsupported_by_evidence",
+  "report_ref": "b8e88dc12397744981c41f4e67d8a6db8af1c4032479a9ecb7b8be76a57aa0a5",
+  "lesson": {
+    "title": "Verify promotion expiration before confirming date",
+    "when": "A customer asks to confirm a specific expiration date for a discount code or promotion, and retrieved results show the applied discount but omit its end date.",
+    "do": "State only the verified discount details present in official results and clearly express uncertainty regarding the exact expiration date.",
+    "otherwise": "State an unverified promotion expiration date or promise that an offer lasts until a specific day.",
+    "triggers": [
+      "uu dai nay het ngay phai khong",
+      "ma giam gia den khi nao het han",
+      "promo code expiration date check",
+      "promotion end date unverified"
+    ],
+    "id": "03891405b6fdd1b2208a4a2a608eda5307f8f4f3fd0e018e081ca0219ed4f9f9",
+    "status": "approved",
+    "scope": "general",
+    "mechanism": "knowledge_gap",
+    "source_refs": [
+      {
+        "job_id": "b8e88dc12397744981c41f4e67d8a6db8af1c4032479a9ecb7b8be76a57aa0a5",
+        "message_id": 2,
+        "turn_id": 2,
+        "origin": "turn_detector"
+      }
+    ],
+    "version": 2
+  },
+  "lesson_path": "lessons\\approved\\03891405b6fdd1b2208a4a2a608eda5307f8f4f3fd0e018e081ca0219ed4f9f9.md",
+  "lesson_hash": "e2267d70b6be3277034ae90375678f331c69f1bdbf2dd2adaffad0a947b7100e"
+}

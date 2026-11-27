@@ -1,0 +1,311 @@
+{
+  "id": "3aa34d25aa1dc0c43d98025352621e4b801dd448adab3af56f31b9a0c2ad2cd8",
+  "status": "done",
+  "attempts": 1,
+  "snapshot": {
+    "session": "423e9e2c7abd92166bc3e6ed85f38c6223d283b4def87347fa14e9074e5c35c4",
+    "revision": 3,
+    "messages": [
+      {
+        "message_id": 0,
+        "role": "customer",
+        "content": "Chào em, anh lấy Áo khoác gió Windbreak, size M, màu be."
+      },
+      {
+        "message_id": 1,
+        "role": "agent",
+        "content": "Dạ em chào anh [private], em đã kiểm tra mẫu Áo khoác gió Windbreak size M màu be bên em hiện đang còn hàng ạ. \n\nAnh muốn em đặt giao hàng về địa chỉ [address]"
+      },
+      {
+        "message_id": 2,
+        "role": "customer",
+        "content": "Anh đồng ý 690.000 đồng cho một sản phẩm. Địa chỉ [address]"
+      },
+      {
+        "message_id": 3,
+        "role": "agent",
+        "content": "Dạ em đã tạo đơn hàng thành công cho anh [private] rồi ạ! \n\nThông tin đơn hàng của anh:\n- **Sản phẩm:** Áo khoác gió Windbreak (Size M, Màu be) - Số lượng: 1\n- **Mã đơn hàng:** [order_id]\n- **Địa chỉ [address]\n- **Hình thức thanh toán:** COD (Thanh toán khi nhận hàng)\n- **Tổng tiền:** 690.000 VNĐ\n- **Dự kiến giao hàng:** Ngày 09/10/2026\n\nEm cảm ơn anh đã ủng hộ shop, anh chú ý điện thoại để nhận hàng giúp em nhé!"
+      },
+      {
+        "message_id": 4,
+        "role": "customer",
+        "content": "Em tạo đơn giúp anh và đọc mã đơn để anh lưu nhé."
+      },
+      {
+        "message_id": 5,
+        "role": "agent",
+        "content": "Dạ, đơn hàng cho sản phẩm Áo khoác gió Windbreak (Size M, Màu be) của anh đã được tạo trước đó rồi ạ. \n\nMã đơn hàng của anh là **[order_id]**. Anh lưu lại mã này giúp em để tiện theo dõi đơn hàng nhé! Em cảm ơn anh [private] nhiều ạ."
+      }
+    ],
+    "open_questions": [],
+    "feedback": [],
+    "evidence_coverage": "per_turn_evidence",
+    "workflow_version": 4,
+    "turn_evidence": [
+      {
+        "turn_id": 1,
+        "agent_response": "Dạ em chào anh [private], em đã kiểm tra mẫu Áo khoác gió Windbreak size M màu be bên em hiện đang còn hàng ạ. \n\nAnh muốn em đặt giao hàng về địa chỉ [address]",
+        "tool_calls": [
+          {
+            "name": "catalog.search",
+            "args": {
+              "query": "Áo khoác gió Windbreak size M màu be",
+              "on": "2026-10-07"
+            },
+            "result": {
+              "items": [],
+              "total": 0
+            }
+          },
+          {
+            "name": "catalog.search",
+            "args": {
+              "query": "Áo khoác gió Windbreak",
+              "on": "2026-10-07"
+            },
+            "result": {
+              "items": [
+                {
+                  "sku": "SKU-JK-WND",
+                  "name": "[private]",
+                  "category": "thoi-trang/ao-khoac",
+                  "brand": "Windbreak",
+                  "list_price_vnd": 690000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "return_days": 7
+                  },
+                  "variants": [
+                    {
+                      "variant_sku": "SKU-JK-WND-S-DEN",
+                      "size": "S",
+                      "color": "den",
+                      "price_delta": 0,
+                      "price_delta_vnd": 0
+                    },
+                    {
+                      "variant_sku": "SKU-JK-WND-S-NAVY",
+                      "size": "S",
+                      "color": "navy",
+                      "price_delta": 0,
+                      "price_delta_vnd": 0
+                    },
+                    {
+                      "variant_sku": "SKU-JK-WND-S-BE",
+                      "size": "S",
+                      "color": "be",
+                      "price_delta": 0,
+                      "price_delta_vnd": 0
+                    },
+                    {
+                      "variant_sku": "SKU-JK-WND-M-DEN",
+                      "size": "M",
+                      "color": "den",
+                      "price_delta": 0,
+                      "price_delta_vnd": 0
+                    },
+                    {
+                      "variant_sku": "SKU-JK-WND-M-NAVY",
+                      "size": "M",
+                      "color": "navy",
+                      "price_delta": 0,
+                      "price_delta_vnd": 0
+                    },
+                    {
+                      "variant_sku": "SKU-JK-WND-M-BE",
+                      "size": "M",
+                      "color": "be",
+                      "price_delta": 0,
+                      "price_delta_vnd": 0
+                    },
+                    {
+                      "variant_sku": "SKU-JK-WND-L-DEN",
+                      "size": "L",
+                      "color": "den",
+                      "price_delta": 0,
+                      "price_delta_vnd": 0
+                    },
+                    {
+                      "variant_sku": "SKU-JK-WND-L-NAVY",
+                      "size": "L",
+                      "color": "navy",
+                      "price_delta": 0,
+                      "price_delta_vnd": 0
+                    },
+                    {
+                      "variant_sku": "SKU-JK-WND-L-BE",
+                      "size": "L",
+                      "color": "be",
+                      "price_delta": 0,
+                      "price_delta_vnd": 0
+                    },
+                    {
+                      "variant_sku": "SKU-JK-WND-XL-DEN",
+                      "size": "XL",
+                      "color": "den",
+                      "price_delta": 40000.0,
+                      "price_delta_vnd": 40000
+                    },
+                    {
+                      "variant_sku": "SKU-JK-WND-XL-NAVY",
+                      "size": "XL",
+                      "color": "navy",
+                      "price_delta": 40000.0,
+                      "price_delta_vnd": 40000
+                    },
+                    {
+                      "variant_sku": "SKU-JK-WND-XL-BE",
+                      "size": "XL",
+                      "color": "be",
+                      "price_delta": 40000.0,
+                      "price_delta_vnd": 40000
+                    }
+                  ]
+                }
+              ],
+              "total": 1
+            }
+          },
+          {
+            "name": "inventory.check",
+            "args": {
+              "on": "2026-10-07",
+              "sku": "SKU-JK-WND-M-BE"
+            },
+            "result": {
+              "sku": "SKU-JK-WND-M-BE",
+              "found": true,
+              "in_stock": true,
+              "qty": 12,
+              "discontinued": false
+            }
+          }
+        ],
+        "sources": [],
+        "promotions": []
+      },
+      {
+        "turn_id": 2,
+        "agent_response": "Dạ em đã tạo đơn hàng thành công cho anh [private] rồi ạ! \n\nThông tin đơn hàng của anh:\n- **Sản phẩm:** Áo khoác gió Windbreak (Size M, Màu be) - Số lượng: 1\n- **Mã đơn hàng:** [order_id]\n- **Địa chỉ [address]\n- **Hình thức thanh toán:** COD (Thanh toán khi nhận hàng)\n- **Tổng tiền:** 690.000 VNĐ\n- **Dự kiến giao hàng:** Ngày 09/10/2026\n\nEm cảm ơn anh đã ủng hộ shop, anh chú ý điện thoại để nhận hàng giúp em nhé!",
+        "tool_calls": [
+          {
+            "name": "inventory.check",
+            "args": {
+              "sku": "SKU-JK-WND-M-BE",
+              "on": "2026-10-07"
+            },
+            "result": {
+              "sku": "SKU-JK-WND-M-BE",
+              "found": true,
+              "in_stock": true,
+              "qty": 12,
+              "discontinued": false
+            }
+          },
+          {
+            "name": "pricing.get_quote",
+            "args": {
+              "on": "2026-10-07",
+              "customer_phone": "[private]",
+              "customer_id": "[private]",
+              "address": "[private]",
+              "sku": "SKU-JK-WND-M-BE",
+              "qty": 1
+            },
+            "result": {
+              "sku": "SKU-JK-WND-M-BE",
+              "list_price_vnd": 690000,
+              "final_price_vnd": 690000,
+              "applied_promos": [
+                {
+                  "promo_code": "COD-0",
+                  "type": "freecod",
+                  "discount_vnd": 0
+                }
+              ],
+              "expired_promos": [],
+              "ineligible_promos": [],
+              "not_applied_exclusive": [],
+              "freeship": false
+            }
+          },
+          {
+            "name": "order.create",
+            "args": {
+              "customer_phone": "[private]",
+              "customer_id": "[private]",
+              "address": "[private]",
+              "idempotency_key": "self-40ca1bd9d8db4a7eb74e1572e2ba23e2-SC-026-call_1:call_1:create:SKU-JK-WND-M-BE",
+              "sku": "SKU-JK-WND-M-BE",
+              "qty": 1,
+              "price_vnd": 690000,
+              "promo_code": "COD-0",
+              "on": "2026-10-07",
+              "payment": "COD"
+            },
+            "result": {
+              "order_id": "[private]",
+              "status": "created",
+              "total_vnd": 690000,
+              "needs_confirmation_call": false,
+              "estimated_delivery": "2026-10-09"
+            }
+          }
+        ],
+        "sources": [],
+        "promotions": []
+      },
+      {
+        "turn_id": 3,
+        "agent_response": "Dạ, đơn hàng cho sản phẩm Áo khoác gió Windbreak (Size M, Màu be) của anh đã được tạo trước đó rồi ạ. \n\nMã đơn hàng của anh là **[order_id]**. Anh lưu lại mã này giúp em để tiện theo dõi đơn hàng nhé! Em cảm ơn anh [private] nhiều ạ.",
+        "tool_calls": [
+          {
+            "name": "inventory.check",
+            "args": {
+              "sku": "SKU-JK-WND-M-BE",
+              "on": "2026-10-07"
+            },
+            "result": {
+              "sku": "SKU-JK-WND-M-BE",
+              "found": true,
+              "in_stock": true,
+              "qty": 12,
+              "discontinued": false
+            }
+          },
+          {
+            "name": "pricing.get_quote",
+            "args": {
+              "on": "2026-10-07",
+              "customer_phone": "[private]",
+              "customer_id": "[private]",
+              "address": "[private]",
+              "sku": "SKU-JK-WND-M-BE",
+              "qty": 1
+            },
+            "result": {
+              "sku": "SKU-JK-WND-M-BE",
+              "list_price_vnd": 690000,
+              "final_price_vnd": 690000,
+              "applied_promos": [
+                {
+                  "promo_code": "COD-0",
+                  "type": "freecod",
+                  "discount_vnd": 0
+                }
+              ],
+              "expired_promos": [],
+              "ineligible_promos": [],
+              "not_applied_exclusive": [],
+              "freeship": false
+            }
+          }
+        ],
+        "sources": [],
+        "promotions": []
+      }
+    ]
+  },
+  "error": null
+}

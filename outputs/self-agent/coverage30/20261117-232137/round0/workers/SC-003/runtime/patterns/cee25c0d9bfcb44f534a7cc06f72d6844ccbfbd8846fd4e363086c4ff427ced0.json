@@ -1,0 +1,46 @@
+{
+  "id": "cee25c0d9bfcb44f534a7cc06f72d6844ccbfbd8846fd4e363086c4ff427ced0",
+  "reason": "reasoning_failure",
+  "pattern": "Check the answer against evidence and preserve all applicable conditions.",
+  "status": "approved",
+  "scope": "general",
+  "mechanism": "reflection",
+  "criterion": "Check the answer against evidence and preserve all applicable conditions.",
+  "evidence_refs": [
+    {
+      "job_id": "3c9aba8cefccf09a016fe2e6ee3578140780bdf501d462e6d209792679a89f5f",
+      "message_id": 0,
+      "turn_id": 1,
+      "origin": "turn_detector"
+    }
+  ],
+  "assessment": "contradicts_evidence",
+  "report_ref": "3c9aba8cefccf09a016fe2e6ee3578140780bdf501d462e6d209792679a89f5f",
+  "lesson": {
+    "title": "Reflect Inventory Check Results Accurately",
+    "when": "An inventory lookup tool has already returned the stock status and restock date",
+    "do": "State the known stock availability and restock timeline directly to the customer based on the tool result",
+    "otherwise": "Do not claim that inventory still needs to be checked when the data has already been retrieved",
+    "triggers": [
+      "inventory check contradiction",
+      "already checked stock",
+      "stock status messaging",
+      "out of stock restock date"
+    ],
+    "id": "91705e9fbf7144fc3e7376513f61ca3b790078f033f0efed5c4591452febe2ba",
+    "status": "approved",
+    "scope": "general",
+    "mechanism": "reflection",
+    "source_refs": [
+      {
+        "job_id": "3c9aba8cefccf09a016fe2e6ee3578140780bdf501d462e6d209792679a89f5f",
+        "message_id": 0,
+        "turn_id": 1,
+        "origin": "turn_detector"
+      }
+    ],
+    "version": 2
+  },
+  "lesson_path": "lessons\\approved\\91705e9fbf7144fc3e7376513f61ca3b790078f033f0efed5c4591452febe2ba.md",
+  "lesson_hash": "0b79efc34d78367dd44c15d622e578359cc166594ce784ad69462c8fff79c8c0"
+}

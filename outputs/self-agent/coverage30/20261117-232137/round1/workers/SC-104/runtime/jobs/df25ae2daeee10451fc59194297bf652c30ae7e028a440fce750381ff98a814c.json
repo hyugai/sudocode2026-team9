@@ -1,0 +1,188 @@
+{
+  "id": "df25ae2daeee10451fc59194297bf652c30ae7e028a440fce750381ff98a814c",
+  "status": "done",
+  "attempts": 1,
+  "snapshot": {
+    "session": "018b6230b5c08247c38f1b1ebcb50ad1f967ca4b6ee93c12189fea9368825286",
+    "revision": 3,
+    "messages": [
+      {
+        "message_id": 0,
+        "role": "customer",
+        "content": "Tôi là [private], số điện thoại [private], đang nhắn qua Zalo OA. Chị muốn tiếp tục phần tư vấn lần trước, người nhà đồng ý đổi máy rồi."
+      },
+      {
+        "message_id": 1,
+        "role": "agent",
+        "content": "Dạ em chào chị [private]. Mọi người trong nhà mình đã đồng ý đổi máy rồi đúng không ạ? Chị cho em hỏi là chị muốn chốt đổi sang mẫu máy nào mà lần trước mình đã tham khảo, hay chị muốn em hỗ trợ lên đơn luôn ạ?"
+      },
+      {
+        "message_id": 2,
+        "role": "customer",
+        "content": "Em nhắc lại máy mới, giá sau thu cũ đổi mới và dùng địa chỉ [address]"
+      },
+      {
+        "message_id": 3,
+        "role": "agent",
+        "content": "Dạ em xác nhận lại thông tin cho chị [private] ạ:\n\n- **Sản phẩm**: Máy lọc không khí (SKU-AP-X), tình trạng máy mới 100%, sẵn hàng.\n- **Giá sau khi thu cũ đổi mới** (áp dụng mã TRADE-IN-AP): **4.490.000đ** (đã giảm 400.000đ từ giá niêm yết 4.890.000đ và miễn phí vận chuyển).\n\nHiện tại hệ thống chưa lưu cụ thể địa chỉ [address]"
+      },
+      {
+        "message_id": 4,
+        "role": "customer",
+        "content": "Chị đồng ý 4.490.000 đồng, một máy, cod. Khi giao em thu máy cũ theo chương trình."
+      },
+      {
+        "message_id": 5,
+        "role": "agent",
+        "content": "Dạ em cảm ơn chị [private] đã xác nhận đặt hàng máy lọc không khí (SKU-AP-X) với giá 4.490.000đ theo phương thức thanh toán COD ạ. \n\nHiện tại hệ thống bên em vẫn chưa lưu địa chỉ [address]"
+      }
+    ],
+    "open_questions": [],
+    "feedback": [],
+    "evidence_coverage": "per_turn_evidence",
+    "workflow_version": 4,
+    "turn_evidence": [
+      {
+        "turn_id": 1,
+        "agent_response": "Dạ em chào chị [private]. Mọi người trong nhà mình đã đồng ý đổi máy rồi đúng không ạ? Chị cho em hỏi là chị muốn chốt đổi sang mẫu máy nào mà lần trước mình đã tham khảo, hay chị muốn em hỗ trợ lên đơn luôn ạ?",
+        "tool_calls": [],
+        "sources": [],
+        "promotions": []
+      },
+      {
+        "turn_id": 2,
+        "agent_response": "Dạ em xác nhận lại thông tin cho chị [private] ạ:\n\n- **Sản phẩm**: Máy lọc không khí (SKU-AP-X), tình trạng máy mới 100%, sẵn hàng.\n- **Giá sau khi thu cũ đổi mới** (áp dụng mã TRADE-IN-AP): **4.490.000đ** (đã giảm 400.000đ từ giá niêm yết 4.890.000đ và miễn phí vận chuyển).\n\nHiện tại hệ thống chưa lưu cụ thể địa chỉ [address]",
+        "tool_calls": [
+          {
+            "name": "policy.search",
+            "args": {
+              "query": "Em nhắc lại máy mới, giá sau thu cũ đổi mới và dùng địa chỉ [address]",
+              "k": 3,
+              "product_sku": "SKU-AP-X",
+              "as_of": "2026-10-27"
+            },
+            "result": {
+              "query": "Em nhắc lại máy mới, giá sau thu cũ đổi mới và dùng địa chỉ [address]",
+              "as_of": "2026-10-27",
+              "product_sku": "SKU-AP-X",
+              "count": 3,
+              "chunks": [
+                {
+                  "chunk_id": "DT-03",
+                  "content": "Đổi size hoặc màu lần **đầu tiên** cho cùng một đơn hàng: **miễn phí**, shop chịu phí vận chuyển hai chiều. Từ lần đổi thứ hai trở đi: khách chịu phí vận chuyển 30.000đ/chiều. Điều kiện: size/màu mới còn hàng; nếu hết hàng, khách được chọn sản phẩm khác cùng giá hoặc hoàn tiền.",
+                  "source_file": "chinh-sach-doi-tra.md",
+                  "section": "[DT-03] Đổi size / màu (thời trang)"
+                },
+                {
+                  "chunk_id": "CL-01",
+                  "content": "Thay thế phiên bản 2026-06. Thay đổi: thời hạn đổi trả 14 → **7 ngày**; đổi size lần đầu **miễn phí** (trước: 20.000đ); hoàn tiền 7 → **3–5 ngày làm việc**; lỗi nhà sản xuất đổi mới 15 → **30 ngày** (gia dụng, mẹ & bé). Đơn tạo trước 01/10/2026 vẫn áp dụng bản cũ.",
+                  "source_file": "changelog.md",
+                  "section": "[CL-01] 01/10/2026 — Chính sách đổi trả phiên bản 2026-10"
+                },
+                {
+                  "chunk_id": "DT-05",
+                  "content": "Đổi mới 1-1 trong 30 ngày với gia dụng và mẹ & bé nếu có xác nhận lỗi từ trung tâm bảo hành. Sau 30 ngày áp dụng chính sách bảo hành (xem chinh-sach-bao-hanh.md).",
+                  "source_file": "chinh-sach-doi-tra.md",
+                  "section": "[DT-05] Sản phẩm lỗi do nhà sản xuất"
+                }
+              ]
+            }
+          },
+          {
+            "name": "catalog.search",
+            "args": {
+              "query": "Em nhắc lại máy mới, giá sau thu cũ đổi mới và dùng địa chỉ [address]",
+              "on": "2026-10-27"
+            },
+            "result": {
+              "items": [],
+              "total": 0
+            }
+          },
+          {
+            "name": "pricing.get_quote",
+            "args": {
+              "on": "2026-10-27",
+              "customer_phone": "[private]",
+              "customer_id": "[private]",
+              "sku": "SKU-AP-X",
+              "qty": 1
+            },
+            "result": {
+              "sku": "SKU-AP-X",
+              "list_price_vnd": 4890000,
+              "final_price_vnd": 4490000,
+              "applied_promos": [
+                {
+                  "promo_code": "COD-0",
+                  "type": "freecod",
+                  "discount_vnd": 0
+                },
+                {
+                  "promo_code": "TRADE-IN-AP",
+                  "type": "fixed",
+                  "discount_vnd": 400000
+                }
+              ],
+              "expired_promos": [
+                "GIFT-FILTER",
+                "AP-SEP"
+              ],
+              "ineligible_promos": [
+                {
+                  "promo_code": "AIR-2ND-50",
+                  "reason": "min_qty"
+                },
+                {
+                  "promo_code": "NAM-SHIP0",
+                  "reason": "region"
+                }
+              ],
+              "not_applied_exclusive": [],
+              "freeship": true
+            }
+          },
+          {
+            "name": "inventory.check",
+            "args": {
+              "on": "2026-10-27",
+              "sku": "SKU-AP-X"
+            },
+            "result": {
+              "sku": "SKU-AP-X",
+              "found": true,
+              "in_stock": true,
+              "qty": 40,
+              "discontinued": false
+            }
+          }
+        ],
+        "sources": [],
+        "promotions": []
+      },
+      {
+        "turn_id": 3,
+        "agent_response": "Dạ em cảm ơn chị [private] đã xác nhận đặt hàng máy lọc không khí (SKU-AP-X) với giá 4.490.000đ theo phương thức thanh toán COD ạ. \n\nHiện tại hệ thống bên em vẫn chưa lưu địa chỉ [address]",
+        "tool_calls": [
+          {
+            "name": "inventory.check",
+            "args": {
+              "sku": "SKU-AP-X",
+              "on": "2026-10-27"
+            },
+            "result": {
+              "sku": "SKU-AP-X",
+              "found": true,
+              "in_stock": true,
+              "qty": 40,
+              "discontinued": false
+            }
+          }
+        ],
+        "sources": [],
+        "promotions": []
+      }
+    ]
+  },
+  "error": null
+}

@@ -1,0 +1,395 @@
+<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src 'none'; base-uri 'none'; form-action 'none'"><title>Review self-learning</title><style>body{margin:0;background:#f5f2ed;color:#292824;font:16px/1.6 system-ui,sans-serif}main{max-width:1180px;margin:auto;padding:24px}h1,h2,h3{line-height:1.3}article,.box{background:#fffdf9;border:1px solid #ddd7cc;border-radius:12px;padding:18px;margin:16px 0}.columns{display:grid;grid-template-columns:1fr 1fr;gap:18px}.answer{white-space:pre-wrap}mark{background:#fff0a6;color:#292824}del{background:#fbe2df;text-decoration:line-through}.warn{border-left:5px solid #a66b16}.regression{border-left:5px solid #a43131}.improved_resolution{border-left:5px solid #367458}.muted{color:#635f57}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#f3f1eb;padding:12px;border-radius:8px}body,td,p,div,summary{overflow-wrap:anywhere}table{border-collapse:collapse;width:100%}th,td{text-align:left;padding:8px;border-bottom:1px solid #e3ded5;vertical-align:top}summary{cursor:pointer;padding:8px 0}summary:focus-visible,a:focus-visible{outline:3px solid #8c5517}a{color:#754610}nav{display:flex;flex-wrap:wrap;gap:14px}@media(max-width:650px){main{padding:12px}.columns{grid-template-columns:1fr}article,.box{padding:12px}}</style></head><body><main><h1>Review self-learning</h1><p>Học sau khi kết thúc session. Báo cáo dựng từ artifact đã lưu, không gọi thêm LLM.</p><nav><a href="#overview">Tổng quan</a><a href="#turns">Trước / sau</a><a href="#lessons">Lesson</a><a href="#sessions">Học &amp; guardrail</a></nav><section id="overview"><h2>Tổng quan</h2><p class="box warn">Chưa chạy judge: chỉ xem thay đổi câu trả lời và dấu vết lesson, chưa đánh giá cải thiện.</p><p class="box warn">Không có cặp chấm hợp lệ: chưa thể kết luận cải thiện hay không có regression.</p><p><b>0</b> cặp chấm hợp lệ / 0 case được lưu trong comparison. 0/3 lượt trong session được inject.</p><table><tr><th>Phân loại</th><th>Số lượt</th></tr><tr><td>Giải quyết được thêm · cần xác nhận</td><td>0</td></tr><tr><td>Thận trọng hơn · vẫn chưa giải quyết</td><td>0</td></tr><tr><td>Có dấu hiệu regression · cần xác nhận</td><td>0</td></tr><tr><td>Không đổi trạng thái chấm</td><td>0</td></tr><tr><td>Chưa đủ kết quả chấm hợp lệ</td><td>0</td></tr><tr><td>Chưa được judge chấm</td><td>3</td></tr><tr><td>Thiếu một vòng</td><td>0</td></tr><tr><td>Câu hỏi hai vòng khác nhau</td><td>0</td></tr><tr><td>Bị loại khỏi phép so sánh</td><td>0</td></tr></table><details><summary>Phạm vi, nguồn baseline và exclusions</summary><pre>{
+  &quot;evaluation_population&quot;: &quot;single_session_no_baseline&quot;
+}</pre></details><p class="muted">Verdict kiểm tra được reference vẫn cần người đọc xác nhận ngữ nghĩa và độ đầy đủ.</p><p class="muted">Câu trả lời thay đổi hoặc được inject lesson chưa chứng minh lesson gây ra cải thiện.</p><p class="muted">Reflection chưa được chấm chất lượng; learning job done/lesson approved không phải điểm chất lượng.</p><p class="muted">Guardrail mẫu có giới hạn; không phát hiện mẫu không đồng nghĩa không có prompt injection.</p></section><section id="turns"><h2>Cải thiện ở đâu? Đọc từng lượt</h2><h3>Chưa được judge chấm (3)</h3><article id="turn-0" class="not_evaluated"><h3>SC-026/call_2 · lượt 1</h3><p><b>Khách:</b> Anh gọi tiếp về món đã hỏi. Đơn OD600001 đã nhận hôm qua; sản phẩm hơi chật.</p><p class="muted">Câu trả lời không đổi/thiếu cặp · Lesson chưa inject.</p><div class="columns"><div><h3>Phiên vừa kết thúc</h3><p><b>Chưa có verdict hợp lệ</b></p><div class="answer">Dạ em chào anh [private]. Em đã ghi nhận phản hồi của anh về việc đơn hàng OD600001 bị chật ạ. 
+
+Tuy nhiên, khi kiểm tra hệ thống thì em chưa thấy thông tin mã đơn OD600001. Anh cho em hỏi sản phẩm anh nhận được có phải là áo khoác màu be size M (thuộc đơn hàng [order_id]) không ạ? Anh muốn đổi sang size lớn hơn hay cần em hỗ trợ kiểm tra chi tiết theo hướng nào ạ?</div><details><summary>Claims, trích dẫn và verdict gốc</summary><pre>{
+  &quot;status&quot;: null
+}</pre></details><details><summary>Evidence hiện tại và trước lượt này</summary><pre>{
+  &quot;current&quot;: {
+    &quot;turn_id&quot;: 1,
+    &quot;agent_response&quot;: &quot;Dạ em chào anh [private]. Em đã ghi nhận phản hồi của anh về việc đơn hàng OD600001 bị chật ạ. \n\nTuy nhiên, khi kiểm tra hệ thống thì em chưa thấy thông tin mã đơn OD600001. Anh cho em hỏi sản phẩm anh nhận được có phải là áo khoác màu be size M (thuộc đơn hàng [order_id]) không ạ? Anh muốn đổi sang size lớn hơn hay cần em hỗ trợ kiểm tra chi tiết theo hướng nào ạ?&quot;,
+    &quot;tool_calls&quot;: [
+      {
+        &quot;name&quot;: &quot;order.status&quot;,
+        &quot;args&quot;: {
+          &quot;order_id&quot;: &quot;[private]&quot;
+        },
+        &quot;result&quot;: {
+          &quot;orders&quot;: []
+        }
+      }
+    ],
+    &quot;sources&quot;: [],
+    &quot;promotions&quot;: []
+  },
+  &quot;earlier&quot;: []
+}</pre></details></div></div><details><summary>Lesson ID, routing, token và injection trace</summary><pre>{}</pre></details></article><article id="turn-1" class="not_evaluated"><h3>SC-026/call_2 · lượt 2</h3><p><b>Khách:</b> Anh muốn đổi từ size M sang L, giữ màu cũ. Đây là lần đổi đầu tiên; hàng còn nguyên tem, hộp và chưa sử dụng.</p><p class="muted">Câu trả lời không đổi/thiếu cặp · Lesson chưa inject.</p><div class="columns"><div><h3>Phiên vừa kết thúc</h3><p><b>Chưa có verdict hợp lệ</b></p><div class="answer">Dạ em chào anh [private]. Anh xác nhận giúp em để em hỗ trợ làm thủ tục cập nhật đơn đổi sang size L cho anh nhé? Em cần kiểm tra lại tồn kho trước khi xác nhận cho mình ạ.</div><details><summary>Claims, trích dẫn và verdict gốc</summary><pre>{
+  &quot;status&quot;: null
+}</pre></details><details><summary>Evidence hiện tại và trước lượt này</summary><pre>{
+  &quot;current&quot;: {
+    &quot;turn_id&quot;: 2,
+    &quot;agent_response&quot;: &quot;Dạ em chào anh [private]. Anh xác nhận giúp em để em hỗ trợ làm thủ tục cập nhật đơn đổi sang size L cho anh nhé? Em cần kiểm tra lại tồn kho trước khi xác nhận cho mình ạ.&quot;,
+    &quot;tool_calls&quot;: [
+      {
+        &quot;name&quot;: &quot;catalog.search&quot;,
+        &quot;args&quot;: {
+          &quot;query&quot;: &quot;Anh muốn đổi từ size M sang L, giữ màu cũ. Đây là lần đổi đầu tiên; hàng còn nguyên tem, hộp và chưa sử dụng.&quot;,
+          &quot;on&quot;: &quot;2026-10-12&quot;
+        },
+        &quot;result&quot;: {
+          &quot;items&quot;: [],
+          &quot;total&quot;: 0
+        }
+      },
+      {
+        &quot;name&quot;: &quot;order.status&quot;,
+        &quot;args&quot;: {
+          &quot;order_id&quot;: &quot;[private]&quot;
+        },
+        &quot;result&quot;: {
+          &quot;orders&quot;: [
+            {
+              &quot;order_id&quot;: &quot;[private]&quot;,
+              &quot;customer_id&quot;: &quot;[private]&quot;,
+              &quot;customer_phone&quot;: &quot;[private]&quot;,
+              &quot;sku&quot;: &quot;SKU-JK-WND-M-BE&quot;,
+              &quot;qty&quot;: 1,
+              &quot;price_vnd&quot;: 690000,
+              &quot;lines&quot;: [
+                {
+                  &quot;qty&quot;: 1,
+                  &quot;sku&quot;: &quot;SKU-JK-WND-M-BE&quot;,
+                  &quot;promos&quot;: [
+                    &quot;COD-0&quot;
+                  ],
+                  &quot;price_vnd&quot;: 690000
+                }
+              ],
+              &quot;total_vnd&quot;: 690000,
+              &quot;promos&quot;: [
+                &quot;COD-0&quot;
+              ],
+              &quot;promo_code&quot;: &quot;COD-0&quot;,
+              &quot;payment&quot;: &quot;COD&quot;,
+              &quot;address&quot;: &quot;[private]&quot;,
+              &quot;status&quot;: &quot;created&quot;,
+              &quot;created_on&quot;: &quot;2026-10-07&quot;,
+              &quot;exchange_count&quot;: 0
+            }
+          ]
+        }
+      },
+      {
+        &quot;name&quot;: &quot;inventory.check&quot;,
+        &quot;args&quot;: {
+          &quot;sku&quot;: &quot;SKU-JK-WND-L-BE&quot;,
+          &quot;on&quot;: &quot;2026-10-12&quot;
+        },
+        &quot;result&quot;: {
+          &quot;sku&quot;: &quot;SKU-JK-WND-L-BE&quot;,
+          &quot;found&quot;: true,
+          &quot;in_stock&quot;: true,
+          &quot;qty&quot;: 4,
+          &quot;discontinued&quot;: false
+        }
+      }
+    ],
+    &quot;sources&quot;: [],
+    &quot;promotions&quot;: []
+  },
+  &quot;earlier&quot;: [
+    {
+      &quot;turn_id&quot;: 1,
+      &quot;tool_calls&quot;: [
+        {
+          &quot;name&quot;: &quot;order.status&quot;,
+          &quot;args&quot;: {
+            &quot;order_id&quot;: &quot;[private]&quot;
+          },
+          &quot;result&quot;: {
+            &quot;orders&quot;: []
+          }
+        }
+      ],
+      &quot;sources&quot;: [],
+      &quot;promotions&quot;: []
+    }
+  ]
+}</pre></details></div></div><details><summary>Lesson ID, routing, token và injection trace</summary><pre>{}</pre></details></article><article id="turn-2" class="not_evaluated"><h3>SC-026/call_2 · lượt 3</h3><p><b>Khách:</b> Phí đổi size lần đầu thế nào? Anh đồng ý làm thủ tục đổi, lấy hàng tại địa chỉ [address]</p><p class="muted">Câu trả lời không đổi/thiếu cặp · Lesson chưa inject.</p><div class="columns"><div><h3>Phiên vừa kết thúc</h3><p><b>Chưa có verdict hợp lệ</b></p><div class="answer">Dạ anh [private], lần đổi size đầu tiên bên em hoàn toàn miễn phí và shop chịu chi phí vận chuyển hai chiều ạ. 
+
+Em đã cập nhật xong thủ tục đổi sang size L cho đơn hàng [order_id] của anh. Bên vận chuyển sẽ liên hệ lấy hàng cũ và giao size L mới đến địa chỉ [address]</div><details><summary>Claims, trích dẫn và verdict gốc</summary><pre>{
+  &quot;status&quot;: null
+}</pre></details><details><summary>Evidence hiện tại và trước lượt này</summary><pre>{
+  &quot;current&quot;: {
+    &quot;turn_id&quot;: 3,
+    &quot;agent_response&quot;: &quot;Dạ anh [private], lần đổi size đầu tiên bên em hoàn toàn miễn phí và shop chịu chi phí vận chuyển hai chiều ạ. \n\nEm đã cập nhật xong thủ tục đổi sang size L cho đơn hàng [order_id] của anh. Bên vận chuyển sẽ liên hệ lấy hàng cũ và giao size L mới đến địa chỉ [address]&quot;,
+    &quot;tool_calls&quot;: [
+      {
+        &quot;name&quot;: &quot;policy.search&quot;,
+        &quot;args&quot;: {
+          &quot;query&quot;: &quot;Phí đổi size lần đầu thế nào? Anh đồng ý làm thủ tục đổi, lấy hàng tại địa chỉ [address]&quot;,
+          &quot;k&quot;: 3,
+          &quot;product_sku&quot;: &quot;SKU-JK-WND-M-BE&quot;,
+          &quot;as_of&quot;: &quot;2026-10-12&quot;
+        },
+        &quot;result&quot;: {
+          &quot;query&quot;: &quot;Phí đổi size lần đầu thế nào? Anh đồng ý làm thủ tục đổi, lấy hàng tại địa chỉ [address]&quot;,
+          &quot;as_of&quot;: &quot;2026-10-12&quot;,
+          &quot;product_sku&quot;: &quot;SKU-JK-WND-M-BE&quot;,
+          &quot;count&quot;: 3,
+          &quot;chunks&quot;: [
+            {
+              &quot;chunk_id&quot;: &quot;DT-03&quot;,
+              &quot;content&quot;: &quot;Đổi size hoặc màu lần **đầu tiên** cho cùng một đơn hàng: **miễn phí**, shop chịu phí vận chuyển hai chiều. Từ lần đổi thứ hai trở đi: khách chịu phí vận chuyển 30.000đ/chiều. Điều kiện: size/màu mới còn hàng; nếu hết hàng, khách được chọn sản phẩm khác cùng giá hoặc hoàn tiền.&quot;,
+              &quot;source_file&quot;: &quot;chinh-sach-doi-tra.md&quot;,
+              &quot;section&quot;: &quot;[DT-03] Đổi size / màu (thời trang)&quot;
+            },
+            {
+              &quot;chunk_id&quot;: &quot;VC-01&quot;,
+              &quot;content&quot;: &quot;| Khu vực | Thời gian (ngày làm việc) | Ghi chú | |---|---|---| | Nội thành Hà Nội, TP.HCM, Đà Nẵng | 1–2 | Đặt sau 16h tính từ ngày kế tiếp | | Ngoại thành 3 thành phố trên; Bình Dương, Đồng Nai, Hải Phòng, Cần Thơ | 2–3 | | | Tỉnh thành khác | 2–4 | Tây Nguyên, Tây Bắc: 3–5 | | Vùng sâu, hải đảo (Phú Quốc, Côn Đảo, Lý Sơn…) | 5–7 | Không nhận hàng cồng kềnh | \&quot;Ngày làm việc\&quot; không gồm Chủ nhật, ngày lễ và ngày nghỉ nội bộ (xem `thong-bao-lich-nghi.md`).&quot;,
+              &quot;source_file&quot;: &quot;chinh-sach-van-chuyen-thanh-toan.md&quot;,
+              &quot;section&quot;: &quot;[VC-01] Thời gian giao hàng&quot;
+            },
+            {
+              &quot;chunk_id&quot;: &quot;VC-07&quot;,
+              &quot;content&quot;: &quot;Đơn vị vận chuyển giao tối đa 3 lần. Sau 3 lần không thành công, hàng hoàn về kho; khách muốn giao lại phải đặt đơn mới.&quot;,
+              &quot;source_file&quot;: &quot;chinh-sach-van-chuyen-thanh-toan.md&quot;,
+              &quot;section&quot;: &quot;[VC-07] Giao hàng thất bại&quot;
+            }
+          ]
+        }
+      },
+      {
+        &quot;name&quot;: &quot;order.update&quot;,
+        &quot;args&quot;: {
+          &quot;order_id&quot;: &quot;[private]&quot;,
+          &quot;action&quot;: &quot;exchange_size&quot;,
+          &quot;new_variant_sku&quot;: &quot;SKU-JK-WND-L-BE&quot;,
+          &quot;reason&quot;: &quot;Phí đổi size lần đầu thế nào? Anh đồng ý làm thủ tục đổi, lấy hàng tại địa chỉ [address]&quot;,
+          &quot;on&quot;: &quot;2026-10-12&quot;
+        },
+        &quot;result&quot;: {
+          &quot;order_id&quot;: &quot;[private]&quot;,
+          &quot;action&quot;: &quot;exchange_size&quot;,
+          &quot;new_variant_sku&quot;: &quot;SKU-JK-WND-L-BE&quot;,
+          &quot;fee_vnd&quot;: 0,
+          &quot;price_diff_vnd&quot;: 0,
+          &quot;refund_vnd&quot;: 0,
+          &quot;extra_payment_vnd&quot;: 0,
+          &quot;refund_days&quot;: &quot;3-5 ngày làm việc&quot;,
+          &quot;status&quot;: &quot;pickup_scheduled&quot;
+        }
+      }
+    ],
+    &quot;sources&quot;: [],
+    &quot;promotions&quot;: []
+  },
+  &quot;earlier&quot;: [
+    {
+      &quot;turn_id&quot;: 1,
+      &quot;tool_calls&quot;: [
+        {
+          &quot;name&quot;: &quot;order.status&quot;,
+          &quot;args&quot;: {
+            &quot;order_id&quot;: &quot;[private]&quot;
+          },
+          &quot;result&quot;: {
+            &quot;orders&quot;: []
+          }
+        }
+      ],
+      &quot;sources&quot;: [],
+      &quot;promotions&quot;: []
+    },
+    {
+      &quot;turn_id&quot;: 2,
+      &quot;tool_calls&quot;: [
+        {
+          &quot;name&quot;: &quot;catalog.search&quot;,
+          &quot;args&quot;: {
+            &quot;query&quot;: &quot;Anh muốn đổi từ size M sang L, giữ màu cũ. Đây là lần đổi đầu tiên; hàng còn nguyên tem, hộp và chưa sử dụng.&quot;,
+            &quot;on&quot;: &quot;2026-10-12&quot;
+          },
+          &quot;result&quot;: {
+            &quot;items&quot;: [],
+            &quot;total&quot;: 0
+          }
+        },
+        {
+          &quot;name&quot;: &quot;order.status&quot;,
+          &quot;args&quot;: {
+            &quot;order_id&quot;: &quot;[private]&quot;
+          },
+          &quot;result&quot;: {
+            &quot;orders&quot;: [
+              {
+                &quot;order_id&quot;: &quot;[private]&quot;,
+                &quot;customer_id&quot;: &quot;[private]&quot;,
+                &quot;customer_phone&quot;: &quot;[private]&quot;,
+                &quot;sku&quot;: &quot;SKU-JK-WND-M-BE&quot;,
+                &quot;qty&quot;: 1,
+                &quot;price_vnd&quot;: 690000,
+                &quot;lines&quot;: [
+                  {
+                    &quot;qty&quot;: 1,
+                    &quot;sku&quot;: &quot;SKU-JK-WND-M-BE&quot;,
+                    &quot;promos&quot;: [
+                      &quot;COD-0&quot;
+                    ],
+                    &quot;price_vnd&quot;: 690000
+                  }
+                ],
+                &quot;total_vnd&quot;: 690000,
+                &quot;promos&quot;: [
+                  &quot;COD-0&quot;
+                ],
+                &quot;promo_code&quot;: &quot;COD-0&quot;,
+                &quot;payment&quot;: &quot;COD&quot;,
+                &quot;address&quot;: &quot;[private]&quot;,
+                &quot;status&quot;: &quot;created&quot;,
+                &quot;created_on&quot;: &quot;2026-10-07&quot;,
+                &quot;exchange_count&quot;: 0
+              }
+            ]
+          }
+        },
+        {
+          &quot;name&quot;: &quot;inventory.check&quot;,
+          &quot;args&quot;: {
+            &quot;sku&quot;: &quot;SKU-JK-WND-L-BE&quot;,
+            &quot;on&quot;: &quot;2026-10-12&quot;
+          },
+          &quot;result&quot;: {
+            &quot;sku&quot;: &quot;SKU-JK-WND-L-BE&quot;,
+            &quot;found&quot;: true,
+            &quot;in_stock&quot;: true,
+            &quot;qty&quot;: 4,
+            &quot;discontinued&quot;: false
+          }
+        }
+      ],
+      &quot;sources&quot;: [],
+      &quot;promotions&quot;: []
+    }
+  ]
+}</pre></details></div></div><details><summary>Lesson ID, routing, token và injection trace</summary><pre>{}</pre></details></article></section><section id="lessons"><h2>Lesson mới sinh sau session</h2><p>Approved là trạng thái duyệt lesson, chưa chứng minh chất lượng câu trả lời.</p><article id="lesson-0"><h3>Verify Product Details Before Stating Them</h3><p><b>When:</b> Responding to a customer about an order or item when the system tools or sources return no order details or product information</p><p><b>Do:</b> Ask the customer to clarify or provide the correct details without stating specific unverified product names, sizes, colors, or order IDs</p><p><b>Otherwise:</b> Express uncertainty about the missing details and state that the system currently lacks that information</p><p>Inject tại: Chưa thấy trong trace</p><details><summary>ID, nguồn sinh và kiểm tra guardrail</summary><pre>{
+  &quot;id&quot;: &quot;65937ee9eef2c4d974bef3006d8de98f5b9b9b10c16ff5760d49d6e188a9241e&quot;,
+  &quot;mechanism&quot;: &quot;knowledge_gap&quot;,
+  &quot;content&quot;: {
+    &quot;title&quot;: &quot;Verify Product Details Before Stating Them&quot;,
+    &quot;when&quot;: &quot;Responding to a customer about an order or item when the system tools or sources return no order details or product information&quot;,
+    &quot;do&quot;: &quot;Ask the customer to clarify or provide the correct details without stating specific unverified product names, sizes, colors, or order IDs&quot;,
+    &quot;otherwise&quot;: &quot;Express uncertainty about the missing details and state that the system currently lacks that information&quot;
+  },
+  &quot;source_refs&quot;: [
+    {
+      &quot;job_id&quot;: &quot;9f35c922d159f4e6888b84e0fa52eb9920af697ac72371ddf8201fa45d497761&quot;,
+      &quot;message_id&quot;: 0,
+      &quot;turn_id&quot;: 1,
+      &quot;origin&quot;: &quot;turn_detector&quot;
+    }
+  ],
+  &quot;path&quot;: null,
+  &quot;security_findings&quot;: [],
+  &quot;load_error&quot;: null,
+  &quot;review_flags&quot;: []
+}</pre></details></article></section><section id="sessions"><h2>Học sau session &amp; guardrail</h2><p>Input finding là cảnh báo mẫu, không phải verdict khách nói sai hoặc bằng chứng tấn công thành công. Run cũ thiếu guardrail trace sẽ được ghi rõ.</p><article><h3>SC-026/call_2</h3><h3>Vòng 1</h3><p>Job: done · Issue xác nhận: 1 · Guardrail: có trace</p><details><summary>Vấn đề, trạng thái học và guardrail chi tiết</summary><pre>{
+  &quot;job&quot;: {
+    &quot;status&quot;: &quot;done&quot;,
+    &quot;job_id&quot;: &quot;9f35c922d159f4e6888b84e0fa52eb9920af697ac72371ddf8201fa45d497761&quot;,
+    &quot;error&quot;: null
+  },
+  &quot;error&quot;: null,
+  &quot;learning&quot;: {
+    &quot;job_id&quot;: &quot;9f35c922d159f4e6888b84e0fa52eb9920af697ac72371ddf8201fa45d497761&quot;,
+    &quot;gaps&quot;: [
+      {
+        &quot;id&quot;: &quot;e0fc8292e7f785cf58fdb4df5b49da6a2b1f2228d3eb696df3eb61d72052bbf4&quot;,
+        &quot;status&quot;: &quot;pending_remediation&quot;
+      }
+    ],
+    &quot;scope&quot;: &quot;knowledge_gap_and_reflection_v1&quot;,
+    &quot;evaluation_cases&quot;: [
+      {
+        &quot;id&quot;: &quot;595180c44418701434040e2483cc4fb6101b5e6de0bace9865695e313847bce5&quot;,
+        &quot;gap_id&quot;: &quot;e0fc8292e7f785cf58fdb4df5b49da6a2b1f2228d3eb696df3eb61d72052bbf4&quot;,
+        &quot;turn_id&quot;: 1,
+        &quot;question&quot;: &quot;Anh gọi tiếp về món đã hỏi. Đơn OD600001 đã nhận hôm qua; sản phẩm hơi chật.&quot;,
+        &quot;reason&quot;: &quot;unsupported_claim&quot;,
+        &quot;criterion&quot;: &quot;Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments.&quot;
+      }
+    ],
+    &quot;out_of_scope&quot;: [],
+    &quot;issue_reviews&quot;: [
+      {
+        &quot;job_id&quot;: &quot;9f35c922d159f4e6888b84e0fa52eb9920af697ac72371ddf8201fa45d497761&quot;,
+        &quot;message_id&quot;: 0,
+        &quot;turn_id&quot;: 1,
+        &quot;origin&quot;: &quot;turn_detector&quot;,
+        &quot;mechanism&quot;: &quot;knowledge_gap&quot;,
+        &quot;verified&quot;: true,
+        &quot;claim&quot;: &quot;Anh cho em hỏi sản phẩm anh nhận được có phải là áo khoác màu be size M (thuộc đơn hàng [order_id]) không ạ?&quot;,
+        &quot;assessment&quot;: &quot;unsupported_by_evidence&quot;,
+        &quot;evidence_paths&quot;: [],
+        &quot;rejection&quot;: null,
+        &quot;rejection_reasons&quot;: [],
+        &quot;format_retry&quot;: false,
+        &quot;verifier_output&quot;: {
+          &quot;valid&quot;: true,
+          &quot;issue_scope&quot;: &quot;business_knowledge&quot;,
+          &quot;claim&quot;: &quot;Anh cho em hỏi sản phẩm anh nhận được có phải là áo khoác màu be size M (thuộc đơn hàng [order_id]) không ạ?&quot;,
+          &quot;assessment&quot;: &quot;unsupported_by_evidence&quot;,
+          &quot;evidence_paths&quot;: [],
+          &quot;decision_reason&quot;: &quot;The claim specifies a beige jacket size M under a specific order ID, but the tool result returned an empty order list and no sources provide product details for this order.&quot;,
+          &quot;audit&quot;: {
+            &quot;support_status&quot;: &quot;not_established&quot;,
+            &quot;coverage&quot;: &quot;complete&quot;,
+            &quot;checked_paths&quot;: [
+              &quot;evidence.tool_calls.0.result&quot;,
+              &quot;evidence.sources&quot;,
+              &quot;evidence.promotions&quot;
+            ]
+          }
+        },
+        &quot;candidate_claim&quot;: &quot;Anh cho em hỏi sản phẩm anh nhận được có phải là áo khoác màu be size M (thuộc đơn hàng [order_id]) không ạ?&quot;,
+        &quot;verification_basis&quot;: &quot;evidence_inventory_audit&quot;,
+        &quot;evidence_inventory&quot;: [
+          &quot;evidence.tool_calls.0.result&quot;,
+          &quot;evidence.sources&quot;,
+          &quot;evidence.promotions&quot;
+        ],
+        &quot;lesson_status&quot;: &quot;approved&quot;
+      }
+    ],
+    &quot;detector_error&quot;: null,
+    &quot;guardrails&quot;: {
+      &quot;version&quot;: &quot;learning_guardrails_v1&quot;,
+      &quot;input_findings&quot;: [],
+      &quot;blocked_lessons&quot;: [],
+      &quot;blocked_sources&quot;: []
+    },
+    &quot;detection&quot;: {
+      &quot;candidate_count&quot;: 1,
+      &quot;open_question_count&quot;: 0,
+      &quot;processed_count&quot;: 1,
+      &quot;skipped_unmatched_question&quot;: 0,
+      &quot;skipped_over_limit&quot;: 0,
+      &quot;scan&quot;: {
+        &quot;turns_available&quot;: 3,
+        &quot;turns_scanned&quot;: 3,
+        &quot;requests&quot;: 3,
+        &quot;errors&quot;: [],
+        &quot;schema_retries&quot;: 0,
+        &quot;skipped_over_limit&quot;: 0
+      },
+      &quot;alignment_rejections&quot;: []
+    },
+    &quot;outcome&quot;: &quot;gaps_processed&quot;,
+    &quot;learning_duration_ms&quot;: 42731,
+    &quot;learning_usage&quot;: {
+      &quot;input_tokens&quot;: 6101,
+      &quot;output_tokens&quot;: 374
+    }
+  },
+  &quot;observed_input_findings&quot;: []
+}</pre></details></article></section></main></body></html>

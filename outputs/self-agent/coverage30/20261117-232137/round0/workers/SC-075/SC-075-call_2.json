@@ -1,0 +1,228 @@
+{
+  "scenario_id": "SC-075",
+  "call": "call_2",
+  "session_id": "self-5bf2a4b86ad94ba2b57abd533a675dbf-SC-075-call_2",
+  "turns": [
+    {
+      "customer": "Tôi là [private], số điện thoại [phone], đã nhắn qua Fanpage. Anh đã cân nhắc xong rồi. Câu hỏi cụ thể lần trước em còn lưu chứ?",
+      "agent": "Dạ em còn lưu câu hỏi lần trước: “Chiếc sẽ giao có mã biên bản kiểm tra chất lượng riêng là gì?”. Hiện hệ thống không có thông tin xác nhận cho đúng chiếc hàng sẽ giao, nên em chưa thể trả lời chính xác ạ.",
+      "latency": {
+        "ttft_ms": 23027,
+        "total_ms": 23027,
+        "ttfa_ms": null,
+        "measurement_mode": "non_streaming",
+        "timing_boundary": "response_ready_before_persistence",
+        "asr_ms": null,
+        "call_brief_ms": 21384,
+        "response_ready_ms": 23027,
+        "persistence_ms": 0.091,
+        "request_complete_ms": 23027.587,
+        "backend_total_ms": 23027.587,
+        "precomputed_parts": [
+          "persisted_facts"
+        ]
+      },
+      "lesson_trace": null
+    },
+    {
+      "customer": "Em nhắc lại câu hỏi đó và cho anh biết đã có nguồn xác nhận chưa. Đừng đoán theo sản phẩm khác.",
+      "agent": "Dạ em còn lưu câu hỏi lần trước: “Chiếc sẽ giao có mã biên bản kiểm tra chất lượng riêng là gì?”. Hiện hệ thống không có thông tin xác nhận cho đúng chiếc hàng sẽ giao, nên em chưa thể trả lời chính xác ạ.",
+      "latency": {
+        "ttft_ms": 4688,
+        "total_ms": 4688,
+        "ttfa_ms": null,
+        "measurement_mode": "non_streaming",
+        "timing_boundary": "response_ready_before_persistence",
+        "asr_ms": null,
+        "call_brief_ms": null,
+        "response_ready_ms": 4688,
+        "persistence_ms": 0.095,
+        "request_complete_ms": 4688.535,
+        "backend_total_ms": 4688.535,
+        "precomputed_parts": [
+          "persisted_facts"
+        ]
+      },
+      "lesson_trace": null
+    },
+    {
+      "customer": "Nếu chưa có thông tin thì anh chờ, chưa mua và không cần chuyển máy.",
+      "agent": "Dạ em còn lưu câu hỏi lần trước: “Chiếc sẽ giao có mã biên bản kiểm tra chất lượng riêng là gì?”. Hiện hệ thống không có thông tin xác nhận cho đúng chiếc hàng sẽ giao, nên em chưa thể trả lời chính xác ạ.",
+      "latency": {
+        "ttft_ms": 5390,
+        "total_ms": 5390,
+        "ttfa_ms": null,
+        "measurement_mode": "non_streaming",
+        "timing_boundary": "response_ready_before_persistence",
+        "asr_ms": null,
+        "call_brief_ms": null,
+        "response_ready_ms": 5390,
+        "persistence_ms": 0.09,
+        "request_complete_ms": 5389.677,
+        "backend_total_ms": 5389.677,
+        "precomputed_parts": [
+          "persisted_facts"
+        ]
+      },
+      "lesson_trace": null
+    }
+  ],
+  "generation_context": {
+    "round": 0,
+    "instruction_hash": "9d30a7093911a993d8545de8b61cc6dc8465de67b10fb62b27d9f1bafaf0badf",
+    "applied_patterns": {},
+    "lessons_loaded": false,
+    "lesson_sources": [],
+    "lesson_files": [],
+    "instruction_root": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round0\\instructions"
+  },
+  "evaluation_evidence": [
+    {
+      "turn_id": 1,
+      "agent_response": "Dạ em còn lưu câu hỏi lần trước: “Chiếc sẽ giao có mã biên bản kiểm tra chất lượng riêng là gì?”. Hiện hệ thống không có thông tin xác nhận cho đúng chiếc hàng sẽ giao, nên em chưa thể trả lời chính xác ạ.",
+      "tool_calls": [],
+      "sources": [],
+      "promotions": []
+    },
+    {
+      "turn_id": 2,
+      "agent_response": "Dạ em còn lưu câu hỏi lần trước: “Chiếc sẽ giao có mã biên bản kiểm tra chất lượng riêng là gì?”. Hiện hệ thống không có thông tin xác nhận cho đúng chiếc hàng sẽ giao, nên em chưa thể trả lời chính xác ạ.",
+      "tool_calls": [],
+      "sources": [],
+      "promotions": []
+    },
+    {
+      "turn_id": 3,
+      "agent_response": "Dạ em còn lưu câu hỏi lần trước: “Chiếc sẽ giao có mã biên bản kiểm tra chất lượng riêng là gì?”. Hiện hệ thống không có thông tin xác nhận cho đúng chiếc hàng sẽ giao, nên em chưa thể trả lời chính xác ạ.",
+      "tool_calls": [
+        {
+          "name": "catalog.search",
+          "args": {
+            "query": "Nếu chưa có thông tin thì anh chờ, chưa mua và không cần chuyển máy.",
+            "on": "2026-10-21"
+          },
+          "result": {
+            "items": [],
+            "total": 0
+          }
+        }
+      ],
+      "sources": [],
+      "promotions": []
+    }
+  ],
+  "job": {
+    "status": "done",
+    "job_id": "2c0827371453543270c314099415a7861195432d271ad88eb5c1551304ba4fe9",
+    "error": null
+  },
+  "learning": {
+    "job_id": "2c0827371453543270c314099415a7861195432d271ad88eb5c1551304ba4fe9",
+    "gaps": [
+      {
+        "id": "2a4a5d845594e8f9ab9ae5af021f0d569ba7b8d4f5561aab09a0cf07c93edf07",
+        "status": "pending_evidence"
+      },
+      {
+        "id": "fdabffeb147722a4f1f8dc9dc53bc3845d8a3db51703afb0b610c17ae49795f8",
+        "status": "pending_evidence"
+      }
+    ],
+    "scope": "knowledge_gap_and_reflection_v1",
+    "evaluation_cases": [
+      {
+        "id": "95d4de3d07ee0bda2468652e114bb26d2ab854b0a3352ca078f06186d73fc347",
+        "gap_id": "fdabffeb147722a4f1f8dc9dc53bc3845d8a3db51703afb0b610c17ae49795f8",
+        "turn_id": 2,
+        "question": "Em nhắc lại câu hỏi đó và cho anh biết đã có nguồn xác nhận chưa. Đừng đoán theo sản phẩm khác.",
+        "reason": "missing_knowledge",
+        "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments."
+      }
+    ],
+    "out_of_scope": [],
+    "issue_reviews": [],
+    "detector_error": null,
+    "guardrails": {
+      "version": "learning_guardrails_v1",
+      "input_findings": [],
+      "blocked_lessons": [],
+      "blocked_sources": []
+    },
+    "detection": {
+      "candidate_count": 1,
+      "open_question_count": 1,
+      "processed_count": 2,
+      "skipped_unmatched_question": 0,
+      "skipped_over_limit": 0,
+      "scan": {
+        "turns_available": 3,
+        "turns_scanned": 3,
+        "requests": 3,
+        "errors": [],
+        "schema_retries": 0,
+        "skipped_over_limit": 0
+      },
+      "alignment_rejections": []
+    },
+    "outcome": "gaps_processed",
+    "learning_duration_ms": 6922,
+    "learning_usage": {
+      "input_tokens": 2557,
+      "output_tokens": 65
+    }
+  },
+  "artifact_changes": [
+    {
+      "path": "gaps/2a4a5d845594e8f9ab9ae5af021f0d569ba7b8d4f5561aab09a0cf07c93edf07.json",
+      "change": "updated",
+      "value": {
+        "id": "2a4a5d845594e8f9ab9ae5af021f0d569ba7b8d4f5561aab09a0cf07c93edf07",
+        "question": "Thông tin từng chiếc hàng cần bằng chứng riêng nào?",
+        "occurrences": [
+          "f37de7d27a8eb44237a799ddfa001acd227d097dc7af958196c0e290173c7c65",
+          "2c0827371453543270c314099415a7861195432d271ad88eb5c1551304ba4fe9"
+        ],
+        "reason": "missing_knowledge",
+        "mechanism": "knowledge_gap",
+        "status": "pending_evidence",
+        "evidence_refs": [
+          {
+            "job_id": "f37de7d27a8eb44237a799ddfa001acd227d097dc7af958196c0e290173c7c65",
+            "message_id": 2,
+            "turn_id": 2,
+            "origin": "open_questions"
+          },
+          {
+            "job_id": "2c0827371453543270c314099415a7861195432d271ad88eb5c1551304ba4fe9",
+            "message_id": null,
+            "turn_id": null,
+            "origin": "open_questions"
+          }
+        ],
+        "required_source": "unit_specific_evidence"
+      }
+    },
+    {
+      "path": "gaps/fdabffeb147722a4f1f8dc9dc53bc3845d8a3db51703afb0b610c17ae49795f8.json",
+      "change": "created",
+      "value": {
+        "id": "fdabffeb147722a4f1f8dc9dc53bc3845d8a3db51703afb0b610c17ae49795f8",
+        "question": "Thông tin nghiệp vụ cần được xác minh từ nguồn nào?",
+        "occurrences": [
+          "2c0827371453543270c314099415a7861195432d271ad88eb5c1551304ba4fe9"
+        ],
+        "reason": "missing_knowledge",
+        "mechanism": "knowledge_gap",
+        "status": "pending_evidence",
+        "evidence_refs": [
+          {
+            "job_id": "2c0827371453543270c314099415a7861195432d271ad88eb5c1551304ba4fe9",
+            "message_id": 2,
+            "turn_id": 2,
+            "origin": "turn_detector"
+          }
+        ]
+      }
+    }
+  ]
+}

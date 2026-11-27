@@ -1,0 +1,51 @@
+{
+  "job_id": "be65b06340ec6bf45728ed93dedba777bc0a23cefc387289028b681dc41e05da",
+  "gaps": [
+    {
+      "id": "190df3a70be21e59981c928c19e406a63a0c7151d884ff4ef3ad85d880554ff1",
+      "status": "pending_evidence"
+    }
+  ],
+  "scope": "knowledge_gap_and_reflection_v1",
+  "evaluation_cases": [
+    {
+      "id": "739da0a5ee3fb1bddfdc95423881dcdd5d1a4873d33ce86dae6aaedae308fdd8",
+      "gap_id": "190df3a70be21e59981c928c19e406a63a0c7151d884ff4ef3ad85d880554ff1",
+      "turn_id": 2,
+      "question": "Anh muốn em nhắc lại giá cũ, xin lỗi và giải thích rõ chương trình nào đã thay đổi.",
+      "reason": "missing_knowledge",
+      "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments."
+    }
+  ],
+  "out_of_scope": [],
+  "issue_reviews": [],
+  "detector_error": null,
+  "guardrails": {
+    "version": "learning_guardrails_v1",
+    "input_findings": [],
+    "blocked_lessons": [],
+    "blocked_sources": []
+  },
+  "detection": {
+    "candidate_count": 1,
+    "open_question_count": 0,
+    "processed_count": 1,
+    "skipped_unmatched_question": 0,
+    "skipped_over_limit": 0,
+    "scan": {
+      "turns_available": 3,
+      "turns_scanned": 3,
+      "requests": 3,
+      "errors": [],
+      "schema_retries": 0,
+      "skipped_over_limit": 0
+    },
+    "alignment_rejections": []
+  },
+  "outcome": "gaps_processed",
+  "learning_duration_ms": 22933,
+  "learning_usage": {
+    "input_tokens": 4801,
+    "output_tokens": 80
+  }
+}

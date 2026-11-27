@@ -1,0 +1,45 @@
+{
+  "id": "c5a2ea9356339e4451a2344a2add81d6bf4db263a8cc293eef80ca8cb5007c64",
+  "reason": "unsupported_claim",
+  "pattern": "Do not state an unverified claim as a fact.",
+  "status": "approved",
+  "scope": "general",
+  "mechanism": "knowledge_gap",
+  "criterion": "Do not state an unverified claim as a fact.",
+  "evidence_refs": [
+    {
+      "job_id": "0edf0988d816019ee95e4782f1d2b7ab87b4165a448ffd1d8a108064c3830d1c",
+      "message_id": 2,
+      "turn_id": 2,
+      "origin": "turn_detector"
+    }
+  ],
+  "assessment": "unsupported_by_evidence",
+  "report_ref": "0edf0988d816019ee95e4782f1d2b7ab87b4165a448ffd1d8a108064c3830d1c",
+  "lesson": {
+    "title": "State Uncertainty For Missing System Capabilities",
+    "when": "Answering a customer query about system capabilities or chat history without direct source evidence",
+    "do": "Express uncertainty or state that the required information is unavailable",
+    "otherwise": "Make absolute claims about what the system or store can or cannot check",
+    "triggers": [
+      "nhắc lại chat fanpage",
+      "hệ thống lưu chat không",
+      "kiểm tra tin nhắn fanpage cũ"
+    ],
+    "id": "f1cc735d3e63f5f9567ed0df45fd11ac28c68d9df5a98984ce2d4366fee20103",
+    "status": "approved",
+    "scope": "general",
+    "mechanism": "knowledge_gap",
+    "source_refs": [
+      {
+        "job_id": "0edf0988d816019ee95e4782f1d2b7ab87b4165a448ffd1d8a108064c3830d1c",
+        "message_id": 2,
+        "turn_id": 2,
+        "origin": "turn_detector"
+      }
+    ],
+    "version": 2
+  },
+  "lesson_path": "lessons\\approved\\f1cc735d3e63f5f9567ed0df45fd11ac28c68d9df5a98984ce2d4366fee20103.md",
+  "lesson_hash": "932483049f6b51b1e4c20be49a1cd6eeae8622fa2e0eccf9c2b9ec6a0735f63c"
+}

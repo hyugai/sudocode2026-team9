@@ -1,0 +1,468 @@
+{
+  "scenario_id": "SC-026",
+  "call": "call_1",
+  "session_id": "self-45ab7296fb4c40dcb23fa03c3c060a8b-SC-026-call_1",
+  "turns": [
+    {
+      "customer": "Chào em, anh lấy Áo khoác gió Windbreak, size M, màu be.",
+      "agent": "Dạ, em chào anh [private]! Sản phẩm Áo khoác gió Windbreak size M, màu be bên em hiện đang còn hàng ạ.\n\nĐể em hỗ trợ lên đơn cho mình, anh cho em xin địa chỉ [address]",
+      "latency": {
+        "ttft_ms": 10167,
+        "total_ms": 10167,
+        "ttfa_ms": null,
+        "measurement_mode": "non_streaming",
+        "timing_boundary": "response_ready_before_persistence",
+        "asr_ms": null,
+        "call_brief_ms": 3148,
+        "response_ready_ms": 10167,
+        "persistence_ms": 0.681,
+        "request_complete_ms": 10167.648,
+        "backend_total_ms": 10167.648,
+        "precomputed_parts": []
+      },
+      "lesson_trace": null
+    },
+    {
+      "customer": "Anh đồng ý 690.000 đồng cho một sản phẩm. Địa chỉ [address]",
+      "agent": "Dạ em đã lên đơn thành công cho mình rồi ạ! \n\nThông tin đơn hàng của anh [private]:\n- **Sản phẩm:** Áo khoác gió Windbreak (size M, màu be)\n- **Số lượng:** 1\n- **Tổng tiền:** 690.000 VNĐ\n- **Hình thức thanh toán:** Thanh toán khi nhận hàng (COD)\n- **Địa chỉ [address]\n- **Mã đơn hàng:** [order_id]\n- **Dự kiến giao hàng:** 09/10/2026\n\nEm cảm ơn anh [private] đã ủng hộ shop, chúc anh một ngày tốt lành ạ!",
+      "latency": {
+        "ttft_ms": 6689,
+        "total_ms": 6689,
+        "ttfa_ms": null,
+        "measurement_mode": "non_streaming",
+        "timing_boundary": "response_ready_before_persistence",
+        "asr_ms": null,
+        "call_brief_ms": null,
+        "response_ready_ms": 6689,
+        "persistence_ms": 0.147,
+        "request_complete_ms": 6688.984,
+        "backend_total_ms": 6688.984,
+        "precomputed_parts": [
+          "persisted_facts"
+        ]
+      },
+      "lesson_trace": null
+    },
+    {
+      "customer": "Em tạo đơn giúp anh và đọc mã đơn để anh lưu nhé.",
+      "agent": "Dạ, đơn hàng cho Áo khoác gió Windbreak (size M, màu be) của anh đã được lên thành công trước đó rồi ạ. \n\nMã đơn hàng của anh là **[order_id]**. Anh lưu lại mã này giúp em nhé. \n\nAnh có cần em hỗ trợ thêm thông tin gì khác nữa không ạ?",
+      "latency": {
+        "ttft_ms": 4164,
+        "total_ms": 4164,
+        "ttfa_ms": null,
+        "measurement_mode": "non_streaming",
+        "timing_boundary": "response_ready_before_persistence",
+        "asr_ms": null,
+        "call_brief_ms": null,
+        "response_ready_ms": 4164,
+        "persistence_ms": 0.118,
+        "request_complete_ms": 4163.831,
+        "backend_total_ms": 4163.831,
+        "precomputed_parts": [
+          "persisted_facts"
+        ]
+      },
+      "lesson_trace": null
+    }
+  ],
+  "generation_context": {
+    "round": 0,
+    "instruction_hash": "9d30a7093911a993d8545de8b61cc6dc8465de67b10fb62b27d9f1bafaf0badf",
+    "applied_patterns": {},
+    "lessons_loaded": false,
+    "lesson_sources": [],
+    "lesson_files": [],
+    "instruction_root": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round0\\instructions"
+  },
+  "evaluation_evidence": [
+    {
+      "turn_id": 1,
+      "agent_response": "Dạ, em chào anh [private]! Sản phẩm Áo khoác gió Windbreak size M, màu be bên em hiện đang còn hàng ạ.\n\nĐể em hỗ trợ lên đơn cho mình, anh cho em xin địa chỉ [address]",
+      "tool_calls": [
+        {
+          "name": "catalog.search",
+          "args": {
+            "query": "Áo khoác gió Windbreak size M màu be",
+            "on": "2026-10-07"
+          },
+          "result": {
+            "items": [],
+            "total": 0
+          }
+        },
+        {
+          "name": "catalog.search",
+          "args": {
+            "query": "Áo khoác gió Windbreak",
+            "on": "2026-10-07"
+          },
+          "result": {
+            "items": [
+              {
+                "sku": "SKU-JK-WND",
+                "name": "[private]",
+                "category": "thoi-trang/ao-khoac",
+                "brand": "Windbreak",
+                "list_price_vnd": 690000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "return_days": 7
+                },
+                "variants": [
+                  {
+                    "variant_sku": "SKU-JK-WND-S-DEN",
+                    "size": "S",
+                    "color": "den",
+                    "price_delta": 0,
+                    "price_delta_vnd": 0
+                  },
+                  {
+                    "variant_sku": "SKU-JK-WND-S-NAVY",
+                    "size": "S",
+                    "color": "navy",
+                    "price_delta": 0,
+                    "price_delta_vnd": 0
+                  },
+                  {
+                    "variant_sku": "SKU-JK-WND-S-BE",
+                    "size": "S",
+                    "color": "be",
+                    "price_delta": 0,
+                    "price_delta_vnd": 0
+                  },
+                  {
+                    "variant_sku": "SKU-JK-WND-M-DEN",
+                    "size": "M",
+                    "color": "den",
+                    "price_delta": 0,
+                    "price_delta_vnd": 0
+                  },
+                  {
+                    "variant_sku": "SKU-JK-WND-M-NAVY",
+                    "size": "M",
+                    "color": "navy",
+                    "price_delta": 0,
+                    "price_delta_vnd": 0
+                  },
+                  {
+                    "variant_sku": "SKU-JK-WND-M-BE",
+                    "size": "M",
+                    "color": "be",
+                    "price_delta": 0,
+                    "price_delta_vnd": 0
+                  },
+                  {
+                    "variant_sku": "SKU-JK-WND-L-DEN",
+                    "size": "L",
+                    "color": "den",
+                    "price_delta": 0,
+                    "price_delta_vnd": 0
+                  },
+                  {
+                    "variant_sku": "SKU-JK-WND-L-NAVY",
+                    "size": "L",
+                    "color": "navy",
+                    "price_delta": 0,
+                    "price_delta_vnd": 0
+                  },
+                  {
+                    "variant_sku": "SKU-JK-WND-L-BE",
+                    "size": "L",
+                    "color": "be",
+                    "price_delta": 0,
+                    "price_delta_vnd": 0
+                  },
+                  {
+                    "variant_sku": "SKU-JK-WND-XL-DEN",
+                    "size": "XL",
+                    "color": "den",
+                    "price_delta": 40000.0,
+                    "price_delta_vnd": 40000
+                  },
+                  {
+                    "variant_sku": "SKU-JK-WND-XL-NAVY",
+                    "size": "XL",
+                    "color": "navy",
+                    "price_delta": 40000.0,
+                    "price_delta_vnd": 40000
+                  },
+                  {
+                    "variant_sku": "SKU-JK-WND-XL-BE",
+                    "size": "XL",
+                    "color": "be",
+                    "price_delta": 40000.0,
+                    "price_delta_vnd": 40000
+                  }
+                ]
+              }
+            ],
+            "total": 1
+          }
+        },
+        {
+          "name": "inventory.check",
+          "args": {
+            "on": "2026-10-07",
+            "sku": "SKU-JK-WND-M-BE"
+          },
+          "result": {
+            "sku": "SKU-JK-WND-M-BE",
+            "found": true,
+            "in_stock": true,
+            "qty": 12,
+            "discontinued": false
+          }
+        }
+      ],
+      "sources": [],
+      "promotions": []
+    },
+    {
+      "turn_id": 2,
+      "agent_response": "Dạ em đã lên đơn thành công cho mình rồi ạ! \n\nThông tin đơn hàng của anh [private]:\n- **Sản phẩm:** Áo khoác gió Windbreak (size M, màu be)\n- **Số lượng:** 1\n- **Tổng tiền:** 690.000 VNĐ\n- **Hình thức thanh toán:** Thanh toán khi nhận hàng (COD)\n- **Địa chỉ [address]\n- **Mã đơn hàng:** [order_id]\n- **Dự kiến giao hàng:** 09/10/2026\n\nEm cảm ơn anh [private] đã ủng hộ shop, chúc anh một ngày tốt lành ạ!",
+      "tool_calls": [
+        {
+          "name": "inventory.check",
+          "args": {
+            "sku": "SKU-JK-WND-M-BE",
+            "on": "2026-10-07"
+          },
+          "result": {
+            "sku": "SKU-JK-WND-M-BE",
+            "found": true,
+            "in_stock": true,
+            "qty": 12,
+            "discontinued": false
+          }
+        },
+        {
+          "name": "pricing.get_quote",
+          "args": {
+            "on": "2026-10-07",
+            "customer_phone": "[private]",
+            "customer_id": "[private]",
+            "address": "[private]",
+            "sku": "SKU-JK-WND-M-BE",
+            "qty": 1
+          },
+          "result": {
+            "sku": "SKU-JK-WND-M-BE",
+            "list_price_vnd": 690000,
+            "final_price_vnd": 690000,
+            "applied_promos": [
+              {
+                "promo_code": "COD-0",
+                "type": "freecod",
+                "discount_vnd": 0
+              }
+            ],
+            "expired_promos": [],
+            "ineligible_promos": [],
+            "not_applied_exclusive": [],
+            "freeship": false
+          }
+        },
+        {
+          "name": "order.create",
+          "args": {
+            "customer_phone": "[private]",
+            "customer_id": "[private]",
+            "address": "[private]",
+            "idempotency_key": "self-45ab7296fb4c40dcb23fa03c3c060a8b-SC-026-call_1:call_1:create:SKU-JK-WND-M-BE",
+            "sku": "SKU-JK-WND-M-BE",
+            "qty": 1,
+            "price_vnd": 690000,
+            "promo_code": "COD-0",
+            "on": "2026-10-07",
+            "payment": "COD"
+          },
+          "result": {
+            "order_id": "[private]",
+            "status": "created",
+            "total_vnd": 690000,
+            "needs_confirmation_call": false,
+            "estimated_delivery": "2026-10-09"
+          }
+        }
+      ],
+      "sources": [],
+      "promotions": []
+    },
+    {
+      "turn_id": 3,
+      "agent_response": "Dạ, đơn hàng cho Áo khoác gió Windbreak (size M, màu be) của anh đã được lên thành công trước đó rồi ạ. \n\nMã đơn hàng của anh là **[order_id]**. Anh lưu lại mã này giúp em nhé. \n\nAnh có cần em hỗ trợ thêm thông tin gì khác nữa không ạ?",
+      "tool_calls": [
+        {
+          "name": "inventory.check",
+          "args": {
+            "sku": "SKU-JK-WND-M-BE",
+            "on": "2026-10-07"
+          },
+          "result": {
+            "sku": "SKU-JK-WND-M-BE",
+            "found": true,
+            "in_stock": true,
+            "qty": 12,
+            "discontinued": false
+          }
+        },
+        {
+          "name": "pricing.get_quote",
+          "args": {
+            "on": "2026-10-07",
+            "customer_phone": "[private]",
+            "customer_id": "[private]",
+            "address": "[private]",
+            "sku": "SKU-JK-WND-M-BE",
+            "qty": 1
+          },
+          "result": {
+            "sku": "SKU-JK-WND-M-BE",
+            "list_price_vnd": 690000,
+            "final_price_vnd": 690000,
+            "applied_promos": [
+              {
+                "promo_code": "COD-0",
+                "type": "freecod",
+                "discount_vnd": 0
+              }
+            ],
+            "expired_promos": [],
+            "ineligible_promos": [],
+            "not_applied_exclusive": [],
+            "freeship": false
+          }
+        }
+      ],
+      "sources": [],
+      "promotions": []
+    }
+  ],
+  "job": {
+    "status": "done",
+    "job_id": "12b9ba25e754faa718a227a82bc4e9fd9ebadfd0481213520d6c6c5fff227fed",
+    "error": null
+  },
+  "learning": {
+    "job_id": "12b9ba25e754faa718a227a82bc4e9fd9ebadfd0481213520d6c6c5fff227fed",
+    "gaps": [
+      {
+        "id": "2ba33729d993fbc0af4e0e4d1dd5d667f853fa7bc4bc954d61a69bc72bc687f0",
+        "status": "pending_evidence"
+      }
+    ],
+    "scope": "knowledge_gap_and_reflection_v1",
+    "evaluation_cases": [],
+    "out_of_scope": [],
+    "issue_reviews": [
+      {
+        "job_id": "12b9ba25e754faa718a227a82bc4e9fd9ebadfd0481213520d6c6c5fff227fed",
+        "message_id": 4,
+        "turn_id": 3,
+        "origin": "turn_detector",
+        "mechanism": "reflection",
+        "verified": false,
+        "claim": "Dạ, đơn hàng cho Áo khoác gió Windbreak (size M, màu be) của anh đã được lên thành công trước đó rồi ạ.",
+        "assessment": null,
+        "evidence_paths": [],
+        "rejection": "missing_or_invalid_claim_evidence",
+        "rejection_reasons": [
+          "evidence_authority_or_scope_not_verified"
+        ],
+        "format_retry": false,
+        "verifier_output": {
+          "valid": true,
+          "issue_scope": "reflection",
+          "claim": "Dạ, đơn hàng cho Áo khoác gió Windbreak (size M, màu be) của anh đã được lên thành công trước đó rồi ạ.",
+          "assessment": "contradicts_evidence",
+          "evidence_paths": [
+            "evidence.tool_calls.0.name",
+            "evidence.tool_calls.1.name"
+          ],
+          "decision_reason": "The agent redundantly called inventory.check and pricing.get_quote in turn 3 despite the order already being created in turn 2, making the tool execution unnecessary.",
+          "audit": {
+            "support_status": "supported",
+            "coverage": "complete",
+            "checked_paths": [
+              "evidence.tool_calls.0.name",
+              "evidence.tool_calls.1.name",
+              "prior_evidence.1.tool_calls.2.result"
+            ]
+          }
+        },
+        "candidate_claim": "Dạ, đơn hàng cho Áo khoác gió Windbreak (size M, màu be) của anh đã được lên thành công trước đó rồi ạ.",
+        "verification_basis": null,
+        "evidence_inventory": [
+          "evidence.tool_calls.0.result",
+          "evidence.tool_calls.1.result",
+          "evidence.sources",
+          "evidence.promotions",
+          "prior_evidence.0.tool_calls.0.result",
+          "prior_evidence.0.tool_calls.1.result",
+          "prior_evidence.0.tool_calls.2.result",
+          "prior_evidence.0.sources",
+          "prior_evidence.0.promotions",
+          "prior_evidence.1.tool_calls.0.result",
+          "prior_evidence.1.tool_calls.1.result",
+          "prior_evidence.1.tool_calls.2.result",
+          "prior_evidence.1.sources",
+          "prior_evidence.1.promotions"
+        ]
+      }
+    ],
+    "detector_error": null,
+    "guardrails": {
+      "version": "learning_guardrails_v1",
+      "input_findings": [],
+      "blocked_lessons": [],
+      "blocked_sources": []
+    },
+    "detection": {
+      "candidate_count": 1,
+      "open_question_count": 0,
+      "processed_count": 1,
+      "skipped_unmatched_question": 0,
+      "skipped_over_limit": 0,
+      "scan": {
+        "turns_available": 3,
+        "turns_scanned": 3,
+        "requests": 3,
+        "errors": [],
+        "schema_retries": 0,
+        "skipped_over_limit": 0
+      },
+      "alignment_rejections": []
+    },
+    "outcome": "gaps_processed",
+    "learning_duration_ms": 6296,
+    "learning_usage": {
+      "input_tokens": 8804,
+      "output_tokens": 295
+    }
+  },
+  "artifact_changes": [
+    {
+      "path": "gaps/2ba33729d993fbc0af4e0e4d1dd5d667f853fa7bc4bc954d61a69bc72bc687f0.json",
+      "change": "created",
+      "value": {
+        "id": "2ba33729d993fbc0af4e0e4d1dd5d667f853fa7bc4bc954d61a69bc72bc687f0",
+        "question": "Thông tin nghiệp vụ cần được xác minh từ nguồn nào?",
+        "occurrences": [
+          "12b9ba25e754faa718a227a82bc4e9fd9ebadfd0481213520d6c6c5fff227fed"
+        ],
+        "reason": "reasoning_failure",
+        "mechanism": "reflection",
+        "status": "pending_evidence",
+        "evidence_refs": [
+          {
+            "job_id": "12b9ba25e754faa718a227a82bc4e9fd9ebadfd0481213520d6c6c5fff227fed",
+            "message_id": 4,
+            "turn_id": 3,
+            "origin": "turn_detector"
+          }
+        ]
+      }
+    }
+  ]
+}

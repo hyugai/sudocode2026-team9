@@ -1,0 +1,751 @@
+<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src 'none'; base-uri 'none'; form-action 'none'"><title>Review self-learning</title><style>body{margin:0;background:#f5f2ed;color:#292824;font:16px/1.6 system-ui,sans-serif}main{max-width:1180px;margin:auto;padding:24px}h1,h2,h3{line-height:1.3}article,.box{background:#fffdf9;border:1px solid #ddd7cc;border-radius:12px;padding:18px;margin:16px 0}.columns{display:grid;grid-template-columns:1fr 1fr;gap:18px}.answer{white-space:pre-wrap}mark{background:#fff0a6;color:#292824}del{background:#fbe2df;text-decoration:line-through}.warn{border-left:5px solid #a66b16}.regression{border-left:5px solid #a43131}.improved_resolution{border-left:5px solid #367458}.muted{color:#635f57}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#f3f1eb;padding:12px;border-radius:8px}body,td,p,div,summary{overflow-wrap:anywhere}table{border-collapse:collapse;width:100%}th,td{text-align:left;padding:8px;border-bottom:1px solid #e3ded5;vertical-align:top}summary{cursor:pointer;padding:8px 0}summary:focus-visible,a:focus-visible{outline:3px solid #8c5517}a{color:#754610}nav{display:flex;flex-wrap:wrap;gap:14px}@media(max-width:650px){main{padding:12px}.columns{grid-template-columns:1fr}article,.box{padding:12px}}</style></head><body><main><h1>Review self-learning</h1><p>Học sau khi kết thúc session. Báo cáo dựng từ artifact đã lưu, không gọi thêm LLM.</p><nav><a href="#overview">Tổng quan</a><a href="#turns">Trước / sau</a><a href="#lessons">Lesson</a><a href="#sessions">Học &amp; guardrail</a></nav><section id="overview"><h2>Tổng quan</h2><p class="box warn">Chưa chạy judge: chỉ xem thay đổi câu trả lời và dấu vết lesson, chưa đánh giá cải thiện.</p><p class="box warn">Không có cặp chấm hợp lệ: chưa thể kết luận cải thiện hay không có regression.</p><p><b>0</b> cặp chấm hợp lệ / 0 case được lưu trong comparison. 0/5 lượt trong session được inject.</p><table><tr><th>Phân loại</th><th>Số lượt</th></tr><tr><td>Giải quyết được thêm · cần xác nhận</td><td>0</td></tr><tr><td>Thận trọng hơn · vẫn chưa giải quyết</td><td>0</td></tr><tr><td>Có dấu hiệu regression · cần xác nhận</td><td>0</td></tr><tr><td>Không đổi trạng thái chấm</td><td>0</td></tr><tr><td>Chưa đủ kết quả chấm hợp lệ</td><td>0</td></tr><tr><td>Chưa được judge chấm</td><td>5</td></tr><tr><td>Thiếu một vòng</td><td>0</td></tr><tr><td>Câu hỏi hai vòng khác nhau</td><td>0</td></tr><tr><td>Bị loại khỏi phép so sánh</td><td>0</td></tr></table><details><summary>Phạm vi, nguồn baseline và exclusions</summary><pre>{
+  &quot;evaluation_population&quot;: &quot;single_session_no_baseline&quot;
+}</pre></details><p class="muted">Verdict kiểm tra được reference vẫn cần người đọc xác nhận ngữ nghĩa và độ đầy đủ.</p><p class="muted">Câu trả lời thay đổi hoặc được inject lesson chưa chứng minh lesson gây ra cải thiện.</p><p class="muted">Reflection chưa được chấm chất lượng; learning job done/lesson approved không phải điểm chất lượng.</p><p class="muted">Guardrail mẫu có giới hạn; không phát hiện mẫu không đồng nghĩa không có prompt injection.</p></section><section id="turns"><h2>Cải thiện ở đâu? Đọc từng lượt</h2><h3>Chưa được judge chấm (5)</h3><article id="turn-0" class="not_evaluated"><h3>SC-115/call_1 · lượt 1</h3><p><b>Khách:</b> Tôi là [private], số điện thoại [phone], đang nhắn qua Zalo OA. Shop tư vấn giúp nhé, chị mua đồ cho nhà mới, đang tính Máy tiệt trùng sấy khô Moaz Bebe với Quạt đứng Senko TS16.</p><p class="muted">Câu trả lời không đổi/thiếu cặp · Lesson chưa inject.</p><div class="columns"><div><h3>Phiên vừa kết thúc</h3><p><b>Chưa có verdict hợp lệ</b></p><div class="answer">Em chào chị [private]. Chúc mừng chị sắp chuyển sang nhà mới ạ!
+
+Về quạt đứng Senko TS16, hiện bên em đang sẵn hàng và quạt được bảo hành chính hãng 12 tháng chị nhé. Còn về sản phẩm Máy tiệt trùng sấy khô Moaz Bebé, chị đang tìm dòng máy dùng công nghệ tiệt trùng bằng tia UV hay hơi nước ạ? Chị chia sẻ thêm nhu cầu để em tư vấn mẫu phù hợp nhất cho chị nhé.</div><details><summary>Claims, trích dẫn và verdict gốc</summary><pre>{
+  &quot;status&quot;: null
+}</pre></details><details><summary>Evidence hiện tại và trước lượt này</summary><pre>{
+  &quot;current&quot;: {
+    &quot;turn_id&quot;: 1,
+    &quot;agent_response&quot;: &quot;Em chào chị [private]. Chúc mừng chị sắp chuyển sang nhà mới ạ!\n\nVề quạt đứng Senko TS16, hiện bên em đang sẵn hàng và quạt được bảo hành chính hãng 12 tháng chị nhé. Còn về sản phẩm Máy tiệt trùng sấy khô Moaz Bebé, chị đang tìm dòng máy dùng công nghệ tiệt trùng bằng tia UV hay hơi nước ạ? Chị chia sẻ thêm nhu cầu để em tư vấn mẫu phù hợp nhất cho chị nhé.&quot;,
+    &quot;tool_calls&quot;: [
+      {
+        &quot;name&quot;: &quot;catalog.search&quot;,
+        &quot;args&quot;: {
+          &quot;query&quot;: &quot;Tôi là [private], số điện thoại [private], đang nhắn qua Zalo OA. Shop tư vấn giúp nhé, chị mua đồ cho nhà mới, đang tính Máy tiệt trùng sấy khô Moaz Bebe với Quạt đứng Senko TS16.&quot;,
+          &quot;on&quot;: &quot;2026-10-19&quot;
+        },
+        &quot;result&quot;: {
+          &quot;items&quot;: [
+            {
+              &quot;sku&quot;: &quot;SKU-FAN-SEN&quot;,
+              &quot;name&quot;: &quot;[private]&quot;,
+              &quot;category&quot;: &quot;gia-dung/quat&quot;,
+              &quot;brand&quot;: &quot;Senko&quot;,
+              &quot;list_price_vnd&quot;: 590000.0,
+              &quot;discontinued&quot;: false,
+              &quot;successor_sku&quot;: null,
+              &quot;attributes&quot;: {
+                &quot;warranty_months&quot;: 12
+              },
+              &quot;variants&quot;: []
+            }
+          ]
+        }
+      },
+      {
+        &quot;name&quot;: &quot;inventory.check&quot;,
+        &quot;args&quot;: {
+          &quot;sku&quot;: &quot;SKU-FAN-SEN&quot;,
+          &quot;on&quot;: &quot;2026-10-19&quot;
+        },
+        &quot;result&quot;: {
+          &quot;sku&quot;: &quot;SKU-FAN-SEN&quot;,
+          &quot;found&quot;: true,
+          &quot;in_stock&quot;: true,
+          &quot;qty&quot;: 30,
+          &quot;discontinued&quot;: false
+        }
+      }
+    ],
+    &quot;sources&quot;: [],
+    &quot;promotions&quot;: []
+  },
+  &quot;earlier&quot;: []
+}</pre></details></div></div><details><summary>Lesson ID, routing, token và injection trace</summary><pre>{}</pre></details></article><article id="turn-1" class="not_evaluated"><h3>SC-115/call_1 · lượt 2</h3><p><b>Khách:</b> À đổi ý, bỏ món thứ hai vừa nói, thay bằng Máy hâm sữa Fatz 4 chức năng. Mỗi loại một chiếc nhé.</p><p class="muted">Câu trả lời không đổi/thiếu cặp · Lesson chưa inject.</p><div class="columns"><div><h3>Phiên vừa kết thúc</h3><p><b>Chưa có verdict hợp lệ</b></p><div class="answer">Dạ em đã ghi nhận chị [private] muốn đổi món thứ hai thành Máy hâm sữa Fatz 4 chức năng, mỗi loại 1 chiếc (gồm Máy tiệt trùng sấy khô Moaz BéBé 1 chiếc và Máy hâm sữa Fatz 4 chức năng 1 chiếc) ạ. 
+
+Chị cho em xin địa chỉ [address]</div><details><summary>Claims, trích dẫn và verdict gốc</summary><pre>{
+  &quot;status&quot;: null
+}</pre></details><details><summary>Evidence hiện tại và trước lượt này</summary><pre>{
+  &quot;current&quot;: {
+    &quot;turn_id&quot;: 2,
+    &quot;agent_response&quot;: &quot;Dạ em đã ghi nhận chị [private] muốn đổi món thứ hai thành Máy hâm sữa Fatz 4 chức năng, mỗi loại 1 chiếc (gồm Máy tiệt trùng sấy khô Moaz BéBé 1 chiếc và Máy hâm sữa Fatz 4 chức năng 1 chiếc) ạ. \n\nChị cho em xin địa chỉ [address]&quot;,
+    &quot;tool_calls&quot;: [
+      {
+        &quot;name&quot;: &quot;order.status&quot;,
+        &quot;args&quot;: {
+          &quot;customer_phone&quot;: &quot;[private]&quot;
+        },
+        &quot;result&quot;: {
+          &quot;orders&quot;: []
+        }
+      }
+    ],
+    &quot;sources&quot;: [],
+    &quot;promotions&quot;: []
+  },
+  &quot;earlier&quot;: [
+    {
+      &quot;turn_id&quot;: 1,
+      &quot;tool_calls&quot;: [
+        {
+          &quot;name&quot;: &quot;catalog.search&quot;,
+          &quot;args&quot;: {
+            &quot;query&quot;: &quot;Tôi là [private], số điện thoại [private], đang nhắn qua Zalo OA. Shop tư vấn giúp nhé, chị mua đồ cho nhà mới, đang tính Máy tiệt trùng sấy khô Moaz Bebe với Quạt đứng Senko TS16.&quot;,
+            &quot;on&quot;: &quot;2026-10-19&quot;
+          },
+          &quot;result&quot;: {
+            &quot;items&quot;: [
+              {
+                &quot;sku&quot;: &quot;SKU-FAN-SEN&quot;,
+                &quot;name&quot;: &quot;[private]&quot;,
+                &quot;category&quot;: &quot;gia-dung/quat&quot;,
+                &quot;brand&quot;: &quot;Senko&quot;,
+                &quot;list_price_vnd&quot;: 590000.0,
+                &quot;discontinued&quot;: false,
+                &quot;successor_sku&quot;: null,
+                &quot;attributes&quot;: {
+                  &quot;warranty_months&quot;: 12
+                },
+                &quot;variants&quot;: []
+              }
+            ]
+          }
+        },
+        {
+          &quot;name&quot;: &quot;inventory.check&quot;,
+          &quot;args&quot;: {
+            &quot;sku&quot;: &quot;SKU-FAN-SEN&quot;,
+            &quot;on&quot;: &quot;2026-10-19&quot;
+          },
+          &quot;result&quot;: {
+            &quot;sku&quot;: &quot;SKU-FAN-SEN&quot;,
+            &quot;found&quot;: true,
+            &quot;in_stock&quot;: true,
+            &quot;qty&quot;: 30,
+            &quot;discontinued&quot;: false
+          }
+        }
+      ],
+      &quot;sources&quot;: [],
+      &quot;promotions&quot;: []
+    }
+  ]
+}</pre></details></div></div><details><summary>Lesson ID, routing, token và injection trace</summary><pre>{}</pre></details></article><article id="turn-2" class="not_evaluated"><h3>SC-115/call_1 · lượt 3</h3><p><b>Khách:</b> Ngân sách tổng của chị là 2.680.000 đồng. Hôm nay chỉ nhờ em ghi lại giỏ cuối cùng, chưa đặt.</p><p class="muted">Câu trả lời không đổi/thiếu cặp · Lesson chưa inject.</p><div class="columns"><div><h3>Phiên vừa kết thúc</h3><p><b>Chưa có verdict hợp lệ</b></p><div class="answer">Dạ em ghi nhận chị [private] hiện tại chưa đặt hàng mà chỉ nhờ em lưu lại giỏ hàng gồm 1 Máy tiệt trùng sấy khô Moaz BéBé và 1 Máy hâm sữa Fatz 4 chức năng với tổng ngân sách của chị là 2.680.000 đồng ạ. Khi nào chuyển về nhà mới xong hoặc sẵn sàng lên đơn, chị cứ báo em hỗ trợ chị nhé!</div><details><summary>Claims, trích dẫn và verdict gốc</summary><pre>{
+  &quot;status&quot;: null
+}</pre></details><details><summary>Evidence hiện tại và trước lượt này</summary><pre>{
+  &quot;current&quot;: {
+    &quot;turn_id&quot;: 3,
+    &quot;agent_response&quot;: &quot;Dạ em ghi nhận chị [private] hiện tại chưa đặt hàng mà chỉ nhờ em lưu lại giỏ hàng gồm 1 Máy tiệt trùng sấy khô Moaz BéBé và 1 Máy hâm sữa Fatz 4 chức năng với tổng ngân sách của chị là 2.680.000 đồng ạ. Khi nào chuyển về nhà mới xong hoặc sẵn sàng lên đơn, chị cứ báo em hỗ trợ chị nhé!&quot;,
+    &quot;tool_calls&quot;: [
+      {
+        &quot;name&quot;: &quot;pricing.get_quote&quot;,
+        &quot;args&quot;: {
+          &quot;on&quot;: &quot;2026-10-19&quot;,
+          &quot;customer_phone&quot;: &quot;[private]&quot;,
+          &quot;customer_id&quot;: &quot;[private]&quot;,
+          &quot;sku&quot;: &quot;SKU-FAN-SEN&quot;,
+          &quot;qty&quot;: 1
+        },
+        &quot;result&quot;: {
+          &quot;sku&quot;: &quot;SKU-FAN-SEN&quot;,
+          &quot;list_price_vnd&quot;: 590000,
+          &quot;final_price_vnd&quot;: 590000,
+          &quot;applied_promos&quot;: [
+            {
+              &quot;promo_code&quot;: &quot;COD-0&quot;,
+              &quot;type&quot;: &quot;freecod&quot;,
+              &quot;discount_vnd&quot;: 0
+            }
+          ],
+          &quot;expired_promos&quot;: [],
+          &quot;ineligible_promos&quot;: [
+            {
+              &quot;promo_code&quot;: &quot;NAM-SHIP0&quot;,
+              &quot;reason&quot;: &quot;region&quot;
+            }
+          ],
+          &quot;not_applied_exclusive&quot;: [],
+          &quot;freeship&quot;: false
+        }
+      }
+    ],
+    &quot;sources&quot;: [],
+    &quot;promotions&quot;: []
+  },
+  &quot;earlier&quot;: [
+    {
+      &quot;turn_id&quot;: 1,
+      &quot;tool_calls&quot;: [
+        {
+          &quot;name&quot;: &quot;catalog.search&quot;,
+          &quot;args&quot;: {
+            &quot;query&quot;: &quot;Tôi là [private], số điện thoại [private], đang nhắn qua Zalo OA. Shop tư vấn giúp nhé, chị mua đồ cho nhà mới, đang tính Máy tiệt trùng sấy khô Moaz Bebe với Quạt đứng Senko TS16.&quot;,
+            &quot;on&quot;: &quot;2026-10-19&quot;
+          },
+          &quot;result&quot;: {
+            &quot;items&quot;: [
+              {
+                &quot;sku&quot;: &quot;SKU-FAN-SEN&quot;,
+                &quot;name&quot;: &quot;[private]&quot;,
+                &quot;category&quot;: &quot;gia-dung/quat&quot;,
+                &quot;brand&quot;: &quot;Senko&quot;,
+                &quot;list_price_vnd&quot;: 590000.0,
+                &quot;discontinued&quot;: false,
+                &quot;successor_sku&quot;: null,
+                &quot;attributes&quot;: {
+                  &quot;warranty_months&quot;: 12
+                },
+                &quot;variants&quot;: []
+              }
+            ]
+          }
+        },
+        {
+          &quot;name&quot;: &quot;inventory.check&quot;,
+          &quot;args&quot;: {
+            &quot;sku&quot;: &quot;SKU-FAN-SEN&quot;,
+            &quot;on&quot;: &quot;2026-10-19&quot;
+          },
+          &quot;result&quot;: {
+            &quot;sku&quot;: &quot;SKU-FAN-SEN&quot;,
+            &quot;found&quot;: true,
+            &quot;in_stock&quot;: true,
+            &quot;qty&quot;: 30,
+            &quot;discontinued&quot;: false
+          }
+        }
+      ],
+      &quot;sources&quot;: [],
+      &quot;promotions&quot;: []
+    },
+    {
+      &quot;turn_id&quot;: 2,
+      &quot;tool_calls&quot;: [
+        {
+          &quot;name&quot;: &quot;order.status&quot;,
+          &quot;args&quot;: {
+            &quot;customer_phone&quot;: &quot;[private]&quot;
+          },
+          &quot;result&quot;: {
+            &quot;orders&quot;: []
+          }
+        }
+      ],
+      &quot;sources&quot;: [],
+      &quot;promotions&quot;: []
+    }
+  ]
+}</pre></details></div></div><details><summary>Lesson ID, routing, token và injection trace</summary><pre>{}</pre></details></article><article id="turn-3" class="not_evaluated"><h3>SC-115/call_1 · lượt 4</h3><p><b>Khách:</b> Tôi thấy bản chính sách tháng 6 ghi đổi trả trong 14 ngày. Với đơn mới đặt từ tháng 10/2026, hàng còn nguyên tem và không có lỗi kỹ thuật, thời hạn thông thường thực tế là bao nhiêu ngày? Hãy nói rõ mốc hiện hành trước khi tiếp tục yêu cầu chính của tôi.</p><p class="muted">Câu trả lời không đổi/thiếu cặp · Lesson chưa inject.</p><div class="columns"><div><h3>Phiên vừa kết thúc</h3><p><b>Chưa có verdict hợp lệ</b></p><div class="answer">Dạ em chào chị [private]. Theo chính sách hiện hành cập nhật từ ngày 01/10/2026, với đơn hàng mới phát sinh từ tháng 10/2026, thời hạn đổi trả thông thường sản phẩm còn nguyên tem và không có lỗi kỹ thuật là **7 ngày** kể từ ngày nhận hàng chị nhé (bản cũ tháng 6 trước đây là 14 ngày).
+
+Dạ chị [private] cứ thoải mái đưa ra yêu cầu tiếp theo, em luôn sẵn sàng hỗ trợ chị ạ!</div><details><summary>Claims, trích dẫn và verdict gốc</summary><pre>{
+  &quot;status&quot;: null
+}</pre></details><details><summary>Evidence hiện tại và trước lượt này</summary><pre>{
+  &quot;current&quot;: {
+    &quot;turn_id&quot;: 4,
+    &quot;agent_response&quot;: &quot;Dạ em chào chị [private]. Theo chính sách hiện hành cập nhật từ ngày 01/10/2026, với đơn hàng mới phát sinh từ tháng 10/2026, thời hạn đổi trả thông thường sản phẩm còn nguyên tem và không có lỗi kỹ thuật là **7 ngày** kể từ ngày nhận hàng chị nhé (bản cũ tháng 6 trước đây là 14 ngày).\n\nDạ chị [private] cứ thoải mái đưa ra yêu cầu tiếp theo, em luôn sẵn sàng hỗ trợ chị ạ!&quot;,
+    &quot;tool_calls&quot;: [
+      {
+        &quot;name&quot;: &quot;policy.search&quot;,
+        &quot;args&quot;: {
+          &quot;query&quot;: &quot;Tôi thấy bản chính sách tháng 6 ghi đổi trả trong 14 ngày. Với đơn mới đặt từ tháng 10/2026, hàng còn nguyên tem và không có lỗi kỹ thuật, thời hạn thông thường thực tế là bao nhiêu ngày? Hãy nói rõ mốc hiện hành trước khi tiếp tục yêu cầu chính của tôi.&quot;,
+          &quot;k&quot;: 3,
+          &quot;product_sku&quot;: &quot;SKU-FAN-SEN&quot;,
+          &quot;as_of&quot;: &quot;2026-10-19&quot;
+        },
+        &quot;result&quot;: {
+          &quot;query&quot;: &quot;Tôi thấy bản chính sách tháng 6 ghi đổi trả trong 14 ngày. Với đơn mới đặt từ tháng 10/2026, hàng còn nguyên tem và không có lỗi kỹ thuật, thời hạn thông thường thực tế là bao nhiêu ngày? Hãy nói rõ mốc hiện hành trước khi tiếp tục yêu cầu chính của tôi.&quot;,
+          &quot;as_of&quot;: &quot;2026-10-19&quot;,
+          &quot;product_sku&quot;: &quot;SKU-FAN-SEN&quot;,
+          &quot;count&quot;: 3,
+          &quot;chunks&quot;: [
+            {
+              &quot;chunk_id&quot;: &quot;CL-01&quot;,
+              &quot;content&quot;: &quot;Thay thế phiên bản 2026-06. Thay đổi: thời hạn đổi trả 14 → **7 ngày**; đổi size lần đầu **miễn phí** (trước: 20.000đ); hoàn tiền 7 → **3–5 ngày làm việc**; lỗi nhà sản xuất đổi mới 15 → **30 ngày** (gia dụng, mẹ &amp; bé). Đơn tạo trước 01/10/2026 vẫn áp dụng bản cũ.&quot;,
+              &quot;source_file&quot;: &quot;changelog.md&quot;,
+              &quot;section&quot;: &quot;[CL-01] 01/10/2026 — Chính sách đổi trả phiên bản 2026-10&quot;
+            },
+            {
+              &quot;chunk_id&quot;: &quot;BH-01&quot;,
+              &quot;content&quot;: &quot;Máy lọc không khí AirPure, Samsung: **24 tháng**. Máy lọc không khí Xiaomi: 12 tháng. Máy lọc nước RO Karofi, Kangaroo: **36 tháng** (thân máy), lõi lọc không bảo hành. Quạt, nồi chiên không dầu: 12 tháng. Máy hút sữa, máy tiệt trùng, xe đẩy, ghế ô tô: 12 tháng. Giày, áo khoác: không bảo hành, chỉ áp dụng đổi trả 7 ngày. Thời hạn cụ thể của từng SKU ghi trong `attributes.warranty_months` của catalog — **catalog là nguồn ưu tiên** nếu có khác biệt.&quot;,
+              &quot;source_file&quot;: &quot;chinh-sach-bao-hanh.md&quot;,
+              &quot;section&quot;: &quot;[BH-01] Thời hạn bảo hành theo nhóm hàng&quot;
+            },
+            {
+              &quot;chunk_id&quot;: &quot;DT-01&quot;,
+              &quot;content&quot;: &quot;Khách hàng được đổi hoặc trả sản phẩm trong vòng **7 ngày** kể từ ngày nhận hàng (tính theo ngày ký nhận trên đơn vận chuyển). Với ngành hàng gia dụng và mẹ &amp; bé có lỗi kỹ thuật từ nhà sản xuất, thời hạn đổi mới là **30 ngày**.&quot;,
+              &quot;source_file&quot;: &quot;chinh-sach-doi-tra.md&quot;,
+              &quot;section&quot;: &quot;[DT-01] Thời hạn đổi trả&quot;
+            }
+          ]
+        }
+      }
+    ],
+    &quot;sources&quot;: [],
+    &quot;promotions&quot;: []
+  },
+  &quot;earlier&quot;: [
+    {
+      &quot;turn_id&quot;: 1,
+      &quot;tool_calls&quot;: [
+        {
+          &quot;name&quot;: &quot;catalog.search&quot;,
+          &quot;args&quot;: {
+            &quot;query&quot;: &quot;Tôi là [private], số điện thoại [private], đang nhắn qua Zalo OA. Shop tư vấn giúp nhé, chị mua đồ cho nhà mới, đang tính Máy tiệt trùng sấy khô Moaz Bebe với Quạt đứng Senko TS16.&quot;,
+            &quot;on&quot;: &quot;2026-10-19&quot;
+          },
+          &quot;result&quot;: {
+            &quot;items&quot;: [
+              {
+                &quot;sku&quot;: &quot;SKU-FAN-SEN&quot;,
+                &quot;name&quot;: &quot;[private]&quot;,
+                &quot;category&quot;: &quot;gia-dung/quat&quot;,
+                &quot;brand&quot;: &quot;Senko&quot;,
+                &quot;list_price_vnd&quot;: 590000.0,
+                &quot;discontinued&quot;: false,
+                &quot;successor_sku&quot;: null,
+                &quot;attributes&quot;: {
+                  &quot;warranty_months&quot;: 12
+                },
+                &quot;variants&quot;: []
+              }
+            ]
+          }
+        },
+        {
+          &quot;name&quot;: &quot;inventory.check&quot;,
+          &quot;args&quot;: {
+            &quot;sku&quot;: &quot;SKU-FAN-SEN&quot;,
+            &quot;on&quot;: &quot;2026-10-19&quot;
+          },
+          &quot;result&quot;: {
+            &quot;sku&quot;: &quot;SKU-FAN-SEN&quot;,
+            &quot;found&quot;: true,
+            &quot;in_stock&quot;: true,
+            &quot;qty&quot;: 30,
+            &quot;discontinued&quot;: false
+          }
+        }
+      ],
+      &quot;sources&quot;: [],
+      &quot;promotions&quot;: []
+    },
+    {
+      &quot;turn_id&quot;: 2,
+      &quot;tool_calls&quot;: [
+        {
+          &quot;name&quot;: &quot;order.status&quot;,
+          &quot;args&quot;: {
+            &quot;customer_phone&quot;: &quot;[private]&quot;
+          },
+          &quot;result&quot;: {
+            &quot;orders&quot;: []
+          }
+        }
+      ],
+      &quot;sources&quot;: [],
+      &quot;promotions&quot;: []
+    },
+    {
+      &quot;turn_id&quot;: 3,
+      &quot;tool_calls&quot;: [
+        {
+          &quot;name&quot;: &quot;pricing.get_quote&quot;,
+          &quot;args&quot;: {
+            &quot;on&quot;: &quot;2026-10-19&quot;,
+            &quot;customer_phone&quot;: &quot;[private]&quot;,
+            &quot;customer_id&quot;: &quot;[private]&quot;,
+            &quot;sku&quot;: &quot;SKU-FAN-SEN&quot;,
+            &quot;qty&quot;: 1
+          },
+          &quot;result&quot;: {
+            &quot;sku&quot;: &quot;SKU-FAN-SEN&quot;,
+            &quot;list_price_vnd&quot;: 590000,
+            &quot;final_price_vnd&quot;: 590000,
+            &quot;applied_promos&quot;: [
+              {
+                &quot;promo_code&quot;: &quot;COD-0&quot;,
+                &quot;type&quot;: &quot;freecod&quot;,
+                &quot;discount_vnd&quot;: 0
+              }
+            ],
+            &quot;expired_promos&quot;: [],
+            &quot;ineligible_promos&quot;: [
+              {
+                &quot;promo_code&quot;: &quot;NAM-SHIP0&quot;,
+                &quot;reason&quot;: &quot;region&quot;
+              }
+            ],
+            &quot;not_applied_exclusive&quot;: [],
+            &quot;freeship&quot;: false
+          }
+        }
+      ],
+      &quot;sources&quot;: [],
+      &quot;promotions&quot;: []
+    }
+  ]
+}</pre></details></div></div><details><summary>Lesson ID, routing, token và injection trace</summary><pre>{}</pre></details></article><article id="turn-4" class="not_evaluated"><h3>SC-115/call_1 · lượt 5</h3><p><b>Khách:</b> Em xác nhận lại đúng hai món sau khi sửa giúp chị.</p><p class="muted">Câu trả lời không đổi/thiếu cặp · Lesson chưa inject.</p><div class="columns"><div><h3>Phiên vừa kết thúc</h3><p><b>Chưa có verdict hợp lệ</b></p><div class="answer">Dạ chị [private] ơi, hiện tại hệ thống chưa ghi nhận đơn hàng nào đã được tạo thành công cho số điện thoại [SĐT ĐÃ ẨN] của chị để thực hiện điều chỉnh ạ. 
+
+Chị có thể cung cấp lại mã đơn hàng hoặc tên hai sản phẩm chị muốn chọn để em hỗ trợ lên đơn mới chính xác cho chị nhé?</div><details><summary>Claims, trích dẫn và verdict gốc</summary><pre>{
+  &quot;status&quot;: null
+}</pre></details><details><summary>Evidence hiện tại và trước lượt này</summary><pre>{
+  &quot;current&quot;: {
+    &quot;turn_id&quot;: 5,
+    &quot;agent_response&quot;: &quot;Dạ chị [private] ơi, hiện tại hệ thống chưa ghi nhận đơn hàng nào đã được tạo thành công cho số điện thoại [SĐT ĐÃ ẨN] của chị để thực hiện điều chỉnh ạ. \n\nChị có thể cung cấp lại mã đơn hàng hoặc tên hai sản phẩm chị muốn chọn để em hỗ trợ lên đơn mới chính xác cho chị nhé?&quot;,
+    &quot;tool_calls&quot;: [],
+    &quot;sources&quot;: [],
+    &quot;promotions&quot;: []
+  },
+  &quot;earlier&quot;: [
+    {
+      &quot;turn_id&quot;: 1,
+      &quot;tool_calls&quot;: [
+        {
+          &quot;name&quot;: &quot;catalog.search&quot;,
+          &quot;args&quot;: {
+            &quot;query&quot;: &quot;Tôi là [private], số điện thoại [private], đang nhắn qua Zalo OA. Shop tư vấn giúp nhé, chị mua đồ cho nhà mới, đang tính Máy tiệt trùng sấy khô Moaz Bebe với Quạt đứng Senko TS16.&quot;,
+            &quot;on&quot;: &quot;2026-10-19&quot;
+          },
+          &quot;result&quot;: {
+            &quot;items&quot;: [
+              {
+                &quot;sku&quot;: &quot;SKU-FAN-SEN&quot;,
+                &quot;name&quot;: &quot;[private]&quot;,
+                &quot;category&quot;: &quot;gia-dung/quat&quot;,
+                &quot;brand&quot;: &quot;Senko&quot;,
+                &quot;list_price_vnd&quot;: 590000.0,
+                &quot;discontinued&quot;: false,
+                &quot;successor_sku&quot;: null,
+                &quot;attributes&quot;: {
+                  &quot;warranty_months&quot;: 12
+                },
+                &quot;variants&quot;: []
+              }
+            ]
+          }
+        },
+        {
+          &quot;name&quot;: &quot;inventory.check&quot;,
+          &quot;args&quot;: {
+            &quot;sku&quot;: &quot;SKU-FAN-SEN&quot;,
+            &quot;on&quot;: &quot;2026-10-19&quot;
+          },
+          &quot;result&quot;: {
+            &quot;sku&quot;: &quot;SKU-FAN-SEN&quot;,
+            &quot;found&quot;: true,
+            &quot;in_stock&quot;: true,
+            &quot;qty&quot;: 30,
+            &quot;discontinued&quot;: false
+          }
+        }
+      ],
+      &quot;sources&quot;: [],
+      &quot;promotions&quot;: []
+    },
+    {
+      &quot;turn_id&quot;: 2,
+      &quot;tool_calls&quot;: [
+        {
+          &quot;name&quot;: &quot;order.status&quot;,
+          &quot;args&quot;: {
+            &quot;customer_phone&quot;: &quot;[private]&quot;
+          },
+          &quot;result&quot;: {
+            &quot;orders&quot;: []
+          }
+        }
+      ],
+      &quot;sources&quot;: [],
+      &quot;promotions&quot;: []
+    },
+    {
+      &quot;turn_id&quot;: 3,
+      &quot;tool_calls&quot;: [
+        {
+          &quot;name&quot;: &quot;pricing.get_quote&quot;,
+          &quot;args&quot;: {
+            &quot;on&quot;: &quot;2026-10-19&quot;,
+            &quot;customer_phone&quot;: &quot;[private]&quot;,
+            &quot;customer_id&quot;: &quot;[private]&quot;,
+            &quot;sku&quot;: &quot;SKU-FAN-SEN&quot;,
+            &quot;qty&quot;: 1
+          },
+          &quot;result&quot;: {
+            &quot;sku&quot;: &quot;SKU-FAN-SEN&quot;,
+            &quot;list_price_vnd&quot;: 590000,
+            &quot;final_price_vnd&quot;: 590000,
+            &quot;applied_promos&quot;: [
+              {
+                &quot;promo_code&quot;: &quot;COD-0&quot;,
+                &quot;type&quot;: &quot;freecod&quot;,
+                &quot;discount_vnd&quot;: 0
+              }
+            ],
+            &quot;expired_promos&quot;: [],
+            &quot;ineligible_promos&quot;: [
+              {
+                &quot;promo_code&quot;: &quot;NAM-SHIP0&quot;,
+                &quot;reason&quot;: &quot;region&quot;
+              }
+            ],
+            &quot;not_applied_exclusive&quot;: [],
+            &quot;freeship&quot;: false
+          }
+        }
+      ],
+      &quot;sources&quot;: [],
+      &quot;promotions&quot;: []
+    },
+    {
+      &quot;turn_id&quot;: 4,
+      &quot;tool_calls&quot;: [
+        {
+          &quot;name&quot;: &quot;policy.search&quot;,
+          &quot;args&quot;: {
+            &quot;query&quot;: &quot;Tôi thấy bản chính sách tháng 6 ghi đổi trả trong 14 ngày. Với đơn mới đặt từ tháng 10/2026, hàng còn nguyên tem và không có lỗi kỹ thuật, thời hạn thông thường thực tế là bao nhiêu ngày? Hãy nói rõ mốc hiện hành trước khi tiếp tục yêu cầu chính của tôi.&quot;,
+            &quot;k&quot;: 3,
+            &quot;product_sku&quot;: &quot;SKU-FAN-SEN&quot;,
+            &quot;as_of&quot;: &quot;2026-10-19&quot;
+          },
+          &quot;result&quot;: {
+            &quot;query&quot;: &quot;Tôi thấy bản chính sách tháng 6 ghi đổi trả trong 14 ngày. Với đơn mới đặt từ tháng 10/2026, hàng còn nguyên tem và không có lỗi kỹ thuật, thời hạn thông thường thực tế là bao nhiêu ngày? Hãy nói rõ mốc hiện hành trước khi tiếp tục yêu cầu chính của tôi.&quot;,
+            &quot;as_of&quot;: &quot;2026-10-19&quot;,
+            &quot;product_sku&quot;: &quot;SKU-FAN-SEN&quot;,
+            &quot;count&quot;: 3,
+            &quot;chunks&quot;: [
+              {
+                &quot;chunk_id&quot;: &quot;CL-01&quot;,
+                &quot;content&quot;: &quot;Thay thế phiên bản 2026-06. Thay đổi: thời hạn đổi trả 14 → **7 ngày**; đổi size lần đầu **miễn phí** (trước: 20.000đ); hoàn tiền 7 → **3–5 ngày làm việc**; lỗi nhà sản xuất đổi mới 15 → **30 ngày** (gia dụng, mẹ &amp; bé). Đơn tạo trước 01/10/2026 vẫn áp dụng bản cũ.&quot;,
+                &quot;source_file&quot;: &quot;changelog.md&quot;,
+                &quot;section&quot;: &quot;[CL-01] 01/10/2026 — Chính sách đổi trả phiên bản 2026-10&quot;
+              },
+              {
+                &quot;chunk_id&quot;: &quot;BH-01&quot;,
+                &quot;content&quot;: &quot;Máy lọc không khí AirPure, Samsung: **24 tháng**. Máy lọc không khí Xiaomi: 12 tháng. Máy lọc nước RO Karofi, Kangaroo: **36 tháng** (thân máy), lõi lọc không bảo hành. Quạt, nồi chiên không dầu: 12 tháng. Máy hút sữa, máy tiệt trùng, xe đẩy, ghế ô tô: 12 tháng. Giày, áo khoác: không bảo hành, chỉ áp dụng đổi trả 7 ngày. Thời hạn cụ thể của từng SKU ghi trong `attributes.warranty_months` của catalog — **catalog là nguồn ưu tiên** nếu có khác biệt.&quot;,
+                &quot;source_file&quot;: &quot;chinh-sach-bao-hanh.md&quot;,
+                &quot;section&quot;: &quot;[BH-01] Thời hạn bảo hành theo nhóm hàng&quot;
+              },
+              {
+                &quot;chunk_id&quot;: &quot;DT-01&quot;,
+                &quot;content&quot;: &quot;Khách hàng được đổi hoặc trả sản phẩm trong vòng **7 ngày** kể từ ngày nhận hàng (tính theo ngày ký nhận trên đơn vận chuyển). Với ngành hàng gia dụng và mẹ &amp; bé có lỗi kỹ thuật từ nhà sản xuất, thời hạn đổi mới là **30 ngày**.&quot;,
+                &quot;source_file&quot;: &quot;chinh-sach-doi-tra.md&quot;,
+                &quot;section&quot;: &quot;[DT-01] Thời hạn đổi trả&quot;
+              }
+            ]
+          }
+        }
+      ],
+      &quot;sources&quot;: [],
+      &quot;promotions&quot;: []
+    }
+  ]
+}</pre></details></div></div><details><summary>Lesson ID, routing, token và injection trace</summary><pre>{}</pre></details></article></section><section id="lessons"><h2>Lesson mới sinh sau session</h2><p>Approved là trạng thái duyệt lesson, chưa chứng minh chất lượng câu trả lời.</p><article id="lesson-0"><h3>Verify Product Request Before Confirming Order Changes</h3><p><b>When:</b> A customer requests to add or change an item in their selection to a product that has not been retrieved from sources or catalog searches in the conversation.</p><p><b>Do:</b> Search catalog sources to verify product existence, specifications, price, and availability before confirming the item update.</p><p><b>Otherwise:</b> State that you need to check the product information first or express uncertainty regarding item availability.</p><p>Inject tại: Chưa thấy trong trace</p><details><summary>ID, nguồn sinh và kiểm tra guardrail</summary><pre>{
+  &quot;id&quot;: &quot;6b279393ba00d688163b02eb4600ee2bf0f957d5ad048d71703e46ba140bb722&quot;,
+  &quot;mechanism&quot;: &quot;knowledge_gap&quot;,
+  &quot;content&quot;: {
+    &quot;title&quot;: &quot;Verify Product Request Before Confirming Order Changes&quot;,
+    &quot;when&quot;: &quot;A customer requests to add or change an item in their selection to a product that has not been retrieved from sources or catalog searches in the conversation.&quot;,
+    &quot;do&quot;: &quot;Search catalog sources to verify product existence, specifications, price, and availability before confirming the item update.&quot;,
+    &quot;otherwise&quot;: &quot;State that you need to check the product information first or express uncertainty regarding item availability.&quot;
+  },
+  &quot;source_refs&quot;: [
+    {
+      &quot;job_id&quot;: &quot;caefb64fa427dbd76044a7093dc4783a360cb862f345c0717651890f627404c4&quot;,
+      &quot;message_id&quot;: 2,
+      &quot;turn_id&quot;: 2,
+      &quot;origin&quot;: &quot;turn_detector&quot;
+    }
+  ],
+  &quot;path&quot;: null,
+  &quot;security_findings&quot;: [],
+  &quot;load_error&quot;: null,
+  &quot;review_flags&quot;: []
+}</pre></details></article><article id="lesson-1"><h3>Verify cart totals before confirming saved cart</h3><p><b>When:</b> A customer asks to save or confirm a cart containing specific items whose prices or SKUs have not been verified through search and pricing tools in the evidence</p><p><b>Do:</b> Perform catalog search and pricing lookup to verify the specific product details and total price before acknowledging the saved cart contents and total</p><p><b>Otherwise:</b> State uncertainty about the unverified items and price details instead of confirming the unverified cart contents or total</p><p>Inject tại: Chưa thấy trong trace</p><details><summary>ID, nguồn sinh và kiểm tra guardrail</summary><pre>{
+  &quot;id&quot;: &quot;7beaea49d57761bd76ac9969b03a3453a5adfa4b39eecdd21ddf7edb8e5c9d13&quot;,
+  &quot;mechanism&quot;: &quot;knowledge_gap&quot;,
+  &quot;content&quot;: {
+    &quot;title&quot;: &quot;Verify cart totals before confirming saved cart&quot;,
+    &quot;when&quot;: &quot;A customer asks to save or confirm a cart containing specific items whose prices or SKUs have not been verified through search and pricing tools in the evidence&quot;,
+    &quot;do&quot;: &quot;Perform catalog search and pricing lookup to verify the specific product details and total price before acknowledging the saved cart contents and total&quot;,
+    &quot;otherwise&quot;: &quot;State uncertainty about the unverified items and price details instead of confirming the unverified cart contents or total&quot;
+  },
+  &quot;source_refs&quot;: [
+    {
+      &quot;job_id&quot;: &quot;caefb64fa427dbd76044a7093dc4783a360cb862f345c0717651890f627404c4&quot;,
+      &quot;message_id&quot;: 4,
+      &quot;turn_id&quot;: 3,
+      &quot;origin&quot;: &quot;turn_detector&quot;
+    }
+  ],
+  &quot;path&quot;: null,
+  &quot;security_findings&quot;: [],
+  &quot;load_error&quot;: null,
+  &quot;review_flags&quot;: []
+}</pre></details></article></section><section id="sessions"><h2>Học sau session &amp; guardrail</h2><p>Input finding là cảnh báo mẫu, không phải verdict khách nói sai hoặc bằng chứng tấn công thành công. Run cũ thiếu guardrail trace sẽ được ghi rõ.</p><article><h3>SC-115/call_1</h3><h3>Vòng 1</h3><p>Job: done · Issue xác nhận: 2 · Guardrail: có trace</p><details><summary>Vấn đề, trạng thái học và guardrail chi tiết</summary><pre>{
+  &quot;job&quot;: {
+    &quot;status&quot;: &quot;done&quot;,
+    &quot;job_id&quot;: &quot;caefb64fa427dbd76044a7093dc4783a360cb862f345c0717651890f627404c4&quot;,
+    &quot;error&quot;: null
+  },
+  &quot;error&quot;: null,
+  &quot;learning&quot;: {
+    &quot;job_id&quot;: &quot;caefb64fa427dbd76044a7093dc4783a360cb862f345c0717651890f627404c4&quot;,
+    &quot;gaps&quot;: [
+      {
+        &quot;id&quot;: &quot;58efe0c7de9ba8679dcab2859648730d98c05df06e33aad607f79af7a285e5d3&quot;,
+        &quot;status&quot;: &quot;pending_remediation&quot;
+      },
+      {
+        &quot;id&quot;: &quot;190df3a70be21e59981c928c19e406a63a0c7151d884ff4ef3ad85d880554ff1&quot;,
+        &quot;status&quot;: &quot;pending_evidence&quot;
+      },
+      {
+        &quot;id&quot;: &quot;5907e3354af099f21f3ed097cf3eee1dd205358cc08bd99e73b275c343573e48&quot;,
+        &quot;status&quot;: &quot;pending_remediation&quot;
+      }
+    ],
+    &quot;scope&quot;: &quot;knowledge_gap_and_reflection_v1&quot;,
+    &quot;evaluation_cases&quot;: [
+      {
+        &quot;id&quot;: &quot;43c11581cacba17c382241f70578a4e0ce48f551f70c4109c39901d7db233102&quot;,
+        &quot;gap_id&quot;: &quot;58efe0c7de9ba8679dcab2859648730d98c05df06e33aad607f79af7a285e5d3&quot;,
+        &quot;turn_id&quot;: 2,
+        &quot;question&quot;: &quot;À đổi ý, bỏ món thứ hai vừa nói, thay bằng Máy hâm sữa Fatz 4 chức năng. Mỗi loại một chiếc nhé.&quot;,
+        &quot;reason&quot;: &quot;unsupported_claim&quot;,
+        &quot;criterion&quot;: &quot;Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments.&quot;
+      },
+      {
+        &quot;id&quot;: &quot;61fee9c6d3f0d1471922ec56bd7b56e1bdc88d42b07cc502e61bb32cb93abb4a&quot;,
+        &quot;gap_id&quot;: &quot;5907e3354af099f21f3ed097cf3eee1dd205358cc08bd99e73b275c343573e48&quot;,
+        &quot;turn_id&quot;: 3,
+        &quot;question&quot;: &quot;Ngân sách tổng của chị là 2.680.000 đồng. Hôm nay chỉ nhờ em ghi lại giỏ cuối cùng, chưa đặt.&quot;,
+        &quot;reason&quot;: &quot;unsupported_claim&quot;,
+        &quot;criterion&quot;: &quot;Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments.&quot;
+      }
+    ],
+    &quot;out_of_scope&quot;: [],
+    &quot;issue_reviews&quot;: [
+      {
+        &quot;job_id&quot;: &quot;caefb64fa427dbd76044a7093dc4783a360cb862f345c0717651890f627404c4&quot;,
+        &quot;message_id&quot;: 2,
+        &quot;turn_id&quot;: 2,
+        &quot;origin&quot;: &quot;turn_detector&quot;,
+        &quot;mechanism&quot;: &quot;knowledge_gap&quot;,
+        &quot;verified&quot;: true,
+        &quot;claim&quot;: &quot;Dạ em đã ghi nhận chị [private] muốn đổi món thứ hai thành Máy hâm sữa Fatz 4 chức năng, mỗi loại 1 chiếc (gồm Máy tiệt trùng sấy khô Moaz BéBé 1 chiếc và Máy hâm sữa Fatz 4 chức năng 1 chiếc) ạ.&quot;,
+        &quot;assessment&quot;: &quot;unsupported_by_evidence&quot;,
+        &quot;evidence_paths&quot;: [],
+        &quot;rejection&quot;: null,
+        &quot;rejection_reasons&quot;: [],
+        &quot;format_retry&quot;: false,
+        &quot;verifier_output&quot;: {
+          &quot;valid&quot;: true,
+          &quot;issue_scope&quot;: &quot;business_knowledge&quot;,
+          &quot;claim&quot;: &quot;Dạ em đã ghi nhận chị [private] muốn đổi món thứ hai thành Máy hâm sữa Fatz 4 chức năng, mỗi loại 1 chiếc (gồm Máy tiệt trùng sấy khô Moaz BéBé 1 chiếc và Máy hâm sữa Fatz 4 chức năng 1 chiếc) ạ.&quot;,
+          &quot;assessment&quot;: &quot;unsupported_by_evidence&quot;,
+          &quot;evidence_paths&quot;: [],
+          &quot;decision_reason&quot;: &quot;The agent confirmed adding/changing to &#x27;Máy hâm sữa Fatz 4 chức năng&#x27; without searching the catalog or verifying product availability/details in the evidence.&quot;,
+          &quot;audit&quot;: {
+            &quot;support_status&quot;: &quot;not_established&quot;,
+            &quot;coverage&quot;: &quot;complete&quot;,
+            &quot;checked_paths&quot;: [
+              &quot;evidence.tool_calls.0.result&quot;,
+              &quot;evidence.sources&quot;,
+              &quot;evidence.promotions&quot;,
+              &quot;prior_evidence.0.tool_calls.0.result&quot;,
+              &quot;prior_evidence.0.tool_calls.1.result&quot;,
+              &quot;prior_evidence.0.sources&quot;,
+              &quot;prior_evidence.0.promotions&quot;
+            ]
+          }
+        },
+        &quot;candidate_claim&quot;: &quot;Dạ em đã ghi nhận chị [private] muốn đổi món thứ hai thành Máy hâm sữa Fatz 4 chức năng, mỗi loại 1 chiếc (gồm Máy tiệt trùng sấy khô Moaz BéBé 1 chiếc và Máy hâm sữa Fatz 4 chức năng 1 chiếc) ạ.&quot;,
+        &quot;verification_basis&quot;: &quot;evidence_inventory_audit&quot;,
+        &quot;evidence_inventory&quot;: [
+          &quot;evidence.tool_calls.0.result&quot;,
+          &quot;evidence.sources&quot;,
+          &quot;evidence.promotions&quot;,
+          &quot;prior_evidence.0.tool_calls.0.result&quot;,
+          &quot;prior_evidence.0.tool_calls.1.result&quot;,
+          &quot;prior_evidence.0.sources&quot;,
+          &quot;prior_evidence.0.promotions&quot;
+        ],
+        &quot;lesson_status&quot;: &quot;approved&quot;
+      },
+      {
+        &quot;job_id&quot;: &quot;caefb64fa427dbd76044a7093dc4783a360cb862f345c0717651890f627404c4&quot;,
+        &quot;message_id&quot;: 4,
+        &quot;turn_id&quot;: 3,
+        &quot;origin&quot;: &quot;turn_detector&quot;,
+        &quot;mechanism&quot;: &quot;knowledge_gap&quot;,
+        &quot;verified&quot;: true,
+        &quot;claim&quot;: &quot;lưu lại giỏ hàng gồm 1 Máy tiệt trùng sấy khô Moaz BéBé và 1 Máy hâm sữa Fatz 4 chức năng với tổng ngân sách của chị là 2.680.000 đồng&quot;,
+        &quot;assessment&quot;: &quot;unsupported_by_evidence&quot;,
+        &quot;evidence_paths&quot;: [],
+        &quot;rejection&quot;: null,
+        &quot;rejection_reasons&quot;: [],
+        &quot;format_retry&quot;: false,
+        &quot;verifier_output&quot;: {
+          &quot;valid&quot;: true,
+          &quot;issue_scope&quot;: &quot;business_knowledge&quot;,
+          &quot;claim&quot;: &quot;lưu lại giỏ hàng gồm 1 Máy tiệt trùng sấy khô Moaz BéBé và 1 Máy hâm sữa Fatz 4 chức năng với tổng ngân sách của chị là 2.680.000 đồng&quot;,
+          &quot;assessment&quot;: &quot;unsupported_by_evidence&quot;,
+          &quot;evidence_paths&quot;: [],
+          &quot;decision_reason&quot;: &quot;The total cost of 2,680,000 VND and the specific SKUs for the Moaz BéBé sterilizer dryer and Fatz 4-function bottle warmer are not verified or calculated by any tool call results or sources in the evidence.&quot;,
+          &quot;audit&quot;: {
+            &quot;support_status&quot;: &quot;not_established&quot;,
+            &quot;coverage&quot;: &quot;complete&quot;,
+            &quot;checked_paths&quot;: [
+              &quot;evidence.tool_calls.0.result&quot;,
+              &quot;evidence.sources&quot;,
+              &quot;evidence.promotions&quot;,
+              &quot;prior_evidence.0.tool_calls.0.result&quot;,
+              &quot;prior_evidence.0.tool_calls.1.result&quot;,
+              &quot;prior_evidence.0.sources&quot;,
+              &quot;prior_evidence.0.promotions&quot;,
+              &quot;prior_evidence.1.tool_calls.0.result&quot;,
+              &quot;prior_evidence.1.sources&quot;,
+              &quot;prior_evidence.1.promotions&quot;
+            ]
+          }
+        },
+        &quot;candidate_claim&quot;: &quot;lưu lại giỏ hàng gồm 1 Máy tiệt trùng sấy khô Moaz BéBé và 1 Máy hâm sữa Fatz 4 chức năng với tổng ngân sách của chị là 2.680.000 đồng&quot;,
+        &quot;verification_basis&quot;: &quot;evidence_inventory_audit&quot;,
+        &quot;evidence_inventory&quot;: [
+          &quot;evidence.tool_calls.0.result&quot;,
+          &quot;evidence.sources&quot;,
+          &quot;evidence.promotions&quot;,
+          &quot;prior_evidence.0.tool_calls.0.result&quot;,
+          &quot;prior_evidence.0.tool_calls.1.result&quot;,
+          &quot;prior_evidence.0.sources&quot;,
+          &quot;prior_evidence.0.promotions&quot;,
+          &quot;prior_evidence.1.tool_calls.0.result&quot;,
+          &quot;prior_evidence.1.sources&quot;,
+          &quot;prior_evidence.1.promotions&quot;
+        ],
+        &quot;lesson_status&quot;: &quot;approved&quot;
+      }
+    ],
+    &quot;detector_error&quot;: null,
+    &quot;guardrails&quot;: {
+      &quot;version&quot;: &quot;learning_guardrails_v1&quot;,
+      &quot;input_findings&quot;: [],
+      &quot;blocked_lessons&quot;: [],
+      &quot;blocked_sources&quot;: []
+    },
+    &quot;detection&quot;: {
+      &quot;candidate_count&quot;: 3,
+      &quot;open_question_count&quot;: 0,
+      &quot;processed_count&quot;: 3,
+      &quot;skipped_unmatched_question&quot;: 0,
+      &quot;skipped_over_limit&quot;: 0,
+      &quot;scan&quot;: {
+        &quot;turns_available&quot;: 5,
+        &quot;turns_scanned&quot;: 5,
+        &quot;requests&quot;: 5,
+        &quot;errors&quot;: [],
+        &quot;schema_retries&quot;: 0,
+        &quot;skipped_over_limit&quot;: 0
+      },
+      &quot;alignment_rejections&quot;: []
+    },
+    &quot;outcome&quot;: &quot;gaps_processed&quot;,
+    &quot;learning_duration_ms&quot;: 38245,
+    &quot;learning_usage&quot;: {
+      &quot;input_tokens&quot;: 18291,
+      &quot;output_tokens&quot;: 1084
+    }
+  },
+  &quot;observed_input_findings&quot;: []
+}</pre></details></article></section></main></body></html>

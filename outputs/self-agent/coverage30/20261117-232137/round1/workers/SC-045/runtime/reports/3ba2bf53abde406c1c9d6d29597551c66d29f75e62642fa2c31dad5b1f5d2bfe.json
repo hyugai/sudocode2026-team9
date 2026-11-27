@@ -1,0 +1,99 @@
+{
+  "job_id": "3ba2bf53abde406c1c9d6d29597551c66d29f75e62642fa2c31dad5b1f5d2bfe",
+  "gaps": [
+    {
+      "id": "6db1cf6fa9bc3c6e1881e43cbc8a91c639cc50d7ccf2e9451c35d8a2af653e82",
+      "status": "pending_remediation"
+    }
+  ],
+  "scope": "knowledge_gap_and_reflection_v1",
+  "evaluation_cases": [
+    {
+      "id": "8964319cb053b660caaf4356b0ef332087625b3413dcbcfc4a382fa466098f2b",
+      "gap_id": "6db1cf6fa9bc3c6e1881e43cbc8a91c639cc50d7ccf2e9451c35d8a2af653e82",
+      "turn_id": 2,
+      "question": "Chị còn bận, em gọi lại lúc 10 giờ ngày 2026-10-23. Đừng bắt chị nói lại thông tin nữa nhé.",
+      "reason": "unsupported_claim",
+      "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments."
+    }
+  ],
+  "out_of_scope": [],
+  "issue_reviews": [
+    {
+      "job_id": "3ba2bf53abde406c1c9d6d29597551c66d29f75e62642fa2c31dad5b1f5d2bfe",
+      "message_id": 2,
+      "turn_id": 2,
+      "origin": "turn_detector",
+      "mechanism": "knowledge_gap",
+      "verified": true,
+      "claim": "Em đã lưu đầy đủ các thông tin chị đã chọn nên lần tới gọi lại em sẽ hỗ trợ chị lên đơn ngay chứ không hỏi lại nữa đâu ạ.",
+      "assessment": "unsupported_by_evidence",
+      "evidence_paths": [],
+      "rejection": null,
+      "rejection_reasons": [],
+      "format_retry": false,
+      "verifier_output": {
+        "valid": true,
+        "issue_scope": "business_knowledge",
+        "claim": "Em đã lưu đầy đủ các thông tin chị đã chọn nên lần tới gọi lại em sẽ hỗ trợ chị lên đơn ngay chứ không hỏi lại nữa đâu ạ.",
+        "assessment": "unsupported_by_evidence",
+        "evidence_paths": [],
+        "decision_reason": "The claim that all chosen order details (such as exact quantity) were already provided and saved is not established by any evidence or tool call results.",
+        "audit": {
+          "support_status": "not_established",
+          "coverage": "complete",
+          "checked_paths": [
+            "evidence.tool_calls.0.result",
+            "evidence.sources",
+            "evidence.promotions",
+            "prior_evidence.0.tool_calls.0.result",
+            "prior_evidence.0.tool_calls.1.result",
+            "prior_evidence.0.sources",
+            "prior_evidence.0.promotions"
+          ]
+        }
+      },
+      "candidate_claim": "Em đã lưu đầy đủ các thông tin chị đã chọn nên lần tới gọi lại em sẽ hỗ trợ chị lên đơn ngay chứ không hỏi lại nữa đâu ạ.",
+      "verification_basis": "evidence_inventory_audit",
+      "evidence_inventory": [
+        "evidence.tool_calls.0.result",
+        "evidence.sources",
+        "evidence.promotions",
+        "prior_evidence.0.tool_calls.0.result",
+        "prior_evidence.0.tool_calls.1.result",
+        "prior_evidence.0.sources",
+        "prior_evidence.0.promotions"
+      ],
+      "lesson_status": "approved"
+    }
+  ],
+  "detector_error": null,
+  "guardrails": {
+    "version": "learning_guardrails_v1",
+    "input_findings": [],
+    "blocked_lessons": [],
+    "blocked_sources": []
+  },
+  "detection": {
+    "candidate_count": 1,
+    "open_question_count": 0,
+    "processed_count": 1,
+    "skipped_unmatched_question": 0,
+    "skipped_over_limit": 0,
+    "scan": {
+      "turns_available": 2,
+      "turns_scanned": 2,
+      "requests": 2,
+      "errors": [],
+      "schema_retries": 0,
+      "skipped_over_limit": 0
+    },
+    "alignment_rejections": []
+  },
+  "outcome": "gaps_processed",
+  "learning_duration_ms": 7439,
+  "learning_usage": {
+    "input_tokens": 6153,
+    "output_tokens": 402
+  }
+}

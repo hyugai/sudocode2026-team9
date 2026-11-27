@@ -1,0 +1,47 @@
+{
+  "id": "0bdb6614c71bdc0485110ae00e0ead9063519b10a4317ce0df934476a03c6fc2",
+  "reason": "unsupported_claim",
+  "pattern": "Do not state an unverified claim as a fact.",
+  "status": "approved",
+  "scope": "general",
+  "mechanism": "knowledge_gap",
+  "criterion": "Do not state an unverified claim as a fact.",
+  "evidence_refs": [
+    {
+      "job_id": "65daad45cf0c9160d1cb3402c5c1ac94d41109edc388d61615a92639bc340c29",
+      "message_id": 0,
+      "turn_id": 1,
+      "origin": "turn_detector"
+    }
+  ],
+  "assessment": "unsupported_by_evidence",
+  "report_ref": "65daad45cf0c9160d1cb3402c5c1ac94d41109edc388d61615a92639bc340c29",
+  "lesson": {
+    "title": "Verify prior context before stating specific history",
+    "when": "a customer refers to a previous conversation or decision and no source or tool result confirms the specific product or details discussed",
+    "do": "ask the customer directly which product or item they are referring to without inventing past interaction details",
+    "otherwise": "express uncertainty about the exact item previously discussed instead of assuming or stating specific products",
+    "triggers": [
+      "nhắc đúng món",
+      "nhắn qua Zalo",
+      "lịch sử tư vấn",
+      "remember previous product",
+      "unverified chat history"
+    ],
+    "id": "01a913544fdac1395d75b0f5a4ffe75a884011933f924d54d788a5911dd30e2a",
+    "status": "approved",
+    "scope": "general",
+    "mechanism": "knowledge_gap",
+    "source_refs": [
+      {
+        "job_id": "65daad45cf0c9160d1cb3402c5c1ac94d41109edc388d61615a92639bc340c29",
+        "message_id": 0,
+        "turn_id": 1,
+        "origin": "turn_detector"
+      }
+    ],
+    "version": 2
+  },
+  "lesson_path": "lessons\\approved\\01a913544fdac1395d75b0f5a4ffe75a884011933f924d54d788a5911dd30e2a.md",
+  "lesson_hash": "35760691b8afd42847dc28985828043d1f77db8ba2940641f67649bf0726476a"
+}

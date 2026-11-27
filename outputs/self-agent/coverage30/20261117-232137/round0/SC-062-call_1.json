@@ -1,0 +1,321 @@
+{
+  "scenario_id": "SC-062",
+  "call": "call_1",
+  "session_id": "self-8486b4cbbb4448f68c8aeb6fca91f8af-SC-062-call_1",
+  "turns": [
+    {
+      "customer": "Chào shop, anh đang xem Máy hút sữa điện đôi Medela Swing Maxi, mức giá 5.990.000 đồng đúng không?",
+      "agent": "Dạ em chào anh [private]. Dạ đúng rồi anh, sản phẩm Máy hút sữa điện đôi Medela Swing Maxi hiện đang có giá là 5.990.000 đồng, hàng đang sẵn có tại shop và được miễn phí vận chuyển anh nha. \n\nAnh có cần em tư vấn thêm thông tin gì về sản phẩm hay hỗ trợ mình lên đơn luôn không ạ?",
+      "latency": {
+        "ttft_ms": 7630,
+        "total_ms": 7630,
+        "ttfa_ms": null,
+        "measurement_mode": "non_streaming",
+        "timing_boundary": "response_ready_before_persistence",
+        "asr_ms": null,
+        "call_brief_ms": 3631,
+        "response_ready_ms": 7630,
+        "persistence_ms": 0.332,
+        "request_complete_ms": 7630.45,
+        "backend_total_ms": 7630.45,
+        "precomputed_parts": []
+      },
+      "lesson_trace": null
+    },
+    {
+      "customer": "Anh mua cho người thân và còn vấn đề sức khỏe cần hỏi. Chưa đặt hàng nhé.",
+      "agent": "Dạ em nghe rõ rồi ạ. Anh [private] cho em hỏi người thân của mình đang gặp thắc mắc hoặc vấn đề sức khỏe cụ thể nào liên quan đến việc dùng máy hút sữa ạ? Em sẽ tư vấn chi tiết thông tin sản phẩm để mình yên tâm cân nhắc ạ.",
+      "latency": {
+        "ttft_ms": 7106,
+        "total_ms": 7106,
+        "ttfa_ms": null,
+        "measurement_mode": "non_streaming",
+        "timing_boundary": "response_ready_before_persistence",
+        "asr_ms": null,
+        "call_brief_ms": null,
+        "response_ready_ms": 7106,
+        "persistence_ms": 0.12,
+        "request_complete_ms": 7105.67,
+        "backend_total_ms": 7105.67,
+        "precomputed_parts": [
+          "persisted_facts"
+        ]
+      },
+      "lesson_trace": null
+    },
+    {
+      "customer": "Anh sẽ liên hệ lại khi có câu hỏi cụ thể.",
+      "agent": "Dạ em hiểu rồi ạ. Khi nào anh [private] có thời gian hoặc cần hỗ trợ chi tiết hơn về sản phẩm, anh cứ liên hệ lại với em nhé. \n\nEm chúc anh và gia đình thật nhiều sức khỏe ạ!",
+      "latency": {
+        "ttft_ms": 2856,
+        "total_ms": 2856,
+        "ttfa_ms": null,
+        "measurement_mode": "non_streaming",
+        "timing_boundary": "response_ready_before_persistence",
+        "asr_ms": null,
+        "call_brief_ms": null,
+        "response_ready_ms": 2856,
+        "persistence_ms": 0.084,
+        "request_complete_ms": 2855.772,
+        "backend_total_ms": 2855.772,
+        "precomputed_parts": [
+          "persisted_facts"
+        ]
+      },
+      "lesson_trace": null
+    }
+  ],
+  "generation_context": {
+    "round": 0,
+    "instruction_hash": "9d30a7093911a993d8545de8b61cc6dc8465de67b10fb62b27d9f1bafaf0badf",
+    "applied_patterns": {},
+    "lessons_loaded": false,
+    "lesson_sources": [],
+    "lesson_files": [],
+    "instruction_root": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round0\\instructions"
+  },
+  "evaluation_evidence": [
+    {
+      "turn_id": 1,
+      "agent_response": "Dạ em chào anh [private]. Dạ đúng rồi anh, sản phẩm Máy hút sữa điện đôi Medela Swing Maxi hiện đang có giá là 5.990.000 đồng, hàng đang sẵn có tại shop và được miễn phí vận chuyển anh nha. \n\nAnh có cần em tư vấn thêm thông tin gì về sản phẩm hay hỗ trợ mình lên đơn luôn không ạ?",
+      "tool_calls": [
+        {
+          "name": "catalog.search",
+          "args": {
+            "query": "Máy hút sữa điện đôi Medela Swing Maxi",
+            "on": "2026-10-16"
+          },
+          "result": {
+            "items": [
+              {
+                "sku": "SKU-MB-PUMP2",
+                "name": "[private]",
+                "category": "me-be",
+                "brand": "Medela",
+                "list_price_vnd": 5990000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "warranty_months": 12
+                },
+                "variants": []
+              }
+            ],
+            "total": 1
+          }
+        },
+        {
+          "name": "inventory.check",
+          "args": {
+            "sku": "SKU-MB-PUMP2",
+            "on": "2026-10-16"
+          },
+          "result": {
+            "sku": "SKU-MB-PUMP2",
+            "found": true,
+            "in_stock": true,
+            "qty": 18,
+            "discontinued": false
+          }
+        },
+        {
+          "name": "pricing.get_quote",
+          "args": {
+            "on": "2026-10-16",
+            "customer_phone": "[private]",
+            "customer_id": "[private]",
+            "sku": "SKU-MB-PUMP2",
+            "qty": 1
+          },
+          "result": {
+            "sku": "SKU-MB-PUMP2",
+            "list_price_vnd": 5990000,
+            "final_price_vnd": 5990000,
+            "applied_promos": [
+              {
+                "promo_code": "MOM-FREESHIP",
+                "type": "freeship",
+                "discount_vnd": 0
+              },
+              {
+                "promo_code": "COD-0",
+                "type": "freecod",
+                "discount_vnd": 0
+              }
+            ],
+            "expired_promos": [],
+            "ineligible_promos": [],
+            "not_applied_exclusive": [],
+            "freeship": true
+          }
+        }
+      ],
+      "sources": [
+        {
+          "sku": "SKU-MB-PUMP2",
+          "name": "[private]",
+          "category": "me-be",
+          "brand": "Medela",
+          "list_price_vnd": 5990000.0,
+          "discontinued": false,
+          "successor_sku": null,
+          "attributes": {
+            "warranty_months": 12
+          },
+          "variants": []
+        },
+        {
+          "sku": "SKU-MB-PUMP2",
+          "name": "[private]",
+          "category": "me-be",
+          "brand": "Medela",
+          "list_price_vnd": 5990000.0,
+          "discontinued": false,
+          "successor_sku": null,
+          "attributes": {
+            "warranty_months": 12
+          },
+          "variants": []
+        }
+      ],
+      "promotions": []
+    },
+    {
+      "turn_id": 2,
+      "agent_response": "Dạ em nghe rõ rồi ạ. Anh [private] cho em hỏi người thân của mình đang gặp thắc mắc hoặc vấn đề sức khỏe cụ thể nào liên quan đến việc dùng máy hút sữa ạ? Em sẽ tư vấn chi tiết thông tin sản phẩm để mình yên tâm cân nhắc ạ.",
+      "tool_calls": [
+        {
+          "name": "catalog.search",
+          "args": {
+            "query": "Anh mua cho người thân và còn vấn đề sức khỏe cần hỏi. Chưa đặt hàng nhé.",
+            "on": "2026-10-16"
+          },
+          "result": {
+            "items": [],
+            "total": 0
+          }
+        },
+        {
+          "name": "inventory.check",
+          "args": {
+            "sku": "SKU-MB-PUMP2",
+            "on": "2026-10-16"
+          },
+          "result": {
+            "sku": "SKU-MB-PUMP2",
+            "found": true,
+            "in_stock": true,
+            "qty": 18,
+            "discontinued": false
+          }
+        }
+      ],
+      "sources": [
+        {
+          "sku": "SKU-MB-PUMP2",
+          "name": "[private]",
+          "category": "me-be",
+          "brand": "Medela",
+          "list_price_vnd": 5990000.0,
+          "discontinued": false,
+          "successor_sku": null,
+          "attributes": {
+            "warranty_months": 12
+          },
+          "variants": []
+        },
+        {
+          "sku": "SKU-MB-PUMP2",
+          "name": "[private]",
+          "category": "me-be",
+          "brand": "Medela",
+          "list_price_vnd": 5990000.0,
+          "discontinued": false,
+          "successor_sku": null,
+          "attributes": {
+            "warranty_months": 12
+          },
+          "variants": []
+        }
+      ],
+      "promotions": []
+    },
+    {
+      "turn_id": 3,
+      "agent_response": "Dạ em hiểu rồi ạ. Khi nào anh [private] có thời gian hoặc cần hỗ trợ chi tiết hơn về sản phẩm, anh cứ liên hệ lại với em nhé. \n\nEm chúc anh và gia đình thật nhiều sức khỏe ạ!",
+      "tool_calls": [],
+      "sources": [
+        {
+          "sku": "SKU-MB-PUMP2",
+          "name": "[private]",
+          "category": "me-be",
+          "brand": "Medela",
+          "list_price_vnd": 5990000.0,
+          "discontinued": false,
+          "successor_sku": null,
+          "attributes": {
+            "warranty_months": 12
+          },
+          "variants": []
+        },
+        {
+          "sku": "SKU-MB-PUMP2",
+          "name": "[private]",
+          "category": "me-be",
+          "brand": "Medela",
+          "list_price_vnd": 5990000.0,
+          "discontinued": false,
+          "successor_sku": null,
+          "attributes": {
+            "warranty_months": 12
+          },
+          "variants": []
+        }
+      ],
+      "promotions": []
+    }
+  ],
+  "job": {
+    "status": "done",
+    "job_id": "ace6b04d24a11b8e1201158e5589af4ce144ccadd3bcc28adc079938ab63b4f4",
+    "error": null
+  },
+  "learning": {
+    "job_id": "ace6b04d24a11b8e1201158e5589af4ce144ccadd3bcc28adc079938ab63b4f4",
+    "gaps": [],
+    "scope": "knowledge_gap_and_reflection_v1",
+    "evaluation_cases": [],
+    "out_of_scope": [],
+    "issue_reviews": [],
+    "detector_error": null,
+    "guardrails": {
+      "version": "learning_guardrails_v1",
+      "input_findings": [],
+      "blocked_lessons": [],
+      "blocked_sources": []
+    },
+    "detection": {
+      "candidate_count": 0,
+      "open_question_count": 0,
+      "processed_count": 0,
+      "skipped_unmatched_question": 0,
+      "skipped_over_limit": 0,
+      "scan": {
+        "turns_available": 3,
+        "turns_scanned": 3,
+        "requests": 3,
+        "errors": [],
+        "schema_retries": 0,
+        "skipped_over_limit": 0
+      },
+      "alignment_rejections": []
+    },
+    "outcome": "no_candidates",
+    "learning_duration_ms": 4766,
+    "learning_usage": {
+      "input_tokens": 4558,
+      "output_tokens": 18
+    }
+  },
+  "artifact_changes": []
+}

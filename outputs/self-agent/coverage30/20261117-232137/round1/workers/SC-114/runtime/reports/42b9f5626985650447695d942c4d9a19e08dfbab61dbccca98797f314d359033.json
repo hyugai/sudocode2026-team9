@@ -1,0 +1,116 @@
+{
+  "job_id": "42b9f5626985650447695d942c4d9a19e08dfbab61dbccca98797f314d359033",
+  "gaps": [
+    {
+      "id": "20adac6bdb2784074d5a5bb76c0f21f65fa46af9284a1e99e7af3cf0cab16894",
+      "status": "pending_evidence"
+    },
+    {
+      "id": "7a444b590d62035276fbc6177f8b59ee8c651cb7a17b99ca911db5879abe0f0d",
+      "status": "pending_evidence"
+    }
+  ],
+  "scope": "knowledge_gap_and_reflection_v1",
+  "evaluation_cases": [
+    {
+      "id": "9380228358b5d2d58be892179fc8ca5f71e0c9acbca82ea3b65f0bdc48686d97",
+      "gap_id": "20adac6bdb2784074d5a5bb76c0f21f65fa46af9284a1e99e7af3cf0cab16894",
+      "turn_id": 2,
+      "question": "Tổng 6.580.000 đồng nằm trong ngân sách, mỗi món một chiếc, giao 103 đường Kiểm Thử, TP. Hồ Chí Minh.",
+      "reason": "missing_knowledge",
+      "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments."
+    }
+  ],
+  "out_of_scope": [],
+  "issue_reviews": [
+    {
+      "job_id": "42b9f5626985650447695d942c4d9a19e08dfbab61dbccca98797f314d359033",
+      "message_id": 6,
+      "turn_id": 4,
+      "origin": "turn_detector",
+      "mechanism": "reflection",
+      "verified": false,
+      "claim": "Dạ em xác nhận đã tạo thành công đơn hàng cho anh [private] rồi ạ. \n\n* **Mã đơn hàng:** [order_id]  \n* **Sản phẩm:** Nồi chiên không dầu Xiaomi 4.5L (SKU-AF-XM), số lượng: 1  \n* **Tổng thanh toán:** 1.590.000đ (Thanh toán COD khi nhận hàng, miễn phí vận chuyển)  \n* **Địa chỉ [address]\n* **Dự kiến giao hàng:** 2026-10-23",
+      "assessment": null,
+      "evidence_paths": [],
+      "rejection": "missing_or_invalid_claim_evidence",
+      "rejection_reasons": [
+        "verifier_rejected_issue"
+      ],
+      "format_retry": false,
+      "verifier_output": {
+        "valid": false,
+        "issue_scope": "reflection",
+        "claim": "Dạ em xác nhận đã tạo thành công đơn hàng cho anh [private] rồi ạ. \n\n* **Mã đơn hàng:** [order_id]  \n* **Sản phẩm:** Nồi chiên không dầu Xiaomi 4.5L (SKU-AF-XM), số lượng: 1  \n* **Tổng thanh toán:** 1.590.000đ (Thanh toán COD khi nhận hàng, miễn phí vận chuyển)  \n* **Địa chỉ [address]\n* **Dự kiến giao hàng:** 2026-10-23",
+        "assessment": "context_mismatch",
+        "evidence_paths": [],
+        "decision_reason": "The customer prompt in the evaluation reason ('bỏ món Nồi chiên không dầu Xiaomi 4.5L đã hủy nhé') does not appear anywhere in the conversation history.",
+        "audit": {
+          "support_status": "not_established",
+          "coverage": "complete",
+          "checked_paths": [
+            "evidence.tool_calls.0.result",
+            "evidence.tool_calls.1.result",
+            "evidence.sources",
+            "evidence.promotions",
+            "prior_evidence.0.tool_calls",
+            "prior_evidence.0.sources",
+            "prior_evidence.0.promotions",
+            "prior_evidence.1.tool_calls.0.result",
+            "prior_evidence.1.sources",
+            "prior_evidence.1.promotions",
+            "prior_evidence.2.tool_calls",
+            "prior_evidence.2.sources",
+            "prior_evidence.2.promotions"
+          ]
+        }
+      },
+      "candidate_claim": "Dạ em xác nhận đã tạo thành công đơn hàng cho anh [private] rồi ạ. \n\n* **Mã đơn hàng:** [order_id]  \n* **Sản phẩm:** Nồi chiên không dầu Xiaomi 4.5L (SKU-AF-XM), số lượng: 1  \n* **Tổng thanh toán:** 1.590.000đ (Thanh toán COD khi nhận hàng, miễn phí vận chuyển)  \n* **Địa chỉ [address]\n* **Dự kiến giao hàng:** 2026-10-23",
+      "verification_basis": null,
+      "evidence_inventory": [
+        "evidence.tool_calls.0.result",
+        "evidence.tool_calls.1.result",
+        "evidence.sources",
+        "evidence.promotions",
+        "prior_evidence.0.tool_calls",
+        "prior_evidence.0.sources",
+        "prior_evidence.0.promotions",
+        "prior_evidence.1.tool_calls.0.result",
+        "prior_evidence.1.sources",
+        "prior_evidence.1.promotions",
+        "prior_evidence.2.tool_calls",
+        "prior_evidence.2.sources",
+        "prior_evidence.2.promotions"
+      ]
+    }
+  ],
+  "detector_error": null,
+  "guardrails": {
+    "version": "learning_guardrails_v1",
+    "input_findings": [],
+    "blocked_lessons": [],
+    "blocked_sources": []
+  },
+  "detection": {
+    "candidate_count": 2,
+    "open_question_count": 0,
+    "processed_count": 2,
+    "skipped_unmatched_question": 0,
+    "skipped_over_limit": 0,
+    "scan": {
+      "turns_available": 4,
+      "turns_scanned": 4,
+      "requests": 4,
+      "errors": [],
+      "schema_retries": 0,
+      "skipped_over_limit": 0
+    },
+    "alignment_rejections": []
+  },
+  "outcome": "gaps_processed",
+  "learning_duration_ms": 10848,
+  "learning_usage": {
+    "input_tokens": 6531,
+    "output_tokens": 635
+  }
+}

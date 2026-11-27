@@ -1,0 +1,47 @@
+{
+  "id": "a1a92860172677ce2cf3285e96de3e49f3a82e8e3aef9576198a235d8448289d",
+  "reason": "unsupported_claim",
+  "pattern": "Do not state an unverified claim as a fact.",
+  "status": "approved",
+  "scope": "general",
+  "mechanism": "knowledge_gap",
+  "criterion": "Do not state an unverified claim as a fact.",
+  "evidence_refs": [
+    {
+      "job_id": "4ae5ad4e262312a18b7effd853628ecb8a4a5acad756039b49676d895161a70d",
+      "message_id": 0,
+      "turn_id": 1,
+      "origin": "turn_detector"
+    }
+  ],
+  "assessment": "unsupported_by_evidence",
+  "report_ref": "4ae5ad4e262312a18b7effd853628ecb8a4a5acad756039b49676d895161a70d",
+  "lesson": {
+    "title": "Verify Customer History Before Claiming Prior Interactions",
+    "when": "A customer vaguely refers to a previously inquired product or past conversation without verified context in the evidence",
+    "do": "Ask the customer to clarify the specific product or topic they inquired about, or state that past interaction details are not available",
+    "otherwise": "Do not assume or state specific past products, previous conversation details, or health concerns not confirmed by source evidence",
+    "triggers": [
+      "hỏi về món đã hỏi",
+      "sản phẩm đã hỏi",
+      "gọi lại về sản phẩm cũ",
+      "nhắc lại cuộc gọi trước",
+      "past conversation details missing"
+    ],
+    "id": "7bb5685bff9133b2177c9eb56a6818f8a4e7e5518eb78d5f7f82729d0228fd7b",
+    "status": "approved",
+    "scope": "general",
+    "mechanism": "knowledge_gap",
+    "source_refs": [
+      {
+        "job_id": "4ae5ad4e262312a18b7effd853628ecb8a4a5acad756039b49676d895161a70d",
+        "message_id": 0,
+        "turn_id": 1,
+        "origin": "turn_detector"
+      }
+    ],
+    "version": 2
+  },
+  "lesson_path": "lessons\\approved\\7bb5685bff9133b2177c9eb56a6818f8a4e7e5518eb78d5f7f82729d0228fd7b.md",
+  "lesson_hash": "e181cd53d85f76bdf9e1b4787a0cdcb1a761900162ef8214a79bebbe2965edfe"
+}

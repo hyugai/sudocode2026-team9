@@ -1,0 +1,45 @@
+{
+  "id": "5907e3354af099f21f3ed097cf3eee1dd205358cc08bd99e73b275c343573e48",
+  "reason": "unsupported_claim",
+  "pattern": "Do not state an unverified claim as a fact.",
+  "status": "approved",
+  "scope": "general",
+  "mechanism": "knowledge_gap",
+  "criterion": "Do not state an unverified claim as a fact.",
+  "evidence_refs": [
+    {
+      "job_id": "caefb64fa427dbd76044a7093dc4783a360cb862f345c0717651890f627404c4",
+      "message_id": 4,
+      "turn_id": 3,
+      "origin": "turn_detector"
+    }
+  ],
+  "assessment": "unsupported_by_evidence",
+  "report_ref": "caefb64fa427dbd76044a7093dc4783a360cb862f345c0717651890f627404c4",
+  "lesson": {
+    "title": "Verify cart totals before confirming saved cart",
+    "when": "A customer asks to save or confirm a cart containing specific items whose prices or SKUs have not been verified through search and pricing tools in the evidence",
+    "do": "Perform catalog search and pricing lookup to verify the specific product details and total price before acknowledging the saved cart contents and total",
+    "otherwise": "State uncertainty about the unverified items and price details instead of confirming the unverified cart contents or total",
+    "triggers": [
+      "save cart unverified price",
+      "ghi giỏ hàng chưa tra giá",
+      "lưu giỏ hàng chưa xác nhận giá"
+    ],
+    "id": "7beaea49d57761bd76ac9969b03a3453a5adfa4b39eecdd21ddf7edb8e5c9d13",
+    "status": "approved",
+    "scope": "general",
+    "mechanism": "knowledge_gap",
+    "source_refs": [
+      {
+        "job_id": "caefb64fa427dbd76044a7093dc4783a360cb862f345c0717651890f627404c4",
+        "message_id": 4,
+        "turn_id": 3,
+        "origin": "turn_detector"
+      }
+    ],
+    "version": 2
+  },
+  "lesson_path": "lessons\\approved\\7beaea49d57761bd76ac9969b03a3453a5adfa4b39eecdd21ddf7edb8e5c9d13.md",
+  "lesson_hash": "7ec249cbbc1c1d3e2dafd45c6c3a40ca64a590036a6507f65a68de1d8176b590"
+}

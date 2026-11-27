@@ -1,0 +1,47 @@
+{
+  "id": "4cb5864cfecfe6494694e5a70b426381af66e416c4f340796b31a56ae0c5531e",
+  "reason": "unsupported_claim",
+  "pattern": "Do not state an unverified claim as a fact.",
+  "status": "approved",
+  "scope": "general",
+  "mechanism": "knowledge_gap",
+  "criterion": "Do not state an unverified claim as a fact.",
+  "evidence_refs": [
+    {
+      "job_id": "d49d4adc843c44ab5161691a8adb279d2f2e9f75cb6b74e0020ae8d9ec186be3",
+      "message_id": 2,
+      "turn_id": 2,
+      "origin": "turn_detector"
+    }
+  ],
+  "assessment": "unsupported_by_evidence",
+  "report_ref": "d49d4adc843c44ab5161691a8adb279d2f2e9f75cb6b74e0020ae8d9ec186be3",
+  "lesson": {
+    "title": "State only verified prior price details",
+    "when": "a customer asks to recall or explain a previous price or promo value and official source records or tool outputs do not state the exact past amount",
+    "do": "explain current pricing and state only verified promo details while expressing uncertainty about unrecorded past price amounts",
+    "otherwise": "stating unverified past prices or discount values creates unsupported business claims",
+    "triggers": [
+      "nhắc lại giá cũ",
+      "giải thích mức giá cũ",
+      "previous price explanation",
+      "unverified past price",
+      "mức giá cũ bao nhiêu"
+    ],
+    "id": "1f653209866834d6367f23c31729113c40f0115c3b57e24259f6a546142c8918",
+    "status": "approved",
+    "scope": "general",
+    "mechanism": "knowledge_gap",
+    "source_refs": [
+      {
+        "job_id": "d49d4adc843c44ab5161691a8adb279d2f2e9f75cb6b74e0020ae8d9ec186be3",
+        "message_id": 2,
+        "turn_id": 2,
+        "origin": "turn_detector"
+      }
+    ],
+    "version": 2
+  },
+  "lesson_path": "lessons\\approved\\1f653209866834d6367f23c31729113c40f0115c3b57e24259f6a546142c8918.md",
+  "lesson_hash": "1a645eeafa1a0b141b2a085f39f3f642835e940a3d31b496cff48615fcd8fb3b"
+}

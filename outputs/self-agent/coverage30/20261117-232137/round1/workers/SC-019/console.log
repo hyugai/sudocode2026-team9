@@ -1,0 +1,126 @@
+[11/17/26 23:44:45] INFO     Processing request of type           server.py:733
+                             ListToolsRequest                                  
+[11/17/26 23:44:46] INFO     Processing request of type           server.py:733
+                             ListToolsRequest                                  
+[11/17/26 23:44:47] INFO     Processing request of type           server.py:733
+                             ListToolsRequest                                  
+Direct use of automatic function calling (AFC) in AsyncModels.generate_content is not recommended. Instead, we recommend to use AFC in AsyncChat.send_message. Similarly, direct use of AFC in AsyncModels.generate_content_stream is not recommended. Instead, we recommend to use AFC in AsyncChat.send_message_stream.
+[11/17/26 23:44:52] INFO     Processing request of type           server.py:733
+                             CallToolRequest                                   
+[11/17/26 23:44:53] INFO     Processing request of type           server.py:733
+                             CallToolRequest                                   
+[11/17/26 23:44:54] INFO     Processing request of type           server.py:733
+                             CallToolRequest                                   
+[11/17/26 23:45:00] INFO     Processing request of type           server.py:733
+                             CallToolRequest                                   
+                    INFO     Describing index 'policy-telesale'  indexes.py:231
+[11/17/26 23:45:02] INFO     HTTP Request: GET                  _client.py:1025
+                             https://api.pinecone.io/indexes/po                
+                             licy-telesale "HTTP/1.1 200 OK"                   
+                    INFO     Index client created for host      __init__.py:195
+                             https://policy-telesale-kvtrojy.sv                
+                             c.aped-4627-b74a.pinecone.io                      
+                    INFO     Connected to Pinecone policy      knowledge.py:173
+                             index policy-telesale                             
+                    INFO     Searching namespace 'policy-prod' __init__.py:1490
+                             with top_k=20                                     
+[11/17/26 23:45:23] INFO     Processing request of type           server.py:733
+                             CallToolRequest                                   
+[11/17/26 23:45:24] INFO     Processing request of type           server.py:733
+                             CallToolRequest                                   
+[11/17/26 23:45:36] INFO     Processing request of type           server.py:733
+                             CallToolRequest                                   
+                    INFO     Processing request of type           server.py:733
+                             CallToolRequest                                   
+Round 1: loaded 2 patterns from this round 0; lessons_loaded=True
+
+==================================================
+STARTING DEEP AGENT RUN: Nhờ em tư vấn giúp, chị xem Máy lọc không khí AirPure X đang còn 4.390.000 đồng nhờ AP-SEP, đúng không?
+==================================================
+   -> Context: scope=turn, prompt_chars=2676, recent_messages=0, allowed_tools=[]
+   -> Model request estimate: ~2375 input tokens (system=4448 chars, messages=2676 chars, tools=0 chars, visible_tools=0)
+   -> Agent Response: Dạ đúng rồi chị Trang ơi, sản phẩm Máy lọc không khí AirPure X hiện có giá niêm yết là 4.890.000 đồng, và khi áp dụng mã ưu đãi AP-SEP thì được giảm 500.000 đồng, giá chỉ còn 4.390.000 đồng thôi ạ. Ngoài ra sản phẩm này còn đang được miễn phí vận chuyển nữa ạ. 
+
+Chị có muốn em hỗ trợ đặt hàng sản phẩm này luôn không chị?
+
+DEEP AGENT RUN COMPLETED!
+==================================================
+
+
+==================================================
+STARTING DEEP AGENT RUN: Chị ưu tiên giá, ngân sách tối đa 4.990.000 đồng. Ưu đãi này hết ngày 30/09 phải không?
+==================================================
+   -> Context: scope=turn, prompt_chars=3846, recent_messages=2, allowed_tools=[]
+   -> Model request estimate: ~3189 input tokens (system=4448 chars, messages=5117 chars, tools=0 chars, visible_tools=0)
+   -> Agent Response: Dạ chị Trang ơi, mã ưu đãi AP-SEP giảm 500.000 đồng giúp giá máy lọc không khí AirPure X chỉ còn 4.390.000 đồng (nằm trong ngân sách 4.990.000 đồng của chị và được miễn phí vận chuyển). 
+
+Về thời hạn chính xác của mã ưu đãi này thì trên hệ thống hiện chưa cập nhật ngày hết hạn cụ thể ạ. Chị có muốn em hỗ trợ lên đơn đặt hàng luôn bây giờ để giữ mức giá ưu đãi 4.390.000 đồng này không ạ?
+
+DEEP AGENT RUN COMPLETED!
+==================================================
+
+
+==================================================
+STARTING DEEP AGENT RUN: Chưa mua ngay đâu em, chị cần cân nhắc thêm.
+==================================================
+   -> Context: scope=turn, prompt_chars=1911, recent_messages=2, allowed_tools=[]
+   -> Model request estimate: ~2417 input tokens (system=4448 chars, messages=2803 chars, tools=0 chars, visible_tools=0)
+   -> Agent Response: Dạ em hiểu rồi ạ. Chị Trang cứ thong thả cân nhắc thêm nha. Khi nào chị quyết định hoặc cần em hỗ trợ thêm thông tin gì, chị cứ liên hệ lại với em nhé. Em chúc chị một ngày vui vẻ ạ!
+
+DEEP AGENT RUN COMPLETED!
+==================================================
+
+SC-019/call_1: job=done, changed=0; D:\DOCUMENT\School\SUDO\sudo_code_2026-group_9\outputs\self-agent\coverage30\20261117-232137\round1\workers\SC-019\SC-019-call_1.json
+
+==================================================
+STARTING DEEP AGENT RUN: Chị muốn xác nhận trước khi quyết, lấy máy theo chương trình lần trước nhé.
+==================================================
+   -> Context: scope=turn, prompt_chars=2400, recent_messages=0, allowed_tools=['search_customer_memory_archive']
+   -> Model request estimate: ~2792 input tokens (system=4448 chars, messages=3928 chars, tools=0 chars, visible_tools=0)
+   -> Agent Response: Dạ em chào chị Trang, sản phẩm lần trước em có tư vấn cho mình là máy lọc không khí mã SKU-AP-X ạ. 
+
+Tuy nhiên, em xin phép thông báo là chương trình khuyến mãi mã `AP-SEP` lần trước hiện đã hết hạn. Giá hiện tại của máy là 4.890.000 đ, kèm theo quà tặng là 1 lõi lọc phụ (SKU-AP-FLT-X) và miễn phí vận chuyển ạ.
+
+Chị có muốn em lên đơn đặt hàng sản phẩm này cho mình theo chương trình hiện tại luôn không ạ?
+
+DEEP AGENT RUN COMPLETED!
+==================================================
+
+
+==================================================
+STARTING DEEP AGENT RUN: Sao giá lại khác vậy? Em nhắc lại mức cũ và giải thích giúp chị.
+==================================================
+   -> Context: scope=turn, prompt_chars=2624, recent_messages=2, allowed_tools=[]
+   -> Model request estimate: ~2358 input tokens (system=4448 chars, messages=2624 chars, tools=0 chars, visible_tools=0)
+   -> Agent Response: Dạ chị Trang, em xin giải thích rõ ạ: 
+
+Ở lần tư vấn trước, máy lọc không khí SKU-AP-X có giá là **4.390.000 đ** nhờ áp dụng mã giảm giá `AP-SEP`. Tuy nhiên, chương trình ưu đãi này hiện đã hết hạn.
+
+Hiện tại, giá niêm yết của máy là **4.890.000 đ** (mã ưu đãi hiện áp dụng là `COD-0`). Thay vào đó, chị sẽ được tặng kèm 1 lõi lọc phụ (SKU-AP-FLT-X) và miễn phí vận chuyển ạ.
+
+Chị có muốn em hỗ trợ lên đơn lấy máy theo chương trình mới này luôn không ạ?
+
+DEEP AGENT RUN COMPLETED!
+==================================================
+
+
+==================================================
+STARTING DEEP AGENT RUN: Nếu ưu đãi cũ đã hết thì chị chấp nhận 4.890.000 đồng. Một máy, cod, giao 108 đường Kiểm Thử, Đà Nẵng.
+==================================================
+   -> Context: scope=turn, prompt_chars=3474, recent_messages=2, allowed_tools=[]
+   -> Model request estimate: ~2641 input tokens (system=4448 chars, messages=3474 chars, tools=0 chars, visible_tools=0)
+   -> Agent Response: Dạ em đã lên đơn hàng thành công cho chị Trang rồi ạ! 
+
+Thông tin đơn hàng của chị:
+- **Mã đơn hàng:** ORD-0A2CB718
+- **Sản phẩm:** 1 máy lọc không khí (SKU-AP-X)
+- **Tổng thanh toán:** 4.890.000đ (thanh toán COD khi nhận hàng, miễn phí vận chuyển và có quà tặng kèm lõi lọc SKU-AP-FLT-X)
+- **Địa chỉ giao hàng:** 108 đường Kiểm Thử, Đà Nẵng
+- **Dự kiến giao hàng:** 12/10/2026
+
+Em cảm ơn chị đã ủng hộ cửa hàng, chị chú ý điện thoại để nhận hàng giúp em nhé!
+
+DEEP AGENT RUN COMPLETED!
+==================================================
+
+SC-019/call_2: job=done, changed=4; D:\DOCUMENT\School\SUDO\sudo_code_2026-group_9\outputs\self-agent\coverage30\20261117-232137\round1\workers\SC-019\SC-019-call_2.json

@@ -1,0 +1,733 @@
+{
+  "schema_version": 1,
+  "guardrail_version": "learning_guardrails_v1",
+  "metadata": {
+    "evaluation_population": "single_session_no_baseline"
+  },
+  "warnings": [
+    "Chưa chạy judge: chỉ xem thay đổi câu trả lời và dấu vết lesson, chưa đánh giá cải thiện.",
+    "Không có cặp chấm hợp lệ: chưa thể kết luận cải thiện hay không có regression."
+  ],
+  "summary": {
+    "total_turns": 3,
+    "judged_pair_count": 0,
+    "round0_turns": 0,
+    "round1_turns": 3,
+    "stored_frozen_case_count": 0,
+    "injected_turns": 2,
+    "changed_answers": 0,
+    "counts": {
+      "improved_resolution": 0,
+      "safer_unresolved": 0,
+      "regression": 0,
+      "unchanged": 0,
+      "needs_review": 0,
+      "not_evaluated": 3,
+      "unpaired": 0,
+      "question_changed": 0,
+      "excluded": 0
+    }
+  },
+  "rows": [
+    {
+      "call": "SC-041/call_1",
+      "turn_id": 1,
+      "question": "Alo em, chị muốn một Máy lọc không khí AirPure X, giá đang là 4.890.000 đồng đúng không?",
+      "baseline_question": null,
+      "classification": "not_evaluated",
+      "case_id": null,
+      "gap_id": null,
+      "answer_changed": false,
+      "injected": false,
+      "lesson_trace": {
+        "lessons_loaded": 25,
+        "selected_lessons": [],
+        "injected": false,
+        "mode": "memory_only",
+        "response_modified": false,
+        "routing": "failed",
+        "routing_error": "ValueError",
+        "routing_ms": 1518.033,
+        "routing_usage": {
+          "input_tokens": 4496,
+          "output_tokens": 1
+        },
+        "wrapper_total_ms": 8089.916
+      },
+      "round0": {
+        "answer": null,
+        "verdict": {
+          "status": null
+        },
+        "latency": null,
+        "evidence": {
+          "current": {},
+          "earlier": []
+        }
+      },
+      "round1": {
+        "answer": "Dạ em chào chị [private], đúng rồi ạ, sản phẩm Máy lọc không khí AirPure X hiện tại đang có giá là 4.890.000 đồng, sẵn hàng và còn được tặng kèm 1 màng lọc phụ kiện nữa chị nha. \n\nChị có muốn em lên đơn đặt hàng sản phẩm này cho mình luôn không ạ?",
+        "verdict": {
+          "status": null
+        },
+        "latency": {
+          "ttft_ms": 6571,
+          "total_ms": 6571,
+          "ttfa_ms": null,
+          "measurement_mode": "non_streaming",
+          "timing_boundary": "response_ready_before_persistence",
+          "asr_ms": null,
+          "call_brief_ms": 3186,
+          "response_ready_ms": 6571,
+          "persistence_ms": 0.347,
+          "request_complete_ms": 6571.792,
+          "backend_total_ms": 6571.792,
+          "precomputed_parts": []
+        },
+        "evidence": {
+          "current": {
+            "turn_id": 1,
+            "agent_response": "Dạ em chào chị [private], đúng rồi ạ, sản phẩm Máy lọc không khí AirPure X hiện tại đang có giá là 4.890.000 đồng, sẵn hàng và còn được tặng kèm 1 màng lọc phụ kiện nữa chị nha. \n\nChị có muốn em lên đơn đặt hàng sản phẩm này cho mình luôn không ạ?",
+            "tool_calls": [
+              {
+                "name": "catalog.search",
+                "args": {
+                  "query": "Máy lọc không khí AirPure X",
+                  "on": "2026-10-15"
+                },
+                "result": {
+                  "items": [
+                    {
+                      "sku": "SKU-AP-X",
+                      "name": "[private]",
+                      "category": "gia-dung/may-loc-khong-khi",
+                      "brand": "AirPure",
+                      "list_price_vnd": 4890000.0,
+                      "discontinued": false,
+                      "successor_sku": null,
+                      "attributes": {
+                        "features": "HEPA H13, cảm biến PM2.5, chế độ ngủ",
+                        "room_area_m2": 25,
+                        "child_safe_lock": false,
+                        "warranty_months": 24
+                      },
+                      "variants": []
+                    }
+                  ],
+                  "total": 1
+                }
+              },
+              {
+                "name": "inventory.check",
+                "args": {
+                  "sku": "SKU-AP-X",
+                  "on": "2026-10-15"
+                },
+                "result": {
+                  "sku": "SKU-AP-X",
+                  "found": true,
+                  "in_stock": true,
+                  "qty": 40,
+                  "discontinued": false
+                }
+              },
+              {
+                "name": "pricing.get_quote",
+                "args": {
+                  "on": "2026-10-15",
+                  "customer_phone": "[private]",
+                  "customer_id": "[private]",
+                  "sku": "SKU-AP-X",
+                  "qty": 1
+                },
+                "result": {
+                  "sku": "SKU-AP-X",
+                  "list_price_vnd": 4890000,
+                  "final_price_vnd": 4890000,
+                  "applied_promos": [
+                    {
+                      "promo_code": "COD-0",
+                      "type": "freecod",
+                      "discount_vnd": 0
+                    },
+                    {
+                      "promo_code": "GIFT-FILTER",
+                      "type": "gift",
+                      "discount_vnd": 0,
+                      "gift_sku": "SKU-AP-FLT-X"
+                    }
+                  ],
+                  "expired_promos": [
+                    "AP-SEP"
+                  ],
+                  "ineligible_promos": [
+                    {
+                      "promo_code": "AIR-2ND-50",
+                      "reason": "min_qty"
+                    },
+                    {
+                      "promo_code": "NAM-SHIP0",
+                      "reason": "region"
+                    },
+                    {
+                      "promo_code": "TRADE-IN-AP",
+                      "reason": "requires_owned_sku"
+                    }
+                  ],
+                  "not_applied_exclusive": [],
+                  "freeship": true
+                }
+              }
+            ],
+            "sources": [
+              {
+                "sku": "SKU-AP-X",
+                "name": "[private]",
+                "category": "gia-dung/may-loc-khong-khi",
+                "brand": "AirPure",
+                "list_price_vnd": 4890000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "features": "HEPA H13, cảm biến PM2.5, chế độ ngủ",
+                  "room_area_m2": 25,
+                  "child_safe_lock": false,
+                  "warranty_months": 24
+                },
+                "variants": []
+              }
+            ],
+            "promotions": []
+          },
+          "earlier": []
+        }
+      }
+    },
+    {
+      "call": "SC-041/call_1",
+      "turn_id": 2,
+      "question": "Địa chỉ [address]; thanh toán COD. Hôm nay chưa chốt.",
+      "baseline_question": null,
+      "classification": "not_evaluated",
+      "case_id": null,
+      "gap_id": null,
+      "answer_changed": false,
+      "injected": true,
+      "lesson_trace": {
+        "lessons_loaded": 25,
+        "selected_lessons": [
+          {
+            "id": "2428465dd6aebd918b246b218ea61f077e2a4a03ca7a10bb6c10ca1cd078d1a6",
+            "hash": "a6ef6e56d1a0afa44afce603254ba8380a79684f4316ec30047adabc7375818d",
+            "mechanism": "knowledge_gap"
+          }
+        ],
+        "injected": true,
+        "mode": "memory_only",
+        "response_modified": false,
+        "routing": "selected",
+        "routing_ms": 2329.458,
+        "routing_usage": {
+          "input_tokens": 5102,
+          "output_tokens": 69
+        },
+        "guardrails": {
+          "version": "learning_guardrails_v1",
+          "blocked_lessons": []
+        },
+        "injected_chars": 892,
+        "injected_lesson_count": 1,
+        "wrapper_total_ms": 5640.93
+      },
+      "round0": {
+        "answer": null,
+        "verdict": {
+          "status": null
+        },
+        "latency": null,
+        "evidence": {
+          "current": {},
+          "earlier": []
+        }
+      },
+      "round1": {
+        "answer": "Dạ em đã ghi nhận địa chỉ [address]",
+        "verdict": {
+          "status": null
+        },
+        "latency": {
+          "ttft_ms": 3311,
+          "total_ms": 3311,
+          "ttfa_ms": null,
+          "measurement_mode": "non_streaming",
+          "timing_boundary": "response_ready_before_persistence",
+          "asr_ms": null,
+          "call_brief_ms": null,
+          "response_ready_ms": 3311,
+          "persistence_ms": 0.105,
+          "request_complete_ms": 3311.339,
+          "backend_total_ms": 3311.339,
+          "precomputed_parts": [
+            "persisted_facts"
+          ]
+        },
+        "evidence": {
+          "current": {
+            "turn_id": 2,
+            "agent_response": "Dạ em đã ghi nhận địa chỉ [address]",
+            "tool_calls": [],
+            "sources": [
+              {
+                "sku": "SKU-AP-X",
+                "name": "[private]",
+                "category": "gia-dung/may-loc-khong-khi",
+                "brand": "AirPure",
+                "list_price_vnd": 4890000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "features": "HEPA H13, cảm biến PM2.5, chế độ ngủ",
+                  "room_area_m2": 25,
+                  "child_safe_lock": false,
+                  "warranty_months": 24
+                },
+                "variants": []
+              }
+            ],
+            "promotions": []
+          },
+          "earlier": [
+            {
+              "turn_id": 1,
+              "tool_calls": [
+                {
+                  "name": "catalog.search",
+                  "args": {
+                    "query": "Máy lọc không khí AirPure X",
+                    "on": "2026-10-15"
+                  },
+                  "result": {
+                    "items": [
+                      {
+                        "sku": "SKU-AP-X",
+                        "name": "[private]",
+                        "category": "gia-dung/may-loc-khong-khi",
+                        "brand": "AirPure",
+                        "list_price_vnd": 4890000.0,
+                        "discontinued": false,
+                        "successor_sku": null,
+                        "attributes": {
+                          "features": "HEPA H13, cảm biến PM2.5, chế độ ngủ",
+                          "room_area_m2": 25,
+                          "child_safe_lock": false,
+                          "warranty_months": 24
+                        },
+                        "variants": []
+                      }
+                    ],
+                    "total": 1
+                  }
+                },
+                {
+                  "name": "inventory.check",
+                  "args": {
+                    "sku": "SKU-AP-X",
+                    "on": "2026-10-15"
+                  },
+                  "result": {
+                    "sku": "SKU-AP-X",
+                    "found": true,
+                    "in_stock": true,
+                    "qty": 40,
+                    "discontinued": false
+                  }
+                },
+                {
+                  "name": "pricing.get_quote",
+                  "args": {
+                    "on": "2026-10-15",
+                    "customer_phone": "[private]",
+                    "customer_id": "[private]",
+                    "sku": "SKU-AP-X",
+                    "qty": 1
+                  },
+                  "result": {
+                    "sku": "SKU-AP-X",
+                    "list_price_vnd": 4890000,
+                    "final_price_vnd": 4890000,
+                    "applied_promos": [
+                      {
+                        "promo_code": "COD-0",
+                        "type": "freecod",
+                        "discount_vnd": 0
+                      },
+                      {
+                        "promo_code": "GIFT-FILTER",
+                        "type": "gift",
+                        "discount_vnd": 0,
+                        "gift_sku": "SKU-AP-FLT-X"
+                      }
+                    ],
+                    "expired_promos": [
+                      "AP-SEP"
+                    ],
+                    "ineligible_promos": [
+                      {
+                        "promo_code": "AIR-2ND-50",
+                        "reason": "min_qty"
+                      },
+                      {
+                        "promo_code": "NAM-SHIP0",
+                        "reason": "region"
+                      },
+                      {
+                        "promo_code": "TRADE-IN-AP",
+                        "reason": "requires_owned_sku"
+                      }
+                    ],
+                    "not_applied_exclusive": [],
+                    "freeship": true
+                  }
+                }
+              ],
+              "sources": [
+                {
+                  "sku": "SKU-AP-X",
+                  "name": "[private]",
+                  "category": "gia-dung/may-loc-khong-khi",
+                  "brand": "AirPure",
+                  "list_price_vnd": 4890000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "features": "HEPA H13, cảm biến PM2.5, chế độ ngủ",
+                    "room_area_m2": 25,
+                    "child_safe_lock": false,
+                    "warranty_months": 24
+                  },
+                  "variants": []
+                }
+              ],
+              "promotions": []
+            }
+          ]
+        }
+      }
+    },
+    {
+      "call": "SC-041/call_1",
+      "turn_id": 3,
+      "question": "Em gọi lại lúc 10 giờ ngày 2026-10-17 nhé.",
+      "baseline_question": null,
+      "classification": "not_evaluated",
+      "case_id": null,
+      "gap_id": null,
+      "answer_changed": false,
+      "injected": true,
+      "lesson_trace": {
+        "lessons_loaded": 25,
+        "selected_lessons": [
+          {
+            "id": "2428465dd6aebd918b246b218ea61f077e2a4a03ca7a10bb6c10ca1cd078d1a6",
+            "hash": "a6ef6e56d1a0afa44afce603254ba8380a79684f4316ec30047adabc7375818d",
+            "mechanism": "knowledge_gap"
+          }
+        ],
+        "injected": true,
+        "mode": "memory_only",
+        "response_modified": false,
+        "routing": "selected",
+        "routing_ms": 3145.119,
+        "routing_usage": {
+          "input_tokens": 5212,
+          "output_tokens": 69
+        },
+        "guardrails": {
+          "version": "learning_guardrails_v1",
+          "blocked_lessons": []
+        },
+        "injected_chars": 892,
+        "injected_lesson_count": 1,
+        "wrapper_total_ms": 6540.9
+      },
+      "round0": {
+        "answer": null,
+        "verdict": {
+          "status": null
+        },
+        "latency": null,
+        "evidence": {
+          "current": {},
+          "earlier": []
+        }
+      },
+      "round1": {
+        "answer": "Dạ em đã hẹn lịch gọi lại cho chị [private] vào lúc 10 giờ sáng ngày 17/10/2026 rồi ạ. Em cảm ơn chị và chúc chị một ngày tốt lành, em chào chị nhé!",
+        "verdict": {
+          "status": null
+        },
+        "latency": {
+          "ttft_ms": 3396,
+          "total_ms": 3396,
+          "ttfa_ms": null,
+          "measurement_mode": "non_streaming",
+          "timing_boundary": "response_ready_before_persistence",
+          "asr_ms": null,
+          "call_brief_ms": null,
+          "response_ready_ms": 3396,
+          "persistence_ms": 0.093,
+          "request_complete_ms": 3395.677,
+          "backend_total_ms": 3395.677,
+          "precomputed_parts": [
+            "persisted_facts"
+          ]
+        },
+        "evidence": {
+          "current": {
+            "turn_id": 3,
+            "agent_response": "Dạ em đã hẹn lịch gọi lại cho chị [private] vào lúc 10 giờ sáng ngày 17/10/2026 rồi ạ. Em cảm ơn chị và chúc chị một ngày tốt lành, em chào chị nhé!",
+            "tool_calls": [
+              {
+                "name": "schedule.callback",
+                "args": {
+                  "customer_phone": "[private]",
+                  "callback_at": "2026-10-17T10:00",
+                  "note": "Em gọi lại lúc 10 giờ ngày 2026-10-17 nhé.",
+                  "on": "2026-10-15"
+                },
+                "result": {
+                  "callback_id": "CB-B3B877",
+                  "customer_phone": "[private]",
+                  "callback_at": "2026-10-17T10:00",
+                  "moved_from": null,
+                  "note": "Em gọi lại lúc 10 giờ ngày 2026-10-17 nhé."
+                }
+              }
+            ],
+            "sources": [
+              {
+                "sku": "SKU-AP-X",
+                "name": "[private]",
+                "category": "gia-dung/may-loc-khong-khi",
+                "brand": "AirPure",
+                "list_price_vnd": 4890000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "features": "HEPA H13, cảm biến PM2.5, chế độ ngủ",
+                  "room_area_m2": 25,
+                  "child_safe_lock": false,
+                  "warranty_months": 24
+                },
+                "variants": []
+              }
+            ],
+            "promotions": []
+          },
+          "earlier": [
+            {
+              "turn_id": 1,
+              "tool_calls": [
+                {
+                  "name": "catalog.search",
+                  "args": {
+                    "query": "Máy lọc không khí AirPure X",
+                    "on": "2026-10-15"
+                  },
+                  "result": {
+                    "items": [
+                      {
+                        "sku": "SKU-AP-X",
+                        "name": "[private]",
+                        "category": "gia-dung/may-loc-khong-khi",
+                        "brand": "AirPure",
+                        "list_price_vnd": 4890000.0,
+                        "discontinued": false,
+                        "successor_sku": null,
+                        "attributes": {
+                          "features": "HEPA H13, cảm biến PM2.5, chế độ ngủ",
+                          "room_area_m2": 25,
+                          "child_safe_lock": false,
+                          "warranty_months": 24
+                        },
+                        "variants": []
+                      }
+                    ],
+                    "total": 1
+                  }
+                },
+                {
+                  "name": "inventory.check",
+                  "args": {
+                    "sku": "SKU-AP-X",
+                    "on": "2026-10-15"
+                  },
+                  "result": {
+                    "sku": "SKU-AP-X",
+                    "found": true,
+                    "in_stock": true,
+                    "qty": 40,
+                    "discontinued": false
+                  }
+                },
+                {
+                  "name": "pricing.get_quote",
+                  "args": {
+                    "on": "2026-10-15",
+                    "customer_phone": "[private]",
+                    "customer_id": "[private]",
+                    "sku": "SKU-AP-X",
+                    "qty": 1
+                  },
+                  "result": {
+                    "sku": "SKU-AP-X",
+                    "list_price_vnd": 4890000,
+                    "final_price_vnd": 4890000,
+                    "applied_promos": [
+                      {
+                        "promo_code": "COD-0",
+                        "type": "freecod",
+                        "discount_vnd": 0
+                      },
+                      {
+                        "promo_code": "GIFT-FILTER",
+                        "type": "gift",
+                        "discount_vnd": 0,
+                        "gift_sku": "SKU-AP-FLT-X"
+                      }
+                    ],
+                    "expired_promos": [
+                      "AP-SEP"
+                    ],
+                    "ineligible_promos": [
+                      {
+                        "promo_code": "AIR-2ND-50",
+                        "reason": "min_qty"
+                      },
+                      {
+                        "promo_code": "NAM-SHIP0",
+                        "reason": "region"
+                      },
+                      {
+                        "promo_code": "TRADE-IN-AP",
+                        "reason": "requires_owned_sku"
+                      }
+                    ],
+                    "not_applied_exclusive": [],
+                    "freeship": true
+                  }
+                }
+              ],
+              "sources": [
+                {
+                  "sku": "SKU-AP-X",
+                  "name": "[private]",
+                  "category": "gia-dung/may-loc-khong-khi",
+                  "brand": "AirPure",
+                  "list_price_vnd": 4890000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "features": "HEPA H13, cảm biến PM2.5, chế độ ngủ",
+                    "room_area_m2": 25,
+                    "child_safe_lock": false,
+                    "warranty_months": 24
+                  },
+                  "variants": []
+                }
+              ],
+              "promotions": []
+            },
+            {
+              "turn_id": 2,
+              "tool_calls": [],
+              "sources": [
+                {
+                  "sku": "SKU-AP-X",
+                  "name": "[private]",
+                  "category": "gia-dung/may-loc-khong-khi",
+                  "brand": "AirPure",
+                  "list_price_vnd": 4890000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "features": "HEPA H13, cảm biến PM2.5, chế độ ngủ",
+                    "room_area_m2": 25,
+                    "child_safe_lock": false,
+                    "warranty_months": 24
+                  },
+                  "variants": []
+                }
+              ],
+              "promotions": []
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "lessons": [],
+  "sessions": [
+    {
+      "call": "SC-041/call_1",
+      "round0": {
+        "job": null,
+        "error": null,
+        "learning": null,
+        "observed_input_findings": []
+      },
+      "round1": {
+        "job": {
+          "status": "done",
+          "job_id": "e13071513ea04911db79ced3703848ffc56249af7e212ac33e26f8af5e73566b",
+          "error": null
+        },
+        "error": null,
+        "learning": {
+          "job_id": "e13071513ea04911db79ced3703848ffc56249af7e212ac33e26f8af5e73566b",
+          "gaps": [],
+          "scope": "knowledge_gap_and_reflection_v1",
+          "evaluation_cases": [],
+          "out_of_scope": [],
+          "issue_reviews": [],
+          "detector_error": null,
+          "guardrails": {
+            "version": "learning_guardrails_v1",
+            "input_findings": [],
+            "blocked_lessons": [],
+            "blocked_sources": []
+          },
+          "detection": {
+            "candidate_count": 0,
+            "open_question_count": 0,
+            "processed_count": 0,
+            "skipped_unmatched_question": 0,
+            "skipped_over_limit": 0,
+            "scan": {
+              "turns_available": 3,
+              "turns_scanned": 3,
+              "requests": 3,
+              "errors": [],
+              "schema_retries": 0,
+              "skipped_over_limit": 0
+            },
+            "alignment_rejections": []
+          },
+          "outcome": "no_candidates",
+          "learning_duration_ms": 4183,
+          "learning_usage": {
+            "input_tokens": 4500,
+            "output_tokens": 18
+          }
+        },
+        "observed_input_findings": []
+      }
+    }
+  ],
+  "limitations": [
+    "Verdict kiểm tra được reference vẫn cần người đọc xác nhận ngữ nghĩa và độ đầy đủ.",
+    "Câu trả lời thay đổi hoặc được inject lesson chưa chứng minh lesson gây ra cải thiện.",
+    "Reflection chưa được chấm chất lượng; learning job done/lesson approved không phải điểm chất lượng.",
+    "Guardrail mẫu có giới hạn; không phát hiện mẫu không đồng nghĩa không có prompt injection."
+  ]
+}

@@ -1,0 +1,1139 @@
+{
+  "schema_version": 1,
+  "guardrail_version": "learning_guardrails_v1",
+  "metadata": {
+    "evaluation_population": "single_session_no_baseline"
+  },
+  "warnings": [
+    "Chưa chạy judge: chỉ xem thay đổi câu trả lời và dấu vết lesson, chưa đánh giá cải thiện.",
+    "Không có cặp chấm hợp lệ: chưa thể kết luận cải thiện hay không có regression."
+  ],
+  "summary": {
+    "total_turns": 4,
+    "judged_pair_count": 0,
+    "round0_turns": 0,
+    "round1_turns": 4,
+    "stored_frozen_case_count": 0,
+    "injected_turns": 0,
+    "changed_answers": 0,
+    "counts": {
+      "improved_resolution": 0,
+      "safer_unresolved": 0,
+      "regression": 0,
+      "unchanged": 0,
+      "needs_review": 0,
+      "not_evaluated": 4,
+      "unpaired": 0,
+      "question_changed": 0,
+      "excluded": 0
+    }
+  },
+  "rows": [
+    {
+      "call": "SC-111/call_2",
+      "turn_id": 1,
+      "question": "Tôi là [private], số điện thoại [phone], đã nhắn qua Fanpage. Anh gọi lại chuyện hôm trước. Em nhắc đúng hai món cuối cùng sau khi sửa và tổng tiền nhé.",
+      "baseline_question": null,
+      "classification": "not_evaluated",
+      "case_id": null,
+      "gap_id": null,
+      "answer_changed": false,
+      "injected": false,
+      "lesson_trace": {},
+      "round0": {
+        "answer": null,
+        "verdict": {
+          "status": null
+        },
+        "latency": null,
+        "evidence": {
+          "current": {},
+          "earlier": []
+        }
+      },
+      "round1": {
+        "answer": "Dạ giỏ hàng cuối cùng của mình gồm:\n1. Nồi chiên không dầu Philips 6.2L — 3.990.000 đồng\n2. Quạt đứng DC inverter Panasonic F-409 — 2.450.000 đồng\nTổng tiền theo giá đã kiểm tra hôm nay là 6.440.000 đồng ạ.",
+        "verdict": {
+          "status": null
+        },
+        "latency": {
+          "ttft_ms": 5975,
+          "total_ms": 5975,
+          "ttfa_ms": null,
+          "measurement_mode": "non_streaming",
+          "timing_boundary": "response_ready_before_persistence",
+          "asr_ms": null,
+          "call_brief_ms": 3236,
+          "response_ready_ms": 5975,
+          "persistence_ms": 0.143,
+          "request_complete_ms": 5975.412,
+          "backend_total_ms": 5975.412,
+          "precomputed_parts": [
+            "persisted_facts"
+          ]
+        },
+        "evidence": {
+          "current": {
+            "turn_id": 1,
+            "agent_response": "Dạ giỏ hàng cuối cùng của mình gồm:\n1. Nồi chiên không dầu Philips 6.2L — 3.990.000 đồng\n2. Quạt đứng DC inverter Panasonic F-409 — 2.450.000 đồng\nTổng tiền theo giá đã kiểm tra hôm nay là 6.440.000 đồng ạ.",
+            "tool_calls": [
+              {
+                "name": "pricing.quote_order",
+                "args": {
+                  "on": "2026-10-17",
+                  "customer_phone": "[private]",
+                  "customer_id": "[private]",
+                  "lines": [
+                    {
+                      "sku": "SKU-AF-6L",
+                      "qty": 1
+                    },
+                    {
+                      "sku": "SKU-FAN-DC1",
+                      "qty": 1
+                    }
+                  ]
+                },
+                "result": {
+                  "units": [
+                    {
+                      "unit": 1,
+                      "line": 0,
+                      "sku": "SKU-AF-6L",
+                      "list_price_vnd": 3990000,
+                      "final_price_vnd": 3990000,
+                      "applied_promos": []
+                    },
+                    {
+                      "unit": 2,
+                      "line": 1,
+                      "sku": "SKU-FAN-DC1",
+                      "list_price_vnd": 2450000,
+                      "final_price_vnd": 2450000,
+                      "applied_promos": []
+                    }
+                  ],
+                  "lines": [
+                    {
+                      "sku": "SKU-AF-6L",
+                      "qty": 1,
+                      "unit_prices_vnd": [
+                        3990000
+                      ],
+                      "line_total_vnd": 3990000
+                    },
+                    {
+                      "sku": "SKU-FAN-DC1",
+                      "qty": 1,
+                      "unit_prices_vnd": [
+                        2450000
+                      ],
+                      "line_total_vnd": 2450000
+                    }
+                  ],
+                  "total_vnd": 6440000,
+                  "order_promos": [
+                    {
+                      "promo_code": "COD-0",
+                      "type": "freecod",
+                      "discount_vnd": 0
+                    }
+                  ],
+                  "freeship": true,
+                  "note": "Khi giá trong một dòng khác nhau (VD 2 máy cùng SKU, 1 máy được giảm 50%), tạo đơn bằng mỗi máy một dòng qty=1."
+                }
+              }
+            ],
+            "sources": [],
+            "promotions": []
+          },
+          "earlier": []
+        }
+      }
+    },
+    {
+      "call": "SC-111/call_2",
+      "turn_id": 2,
+      "question": "Tổng 6.440.000 đồng nằm trong ngân sách, mỗi món một chiếc, giao 100 đường Kiểm Thử, TP. Hồ Chí Minh.",
+      "baseline_question": null,
+      "classification": "not_evaluated",
+      "case_id": null,
+      "gap_id": null,
+      "answer_changed": false,
+      "injected": false,
+      "lesson_trace": {},
+      "round0": {
+        "answer": null,
+        "verdict": {
+          "status": null
+        },
+        "latency": null,
+        "evidence": {
+          "current": {},
+          "earlier": []
+        }
+      },
+      "round1": {
+        "answer": "Dạ em đã ghi nhận địa chỉ [address]\n\nĐể em tiến hành chốt đơn cho mình, anh cho em hỏi anh muốn thanh toán theo hình thức nào ạ (ví dụ: chuyển khoản hay thanh toán khi nhận hàng - COD)?",
+        "verdict": {
+          "status": null
+        },
+        "latency": {
+          "ttft_ms": 5171,
+          "total_ms": 5171,
+          "ttfa_ms": null,
+          "measurement_mode": "non_streaming",
+          "timing_boundary": "response_ready_before_persistence",
+          "asr_ms": null,
+          "call_brief_ms": null,
+          "response_ready_ms": 5171,
+          "persistence_ms": 0.267,
+          "request_complete_ms": 5170.853,
+          "backend_total_ms": 5170.853,
+          "precomputed_parts": [
+            "persisted_facts"
+          ]
+        },
+        "evidence": {
+          "current": {
+            "turn_id": 2,
+            "agent_response": "Dạ em đã ghi nhận địa chỉ [address]\n\nĐể em tiến hành chốt đơn cho mình, anh cho em hỏi anh muốn thanh toán theo hình thức nào ạ (ví dụ: chuyển khoản hay thanh toán khi nhận hàng - COD)?",
+            "tool_calls": [
+              {
+                "name": "inventory.check",
+                "args": {
+                  "sku": "SKU-AF-6L",
+                  "on": "2026-10-17"
+                },
+                "result": {
+                  "sku": "SKU-AF-6L",
+                  "found": true,
+                  "in_stock": true,
+                  "qty": 25,
+                  "discontinued": false
+                }
+              },
+              {
+                "name": "inventory.check",
+                "args": {
+                  "sku": "SKU-FAN-DC1",
+                  "on": "2026-10-17"
+                },
+                "result": {
+                  "sku": "SKU-FAN-DC1",
+                  "found": true,
+                  "in_stock": true,
+                  "qty": 30,
+                  "discontinued": false
+                }
+              },
+              {
+                "name": "pricing.quote_order",
+                "args": {
+                  "on": "2026-10-17",
+                  "customer_phone": "[private]",
+                  "customer_id": "[private]",
+                  "address": "[private]",
+                  "lines": [
+                    {
+                      "sku": "SKU-AF-6L",
+                      "qty": 1
+                    },
+                    {
+                      "sku": "SKU-FAN-DC1",
+                      "qty": 1
+                    }
+                  ]
+                },
+                "result": {
+                  "units": [
+                    {
+                      "unit": 1,
+                      "line": 0,
+                      "sku": "SKU-AF-6L",
+                      "list_price_vnd": 3990000,
+                      "final_price_vnd": 3990000,
+                      "applied_promos": []
+                    },
+                    {
+                      "unit": 2,
+                      "line": 1,
+                      "sku": "SKU-FAN-DC1",
+                      "list_price_vnd": 2450000,
+                      "final_price_vnd": 2450000,
+                      "applied_promos": []
+                    }
+                  ],
+                  "lines": [
+                    {
+                      "sku": "SKU-AF-6L",
+                      "qty": 1,
+                      "unit_prices_vnd": [
+                        3990000
+                      ],
+                      "line_total_vnd": 3990000
+                    },
+                    {
+                      "sku": "SKU-FAN-DC1",
+                      "qty": 1,
+                      "unit_prices_vnd": [
+                        2450000
+                      ],
+                      "line_total_vnd": 2450000
+                    }
+                  ],
+                  "total_vnd": 6440000,
+                  "order_promos": [
+                    {
+                      "promo_code": "NAM-SHIP0",
+                      "type": "freeship",
+                      "discount_vnd": 0
+                    },
+                    {
+                      "promo_code": "COD-0",
+                      "type": "freecod",
+                      "discount_vnd": 0
+                    }
+                  ],
+                  "freeship": true,
+                  "note": "Khi giá trong một dòng khác nhau (VD 2 máy cùng SKU, 1 máy được giảm 50%), tạo đơn bằng mỗi máy một dòng qty=1."
+                }
+              }
+            ],
+            "sources": [],
+            "promotions": []
+          },
+          "earlier": [
+            {
+              "turn_id": 1,
+              "tool_calls": [
+                {
+                  "name": "pricing.quote_order",
+                  "args": {
+                    "on": "2026-10-17",
+                    "customer_phone": "[private]",
+                    "customer_id": "[private]",
+                    "lines": [
+                      {
+                        "sku": "SKU-AF-6L",
+                        "qty": 1
+                      },
+                      {
+                        "sku": "SKU-FAN-DC1",
+                        "qty": 1
+                      }
+                    ]
+                  },
+                  "result": {
+                    "units": [
+                      {
+                        "unit": 1,
+                        "line": 0,
+                        "sku": "SKU-AF-6L",
+                        "list_price_vnd": 3990000,
+                        "final_price_vnd": 3990000,
+                        "applied_promos": []
+                      },
+                      {
+                        "unit": 2,
+                        "line": 1,
+                        "sku": "SKU-FAN-DC1",
+                        "list_price_vnd": 2450000,
+                        "final_price_vnd": 2450000,
+                        "applied_promos": []
+                      }
+                    ],
+                    "lines": [
+                      {
+                        "sku": "SKU-AF-6L",
+                        "qty": 1,
+                        "unit_prices_vnd": [
+                          3990000
+                        ],
+                        "line_total_vnd": 3990000
+                      },
+                      {
+                        "sku": "SKU-FAN-DC1",
+                        "qty": 1,
+                        "unit_prices_vnd": [
+                          2450000
+                        ],
+                        "line_total_vnd": 2450000
+                      }
+                    ],
+                    "total_vnd": 6440000,
+                    "order_promos": [
+                      {
+                        "promo_code": "COD-0",
+                        "type": "freecod",
+                        "discount_vnd": 0
+                      }
+                    ],
+                    "freeship": true,
+                    "note": "Khi giá trong một dòng khác nhau (VD 2 máy cùng SKU, 1 máy được giảm 50%), tạo đơn bằng mỗi máy một dòng qty=1."
+                  }
+                }
+              ],
+              "sources": [],
+              "promotions": []
+            }
+          ]
+        }
+      }
+    },
+    {
+      "call": "SC-111/call_2",
+      "turn_id": 3,
+      "question": "Anh chọn thanh toán COD.",
+      "baseline_question": null,
+      "classification": "not_evaluated",
+      "case_id": null,
+      "gap_id": null,
+      "answer_changed": false,
+      "injected": false,
+      "lesson_trace": {},
+      "round0": {
+        "answer": null,
+        "verdict": {
+          "status": null
+        },
+        "latency": null,
+        "evidence": {
+          "current": {},
+          "earlier": []
+        }
+      },
+      "round1": {
+        "answer": "Dạ em đã tạo đơn [order_id] cho giỏ hàng:\n1. Nồi chiên không dầu Philips 6.2L — 3.990.000 đồng\n2. Quạt đứng DC inverter Panasonic F-409 — 2.450.000 đồng\nTổng tiền: 6.440.000 đồng.\nGiao đến [address]\nThanh toán COD.\nDự kiến giao: 2026-10-20.",
+        "verdict": {
+          "status": null
+        },
+        "latency": {
+          "ttft_ms": 5907,
+          "total_ms": 5907,
+          "ttfa_ms": null,
+          "measurement_mode": "non_streaming",
+          "timing_boundary": "response_ready_before_persistence",
+          "asr_ms": null,
+          "call_brief_ms": null,
+          "response_ready_ms": 5907,
+          "persistence_ms": 0.151,
+          "request_complete_ms": 5907.411,
+          "backend_total_ms": 5907.411,
+          "precomputed_parts": [
+            "persisted_facts"
+          ]
+        },
+        "evidence": {
+          "current": {
+            "turn_id": 3,
+            "agent_response": "Dạ em đã tạo đơn [order_id] cho giỏ hàng:\n1. Nồi chiên không dầu Philips 6.2L — 3.990.000 đồng\n2. Quạt đứng DC inverter Panasonic F-409 — 2.450.000 đồng\nTổng tiền: 6.440.000 đồng.\nGiao đến [address]\nThanh toán COD.\nDự kiến giao: 2026-10-20.",
+            "tool_calls": [
+              {
+                "name": "order.create",
+                "args": {
+                  "customer_phone": "[private]",
+                  "customer_id": "[private]",
+                  "address": "[private]",
+                  "idempotency_key": "self-ceb8c23b1e01446fb820e1f37a6a86d7-SC-111-call_2:call_2:create:SKU-AF-6L,SKU-FAN-DC1:cart:941c37eed92e44a4",
+                  "lines": [
+                    {
+                      "sku": "SKU-AF-6L",
+                      "qty": 1,
+                      "price_vnd": 3990000
+                    },
+                    {
+                      "sku": "SKU-FAN-DC1",
+                      "qty": 1,
+                      "price_vnd": 2450000
+                    }
+                  ],
+                  "on": "2026-10-17",
+                  "payment": "COD"
+                },
+                "result": {
+                  "order_id": "[private]",
+                  "status": "created",
+                  "total_vnd": 6440000,
+                  "needs_confirmation_call": true,
+                  "estimated_delivery": "2026-10-20"
+                }
+              }
+            ],
+            "sources": [],
+            "promotions": []
+          },
+          "earlier": [
+            {
+              "turn_id": 1,
+              "tool_calls": [
+                {
+                  "name": "pricing.quote_order",
+                  "args": {
+                    "on": "2026-10-17",
+                    "customer_phone": "[private]",
+                    "customer_id": "[private]",
+                    "lines": [
+                      {
+                        "sku": "SKU-AF-6L",
+                        "qty": 1
+                      },
+                      {
+                        "sku": "SKU-FAN-DC1",
+                        "qty": 1
+                      }
+                    ]
+                  },
+                  "result": {
+                    "units": [
+                      {
+                        "unit": 1,
+                        "line": 0,
+                        "sku": "SKU-AF-6L",
+                        "list_price_vnd": 3990000,
+                        "final_price_vnd": 3990000,
+                        "applied_promos": []
+                      },
+                      {
+                        "unit": 2,
+                        "line": 1,
+                        "sku": "SKU-FAN-DC1",
+                        "list_price_vnd": 2450000,
+                        "final_price_vnd": 2450000,
+                        "applied_promos": []
+                      }
+                    ],
+                    "lines": [
+                      {
+                        "sku": "SKU-AF-6L",
+                        "qty": 1,
+                        "unit_prices_vnd": [
+                          3990000
+                        ],
+                        "line_total_vnd": 3990000
+                      },
+                      {
+                        "sku": "SKU-FAN-DC1",
+                        "qty": 1,
+                        "unit_prices_vnd": [
+                          2450000
+                        ],
+                        "line_total_vnd": 2450000
+                      }
+                    ],
+                    "total_vnd": 6440000,
+                    "order_promos": [
+                      {
+                        "promo_code": "COD-0",
+                        "type": "freecod",
+                        "discount_vnd": 0
+                      }
+                    ],
+                    "freeship": true,
+                    "note": "Khi giá trong một dòng khác nhau (VD 2 máy cùng SKU, 1 máy được giảm 50%), tạo đơn bằng mỗi máy một dòng qty=1."
+                  }
+                }
+              ],
+              "sources": [],
+              "promotions": []
+            },
+            {
+              "turn_id": 2,
+              "tool_calls": [
+                {
+                  "name": "inventory.check",
+                  "args": {
+                    "sku": "SKU-AF-6L",
+                    "on": "2026-10-17"
+                  },
+                  "result": {
+                    "sku": "SKU-AF-6L",
+                    "found": true,
+                    "in_stock": true,
+                    "qty": 25,
+                    "discontinued": false
+                  }
+                },
+                {
+                  "name": "inventory.check",
+                  "args": {
+                    "sku": "SKU-FAN-DC1",
+                    "on": "2026-10-17"
+                  },
+                  "result": {
+                    "sku": "SKU-FAN-DC1",
+                    "found": true,
+                    "in_stock": true,
+                    "qty": 30,
+                    "discontinued": false
+                  }
+                },
+                {
+                  "name": "pricing.quote_order",
+                  "args": {
+                    "on": "2026-10-17",
+                    "customer_phone": "[private]",
+                    "customer_id": "[private]",
+                    "address": "[private]",
+                    "lines": [
+                      {
+                        "sku": "SKU-AF-6L",
+                        "qty": 1
+                      },
+                      {
+                        "sku": "SKU-FAN-DC1",
+                        "qty": 1
+                      }
+                    ]
+                  },
+                  "result": {
+                    "units": [
+                      {
+                        "unit": 1,
+                        "line": 0,
+                        "sku": "SKU-AF-6L",
+                        "list_price_vnd": 3990000,
+                        "final_price_vnd": 3990000,
+                        "applied_promos": []
+                      },
+                      {
+                        "unit": 2,
+                        "line": 1,
+                        "sku": "SKU-FAN-DC1",
+                        "list_price_vnd": 2450000,
+                        "final_price_vnd": 2450000,
+                        "applied_promos": []
+                      }
+                    ],
+                    "lines": [
+                      {
+                        "sku": "SKU-AF-6L",
+                        "qty": 1,
+                        "unit_prices_vnd": [
+                          3990000
+                        ],
+                        "line_total_vnd": 3990000
+                      },
+                      {
+                        "sku": "SKU-FAN-DC1",
+                        "qty": 1,
+                        "unit_prices_vnd": [
+                          2450000
+                        ],
+                        "line_total_vnd": 2450000
+                      }
+                    ],
+                    "total_vnd": 6440000,
+                    "order_promos": [
+                      {
+                        "promo_code": "NAM-SHIP0",
+                        "type": "freeship",
+                        "discount_vnd": 0
+                      },
+                      {
+                        "promo_code": "COD-0",
+                        "type": "freecod",
+                        "discount_vnd": 0
+                      }
+                    ],
+                    "freeship": true,
+                    "note": "Khi giá trong một dòng khác nhau (VD 2 máy cùng SKU, 1 máy được giảm 50%), tạo đơn bằng mỗi máy một dòng qty=1."
+                  }
+                }
+              ],
+              "sources": [],
+              "promotions": []
+            }
+          ]
+        }
+      }
+    },
+    {
+      "call": "SC-111/call_2",
+      "turn_id": 4,
+      "question": "Em lên đơn đúng giỏ cuối cùng, bỏ món Quạt đứng Senko TS16 đã hủy nhé.",
+      "baseline_question": null,
+      "classification": "not_evaluated",
+      "case_id": null,
+      "gap_id": null,
+      "answer_changed": false,
+      "injected": false,
+      "lesson_trace": {},
+      "round0": {
+        "answer": null,
+        "verdict": {
+          "status": null
+        },
+        "latency": null,
+        "evidence": {
+          "current": {},
+          "earlier": []
+        }
+      },
+      "round1": {
+        "answer": "Dạ anh [private], giỏ hàng gồm Nồi chiên không dầu Philips 6.2L và Quạt đứng DC inverter Panasonic F-409 (đã bỏ quạt Senko TS16) của anh đã được lên đơn thành công trước đó rồi ạ. Mã đơn hàng của anh là **[order_id]** với tổng tiền là 6.440.000 đồng, giao về địa chỉ [address]\n\nAnh có cần em hỗ trợ thêm thông tin gì khác về đơn hàng này nữa không ạ?",
+        "verdict": {
+          "status": null
+        },
+        "latency": {
+          "ttft_ms": 4987,
+          "total_ms": 4987,
+          "ttfa_ms": null,
+          "measurement_mode": "non_streaming",
+          "timing_boundary": "response_ready_before_persistence",
+          "asr_ms": null,
+          "call_brief_ms": null,
+          "response_ready_ms": 4987,
+          "persistence_ms": 0.171,
+          "request_complete_ms": 4987.034,
+          "backend_total_ms": 4987.034,
+          "precomputed_parts": [
+            "persisted_facts"
+          ]
+        },
+        "evidence": {
+          "current": {
+            "turn_id": 4,
+            "agent_response": "Dạ anh [private], giỏ hàng gồm Nồi chiên không dầu Philips 6.2L và Quạt đứng DC inverter Panasonic F-409 (đã bỏ quạt Senko TS16) của anh đã được lên đơn thành công trước đó rồi ạ. Mã đơn hàng của anh là **[order_id]** với tổng tiền là 6.440.000 đồng, giao về địa chỉ [address]\n\nAnh có cần em hỗ trợ thêm thông tin gì khác về đơn hàng này nữa không ạ?",
+            "tool_calls": [
+              {
+                "name": "inventory.check",
+                "args": {
+                  "sku": "SKU-AF-6L",
+                  "on": "2026-10-17"
+                },
+                "result": {
+                  "sku": "SKU-AF-6L",
+                  "found": true,
+                  "in_stock": true,
+                  "qty": 25,
+                  "discontinued": false
+                }
+              },
+              {
+                "name": "inventory.check",
+                "args": {
+                  "sku": "SKU-FAN-DC1",
+                  "on": "2026-10-17"
+                },
+                "result": {
+                  "sku": "SKU-FAN-DC1",
+                  "found": true,
+                  "in_stock": true,
+                  "qty": 30,
+                  "discontinued": false
+                }
+              },
+              {
+                "name": "order.status",
+                "args": {
+                  "customer_phone": "[private]"
+                },
+                "result": {
+                  "orders": [
+                    {
+                      "order_id": "[private]",
+                      "customer_id": "[private]",
+                      "customer_phone": "[private]",
+                      "sku": "SKU-AF-6L",
+                      "qty": 2,
+                      "price_vnd": 3990000,
+                      "lines": [
+                        {
+                          "qty": 1,
+                          "sku": "SKU-AF-6L",
+                          "promos": [
+                            "COD-0",
+                            "NAM-SHIP0"
+                          ],
+                          "price_vnd": 3990000
+                        },
+                        {
+                          "qty": 1,
+                          "sku": "SKU-FAN-DC1",
+                          "promos": [
+                            "COD-0",
+                            "NAM-SHIP0"
+                          ],
+                          "price_vnd": 2450000
+                        }
+                      ],
+                      "total_vnd": 6440000,
+                      "promos": [
+                        "COD-0",
+                        "NAM-SHIP0"
+                      ],
+                      "promo_code": null,
+                      "payment": "COD",
+                      "address": "[private]",
+                      "status": "created",
+                      "created_on": "2026-10-17",
+                      "exchange_count": 0
+                    }
+                  ]
+                }
+              },
+              {
+                "name": "pricing.quote_order",
+                "args": {
+                  "on": "2026-10-17",
+                  "customer_phone": "[private]",
+                  "customer_id": "[private]",
+                  "address": "[private]",
+                  "lines": [
+                    {
+                      "sku": "SKU-AF-6L",
+                      "qty": 1
+                    },
+                    {
+                      "sku": "SKU-FAN-DC1",
+                      "qty": 1
+                    }
+                  ]
+                },
+                "result": {
+                  "units": [
+                    {
+                      "unit": 1,
+                      "line": 0,
+                      "sku": "SKU-AF-6L",
+                      "list_price_vnd": 3990000,
+                      "final_price_vnd": 3990000,
+                      "applied_promos": []
+                    },
+                    {
+                      "unit": 2,
+                      "line": 1,
+                      "sku": "SKU-FAN-DC1",
+                      "list_price_vnd": 2450000,
+                      "final_price_vnd": 2450000,
+                      "applied_promos": []
+                    }
+                  ],
+                  "lines": [
+                    {
+                      "sku": "SKU-AF-6L",
+                      "qty": 1,
+                      "unit_prices_vnd": [
+                        3990000
+                      ],
+                      "line_total_vnd": 3990000
+                    },
+                    {
+                      "sku": "SKU-FAN-DC1",
+                      "qty": 1,
+                      "unit_prices_vnd": [
+                        2450000
+                      ],
+                      "line_total_vnd": 2450000
+                    }
+                  ],
+                  "total_vnd": 6440000,
+                  "order_promos": [
+                    {
+                      "promo_code": "NAM-SHIP0",
+                      "type": "freeship",
+                      "discount_vnd": 0
+                    },
+                    {
+                      "promo_code": "COD-0",
+                      "type": "freecod",
+                      "discount_vnd": 0
+                    }
+                  ],
+                  "freeship": true,
+                  "note": "Khi giá trong một dòng khác nhau (VD 2 máy cùng SKU, 1 máy được giảm 50%), tạo đơn bằng mỗi máy một dòng qty=1."
+                }
+              }
+            ],
+            "sources": [],
+            "promotions": []
+          },
+          "earlier": [
+            {
+              "turn_id": 1,
+              "tool_calls": [
+                {
+                  "name": "pricing.quote_order",
+                  "args": {
+                    "on": "2026-10-17",
+                    "customer_phone": "[private]",
+                    "customer_id": "[private]",
+                    "lines": [
+                      {
+                        "sku": "SKU-AF-6L",
+                        "qty": 1
+                      },
+                      {
+                        "sku": "SKU-FAN-DC1",
+                        "qty": 1
+                      }
+                    ]
+                  },
+                  "result": {
+                    "units": [
+                      {
+                        "unit": 1,
+                        "line": 0,
+                        "sku": "SKU-AF-6L",
+                        "list_price_vnd": 3990000,
+                        "final_price_vnd": 3990000,
+                        "applied_promos": []
+                      },
+                      {
+                        "unit": 2,
+                        "line": 1,
+                        "sku": "SKU-FAN-DC1",
+                        "list_price_vnd": 2450000,
+                        "final_price_vnd": 2450000,
+                        "applied_promos": []
+                      }
+                    ],
+                    "lines": [
+                      {
+                        "sku": "SKU-AF-6L",
+                        "qty": 1,
+                        "unit_prices_vnd": [
+                          3990000
+                        ],
+                        "line_total_vnd": 3990000
+                      },
+                      {
+                        "sku": "SKU-FAN-DC1",
+                        "qty": 1,
+                        "unit_prices_vnd": [
+                          2450000
+                        ],
+                        "line_total_vnd": 2450000
+                      }
+                    ],
+                    "total_vnd": 6440000,
+                    "order_promos": [
+                      {
+                        "promo_code": "COD-0",
+                        "type": "freecod",
+                        "discount_vnd": 0
+                      }
+                    ],
+                    "freeship": true,
+                    "note": "Khi giá trong một dòng khác nhau (VD 2 máy cùng SKU, 1 máy được giảm 50%), tạo đơn bằng mỗi máy một dòng qty=1."
+                  }
+                }
+              ],
+              "sources": [],
+              "promotions": []
+            },
+            {
+              "turn_id": 2,
+              "tool_calls": [
+                {
+                  "name": "inventory.check",
+                  "args": {
+                    "sku": "SKU-AF-6L",
+                    "on": "2026-10-17"
+                  },
+                  "result": {
+                    "sku": "SKU-AF-6L",
+                    "found": true,
+                    "in_stock": true,
+                    "qty": 25,
+                    "discontinued": false
+                  }
+                },
+                {
+                  "name": "inventory.check",
+                  "args": {
+                    "sku": "SKU-FAN-DC1",
+                    "on": "2026-10-17"
+                  },
+                  "result": {
+                    "sku": "SKU-FAN-DC1",
+                    "found": true,
+                    "in_stock": true,
+                    "qty": 30,
+                    "discontinued": false
+                  }
+                },
+                {
+                  "name": "pricing.quote_order",
+                  "args": {
+                    "on": "2026-10-17",
+                    "customer_phone": "[private]",
+                    "customer_id": "[private]",
+                    "address": "[private]",
+                    "lines": [
+                      {
+                        "sku": "SKU-AF-6L",
+                        "qty": 1
+                      },
+                      {
+                        "sku": "SKU-FAN-DC1",
+                        "qty": 1
+                      }
+                    ]
+                  },
+                  "result": {
+                    "units": [
+                      {
+                        "unit": 1,
+                        "line": 0,
+                        "sku": "SKU-AF-6L",
+                        "list_price_vnd": 3990000,
+                        "final_price_vnd": 3990000,
+                        "applied_promos": []
+                      },
+                      {
+                        "unit": 2,
+                        "line": 1,
+                        "sku": "SKU-FAN-DC1",
+                        "list_price_vnd": 2450000,
+                        "final_price_vnd": 2450000,
+                        "applied_promos": []
+                      }
+                    ],
+                    "lines": [
+                      {
+                        "sku": "SKU-AF-6L",
+                        "qty": 1,
+                        "unit_prices_vnd": [
+                          3990000
+                        ],
+                        "line_total_vnd": 3990000
+                      },
+                      {
+                        "sku": "SKU-FAN-DC1",
+                        "qty": 1,
+                        "unit_prices_vnd": [
+                          2450000
+                        ],
+                        "line_total_vnd": 2450000
+                      }
+                    ],
+                    "total_vnd": 6440000,
+                    "order_promos": [
+                      {
+                        "promo_code": "NAM-SHIP0",
+                        "type": "freeship",
+                        "discount_vnd": 0
+                      },
+                      {
+                        "promo_code": "COD-0",
+                        "type": "freecod",
+                        "discount_vnd": 0
+                      }
+                    ],
+                    "freeship": true,
+                    "note": "Khi giá trong một dòng khác nhau (VD 2 máy cùng SKU, 1 máy được giảm 50%), tạo đơn bằng mỗi máy một dòng qty=1."
+                  }
+                }
+              ],
+              "sources": [],
+              "promotions": []
+            },
+            {
+              "turn_id": 3,
+              "tool_calls": [
+                {
+                  "name": "order.create",
+                  "args": {
+                    "customer_phone": "[private]",
+                    "customer_id": "[private]",
+                    "address": "[private]",
+                    "idempotency_key": "self-ceb8c23b1e01446fb820e1f37a6a86d7-SC-111-call_2:call_2:create:SKU-AF-6L,SKU-FAN-DC1:cart:941c37eed92e44a4",
+                    "lines": [
+                      {
+                        "sku": "SKU-AF-6L",
+                        "qty": 1,
+                        "price_vnd": 3990000
+                      },
+                      {
+                        "sku": "SKU-FAN-DC1",
+                        "qty": 1,
+                        "price_vnd": 2450000
+                      }
+                    ],
+                    "on": "2026-10-17",
+                    "payment": "COD"
+                  },
+                  "result": {
+                    "order_id": "[private]",
+                    "status": "created",
+                    "total_vnd": 6440000,
+                    "needs_confirmation_call": true,
+                    "estimated_delivery": "2026-10-20"
+                  }
+                }
+              ],
+              "sources": [],
+              "promotions": []
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "lessons": [],
+  "sessions": [
+    {
+      "call": "SC-111/call_2",
+      "round0": {
+        "job": null,
+        "error": null,
+        "learning": null,
+        "observed_input_findings": []
+      },
+      "round1": {
+        "job": {
+          "status": "done",
+          "job_id": "1b6230cabd2729cf76a3f832930e74dd52ee23fc7af25c9f3c6d71b6752e00a7",
+          "error": null
+        },
+        "error": null,
+        "learning": {
+          "job_id": "1b6230cabd2729cf76a3f832930e74dd52ee23fc7af25c9f3c6d71b6752e00a7",
+          "gaps": [],
+          "scope": "knowledge_gap_and_reflection_v1",
+          "evaluation_cases": [],
+          "out_of_scope": [],
+          "issue_reviews": [],
+          "detector_error": null,
+          "guardrails": {
+            "version": "learning_guardrails_v1",
+            "input_findings": [],
+            "blocked_lessons": [],
+            "blocked_sources": []
+          },
+          "detection": {
+            "candidate_count": 0,
+            "open_question_count": 0,
+            "processed_count": 0,
+            "skipped_unmatched_question": 0,
+            "skipped_over_limit": 0,
+            "scan": {
+              "turns_available": 4,
+              "turns_scanned": 4,
+              "requests": 4,
+              "errors": [],
+              "schema_retries": 0,
+              "skipped_over_limit": 0
+            },
+            "alignment_rejections": []
+          },
+          "outcome": "no_candidates",
+          "learning_duration_ms": 7219,
+          "learning_usage": {
+            "input_tokens": 8133,
+            "output_tokens": 9
+          }
+        },
+        "observed_input_findings": []
+      }
+    }
+  ],
+  "limitations": [
+    "Verdict kiểm tra được reference vẫn cần người đọc xác nhận ngữ nghĩa và độ đầy đủ.",
+    "Câu trả lời thay đổi hoặc được inject lesson chưa chứng minh lesson gây ra cải thiện.",
+    "Reflection chưa được chấm chất lượng; learning job done/lesson approved không phải điểm chất lượng.",
+    "Guardrail mẫu có giới hạn; không phát hiện mẫu không đồng nghĩa không có prompt injection."
+  ]
+}

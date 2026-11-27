@@ -1,0 +1,200 @@
+{
+  "id": "5d9a5c1ca7b8e464454f06379b9dad150d6a78c058b5a12ec955257a39dec176",
+  "status": "done",
+  "attempts": 1,
+  "snapshot": {
+    "session": "b1b3a39e3b60b1d1f4a3b0319681ad6c8ff96731c0ef02e45bf4136da4f326a5",
+    "revision": 3,
+    "messages": [
+      {
+        "message_id": 0,
+        "role": "customer",
+        "content": "Chị gọi lại chuyện hôm trước. Đơn OD600001 đã nhận hôm qua; sản phẩm hơi chật."
+      },
+      {
+        "message_id": 1,
+        "role": "agent",
+        "content": "Em chào chị [private] ạ. Em đã kiểm tra mã đơn OD600001 trên hệ thống nhưng hiện tại chưa thấy thông tin chi tiết của đơn hàng này. \n\nChị cho em hỏi sản phẩm chị nhận được là mẫu nào và chị đang muốn đổi sang size bao nhiêu để em hỗ trợ kiểm tra quy định đổi trả giúp chị nhé?"
+      },
+      {
+        "message_id": 2,
+        "role": "customer",
+        "content": "Chị muốn đổi từ size 38 sang 39, giữ màu cũ. Đây là lần đổi đầu tiên; hàng còn nguyên tem, hộp và chưa sử dụng."
+      },
+      {
+        "message_id": 3,
+        "role": "agent",
+        "content": "Em đã kiểm tra đơn hàng [order_id] của chị [private]. Chị xác nhận giúp em xem mình có muốn chốt cập nhật đổi sang size 39 cho đơn [order_id] này luôn không ạ? Em cần kiểm tra lại tồn kho trước khi xác nhận cho mình ạ."
+      },
+      {
+        "message_id": 4,
+        "role": "customer",
+        "content": "Phí đổi size lần đầu thế nào? Chị đồng ý làm thủ tục đổi, lấy hàng tại địa chỉ [address]"
+      },
+      {
+        "message_id": 5,
+        "role": "agent",
+        "content": "Dạ chị [private], theo chính sách của bên em, việc đổi size lần đầu tiên cho cùng một đơn hàng là hoàn toàn **miễn phí** và shop sẽ chịu phí vận chuyển 2 chiều ạ. Đơn vị vận chuyển sẽ sớm liên hệ để thu hồi sản phẩm cũ và giao size mới cho chị nhé! Em cần kiểm tra lại tồn kho trước khi xác nhận cho mình ạ."
+      }
+    ],
+    "open_questions": [],
+    "feedback": [],
+    "evidence_coverage": "per_turn_evidence",
+    "workflow_version": 4,
+    "turn_evidence": [
+      {
+        "turn_id": 1,
+        "agent_response": "Em chào chị [private] ạ. Em đã kiểm tra mã đơn OD600001 trên hệ thống nhưng hiện tại chưa thấy thông tin chi tiết của đơn hàng này. \n\nChị cho em hỏi sản phẩm chị nhận được là mẫu nào và chị đang muốn đổi sang size bao nhiêu để em hỗ trợ kiểm tra quy định đổi trả giúp chị nhé?",
+        "tool_calls": [
+          {
+            "name": "order.status",
+            "args": {
+              "order_id": "[private]"
+            },
+            "result": {
+              "orders": []
+            }
+          }
+        ],
+        "sources": [],
+        "promotions": []
+      },
+      {
+        "turn_id": 2,
+        "agent_response": "Em đã kiểm tra đơn hàng [order_id] của chị [private]. Chị xác nhận giúp em xem mình có muốn chốt cập nhật đổi sang size 39 cho đơn [order_id] này luôn không ạ? Em cần kiểm tra lại tồn kho trước khi xác nhận cho mình ạ.",
+        "tool_calls": [
+          {
+            "name": "catalog.search",
+            "args": {
+              "query": "Chị muốn đổi từ size 38 sang 39, giữ màu cũ. Đây là lần đổi đầu tiên; hàng còn nguyên tem, hộp và chưa sử dụng.",
+              "on": "2026-10-06"
+            },
+            "result": {
+              "items": [],
+              "total": 0
+            }
+          },
+          {
+            "name": "order.status",
+            "args": {
+              "order_id": "[private]"
+            },
+            "result": {
+              "orders": [
+                {
+                  "order_id": "[private]",
+                  "customer_id": "[private]",
+                  "customer_phone": "[private]",
+                  "sku": "SKU-SN-CAS-38-TRANG",
+                  "qty": 1,
+                  "price_vnd": 890000,
+                  "lines": [
+                    {
+                      "qty": 1,
+                      "sku": "SKU-SN-CAS-38-TRANG",
+                      "promos": [
+                        "COD-0"
+                      ],
+                      "price_vnd": 890000
+                    }
+                  ],
+                  "total_vnd": 890000,
+                  "promos": [
+                    "COD-0"
+                  ],
+                  "promo_code": "COD-0",
+                  "payment": "COD",
+                  "address": "[private]",
+                  "status": "created",
+                  "created_on": "2026-10-02",
+                  "exchange_count": 0
+                }
+              ]
+            }
+          },
+          {
+            "name": "inventory.check",
+            "args": {
+              "sku": "SKU-SN-CAS-39-TRANG",
+              "on": "2026-10-06"
+            },
+            "result": {
+              "sku": "SKU-SN-CAS-39-TRANG",
+              "found": true,
+              "in_stock": true,
+              "qty": 5,
+              "discontinued": false
+            }
+          }
+        ],
+        "sources": [],
+        "promotions": []
+      },
+      {
+        "turn_id": 3,
+        "agent_response": "Dạ chị [private], theo chính sách của bên em, việc đổi size lần đầu tiên cho cùng một đơn hàng là hoàn toàn **miễn phí** và shop sẽ chịu phí vận chuyển 2 chiều ạ. Đơn vị vận chuyển sẽ sớm liên hệ để thu hồi sản phẩm cũ và giao size mới cho chị nhé! Em cần kiểm tra lại tồn kho trước khi xác nhận cho mình ạ.",
+        "tool_calls": [
+          {
+            "name": "policy.search",
+            "args": {
+              "query": "Phí đổi size lần đầu thế nào? Chị đồng ý làm thủ tục đổi, lấy hàng tại địa chỉ [address]",
+              "k": 3,
+              "product_sku": "SKU-SN-CAS-38-TRANG",
+              "as_of": "2026-10-06"
+            },
+            "result": {
+              "query": "Phí đổi size lần đầu thế nào? Chị đồng ý làm thủ tục đổi, lấy hàng tại địa chỉ [address]",
+              "as_of": "2026-10-06",
+              "product_sku": "SKU-SN-CAS-38-TRANG",
+              "count": 3,
+              "chunks": [
+                {
+                  "chunk_id": "DT-03",
+                  "content": "Đổi size hoặc màu lần **đầu tiên** cho cùng một đơn hàng: **miễn phí**, shop chịu phí vận chuyển hai chiều. Từ lần đổi thứ hai trở đi: khách chịu phí vận chuyển 30.000đ/chiều. Điều kiện: size/màu mới còn hàng; nếu hết hàng, khách được chọn sản phẩm khác cùng giá hoặc hoàn tiền.",
+                  "source_file": "chinh-sach-doi-tra.md",
+                  "section": "[DT-03] Đổi size / màu (thời trang)"
+                },
+                {
+                  "chunk_id": "VC-01",
+                  "content": "| Khu vực | Thời gian (ngày làm việc) | Ghi chú | |---|---|---| | Nội thành Hà Nội, TP.HCM, Đà Nẵng | 1–2 | Đặt sau 16h tính từ ngày kế tiếp | | Ngoại thành 3 thành phố trên; Bình Dương, Đồng Nai, Hải Phòng, Cần Thơ | 2–3 | | | Tỉnh thành khác | 2–4 | Tây Nguyên, Tây Bắc: 3–5 | | Vùng sâu, hải đảo (Phú Quốc, Côn Đảo, Lý Sơn…) | 5–7 | Không nhận hàng cồng kềnh | \"Ngày làm việc\" không gồm Chủ nhật, ngày lễ và ngày nghỉ nội bộ (xem `thong-bao-lich-nghi.md`).",
+                  "source_file": "chinh-sach-van-chuyen-thanh-toan.md",
+                  "section": "[VC-01] Thời gian giao hàng"
+                },
+                {
+                  "chunk_id": "VC-07",
+                  "content": "Đơn vị vận chuyển giao tối đa 3 lần. Sau 3 lần không thành công, hàng hoàn về kho; khách muốn giao lại phải đặt đơn mới.",
+                  "source_file": "chinh-sach-van-chuyen-thanh-toan.md",
+                  "section": "[VC-07] Giao hàng thất bại"
+                }
+              ]
+            }
+          },
+          {
+            "name": "order.update",
+            "args": {
+              "order_id": "[private]",
+              "action": "exchange_size",
+              "new_variant_sku": "SKU-SN-CAS-39-TRANG",
+              "reason": "Phí đổi size lần đầu thế nào? Chị đồng ý làm thủ tục đổi, lấy hàng tại địa chỉ [address]",
+              "on": "2026-10-06"
+            },
+            "result": {
+              "order_id": "[private]",
+              "action": "exchange_size",
+              "new_variant_sku": "SKU-SN-CAS-39-TRANG",
+              "fee_vnd": 0,
+              "price_diff_vnd": 0,
+              "refund_vnd": 0,
+              "extra_payment_vnd": 0,
+              "refund_days": "3-5 ngày làm việc",
+              "status": "pickup_scheduled"
+            }
+          }
+        ],
+        "sources": [],
+        "promotions": []
+      }
+    ]
+  },
+  "error": null
+}

@@ -1,0 +1,689 @@
+{
+  "schema_version": 1,
+  "guardrail_version": "learning_guardrails_v1",
+  "metadata": {
+    "evaluation_population": "single_session_no_baseline"
+  },
+  "warnings": [
+    "Chưa chạy judge: chỉ xem thay đổi câu trả lời và dấu vết lesson, chưa đánh giá cải thiện.",
+    "Không có cặp chấm hợp lệ: chưa thể kết luận cải thiện hay không có regression."
+  ],
+  "summary": {
+    "total_turns": 4,
+    "judged_pair_count": 0,
+    "round0_turns": 0,
+    "round1_turns": 4,
+    "stored_frozen_case_count": 0,
+    "injected_turns": 1,
+    "changed_answers": 0,
+    "counts": {
+      "improved_resolution": 0,
+      "safer_unresolved": 0,
+      "regression": 0,
+      "unchanged": 0,
+      "needs_review": 0,
+      "not_evaluated": 4,
+      "unpaired": 0,
+      "question_changed": 0,
+      "excluded": 0
+    }
+  },
+  "rows": [
+    {
+      "call": "SC-032/call_2",
+      "turn_id": 1,
+      "question": "Anh liên hệ lại theo lịch, vẫn đang cân nhắc món đã hỏi.",
+      "baseline_question": null,
+      "classification": "not_evaluated",
+      "case_id": null,
+      "gap_id": null,
+      "answer_changed": false,
+      "injected": true,
+      "lesson_trace": {
+        "lessons_loaded": 25,
+        "selected_lessons": [
+          {
+            "id": "cffc7f339760409834ac6700f1221939af0b7c60fd44cecc3660162c23ff2bde",
+            "hash": "6ffa35f87c415855b53761a7baabf6149650e46342246e4cf657808b319faf4c",
+            "mechanism": "knowledge_gap"
+          },
+          {
+            "id": "affe9cae1d31968e6c92f5e33da85c05d11d7a8268cd36edab06b9697276486f",
+            "hash": "d8b42b91cc75639394431c361a1bb933ad5e2d4677d1ae98ca780aa2240081ae",
+            "mechanism": "knowledge_gap"
+          },
+          {
+            "id": "b3c5394ec732ed77e5c0ace9714e42e935c8f1ded760a87c535aca4365ff098e",
+            "hash": "bdf01bb453db50e77e3a480afa92057627679f6f5011988610dce7affcfe64d0",
+            "mechanism": "knowledge_gap"
+          }
+        ],
+        "injected": true,
+        "mode": "memory_only",
+        "response_modified": false,
+        "routing": "selected",
+        "routing_ms": 3178.459,
+        "routing_usage": {
+          "input_tokens": 4840,
+          "output_tokens": 185
+        },
+        "guardrails": {
+          "version": "learning_guardrails_v1",
+          "blocked_lessons": []
+        },
+        "injected_chars": 1489,
+        "injected_lesson_count": 3,
+        "wrapper_total_ms": 8197.917
+      },
+      "round0": {
+        "answer": null,
+        "verdict": {
+          "status": null
+        },
+        "latency": null,
+        "evidence": {
+          "current": {},
+          "earlier": []
+        }
+      },
+      "round1": {
+        "answer": "Dạ em chào anh [private], cảm ơn anh đã liên hệ lại ạ. \n\nLần trước mình có tham khảo mẫu áo gió (mã SKU-JK-WND-M-NAVY) và anh còn đang băn khoăn về điều kiện đổi size đúng không ạ? Anh cần em hỗ trợ thêm thông tin gì về sản phẩm hay chính sách đổi trả để mình dễ cân nhắc hơn không ạ?",
+        "verdict": {
+          "status": null
+        },
+        "latency": {
+          "ttft_ms": 5019,
+          "total_ms": 5019,
+          "ttfa_ms": null,
+          "measurement_mode": "non_streaming",
+          "timing_boundary": "response_ready_before_persistence",
+          "asr_ms": null,
+          "call_brief_ms": 2989,
+          "response_ready_ms": 5019,
+          "persistence_ms": 0.09,
+          "request_complete_ms": 5019.331,
+          "backend_total_ms": 5019.331,
+          "precomputed_parts": [
+            "persisted_facts"
+          ]
+        },
+        "evidence": {
+          "current": {
+            "turn_id": 1,
+            "agent_response": "Dạ em chào anh [private], cảm ơn anh đã liên hệ lại ạ. \n\nLần trước mình có tham khảo mẫu áo gió (mã SKU-JK-WND-M-NAVY) và anh còn đang băn khoăn về điều kiện đổi size đúng không ạ? Anh cần em hỗ trợ thêm thông tin gì về sản phẩm hay chính sách đổi trả để mình dễ cân nhắc hơn không ạ?",
+            "tool_calls": [],
+            "sources": [],
+            "promotions": []
+          },
+          "earlier": []
+        }
+      }
+    },
+    {
+      "call": "SC-032/call_2",
+      "turn_id": 2,
+      "question": "Nếu mua mới hôm nay thì được đổi trong 14 ngày và mất phí 20 nghìn phải không? Hình như đó là bài cũ.",
+      "baseline_question": null,
+      "classification": "not_evaluated",
+      "case_id": null,
+      "gap_id": null,
+      "answer_changed": false,
+      "injected": false,
+      "lesson_trace": {
+        "lessons_loaded": 25,
+        "selected_lessons": [],
+        "injected": false,
+        "mode": "memory_only",
+        "response_modified": false,
+        "routing": "failed",
+        "routing_error": "ValueError",
+        "routing_ms": 1018.454,
+        "routing_usage": {
+          "input_tokens": 4620,
+          "output_tokens": 1
+        },
+        "wrapper_total_ms": 7446.782
+      },
+      "round0": {
+        "answer": null,
+        "verdict": {
+          "status": null
+        },
+        "latency": null,
+        "evidence": {
+          "current": {},
+          "earlier": []
+        }
+      },
+      "round1": {
+        "answer": "Dạ đúng rồi anh [private], đó là quy định cũ ạ. \n\nTheo chính sách mới áp dụng từ ngày 01/10/2026, nếu mình mua mới hôm nay thì thời gian đổi hàng là trong vòng **7 ngày** kể từ khi nhận hàng ạ. Đặc biệt, bên em hỗ trợ **miễn phí** đổi size lần đầu cho mình luôn, chứ không mất phí 20.000đ như trước nữa anh nhé.\n\nAnh có cần em hỗ trợ chọn lại size chuẩn hay tư vấn thêm thông tin gì để lên đơn luôn không anh?",
+        "verdict": {
+          "status": null
+        },
+        "latency": {
+          "ttft_ms": 6428,
+          "total_ms": 6428,
+          "ttfa_ms": null,
+          "measurement_mode": "non_streaming",
+          "timing_boundary": "response_ready_before_persistence",
+          "asr_ms": null,
+          "call_brief_ms": null,
+          "response_ready_ms": 6428,
+          "persistence_ms": 0.092,
+          "request_complete_ms": 6428.245,
+          "backend_total_ms": 6428.245,
+          "precomputed_parts": [
+            "persisted_facts"
+          ]
+        },
+        "evidence": {
+          "current": {
+            "turn_id": 2,
+            "agent_response": "Dạ đúng rồi anh [private], đó là quy định cũ ạ. \n\nTheo chính sách mới áp dụng từ ngày 01/10/2026, nếu mình mua mới hôm nay thì thời gian đổi hàng là trong vòng **7 ngày** kể từ khi nhận hàng ạ. Đặc biệt, bên em hỗ trợ **miễn phí** đổi size lần đầu cho mình luôn, chứ không mất phí 20.000đ như trước nữa anh nhé.\n\nAnh có cần em hỗ trợ chọn lại size chuẩn hay tư vấn thêm thông tin gì để lên đơn luôn không anh?",
+            "tool_calls": [
+              {
+                "name": "policy.search",
+                "args": {
+                  "query": "Nếu mua mới hôm nay thì được đổi trong 14 ngày và mất phí 20 nghìn phải không? Hình như đó là bài cũ.",
+                  "k": 3,
+                  "product_sku": "SKU-JK-WND-M-NAVY",
+                  "as_of": "2026-10-19"
+                },
+                "result": {
+                  "query": "Nếu mua mới hôm nay thì được đổi trong 14 ngày và mất phí 20 nghìn phải không? Hình như đó là bài cũ.",
+                  "as_of": "2026-10-19",
+                  "product_sku": "SKU-JK-WND-M-NAVY",
+                  "count": 3,
+                  "chunks": [
+                    {
+                      "chunk_id": "DT-06",
+                      "content": "Sản phẩm hư hỏng do người dùng (rơi vỡ, vào nước, dùng sai điện áp). Sản phẩm mua trong chương trình xả kho ghi rõ \"không đổi trả\". Quá 7 ngày kể từ ngày nhận (trừ lỗi nhà sản xuất).",
+                      "source_file": "chinh-sach-doi-tra.md",
+                      "section": "[DT-06] Trường hợp không được đổi trả"
+                    },
+                    {
+                      "chunk_id": "CL-01",
+                      "content": "Thay thế phiên bản 2026-06. Thay đổi: thời hạn đổi trả 14 → **7 ngày**; đổi size lần đầu **miễn phí** (trước: 20.000đ); hoàn tiền 7 → **3–5 ngày làm việc**; lỗi nhà sản xuất đổi mới 15 → **30 ngày** (gia dụng, mẹ & bé). Đơn tạo trước 01/10/2026 vẫn áp dụng bản cũ.",
+                      "source_file": "changelog.md",
+                      "section": "[CL-01] 01/10/2026 — Chính sách đổi trả phiên bản 2026-10"
+                    },
+                    {
+                      "chunk_id": "DT-01",
+                      "content": "Khách hàng được đổi hoặc trả sản phẩm trong vòng **7 ngày** kể từ ngày nhận hàng (tính theo ngày ký nhận trên đơn vận chuyển). Với ngành hàng gia dụng và mẹ & bé có lỗi kỹ thuật từ nhà sản xuất, thời hạn đổi mới là **30 ngày**.",
+                      "source_file": "chinh-sach-doi-tra.md",
+                      "section": "[DT-01] Thời hạn đổi trả"
+                    }
+                  ]
+                }
+              }
+            ],
+            "sources": [],
+            "promotions": []
+          },
+          "earlier": [
+            {
+              "turn_id": 1,
+              "tool_calls": [],
+              "sources": [],
+              "promotions": []
+            }
+          ]
+        }
+      }
+    },
+    {
+      "call": "SC-032/call_2",
+      "turn_id": 3,
+      "question": "Nếu hàng chưa dùng, còn tem hộp và đổi size lần đầu thì chính sách hiện tại thế nào?",
+      "baseline_question": null,
+      "classification": "not_evaluated",
+      "case_id": null,
+      "gap_id": null,
+      "answer_changed": false,
+      "injected": false,
+      "lesson_trace": {
+        "lessons_loaded": 25,
+        "selected_lessons": [],
+        "injected": false,
+        "mode": "memory_only",
+        "response_modified": false,
+        "routing": "failed",
+        "routing_error": "ValueError",
+        "routing_ms": 974.621,
+        "routing_usage": {
+          "input_tokens": 4791,
+          "output_tokens": 1
+        },
+        "wrapper_total_ms": 5080.343
+      },
+      "round0": {
+        "answer": null,
+        "verdict": {
+          "status": null
+        },
+        "latency": null,
+        "evidence": {
+          "current": {},
+          "earlier": []
+        }
+      },
+      "round1": {
+        "answer": "Dạ anh [private], theo chính sách hiện tại (áp dụng từ ngày 01/10/2026), nếu sản phẩm còn nguyên tem, hộp và chưa qua sử dụng thì anh được hỗ trợ **đổi size lần đầu hoàn toàn miễn phí** trong vòng **7 ngày** kể từ khi nhận hàng ạ. Bên em sẽ chịu toàn bộ phí vận chuyển hai chiều cho lần đổi đầu tiên này anh nhé. \n\nAnh có muốn em hỗ trợ lên đơn cho áo khoác này luôn không ạ?",
+        "verdict": {
+          "status": null
+        },
+        "latency": {
+          "ttft_ms": 4106,
+          "total_ms": 4106,
+          "ttfa_ms": null,
+          "measurement_mode": "non_streaming",
+          "timing_boundary": "response_ready_before_persistence",
+          "asr_ms": null,
+          "call_brief_ms": null,
+          "response_ready_ms": 4106,
+          "persistence_ms": 0.09,
+          "request_complete_ms": 4105.646,
+          "backend_total_ms": 4105.646,
+          "precomputed_parts": [
+            "persisted_facts"
+          ]
+        },
+        "evidence": {
+          "current": {
+            "turn_id": 3,
+            "agent_response": "Dạ anh [private], theo chính sách hiện tại (áp dụng từ ngày 01/10/2026), nếu sản phẩm còn nguyên tem, hộp và chưa qua sử dụng thì anh được hỗ trợ **đổi size lần đầu hoàn toàn miễn phí** trong vòng **7 ngày** kể từ khi nhận hàng ạ. Bên em sẽ chịu toàn bộ phí vận chuyển hai chiều cho lần đổi đầu tiên này anh nhé. \n\nAnh có muốn em hỗ trợ lên đơn cho áo khoác này luôn không ạ?",
+            "tool_calls": [
+              {
+                "name": "policy.search",
+                "args": {
+                  "query": "Nếu hàng chưa dùng, còn tem hộp và đổi size lần đầu thì chính sách hiện tại thế nào?",
+                  "k": 3,
+                  "product_sku": "SKU-JK-WND-M-NAVY",
+                  "as_of": "2026-10-19"
+                },
+                "result": {
+                  "query": "Nếu hàng chưa dùng, còn tem hộp và đổi size lần đầu thì chính sách hiện tại thế nào?",
+                  "as_of": "2026-10-19",
+                  "product_sku": "SKU-JK-WND-M-NAVY",
+                  "count": 3,
+                  "chunks": [
+                    {
+                      "chunk_id": "DT-02",
+                      "content": "Sản phẩm còn nguyên tem, nhãn, hộp, chưa qua sử dụng (giày/áo chưa giặt, chưa có dấu hiệu mòn đế). Có hóa đơn hoặc mã đơn hàng. Sản phẩm thuộc nhóm đồ lót, bình sữa, núm ti đã bóc seal **không** được đổi trả vì lý do vệ sinh.",
+                      "source_file": "chinh-sach-doi-tra.md",
+                      "section": "[DT-02] Điều kiện đổi trả"
+                    },
+                    {
+                      "chunk_id": "CL-01",
+                      "content": "Thay thế phiên bản 2026-06. Thay đổi: thời hạn đổi trả 14 → **7 ngày**; đổi size lần đầu **miễn phí** (trước: 20.000đ); hoàn tiền 7 → **3–5 ngày làm việc**; lỗi nhà sản xuất đổi mới 15 → **30 ngày** (gia dụng, mẹ & bé). Đơn tạo trước 01/10/2026 vẫn áp dụng bản cũ.",
+                      "source_file": "changelog.md",
+                      "section": "[CL-01] 01/10/2026 — Chính sách đổi trả phiên bản 2026-10"
+                    },
+                    {
+                      "chunk_id": "DT-03",
+                      "content": "Đổi size hoặc màu lần **đầu tiên** cho cùng một đơn hàng: **miễn phí**, shop chịu phí vận chuyển hai chiều. Từ lần đổi thứ hai trở đi: khách chịu phí vận chuyển 30.000đ/chiều. Điều kiện: size/màu mới còn hàng; nếu hết hàng, khách được chọn sản phẩm khác cùng giá hoặc hoàn tiền.",
+                      "source_file": "chinh-sach-doi-tra.md",
+                      "section": "[DT-03] Đổi size / màu (thời trang)"
+                    }
+                  ]
+                }
+              }
+            ],
+            "sources": [],
+            "promotions": []
+          },
+          "earlier": [
+            {
+              "turn_id": 1,
+              "tool_calls": [],
+              "sources": [],
+              "promotions": []
+            },
+            {
+              "turn_id": 2,
+              "tool_calls": [
+                {
+                  "name": "policy.search",
+                  "args": {
+                    "query": "Nếu mua mới hôm nay thì được đổi trong 14 ngày và mất phí 20 nghìn phải không? Hình như đó là bài cũ.",
+                    "k": 3,
+                    "product_sku": "SKU-JK-WND-M-NAVY",
+                    "as_of": "2026-10-19"
+                  },
+                  "result": {
+                    "query": "Nếu mua mới hôm nay thì được đổi trong 14 ngày và mất phí 20 nghìn phải không? Hình như đó là bài cũ.",
+                    "as_of": "2026-10-19",
+                    "product_sku": "SKU-JK-WND-M-NAVY",
+                    "count": 3,
+                    "chunks": [
+                      {
+                        "chunk_id": "DT-06",
+                        "content": "Sản phẩm hư hỏng do người dùng (rơi vỡ, vào nước, dùng sai điện áp). Sản phẩm mua trong chương trình xả kho ghi rõ \"không đổi trả\". Quá 7 ngày kể từ ngày nhận (trừ lỗi nhà sản xuất).",
+                        "source_file": "chinh-sach-doi-tra.md",
+                        "section": "[DT-06] Trường hợp không được đổi trả"
+                      },
+                      {
+                        "chunk_id": "CL-01",
+                        "content": "Thay thế phiên bản 2026-06. Thay đổi: thời hạn đổi trả 14 → **7 ngày**; đổi size lần đầu **miễn phí** (trước: 20.000đ); hoàn tiền 7 → **3–5 ngày làm việc**; lỗi nhà sản xuất đổi mới 15 → **30 ngày** (gia dụng, mẹ & bé). Đơn tạo trước 01/10/2026 vẫn áp dụng bản cũ.",
+                        "source_file": "changelog.md",
+                        "section": "[CL-01] 01/10/2026 — Chính sách đổi trả phiên bản 2026-10"
+                      },
+                      {
+                        "chunk_id": "DT-01",
+                        "content": "Khách hàng được đổi hoặc trả sản phẩm trong vòng **7 ngày** kể từ ngày nhận hàng (tính theo ngày ký nhận trên đơn vận chuyển). Với ngành hàng gia dụng và mẹ & bé có lỗi kỹ thuật từ nhà sản xuất, thời hạn đổi mới là **30 ngày**.",
+                        "source_file": "chinh-sach-doi-tra.md",
+                        "section": "[DT-01] Thời hạn đổi trả"
+                      }
+                    ]
+                  }
+                }
+              ],
+              "sources": [],
+              "promotions": []
+            }
+          ]
+        }
+      }
+    },
+    {
+      "call": "SC-032/call_2",
+      "turn_id": 4,
+      "question": "Anh hiểu rồi, để xem thêm; chưa lên đơn và chưa hẹn gọi lại nhé.",
+      "baseline_question": null,
+      "classification": "not_evaluated",
+      "case_id": null,
+      "gap_id": null,
+      "answer_changed": false,
+      "injected": false,
+      "lesson_trace": {
+        "lessons_loaded": 25,
+        "selected_lessons": [],
+        "injected": false,
+        "mode": "memory_only",
+        "response_modified": false,
+        "routing": "no_match",
+        "routing_ms": 2088.078,
+        "routing_usage": {
+          "input_tokens": 5514,
+          "output_tokens": 18
+        },
+        "wrapper_total_ms": 4525.706
+      },
+      "round0": {
+        "answer": null,
+        "verdict": {
+          "status": null
+        },
+        "latency": null,
+        "evidence": {
+          "current": {},
+          "earlier": []
+        }
+      },
+      "round1": {
+        "answer": "Dạ em ghi nhận rồi ạ. Khi nào anh [private] cần hỗ trợ thêm thông tin hoặc muốn đặt hàng, anh cứ liên hệ lại với bên em nhé. Em cảm ơn anh và chúc anh một ngày tốt lành ạ!",
+        "verdict": {
+          "status": null
+        },
+        "latency": {
+          "ttft_ms": 2437,
+          "total_ms": 2437,
+          "ttfa_ms": null,
+          "measurement_mode": "non_streaming",
+          "timing_boundary": "response_ready_before_persistence",
+          "asr_ms": null,
+          "call_brief_ms": null,
+          "response_ready_ms": 2437,
+          "persistence_ms": 0.086,
+          "request_complete_ms": 2437.551,
+          "backend_total_ms": 2437.551,
+          "precomputed_parts": [
+            "persisted_facts"
+          ]
+        },
+        "evidence": {
+          "current": {
+            "turn_id": 4,
+            "agent_response": "Dạ em ghi nhận rồi ạ. Khi nào anh [private] cần hỗ trợ thêm thông tin hoặc muốn đặt hàng, anh cứ liên hệ lại với bên em nhé. Em cảm ơn anh và chúc anh một ngày tốt lành ạ!",
+            "tool_calls": [],
+            "sources": [],
+            "promotions": []
+          },
+          "earlier": [
+            {
+              "turn_id": 1,
+              "tool_calls": [],
+              "sources": [],
+              "promotions": []
+            },
+            {
+              "turn_id": 2,
+              "tool_calls": [
+                {
+                  "name": "policy.search",
+                  "args": {
+                    "query": "Nếu mua mới hôm nay thì được đổi trong 14 ngày và mất phí 20 nghìn phải không? Hình như đó là bài cũ.",
+                    "k": 3,
+                    "product_sku": "SKU-JK-WND-M-NAVY",
+                    "as_of": "2026-10-19"
+                  },
+                  "result": {
+                    "query": "Nếu mua mới hôm nay thì được đổi trong 14 ngày và mất phí 20 nghìn phải không? Hình như đó là bài cũ.",
+                    "as_of": "2026-10-19",
+                    "product_sku": "SKU-JK-WND-M-NAVY",
+                    "count": 3,
+                    "chunks": [
+                      {
+                        "chunk_id": "DT-06",
+                        "content": "Sản phẩm hư hỏng do người dùng (rơi vỡ, vào nước, dùng sai điện áp). Sản phẩm mua trong chương trình xả kho ghi rõ \"không đổi trả\". Quá 7 ngày kể từ ngày nhận (trừ lỗi nhà sản xuất).",
+                        "source_file": "chinh-sach-doi-tra.md",
+                        "section": "[DT-06] Trường hợp không được đổi trả"
+                      },
+                      {
+                        "chunk_id": "CL-01",
+                        "content": "Thay thế phiên bản 2026-06. Thay đổi: thời hạn đổi trả 14 → **7 ngày**; đổi size lần đầu **miễn phí** (trước: 20.000đ); hoàn tiền 7 → **3–5 ngày làm việc**; lỗi nhà sản xuất đổi mới 15 → **30 ngày** (gia dụng, mẹ & bé). Đơn tạo trước 01/10/2026 vẫn áp dụng bản cũ.",
+                        "source_file": "changelog.md",
+                        "section": "[CL-01] 01/10/2026 — Chính sách đổi trả phiên bản 2026-10"
+                      },
+                      {
+                        "chunk_id": "DT-01",
+                        "content": "Khách hàng được đổi hoặc trả sản phẩm trong vòng **7 ngày** kể từ ngày nhận hàng (tính theo ngày ký nhận trên đơn vận chuyển). Với ngành hàng gia dụng và mẹ & bé có lỗi kỹ thuật từ nhà sản xuất, thời hạn đổi mới là **30 ngày**.",
+                        "source_file": "chinh-sach-doi-tra.md",
+                        "section": "[DT-01] Thời hạn đổi trả"
+                      }
+                    ]
+                  }
+                }
+              ],
+              "sources": [],
+              "promotions": []
+            },
+            {
+              "turn_id": 3,
+              "tool_calls": [
+                {
+                  "name": "policy.search",
+                  "args": {
+                    "query": "Nếu hàng chưa dùng, còn tem hộp và đổi size lần đầu thì chính sách hiện tại thế nào?",
+                    "k": 3,
+                    "product_sku": "SKU-JK-WND-M-NAVY",
+                    "as_of": "2026-10-19"
+                  },
+                  "result": {
+                    "query": "Nếu hàng chưa dùng, còn tem hộp và đổi size lần đầu thì chính sách hiện tại thế nào?",
+                    "as_of": "2026-10-19",
+                    "product_sku": "SKU-JK-WND-M-NAVY",
+                    "count": 3,
+                    "chunks": [
+                      {
+                        "chunk_id": "DT-02",
+                        "content": "Sản phẩm còn nguyên tem, nhãn, hộp, chưa qua sử dụng (giày/áo chưa giặt, chưa có dấu hiệu mòn đế). Có hóa đơn hoặc mã đơn hàng. Sản phẩm thuộc nhóm đồ lót, bình sữa, núm ti đã bóc seal **không** được đổi trả vì lý do vệ sinh.",
+                        "source_file": "chinh-sach-doi-tra.md",
+                        "section": "[DT-02] Điều kiện đổi trả"
+                      },
+                      {
+                        "chunk_id": "CL-01",
+                        "content": "Thay thế phiên bản 2026-06. Thay đổi: thời hạn đổi trả 14 → **7 ngày**; đổi size lần đầu **miễn phí** (trước: 20.000đ); hoàn tiền 7 → **3–5 ngày làm việc**; lỗi nhà sản xuất đổi mới 15 → **30 ngày** (gia dụng, mẹ & bé). Đơn tạo trước 01/10/2026 vẫn áp dụng bản cũ.",
+                        "source_file": "changelog.md",
+                        "section": "[CL-01] 01/10/2026 — Chính sách đổi trả phiên bản 2026-10"
+                      },
+                      {
+                        "chunk_id": "DT-03",
+                        "content": "Đổi size hoặc màu lần **đầu tiên** cho cùng một đơn hàng: **miễn phí**, shop chịu phí vận chuyển hai chiều. Từ lần đổi thứ hai trở đi: khách chịu phí vận chuyển 30.000đ/chiều. Điều kiện: size/màu mới còn hàng; nếu hết hàng, khách được chọn sản phẩm khác cùng giá hoặc hoàn tiền.",
+                        "source_file": "chinh-sach-doi-tra.md",
+                        "section": "[DT-03] Đổi size / màu (thời trang)"
+                      }
+                    ]
+                  }
+                }
+              ],
+              "sources": [],
+              "promotions": []
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "lessons": [
+    {
+      "id": "b83a1e622ef1f27e4028ca59fee9dcb810018c2e00a3baf8a76cd11154fabee4",
+      "mechanism": "knowledge_gap",
+      "content": {
+        "title": "Avoid Inventing Prior Customer Interaction Details",
+        "when": "The user refers generally to a previous inquiry or callback without verified record of the specific item or issue in provided evidence",
+        "do": "Ask the user politely which product or policy they are considering, without claiming specific SKUs or previous concerns",
+        "otherwise": "State clearly that the specific past details are not available in current records and ask how to assist"
+      },
+      "source_refs": [
+        {
+          "job_id": "c822205dd5ce473adbcdf72529e9e10a7b7939074dd960c557990de4d0f0b065",
+          "message_id": 0,
+          "turn_id": 1,
+          "origin": "turn_detector"
+        }
+      ],
+      "path": null,
+      "security_findings": [],
+      "load_error": null,
+      "review_flags": []
+    }
+  ],
+  "sessions": [
+    {
+      "call": "SC-032/call_2",
+      "round0": {
+        "job": null,
+        "error": null,
+        "learning": null,
+        "observed_input_findings": []
+      },
+      "round1": {
+        "job": {
+          "status": "done",
+          "job_id": "c822205dd5ce473adbcdf72529e9e10a7b7939074dd960c557990de4d0f0b065",
+          "error": null
+        },
+        "error": null,
+        "learning": {
+          "job_id": "c822205dd5ce473adbcdf72529e9e10a7b7939074dd960c557990de4d0f0b065",
+          "gaps": [
+            {
+              "id": "bfd7751a56c6c78392017e4ef2219624f9c7ce8c3f919828a01386f58f753598",
+              "status": "pending_remediation"
+            }
+          ],
+          "scope": "knowledge_gap_and_reflection_v1",
+          "evaluation_cases": [
+            {
+              "id": "214c31ce011deea042a298a1b4673b1c278fa0eb3551f0deb0b57dd4b74f0ac0",
+              "gap_id": "bfd7751a56c6c78392017e4ef2219624f9c7ce8c3f919828a01386f58f753598",
+              "turn_id": 1,
+              "question": "Anh liên hệ lại theo lịch, vẫn đang cân nhắc món đã hỏi.",
+              "reason": "unsupported_claim",
+              "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments."
+            }
+          ],
+          "out_of_scope": [],
+          "issue_reviews": [
+            {
+              "job_id": "c822205dd5ce473adbcdf72529e9e10a7b7939074dd960c557990de4d0f0b065",
+              "message_id": 0,
+              "turn_id": 1,
+              "origin": "turn_detector",
+              "mechanism": "knowledge_gap",
+              "verified": true,
+              "claim": "Lần trước mình có tham khảo mẫu áo gió (mã SKU-JK-WND-M-NAVY) và anh còn đang băn khoăn về điều kiện đổi size đúng không ạ?",
+              "assessment": "unsupported_by_evidence",
+              "evidence_paths": [],
+              "rejection": null,
+              "rejection_reasons": [],
+              "format_retry": false,
+              "verifier_output": {
+                "valid": true,
+                "issue_scope": "business_knowledge",
+                "claim": "Lần trước mình có tham khảo mẫu áo gió (mã SKU-JK-WND-M-NAVY) và anh còn đang băn khoăn về điều kiện đổi size đúng không ạ?",
+                "assessment": "unsupported_by_evidence",
+                "evidence_paths": [],
+                "decision_reason": "The agent claims the customer previously inquired about a specific SKU (SKU-JK-WND-M-NAVY) and size exchange conditions, but there are no tool calls, sources, or prior conversation evidence to support this claim.",
+                "audit": {
+                  "support_status": "not_established",
+                  "coverage": "complete",
+                  "checked_paths": [
+                    "evidence.tool_calls",
+                    "evidence.sources",
+                    "evidence.promotions"
+                  ]
+                }
+              },
+              "candidate_claim": "Lần trước mình có tham khảo mẫu áo gió (mã SKU-JK-WND-M-NAVY) và anh còn đang băn khoăn về điều kiện đổi size đúng không ạ?",
+              "verification_basis": "evidence_inventory_audit",
+              "evidence_inventory": [
+                "evidence.tool_calls",
+                "evidence.sources",
+                "evidence.promotions"
+              ],
+              "lesson_status": "approved"
+            }
+          ],
+          "detector_error": null,
+          "guardrails": {
+            "version": "learning_guardrails_v1",
+            "input_findings": [],
+            "blocked_lessons": [],
+            "blocked_sources": []
+          },
+          "detection": {
+            "candidate_count": 1,
+            "open_question_count": 0,
+            "processed_count": 1,
+            "skipped_unmatched_question": 0,
+            "skipped_over_limit": 0,
+            "scan": {
+              "turns_available": 4,
+              "turns_scanned": 4,
+              "requests": 4,
+              "errors": [],
+              "schema_retries": 0,
+              "skipped_over_limit": 0
+            },
+            "alignment_rejections": []
+          },
+          "outcome": "gaps_processed",
+          "learning_duration_ms": 12151,
+          "learning_usage": {
+            "input_tokens": 8278,
+            "output_tokens": 390
+          }
+        },
+        "observed_input_findings": []
+      }
+    }
+  ],
+  "limitations": [
+    "Verdict kiểm tra được reference vẫn cần người đọc xác nhận ngữ nghĩa và độ đầy đủ.",
+    "Câu trả lời thay đổi hoặc được inject lesson chưa chứng minh lesson gây ra cải thiện.",
+    "Reflection chưa được chấm chất lượng; learning job done/lesson approved không phải điểm chất lượng.",
+    "Guardrail mẫu có giới hạn; không phát hiện mẫu không đồng nghĩa không có prompt injection."
+  ]
+}

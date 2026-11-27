@@ -1,0 +1,150 @@
+{
+  "job_id": "c6aa16533eecb9d888fd96bee509aa43869dbef8cf89c00347efebcb2e0809d7",
+  "gaps": [
+    {
+      "id": "2a4a5d845594e8f9ab9ae5af021f0d569ba7b8d4f5561aab09a0cf07c93edf07",
+      "status": "pending_evidence"
+    },
+    {
+      "id": "739c6c9bb4a8169c96510b8625b65123948c4b3a753c5e72dab5e6a2106776dd",
+      "status": "pending_remediation"
+    },
+    {
+      "id": "02c7a5e0ae4b8b0a4da1b6ae9ad904df8223f9c57d341a481b6c1d45d0b38d41",
+      "status": "pending_remediation"
+    },
+    {
+      "id": "fdabffeb147722a4f1f8dc9dc53bc3845d8a3db51703afb0b610c17ae49795f8",
+      "status": "pending_evidence"
+    }
+  ],
+  "scope": "knowledge_gap_and_reflection_v1",
+  "evaluation_cases": [
+    {
+      "id": "dfd92dc8c90b9eb2b38cb83039f543f9df5e7582869d26390e371ecf7d8c8569",
+      "gap_id": "739c6c9bb4a8169c96510b8625b65123948c4b3a753c5e72dab5e6a2106776dd",
+      "turn_id": 1,
+      "question": "Tôi là [private], số điện thoại [private], đã nhắn qua Fanpage. Anh đã cân nhắc xong rồi. Câu hỏi cụ thể lần trước em còn lưu chứ?",
+      "reason": "unsupported_claim",
+      "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments."
+    },
+    {
+      "id": "2b7cd4756ea32ff0f16b1cea47f262845acff96fea5907e1f1a5ac35c2886a47",
+      "gap_id": "fdabffeb147722a4f1f8dc9dc53bc3845d8a3db51703afb0b610c17ae49795f8",
+      "turn_id": 2,
+      "question": "Em nhắc lại câu hỏi đó và cho anh biết đã có nguồn xác nhận chưa. Đừng đoán theo sản phẩm khác.",
+      "reason": "missing_knowledge",
+      "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments."
+    }
+  ],
+  "out_of_scope": [],
+  "issue_reviews": [
+    {
+      "job_id": "c6aa16533eecb9d888fd96bee509aa43869dbef8cf89c00347efebcb2e0809d7",
+      "message_id": 0,
+      "turn_id": 1,
+      "origin": "turn_detector",
+      "mechanism": "knowledge_gap",
+      "verified": true,
+      "claim": "Dạ em còn lưu câu hỏi lần trước: “Chiếc sẽ giao có mã biên bản kiểm tra chất lượng riêng là gì?”.",
+      "assessment": "unsupported_by_evidence",
+      "evidence_paths": [],
+      "rejection": null,
+      "rejection_reasons": [],
+      "format_retry": false,
+      "verifier_output": {
+        "valid": true,
+        "issue_scope": "business_knowledge",
+        "claim": "Dạ em còn lưu câu hỏi lần trước: “Chiếc sẽ giao có mã biên bản kiểm tra chất lượng riêng là gì?”.",
+        "assessment": "unsupported_by_evidence",
+        "evidence_paths": [],
+        "decision_reason": "The agent claims to remember/have stored a specific question from a previous conversation, but there are no tool calls or sources providing conversation history or confirming this customer's previous question.",
+        "audit": {
+          "support_status": "not_established",
+          "coverage": "complete",
+          "checked_paths": [
+            "evidence.tool_calls",
+            "evidence.sources",
+            "evidence.promotions"
+          ]
+        }
+      },
+      "candidate_claim": "Dạ em còn lưu câu hỏi lần trước: “Chiếc sẽ giao có mã biên bản kiểm tra chất lượng riêng là gì?”.",
+      "verification_basis": "evidence_inventory_audit",
+      "evidence_inventory": [
+        "evidence.tool_calls",
+        "evidence.sources",
+        "evidence.promotions"
+      ],
+      "lesson_status": "approved"
+    },
+    {
+      "job_id": "c6aa16533eecb9d888fd96bee509aa43869dbef8cf89c00347efebcb2e0809d7",
+      "message_id": 0,
+      "turn_id": 1,
+      "origin": "turn_detector",
+      "mechanism": "knowledge_gap",
+      "verified": true,
+      "claim": "Hiện hệ thống không có thông tin xác nhận cho đúng chiếc hàng sẽ giao, nên em chưa thể trả lời chính xác ạ.",
+      "assessment": "unsupported_by_evidence",
+      "evidence_paths": [],
+      "rejection": null,
+      "rejection_reasons": [],
+      "format_retry": false,
+      "verifier_output": {
+        "valid": true,
+        "issue_scope": "business_knowledge",
+        "claim": "Hiện hệ thống không có thông tin xác nhận cho đúng chiếc hàng sẽ giao, nên em chưa thể trả lời chính xác ạ.",
+        "assessment": "unsupported_by_evidence",
+        "evidence_paths": [],
+        "decision_reason": "There are no tools, sources, or promotions available in the evidence to support the agent's claim about system information or ability to answer.",
+        "audit": {
+          "support_status": "not_established",
+          "coverage": "complete",
+          "checked_paths": [
+            "evidence.tool_calls",
+            "evidence.sources",
+            "evidence.promotions"
+          ]
+        }
+      },
+      "candidate_claim": "Hiện hệ thống không có thông tin xác nhận cho đúng chiếc hàng sẽ giao, nên em chưa thể trả lời chính xác ạ.",
+      "verification_basis": "evidence_inventory_audit",
+      "evidence_inventory": [
+        "evidence.tool_calls",
+        "evidence.sources",
+        "evidence.promotions"
+      ],
+      "lesson_status": "approved"
+    }
+  ],
+  "detector_error": null,
+  "guardrails": {
+    "version": "learning_guardrails_v1",
+    "input_findings": [],
+    "blocked_lessons": [],
+    "blocked_sources": []
+  },
+  "detection": {
+    "candidate_count": 3,
+    "open_question_count": 1,
+    "processed_count": 4,
+    "skipped_unmatched_question": 0,
+    "skipped_over_limit": 0,
+    "scan": {
+      "turns_available": 3,
+      "turns_scanned": 3,
+      "requests": 3,
+      "errors": [],
+      "schema_retries": 0,
+      "skipped_over_limit": 0
+    },
+    "alignment_rejections": []
+  },
+  "outcome": "gaps_processed",
+  "learning_duration_ms": 16702,
+  "learning_usage": {
+    "input_tokens": 6594,
+    "output_tokens": 695
+  }
+}

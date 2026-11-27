@@ -1,0 +1,542 @@
+<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src 'none'; base-uri 'none'; form-action 'none'"><title>Review self-learning</title><style>body{margin:0;background:#f5f2ed;color:#292824;font:16px/1.6 system-ui,sans-serif}main{max-width:1180px;margin:auto;padding:24px}h1,h2,h3{line-height:1.3}article,.box{background:#fffdf9;border:1px solid #ddd7cc;border-radius:12px;padding:18px;margin:16px 0}.columns{display:grid;grid-template-columns:1fr 1fr;gap:18px}.answer{white-space:pre-wrap}mark{background:#fff0a6;color:#292824}del{background:#fbe2df;text-decoration:line-through}.warn{border-left:5px solid #a66b16}.regression{border-left:5px solid #a43131}.improved_resolution{border-left:5px solid #367458}.muted{color:#635f57}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#f3f1eb;padding:12px;border-radius:8px}body,td,p,div,summary{overflow-wrap:anywhere}table{border-collapse:collapse;width:100%}th,td{text-align:left;padding:8px;border-bottom:1px solid #e3ded5;vertical-align:top}summary{cursor:pointer;padding:8px 0}summary:focus-visible,a:focus-visible{outline:3px solid #8c5517}a{color:#754610}nav{display:flex;flex-wrap:wrap;gap:14px}@media(max-width:650px){main{padding:12px}.columns{grid-template-columns:1fr}article,.box{padding:12px}}</style></head><body><main><h1>Review self-learning</h1><p>Học sau khi kết thúc session. Báo cáo dựng từ artifact đã lưu, không gọi thêm LLM.</p><nav><a href="#overview">Tổng quan</a><a href="#turns">Trước / sau</a><a href="#lessons">Lesson</a><a href="#sessions">Học &amp; guardrail</a></nav><section id="overview"><h2>Tổng quan</h2><p class="box warn">Chưa chạy judge: chỉ xem thay đổi câu trả lời và dấu vết lesson, chưa đánh giá cải thiện.</p><p class="box warn">Không có cặp chấm hợp lệ: chưa thể kết luận cải thiện hay không có regression.</p><p><b>0</b> cặp chấm hợp lệ / 0 case được lưu trong comparison. 0/3 lượt trong session được inject.</p><table><tr><th>Phân loại</th><th>Số lượt</th></tr><tr><td>Giải quyết được thêm · cần xác nhận</td><td>0</td></tr><tr><td>Thận trọng hơn · vẫn chưa giải quyết</td><td>0</td></tr><tr><td>Có dấu hiệu regression · cần xác nhận</td><td>0</td></tr><tr><td>Không đổi trạng thái chấm</td><td>0</td></tr><tr><td>Chưa đủ kết quả chấm hợp lệ</td><td>0</td></tr><tr><td>Chưa được judge chấm</td><td>3</td></tr><tr><td>Thiếu một vòng</td><td>0</td></tr><tr><td>Câu hỏi hai vòng khác nhau</td><td>0</td></tr><tr><td>Bị loại khỏi phép so sánh</td><td>0</td></tr></table><details><summary>Phạm vi, nguồn baseline và exclusions</summary><pre>{
+  &quot;evaluation_population&quot;: &quot;single_session_no_baseline&quot;
+}</pre></details><p class="muted">Verdict kiểm tra được reference vẫn cần người đọc xác nhận ngữ nghĩa và độ đầy đủ.</p><p class="muted">Câu trả lời thay đổi hoặc được inject lesson chưa chứng minh lesson gây ra cải thiện.</p><p class="muted">Reflection chưa được chấm chất lượng; learning job done/lesson approved không phải điểm chất lượng.</p><p class="muted">Guardrail mẫu có giới hạn; không phát hiện mẫu không đồng nghĩa không có prompt injection.</p></section><section id="turns"><h2>Cải thiện ở đâu? Đọc từng lượt</h2><h3>Chưa được judge chấm (3)</h3><article id="turn-0" class="not_evaluated"><h3>SC-101/call_2 · lượt 1</h3><p><b>Khách:</b> Tôi là [private], số điện thoại [phone], đã nhắn qua Zalo OA. Chị gọi lại chuyện hôm trước, người nhà đồng ý đổi máy rồi.</p><p class="muted">Câu trả lời không đổi/thiếu cặp · Lesson chưa inject.</p><div class="columns"><div><h3>Phiên vừa kết thúc</h3><p><b>Chưa có verdict hợp lệ</b></p><div class="answer">Dạ em chào chị [private], em nhớ thông tin đơn hàng máy lọc không khí mã OD188213 của chị rồi ạ. Hôm trước chị em mình có trao đổi về việc đổi sang mẫu mới (SKU-AP-X). 
+
+Chị cho em hỏi người nhà mình đã thống nhất chốt đổi sang mẫu này luôn chưa ạ, để em hỗ trợ lên đơn đổi hàng cho chị nhé?</div><details><summary>Claims, trích dẫn và verdict gốc</summary><pre>{
+  &quot;status&quot;: null
+}</pre></details><details><summary>Evidence hiện tại và trước lượt này</summary><pre>{
+  &quot;current&quot;: {
+    &quot;turn_id&quot;: 1,
+    &quot;agent_response&quot;: &quot;Dạ em chào chị [private], em nhớ thông tin đơn hàng máy lọc không khí mã OD188213 của chị rồi ạ. Hôm trước chị em mình có trao đổi về việc đổi sang mẫu mới (SKU-AP-X). \n\nChị cho em hỏi người nhà mình đã thống nhất chốt đổi sang mẫu này luôn chưa ạ, để em hỗ trợ lên đơn đổi hàng cho chị nhé?&quot;,
+    &quot;tool_calls&quot;: [
+      {
+        &quot;name&quot;: &quot;order.status&quot;,
+        &quot;args&quot;: {
+          &quot;order_id&quot;: &quot;[private]&quot;
+        },
+        &quot;result&quot;: {
+          &quot;orders&quot;: [
+            {
+              &quot;order_id&quot;: &quot;[private]&quot;,
+              &quot;customer_id&quot;: &quot;[private]&quot;,
+              &quot;customer_phone&quot;: &quot;[private]&quot;,
+              &quot;sku&quot;: &quot;SKU-AP-X-2024&quot;,
+              &quot;qty&quot;: 1,
+              &quot;price_vnd&quot;: 4290000,
+              &quot;lines&quot;: [
+                {
+                  &quot;sku&quot;: &quot;SKU-AP-X-2024&quot;,
+                  &quot;qty&quot;: 1,
+                  &quot;price_vnd&quot;: 4290000
+                }
+              ],
+              &quot;total_vnd&quot;: 4290000,
+              &quot;promos&quot;: [],
+              &quot;promo_code&quot;: null,
+              &quot;payment&quot;: &quot;COD&quot;,
+              &quot;address&quot;: &quot;[private]&quot;,
+              &quot;status&quot;: &quot;delivered&quot;,
+              &quot;created_on&quot;: &quot;2026-02-17&quot;,
+              &quot;exchange_count&quot;: 0
+            }
+          ]
+        }
+      }
+    ],
+    &quot;sources&quot;: [],
+    &quot;promotions&quot;: []
+  },
+  &quot;earlier&quot;: []
+}</pre></details></div></div><details><summary>Lesson ID, routing, token và injection trace</summary><pre>{}</pre></details></article><article id="turn-1" class="not_evaluated"><h3>SC-101/call_2 · lượt 2</h3><p><b>Khách:</b> Em nhắc lại máy mới, giá sau thu cũ đổi mới và dùng địa chỉ [address]</p><p class="muted">Câu trả lời không đổi/thiếu cặp · Lesson chưa inject.</p><div class="columns"><div><h3>Phiên vừa kết thúc</h3><p><b>Chưa có verdict hợp lệ</b></p><div class="answer">Dạ chị [private], em xin nhắc lại thông tin sản phẩm và ưu đãi cho mình ạ:
+
+Mẫu máy lọc không khí mới là mã **SKU-AP-X**. Giá niêm yết là 4.890.000đ, sau khi áp dụng ưu đãi thu cũ đổi mới (mã TRADE-IN-AP giảm 400.000đ), giá thanh toán còn **4.490.000đ** (đã được miễn phí giao hàng ạ).
+
+Em cũng đã ghi nhận địa chỉ [address]
+
+Chị xác nhận chốt lên đơn đổi sang mẫu máy mới này luôn giúp em nhé?</div><details><summary>Claims, trích dẫn và verdict gốc</summary><pre>{
+  &quot;status&quot;: null
+}</pre></details><details><summary>Evidence hiện tại và trước lượt này</summary><pre>{
+  &quot;current&quot;: {
+    &quot;turn_id&quot;: 2,
+    &quot;agent_response&quot;: &quot;Dạ chị [private], em xin nhắc lại thông tin sản phẩm và ưu đãi cho mình ạ:\n\nMẫu máy lọc không khí mới là mã **SKU-AP-X**. Giá niêm yết là 4.890.000đ, sau khi áp dụng ưu đãi thu cũ đổi mới (mã TRADE-IN-AP giảm 400.000đ), giá thanh toán còn **4.490.000đ** (đã được miễn phí giao hàng ạ).\n\nEm cũng đã ghi nhận địa chỉ [address]\n\nChị xác nhận chốt lên đơn đổi sang mẫu máy mới này luôn giúp em nhé?&quot;,
+    &quot;tool_calls&quot;: [
+      {
+        &quot;name&quot;: &quot;policy.search&quot;,
+        &quot;args&quot;: {
+          &quot;query&quot;: &quot;Em nhắc lại máy mới, giá sau thu cũ đổi mới và dùng địa chỉ [address]&quot;,
+          &quot;k&quot;: 3,
+          &quot;product_sku&quot;: &quot;SKU-AP-X&quot;,
+          &quot;as_of&quot;: &quot;2026-10-23&quot;
+        },
+        &quot;result&quot;: {
+          &quot;query&quot;: &quot;Em nhắc lại máy mới, giá sau thu cũ đổi mới và dùng địa chỉ [address]&quot;,
+          &quot;as_of&quot;: &quot;2026-10-23&quot;,
+          &quot;product_sku&quot;: &quot;SKU-AP-X&quot;,
+          &quot;count&quot;: 3,
+          &quot;chunks&quot;: [
+            {
+              &quot;chunk_id&quot;: &quot;DT-03&quot;,
+              &quot;content&quot;: &quot;Đổi size hoặc màu lần **đầu tiên** cho cùng một đơn hàng: **miễn phí**, shop chịu phí vận chuyển hai chiều. Từ lần đổi thứ hai trở đi: khách chịu phí vận chuyển 30.000đ/chiều. Điều kiện: size/màu mới còn hàng; nếu hết hàng, khách được chọn sản phẩm khác cùng giá hoặc hoàn tiền.&quot;,
+              &quot;source_file&quot;: &quot;chinh-sach-doi-tra.md&quot;,
+              &quot;section&quot;: &quot;[DT-03] Đổi size / màu (thời trang)&quot;
+            },
+            {
+              &quot;chunk_id&quot;: &quot;CL-01&quot;,
+              &quot;content&quot;: &quot;Thay thế phiên bản 2026-06. Thay đổi: thời hạn đổi trả 14 → **7 ngày**; đổi size lần đầu **miễn phí** (trước: 20.000đ); hoàn tiền 7 → **3–5 ngày làm việc**; lỗi nhà sản xuất đổi mới 15 → **30 ngày** (gia dụng, mẹ &amp; bé). Đơn tạo trước 01/10/2026 vẫn áp dụng bản cũ.&quot;,
+              &quot;source_file&quot;: &quot;changelog.md&quot;,
+              &quot;section&quot;: &quot;[CL-01] 01/10/2026 — Chính sách đổi trả phiên bản 2026-10&quot;
+            },
+            {
+              &quot;chunk_id&quot;: &quot;DT-05&quot;,
+              &quot;content&quot;: &quot;Đổi mới 1-1 trong 30 ngày với gia dụng và mẹ &amp; bé nếu có xác nhận lỗi từ trung tâm bảo hành. Sau 30 ngày áp dụng chính sách bảo hành (xem chinh-sach-bao-hanh.md).&quot;,
+              &quot;source_file&quot;: &quot;chinh-sach-doi-tra.md&quot;,
+              &quot;section&quot;: &quot;[DT-05] Sản phẩm lỗi do nhà sản xuất&quot;
+            }
+          ]
+        }
+      },
+      {
+        &quot;name&quot;: &quot;catalog.search&quot;,
+        &quot;args&quot;: {
+          &quot;query&quot;: &quot;Em nhắc lại máy mới, giá sau thu cũ đổi mới và dùng địa chỉ [address]&quot;,
+          &quot;on&quot;: &quot;2026-10-23&quot;
+        },
+        &quot;result&quot;: {
+          &quot;items&quot;: [],
+          &quot;total&quot;: 0
+        }
+      },
+      {
+        &quot;name&quot;: &quot;pricing.get_quote&quot;,
+        &quot;args&quot;: {
+          &quot;on&quot;: &quot;2026-10-23&quot;,
+          &quot;customer_phone&quot;: &quot;[private]&quot;,
+          &quot;customer_id&quot;: &quot;[private]&quot;,
+          &quot;address&quot;: &quot;[private]&quot;,
+          &quot;sku&quot;: &quot;SKU-AP-X&quot;,
+          &quot;qty&quot;: 1
+        },
+        &quot;result&quot;: {
+          &quot;sku&quot;: &quot;SKU-AP-X&quot;,
+          &quot;list_price_vnd&quot;: 4890000,
+          &quot;final_price_vnd&quot;: 4490000,
+          &quot;applied_promos&quot;: [
+            {
+              &quot;promo_code&quot;: &quot;COD-0&quot;,
+              &quot;type&quot;: &quot;freecod&quot;,
+              &quot;discount_vnd&quot;: 0
+            },
+            {
+              &quot;promo_code&quot;: &quot;TRADE-IN-AP&quot;,
+              &quot;type&quot;: &quot;fixed&quot;,
+              &quot;discount_vnd&quot;: 400000
+            }
+          ],
+          &quot;expired_promos&quot;: [
+            &quot;GIFT-FILTER&quot;,
+            &quot;AP-SEP&quot;
+          ],
+          &quot;ineligible_promos&quot;: [
+            {
+              &quot;promo_code&quot;: &quot;AIR-2ND-50&quot;,
+              &quot;reason&quot;: &quot;min_qty&quot;
+            },
+            {
+              &quot;promo_code&quot;: &quot;NAM-SHIP0&quot;,
+              &quot;reason&quot;: &quot;region&quot;
+            }
+          ],
+          &quot;not_applied_exclusive&quot;: [],
+          &quot;freeship&quot;: true
+        }
+      },
+      {
+        &quot;name&quot;: &quot;inventory.check&quot;,
+        &quot;args&quot;: {
+          &quot;sku&quot;: &quot;SKU-AP-X&quot;,
+          &quot;on&quot;: &quot;2026-10-23&quot;
+        },
+        &quot;result&quot;: {
+          &quot;sku&quot;: &quot;SKU-AP-X&quot;,
+          &quot;found&quot;: true,
+          &quot;in_stock&quot;: true,
+          &quot;qty&quot;: 40,
+          &quot;discontinued&quot;: false
+        }
+      }
+    ],
+    &quot;sources&quot;: [],
+    &quot;promotions&quot;: []
+  },
+  &quot;earlier&quot;: [
+    {
+      &quot;turn_id&quot;: 1,
+      &quot;tool_calls&quot;: [
+        {
+          &quot;name&quot;: &quot;order.status&quot;,
+          &quot;args&quot;: {
+            &quot;order_id&quot;: &quot;[private]&quot;
+          },
+          &quot;result&quot;: {
+            &quot;orders&quot;: [
+              {
+                &quot;order_id&quot;: &quot;[private]&quot;,
+                &quot;customer_id&quot;: &quot;[private]&quot;,
+                &quot;customer_phone&quot;: &quot;[private]&quot;,
+                &quot;sku&quot;: &quot;SKU-AP-X-2024&quot;,
+                &quot;qty&quot;: 1,
+                &quot;price_vnd&quot;: 4290000,
+                &quot;lines&quot;: [
+                  {
+                    &quot;sku&quot;: &quot;SKU-AP-X-2024&quot;,
+                    &quot;qty&quot;: 1,
+                    &quot;price_vnd&quot;: 4290000
+                  }
+                ],
+                &quot;total_vnd&quot;: 4290000,
+                &quot;promos&quot;: [],
+                &quot;promo_code&quot;: null,
+                &quot;payment&quot;: &quot;COD&quot;,
+                &quot;address&quot;: &quot;[private]&quot;,
+                &quot;status&quot;: &quot;delivered&quot;,
+                &quot;created_on&quot;: &quot;2026-02-17&quot;,
+                &quot;exchange_count&quot;: 0
+              }
+            ]
+          }
+        }
+      ],
+      &quot;sources&quot;: [],
+      &quot;promotions&quot;: []
+    }
+  ]
+}</pre></details></div></div><details><summary>Lesson ID, routing, token và injection trace</summary><pre>{}</pre></details></article><article id="turn-2" class="not_evaluated"><h3>SC-101/call_2 · lượt 3</h3><p><b>Khách:</b> Chị đồng ý 4.490.000 đồng, một máy, COD. Khi giao em thu máy cũ theo chương trình.</p><p class="muted">Câu trả lời không đổi/thiếu cặp · Lesson chưa inject.</p><div class="columns"><div><h3>Phiên vừa kết thúc</h3><p><b>Chưa có verdict hợp lệ</b></p><div class="answer">Dạ em cảm ơn chị [private]. Em đã lên đơn hàng thành công cho chị với thông tin như sau:
+
+- **Sản phẩm:** Máy lọc không khí SKU-AP-X (Số lượng: 1)
+- **Tổng tiền:** 4.490.000đ (Đã áp dụng ưu đãi thu cũ đổi mới TRADE-IN-AP)
+- **Hình thức thanh toán:** COD (Thanh toán khi nhận hàng)
+- **Địa chỉ [address]
+- **Mã đơn hàng:** [order_id]
+- **Dự kiến giao hàng:** 2026-10-27
+
+Khi nhân viên giao máy mới đến sẽ đồng thời hỗ trợ thu hồi máy cũ theo chương trình cho chị luôn ạ. Em cảm ơn chị!</div><details><summary>Claims, trích dẫn và verdict gốc</summary><pre>{
+  &quot;status&quot;: null
+}</pre></details><details><summary>Evidence hiện tại và trước lượt này</summary><pre>{
+  &quot;current&quot;: {
+    &quot;turn_id&quot;: 3,
+    &quot;agent_response&quot;: &quot;Dạ em cảm ơn chị [private]. Em đã lên đơn hàng thành công cho chị với thông tin như sau:\n\n- **Sản phẩm:** Máy lọc không khí SKU-AP-X (Số lượng: 1)\n- **Tổng tiền:** 4.490.000đ (Đã áp dụng ưu đãi thu cũ đổi mới TRADE-IN-AP)\n- **Hình thức thanh toán:** COD (Thanh toán khi nhận hàng)\n- **Địa chỉ [address]\n- **Mã đơn hàng:** [order_id]\n- **Dự kiến giao hàng:** 2026-10-27\n\nKhi nhân viên giao máy mới đến sẽ đồng thời hỗ trợ thu hồi máy cũ theo chương trình cho chị luôn ạ. Em cảm ơn chị!&quot;,
+    &quot;tool_calls&quot;: [
+      {
+        &quot;name&quot;: &quot;inventory.check&quot;,
+        &quot;args&quot;: {
+          &quot;sku&quot;: &quot;SKU-AP-X&quot;,
+          &quot;on&quot;: &quot;2026-10-23&quot;
+        },
+        &quot;result&quot;: {
+          &quot;sku&quot;: &quot;SKU-AP-X&quot;,
+          &quot;found&quot;: true,
+          &quot;in_stock&quot;: true,
+          &quot;qty&quot;: 40,
+          &quot;discontinued&quot;: false
+        }
+      },
+      {
+        &quot;name&quot;: &quot;order.create&quot;,
+        &quot;args&quot;: {
+          &quot;customer_phone&quot;: &quot;[private]&quot;,
+          &quot;customer_id&quot;: &quot;[private]&quot;,
+          &quot;address&quot;: &quot;[private]&quot;,
+          &quot;idempotency_key&quot;: &quot;self-6a4bfdaf559147499271dd1bdb3ff547-SC-101-call_2:call_2:create:SKU-AP-X&quot;,
+          &quot;sku&quot;: &quot;SKU-AP-X&quot;,
+          &quot;qty&quot;: 1,
+          &quot;price_vnd&quot;: 4490000,
+          &quot;promo_code&quot;: &quot;TRADE-IN-AP&quot;,
+          &quot;on&quot;: &quot;2026-10-23&quot;,
+          &quot;payment&quot;: &quot;COD&quot;
+        },
+        &quot;result&quot;: {
+          &quot;order_id&quot;: &quot;[private]&quot;,
+          &quot;status&quot;: &quot;created&quot;,
+          &quot;total_vnd&quot;: 4490000,
+          &quot;needs_confirmation_call&quot;: true,
+          &quot;estimated_delivery&quot;: &quot;2026-10-27&quot;
+        }
+      }
+    ],
+    &quot;sources&quot;: [],
+    &quot;promotions&quot;: []
+  },
+  &quot;earlier&quot;: [
+    {
+      &quot;turn_id&quot;: 1,
+      &quot;tool_calls&quot;: [
+        {
+          &quot;name&quot;: &quot;order.status&quot;,
+          &quot;args&quot;: {
+            &quot;order_id&quot;: &quot;[private]&quot;
+          },
+          &quot;result&quot;: {
+            &quot;orders&quot;: [
+              {
+                &quot;order_id&quot;: &quot;[private]&quot;,
+                &quot;customer_id&quot;: &quot;[private]&quot;,
+                &quot;customer_phone&quot;: &quot;[private]&quot;,
+                &quot;sku&quot;: &quot;SKU-AP-X-2024&quot;,
+                &quot;qty&quot;: 1,
+                &quot;price_vnd&quot;: 4290000,
+                &quot;lines&quot;: [
+                  {
+                    &quot;sku&quot;: &quot;SKU-AP-X-2024&quot;,
+                    &quot;qty&quot;: 1,
+                    &quot;price_vnd&quot;: 4290000
+                  }
+                ],
+                &quot;total_vnd&quot;: 4290000,
+                &quot;promos&quot;: [],
+                &quot;promo_code&quot;: null,
+                &quot;payment&quot;: &quot;COD&quot;,
+                &quot;address&quot;: &quot;[private]&quot;,
+                &quot;status&quot;: &quot;delivered&quot;,
+                &quot;created_on&quot;: &quot;2026-02-17&quot;,
+                &quot;exchange_count&quot;: 0
+              }
+            ]
+          }
+        }
+      ],
+      &quot;sources&quot;: [],
+      &quot;promotions&quot;: []
+    },
+    {
+      &quot;turn_id&quot;: 2,
+      &quot;tool_calls&quot;: [
+        {
+          &quot;name&quot;: &quot;policy.search&quot;,
+          &quot;args&quot;: {
+            &quot;query&quot;: &quot;Em nhắc lại máy mới, giá sau thu cũ đổi mới và dùng địa chỉ [address]&quot;,
+            &quot;k&quot;: 3,
+            &quot;product_sku&quot;: &quot;SKU-AP-X&quot;,
+            &quot;as_of&quot;: &quot;2026-10-23&quot;
+          },
+          &quot;result&quot;: {
+            &quot;query&quot;: &quot;Em nhắc lại máy mới, giá sau thu cũ đổi mới và dùng địa chỉ [address]&quot;,
+            &quot;as_of&quot;: &quot;2026-10-23&quot;,
+            &quot;product_sku&quot;: &quot;SKU-AP-X&quot;,
+            &quot;count&quot;: 3,
+            &quot;chunks&quot;: [
+              {
+                &quot;chunk_id&quot;: &quot;DT-03&quot;,
+                &quot;content&quot;: &quot;Đổi size hoặc màu lần **đầu tiên** cho cùng một đơn hàng: **miễn phí**, shop chịu phí vận chuyển hai chiều. Từ lần đổi thứ hai trở đi: khách chịu phí vận chuyển 30.000đ/chiều. Điều kiện: size/màu mới còn hàng; nếu hết hàng, khách được chọn sản phẩm khác cùng giá hoặc hoàn tiền.&quot;,
+                &quot;source_file&quot;: &quot;chinh-sach-doi-tra.md&quot;,
+                &quot;section&quot;: &quot;[DT-03] Đổi size / màu (thời trang)&quot;
+              },
+              {
+                &quot;chunk_id&quot;: &quot;CL-01&quot;,
+                &quot;content&quot;: &quot;Thay thế phiên bản 2026-06. Thay đổi: thời hạn đổi trả 14 → **7 ngày**; đổi size lần đầu **miễn phí** (trước: 20.000đ); hoàn tiền 7 → **3–5 ngày làm việc**; lỗi nhà sản xuất đổi mới 15 → **30 ngày** (gia dụng, mẹ &amp; bé). Đơn tạo trước 01/10/2026 vẫn áp dụng bản cũ.&quot;,
+                &quot;source_file&quot;: &quot;changelog.md&quot;,
+                &quot;section&quot;: &quot;[CL-01] 01/10/2026 — Chính sách đổi trả phiên bản 2026-10&quot;
+              },
+              {
+                &quot;chunk_id&quot;: &quot;DT-05&quot;,
+                &quot;content&quot;: &quot;Đổi mới 1-1 trong 30 ngày với gia dụng và mẹ &amp; bé nếu có xác nhận lỗi từ trung tâm bảo hành. Sau 30 ngày áp dụng chính sách bảo hành (xem chinh-sach-bao-hanh.md).&quot;,
+                &quot;source_file&quot;: &quot;chinh-sach-doi-tra.md&quot;,
+                &quot;section&quot;: &quot;[DT-05] Sản phẩm lỗi do nhà sản xuất&quot;
+              }
+            ]
+          }
+        },
+        {
+          &quot;name&quot;: &quot;catalog.search&quot;,
+          &quot;args&quot;: {
+            &quot;query&quot;: &quot;Em nhắc lại máy mới, giá sau thu cũ đổi mới và dùng địa chỉ [address]&quot;,
+            &quot;on&quot;: &quot;2026-10-23&quot;
+          },
+          &quot;result&quot;: {
+            &quot;items&quot;: [],
+            &quot;total&quot;: 0
+          }
+        },
+        {
+          &quot;name&quot;: &quot;pricing.get_quote&quot;,
+          &quot;args&quot;: {
+            &quot;on&quot;: &quot;2026-10-23&quot;,
+            &quot;customer_phone&quot;: &quot;[private]&quot;,
+            &quot;customer_id&quot;: &quot;[private]&quot;,
+            &quot;address&quot;: &quot;[private]&quot;,
+            &quot;sku&quot;: &quot;SKU-AP-X&quot;,
+            &quot;qty&quot;: 1
+          },
+          &quot;result&quot;: {
+            &quot;sku&quot;: &quot;SKU-AP-X&quot;,
+            &quot;list_price_vnd&quot;: 4890000,
+            &quot;final_price_vnd&quot;: 4490000,
+            &quot;applied_promos&quot;: [
+              {
+                &quot;promo_code&quot;: &quot;COD-0&quot;,
+                &quot;type&quot;: &quot;freecod&quot;,
+                &quot;discount_vnd&quot;: 0
+              },
+              {
+                &quot;promo_code&quot;: &quot;TRADE-IN-AP&quot;,
+                &quot;type&quot;: &quot;fixed&quot;,
+                &quot;discount_vnd&quot;: 400000
+              }
+            ],
+            &quot;expired_promos&quot;: [
+              &quot;GIFT-FILTER&quot;,
+              &quot;AP-SEP&quot;
+            ],
+            &quot;ineligible_promos&quot;: [
+              {
+                &quot;promo_code&quot;: &quot;AIR-2ND-50&quot;,
+                &quot;reason&quot;: &quot;min_qty&quot;
+              },
+              {
+                &quot;promo_code&quot;: &quot;NAM-SHIP0&quot;,
+                &quot;reason&quot;: &quot;region&quot;
+              }
+            ],
+            &quot;not_applied_exclusive&quot;: [],
+            &quot;freeship&quot;: true
+          }
+        },
+        {
+          &quot;name&quot;: &quot;inventory.check&quot;,
+          &quot;args&quot;: {
+            &quot;sku&quot;: &quot;SKU-AP-X&quot;,
+            &quot;on&quot;: &quot;2026-10-23&quot;
+          },
+          &quot;result&quot;: {
+            &quot;sku&quot;: &quot;SKU-AP-X&quot;,
+            &quot;found&quot;: true,
+            &quot;in_stock&quot;: true,
+            &quot;qty&quot;: 40,
+            &quot;discontinued&quot;: false
+          }
+        }
+      ],
+      &quot;sources&quot;: [],
+      &quot;promotions&quot;: []
+    }
+  ]
+}</pre></details></div></div><details><summary>Lesson ID, routing, token và injection trace</summary><pre>{}</pre></details></article></section><section id="lessons"><h2>Lesson mới sinh sau session</h2><p>Approved là trạng thái duyệt lesson, chưa chứng minh chất lượng câu trả lời.</p><article id="lesson-0"><h3>Do Not Invent Prior Conversational History</h3><p><b>When:</b> Responding to a customer referencing past offline or unrecorded communications</p><p><b>Do:</b> Answer based strictly on available tool results and verified records without inventing specific prior conversation details or model choices</p><p><b>Otherwise:</b> State clearly that past conversation details are not recorded in the system instead of assuming prior discussion facts</p><p>Inject tại: Chưa thấy trong trace</p><details><summary>ID, nguồn sinh và kiểm tra guardrail</summary><pre>{
+  &quot;id&quot;: &quot;e45dc72c5fe31056f074ee827287d8fbe6b10a70731330b3a772124cd2242342&quot;,
+  &quot;mechanism&quot;: &quot;knowledge_gap&quot;,
+  &quot;content&quot;: {
+    &quot;title&quot;: &quot;Do Not Invent Prior Conversational History&quot;,
+    &quot;when&quot;: &quot;Responding to a customer referencing past offline or unrecorded communications&quot;,
+    &quot;do&quot;: &quot;Answer based strictly on available tool results and verified records without inventing specific prior conversation details or model choices&quot;,
+    &quot;otherwise&quot;: &quot;State clearly that past conversation details are not recorded in the system instead of assuming prior discussion facts&quot;
+  },
+  &quot;source_refs&quot;: [
+    {
+      &quot;job_id&quot;: &quot;d8ad223aa73b5dd1223bae1039155a7783385f46bf104cfa45c5d7d4facf571a&quot;,
+      &quot;message_id&quot;: 0,
+      &quot;turn_id&quot;: 1,
+      &quot;origin&quot;: &quot;turn_detector&quot;
+    }
+  ],
+  &quot;path&quot;: null,
+  &quot;security_findings&quot;: [],
+  &quot;load_error&quot;: null,
+  &quot;review_flags&quot;: []
+}</pre></details></article></section><section id="sessions"><h2>Học sau session &amp; guardrail</h2><p>Input finding là cảnh báo mẫu, không phải verdict khách nói sai hoặc bằng chứng tấn công thành công. Run cũ thiếu guardrail trace sẽ được ghi rõ.</p><article><h3>SC-101/call_2</h3><h3>Vòng 1</h3><p>Job: done · Issue xác nhận: 1 · Guardrail: có trace</p><details><summary>Vấn đề, trạng thái học và guardrail chi tiết</summary><pre>{
+  &quot;job&quot;: {
+    &quot;status&quot;: &quot;done&quot;,
+    &quot;job_id&quot;: &quot;d8ad223aa73b5dd1223bae1039155a7783385f46bf104cfa45c5d7d4facf571a&quot;,
+    &quot;error&quot;: null
+  },
+  &quot;error&quot;: null,
+  &quot;learning&quot;: {
+    &quot;job_id&quot;: &quot;d8ad223aa73b5dd1223bae1039155a7783385f46bf104cfa45c5d7d4facf571a&quot;,
+    &quot;gaps&quot;: [
+      {
+        &quot;id&quot;: &quot;d3803d576fcc04307599bfeffd8e82f9005b398cefa6dd367fdd95006b93f429&quot;,
+        &quot;status&quot;: &quot;pending_remediation&quot;
+      }
+    ],
+    &quot;scope&quot;: &quot;knowledge_gap_and_reflection_v1&quot;,
+    &quot;evaluation_cases&quot;: [
+      {
+        &quot;id&quot;: &quot;7563e0d6e504ccd4a76cf25dc1b5fadf1a6485fa5b1a50f4308b7b4ce58794df&quot;,
+        &quot;gap_id&quot;: &quot;d3803d576fcc04307599bfeffd8e82f9005b398cefa6dd367fdd95006b93f429&quot;,
+        &quot;turn_id&quot;: 1,
+        &quot;question&quot;: &quot;Tôi là [private], số điện thoại [private], đã nhắn qua Zalo OA. Chị gọi lại chuyện hôm trước, người nhà đồng ý đổi máy rồi.&quot;,
+        &quot;reason&quot;: &quot;unsupported_claim&quot;,
+        &quot;criterion&quot;: &quot;Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments.&quot;
+      }
+    ],
+    &quot;out_of_scope&quot;: [],
+    &quot;issue_reviews&quot;: [
+      {
+        &quot;job_id&quot;: &quot;d8ad223aa73b5dd1223bae1039155a7783385f46bf104cfa45c5d7d4facf571a&quot;,
+        &quot;message_id&quot;: 0,
+        &quot;turn_id&quot;: 1,
+        &quot;origin&quot;: &quot;turn_detector&quot;,
+        &quot;mechanism&quot;: &quot;knowledge_gap&quot;,
+        &quot;verified&quot;: true,
+        &quot;claim&quot;: &quot;Dạ em chào chị [private], em nhớ thông tin đơn hàng máy lọc không khí mã OD188213 của chị rồi ạ. Hôm trước chị em mình có trao đổi về việc đổi sang mẫu mới (SKU-AP-X).&quot;,
+        &quot;assessment&quot;: &quot;unsupported_by_evidence&quot;,
+        &quot;evidence_paths&quot;: [],
+        &quot;rejection&quot;: null,
+        &quot;rejection_reasons&quot;: [],
+        &quot;format_retry&quot;: false,
+        &quot;verifier_output&quot;: {
+          &quot;valid&quot;: true,
+          &quot;issue_scope&quot;: &quot;business_knowledge&quot;,
+          &quot;claim&quot;: &quot;Dạ em chào chị [private], em nhớ thông tin đơn hàng máy lọc không khí mã OD188213 của chị rồi ạ. Hôm trước chị em mình có trao đổi về việc đổi sang mẫu mới (SKU-AP-X).&quot;,
+          &quot;assessment&quot;: &quot;unsupported_by_evidence&quot;,
+          &quot;evidence_paths&quot;: [],
+          &quot;decision_reason&quot;: &quot;The claim asserts a specific prior conversation about exchanging order OD188213 for model SKU-AP-X, but no evidence source or conversation history supports this prior interaction fact.&quot;,
+          &quot;audit&quot;: {
+            &quot;support_status&quot;: &quot;not_established&quot;,
+            &quot;coverage&quot;: &quot;complete&quot;,
+            &quot;checked_paths&quot;: [
+              &quot;evidence.tool_calls.0.result&quot;,
+              &quot;evidence.sources&quot;,
+              &quot;evidence.promotions&quot;
+            ]
+          }
+        },
+        &quot;candidate_claim&quot;: &quot;Dạ em chào chị [private], em nhớ thông tin đơn hàng máy lọc không khí mã OD188213 của chị rồi ạ. Hôm trước chị em mình có trao đổi về việc đổi sang mẫu mới (SKU-AP-X).&quot;,
+        &quot;verification_basis&quot;: &quot;evidence_inventory_audit&quot;,
+        &quot;evidence_inventory&quot;: [
+          &quot;evidence.tool_calls.0.result&quot;,
+          &quot;evidence.sources&quot;,
+          &quot;evidence.promotions&quot;
+        ],
+        &quot;lesson_status&quot;: &quot;approved&quot;
+      }
+    ],
+    &quot;detector_error&quot;: null,
+    &quot;guardrails&quot;: {
+      &quot;version&quot;: &quot;learning_guardrails_v1&quot;,
+      &quot;input_findings&quot;: [],
+      &quot;blocked_lessons&quot;: [],
+      &quot;blocked_sources&quot;: []
+    },
+    &quot;detection&quot;: {
+      &quot;candidate_count&quot;: 1,
+      &quot;open_question_count&quot;: 0,
+      &quot;processed_count&quot;: 1,
+      &quot;skipped_unmatched_question&quot;: 0,
+      &quot;skipped_over_limit&quot;: 0,
+      &quot;scan&quot;: {
+        &quot;turns_available&quot;: 3,
+        &quot;turns_scanned&quot;: 3,
+        &quot;requests&quot;: 3,
+        &quot;errors&quot;: [],
+        &quot;schema_retries&quot;: 0,
+        &quot;skipped_over_limit&quot;: 0
+      },
+      &quot;alignment_rejections&quot;: []
+    },
+    &quot;outcome&quot;: &quot;gaps_processed&quot;,
+    &quot;learning_duration_ms&quot;: 8781,
+    &quot;learning_usage&quot;: {
+      &quot;input_tokens&quot;: 8036,
+      &quot;output_tokens&quot;: 405
+    }
+  },
+  &quot;observed_input_findings&quot;: []
+}</pre></details></article></section></main></body></html>

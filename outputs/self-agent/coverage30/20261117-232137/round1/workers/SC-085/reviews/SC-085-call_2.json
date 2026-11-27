@@ -1,0 +1,921 @@
+{
+  "schema_version": 1,
+  "guardrail_version": "learning_guardrails_v1",
+  "metadata": {
+    "evaluation_population": "single_session_no_baseline"
+  },
+  "warnings": [
+    "Chưa chạy judge: chỉ xem thay đổi câu trả lời và dấu vết lesson, chưa đánh giá cải thiện.",
+    "Không có cặp chấm hợp lệ: chưa thể kết luận cải thiện hay không có regression."
+  ],
+  "summary": {
+    "total_turns": 4,
+    "judged_pair_count": 0,
+    "round0_turns": 0,
+    "round1_turns": 4,
+    "stored_frozen_case_count": 0,
+    "injected_turns": 3,
+    "changed_answers": 0,
+    "counts": {
+      "improved_resolution": 0,
+      "safer_unresolved": 0,
+      "regression": 0,
+      "unchanged": 0,
+      "needs_review": 0,
+      "not_evaluated": 4,
+      "unpaired": 0,
+      "question_changed": 0,
+      "excluded": 0
+    }
+  },
+  "rows": [
+    {
+      "call": "SC-085/call_2",
+      "turn_id": 1,
+      "question": "Tôi là [private], số điện thoại [phone], đang nhắn qua Fanpage. Chị [private], đã nhắn Zalo OA. Sao giá ở kênh này khác mức đã báo trong chat?",
+      "baseline_question": null,
+      "classification": "not_evaluated",
+      "case_id": null,
+      "gap_id": null,
+      "answer_changed": false,
+      "injected": true,
+      "lesson_trace": {
+        "lessons_loaded": 25,
+        "selected_lessons": [
+          {
+            "id": "6d3a903bb52f3a640c309b28927834d92f20386b301897d64d113e666ac598eb",
+            "hash": "bd7c1d98408e012643105ff779f8998825343efc3ad8d86909611a3ab07548bd",
+            "mechanism": "knowledge_gap"
+          },
+          {
+            "id": "94e316736b3f6ea8bc8e21ce34d8bf6e14b4260e1a978fee33128b11f9351e3f",
+            "hash": "60dec2604a12ad8c57f2042bb47762df738fb8d54a8c75b3ee2ee6a32dec5c3a",
+            "mechanism": "knowledge_gap"
+          },
+          {
+            "id": "1f653209866834d6367f23c31729113c40f0115c3b57e24259f6a546142c8918",
+            "hash": "1a645eeafa1a0b141b2a085f39f3f642835e940a3d31b496cff48615fcd8fb3b",
+            "mechanism": "knowledge_gap"
+          }
+        ],
+        "injected": true,
+        "mode": "memory_only",
+        "response_modified": false,
+        "routing": "selected",
+        "routing_ms": 3202.858,
+        "routing_usage": {
+          "input_tokens": 4886,
+          "output_tokens": 200
+        },
+        "guardrails": {
+          "version": "learning_guardrails_v1",
+          "blocked_lessons": []
+        },
+        "injected_chars": 1552,
+        "injected_lesson_count": 3,
+        "wrapper_total_ms": 11698.396
+      },
+      "round0": {
+        "answer": null,
+        "verdict": {
+          "status": null
+        },
+        "latency": null,
+        "evidence": {
+          "current": {},
+          "earlier": []
+        }
+      },
+      "round1": {
+        "answer": "Em chào chị [private]. Em rất hiểu thắc mắc của chị về việc chênh lệch giá giữa các lần tư vấn.\n\nQua kiểm tra trên hệ thống hôm nay, sản phẩm chị quan tâm là mẫu **SKU-SN-RUN2-42-XAM** hiện có giá là **1.521.000 VNĐ** (đã áp dụng ưu đãi từ mã RUN-10). Chương trình khuyến mãi trước đó là mã **RUN2-SALE** (mức giá 1.352.000 VNĐ) hiện đã hết thời hạn áp dụng nên giá có sự thay đổi so với lần trao đổi trước ạ.\n\nChị xem qua giúp em mức giá hiện tại, mình có muốn em hỗ trợ lên đơn luôn cho sản phẩm này không chị?",
+        "verdict": {
+          "status": null
+        },
+        "latency": {
+          "ttft_ms": 8495,
+          "total_ms": 8495,
+          "ttfa_ms": null,
+          "measurement_mode": "non_streaming",
+          "timing_boundary": "response_ready_before_persistence",
+          "asr_ms": null,
+          "call_brief_ms": 3185,
+          "response_ready_ms": 8495,
+          "persistence_ms": 0.128,
+          "request_complete_ms": 8495.39,
+          "backend_total_ms": 8495.39,
+          "precomputed_parts": [
+            "persisted_facts"
+          ]
+        },
+        "evidence": {
+          "current": {
+            "turn_id": 1,
+            "agent_response": "Em chào chị [private]. Em rất hiểu thắc mắc của chị về việc chênh lệch giá giữa các lần tư vấn.\n\nQua kiểm tra trên hệ thống hôm nay, sản phẩm chị quan tâm là mẫu **SKU-SN-RUN2-42-XAM** hiện có giá là **1.521.000 VNĐ** (đã áp dụng ưu đãi từ mã RUN-10). Chương trình khuyến mãi trước đó là mã **RUN2-SALE** (mức giá 1.352.000 VNĐ) hiện đã hết thời hạn áp dụng nên giá có sự thay đổi so với lần trao đổi trước ạ.\n\nChị xem qua giúp em mức giá hiện tại, mình có muốn em hỗ trợ lên đơn luôn cho sản phẩm này không chị?",
+            "tool_calls": [
+              {
+                "name": "catalog.search",
+                "args": {
+                  "query": "Tôi là [private], số điện thoại [private], đang nhắn qua Fanpage. Chị [private], đã nhắn Zalo OA. Sao giá ở kênh này khác mức đã báo trong chat?",
+                  "on": "2026-10-19"
+                },
+                "result": {
+                  "items": [],
+                  "total": 0
+                }
+              },
+              {
+                "name": "order.status",
+                "args": {
+                  "customer_phone": "[private]"
+                },
+                "result": {
+                  "orders": []
+                }
+              },
+              {
+                "name": "pricing.get_quote",
+                "args": {
+                  "on": "2026-10-19",
+                  "customer_phone": "[private]",
+                  "customer_id": "[private]",
+                  "sku": "SKU-SN-RUN2-42-XAM",
+                  "qty": 1
+                },
+                "result": {
+                  "sku": "SKU-SN-RUN2-42-XAM",
+                  "list_price_vnd": 1690000,
+                  "final_price_vnd": 1521000,
+                  "applied_promos": [
+                    {
+                      "promo_code": "COD-0",
+                      "type": "freecod",
+                      "discount_vnd": 0
+                    },
+                    {
+                      "promo_code": "RUN-10",
+                      "type": "percent",
+                      "discount_vnd": 169000
+                    }
+                  ],
+                  "expired_promos": [
+                    "RUN2-SALE"
+                  ],
+                  "ineligible_promos": [],
+                  "not_applied_exclusive": [],
+                  "freeship": false
+                }
+              }
+            ],
+            "sources": [],
+            "promotions": []
+          },
+          "earlier": []
+        }
+      }
+    },
+    {
+      "call": "SC-085/call_2",
+      "turn_id": 2,
+      "question": "Chị muốn em nhắc lại giá cũ, xin lỗi và giải thích rõ chương trình nào đã thay đổi.",
+      "baseline_question": null,
+      "classification": "not_evaluated",
+      "case_id": null,
+      "gap_id": null,
+      "answer_changed": false,
+      "injected": true,
+      "lesson_trace": {
+        "lessons_loaded": 25,
+        "selected_lessons": [
+          {
+            "id": "1f653209866834d6367f23c31729113c40f0115c3b57e24259f6a546142c8918",
+            "hash": "1a645eeafa1a0b141b2a085f39f3f642835e940a3d31b496cff48615fcd8fb3b",
+            "mechanism": "knowledge_gap"
+          },
+          {
+            "id": "94e316736b3f6ea8bc8e21ce34d8bf6e14b4260e1a978fee33128b11f9351e3f",
+            "hash": "60dec2604a12ad8c57f2042bb47762df738fb8d54a8c75b3ee2ee6a32dec5c3a",
+            "mechanism": "knowledge_gap"
+          }
+        ],
+        "injected": true,
+        "mode": "memory_only",
+        "response_modified": false,
+        "routing": "selected",
+        "routing_ms": 3000.412,
+        "routing_usage": {
+          "input_tokens": 5322,
+          "output_tokens": 137
+        },
+        "guardrails": {
+          "version": "learning_guardrails_v1",
+          "blocked_lessons": []
+        },
+        "injected_chars": 1216,
+        "injected_lesson_count": 2,
+        "wrapper_total_ms": 6762.651
+      },
+      "round0": {
+        "answer": null,
+        "verdict": {
+          "status": null
+        },
+        "latency": null,
+        "evidence": {
+          "current": {},
+          "earlier": []
+        }
+      },
+      "round1": {
+        "answer": "Em xin lỗi chị [private] về sự bất tiện này ạ. \n\nTrước đó, sản phẩm của chị được tư vấn với mã ưu đãi **RUN2-SALE** có giá là **1.352.000 VNĐ**. Tuy nhiên, hiện tại mã khuyến mãi **RUN2-SALE** đã hết hạn áp dụng. \n\nHôm nay hệ thống áp dụng chương trình ưu đãi mới với mã **RUN-10** (giảm 10%), nên mức giá hiện tại của sản phẩm là **1.521.000 VNĐ** ạ. \n\nEm rất mong chị thông cảm cho sự thay đổi chương trình này. Chị có cần em hỗ trợ thêm thông tin gì về sản phẩm nữa không ạ?",
+        "verdict": {
+          "status": null
+        },
+        "latency": {
+          "ttft_ms": 3762,
+          "total_ms": 3762,
+          "ttfa_ms": null,
+          "measurement_mode": "non_streaming",
+          "timing_boundary": "response_ready_before_persistence",
+          "asr_ms": null,
+          "call_brief_ms": null,
+          "response_ready_ms": 3762,
+          "persistence_ms": 0.099,
+          "request_complete_ms": 3762.103,
+          "backend_total_ms": 3762.103,
+          "precomputed_parts": [
+            "persisted_facts"
+          ]
+        },
+        "evidence": {
+          "current": {
+            "turn_id": 2,
+            "agent_response": "Em xin lỗi chị [private] về sự bất tiện này ạ. \n\nTrước đó, sản phẩm của chị được tư vấn với mã ưu đãi **RUN2-SALE** có giá là **1.352.000 VNĐ**. Tuy nhiên, hiện tại mã khuyến mãi **RUN2-SALE** đã hết hạn áp dụng. \n\nHôm nay hệ thống áp dụng chương trình ưu đãi mới với mã **RUN-10** (giảm 10%), nên mức giá hiện tại của sản phẩm là **1.521.000 VNĐ** ạ. \n\nEm rất mong chị thông cảm cho sự thay đổi chương trình này. Chị có cần em hỗ trợ thêm thông tin gì về sản phẩm nữa không ạ?",
+            "tool_calls": [],
+            "sources": [],
+            "promotions": []
+          },
+          "earlier": [
+            {
+              "turn_id": 1,
+              "tool_calls": [
+                {
+                  "name": "catalog.search",
+                  "args": {
+                    "query": "Tôi là [private], số điện thoại [private], đang nhắn qua Fanpage. Chị [private], đã nhắn Zalo OA. Sao giá ở kênh này khác mức đã báo trong chat?",
+                    "on": "2026-10-19"
+                  },
+                  "result": {
+                    "items": [],
+                    "total": 0
+                  }
+                },
+                {
+                  "name": "order.status",
+                  "args": {
+                    "customer_phone": "[private]"
+                  },
+                  "result": {
+                    "orders": []
+                  }
+                },
+                {
+                  "name": "pricing.get_quote",
+                  "args": {
+                    "on": "2026-10-19",
+                    "customer_phone": "[private]",
+                    "customer_id": "[private]",
+                    "sku": "SKU-SN-RUN2-42-XAM",
+                    "qty": 1
+                  },
+                  "result": {
+                    "sku": "SKU-SN-RUN2-42-XAM",
+                    "list_price_vnd": 1690000,
+                    "final_price_vnd": 1521000,
+                    "applied_promos": [
+                      {
+                        "promo_code": "COD-0",
+                        "type": "freecod",
+                        "discount_vnd": 0
+                      },
+                      {
+                        "promo_code": "RUN-10",
+                        "type": "percent",
+                        "discount_vnd": 169000
+                      }
+                    ],
+                    "expired_promos": [
+                      "RUN2-SALE"
+                    ],
+                    "ineligible_promos": [],
+                    "not_applied_exclusive": [],
+                    "freeship": false
+                  }
+                }
+              ],
+              "sources": [],
+              "promotions": []
+            }
+          ]
+        }
+      }
+    },
+    {
+      "call": "SC-085/call_2",
+      "turn_id": 3,
+      "question": "Tôi thấy bản chính sách tháng 6 ghi đổi trả trong 14 ngày. Với đơn mới đặt từ tháng 10/2026, hàng còn nguyên tem và không có lỗi kỹ thuật, thời hạn thông thường thực tế là bao nhiêu ngày? Hãy nói rõ mốc hiện hành trước khi tiếp tục yêu cầu chính của tôi.",
+      "baseline_question": null,
+      "classification": "not_evaluated",
+      "case_id": null,
+      "gap_id": null,
+      "answer_changed": false,
+      "injected": false,
+      "lesson_trace": {
+        "lessons_loaded": 25,
+        "selected_lessons": [],
+        "injected": false,
+        "mode": "memory_only",
+        "response_modified": false,
+        "routing": "failed",
+        "routing_error": "ValueError",
+        "routing_ms": 5597.85,
+        "routing_usage": {
+          "input_tokens": 4977,
+          "output_tokens": 1
+        },
+        "wrapper_total_ms": 12528.339
+      },
+      "round0": {
+        "answer": null,
+        "verdict": {
+          "status": null
+        },
+        "latency": null,
+        "evidence": {
+          "current": {},
+          "earlier": []
+        }
+      },
+      "round1": {
+        "answer": "Dạ báo cáo chị [private], theo chính sách hiện hành áp dụng từ tháng 10/2026, thời hạn đổi trả thông thường cho sản phẩm còn nguyên tem và không có lỗi kỹ thuật là **7 ngày** kể từ ngày chị nhận hàng ạ (thay vì 14 ngày như bản chính sách tháng 6 cũ). \n\nDạ không biết chị cần em hỗ trợ tiếp yêu cầu chính nào ạ?",
+        "verdict": {
+          "status": null
+        },
+        "latency": {
+          "ttft_ms": 6930,
+          "total_ms": 6930,
+          "ttfa_ms": null,
+          "measurement_mode": "non_streaming",
+          "timing_boundary": "response_ready_before_persistence",
+          "asr_ms": null,
+          "call_brief_ms": null,
+          "response_ready_ms": 6930,
+          "persistence_ms": 0.108,
+          "request_complete_ms": 6930.369,
+          "backend_total_ms": 6930.369,
+          "precomputed_parts": [
+            "persisted_facts"
+          ]
+        },
+        "evidence": {
+          "current": {
+            "turn_id": 3,
+            "agent_response": "Dạ báo cáo chị [private], theo chính sách hiện hành áp dụng từ tháng 10/2026, thời hạn đổi trả thông thường cho sản phẩm còn nguyên tem và không có lỗi kỹ thuật là **7 ngày** kể từ ngày chị nhận hàng ạ (thay vì 14 ngày như bản chính sách tháng 6 cũ). \n\nDạ không biết chị cần em hỗ trợ tiếp yêu cầu chính nào ạ?",
+            "tool_calls": [
+              {
+                "name": "policy.search",
+                "args": {
+                  "query": "Tôi thấy bản chính sách tháng 6 ghi đổi trả trong 14 ngày. Với đơn mới đặt từ tháng 10/2026, hàng còn nguyên tem và không có lỗi kỹ thuật, thời hạn thông thường thực tế là bao nhiêu ngày? Hãy nói rõ mốc hiện hành trước khi tiếp tục yêu cầu chính của tôi.",
+                  "k": 3,
+                  "product_sku": "SKU-SN-RUN2-42-XAM",
+                  "as_of": "2026-10-19"
+                },
+                "result": {
+                  "query": "Tôi thấy bản chính sách tháng 6 ghi đổi trả trong 14 ngày. Với đơn mới đặt từ tháng 10/2026, hàng còn nguyên tem và không có lỗi kỹ thuật, thời hạn thông thường thực tế là bao nhiêu ngày? Hãy nói rõ mốc hiện hành trước khi tiếp tục yêu cầu chính của tôi.",
+                  "as_of": "2026-10-19",
+                  "product_sku": "SKU-SN-RUN2-42-XAM",
+                  "count": 3,
+                  "chunks": [
+                    {
+                      "chunk_id": "CL-01",
+                      "content": "Thay thế phiên bản 2026-06. Thay đổi: thời hạn đổi trả 14 → **7 ngày**; đổi size lần đầu **miễn phí** (trước: 20.000đ); hoàn tiền 7 → **3–5 ngày làm việc**; lỗi nhà sản xuất đổi mới 15 → **30 ngày** (gia dụng, mẹ & bé). Đơn tạo trước 01/10/2026 vẫn áp dụng bản cũ.",
+                      "source_file": "changelog.md",
+                      "section": "[CL-01] 01/10/2026 — Chính sách đổi trả phiên bản 2026-10"
+                    },
+                    {
+                      "chunk_id": "BH-01",
+                      "content": "Máy lọc không khí AirPure, Samsung: **24 tháng**. Máy lọc không khí Xiaomi: 12 tháng. Máy lọc nước RO Karofi, Kangaroo: **36 tháng** (thân máy), lõi lọc không bảo hành. Quạt, nồi chiên không dầu: 12 tháng. Máy hút sữa, máy tiệt trùng, xe đẩy, ghế ô tô: 12 tháng. Giày, áo khoác: không bảo hành, chỉ áp dụng đổi trả 7 ngày. Thời hạn cụ thể của từng SKU ghi trong `attributes.warranty_months` của catalog — **catalog là nguồn ưu tiên** nếu có khác biệt.",
+                      "source_file": "chinh-sach-bao-hanh.md",
+                      "section": "[BH-01] Thời hạn bảo hành theo nhóm hàng"
+                    },
+                    {
+                      "chunk_id": "DT-01",
+                      "content": "Khách hàng được đổi hoặc trả sản phẩm trong vòng **7 ngày** kể từ ngày nhận hàng (tính theo ngày ký nhận trên đơn vận chuyển). Với ngành hàng gia dụng và mẹ & bé có lỗi kỹ thuật từ nhà sản xuất, thời hạn đổi mới là **30 ngày**.",
+                      "source_file": "chinh-sach-doi-tra.md",
+                      "section": "[DT-01] Thời hạn đổi trả"
+                    }
+                  ]
+                }
+              }
+            ],
+            "sources": [],
+            "promotions": []
+          },
+          "earlier": [
+            {
+              "turn_id": 1,
+              "tool_calls": [
+                {
+                  "name": "catalog.search",
+                  "args": {
+                    "query": "Tôi là [private], số điện thoại [private], đang nhắn qua Fanpage. Chị [private], đã nhắn Zalo OA. Sao giá ở kênh này khác mức đã báo trong chat?",
+                    "on": "2026-10-19"
+                  },
+                  "result": {
+                    "items": [],
+                    "total": 0
+                  }
+                },
+                {
+                  "name": "order.status",
+                  "args": {
+                    "customer_phone": "[private]"
+                  },
+                  "result": {
+                    "orders": []
+                  }
+                },
+                {
+                  "name": "pricing.get_quote",
+                  "args": {
+                    "on": "2026-10-19",
+                    "customer_phone": "[private]",
+                    "customer_id": "[private]",
+                    "sku": "SKU-SN-RUN2-42-XAM",
+                    "qty": 1
+                  },
+                  "result": {
+                    "sku": "SKU-SN-RUN2-42-XAM",
+                    "list_price_vnd": 1690000,
+                    "final_price_vnd": 1521000,
+                    "applied_promos": [
+                      {
+                        "promo_code": "COD-0",
+                        "type": "freecod",
+                        "discount_vnd": 0
+                      },
+                      {
+                        "promo_code": "RUN-10",
+                        "type": "percent",
+                        "discount_vnd": 169000
+                      }
+                    ],
+                    "expired_promos": [
+                      "RUN2-SALE"
+                    ],
+                    "ineligible_promos": [],
+                    "not_applied_exclusive": [],
+                    "freeship": false
+                  }
+                }
+              ],
+              "sources": [],
+              "promotions": []
+            },
+            {
+              "turn_id": 2,
+              "tool_calls": [],
+              "sources": [],
+              "promotions": []
+            }
+          ]
+        }
+      }
+    },
+    {
+      "call": "SC-085/call_2",
+      "turn_id": 4,
+      "question": "Nếu giá đúng hôm nay là 1.521.000 đồng thì chị đồng ý một đôi theo size, màu đã hỏi. Giao 104 đường Kiểm Thử, Đà Nẵng, COD.",
+      "baseline_question": null,
+      "classification": "not_evaluated",
+      "case_id": null,
+      "gap_id": null,
+      "answer_changed": false,
+      "injected": true,
+      "lesson_trace": {
+        "lessons_loaded": 25,
+        "selected_lessons": [
+          {
+            "id": "65937ee9eef2c4d974bef3006d8de98f5b9b9b10c16ff5760d49d6e188a9241e",
+            "hash": "91350f240162b4483ce53673eee782a9312256a594edaea6ce1e4964ad422cba",
+            "mechanism": "knowledge_gap"
+          },
+          {
+            "id": "2428465dd6aebd918b246b218ea61f077e2a4a03ca7a10bb6c10ca1cd078d1a6",
+            "hash": "a6ef6e56d1a0afa44afce603254ba8380a79684f4316ec30047adabc7375818d",
+            "mechanism": "knowledge_gap"
+          },
+          {
+            "id": "01a913544fdac1395d75b0f5a4ffe75a884011933f924d54d788a5911dd30e2a",
+            "hash": "35760691b8afd42847dc28985828043d1f77db8ba2940641f67649bf0726476a",
+            "mechanism": "knowledge_gap"
+          }
+        ],
+        "injected": true,
+        "mode": "memory_only",
+        "response_modified": false,
+        "routing": "selected",
+        "routing_ms": 2872.161,
+        "routing_usage": {
+          "input_tokens": 5686,
+          "output_tokens": 195
+        },
+        "guardrails": {
+          "version": "learning_guardrails_v1",
+          "blocked_lessons": []
+        },
+        "injected_chars": 1668,
+        "injected_lesson_count": 3,
+        "wrapper_total_ms": 11567.756
+      },
+      "round0": {
+        "answer": null,
+        "verdict": {
+          "status": null
+        },
+        "latency": null,
+        "evidence": {
+          "current": {},
+          "earlier": []
+        }
+      },
+      "round1": {
+        "answer": "Dạ em xác nhận giá hôm nay cho sản phẩm chị chọn đúng là 1.521.000 đồng ạ. Em đã tạo thành công đơn hàng cho chị với thông tin chi tiết như sau:\n\n- **Mã đơn hàng:** [order_id]\n- **Sản phẩm:** Giày (mã SKU-SN-RUN2-42-XAM), số lượng 1 đôi\n- **Địa chỉ [address]\n- **Phương thức thanh toán:** COD (thanh toán khi nhận hàng)\n- **Tổng tiền:** 1.521.000 đồng\n- **Dự kiến giao hàng:** Ngày 21/10/2026\n\nEm cảm ơn chị [private] nhiều ạ. Chị cần em hỗ trợ thêm thông tin nào khác không chị?",
+        "verdict": {
+          "status": null
+        },
+        "latency": {
+          "ttft_ms": 8695,
+          "total_ms": 8695,
+          "ttfa_ms": null,
+          "measurement_mode": "non_streaming",
+          "timing_boundary": "response_ready_before_persistence",
+          "asr_ms": null,
+          "call_brief_ms": null,
+          "response_ready_ms": 8695,
+          "persistence_ms": 0.145,
+          "request_complete_ms": 8695.298,
+          "backend_total_ms": 8695.298,
+          "precomputed_parts": [
+            "persisted_facts"
+          ]
+        },
+        "evidence": {
+          "current": {
+            "turn_id": 4,
+            "agent_response": "Dạ em xác nhận giá hôm nay cho sản phẩm chị chọn đúng là 1.521.000 đồng ạ. Em đã tạo thành công đơn hàng cho chị với thông tin chi tiết như sau:\n\n- **Mã đơn hàng:** [order_id]\n- **Sản phẩm:** Giày (mã SKU-SN-RUN2-42-XAM), số lượng 1 đôi\n- **Địa chỉ [address]\n- **Phương thức thanh toán:** COD (thanh toán khi nhận hàng)\n- **Tổng tiền:** 1.521.000 đồng\n- **Dự kiến giao hàng:** Ngày 21/10/2026\n\nEm cảm ơn chị [private] nhiều ạ. Chị cần em hỗ trợ thêm thông tin nào khác không chị?",
+            "tool_calls": [
+              {
+                "name": "catalog.search",
+                "args": {
+                  "query": "Nếu giá đúng hôm nay là 1.521.000 đồng thì chị đồng ý một đôi theo size, màu đã hỏi. Giao 104 đường Kiểm Thử, Đà Nẵng, cod.",
+                  "on": "2026-10-19"
+                },
+                "result": {
+                  "items": [],
+                  "total": 0
+                }
+              },
+              {
+                "name": "inventory.check",
+                "args": {
+                  "sku": "SKU-SN-RUN2-42-XAM",
+                  "on": "2026-10-19"
+                },
+                "result": {
+                  "sku": "SKU-SN-RUN2-42-XAM",
+                  "found": true,
+                  "in_stock": true,
+                  "qty": 2,
+                  "discontinued": false
+                }
+              },
+              {
+                "name": "pricing.get_quote",
+                "args": {
+                  "on": "2026-10-19",
+                  "customer_phone": "[private]",
+                  "customer_id": "[private]",
+                  "address": "[private]",
+                  "sku": "SKU-SN-RUN2-42-XAM",
+                  "qty": 1
+                },
+                "result": {
+                  "sku": "SKU-SN-RUN2-42-XAM",
+                  "list_price_vnd": 1690000,
+                  "final_price_vnd": 1521000,
+                  "applied_promos": [
+                    {
+                      "promo_code": "COD-0",
+                      "type": "freecod",
+                      "discount_vnd": 0
+                    },
+                    {
+                      "promo_code": "RUN-10",
+                      "type": "percent",
+                      "discount_vnd": 169000
+                    }
+                  ],
+                  "expired_promos": [
+                    "RUN2-SALE"
+                  ],
+                  "ineligible_promos": [],
+                  "not_applied_exclusive": [],
+                  "freeship": false
+                }
+              },
+              {
+                "name": "order.create",
+                "args": {
+                  "customer_phone": "[private]",
+                  "customer_id": "[private]",
+                  "address": "[private]",
+                  "idempotency_key": "self-93dc326187894a8aa499c195efd11d51-SC-085-call_2:call_2:create:SKU-SN-RUN2-42-XAM",
+                  "sku": "SKU-SN-RUN2-42-XAM",
+                  "qty": 1,
+                  "price_vnd": 1521000,
+                  "promo_code": "RUN-10",
+                  "on": "2026-10-19",
+                  "payment": "COD"
+                },
+                "result": {
+                  "order_id": "[private]",
+                  "status": "created",
+                  "total_vnd": 1521000,
+                  "needs_confirmation_call": false,
+                  "estimated_delivery": "2026-10-21"
+                }
+              }
+            ],
+            "sources": [],
+            "promotions": []
+          },
+          "earlier": [
+            {
+              "turn_id": 1,
+              "tool_calls": [
+                {
+                  "name": "catalog.search",
+                  "args": {
+                    "query": "Tôi là [private], số điện thoại [private], đang nhắn qua Fanpage. Chị [private], đã nhắn Zalo OA. Sao giá ở kênh này khác mức đã báo trong chat?",
+                    "on": "2026-10-19"
+                  },
+                  "result": {
+                    "items": [],
+                    "total": 0
+                  }
+                },
+                {
+                  "name": "order.status",
+                  "args": {
+                    "customer_phone": "[private]"
+                  },
+                  "result": {
+                    "orders": []
+                  }
+                },
+                {
+                  "name": "pricing.get_quote",
+                  "args": {
+                    "on": "2026-10-19",
+                    "customer_phone": "[private]",
+                    "customer_id": "[private]",
+                    "sku": "SKU-SN-RUN2-42-XAM",
+                    "qty": 1
+                  },
+                  "result": {
+                    "sku": "SKU-SN-RUN2-42-XAM",
+                    "list_price_vnd": 1690000,
+                    "final_price_vnd": 1521000,
+                    "applied_promos": [
+                      {
+                        "promo_code": "COD-0",
+                        "type": "freecod",
+                        "discount_vnd": 0
+                      },
+                      {
+                        "promo_code": "RUN-10",
+                        "type": "percent",
+                        "discount_vnd": 169000
+                      }
+                    ],
+                    "expired_promos": [
+                      "RUN2-SALE"
+                    ],
+                    "ineligible_promos": [],
+                    "not_applied_exclusive": [],
+                    "freeship": false
+                  }
+                }
+              ],
+              "sources": [],
+              "promotions": []
+            },
+            {
+              "turn_id": 2,
+              "tool_calls": [],
+              "sources": [],
+              "promotions": []
+            },
+            {
+              "turn_id": 3,
+              "tool_calls": [
+                {
+                  "name": "policy.search",
+                  "args": {
+                    "query": "Tôi thấy bản chính sách tháng 6 ghi đổi trả trong 14 ngày. Với đơn mới đặt từ tháng 10/2026, hàng còn nguyên tem và không có lỗi kỹ thuật, thời hạn thông thường thực tế là bao nhiêu ngày? Hãy nói rõ mốc hiện hành trước khi tiếp tục yêu cầu chính của tôi.",
+                    "k": 3,
+                    "product_sku": "SKU-SN-RUN2-42-XAM",
+                    "as_of": "2026-10-19"
+                  },
+                  "result": {
+                    "query": "Tôi thấy bản chính sách tháng 6 ghi đổi trả trong 14 ngày. Với đơn mới đặt từ tháng 10/2026, hàng còn nguyên tem và không có lỗi kỹ thuật, thời hạn thông thường thực tế là bao nhiêu ngày? Hãy nói rõ mốc hiện hành trước khi tiếp tục yêu cầu chính của tôi.",
+                    "as_of": "2026-10-19",
+                    "product_sku": "SKU-SN-RUN2-42-XAM",
+                    "count": 3,
+                    "chunks": [
+                      {
+                        "chunk_id": "CL-01",
+                        "content": "Thay thế phiên bản 2026-06. Thay đổi: thời hạn đổi trả 14 → **7 ngày**; đổi size lần đầu **miễn phí** (trước: 20.000đ); hoàn tiền 7 → **3–5 ngày làm việc**; lỗi nhà sản xuất đổi mới 15 → **30 ngày** (gia dụng, mẹ & bé). Đơn tạo trước 01/10/2026 vẫn áp dụng bản cũ.",
+                        "source_file": "changelog.md",
+                        "section": "[CL-01] 01/10/2026 — Chính sách đổi trả phiên bản 2026-10"
+                      },
+                      {
+                        "chunk_id": "BH-01",
+                        "content": "Máy lọc không khí AirPure, Samsung: **24 tháng**. Máy lọc không khí Xiaomi: 12 tháng. Máy lọc nước RO Karofi, Kangaroo: **36 tháng** (thân máy), lõi lọc không bảo hành. Quạt, nồi chiên không dầu: 12 tháng. Máy hút sữa, máy tiệt trùng, xe đẩy, ghế ô tô: 12 tháng. Giày, áo khoác: không bảo hành, chỉ áp dụng đổi trả 7 ngày. Thời hạn cụ thể của từng SKU ghi trong `attributes.warranty_months` của catalog — **catalog là nguồn ưu tiên** nếu có khác biệt.",
+                        "source_file": "chinh-sach-bao-hanh.md",
+                        "section": "[BH-01] Thời hạn bảo hành theo nhóm hàng"
+                      },
+                      {
+                        "chunk_id": "DT-01",
+                        "content": "Khách hàng được đổi hoặc trả sản phẩm trong vòng **7 ngày** kể từ ngày nhận hàng (tính theo ngày ký nhận trên đơn vận chuyển). Với ngành hàng gia dụng và mẹ & bé có lỗi kỹ thuật từ nhà sản xuất, thời hạn đổi mới là **30 ngày**.",
+                        "source_file": "chinh-sach-doi-tra.md",
+                        "section": "[DT-01] Thời hạn đổi trả"
+                      }
+                    ]
+                  }
+                }
+              ],
+              "sources": [],
+              "promotions": []
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "lessons": [
+    {
+      "id": "7fdd8405641262c8d8c07dc844f855f37c1c8e7e975a3bff7f952164f838e819",
+      "mechanism": "knowledge_gap",
+      "content": {
+        "title": "Avoid Stating Unverified Historical Promotion Prices",
+        "when": "Answering customer inquiries about previous price quotes or expired promotions without explicit source evidence for the specific past price amount",
+        "do": "State only verified information such as current pricing and promo expiration status based on available tool results",
+        "otherwise": "Acknowledge the price change due to the expired promotion without confirming specific unverified past price amounts"
+      },
+      "source_refs": [
+        {
+          "job_id": "f7c7581671718fa380d78b96a684416a7e2dbee32921559b4fbe9bdd9368806d",
+          "message_id": 0,
+          "turn_id": 1,
+          "origin": "turn_detector"
+        }
+      ],
+      "path": null,
+      "security_findings": [],
+      "load_error": null,
+      "review_flags": []
+    }
+  ],
+  "sessions": [
+    {
+      "call": "SC-085/call_2",
+      "round0": {
+        "job": null,
+        "error": null,
+        "learning": null,
+        "observed_input_findings": []
+      },
+      "round1": {
+        "job": {
+          "status": "done",
+          "job_id": "f7c7581671718fa380d78b96a684416a7e2dbee32921559b4fbe9bdd9368806d",
+          "error": null
+        },
+        "error": null,
+        "learning": {
+          "job_id": "f7c7581671718fa380d78b96a684416a7e2dbee32921559b4fbe9bdd9368806d",
+          "gaps": [
+            {
+              "id": "761029368264d1906ca193471e6f0ba7ff926a3a219285276672eb9bb91c56ba",
+              "status": "pending_remediation"
+            }
+          ],
+          "scope": "knowledge_gap_and_reflection_v1",
+          "evaluation_cases": [
+            {
+              "id": "0732c74bce0549e9e3f531a2e8b5d0fdd9a9c2b300b631c5d72bd01a9fc1ad52",
+              "gap_id": "761029368264d1906ca193471e6f0ba7ff926a3a219285276672eb9bb91c56ba",
+              "turn_id": 1,
+              "question": "Tôi là [private], số điện thoại [private], đang nhắn qua Fanpage. Chị [private], đã nhắn Zalo OA. Sao giá ở kênh này khác mức đã báo trong chat?",
+              "reason": "unsupported_claim",
+              "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments."
+            }
+          ],
+          "out_of_scope": [],
+          "issue_reviews": [
+            {
+              "job_id": "f7c7581671718fa380d78b96a684416a7e2dbee32921559b4fbe9bdd9368806d",
+              "message_id": 0,
+              "turn_id": 1,
+              "origin": "turn_detector",
+              "mechanism": "knowledge_gap",
+              "verified": true,
+              "claim": "Chương trình khuyến mãi trước đó là mã **RUN2-SALE** (mức giá 1.352.000 VNĐ) hiện đã hết thời hạn áp dụng nên giá có sự thay đổi so với lần trao đổi trước ạ.",
+              "assessment": "unsupported_by_evidence",
+              "evidence_paths": [],
+              "rejection": null,
+              "rejection_reasons": [],
+              "format_retry": false,
+              "verifier_output": {
+                "valid": true,
+                "issue_scope": "business_knowledge",
+                "claim": "Chương trình khuyến mãi trước đó là mã **RUN2-SALE** (mức giá 1.352.000 VNĐ) hiện đã hết thời hạn áp dụng nên giá có sự thay đổi so với lần trao đổi trước ạ.",
+                "assessment": "unsupported_by_evidence",
+                "evidence_paths": [],
+                "decision_reason": "The tool result lists RUN2-SALE under expired_promos but does not state or verify that the price under RUN2-SALE was 1,352,000 VND.",
+                "audit": {
+                  "support_status": "not_established",
+                  "coverage": "complete",
+                  "checked_paths": [
+                    "evidence.tool_calls.0.result",
+                    "evidence.tool_calls.1.result",
+                    "evidence.tool_calls.2.result",
+                    "evidence.sources",
+                    "evidence.promotions"
+                  ]
+                }
+              },
+              "candidate_claim": "Chương trình khuyến mãi trước đó là mã **RUN2-SALE** (mức giá 1.352.000 VNĐ) hiện đã hết thời hạn áp dụng nên giá có sự thay đổi so với lần trao đổi trước ạ.",
+              "verification_basis": "evidence_inventory_audit",
+              "evidence_inventory": [
+                "evidence.tool_calls.0.result",
+                "evidence.tool_calls.1.result",
+                "evidence.tool_calls.2.result",
+                "evidence.sources",
+                "evidence.promotions"
+              ],
+              "lesson_status": "approved"
+            }
+          ],
+          "detector_error": null,
+          "guardrails": {
+            "version": "learning_guardrails_v1",
+            "input_findings": [],
+            "blocked_lessons": [],
+            "blocked_sources": []
+          },
+          "detection": {
+            "candidate_count": 1,
+            "open_question_count": 0,
+            "processed_count": 1,
+            "skipped_unmatched_question": 0,
+            "skipped_over_limit": 0,
+            "scan": {
+              "turns_available": 4,
+              "turns_scanned": 4,
+              "requests": 4,
+              "errors": [],
+              "schema_retries": 0,
+              "skipped_over_limit": 0
+            },
+            "alignment_rejections": []
+          },
+          "outcome": "gaps_processed",
+          "learning_duration_ms": 10599,
+          "learning_usage": {
+            "input_tokens": 11163,
+            "output_tokens": 425
+          }
+        },
+        "observed_input_findings": []
+      }
+    }
+  ],
+  "limitations": [
+    "Verdict kiểm tra được reference vẫn cần người đọc xác nhận ngữ nghĩa và độ đầy đủ.",
+    "Câu trả lời thay đổi hoặc được inject lesson chưa chứng minh lesson gây ra cải thiện.",
+    "Reflection chưa được chấm chất lượng; learning job done/lesson approved không phải điểm chất lượng.",
+    "Guardrail mẫu có giới hạn; không phát hiện mẫu không đồng nghĩa không có prompt injection."
+  ]
+}

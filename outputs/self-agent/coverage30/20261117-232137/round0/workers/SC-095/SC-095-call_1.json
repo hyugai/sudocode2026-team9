@@ -1,0 +1,290 @@
+{
+  "scenario_id": "SC-095",
+  "call": "call_1",
+  "session_id": "self-f8fa7dcb2c2344f3bc0791b01da3dd68-SC-095-call_1",
+  "turns": [
+    {
+      "customer": "Tôi là [private], số điện thoại [phone], đang nhắn qua Zalo OA. Chị là [private], con cô Loan. Hai mẹ con dùng chung số này; hôm nay chị hỏi cho riêng chị.",
+      "agent": "Em chào chị [private] ạ. Em đã ghi nhận thông tin chị đang trao đổi qua Zalo OA và dùng chung số điện thoại với cô Loan rồi ạ. \n\nHôm nay chị [private] đang cần em hỗ trợ tìm hiểu hoặc tư vấn sản phẩm nào cho riêng chị vậy ạ?",
+      "latency": {
+        "ttft_ms": 4829,
+        "total_ms": 4829,
+        "ttfa_ms": null,
+        "measurement_mode": "non_streaming",
+        "timing_boundary": "response_ready_before_persistence",
+        "asr_ms": null,
+        "call_brief_ms": 3096,
+        "response_ready_ms": 4829,
+        "persistence_ms": 0.115,
+        "request_complete_ms": 4828.761,
+        "backend_total_ms": 4828.761,
+        "precomputed_parts": []
+      },
+      "lesson_trace": null
+    },
+    {
+      "customer": "Chị quan tâm Quạt đứng Senko TS16, giá 590.000 đồng đúng không? Không phải món mẹ chị từng hỏi.",
+      "agent": "Dạ em chào chị [private]. Đúng rồi ạ, sản phẩm Quạt đứng Senko TS16 hiện tại bên em đang có giá chính xác là 590.000 đồng và hàng đang có sẵn ạ. \n\nEm ghi nhận thông tin đây là nhu cầu riêng của chị rồi ạ. Chị có cần em tư vấn thêm về tính năng của quạt hay hỗ trợ chị đặt hàng luôn không ạ?",
+      "latency": {
+        "ttft_ms": 5412,
+        "total_ms": 5412,
+        "ttfa_ms": null,
+        "measurement_mode": "non_streaming",
+        "timing_boundary": "response_ready_before_persistence",
+        "asr_ms": null,
+        "call_brief_ms": null,
+        "response_ready_ms": 5412,
+        "persistence_ms": 0.339,
+        "request_complete_ms": 5412.797,
+        "backend_total_ms": 5412.797,
+        "precomputed_parts": []
+      },
+      "lesson_trace": null
+    },
+    {
+      "customer": "Tôi thấy bản chính sách tháng 6 ghi đổi trả trong 14 ngày. Với đơn mới đặt từ tháng 10/2026, hàng còn nguyên tem và không có lỗi kỹ thuật, thời hạn thông thường thực tế là bao nhiêu ngày? Hãy nói rõ mốc hiện hành trước khi tiếp tục yêu cầu chính của tôi.",
+      "agent": "Dạ báo cáo chị [private], theo chính sách áp dụng từ tháng 10/2026, thời hạn đổi trả thông thường đối với sản phẩm còn nguyên tem và không có lỗi kỹ thuật hiện hành là **7 ngày** kể từ ngày nhận hàng ạ (bản tháng 6 trước đây là 14 ngày).\n\nEm đã ghi nhận rõ thông tin này rồi ạ. Chị cần em hỗ trợ tiếp yêu cầu chính nào của chị ạ?",
+      "latency": {
+        "ttft_ms": 6462,
+        "total_ms": 6462,
+        "ttfa_ms": null,
+        "measurement_mode": "non_streaming",
+        "timing_boundary": "response_ready_before_persistence",
+        "asr_ms": null,
+        "call_brief_ms": null,
+        "response_ready_ms": 6462,
+        "persistence_ms": 0.092,
+        "request_complete_ms": 6462.148,
+        "backend_total_ms": 6462.148,
+        "precomputed_parts": [
+          "persisted_facts"
+        ]
+      },
+      "lesson_trace": null
+    },
+    {
+      "customer": "Chị chưa mua ngay. Em lưu đúng hồ sơ [private] giúp chị nhé.",
+      "agent": "Dạ em cảm ơn chị [private] ạ. Em đã lưu đúng thông tin hồ sơ của chị rồi. Khi nào chị có nhu cầu đặt hàng hoặc cần em hỗ trợ thêm gì chị cứ báo em nhé!",
+      "latency": {
+        "ttft_ms": 2815,
+        "total_ms": 2815,
+        "ttfa_ms": null,
+        "measurement_mode": "non_streaming",
+        "timing_boundary": "response_ready_before_persistence",
+        "asr_ms": null,
+        "call_brief_ms": null,
+        "response_ready_ms": 2815,
+        "persistence_ms": 0.08,
+        "request_complete_ms": 2815.129,
+        "backend_total_ms": 2815.129,
+        "precomputed_parts": [
+          "persisted_facts"
+        ]
+      },
+      "lesson_trace": null
+    }
+  ],
+  "generation_context": {
+    "round": 0,
+    "instruction_hash": "9d30a7093911a993d8545de8b61cc6dc8465de67b10fb62b27d9f1bafaf0badf",
+    "applied_patterns": {},
+    "lessons_loaded": false,
+    "lesson_sources": [],
+    "lesson_files": [],
+    "instruction_root": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round0\\instructions"
+  },
+  "evaluation_evidence": [
+    {
+      "turn_id": 1,
+      "agent_response": "Em chào chị [private] ạ. Em đã ghi nhận thông tin chị đang trao đổi qua Zalo OA và dùng chung số điện thoại với cô Loan rồi ạ. \n\nHôm nay chị [private] đang cần em hỗ trợ tìm hiểu hoặc tư vấn sản phẩm nào cho riêng chị vậy ạ?",
+      "tool_calls": [],
+      "sources": [],
+      "promotions": []
+    },
+    {
+      "turn_id": 2,
+      "agent_response": "Dạ em chào chị [private]. Đúng rồi ạ, sản phẩm Quạt đứng Senko TS16 hiện tại bên em đang có giá chính xác là 590.000 đồng và hàng đang có sẵn ạ. \n\nEm ghi nhận thông tin đây là nhu cầu riêng của chị rồi ạ. Chị có cần em tư vấn thêm về tính năng của quạt hay hỗ trợ chị đặt hàng luôn không ạ?",
+      "tool_calls": [
+        {
+          "name": "catalog.search",
+          "args": {
+            "query": "Quạt đứng Senko TS16",
+            "on": "2026-10-19"
+          },
+          "result": {
+            "items": [
+              {
+                "sku": "SKU-FAN-SEN",
+                "name": "[private]",
+                "category": "gia-[private]/quat",
+                "brand": "Senko",
+                "list_price_vnd": 590000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "warranty_months": 12
+                },
+                "variants": []
+              }
+            ],
+            "total": 1
+          }
+        },
+        {
+          "name": "inventory.check",
+          "args": {
+            "sku": "SKU-FAN-SEN",
+            "on": "2026-10-19"
+          },
+          "result": {
+            "sku": "SKU-FAN-SEN",
+            "found": true,
+            "in_stock": true,
+            "qty": 30,
+            "discontinued": false
+          }
+        },
+        {
+          "name": "pricing.get_quote",
+          "args": {
+            "on": "2026-10-19",
+            "customer_phone": "[private]",
+            "customer_id": "[private]",
+            "sku": "SKU-FAN-SEN",
+            "qty": 1
+          },
+          "result": {
+            "sku": "SKU-FAN-SEN",
+            "list_price_vnd": 590000,
+            "final_price_vnd": 590000,
+            "applied_promos": [
+              {
+                "promo_code": "COD-0",
+                "type": "freecod",
+                "discount_vnd": 0
+              }
+            ],
+            "expired_promos": [],
+            "ineligible_promos": [
+              {
+                "promo_code": "NAM-SHIP0",
+                "reason": "region"
+              }
+            ],
+            "not_applied_exclusive": [],
+            "freeship": false
+          }
+        }
+      ],
+      "sources": [
+        {
+          "sku": "SKU-FAN-SEN",
+          "name": "[private]",
+          "category": "gia-[private]/quat",
+          "brand": "Senko",
+          "list_price_vnd": 590000.0,
+          "discontinued": false,
+          "successor_sku": null,
+          "attributes": {
+            "warranty_months": 12
+          },
+          "variants": []
+        }
+      ],
+      "promotions": []
+    },
+    {
+      "turn_id": 3,
+      "agent_response": "Dạ báo cáo chị [private], theo chính sách áp dụng từ tháng 10/2026, thời hạn đổi trả thông thường đối với sản phẩm còn nguyên tem và không có lỗi kỹ thuật hiện hành là **7 ngày** kể từ ngày nhận hàng ạ (bản tháng 6 trước đây là 14 ngày).\n\nEm đã ghi nhận rõ thông tin này rồi ạ. Chị cần em hỗ trợ tiếp yêu cầu chính nào của chị ạ?",
+      "tool_calls": [
+        {
+          "name": "policy.search",
+          "args": {
+            "query": "Tôi thấy bản chính sách tháng 6 ghi đổi trả trong 14 ngày. Với đơn mới đặt từ tháng 10/2026, hàng còn nguyên tem và không có lỗi kỹ thuật, thời hạn thông thường thực tế là bao nhiêu ngày? Hãy nói rõ mốc hiện hành trước khi tiếp tục yêu cầu chính của tôi.",
+            "k": 3,
+            "product_sku": "SKU-FAN-SEN",
+            "as_of": "2026-10-19"
+          },
+          "result": {
+            "query": "Tôi thấy bản chính sách tháng 6 ghi đổi trả trong 14 ngày. Với đơn mới đặt từ tháng 10/2026, hàng còn nguyên tem và không có lỗi kỹ thuật, thời hạn thông thường thực tế là bao nhiêu ngày? Hãy nói rõ mốc hiện hành trước khi tiếp tục yêu cầu chính của tôi.",
+            "as_of": "2026-10-19",
+            "product_sku": "SKU-FAN-SEN",
+            "count": 3,
+            "chunks": [
+              {
+                "chunk_id": "CL-01",
+                "content": "Thay thế phiên bản 2026-06. Thay đổi: thời hạn đổi trả 14 → **7 ngày**; đổi size lần đầu **miễn phí** (trước: 20.000đ); hoàn tiền 7 → **3–5 ngày làm việc**; lỗi nhà sản xuất đổi mới 15 → **30 ngày** (gia dụng, mẹ & bé). Đơn tạo trước 01/10/2026 vẫn áp dụng bản cũ.",
+                "source_file": "changelog.md",
+                "section": "[CL-01] 01/10/2026 — Chính sách đổi trả phiên bản 2026-10"
+              },
+              {
+                "chunk_id": "BH-01",
+                "content": "Máy lọc không khí AirPure, Samsung: **24 tháng**. Máy lọc không khí Xiaomi: 12 tháng. Máy lọc nước RO Karofi, Kangaroo: **36 tháng** (thân máy), lõi lọc không bảo hành. Quạt, nồi chiên không dầu: 12 tháng. Máy hút sữa, máy tiệt trùng, xe đẩy, ghế ô tô: 12 tháng. Giày, áo khoác: không bảo hành, chỉ áp dụng đổi trả 7 ngày. Thời hạn cụ thể của từng SKU ghi trong `attributes.warranty_months` của catalog — **catalog là nguồn ưu tiên** nếu có khác biệt.",
+                "source_file": "chinh-sach-bao-hanh.md",
+                "section": "[BH-01] Thời hạn bảo hành theo nhóm hàng"
+              },
+              {
+                "chunk_id": "DT-01",
+                "content": "Khách hàng được đổi hoặc trả sản phẩm trong vòng **7 ngày** kể từ ngày nhận hàng (tính theo ngày ký nhận trên đơn vận chuyển). Với ngành hàng gia dụng và mẹ & bé có lỗi kỹ thuật từ nhà sản xuất, thời hạn đổi mới là **30 ngày**.",
+                "source_file": "chinh-sach-doi-tra.md",
+                "section": "[DT-01] Thời hạn đổi trả"
+              }
+            ]
+          }
+        }
+      ],
+      "sources": [],
+      "promotions": []
+    },
+    {
+      "turn_id": 4,
+      "agent_response": "Dạ em cảm ơn chị [private] ạ. Em đã lưu đúng thông tin hồ sơ của chị rồi. Khi nào chị có nhu cầu đặt hàng hoặc cần em hỗ trợ thêm gì chị cứ báo em nhé!",
+      "tool_calls": [],
+      "sources": [],
+      "promotions": []
+    }
+  ],
+  "job": {
+    "status": "done",
+    "job_id": "0033e6f663b60db2820d1e3cd681d95ca6639df52e8875388413b63c7b515506",
+    "error": null
+  },
+  "learning": {
+    "job_id": "0033e6f663b60db2820d1e3cd681d95ca6639df52e8875388413b63c7b515506",
+    "gaps": [],
+    "scope": "knowledge_gap_and_reflection_v1",
+    "evaluation_cases": [],
+    "out_of_scope": [],
+    "issue_reviews": [],
+    "detector_error": null,
+    "guardrails": {
+      "version": "learning_guardrails_v1",
+      "input_findings": [],
+      "blocked_lessons": [],
+      "blocked_sources": []
+    },
+    "detection": {
+      "candidate_count": 0,
+      "open_question_count": 0,
+      "processed_count": 0,
+      "skipped_unmatched_question": 0,
+      "skipped_over_limit": 0,
+      "scan": {
+        "turns_available": 4,
+        "turns_scanned": 4,
+        "requests": 4,
+        "errors": [],
+        "schema_retries": 0,
+        "skipped_over_limit": 0
+      },
+      "alignment_rejections": []
+    },
+    "outcome": "no_candidates",
+    "learning_duration_ms": 6333,
+    "learning_usage": {
+      "input_tokens": 6221,
+      "output_tokens": 13
+    }
+  },
+  "artifact_changes": []
+}

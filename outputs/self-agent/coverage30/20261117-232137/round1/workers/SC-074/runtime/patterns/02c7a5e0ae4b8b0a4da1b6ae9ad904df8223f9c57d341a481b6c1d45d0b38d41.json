@@ -1,0 +1,46 @@
+{
+  "id": "02c7a5e0ae4b8b0a4da1b6ae9ad904df8223f9c57d341a481b6c1d45d0b38d41",
+  "reason": "unsupported_claim",
+  "pattern": "Do not state an unverified claim as a fact.",
+  "status": "approved",
+  "scope": "general",
+  "mechanism": "knowledge_gap",
+  "criterion": "Do not state an unverified claim as a fact.",
+  "evidence_refs": [
+    {
+      "job_id": "e08c6a4dfacceb087dcffbeebbe302a25178389c8e6c0b1dfeebc8205e9a1c5f",
+      "message_id": 0,
+      "turn_id": 1,
+      "origin": "turn_detector"
+    }
+  ],
+  "assessment": "unsupported_by_evidence",
+  "report_ref": "e08c6a4dfacceb087dcffbeebbe302a25178389c8e6c0b1dfeebc8205e9a1c5f",
+  "lesson": {
+    "title": "Verify system status before claiming information availability",
+    "when": "A customer asks about stored details or specific system records not supported by available sources",
+    "do": "State clearly that the information cannot be verified from available records without asserting system capabilities or limitations",
+    "otherwise": "Invent unsupported claims about system status or data availability",
+    "triggers": [
+      "khách hỏi thông tin đã lưu",
+      "kiểm tra lịch sử hệ thống",
+      "hệ thống không có thông tin",
+      "xác nhận thông tin cũ"
+    ],
+    "id": "2f76ef7f25d2559bfa0fc81e3b6c3108cc8b4e3f02909a800a6675066da5ec98",
+    "status": "approved",
+    "scope": "general",
+    "mechanism": "knowledge_gap",
+    "source_refs": [
+      {
+        "job_id": "e08c6a4dfacceb087dcffbeebbe302a25178389c8e6c0b1dfeebc8205e9a1c5f",
+        "message_id": 0,
+        "turn_id": 1,
+        "origin": "turn_detector"
+      }
+    ],
+    "version": 2
+  },
+  "lesson_path": "lessons\\approved\\2f76ef7f25d2559bfa0fc81e3b6c3108cc8b4e3f02909a800a6675066da5ec98.md",
+  "lesson_hash": "fa22a68ccb05a92853eb20186cf49e36c570a0bba07eb96e3da7d36407605245"
+}

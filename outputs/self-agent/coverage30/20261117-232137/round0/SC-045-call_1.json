@@ -1,0 +1,355 @@
+{
+  "scenario_id": "SC-045",
+  "call": "call_1",
+  "session_id": "self-2dbd34d71b6b4659bfc3efc506d56d52-SC-045-call_1",
+  "turns": [
+    {
+      "customer": "Shop tư vấn giúp nhé, chị muốn một Quạt đứng Senko TS16, giá đang là 590.000 đồng đúng không?",
+      "agent": "Dạ đúng rồi chị [private] ạ, sản phẩm Quạt đứng Senko TS16 hiện đang có giá chính xác là 590.000 đồng và bên em đang có sẵn hàng ạ. \n\nChị có muốn em hỗ trợ lên đơn đặt mua quạt này luôn không chị?",
+      "latency": {
+        "ttft_ms": 6825,
+        "total_ms": 6825,
+        "ttfa_ms": null,
+        "measurement_mode": "non_streaming",
+        "timing_boundary": "response_ready_before_persistence",
+        "asr_ms": null,
+        "call_brief_ms": 3305,
+        "response_ready_ms": 6825,
+        "persistence_ms": 0.363,
+        "request_complete_ms": 6825.598,
+        "backend_total_ms": 6825.598,
+        "precomputed_parts": []
+      },
+      "lesson_trace": null
+    },
+    {
+      "customer": "Địa chỉ [address]; thanh toán COD. Hôm nay chưa chốt.",
+      "agent": "Dạ em đã ghi nhận địa chỉ [address]",
+      "latency": {
+        "ttft_ms": 3461,
+        "total_ms": 3461,
+        "ttfa_ms": null,
+        "measurement_mode": "non_streaming",
+        "timing_boundary": "response_ready_before_persistence",
+        "asr_ms": null,
+        "call_brief_ms": null,
+        "response_ready_ms": 3461,
+        "persistence_ms": 0.113,
+        "request_complete_ms": 3461.148,
+        "backend_total_ms": 3461.148,
+        "precomputed_parts": [
+          "persisted_facts"
+        ]
+      },
+      "lesson_trace": null
+    },
+    {
+      "customer": "Tôi thấy bản chính sách tháng 6 ghi đổi trả trong 14 ngày. Với đơn mới đặt từ tháng 10/2026, hàng còn nguyên tem và không có lỗi kỹ thuật, thời hạn thông thường thực tế là bao nhiêu ngày? Hãy nói rõ mốc hiện hành trước khi tiếp tục yêu cầu chính của tôi.",
+      "agent": "Dạ em chào chị [private]. Theo chính sách hiện hành áp dụng từ tháng 10/2026, với các đơn hàng mới đặt từ thời điểm này, sản phẩm còn nguyên tem và không có lỗi kỹ thuật có thời hạn đổi trả thông thường là **7 ngày** kể từ ngày nhận hàng ạ (thay cho mốc 14 ngày của chính sách tháng 6).\n\nDạ chị có thể chia sẻ thêm yêu cầu chính của chị để em hỗ trợ tư vấn chi tiết hơn cho chị nhé?",
+      "latency": {
+        "ttft_ms": 8664,
+        "total_ms": 8664,
+        "ttfa_ms": null,
+        "measurement_mode": "non_streaming",
+        "timing_boundary": "response_ready_before_persistence",
+        "asr_ms": null,
+        "call_brief_ms": null,
+        "response_ready_ms": 8664,
+        "persistence_ms": 0.105,
+        "request_complete_ms": 8664.443,
+        "backend_total_ms": 8664.443,
+        "precomputed_parts": [
+          "persisted_facts"
+        ]
+      },
+      "lesson_trace": null
+    },
+    {
+      "customer": "Em gọi lại lúc 10 giờ ngày 2026-10-21 nhé.",
+      "agent": "Dạ em đã ghi nhận lịch hẹn gọi lại cho chị [private] vào lúc 10:00 ngày 21/10/2026 rồi ạ. Em cảm ơn chị và chúc chị một ngày vui vẻ, em chào chị ạ!",
+      "latency": {
+        "ttft_ms": 3202,
+        "total_ms": 3202,
+        "ttfa_ms": null,
+        "measurement_mode": "non_streaming",
+        "timing_boundary": "response_ready_before_persistence",
+        "asr_ms": null,
+        "call_brief_ms": null,
+        "response_ready_ms": 3202,
+        "persistence_ms": 0.1,
+        "request_complete_ms": 3202.375,
+        "backend_total_ms": 3202.375,
+        "precomputed_parts": [
+          "persisted_facts"
+        ]
+      },
+      "lesson_trace": null
+    }
+  ],
+  "generation_context": {
+    "round": 0,
+    "instruction_hash": "9d30a7093911a993d8545de8b61cc6dc8465de67b10fb62b27d9f1bafaf0badf",
+    "applied_patterns": {},
+    "lessons_loaded": false,
+    "lesson_sources": [],
+    "lesson_files": [],
+    "instruction_root": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round0\\instructions"
+  },
+  "evaluation_evidence": [
+    {
+      "turn_id": 1,
+      "agent_response": "Dạ đúng rồi chị [private] ạ, sản phẩm Quạt đứng Senko TS16 hiện đang có giá chính xác là 590.000 đồng và bên em đang có sẵn hàng ạ. \n\nChị có muốn em hỗ trợ lên đơn đặt mua quạt này luôn không chị?",
+      "tool_calls": [
+        {
+          "name": "catalog.search",
+          "args": {
+            "query": "Quạt đứng Senko TS16",
+            "on": "2026-10-19"
+          },
+          "result": {
+            "items": [
+              {
+                "sku": "SKU-FAN-SEN",
+                "name": "[private]",
+                "category": "gia-dung/quat",
+                "brand": "Senko",
+                "list_price_vnd": 590000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "warranty_months": 12
+                },
+                "variants": []
+              }
+            ],
+            "total": 1
+          }
+        },
+        {
+          "name": "inventory.check",
+          "args": {
+            "sku": "SKU-FAN-SEN",
+            "on": "2026-10-19"
+          },
+          "result": {
+            "sku": "SKU-FAN-SEN",
+            "found": true,
+            "in_stock": true,
+            "qty": 30,
+            "discontinued": false
+          }
+        },
+        {
+          "name": "pricing.get_quote",
+          "args": {
+            "on": "2026-10-19",
+            "customer_phone": "[private]",
+            "customer_id": "[private]",
+            "sku": "SKU-FAN-SEN",
+            "qty": 1
+          },
+          "result": {
+            "sku": "SKU-FAN-SEN",
+            "list_price_vnd": 590000,
+            "final_price_vnd": 590000,
+            "applied_promos": [
+              {
+                "promo_code": "COD-0",
+                "type": "freecod",
+                "discount_vnd": 0
+              }
+            ],
+            "expired_promos": [],
+            "ineligible_promos": [
+              {
+                "promo_code": "NAM-SHIP0",
+                "reason": "region"
+              }
+            ],
+            "not_applied_exclusive": [],
+            "freeship": false
+          }
+        }
+      ],
+      "sources": [
+        {
+          "sku": "SKU-FAN-SEN",
+          "name": "[private]",
+          "category": "gia-dung/quat",
+          "brand": "Senko",
+          "list_price_vnd": 590000.0,
+          "discontinued": false,
+          "successor_sku": null,
+          "attributes": {
+            "warranty_months": 12
+          },
+          "variants": []
+        }
+      ],
+      "promotions": []
+    },
+    {
+      "turn_id": 2,
+      "agent_response": "Dạ em đã ghi nhận địa chỉ [address]",
+      "tool_calls": [],
+      "sources": [
+        {
+          "sku": "SKU-FAN-SEN",
+          "name": "[private]",
+          "category": "gia-dung/quat",
+          "brand": "Senko",
+          "list_price_vnd": 590000.0,
+          "discontinued": false,
+          "successor_sku": null,
+          "attributes": {
+            "warranty_months": 12
+          },
+          "variants": []
+        }
+      ],
+      "promotions": []
+    },
+    {
+      "turn_id": 3,
+      "agent_response": "Dạ em chào chị [private]. Theo chính sách hiện hành áp dụng từ tháng 10/2026, với các đơn hàng mới đặt từ thời điểm này, sản phẩm còn nguyên tem và không có lỗi kỹ thuật có thời hạn đổi trả thông thường là **7 ngày** kể từ ngày nhận hàng ạ (thay cho mốc 14 ngày của chính sách tháng 6).\n\nDạ chị có thể chia sẻ thêm yêu cầu chính của chị để em hỗ trợ tư vấn chi tiết hơn cho chị nhé?",
+      "tool_calls": [
+        {
+          "name": "policy.search",
+          "args": {
+            "query": "Tôi thấy bản chính sách tháng 6 ghi đổi trả trong 14 ngày. Với đơn mới đặt từ tháng 10/2026, hàng còn nguyên tem và không có lỗi kỹ thuật, thời hạn thông thường thực tế là bao nhiêu ngày? Hãy nói rõ mốc hiện hành trước khi tiếp tục yêu cầu chính của tôi.",
+            "k": 3,
+            "product_sku": "SKU-FAN-SEN",
+            "as_of": "2026-10-19"
+          },
+          "result": {
+            "query": "Tôi thấy bản chính sách tháng 6 ghi đổi trả trong 14 ngày. Với đơn mới đặt từ tháng 10/2026, hàng còn nguyên tem và không có lỗi kỹ thuật, thời hạn thông thường thực tế là bao nhiêu ngày? Hãy nói rõ mốc hiện hành trước khi tiếp tục yêu cầu chính của tôi.",
+            "as_of": "2026-10-19",
+            "product_sku": "SKU-FAN-SEN",
+            "count": 3,
+            "chunks": [
+              {
+                "chunk_id": "CL-01",
+                "content": "Thay thế phiên bản 2026-06. Thay đổi: thời hạn đổi trả 14 → **7 ngày**; đổi size lần đầu **miễn phí** (trước: 20.000đ); hoàn tiền 7 → **3–5 ngày làm việc**; lỗi nhà sản xuất đổi mới 15 → **30 ngày** (gia dụng, mẹ & bé). Đơn tạo trước 01/10/2026 vẫn áp dụng bản cũ.",
+                "source_file": "changelog.md",
+                "section": "[CL-01] 01/10/2026 — Chính sách đổi trả phiên bản 2026-10"
+              },
+              {
+                "chunk_id": "BH-01",
+                "content": "Máy lọc không khí AirPure, Samsung: **24 tháng**. Máy lọc không khí Xiaomi: 12 tháng. Máy lọc nước RO Karofi, Kangaroo: **36 tháng** (thân máy), lõi lọc không bảo hành. Quạt, nồi chiên không dầu: 12 tháng. Máy hút sữa, máy tiệt trùng, xe đẩy, ghế ô tô: 12 tháng. Giày, áo khoác: không bảo hành, chỉ áp dụng đổi trả 7 ngày. Thời hạn cụ thể của từng SKU ghi trong `attributes.warranty_months` của catalog — **catalog là nguồn ưu tiên** nếu có khác biệt.",
+                "source_file": "chinh-sach-bao-hanh.md",
+                "section": "[BH-01] Thời hạn bảo hành theo nhóm hàng"
+              },
+              {
+                "chunk_id": "DT-01",
+                "content": "Khách hàng được đổi hoặc trả sản phẩm trong vòng **7 ngày** kể từ ngày nhận hàng (tính theo ngày ký nhận trên đơn vận chuyển). Với ngành hàng gia dụng và mẹ & bé có lỗi kỹ thuật từ nhà sản xuất, thời hạn đổi mới là **30 ngày**.",
+                "source_file": "chinh-sach-doi-tra.md",
+                "section": "[DT-01] Thời hạn đổi trả"
+              }
+            ]
+          }
+        },
+        {
+          "name": "pricing.get_quote",
+          "args": {
+            "on": "2026-10-19",
+            "customer_phone": "[private]",
+            "customer_id": "[private]",
+            "address": "[private]",
+            "sku": "SKU-FAN-SEN",
+            "qty": 1
+          },
+          "result": {
+            "sku": "SKU-FAN-SEN",
+            "list_price_vnd": 590000,
+            "final_price_vnd": 590000,
+            "applied_promos": [
+              {
+                "promo_code": "COD-0",
+                "type": "freecod",
+                "discount_vnd": 0
+              }
+            ],
+            "expired_promos": [],
+            "ineligible_promos": [
+              {
+                "promo_code": "NAM-SHIP0",
+                "reason": "region"
+              }
+            ],
+            "not_applied_exclusive": [],
+            "freeship": false
+          }
+        }
+      ],
+      "sources": [],
+      "promotions": []
+    },
+    {
+      "turn_id": 4,
+      "agent_response": "Dạ em đã ghi nhận lịch hẹn gọi lại cho chị [private] vào lúc 10:00 ngày 21/10/2026 rồi ạ. Em cảm ơn chị và chúc chị một ngày vui vẻ, em chào chị ạ!",
+      "tool_calls": [
+        {
+          "name": "schedule.callback",
+          "args": {
+            "customer_phone": "[private]",
+            "callback_at": "2026-10-21T10:00",
+            "note": "Em gọi lại lúc 10 giờ ngày 2026-10-21 nhé.",
+            "on": "2026-10-19"
+          },
+          "result": {
+            "callback_id": "CB-392D0F",
+            "customer_phone": "[private]",
+            "callback_at": "2026-10-21T10:00",
+            "moved_from": null,
+            "note": "Em gọi lại lúc 10 giờ ngày 2026-10-21 nhé."
+          }
+        }
+      ],
+      "sources": [],
+      "promotions": []
+    }
+  ],
+  "job": {
+    "status": "done",
+    "job_id": "5b12c0f0c9f829ab6e3602b78e4f41d751f236dfc41ed1d87fdc0820229f8c6b",
+    "error": null
+  },
+  "learning": {
+    "job_id": "5b12c0f0c9f829ab6e3602b78e4f41d751f236dfc41ed1d87fdc0820229f8c6b",
+    "gaps": [],
+    "scope": "knowledge_gap_and_reflection_v1",
+    "evaluation_cases": [],
+    "out_of_scope": [],
+    "issue_reviews": [],
+    "detector_error": null,
+    "guardrails": {
+      "version": "learning_guardrails_v1",
+      "input_findings": [],
+      "blocked_lessons": [],
+      "blocked_sources": []
+    },
+    "detection": {
+      "candidate_count": 0,
+      "open_question_count": 0,
+      "processed_count": 0,
+      "skipped_unmatched_question": 0,
+      "skipped_over_limit": 0,
+      "scan": {
+        "turns_available": 4,
+        "turns_scanned": 4,
+        "requests": 4,
+        "errors": [],
+        "schema_retries": 0,
+        "skipped_over_limit": 0
+      },
+      "alignment_rejections": []
+    },
+    "outcome": "no_candidates",
+    "learning_duration_ms": 4644,
+    "learning_usage": {
+      "input_tokens": 7164,
+      "output_tokens": 14
+    }
+  },
+  "artifact_changes": []
+}

@@ -1,0 +1,3677 @@
+{
+  "schema_version": 1,
+  "guardrail_version": "learning_guardrails_v1",
+  "metadata": {
+    "evaluation_population": "single_session_no_baseline"
+  },
+  "warnings": [
+    "Chưa chạy judge: chỉ xem thay đổi câu trả lời và dấu vết lesson, chưa đánh giá cải thiện.",
+    "Không có cặp chấm hợp lệ: chưa thể kết luận cải thiện hay không có regression."
+  ],
+  "summary": {
+    "total_turns": 3,
+    "judged_pair_count": 0,
+    "round0_turns": 0,
+    "round1_turns": 3,
+    "stored_frozen_case_count": 0,
+    "injected_turns": 2,
+    "changed_answers": 0,
+    "counts": {
+      "improved_resolution": 0,
+      "safer_unresolved": 0,
+      "regression": 0,
+      "unchanged": 0,
+      "needs_review": 0,
+      "not_evaluated": 3,
+      "unpaired": 0,
+      "question_changed": 0,
+      "excluded": 0
+    }
+  },
+  "rows": [
+    {
+      "call": "SC-032/call_1",
+      "turn_id": 1,
+      "question": "Chào shop, anh muốn xem Áo khoác gió Windbreak, size M, màu xanh navy, giá hiện tại có phải 690.000 đồng không?",
+      "baseline_question": null,
+      "classification": "not_evaluated",
+      "case_id": null,
+      "gap_id": null,
+      "answer_changed": false,
+      "injected": false,
+      "lesson_trace": {
+        "lessons_loaded": 25,
+        "selected_lessons": [],
+        "injected": false,
+        "mode": "memory_only",
+        "response_modified": false,
+        "routing": "failed",
+        "routing_error": "ValueError",
+        "routing_ms": 1736.939,
+        "routing_usage": {
+          "input_tokens": 4502,
+          "output_tokens": 1
+        },
+        "wrapper_total_ms": 14953.045
+      },
+      "round0": {
+        "answer": null,
+        "verdict": {
+          "status": null
+        },
+        "latency": null,
+        "evidence": {
+          "current": {},
+          "earlier": []
+        }
+      },
+      "round1": {
+        "answer": "Model call limits exceeded: run limit (3/3)",
+        "verdict": {
+          "status": null
+        },
+        "latency": {
+          "ttft_ms": 13215,
+          "total_ms": 13215,
+          "ttfa_ms": null,
+          "measurement_mode": "non_streaming",
+          "timing_boundary": "response_ready_before_persistence",
+          "asr_ms": null,
+          "call_brief_ms": 4301,
+          "response_ready_ms": 13215,
+          "persistence_ms": 0.765,
+          "request_complete_ms": 13216.01,
+          "backend_total_ms": 13216.01,
+          "precomputed_parts": []
+        },
+        "evidence": {
+          "current": {
+            "turn_id": 1,
+            "agent_response": "Model call limits exceeded: run limit (3/3)",
+            "tool_calls": [
+              {
+                "name": "catalog.search",
+                "args": {
+                  "query": "Áo khoác gió Windbreak size M màu xanh navy",
+                  "on": "2026-10-16"
+                },
+                "result": {
+                  "items": [],
+                  "total": 0
+                }
+              },
+              {
+                "name": "catalog.search",
+                "args": {
+                  "query": "Áo khoác gió Windbreak",
+                  "on": "2026-10-16"
+                },
+                "result": {
+                  "items": [
+                    {
+                      "sku": "SKU-JK-WND",
+                      "name": "[private]",
+                      "category": "thoi-trang/ao-khoac",
+                      "brand": "Windbreak",
+                      "list_price_vnd": 690000.0,
+                      "discontinued": false,
+                      "successor_sku": null,
+                      "attributes": {
+                        "return_days": 7
+                      },
+                      "variants": [
+                        {
+                          "variant_sku": "SKU-JK-WND-S-DEN",
+                          "size": "S",
+                          "color": "den",
+                          "price_delta": 0,
+                          "price_delta_vnd": 0
+                        },
+                        {
+                          "variant_sku": "SKU-JK-WND-S-NAVY",
+                          "size": "S",
+                          "color": "navy",
+                          "price_delta": 0,
+                          "price_delta_vnd": 0
+                        },
+                        {
+                          "variant_sku": "SKU-JK-WND-S-BE",
+                          "size": "S",
+                          "color": "be",
+                          "price_delta": 0,
+                          "price_delta_vnd": 0
+                        },
+                        {
+                          "variant_sku": "SKU-JK-WND-M-DEN",
+                          "size": "M",
+                          "color": "den",
+                          "price_delta": 0,
+                          "price_delta_vnd": 0
+                        },
+                        {
+                          "variant_sku": "SKU-JK-WND-M-NAVY",
+                          "size": "M",
+                          "color": "navy",
+                          "price_delta": 0,
+                          "price_delta_vnd": 0
+                        },
+                        {
+                          "variant_sku": "SKU-JK-WND-M-BE",
+                          "size": "M",
+                          "color": "be",
+                          "price_delta": 0,
+                          "price_delta_vnd": 0
+                        },
+                        {
+                          "variant_sku": "SKU-JK-WND-L-DEN",
+                          "size": "L",
+                          "color": "den",
+                          "price_delta": 0,
+                          "price_delta_vnd": 0
+                        },
+                        {
+                          "variant_sku": "SKU-JK-WND-L-NAVY",
+                          "size": "L",
+                          "color": "navy",
+                          "price_delta": 0,
+                          "price_delta_vnd": 0
+                        },
+                        {
+                          "variant_sku": "SKU-JK-WND-L-BE",
+                          "size": "L",
+                          "color": "be",
+                          "price_delta": 0,
+                          "price_delta_vnd": 0
+                        },
+                        {
+                          "variant_sku": "SKU-JK-WND-XL-DEN",
+                          "size": "XL",
+                          "color": "den",
+                          "price_delta": 40000.0,
+                          "price_delta_vnd": 40000
+                        },
+                        {
+                          "variant_sku": "SKU-JK-WND-XL-NAVY",
+                          "size": "XL",
+                          "color": "navy",
+                          "price_delta": 40000.0,
+                          "price_delta_vnd": 40000
+                        },
+                        {
+                          "variant_sku": "SKU-JK-WND-XL-BE",
+                          "size": "XL",
+                          "color": "be",
+                          "price_delta": 40000.0,
+                          "price_delta_vnd": 40000
+                        }
+                      ]
+                    }
+                  ],
+                  "total": 1
+                }
+              },
+              {
+                "name": "pricing.get_quote",
+                "args": {
+                  "sku": "SKU-JK-WND-M-NAVY",
+                  "qty": 1,
+                  "on": "2026-10-16",
+                  "customer_id": "[private]"
+                },
+                "result": {
+                  "sku": "SKU-JK-WND-M-NAVY",
+                  "list_price_vnd": 690000,
+                  "final_price_vnd": 690000,
+                  "applied_promos": [
+                    {
+                      "promo_code": "COD-0",
+                      "type": "freecod",
+                      "discount_vnd": 0
+                    }
+                  ],
+                  "expired_promos": [],
+                  "ineligible_promos": [],
+                  "not_applied_exclusive": [],
+                  "freeship": false
+                }
+              },
+              {
+                "name": "inventory.check",
+                "args": {
+                  "on": "2026-10-16",
+                  "sku": "SKU-JK-WND-M-NAVY"
+                },
+                "result": {
+                  "sku": "SKU-JK-WND-M-NAVY",
+                  "found": true,
+                  "in_stock": true,
+                  "qty": 12,
+                  "discontinued": false
+                }
+              }
+            ],
+            "sources": [
+              {
+                "sku": "SKU-JK-WND",
+                "name": "[private]",
+                "category": "thoi-trang/ao-khoac",
+                "brand": "Windbreak",
+                "list_price_vnd": 690000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "return_days": 7
+                },
+                "variants": [
+                  {
+                    "variant_sku": "SKU-JK-WND-S-DEN",
+                    "size": "S",
+                    "color": "den",
+                    "price_delta": 0,
+                    "price_delta_vnd": 0
+                  },
+                  {
+                    "variant_sku": "SKU-JK-WND-S-NAVY",
+                    "size": "S",
+                    "color": "navy",
+                    "price_delta": 0,
+                    "price_delta_vnd": 0
+                  },
+                  {
+                    "variant_sku": "SKU-JK-WND-S-BE",
+                    "size": "S",
+                    "color": "be",
+                    "price_delta": 0,
+                    "price_delta_vnd": 0
+                  },
+                  {
+                    "variant_sku": "SKU-JK-WND-M-DEN",
+                    "size": "M",
+                    "color": "den",
+                    "price_delta": 0,
+                    "price_delta_vnd": 0
+                  },
+                  {
+                    "variant_sku": "SKU-JK-WND-M-NAVY",
+                    "size": "M",
+                    "color": "navy",
+                    "price_delta": 0,
+                    "price_delta_vnd": 0
+                  },
+                  {
+                    "variant_sku": "SKU-JK-WND-M-BE",
+                    "size": "M",
+                    "color": "be",
+                    "price_delta": 0,
+                    "price_delta_vnd": 0
+                  },
+                  {
+                    "variant_sku": "SKU-JK-WND-L-DEN",
+                    "size": "L",
+                    "color": "den",
+                    "price_delta": 0,
+                    "price_delta_vnd": 0
+                  },
+                  {
+                    "variant_sku": "SKU-JK-WND-L-NAVY",
+                    "size": "L",
+                    "color": "navy",
+                    "price_delta": 0,
+                    "price_delta_vnd": 0
+                  },
+                  {
+                    "variant_sku": "SKU-JK-WND-L-BE",
+                    "size": "L",
+                    "color": "be",
+                    "price_delta": 0,
+                    "price_delta_vnd": 0
+                  },
+                  {
+                    "variant_sku": "SKU-JK-WND-XL-DEN",
+                    "size": "XL",
+                    "color": "den",
+                    "price_delta": 40000.0,
+                    "price_delta_vnd": 40000
+                  },
+                  {
+                    "variant_sku": "SKU-JK-WND-XL-NAVY",
+                    "size": "XL",
+                    "color": "navy",
+                    "price_delta": 40000.0,
+                    "price_delta_vnd": 40000
+                  },
+                  {
+                    "variant_sku": "SKU-JK-WND-XL-BE",
+                    "size": "XL",
+                    "color": "be",
+                    "price_delta": 40000.0,
+                    "price_delta_vnd": 40000
+                  }
+                ]
+              },
+              {
+                "sku": "SKU-AP-X",
+                "name": "[private]",
+                "category": "gia-dung/may-loc-khong-khi",
+                "brand": "AirPure",
+                "list_price_vnd": 4890000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "features": "HEPA H13, cảm biến PM2.5, chế độ ngủ",
+                  "room_area_m2": 25,
+                  "child_safe_lock": false,
+                  "warranty_months": 24
+                },
+                "variants": []
+              },
+              {
+                "sku": "SKU-AP-Y",
+                "name": "[private]",
+                "category": "gia-dung/may-loc-khong-khi",
+                "brand": "AirPure",
+                "list_price_vnd": 5200000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "features": "HEPA H13 + than hoạt tính, app điều khiển",
+                  "room_area_m2": 30,
+                  "child_safe_lock": true,
+                  "warranty_months": 24
+                },
+                "variants": []
+              },
+              {
+                "sku": "SKU-AP-MINI",
+                "name": "[private]",
+                "category": "gia-dung/may-loc-khong-khi",
+                "brand": "AirPure",
+                "list_price_vnd": 2190000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "features": "HEPA H11, để bàn",
+                  "room_area_m2": 12,
+                  "child_safe_lock": false,
+                  "warranty_months": 24
+                },
+                "variants": []
+              },
+              {
+                "sku": "SKU-AP-PRO",
+                "name": "[private]",
+                "category": "gia-dung/may-loc-khong-khi",
+                "brand": "AirPure",
+                "list_price_vnd": 7990000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "features": "HEPA H13, UV, diệt khuẩn",
+                  "room_area_m2": 45,
+                  "child_safe_lock": true,
+                  "warranty_months": 24
+                },
+                "variants": []
+              },
+              {
+                "sku": "SKU-XM-4L",
+                "name": "[private]",
+                "category": "gia-dung/may-loc-khong-khi",
+                "brand": "Xiaomi",
+                "list_price_vnd": 2990000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "features": "HEPA, app Mi Home",
+                  "room_area_m2": 43,
+                  "child_safe_lock": false,
+                  "warranty_months": 24
+                },
+                "variants": []
+              },
+              {
+                "sku": "SKU-XM-4P",
+                "name": "[private]",
+                "category": "gia-dung/may-loc-khong-khi",
+                "brand": "Xiaomi",
+                "list_price_vnd": 5490000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "features": "HEPA, màn OLED, app Mi Home",
+                  "room_area_m2": 60,
+                  "child_safe_lock": false,
+                  "warranty_months": 24
+                },
+                "variants": []
+              },
+              {
+                "sku": "SKU-SS-AX40",
+                "name": "[private]",
+                "category": "gia-dung/may-loc-khong-khi",
+                "brand": "Samsung",
+                "list_price_vnd": 6490000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "features": "HEPA, lọc khử mùi, cảm biến bụi",
+                  "room_area_m2": 40,
+                  "child_safe_lock": true,
+                  "warranty_months": 24
+                },
+                "variants": []
+              },
+              {
+                "sku": "SKU-WF-RO9",
+                "name": "[private]",
+                "category": "gia-dung/may-loc-nuoc",
+                "brand": "Karofi",
+                "list_price_vnd": 5990000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "stages": 9,
+                  "warranty_months": 36
+                },
+                "variants": []
+              },
+              {
+                "sku": "SKU-WF-RO10",
+                "name": "[private]",
+                "category": "gia-dung/may-loc-nuoc",
+                "brand": "Kangaroo",
+                "list_price_vnd": 6890000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "stages": 0,
+                  "warranty_months": 36
+                },
+                "variants": []
+              },
+              {
+                "sku": "SKU-WF-UF",
+                "name": "[private]",
+                "category": "gia-dung/may-loc-nuoc",
+                "brand": "Sunhouse",
+                "list_price_vnd": 3290000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "stages": 5,
+                  "warranty_months": 36
+                },
+                "variants": []
+              },
+              {
+                "sku": "SKU-FAN-TWR",
+                "name": "[private]",
+                "category": "gia-dung/quat",
+                "brand": "Xiaomi",
+                "list_price_vnd": 1790000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "warranty_months": 12
+                },
+                "variants": []
+              },
+              {
+                "sku": "SKU-AF-XM",
+                "name": "[private]",
+                "category": "gia-dung/noi-chien",
+                "brand": "Xiaomi",
+                "list_price_vnd": 1590000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "warranty_months": 12
+                },
+                "variants": []
+              },
+              {
+                "sku": "SKU-JK-DWN",
+                "name": "[private]",
+                "category": "thoi-trang/ao-khoac",
+                "brand": "Warmly",
+                "list_price_vnd": 1490000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "return_days": 7
+                },
+                "variants": [
+                  {
+                    "variant_sku": "SKU-JK-DWN-S-DEN",
+                    "size": "S",
+                    "color": "den",
+                    "price_delta": 0,
+                    "price_delta_vnd": 0
+                  },
+                  {
+                    "variant_sku": "SKU-JK-DWN-S-NAVY",
+                    "size": "S",
+                    "color": "navy",
+                    "price_delta": 0,
+                    "price_delta_vnd": 0
+                  },
+                  {
+                    "variant_sku": "SKU-JK-DWN-S-BE",
+                    "size": "S",
+                    "color": "be",
+                    "price_delta": 0,
+                    "price_delta_vnd": 0
+                  },
+                  {
+                    "variant_sku": "SKU-JK-DWN-M-DEN",
+                    "size": "M",
+                    "color": "den",
+                    "price_delta": 0,
+                    "price_delta_vnd": 0
+                  },
+                  {
+                    "variant_sku": "SKU-JK-DWN-M-NAVY",
+                    "size": "M",
+                    "color": "navy",
+                    "price_delta": 0,
+                    "price_delta_vnd": 0
+                  },
+                  {
+                    "variant_sku": "SKU-JK-DWN-M-BE",
+                    "size": "M",
+                    "color": "be",
+                    "price_delta": 0,
+                    "price_delta_vnd": 0
+                  },
+                  {
+                    "variant_sku": "SKU-JK-DWN-L-DEN",
+                    "size": "L",
+                    "color": "den",
+                    "price_delta": 0,
+                    "price_delta_vnd": 0
+                  },
+                  {
+                    "variant_sku": "SKU-JK-DWN-L-NAVY",
+                    "size": "L",
+                    "color": "navy",
+                    "price_delta": 0,
+                    "price_delta_vnd": 0
+                  },
+                  {
+                    "variant_sku": "SKU-JK-DWN-L-BE",
+                    "size": "L",
+                    "color": "be",
+                    "price_delta": 0,
+                    "price_delta_vnd": 0
+                  },
+                  {
+                    "variant_sku": "SKU-JK-DWN-XL-DEN",
+                    "size": "XL",
+                    "color": "den",
+                    "price_delta": 40000.0,
+                    "price_delta_vnd": 40000
+                  },
+                  {
+                    "variant_sku": "SKU-JK-DWN-XL-NAVY",
+                    "size": "XL",
+                    "color": "navy",
+                    "price_delta": 40000.0,
+                    "price_delta_vnd": 40000
+                  },
+                  {
+                    "variant_sku": "SKU-JK-DWN-XL-BE",
+                    "size": "XL",
+                    "color": "be",
+                    "price_delta": 40000.0,
+                    "price_delta_vnd": 40000
+                  }
+                ]
+              },
+              {
+                "sku": "SKU-MB-PUMP1",
+                "name": "[private]",
+                "category": "me-be",
+                "brand": "Spectra",
+                "list_price_vnd": 4290000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "warranty_months": 12
+                },
+                "variants": []
+              },
+              {
+                "sku": "SKU-MB-PUMP2",
+                "name": "[private]",
+                "category": "me-be",
+                "brand": "Medela",
+                "list_price_vnd": 5990000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "warranty_months": 12
+                },
+                "variants": []
+              },
+              {
+                "sku": "SKU-MB-STR2",
+                "name": "[private]",
+                "category": "me-be",
+                "brand": "Combi",
+                "list_price_vnd": 6790000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "max_weight_kg": 15,
+                  "warranty_months": 12
+                },
+                "variants": []
+              },
+              {
+                "sku": "SKU-MB-MON",
+                "name": "[private]",
+                "category": "me-be",
+                "brand": "Fatz",
+                "list_price_vnd": 490000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "warranty_months": 12
+                },
+                "variants": []
+              },
+              {
+                "sku": "SKU-MB-STER",
+                "name": "[private]",
+                "category": "me-be",
+                "brand": "Moaz",
+                "list_price_vnd": 1890000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "warranty_months": 12
+                },
+                "variants": []
+              },
+              {
+                "sku": "SKU-MB-BOT",
+                "name": "[private]",
+                "category": "me-be",
+                "brand": "Pigeon",
+                "list_price_vnd": 289000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "volume_ml": 240
+                },
+                "variants": []
+              },
+              {
+                "sku": "SKU-BDL-AIR",
+                "name": "[private]",
+                "category": "gia-dung/combo",
+                "brand": "AirPure",
+                "list_price_vnd": 6390000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "bundle_of": [
+                    "SKU-AP-Y",
+                    "SKU-AP-FLT-X",
+                    "SKU-AP-FLT-X"
+                  ],
+                  "saving_vnd": 190000,
+                  "warranty_months": 24
+                },
+                "variants": []
+              }
+            ],
+            "promotions": []
+          },
+          "earlier": []
+        }
+      }
+    },
+    {
+      "call": "SC-032/call_1",
+      "turn_id": 2,
+      "question": "Anh chỉ tham khảo, chưa đặt đơn. Khi quay lại anh sẽ hỏi thêm điều kiện đổi size.",
+      "baseline_question": null,
+      "classification": "not_evaluated",
+      "case_id": null,
+      "gap_id": null,
+      "answer_changed": false,
+      "injected": true,
+      "lesson_trace": {
+        "lessons_loaded": 25,
+        "selected_lessons": [
+          {
+            "id": "2428465dd6aebd918b246b218ea61f077e2a4a03ca7a10bb6c10ca1cd078d1a6",
+            "hash": "a6ef6e56d1a0afa44afce603254ba8380a79684f4316ec30047adabc7375818d",
+            "mechanism": "knowledge_gap"
+          }
+        ],
+        "injected": true,
+        "mode": "memory_only",
+        "response_modified": false,
+        "routing": "selected",
+        "routing_ms": 2161.67,
+        "routing_usage": {
+          "input_tokens": 4992,
+          "output_tokens": 69
+        },
+        "guardrails": {
+          "version": "learning_guardrails_v1",
+          "blocked_lessons": []
+        },
+        "injected_chars": 892,
+        "injected_lesson_count": 1,
+        "wrapper_total_ms": 4969.251
+      },
+      "round0": {
+        "answer": null,
+        "verdict": {
+          "status": null
+        },
+        "latency": null,
+        "evidence": {
+          "current": {},
+          "earlier": []
+        }
+      },
+      "round1": {
+        "answer": "Dạ em hiểu rồi ạ, em đã ghi nhận anh [private] sẽ tham khảo thêm về điều kiện đổi size khi quay lại. \n\nKhi nào cần hỗ trợ hoặc sẵn sàng đặt hàng, anh cứ liên hệ lại với em nhé. Chúc anh một ngày tốt lành ạ!",
+        "verdict": {
+          "status": null
+        },
+        "latency": {
+          "ttft_ms": 2807,
+          "total_ms": 2807,
+          "ttfa_ms": null,
+          "measurement_mode": "non_streaming",
+          "timing_boundary": "response_ready_before_persistence",
+          "asr_ms": null,
+          "call_brief_ms": null,
+          "response_ready_ms": 2807,
+          "persistence_ms": 0.102,
+          "request_complete_ms": 2807.46,
+          "backend_total_ms": 2807.46,
+          "precomputed_parts": [
+            "persisted_facts"
+          ]
+        },
+        "evidence": {
+          "current": {
+            "turn_id": 2,
+            "agent_response": "Dạ em hiểu rồi ạ, em đã ghi nhận anh [private] sẽ tham khảo thêm về điều kiện đổi size khi quay lại. \n\nKhi nào cần hỗ trợ hoặc sẵn sàng đặt hàng, anh cứ liên hệ lại với em nhé. Chúc anh một ngày tốt lành ạ!",
+            "tool_calls": [],
+            "sources": [
+              {
+                "sku": "SKU-JK-WND",
+                "name": "[private]",
+                "category": "thoi-trang/ao-khoac",
+                "brand": "Windbreak",
+                "list_price_vnd": 690000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "return_days": 7
+                },
+                "variants": [
+                  {
+                    "variant_sku": "SKU-JK-WND-S-DEN",
+                    "size": "S",
+                    "color": "den",
+                    "price_delta": 0,
+                    "price_delta_vnd": 0
+                  },
+                  {
+                    "variant_sku": "SKU-JK-WND-S-NAVY",
+                    "size": "S",
+                    "color": "navy",
+                    "price_delta": 0,
+                    "price_delta_vnd": 0
+                  },
+                  {
+                    "variant_sku": "SKU-JK-WND-S-BE",
+                    "size": "S",
+                    "color": "be",
+                    "price_delta": 0,
+                    "price_delta_vnd": 0
+                  },
+                  {
+                    "variant_sku": "SKU-JK-WND-M-DEN",
+                    "size": "M",
+                    "color": "den",
+                    "price_delta": 0,
+                    "price_delta_vnd": 0
+                  },
+                  {
+                    "variant_sku": "SKU-JK-WND-M-NAVY",
+                    "size": "M",
+                    "color": "navy",
+                    "price_delta": 0,
+                    "price_delta_vnd": 0
+                  },
+                  {
+                    "variant_sku": "SKU-JK-WND-M-BE",
+                    "size": "M",
+                    "color": "be",
+                    "price_delta": 0,
+                    "price_delta_vnd": 0
+                  },
+                  {
+                    "variant_sku": "SKU-JK-WND-L-DEN",
+                    "size": "L",
+                    "color": "den",
+                    "price_delta": 0,
+                    "price_delta_vnd": 0
+                  },
+                  {
+                    "variant_sku": "SKU-JK-WND-L-NAVY",
+                    "size": "L",
+                    "color": "navy",
+                    "price_delta": 0,
+                    "price_delta_vnd": 0
+                  },
+                  {
+                    "variant_sku": "SKU-JK-WND-L-BE",
+                    "size": "L",
+                    "color": "be",
+                    "price_delta": 0,
+                    "price_delta_vnd": 0
+                  },
+                  {
+                    "variant_sku": "SKU-JK-WND-XL-DEN",
+                    "size": "XL",
+                    "color": "den",
+                    "price_delta": 40000.0,
+                    "price_delta_vnd": 40000
+                  },
+                  {
+                    "variant_sku": "SKU-JK-WND-XL-NAVY",
+                    "size": "XL",
+                    "color": "navy",
+                    "price_delta": 40000.0,
+                    "price_delta_vnd": 40000
+                  },
+                  {
+                    "variant_sku": "SKU-JK-WND-XL-BE",
+                    "size": "XL",
+                    "color": "be",
+                    "price_delta": 40000.0,
+                    "price_delta_vnd": 40000
+                  }
+                ]
+              },
+              {
+                "sku": "SKU-AP-X",
+                "name": "[private]",
+                "category": "gia-dung/may-loc-khong-khi",
+                "brand": "AirPure",
+                "list_price_vnd": 4890000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "features": "HEPA H13, cảm biến PM2.5, chế độ ngủ",
+                  "room_area_m2": 25,
+                  "child_safe_lock": false,
+                  "warranty_months": 24
+                },
+                "variants": []
+              },
+              {
+                "sku": "SKU-AP-Y",
+                "name": "[private]",
+                "category": "gia-dung/may-loc-khong-khi",
+                "brand": "AirPure",
+                "list_price_vnd": 5200000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "features": "HEPA H13 + than hoạt tính, app điều khiển",
+                  "room_area_m2": 30,
+                  "child_safe_lock": true,
+                  "warranty_months": 24
+                },
+                "variants": []
+              },
+              {
+                "sku": "SKU-AP-MINI",
+                "name": "[private]",
+                "category": "gia-dung/may-loc-khong-khi",
+                "brand": "AirPure",
+                "list_price_vnd": 2190000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "features": "HEPA H11, để bàn",
+                  "room_area_m2": 12,
+                  "child_safe_lock": false,
+                  "warranty_months": 24
+                },
+                "variants": []
+              },
+              {
+                "sku": "SKU-AP-PRO",
+                "name": "[private]",
+                "category": "gia-dung/may-loc-khong-khi",
+                "brand": "AirPure",
+                "list_price_vnd": 7990000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "features": "HEPA H13, UV, diệt khuẩn",
+                  "room_area_m2": 45,
+                  "child_safe_lock": true,
+                  "warranty_months": 24
+                },
+                "variants": []
+              },
+              {
+                "sku": "SKU-XM-4L",
+                "name": "[private]",
+                "category": "gia-dung/may-loc-khong-khi",
+                "brand": "Xiaomi",
+                "list_price_vnd": 2990000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "features": "HEPA, app Mi Home",
+                  "room_area_m2": 43,
+                  "child_safe_lock": false,
+                  "warranty_months": 24
+                },
+                "variants": []
+              },
+              {
+                "sku": "SKU-XM-4P",
+                "name": "[private]",
+                "category": "gia-dung/may-loc-khong-khi",
+                "brand": "Xiaomi",
+                "list_price_vnd": 5490000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "features": "HEPA, màn OLED, app Mi Home",
+                  "room_area_m2": 60,
+                  "child_safe_lock": false,
+                  "warranty_months": 24
+                },
+                "variants": []
+              },
+              {
+                "sku": "SKU-SS-AX40",
+                "name": "[private]",
+                "category": "gia-dung/may-loc-khong-khi",
+                "brand": "Samsung",
+                "list_price_vnd": 6490000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "features": "HEPA, lọc khử mùi, cảm biến bụi",
+                  "room_area_m2": 40,
+                  "child_safe_lock": true,
+                  "warranty_months": 24
+                },
+                "variants": []
+              },
+              {
+                "sku": "SKU-WF-RO9",
+                "name": "[private]",
+                "category": "gia-dung/may-loc-nuoc",
+                "brand": "Karofi",
+                "list_price_vnd": 5990000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "stages": 9,
+                  "warranty_months": 36
+                },
+                "variants": []
+              },
+              {
+                "sku": "SKU-WF-RO10",
+                "name": "[private]",
+                "category": "gia-dung/may-loc-nuoc",
+                "brand": "Kangaroo",
+                "list_price_vnd": 6890000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "stages": 0,
+                  "warranty_months": 36
+                },
+                "variants": []
+              },
+              {
+                "sku": "SKU-WF-UF",
+                "name": "[private]",
+                "category": "gia-dung/may-loc-nuoc",
+                "brand": "Sunhouse",
+                "list_price_vnd": 3290000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "stages": 5,
+                  "warranty_months": 36
+                },
+                "variants": []
+              },
+              {
+                "sku": "SKU-FAN-TWR",
+                "name": "[private]",
+                "category": "gia-dung/quat",
+                "brand": "Xiaomi",
+                "list_price_vnd": 1790000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "warranty_months": 12
+                },
+                "variants": []
+              },
+              {
+                "sku": "SKU-AF-XM",
+                "name": "[private]",
+                "category": "gia-dung/noi-chien",
+                "brand": "Xiaomi",
+                "list_price_vnd": 1590000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "warranty_months": 12
+                },
+                "variants": []
+              },
+              {
+                "sku": "SKU-JK-DWN",
+                "name": "[private]",
+                "category": "thoi-trang/ao-khoac",
+                "brand": "Warmly",
+                "list_price_vnd": 1490000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "return_days": 7
+                },
+                "variants": [
+                  {
+                    "variant_sku": "SKU-JK-DWN-S-DEN",
+                    "size": "S",
+                    "color": "den",
+                    "price_delta": 0,
+                    "price_delta_vnd": 0
+                  },
+                  {
+                    "variant_sku": "SKU-JK-DWN-S-NAVY",
+                    "size": "S",
+                    "color": "navy",
+                    "price_delta": 0,
+                    "price_delta_vnd": 0
+                  },
+                  {
+                    "variant_sku": "SKU-JK-DWN-S-BE",
+                    "size": "S",
+                    "color": "be",
+                    "price_delta": 0,
+                    "price_delta_vnd": 0
+                  },
+                  {
+                    "variant_sku": "SKU-JK-DWN-M-DEN",
+                    "size": "M",
+                    "color": "den",
+                    "price_delta": 0,
+                    "price_delta_vnd": 0
+                  },
+                  {
+                    "variant_sku": "SKU-JK-DWN-M-NAVY",
+                    "size": "M",
+                    "color": "navy",
+                    "price_delta": 0,
+                    "price_delta_vnd": 0
+                  },
+                  {
+                    "variant_sku": "SKU-JK-DWN-M-BE",
+                    "size": "M",
+                    "color": "be",
+                    "price_delta": 0,
+                    "price_delta_vnd": 0
+                  },
+                  {
+                    "variant_sku": "SKU-JK-DWN-L-DEN",
+                    "size": "L",
+                    "color": "den",
+                    "price_delta": 0,
+                    "price_delta_vnd": 0
+                  },
+                  {
+                    "variant_sku": "SKU-JK-DWN-L-NAVY",
+                    "size": "L",
+                    "color": "navy",
+                    "price_delta": 0,
+                    "price_delta_vnd": 0
+                  },
+                  {
+                    "variant_sku": "SKU-JK-DWN-L-BE",
+                    "size": "L",
+                    "color": "be",
+                    "price_delta": 0,
+                    "price_delta_vnd": 0
+                  },
+                  {
+                    "variant_sku": "SKU-JK-DWN-XL-DEN",
+                    "size": "XL",
+                    "color": "den",
+                    "price_delta": 40000.0,
+                    "price_delta_vnd": 40000
+                  },
+                  {
+                    "variant_sku": "SKU-JK-DWN-XL-NAVY",
+                    "size": "XL",
+                    "color": "navy",
+                    "price_delta": 40000.0,
+                    "price_delta_vnd": 40000
+                  },
+                  {
+                    "variant_sku": "SKU-JK-DWN-XL-BE",
+                    "size": "XL",
+                    "color": "be",
+                    "price_delta": 40000.0,
+                    "price_delta_vnd": 40000
+                  }
+                ]
+              },
+              {
+                "sku": "SKU-MB-PUMP1",
+                "name": "[private]",
+                "category": "me-be",
+                "brand": "Spectra",
+                "list_price_vnd": 4290000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "warranty_months": 12
+                },
+                "variants": []
+              },
+              {
+                "sku": "SKU-MB-PUMP2",
+                "name": "[private]",
+                "category": "me-be",
+                "brand": "Medela",
+                "list_price_vnd": 5990000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "warranty_months": 12
+                },
+                "variants": []
+              },
+              {
+                "sku": "SKU-MB-STR2",
+                "name": "[private]",
+                "category": "me-be",
+                "brand": "Combi",
+                "list_price_vnd": 6790000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "max_weight_kg": 15,
+                  "warranty_months": 12
+                },
+                "variants": []
+              },
+              {
+                "sku": "SKU-MB-MON",
+                "name": "[private]",
+                "category": "me-be",
+                "brand": "Fatz",
+                "list_price_vnd": 490000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "warranty_months": 12
+                },
+                "variants": []
+              },
+              {
+                "sku": "SKU-MB-STER",
+                "name": "[private]",
+                "category": "me-be",
+                "brand": "Moaz",
+                "list_price_vnd": 1890000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "warranty_months": 12
+                },
+                "variants": []
+              },
+              {
+                "sku": "SKU-MB-BOT",
+                "name": "[private]",
+                "category": "me-be",
+                "brand": "Pigeon",
+                "list_price_vnd": 289000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "volume_ml": 240
+                },
+                "variants": []
+              },
+              {
+                "sku": "SKU-BDL-AIR",
+                "name": "[private]",
+                "category": "gia-dung/combo",
+                "brand": "AirPure",
+                "list_price_vnd": 6390000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "bundle_of": [
+                    "SKU-AP-Y",
+                    "SKU-AP-FLT-X",
+                    "SKU-AP-FLT-X"
+                  ],
+                  "saving_vnd": 190000,
+                  "warranty_months": 24
+                },
+                "variants": []
+              }
+            ],
+            "promotions": []
+          },
+          "earlier": [
+            {
+              "turn_id": 1,
+              "tool_calls": [
+                {
+                  "name": "catalog.search",
+                  "args": {
+                    "query": "Áo khoác gió Windbreak size M màu xanh navy",
+                    "on": "2026-10-16"
+                  },
+                  "result": {
+                    "items": [],
+                    "total": 0
+                  }
+                },
+                {
+                  "name": "catalog.search",
+                  "args": {
+                    "query": "Áo khoác gió Windbreak",
+                    "on": "2026-10-16"
+                  },
+                  "result": {
+                    "items": [
+                      {
+                        "sku": "SKU-JK-WND",
+                        "name": "[private]",
+                        "category": "thoi-trang/ao-khoac",
+                        "brand": "Windbreak",
+                        "list_price_vnd": 690000.0,
+                        "discontinued": false,
+                        "successor_sku": null,
+                        "attributes": {
+                          "return_days": 7
+                        },
+                        "variants": [
+                          {
+                            "variant_sku": "SKU-JK-WND-S-DEN",
+                            "size": "S",
+                            "color": "den",
+                            "price_delta": 0,
+                            "price_delta_vnd": 0
+                          },
+                          {
+                            "variant_sku": "SKU-JK-WND-S-NAVY",
+                            "size": "S",
+                            "color": "navy",
+                            "price_delta": 0,
+                            "price_delta_vnd": 0
+                          },
+                          {
+                            "variant_sku": "SKU-JK-WND-S-BE",
+                            "size": "S",
+                            "color": "be",
+                            "price_delta": 0,
+                            "price_delta_vnd": 0
+                          },
+                          {
+                            "variant_sku": "SKU-JK-WND-M-DEN",
+                            "size": "M",
+                            "color": "den",
+                            "price_delta": 0,
+                            "price_delta_vnd": 0
+                          },
+                          {
+                            "variant_sku": "SKU-JK-WND-M-NAVY",
+                            "size": "M",
+                            "color": "navy",
+                            "price_delta": 0,
+                            "price_delta_vnd": 0
+                          },
+                          {
+                            "variant_sku": "SKU-JK-WND-M-BE",
+                            "size": "M",
+                            "color": "be",
+                            "price_delta": 0,
+                            "price_delta_vnd": 0
+                          },
+                          {
+                            "variant_sku": "SKU-JK-WND-L-DEN",
+                            "size": "L",
+                            "color": "den",
+                            "price_delta": 0,
+                            "price_delta_vnd": 0
+                          },
+                          {
+                            "variant_sku": "SKU-JK-WND-L-NAVY",
+                            "size": "L",
+                            "color": "navy",
+                            "price_delta": 0,
+                            "price_delta_vnd": 0
+                          },
+                          {
+                            "variant_sku": "SKU-JK-WND-L-BE",
+                            "size": "L",
+                            "color": "be",
+                            "price_delta": 0,
+                            "price_delta_vnd": 0
+                          },
+                          {
+                            "variant_sku": "SKU-JK-WND-XL-DEN",
+                            "size": "XL",
+                            "color": "den",
+                            "price_delta": 40000.0,
+                            "price_delta_vnd": 40000
+                          },
+                          {
+                            "variant_sku": "SKU-JK-WND-XL-NAVY",
+                            "size": "XL",
+                            "color": "navy",
+                            "price_delta": 40000.0,
+                            "price_delta_vnd": 40000
+                          },
+                          {
+                            "variant_sku": "SKU-JK-WND-XL-BE",
+                            "size": "XL",
+                            "color": "be",
+                            "price_delta": 40000.0,
+                            "price_delta_vnd": 40000
+                          }
+                        ]
+                      }
+                    ],
+                    "total": 1
+                  }
+                },
+                {
+                  "name": "pricing.get_quote",
+                  "args": {
+                    "sku": "SKU-JK-WND-M-NAVY",
+                    "qty": 1,
+                    "on": "2026-10-16",
+                    "customer_id": "[private]"
+                  },
+                  "result": {
+                    "sku": "SKU-JK-WND-M-NAVY",
+                    "list_price_vnd": 690000,
+                    "final_price_vnd": 690000,
+                    "applied_promos": [
+                      {
+                        "promo_code": "COD-0",
+                        "type": "freecod",
+                        "discount_vnd": 0
+                      }
+                    ],
+                    "expired_promos": [],
+                    "ineligible_promos": [],
+                    "not_applied_exclusive": [],
+                    "freeship": false
+                  }
+                },
+                {
+                  "name": "inventory.check",
+                  "args": {
+                    "on": "2026-10-16",
+                    "sku": "SKU-JK-WND-M-NAVY"
+                  },
+                  "result": {
+                    "sku": "SKU-JK-WND-M-NAVY",
+                    "found": true,
+                    "in_stock": true,
+                    "qty": 12,
+                    "discontinued": false
+                  }
+                }
+              ],
+              "sources": [
+                {
+                  "sku": "SKU-JK-WND",
+                  "name": "[private]",
+                  "category": "thoi-trang/ao-khoac",
+                  "brand": "Windbreak",
+                  "list_price_vnd": 690000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "return_days": 7
+                  },
+                  "variants": [
+                    {
+                      "variant_sku": "SKU-JK-WND-S-DEN",
+                      "size": "S",
+                      "color": "den",
+                      "price_delta": 0,
+                      "price_delta_vnd": 0
+                    },
+                    {
+                      "variant_sku": "SKU-JK-WND-S-NAVY",
+                      "size": "S",
+                      "color": "navy",
+                      "price_delta": 0,
+                      "price_delta_vnd": 0
+                    },
+                    {
+                      "variant_sku": "SKU-JK-WND-S-BE",
+                      "size": "S",
+                      "color": "be",
+                      "price_delta": 0,
+                      "price_delta_vnd": 0
+                    },
+                    {
+                      "variant_sku": "SKU-JK-WND-M-DEN",
+                      "size": "M",
+                      "color": "den",
+                      "price_delta": 0,
+                      "price_delta_vnd": 0
+                    },
+                    {
+                      "variant_sku": "SKU-JK-WND-M-NAVY",
+                      "size": "M",
+                      "color": "navy",
+                      "price_delta": 0,
+                      "price_delta_vnd": 0
+                    },
+                    {
+                      "variant_sku": "SKU-JK-WND-M-BE",
+                      "size": "M",
+                      "color": "be",
+                      "price_delta": 0,
+                      "price_delta_vnd": 0
+                    },
+                    {
+                      "variant_sku": "SKU-JK-WND-L-DEN",
+                      "size": "L",
+                      "color": "den",
+                      "price_delta": 0,
+                      "price_delta_vnd": 0
+                    },
+                    {
+                      "variant_sku": "SKU-JK-WND-L-NAVY",
+                      "size": "L",
+                      "color": "navy",
+                      "price_delta": 0,
+                      "price_delta_vnd": 0
+                    },
+                    {
+                      "variant_sku": "SKU-JK-WND-L-BE",
+                      "size": "L",
+                      "color": "be",
+                      "price_delta": 0,
+                      "price_delta_vnd": 0
+                    },
+                    {
+                      "variant_sku": "SKU-JK-WND-XL-DEN",
+                      "size": "XL",
+                      "color": "den",
+                      "price_delta": 40000.0,
+                      "price_delta_vnd": 40000
+                    },
+                    {
+                      "variant_sku": "SKU-JK-WND-XL-NAVY",
+                      "size": "XL",
+                      "color": "navy",
+                      "price_delta": 40000.0,
+                      "price_delta_vnd": 40000
+                    },
+                    {
+                      "variant_sku": "SKU-JK-WND-XL-BE",
+                      "size": "XL",
+                      "color": "be",
+                      "price_delta": 40000.0,
+                      "price_delta_vnd": 40000
+                    }
+                  ]
+                },
+                {
+                  "sku": "SKU-AP-X",
+                  "name": "[private]",
+                  "category": "gia-dung/may-loc-khong-khi",
+                  "brand": "AirPure",
+                  "list_price_vnd": 4890000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "features": "HEPA H13, cảm biến PM2.5, chế độ ngủ",
+                    "room_area_m2": 25,
+                    "child_safe_lock": false,
+                    "warranty_months": 24
+                  },
+                  "variants": []
+                },
+                {
+                  "sku": "SKU-AP-Y",
+                  "name": "[private]",
+                  "category": "gia-dung/may-loc-khong-khi",
+                  "brand": "AirPure",
+                  "list_price_vnd": 5200000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "features": "HEPA H13 + than hoạt tính, app điều khiển",
+                    "room_area_m2": 30,
+                    "child_safe_lock": true,
+                    "warranty_months": 24
+                  },
+                  "variants": []
+                },
+                {
+                  "sku": "SKU-AP-MINI",
+                  "name": "[private]",
+                  "category": "gia-dung/may-loc-khong-khi",
+                  "brand": "AirPure",
+                  "list_price_vnd": 2190000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "features": "HEPA H11, để bàn",
+                    "room_area_m2": 12,
+                    "child_safe_lock": false,
+                    "warranty_months": 24
+                  },
+                  "variants": []
+                },
+                {
+                  "sku": "SKU-AP-PRO",
+                  "name": "[private]",
+                  "category": "gia-dung/may-loc-khong-khi",
+                  "brand": "AirPure",
+                  "list_price_vnd": 7990000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "features": "HEPA H13, UV, diệt khuẩn",
+                    "room_area_m2": 45,
+                    "child_safe_lock": true,
+                    "warranty_months": 24
+                  },
+                  "variants": []
+                },
+                {
+                  "sku": "SKU-XM-4L",
+                  "name": "[private]",
+                  "category": "gia-dung/may-loc-khong-khi",
+                  "brand": "Xiaomi",
+                  "list_price_vnd": 2990000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "features": "HEPA, app Mi Home",
+                    "room_area_m2": 43,
+                    "child_safe_lock": false,
+                    "warranty_months": 24
+                  },
+                  "variants": []
+                },
+                {
+                  "sku": "SKU-XM-4P",
+                  "name": "[private]",
+                  "category": "gia-dung/may-loc-khong-khi",
+                  "brand": "Xiaomi",
+                  "list_price_vnd": 5490000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "features": "HEPA, màn OLED, app Mi Home",
+                    "room_area_m2": 60,
+                    "child_safe_lock": false,
+                    "warranty_months": 24
+                  },
+                  "variants": []
+                },
+                {
+                  "sku": "SKU-SS-AX40",
+                  "name": "[private]",
+                  "category": "gia-dung/may-loc-khong-khi",
+                  "brand": "Samsung",
+                  "list_price_vnd": 6490000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "features": "HEPA, lọc khử mùi, cảm biến bụi",
+                    "room_area_m2": 40,
+                    "child_safe_lock": true,
+                    "warranty_months": 24
+                  },
+                  "variants": []
+                },
+                {
+                  "sku": "SKU-WF-RO9",
+                  "name": "[private]",
+                  "category": "gia-dung/may-loc-nuoc",
+                  "brand": "Karofi",
+                  "list_price_vnd": 5990000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "stages": 9,
+                    "warranty_months": 36
+                  },
+                  "variants": []
+                },
+                {
+                  "sku": "SKU-WF-RO10",
+                  "name": "[private]",
+                  "category": "gia-dung/may-loc-nuoc",
+                  "brand": "Kangaroo",
+                  "list_price_vnd": 6890000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "stages": 0,
+                    "warranty_months": 36
+                  },
+                  "variants": []
+                },
+                {
+                  "sku": "SKU-WF-UF",
+                  "name": "[private]",
+                  "category": "gia-dung/may-loc-nuoc",
+                  "brand": "Sunhouse",
+                  "list_price_vnd": 3290000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "stages": 5,
+                    "warranty_months": 36
+                  },
+                  "variants": []
+                },
+                {
+                  "sku": "SKU-FAN-TWR",
+                  "name": "[private]",
+                  "category": "gia-dung/quat",
+                  "brand": "Xiaomi",
+                  "list_price_vnd": 1790000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "warranty_months": 12
+                  },
+                  "variants": []
+                },
+                {
+                  "sku": "SKU-AF-XM",
+                  "name": "[private]",
+                  "category": "gia-dung/noi-chien",
+                  "brand": "Xiaomi",
+                  "list_price_vnd": 1590000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "warranty_months": 12
+                  },
+                  "variants": []
+                },
+                {
+                  "sku": "SKU-JK-DWN",
+                  "name": "[private]",
+                  "category": "thoi-trang/ao-khoac",
+                  "brand": "Warmly",
+                  "list_price_vnd": 1490000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "return_days": 7
+                  },
+                  "variants": [
+                    {
+                      "variant_sku": "SKU-JK-DWN-S-DEN",
+                      "size": "S",
+                      "color": "den",
+                      "price_delta": 0,
+                      "price_delta_vnd": 0
+                    },
+                    {
+                      "variant_sku": "SKU-JK-DWN-S-NAVY",
+                      "size": "S",
+                      "color": "navy",
+                      "price_delta": 0,
+                      "price_delta_vnd": 0
+                    },
+                    {
+                      "variant_sku": "SKU-JK-DWN-S-BE",
+                      "size": "S",
+                      "color": "be",
+                      "price_delta": 0,
+                      "price_delta_vnd": 0
+                    },
+                    {
+                      "variant_sku": "SKU-JK-DWN-M-DEN",
+                      "size": "M",
+                      "color": "den",
+                      "price_delta": 0,
+                      "price_delta_vnd": 0
+                    },
+                    {
+                      "variant_sku": "SKU-JK-DWN-M-NAVY",
+                      "size": "M",
+                      "color": "navy",
+                      "price_delta": 0,
+                      "price_delta_vnd": 0
+                    },
+                    {
+                      "variant_sku": "SKU-JK-DWN-M-BE",
+                      "size": "M",
+                      "color": "be",
+                      "price_delta": 0,
+                      "price_delta_vnd": 0
+                    },
+                    {
+                      "variant_sku": "SKU-JK-DWN-L-DEN",
+                      "size": "L",
+                      "color": "den",
+                      "price_delta": 0,
+                      "price_delta_vnd": 0
+                    },
+                    {
+                      "variant_sku": "SKU-JK-DWN-L-NAVY",
+                      "size": "L",
+                      "color": "navy",
+                      "price_delta": 0,
+                      "price_delta_vnd": 0
+                    },
+                    {
+                      "variant_sku": "SKU-JK-DWN-L-BE",
+                      "size": "L",
+                      "color": "be",
+                      "price_delta": 0,
+                      "price_delta_vnd": 0
+                    },
+                    {
+                      "variant_sku": "SKU-JK-DWN-XL-DEN",
+                      "size": "XL",
+                      "color": "den",
+                      "price_delta": 40000.0,
+                      "price_delta_vnd": 40000
+                    },
+                    {
+                      "variant_sku": "SKU-JK-DWN-XL-NAVY",
+                      "size": "XL",
+                      "color": "navy",
+                      "price_delta": 40000.0,
+                      "price_delta_vnd": 40000
+                    },
+                    {
+                      "variant_sku": "SKU-JK-DWN-XL-BE",
+                      "size": "XL",
+                      "color": "be",
+                      "price_delta": 40000.0,
+                      "price_delta_vnd": 40000
+                    }
+                  ]
+                },
+                {
+                  "sku": "SKU-MB-PUMP1",
+                  "name": "[private]",
+                  "category": "me-be",
+                  "brand": "Spectra",
+                  "list_price_vnd": 4290000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "warranty_months": 12
+                  },
+                  "variants": []
+                },
+                {
+                  "sku": "SKU-MB-PUMP2",
+                  "name": "[private]",
+                  "category": "me-be",
+                  "brand": "Medela",
+                  "list_price_vnd": 5990000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "warranty_months": 12
+                  },
+                  "variants": []
+                },
+                {
+                  "sku": "SKU-MB-STR2",
+                  "name": "[private]",
+                  "category": "me-be",
+                  "brand": "Combi",
+                  "list_price_vnd": 6790000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "max_weight_kg": 15,
+                    "warranty_months": 12
+                  },
+                  "variants": []
+                },
+                {
+                  "sku": "SKU-MB-MON",
+                  "name": "[private]",
+                  "category": "me-be",
+                  "brand": "Fatz",
+                  "list_price_vnd": 490000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "warranty_months": 12
+                  },
+                  "variants": []
+                },
+                {
+                  "sku": "SKU-MB-STER",
+                  "name": "[private]",
+                  "category": "me-be",
+                  "brand": "Moaz",
+                  "list_price_vnd": 1890000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "warranty_months": 12
+                  },
+                  "variants": []
+                },
+                {
+                  "sku": "SKU-MB-BOT",
+                  "name": "[private]",
+                  "category": "me-be",
+                  "brand": "Pigeon",
+                  "list_price_vnd": 289000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "volume_ml": 240
+                  },
+                  "variants": []
+                },
+                {
+                  "sku": "SKU-BDL-AIR",
+                  "name": "[private]",
+                  "category": "gia-dung/combo",
+                  "brand": "AirPure",
+                  "list_price_vnd": 6390000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "bundle_of": [
+                      "SKU-AP-Y",
+                      "SKU-AP-FLT-X",
+                      "SKU-AP-FLT-X"
+                    ],
+                    "saving_vnd": 190000,
+                    "warranty_months": 24
+                  },
+                  "variants": []
+                }
+              ],
+              "promotions": []
+            }
+          ]
+        }
+      }
+    },
+    {
+      "call": "SC-032/call_1",
+      "turn_id": 3,
+      "question": "Em ghi nhớ giúp sản phẩm này để lần sau mình không phải nói lại nhé.",
+      "baseline_question": null,
+      "classification": "not_evaluated",
+      "case_id": null,
+      "gap_id": null,
+      "answer_changed": false,
+      "injected": true,
+      "lesson_trace": {
+        "lessons_loaded": 25,
+        "selected_lessons": [
+          {
+            "id": "2428465dd6aebd918b246b218ea61f077e2a4a03ca7a10bb6c10ca1cd078d1a6",
+            "hash": "a6ef6e56d1a0afa44afce603254ba8380a79684f4316ec30047adabc7375818d",
+            "mechanism": "knowledge_gap"
+          }
+        ],
+        "injected": true,
+        "mode": "memory_only",
+        "response_modified": false,
+        "routing": "selected",
+        "routing_ms": 3262.144,
+        "routing_usage": {
+          "input_tokens": 5190,
+          "output_tokens": 69
+        },
+        "guardrails": {
+          "version": "learning_guardrails_v1",
+          "blocked_lessons": []
+        },
+        "injected_chars": 892,
+        "injected_lesson_count": 1,
+        "wrapper_total_ms": 5782.97
+      },
+      "round0": {
+        "answer": null,
+        "verdict": {
+          "status": null
+        },
+        "latency": null,
+        "evidence": {
+          "current": {},
+          "earlier": []
+        }
+      },
+      "round1": {
+        "answer": "Dạ em hiểu rồi ạ, hệ thống bên em sẽ tự động lưu lại sản phẩm anh [private] đang quan tâm. Khi nào quay lại anh chỉ cần bảo em là được ạ. Anh cần em hỗ trợ thêm thông tin gì nữa không anh?",
+        "verdict": {
+          "status": null
+        },
+        "latency": {
+          "ttft_ms": 2521,
+          "total_ms": 2521,
+          "ttfa_ms": null,
+          "measurement_mode": "non_streaming",
+          "timing_boundary": "response_ready_before_persistence",
+          "asr_ms": null,
+          "call_brief_ms": null,
+          "response_ready_ms": 2521,
+          "persistence_ms": 0.087,
+          "request_complete_ms": 2520.707,
+          "backend_total_ms": 2520.707,
+          "precomputed_parts": [
+            "persisted_facts"
+          ]
+        },
+        "evidence": {
+          "current": {
+            "turn_id": 3,
+            "agent_response": "Dạ em hiểu rồi ạ, hệ thống bên em sẽ tự động lưu lại sản phẩm anh [private] đang quan tâm. Khi nào quay lại anh chỉ cần bảo em là được ạ. Anh cần em hỗ trợ thêm thông tin gì nữa không anh?",
+            "tool_calls": [],
+            "sources": [
+              {
+                "sku": "SKU-JK-WND",
+                "name": "[private]",
+                "category": "thoi-trang/ao-khoac",
+                "brand": "Windbreak",
+                "list_price_vnd": 690000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "return_days": 7
+                },
+                "variants": [
+                  {
+                    "variant_sku": "SKU-JK-WND-S-DEN",
+                    "size": "S",
+                    "color": "den",
+                    "price_delta": 0,
+                    "price_delta_vnd": 0
+                  },
+                  {
+                    "variant_sku": "SKU-JK-WND-S-NAVY",
+                    "size": "S",
+                    "color": "navy",
+                    "price_delta": 0,
+                    "price_delta_vnd": 0
+                  },
+                  {
+                    "variant_sku": "SKU-JK-WND-S-BE",
+                    "size": "S",
+                    "color": "be",
+                    "price_delta": 0,
+                    "price_delta_vnd": 0
+                  },
+                  {
+                    "variant_sku": "SKU-JK-WND-M-DEN",
+                    "size": "M",
+                    "color": "den",
+                    "price_delta": 0,
+                    "price_delta_vnd": 0
+                  },
+                  {
+                    "variant_sku": "SKU-JK-WND-M-NAVY",
+                    "size": "M",
+                    "color": "navy",
+                    "price_delta": 0,
+                    "price_delta_vnd": 0
+                  },
+                  {
+                    "variant_sku": "SKU-JK-WND-M-BE",
+                    "size": "M",
+                    "color": "be",
+                    "price_delta": 0,
+                    "price_delta_vnd": 0
+                  },
+                  {
+                    "variant_sku": "SKU-JK-WND-L-DEN",
+                    "size": "L",
+                    "color": "den",
+                    "price_delta": 0,
+                    "price_delta_vnd": 0
+                  },
+                  {
+                    "variant_sku": "SKU-JK-WND-L-NAVY",
+                    "size": "L",
+                    "color": "navy",
+                    "price_delta": 0,
+                    "price_delta_vnd": 0
+                  },
+                  {
+                    "variant_sku": "SKU-JK-WND-L-BE",
+                    "size": "L",
+                    "color": "be",
+                    "price_delta": 0,
+                    "price_delta_vnd": 0
+                  },
+                  {
+                    "variant_sku": "SKU-JK-WND-XL-DEN",
+                    "size": "XL",
+                    "color": "den",
+                    "price_delta": 40000.0,
+                    "price_delta_vnd": 40000
+                  },
+                  {
+                    "variant_sku": "SKU-JK-WND-XL-NAVY",
+                    "size": "XL",
+                    "color": "navy",
+                    "price_delta": 40000.0,
+                    "price_delta_vnd": 40000
+                  },
+                  {
+                    "variant_sku": "SKU-JK-WND-XL-BE",
+                    "size": "XL",
+                    "color": "be",
+                    "price_delta": 40000.0,
+                    "price_delta_vnd": 40000
+                  }
+                ]
+              },
+              {
+                "sku": "SKU-AP-X",
+                "name": "[private]",
+                "category": "gia-dung/may-loc-khong-khi",
+                "brand": "AirPure",
+                "list_price_vnd": 4890000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "features": "HEPA H13, cảm biến PM2.5, chế độ ngủ",
+                  "room_area_m2": 25,
+                  "child_safe_lock": false,
+                  "warranty_months": 24
+                },
+                "variants": []
+              },
+              {
+                "sku": "SKU-AP-Y",
+                "name": "[private]",
+                "category": "gia-dung/may-loc-khong-khi",
+                "brand": "AirPure",
+                "list_price_vnd": 5200000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "features": "HEPA H13 + than hoạt tính, app điều khiển",
+                  "room_area_m2": 30,
+                  "child_safe_lock": true,
+                  "warranty_months": 24
+                },
+                "variants": []
+              },
+              {
+                "sku": "SKU-AP-MINI",
+                "name": "[private]",
+                "category": "gia-dung/may-loc-khong-khi",
+                "brand": "AirPure",
+                "list_price_vnd": 2190000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "features": "HEPA H11, để bàn",
+                  "room_area_m2": 12,
+                  "child_safe_lock": false,
+                  "warranty_months": 24
+                },
+                "variants": []
+              },
+              {
+                "sku": "SKU-AP-PRO",
+                "name": "[private]",
+                "category": "gia-dung/may-loc-khong-khi",
+                "brand": "AirPure",
+                "list_price_vnd": 7990000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "features": "HEPA H13, UV, diệt khuẩn",
+                  "room_area_m2": 45,
+                  "child_safe_lock": true,
+                  "warranty_months": 24
+                },
+                "variants": []
+              },
+              {
+                "sku": "SKU-XM-4L",
+                "name": "[private]",
+                "category": "gia-dung/may-loc-khong-khi",
+                "brand": "Xiaomi",
+                "list_price_vnd": 2990000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "features": "HEPA, app Mi Home",
+                  "room_area_m2": 43,
+                  "child_safe_lock": false,
+                  "warranty_months": 24
+                },
+                "variants": []
+              },
+              {
+                "sku": "SKU-XM-4P",
+                "name": "[private]",
+                "category": "gia-dung/may-loc-khong-khi",
+                "brand": "Xiaomi",
+                "list_price_vnd": 5490000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "features": "HEPA, màn OLED, app Mi Home",
+                  "room_area_m2": 60,
+                  "child_safe_lock": false,
+                  "warranty_months": 24
+                },
+                "variants": []
+              },
+              {
+                "sku": "SKU-SS-AX40",
+                "name": "[private]",
+                "category": "gia-dung/may-loc-khong-khi",
+                "brand": "Samsung",
+                "list_price_vnd": 6490000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "features": "HEPA, lọc khử mùi, cảm biến bụi",
+                  "room_area_m2": 40,
+                  "child_safe_lock": true,
+                  "warranty_months": 24
+                },
+                "variants": []
+              },
+              {
+                "sku": "SKU-WF-RO9",
+                "name": "[private]",
+                "category": "gia-dung/may-loc-nuoc",
+                "brand": "Karofi",
+                "list_price_vnd": 5990000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "stages": 9,
+                  "warranty_months": 36
+                },
+                "variants": []
+              },
+              {
+                "sku": "SKU-WF-RO10",
+                "name": "[private]",
+                "category": "gia-dung/may-loc-nuoc",
+                "brand": "Kangaroo",
+                "list_price_vnd": 6890000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "stages": 0,
+                  "warranty_months": 36
+                },
+                "variants": []
+              },
+              {
+                "sku": "SKU-WF-UF",
+                "name": "[private]",
+                "category": "gia-dung/may-loc-nuoc",
+                "brand": "Sunhouse",
+                "list_price_vnd": 3290000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "stages": 5,
+                  "warranty_months": 36
+                },
+                "variants": []
+              },
+              {
+                "sku": "SKU-FAN-TWR",
+                "name": "[private]",
+                "category": "gia-dung/quat",
+                "brand": "Xiaomi",
+                "list_price_vnd": 1790000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "warranty_months": 12
+                },
+                "variants": []
+              },
+              {
+                "sku": "SKU-AF-XM",
+                "name": "[private]",
+                "category": "gia-dung/noi-chien",
+                "brand": "Xiaomi",
+                "list_price_vnd": 1590000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "warranty_months": 12
+                },
+                "variants": []
+              },
+              {
+                "sku": "SKU-JK-DWN",
+                "name": "[private]",
+                "category": "thoi-trang/ao-khoac",
+                "brand": "Warmly",
+                "list_price_vnd": 1490000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "return_days": 7
+                },
+                "variants": [
+                  {
+                    "variant_sku": "SKU-JK-DWN-S-DEN",
+                    "size": "S",
+                    "color": "den",
+                    "price_delta": 0,
+                    "price_delta_vnd": 0
+                  },
+                  {
+                    "variant_sku": "SKU-JK-DWN-S-NAVY",
+                    "size": "S",
+                    "color": "navy",
+                    "price_delta": 0,
+                    "price_delta_vnd": 0
+                  },
+                  {
+                    "variant_sku": "SKU-JK-DWN-S-BE",
+                    "size": "S",
+                    "color": "be",
+                    "price_delta": 0,
+                    "price_delta_vnd": 0
+                  },
+                  {
+                    "variant_sku": "SKU-JK-DWN-M-DEN",
+                    "size": "M",
+                    "color": "den",
+                    "price_delta": 0,
+                    "price_delta_vnd": 0
+                  },
+                  {
+                    "variant_sku": "SKU-JK-DWN-M-NAVY",
+                    "size": "M",
+                    "color": "navy",
+                    "price_delta": 0,
+                    "price_delta_vnd": 0
+                  },
+                  {
+                    "variant_sku": "SKU-JK-DWN-M-BE",
+                    "size": "M",
+                    "color": "be",
+                    "price_delta": 0,
+                    "price_delta_vnd": 0
+                  },
+                  {
+                    "variant_sku": "SKU-JK-DWN-L-DEN",
+                    "size": "L",
+                    "color": "den",
+                    "price_delta": 0,
+                    "price_delta_vnd": 0
+                  },
+                  {
+                    "variant_sku": "SKU-JK-DWN-L-NAVY",
+                    "size": "L",
+                    "color": "navy",
+                    "price_delta": 0,
+                    "price_delta_vnd": 0
+                  },
+                  {
+                    "variant_sku": "SKU-JK-DWN-L-BE",
+                    "size": "L",
+                    "color": "be",
+                    "price_delta": 0,
+                    "price_delta_vnd": 0
+                  },
+                  {
+                    "variant_sku": "SKU-JK-DWN-XL-DEN",
+                    "size": "XL",
+                    "color": "den",
+                    "price_delta": 40000.0,
+                    "price_delta_vnd": 40000
+                  },
+                  {
+                    "variant_sku": "SKU-JK-DWN-XL-NAVY",
+                    "size": "XL",
+                    "color": "navy",
+                    "price_delta": 40000.0,
+                    "price_delta_vnd": 40000
+                  },
+                  {
+                    "variant_sku": "SKU-JK-DWN-XL-BE",
+                    "size": "XL",
+                    "color": "be",
+                    "price_delta": 40000.0,
+                    "price_delta_vnd": 40000
+                  }
+                ]
+              },
+              {
+                "sku": "SKU-MB-PUMP1",
+                "name": "[private]",
+                "category": "me-be",
+                "brand": "Spectra",
+                "list_price_vnd": 4290000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "warranty_months": 12
+                },
+                "variants": []
+              },
+              {
+                "sku": "SKU-MB-PUMP2",
+                "name": "[private]",
+                "category": "me-be",
+                "brand": "Medela",
+                "list_price_vnd": 5990000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "warranty_months": 12
+                },
+                "variants": []
+              },
+              {
+                "sku": "SKU-MB-STR2",
+                "name": "[private]",
+                "category": "me-be",
+                "brand": "Combi",
+                "list_price_vnd": 6790000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "max_weight_kg": 15,
+                  "warranty_months": 12
+                },
+                "variants": []
+              },
+              {
+                "sku": "SKU-MB-MON",
+                "name": "[private]",
+                "category": "me-be",
+                "brand": "Fatz",
+                "list_price_vnd": 490000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "warranty_months": 12
+                },
+                "variants": []
+              },
+              {
+                "sku": "SKU-MB-STER",
+                "name": "[private]",
+                "category": "me-be",
+                "brand": "Moaz",
+                "list_price_vnd": 1890000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "warranty_months": 12
+                },
+                "variants": []
+              },
+              {
+                "sku": "SKU-MB-BOT",
+                "name": "[private]",
+                "category": "me-be",
+                "brand": "Pigeon",
+                "list_price_vnd": 289000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "volume_ml": 240
+                },
+                "variants": []
+              },
+              {
+                "sku": "SKU-BDL-AIR",
+                "name": "[private]",
+                "category": "gia-dung/combo",
+                "brand": "AirPure",
+                "list_price_vnd": 6390000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "bundle_of": [
+                    "SKU-AP-Y",
+                    "SKU-AP-FLT-X",
+                    "SKU-AP-FLT-X"
+                  ],
+                  "saving_vnd": 190000,
+                  "warranty_months": 24
+                },
+                "variants": []
+              }
+            ],
+            "promotions": []
+          },
+          "earlier": [
+            {
+              "turn_id": 1,
+              "tool_calls": [
+                {
+                  "name": "catalog.search",
+                  "args": {
+                    "query": "Áo khoác gió Windbreak size M màu xanh navy",
+                    "on": "2026-10-16"
+                  },
+                  "result": {
+                    "items": [],
+                    "total": 0
+                  }
+                },
+                {
+                  "name": "catalog.search",
+                  "args": {
+                    "query": "Áo khoác gió Windbreak",
+                    "on": "2026-10-16"
+                  },
+                  "result": {
+                    "items": [
+                      {
+                        "sku": "SKU-JK-WND",
+                        "name": "[private]",
+                        "category": "thoi-trang/ao-khoac",
+                        "brand": "Windbreak",
+                        "list_price_vnd": 690000.0,
+                        "discontinued": false,
+                        "successor_sku": null,
+                        "attributes": {
+                          "return_days": 7
+                        },
+                        "variants": [
+                          {
+                            "variant_sku": "SKU-JK-WND-S-DEN",
+                            "size": "S",
+                            "color": "den",
+                            "price_delta": 0,
+                            "price_delta_vnd": 0
+                          },
+                          {
+                            "variant_sku": "SKU-JK-WND-S-NAVY",
+                            "size": "S",
+                            "color": "navy",
+                            "price_delta": 0,
+                            "price_delta_vnd": 0
+                          },
+                          {
+                            "variant_sku": "SKU-JK-WND-S-BE",
+                            "size": "S",
+                            "color": "be",
+                            "price_delta": 0,
+                            "price_delta_vnd": 0
+                          },
+                          {
+                            "variant_sku": "SKU-JK-WND-M-DEN",
+                            "size": "M",
+                            "color": "den",
+                            "price_delta": 0,
+                            "price_delta_vnd": 0
+                          },
+                          {
+                            "variant_sku": "SKU-JK-WND-M-NAVY",
+                            "size": "M",
+                            "color": "navy",
+                            "price_delta": 0,
+                            "price_delta_vnd": 0
+                          },
+                          {
+                            "variant_sku": "SKU-JK-WND-M-BE",
+                            "size": "M",
+                            "color": "be",
+                            "price_delta": 0,
+                            "price_delta_vnd": 0
+                          },
+                          {
+                            "variant_sku": "SKU-JK-WND-L-DEN",
+                            "size": "L",
+                            "color": "den",
+                            "price_delta": 0,
+                            "price_delta_vnd": 0
+                          },
+                          {
+                            "variant_sku": "SKU-JK-WND-L-NAVY",
+                            "size": "L",
+                            "color": "navy",
+                            "price_delta": 0,
+                            "price_delta_vnd": 0
+                          },
+                          {
+                            "variant_sku": "SKU-JK-WND-L-BE",
+                            "size": "L",
+                            "color": "be",
+                            "price_delta": 0,
+                            "price_delta_vnd": 0
+                          },
+                          {
+                            "variant_sku": "SKU-JK-WND-XL-DEN",
+                            "size": "XL",
+                            "color": "den",
+                            "price_delta": 40000.0,
+                            "price_delta_vnd": 40000
+                          },
+                          {
+                            "variant_sku": "SKU-JK-WND-XL-NAVY",
+                            "size": "XL",
+                            "color": "navy",
+                            "price_delta": 40000.0,
+                            "price_delta_vnd": 40000
+                          },
+                          {
+                            "variant_sku": "SKU-JK-WND-XL-BE",
+                            "size": "XL",
+                            "color": "be",
+                            "price_delta": 40000.0,
+                            "price_delta_vnd": 40000
+                          }
+                        ]
+                      }
+                    ],
+                    "total": 1
+                  }
+                },
+                {
+                  "name": "pricing.get_quote",
+                  "args": {
+                    "sku": "SKU-JK-WND-M-NAVY",
+                    "qty": 1,
+                    "on": "2026-10-16",
+                    "customer_id": "[private]"
+                  },
+                  "result": {
+                    "sku": "SKU-JK-WND-M-NAVY",
+                    "list_price_vnd": 690000,
+                    "final_price_vnd": 690000,
+                    "applied_promos": [
+                      {
+                        "promo_code": "COD-0",
+                        "type": "freecod",
+                        "discount_vnd": 0
+                      }
+                    ],
+                    "expired_promos": [],
+                    "ineligible_promos": [],
+                    "not_applied_exclusive": [],
+                    "freeship": false
+                  }
+                },
+                {
+                  "name": "inventory.check",
+                  "args": {
+                    "on": "2026-10-16",
+                    "sku": "SKU-JK-WND-M-NAVY"
+                  },
+                  "result": {
+                    "sku": "SKU-JK-WND-M-NAVY",
+                    "found": true,
+                    "in_stock": true,
+                    "qty": 12,
+                    "discontinued": false
+                  }
+                }
+              ],
+              "sources": [
+                {
+                  "sku": "SKU-JK-WND",
+                  "name": "[private]",
+                  "category": "thoi-trang/ao-khoac",
+                  "brand": "Windbreak",
+                  "list_price_vnd": 690000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "return_days": 7
+                  },
+                  "variants": [
+                    {
+                      "variant_sku": "SKU-JK-WND-S-DEN",
+                      "size": "S",
+                      "color": "den",
+                      "price_delta": 0,
+                      "price_delta_vnd": 0
+                    },
+                    {
+                      "variant_sku": "SKU-JK-WND-S-NAVY",
+                      "size": "S",
+                      "color": "navy",
+                      "price_delta": 0,
+                      "price_delta_vnd": 0
+                    },
+                    {
+                      "variant_sku": "SKU-JK-WND-S-BE",
+                      "size": "S",
+                      "color": "be",
+                      "price_delta": 0,
+                      "price_delta_vnd": 0
+                    },
+                    {
+                      "variant_sku": "SKU-JK-WND-M-DEN",
+                      "size": "M",
+                      "color": "den",
+                      "price_delta": 0,
+                      "price_delta_vnd": 0
+                    },
+                    {
+                      "variant_sku": "SKU-JK-WND-M-NAVY",
+                      "size": "M",
+                      "color": "navy",
+                      "price_delta": 0,
+                      "price_delta_vnd": 0
+                    },
+                    {
+                      "variant_sku": "SKU-JK-WND-M-BE",
+                      "size": "M",
+                      "color": "be",
+                      "price_delta": 0,
+                      "price_delta_vnd": 0
+                    },
+                    {
+                      "variant_sku": "SKU-JK-WND-L-DEN",
+                      "size": "L",
+                      "color": "den",
+                      "price_delta": 0,
+                      "price_delta_vnd": 0
+                    },
+                    {
+                      "variant_sku": "SKU-JK-WND-L-NAVY",
+                      "size": "L",
+                      "color": "navy",
+                      "price_delta": 0,
+                      "price_delta_vnd": 0
+                    },
+                    {
+                      "variant_sku": "SKU-JK-WND-L-BE",
+                      "size": "L",
+                      "color": "be",
+                      "price_delta": 0,
+                      "price_delta_vnd": 0
+                    },
+                    {
+                      "variant_sku": "SKU-JK-WND-XL-DEN",
+                      "size": "XL",
+                      "color": "den",
+                      "price_delta": 40000.0,
+                      "price_delta_vnd": 40000
+                    },
+                    {
+                      "variant_sku": "SKU-JK-WND-XL-NAVY",
+                      "size": "XL",
+                      "color": "navy",
+                      "price_delta": 40000.0,
+                      "price_delta_vnd": 40000
+                    },
+                    {
+                      "variant_sku": "SKU-JK-WND-XL-BE",
+                      "size": "XL",
+                      "color": "be",
+                      "price_delta": 40000.0,
+                      "price_delta_vnd": 40000
+                    }
+                  ]
+                },
+                {
+                  "sku": "SKU-AP-X",
+                  "name": "[private]",
+                  "category": "gia-dung/may-loc-khong-khi",
+                  "brand": "AirPure",
+                  "list_price_vnd": 4890000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "features": "HEPA H13, cảm biến PM2.5, chế độ ngủ",
+                    "room_area_m2": 25,
+                    "child_safe_lock": false,
+                    "warranty_months": 24
+                  },
+                  "variants": []
+                },
+                {
+                  "sku": "SKU-AP-Y",
+                  "name": "[private]",
+                  "category": "gia-dung/may-loc-khong-khi",
+                  "brand": "AirPure",
+                  "list_price_vnd": 5200000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "features": "HEPA H13 + than hoạt tính, app điều khiển",
+                    "room_area_m2": 30,
+                    "child_safe_lock": true,
+                    "warranty_months": 24
+                  },
+                  "variants": []
+                },
+                {
+                  "sku": "SKU-AP-MINI",
+                  "name": "[private]",
+                  "category": "gia-dung/may-loc-khong-khi",
+                  "brand": "AirPure",
+                  "list_price_vnd": 2190000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "features": "HEPA H11, để bàn",
+                    "room_area_m2": 12,
+                    "child_safe_lock": false,
+                    "warranty_months": 24
+                  },
+                  "variants": []
+                },
+                {
+                  "sku": "SKU-AP-PRO",
+                  "name": "[private]",
+                  "category": "gia-dung/may-loc-khong-khi",
+                  "brand": "AirPure",
+                  "list_price_vnd": 7990000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "features": "HEPA H13, UV, diệt khuẩn",
+                    "room_area_m2": 45,
+                    "child_safe_lock": true,
+                    "warranty_months": 24
+                  },
+                  "variants": []
+                },
+                {
+                  "sku": "SKU-XM-4L",
+                  "name": "[private]",
+                  "category": "gia-dung/may-loc-khong-khi",
+                  "brand": "Xiaomi",
+                  "list_price_vnd": 2990000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "features": "HEPA, app Mi Home",
+                    "room_area_m2": 43,
+                    "child_safe_lock": false,
+                    "warranty_months": 24
+                  },
+                  "variants": []
+                },
+                {
+                  "sku": "SKU-XM-4P",
+                  "name": "[private]",
+                  "category": "gia-dung/may-loc-khong-khi",
+                  "brand": "Xiaomi",
+                  "list_price_vnd": 5490000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "features": "HEPA, màn OLED, app Mi Home",
+                    "room_area_m2": 60,
+                    "child_safe_lock": false,
+                    "warranty_months": 24
+                  },
+                  "variants": []
+                },
+                {
+                  "sku": "SKU-SS-AX40",
+                  "name": "[private]",
+                  "category": "gia-dung/may-loc-khong-khi",
+                  "brand": "Samsung",
+                  "list_price_vnd": 6490000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "features": "HEPA, lọc khử mùi, cảm biến bụi",
+                    "room_area_m2": 40,
+                    "child_safe_lock": true,
+                    "warranty_months": 24
+                  },
+                  "variants": []
+                },
+                {
+                  "sku": "SKU-WF-RO9",
+                  "name": "[private]",
+                  "category": "gia-dung/may-loc-nuoc",
+                  "brand": "Karofi",
+                  "list_price_vnd": 5990000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "stages": 9,
+                    "warranty_months": 36
+                  },
+                  "variants": []
+                },
+                {
+                  "sku": "SKU-WF-RO10",
+                  "name": "[private]",
+                  "category": "gia-dung/may-loc-nuoc",
+                  "brand": "Kangaroo",
+                  "list_price_vnd": 6890000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "stages": 0,
+                    "warranty_months": 36
+                  },
+                  "variants": []
+                },
+                {
+                  "sku": "SKU-WF-UF",
+                  "name": "[private]",
+                  "category": "gia-dung/may-loc-nuoc",
+                  "brand": "Sunhouse",
+                  "list_price_vnd": 3290000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "stages": 5,
+                    "warranty_months": 36
+                  },
+                  "variants": []
+                },
+                {
+                  "sku": "SKU-FAN-TWR",
+                  "name": "[private]",
+                  "category": "gia-dung/quat",
+                  "brand": "Xiaomi",
+                  "list_price_vnd": 1790000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "warranty_months": 12
+                  },
+                  "variants": []
+                },
+                {
+                  "sku": "SKU-AF-XM",
+                  "name": "[private]",
+                  "category": "gia-dung/noi-chien",
+                  "brand": "Xiaomi",
+                  "list_price_vnd": 1590000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "warranty_months": 12
+                  },
+                  "variants": []
+                },
+                {
+                  "sku": "SKU-JK-DWN",
+                  "name": "[private]",
+                  "category": "thoi-trang/ao-khoac",
+                  "brand": "Warmly",
+                  "list_price_vnd": 1490000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "return_days": 7
+                  },
+                  "variants": [
+                    {
+                      "variant_sku": "SKU-JK-DWN-S-DEN",
+                      "size": "S",
+                      "color": "den",
+                      "price_delta": 0,
+                      "price_delta_vnd": 0
+                    },
+                    {
+                      "variant_sku": "SKU-JK-DWN-S-NAVY",
+                      "size": "S",
+                      "color": "navy",
+                      "price_delta": 0,
+                      "price_delta_vnd": 0
+                    },
+                    {
+                      "variant_sku": "SKU-JK-DWN-S-BE",
+                      "size": "S",
+                      "color": "be",
+                      "price_delta": 0,
+                      "price_delta_vnd": 0
+                    },
+                    {
+                      "variant_sku": "SKU-JK-DWN-M-DEN",
+                      "size": "M",
+                      "color": "den",
+                      "price_delta": 0,
+                      "price_delta_vnd": 0
+                    },
+                    {
+                      "variant_sku": "SKU-JK-DWN-M-NAVY",
+                      "size": "M",
+                      "color": "navy",
+                      "price_delta": 0,
+                      "price_delta_vnd": 0
+                    },
+                    {
+                      "variant_sku": "SKU-JK-DWN-M-BE",
+                      "size": "M",
+                      "color": "be",
+                      "price_delta": 0,
+                      "price_delta_vnd": 0
+                    },
+                    {
+                      "variant_sku": "SKU-JK-DWN-L-DEN",
+                      "size": "L",
+                      "color": "den",
+                      "price_delta": 0,
+                      "price_delta_vnd": 0
+                    },
+                    {
+                      "variant_sku": "SKU-JK-DWN-L-NAVY",
+                      "size": "L",
+                      "color": "navy",
+                      "price_delta": 0,
+                      "price_delta_vnd": 0
+                    },
+                    {
+                      "variant_sku": "SKU-JK-DWN-L-BE",
+                      "size": "L",
+                      "color": "be",
+                      "price_delta": 0,
+                      "price_delta_vnd": 0
+                    },
+                    {
+                      "variant_sku": "SKU-JK-DWN-XL-DEN",
+                      "size": "XL",
+                      "color": "den",
+                      "price_delta": 40000.0,
+                      "price_delta_vnd": 40000
+                    },
+                    {
+                      "variant_sku": "SKU-JK-DWN-XL-NAVY",
+                      "size": "XL",
+                      "color": "navy",
+                      "price_delta": 40000.0,
+                      "price_delta_vnd": 40000
+                    },
+                    {
+                      "variant_sku": "SKU-JK-DWN-XL-BE",
+                      "size": "XL",
+                      "color": "be",
+                      "price_delta": 40000.0,
+                      "price_delta_vnd": 40000
+                    }
+                  ]
+                },
+                {
+                  "sku": "SKU-MB-PUMP1",
+                  "name": "[private]",
+                  "category": "me-be",
+                  "brand": "Spectra",
+                  "list_price_vnd": 4290000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "warranty_months": 12
+                  },
+                  "variants": []
+                },
+                {
+                  "sku": "SKU-MB-PUMP2",
+                  "name": "[private]",
+                  "category": "me-be",
+                  "brand": "Medela",
+                  "list_price_vnd": 5990000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "warranty_months": 12
+                  },
+                  "variants": []
+                },
+                {
+                  "sku": "SKU-MB-STR2",
+                  "name": "[private]",
+                  "category": "me-be",
+                  "brand": "Combi",
+                  "list_price_vnd": 6790000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "max_weight_kg": 15,
+                    "warranty_months": 12
+                  },
+                  "variants": []
+                },
+                {
+                  "sku": "SKU-MB-MON",
+                  "name": "[private]",
+                  "category": "me-be",
+                  "brand": "Fatz",
+                  "list_price_vnd": 490000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "warranty_months": 12
+                  },
+                  "variants": []
+                },
+                {
+                  "sku": "SKU-MB-STER",
+                  "name": "[private]",
+                  "category": "me-be",
+                  "brand": "Moaz",
+                  "list_price_vnd": 1890000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "warranty_months": 12
+                  },
+                  "variants": []
+                },
+                {
+                  "sku": "SKU-MB-BOT",
+                  "name": "[private]",
+                  "category": "me-be",
+                  "brand": "Pigeon",
+                  "list_price_vnd": 289000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "volume_ml": 240
+                  },
+                  "variants": []
+                },
+                {
+                  "sku": "SKU-BDL-AIR",
+                  "name": "[private]",
+                  "category": "gia-dung/combo",
+                  "brand": "AirPure",
+                  "list_price_vnd": 6390000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "bundle_of": [
+                      "SKU-AP-Y",
+                      "SKU-AP-FLT-X",
+                      "SKU-AP-FLT-X"
+                    ],
+                    "saving_vnd": 190000,
+                    "warranty_months": 24
+                  },
+                  "variants": []
+                }
+              ],
+              "promotions": []
+            },
+            {
+              "turn_id": 2,
+              "tool_calls": [],
+              "sources": [
+                {
+                  "sku": "SKU-JK-WND",
+                  "name": "[private]",
+                  "category": "thoi-trang/ao-khoac",
+                  "brand": "Windbreak",
+                  "list_price_vnd": 690000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "return_days": 7
+                  },
+                  "variants": [
+                    {
+                      "variant_sku": "SKU-JK-WND-S-DEN",
+                      "size": "S",
+                      "color": "den",
+                      "price_delta": 0,
+                      "price_delta_vnd": 0
+                    },
+                    {
+                      "variant_sku": "SKU-JK-WND-S-NAVY",
+                      "size": "S",
+                      "color": "navy",
+                      "price_delta": 0,
+                      "price_delta_vnd": 0
+                    },
+                    {
+                      "variant_sku": "SKU-JK-WND-S-BE",
+                      "size": "S",
+                      "color": "be",
+                      "price_delta": 0,
+                      "price_delta_vnd": 0
+                    },
+                    {
+                      "variant_sku": "SKU-JK-WND-M-DEN",
+                      "size": "M",
+                      "color": "den",
+                      "price_delta": 0,
+                      "price_delta_vnd": 0
+                    },
+                    {
+                      "variant_sku": "SKU-JK-WND-M-NAVY",
+                      "size": "M",
+                      "color": "navy",
+                      "price_delta": 0,
+                      "price_delta_vnd": 0
+                    },
+                    {
+                      "variant_sku": "SKU-JK-WND-M-BE",
+                      "size": "M",
+                      "color": "be",
+                      "price_delta": 0,
+                      "price_delta_vnd": 0
+                    },
+                    {
+                      "variant_sku": "SKU-JK-WND-L-DEN",
+                      "size": "L",
+                      "color": "den",
+                      "price_delta": 0,
+                      "price_delta_vnd": 0
+                    },
+                    {
+                      "variant_sku": "SKU-JK-WND-L-NAVY",
+                      "size": "L",
+                      "color": "navy",
+                      "price_delta": 0,
+                      "price_delta_vnd": 0
+                    },
+                    {
+                      "variant_sku": "SKU-JK-WND-L-BE",
+                      "size": "L",
+                      "color": "be",
+                      "price_delta": 0,
+                      "price_delta_vnd": 0
+                    },
+                    {
+                      "variant_sku": "SKU-JK-WND-XL-DEN",
+                      "size": "XL",
+                      "color": "den",
+                      "price_delta": 40000.0,
+                      "price_delta_vnd": 40000
+                    },
+                    {
+                      "variant_sku": "SKU-JK-WND-XL-NAVY",
+                      "size": "XL",
+                      "color": "navy",
+                      "price_delta": 40000.0,
+                      "price_delta_vnd": 40000
+                    },
+                    {
+                      "variant_sku": "SKU-JK-WND-XL-BE",
+                      "size": "XL",
+                      "color": "be",
+                      "price_delta": 40000.0,
+                      "price_delta_vnd": 40000
+                    }
+                  ]
+                },
+                {
+                  "sku": "SKU-AP-X",
+                  "name": "[private]",
+                  "category": "gia-dung/may-loc-khong-khi",
+                  "brand": "AirPure",
+                  "list_price_vnd": 4890000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "features": "HEPA H13, cảm biến PM2.5, chế độ ngủ",
+                    "room_area_m2": 25,
+                    "child_safe_lock": false,
+                    "warranty_months": 24
+                  },
+                  "variants": []
+                },
+                {
+                  "sku": "SKU-AP-Y",
+                  "name": "[private]",
+                  "category": "gia-dung/may-loc-khong-khi",
+                  "brand": "AirPure",
+                  "list_price_vnd": 5200000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "features": "HEPA H13 + than hoạt tính, app điều khiển",
+                    "room_area_m2": 30,
+                    "child_safe_lock": true,
+                    "warranty_months": 24
+                  },
+                  "variants": []
+                },
+                {
+                  "sku": "SKU-AP-MINI",
+                  "name": "[private]",
+                  "category": "gia-dung/may-loc-khong-khi",
+                  "brand": "AirPure",
+                  "list_price_vnd": 2190000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "features": "HEPA H11, để bàn",
+                    "room_area_m2": 12,
+                    "child_safe_lock": false,
+                    "warranty_months": 24
+                  },
+                  "variants": []
+                },
+                {
+                  "sku": "SKU-AP-PRO",
+                  "name": "[private]",
+                  "category": "gia-dung/may-loc-khong-khi",
+                  "brand": "AirPure",
+                  "list_price_vnd": 7990000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "features": "HEPA H13, UV, diệt khuẩn",
+                    "room_area_m2": 45,
+                    "child_safe_lock": true,
+                    "warranty_months": 24
+                  },
+                  "variants": []
+                },
+                {
+                  "sku": "SKU-XM-4L",
+                  "name": "[private]",
+                  "category": "gia-dung/may-loc-khong-khi",
+                  "brand": "Xiaomi",
+                  "list_price_vnd": 2990000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "features": "HEPA, app Mi Home",
+                    "room_area_m2": 43,
+                    "child_safe_lock": false,
+                    "warranty_months": 24
+                  },
+                  "variants": []
+                },
+                {
+                  "sku": "SKU-XM-4P",
+                  "name": "[private]",
+                  "category": "gia-dung/may-loc-khong-khi",
+                  "brand": "Xiaomi",
+                  "list_price_vnd": 5490000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "features": "HEPA, màn OLED, app Mi Home",
+                    "room_area_m2": 60,
+                    "child_safe_lock": false,
+                    "warranty_months": 24
+                  },
+                  "variants": []
+                },
+                {
+                  "sku": "SKU-SS-AX40",
+                  "name": "[private]",
+                  "category": "gia-dung/may-loc-khong-khi",
+                  "brand": "Samsung",
+                  "list_price_vnd": 6490000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "features": "HEPA, lọc khử mùi, cảm biến bụi",
+                    "room_area_m2": 40,
+                    "child_safe_lock": true,
+                    "warranty_months": 24
+                  },
+                  "variants": []
+                },
+                {
+                  "sku": "SKU-WF-RO9",
+                  "name": "[private]",
+                  "category": "gia-dung/may-loc-nuoc",
+                  "brand": "Karofi",
+                  "list_price_vnd": 5990000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "stages": 9,
+                    "warranty_months": 36
+                  },
+                  "variants": []
+                },
+                {
+                  "sku": "SKU-WF-RO10",
+                  "name": "[private]",
+                  "category": "gia-dung/may-loc-nuoc",
+                  "brand": "Kangaroo",
+                  "list_price_vnd": 6890000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "stages": 0,
+                    "warranty_months": 36
+                  },
+                  "variants": []
+                },
+                {
+                  "sku": "SKU-WF-UF",
+                  "name": "[private]",
+                  "category": "gia-dung/may-loc-nuoc",
+                  "brand": "Sunhouse",
+                  "list_price_vnd": 3290000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "stages": 5,
+                    "warranty_months": 36
+                  },
+                  "variants": []
+                },
+                {
+                  "sku": "SKU-FAN-TWR",
+                  "name": "[private]",
+                  "category": "gia-dung/quat",
+                  "brand": "Xiaomi",
+                  "list_price_vnd": 1790000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "warranty_months": 12
+                  },
+                  "variants": []
+                },
+                {
+                  "sku": "SKU-AF-XM",
+                  "name": "[private]",
+                  "category": "gia-dung/noi-chien",
+                  "brand": "Xiaomi",
+                  "list_price_vnd": 1590000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "warranty_months": 12
+                  },
+                  "variants": []
+                },
+                {
+                  "sku": "SKU-JK-DWN",
+                  "name": "[private]",
+                  "category": "thoi-trang/ao-khoac",
+                  "brand": "Warmly",
+                  "list_price_vnd": 1490000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "return_days": 7
+                  },
+                  "variants": [
+                    {
+                      "variant_sku": "SKU-JK-DWN-S-DEN",
+                      "size": "S",
+                      "color": "den",
+                      "price_delta": 0,
+                      "price_delta_vnd": 0
+                    },
+                    {
+                      "variant_sku": "SKU-JK-DWN-S-NAVY",
+                      "size": "S",
+                      "color": "navy",
+                      "price_delta": 0,
+                      "price_delta_vnd": 0
+                    },
+                    {
+                      "variant_sku": "SKU-JK-DWN-S-BE",
+                      "size": "S",
+                      "color": "be",
+                      "price_delta": 0,
+                      "price_delta_vnd": 0
+                    },
+                    {
+                      "variant_sku": "SKU-JK-DWN-M-DEN",
+                      "size": "M",
+                      "color": "den",
+                      "price_delta": 0,
+                      "price_delta_vnd": 0
+                    },
+                    {
+                      "variant_sku": "SKU-JK-DWN-M-NAVY",
+                      "size": "M",
+                      "color": "navy",
+                      "price_delta": 0,
+                      "price_delta_vnd": 0
+                    },
+                    {
+                      "variant_sku": "SKU-JK-DWN-M-BE",
+                      "size": "M",
+                      "color": "be",
+                      "price_delta": 0,
+                      "price_delta_vnd": 0
+                    },
+                    {
+                      "variant_sku": "SKU-JK-DWN-L-DEN",
+                      "size": "L",
+                      "color": "den",
+                      "price_delta": 0,
+                      "price_delta_vnd": 0
+                    },
+                    {
+                      "variant_sku": "SKU-JK-DWN-L-NAVY",
+                      "size": "L",
+                      "color": "navy",
+                      "price_delta": 0,
+                      "price_delta_vnd": 0
+                    },
+                    {
+                      "variant_sku": "SKU-JK-DWN-L-BE",
+                      "size": "L",
+                      "color": "be",
+                      "price_delta": 0,
+                      "price_delta_vnd": 0
+                    },
+                    {
+                      "variant_sku": "SKU-JK-DWN-XL-DEN",
+                      "size": "XL",
+                      "color": "den",
+                      "price_delta": 40000.0,
+                      "price_delta_vnd": 40000
+                    },
+                    {
+                      "variant_sku": "SKU-JK-DWN-XL-NAVY",
+                      "size": "XL",
+                      "color": "navy",
+                      "price_delta": 40000.0,
+                      "price_delta_vnd": 40000
+                    },
+                    {
+                      "variant_sku": "SKU-JK-DWN-XL-BE",
+                      "size": "XL",
+                      "color": "be",
+                      "price_delta": 40000.0,
+                      "price_delta_vnd": 40000
+                    }
+                  ]
+                },
+                {
+                  "sku": "SKU-MB-PUMP1",
+                  "name": "[private]",
+                  "category": "me-be",
+                  "brand": "Spectra",
+                  "list_price_vnd": 4290000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "warranty_months": 12
+                  },
+                  "variants": []
+                },
+                {
+                  "sku": "SKU-MB-PUMP2",
+                  "name": "[private]",
+                  "category": "me-be",
+                  "brand": "Medela",
+                  "list_price_vnd": 5990000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "warranty_months": 12
+                  },
+                  "variants": []
+                },
+                {
+                  "sku": "SKU-MB-STR2",
+                  "name": "[private]",
+                  "category": "me-be",
+                  "brand": "Combi",
+                  "list_price_vnd": 6790000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "max_weight_kg": 15,
+                    "warranty_months": 12
+                  },
+                  "variants": []
+                },
+                {
+                  "sku": "SKU-MB-MON",
+                  "name": "[private]",
+                  "category": "me-be",
+                  "brand": "Fatz",
+                  "list_price_vnd": 490000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "warranty_months": 12
+                  },
+                  "variants": []
+                },
+                {
+                  "sku": "SKU-MB-STER",
+                  "name": "[private]",
+                  "category": "me-be",
+                  "brand": "Moaz",
+                  "list_price_vnd": 1890000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "warranty_months": 12
+                  },
+                  "variants": []
+                },
+                {
+                  "sku": "SKU-MB-BOT",
+                  "name": "[private]",
+                  "category": "me-be",
+                  "brand": "Pigeon",
+                  "list_price_vnd": 289000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "volume_ml": 240
+                  },
+                  "variants": []
+                },
+                {
+                  "sku": "SKU-BDL-AIR",
+                  "name": "[private]",
+                  "category": "gia-dung/combo",
+                  "brand": "AirPure",
+                  "list_price_vnd": 6390000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "bundle_of": [
+                      "SKU-AP-Y",
+                      "SKU-AP-FLT-X",
+                      "SKU-AP-FLT-X"
+                    ],
+                    "saving_vnd": 190000,
+                    "warranty_months": 24
+                  },
+                  "variants": []
+                }
+              ],
+              "promotions": []
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "lessons": [],
+  "sessions": [
+    {
+      "call": "SC-032/call_1",
+      "round0": {
+        "job": null,
+        "error": null,
+        "learning": null,
+        "observed_input_findings": []
+      },
+      "round1": {
+        "job": {
+          "status": "done",
+          "job_id": "c4e2f0b4b167b5c4d4c47676b6bfba56d05b084ca29c85763abd796c58b09efc",
+          "error": null
+        },
+        "error": null,
+        "learning": {
+          "job_id": "c4e2f0b4b167b5c4d4c47676b6bfba56d05b084ca29c85763abd796c58b09efc",
+          "gaps": [],
+          "scope": "knowledge_gap_and_reflection_v1",
+          "evaluation_cases": [],
+          "out_of_scope": [],
+          "issue_reviews": [],
+          "detector_error": null,
+          "guardrails": {
+            "version": "learning_guardrails_v1",
+            "input_findings": [],
+            "blocked_lessons": [],
+            "blocked_sources": []
+          },
+          "detection": {
+            "candidate_count": 0,
+            "open_question_count": 0,
+            "processed_count": 0,
+            "skipped_unmatched_question": 0,
+            "skipped_over_limit": 0,
+            "scan": {
+              "turns_available": 3,
+              "turns_scanned": 3,
+              "requests": 3,
+              "errors": [],
+              "schema_retries": 0,
+              "skipped_over_limit": 0
+            },
+            "alignment_rejections": []
+          },
+          "outcome": "no_candidates",
+          "learning_duration_ms": 4500,
+          "learning_usage": {
+            "input_tokens": 25148,
+            "output_tokens": 12
+          }
+        },
+        "observed_input_findings": []
+      }
+    }
+  ],
+  "limitations": [
+    "Verdict kiểm tra được reference vẫn cần người đọc xác nhận ngữ nghĩa và độ đầy đủ.",
+    "Câu trả lời thay đổi hoặc được inject lesson chưa chứng minh lesson gây ra cải thiện.",
+    "Reflection chưa được chấm chất lượng; learning job done/lesson approved không phải điểm chất lượng.",
+    "Guardrail mẫu có giới hạn; không phát hiện mẫu không đồng nghĩa không có prompt injection."
+  ]
+}

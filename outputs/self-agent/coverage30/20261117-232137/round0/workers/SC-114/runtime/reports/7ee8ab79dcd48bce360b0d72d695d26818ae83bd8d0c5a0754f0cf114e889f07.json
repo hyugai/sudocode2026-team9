@@ -1,0 +1,95 @@
+{
+  "job_id": "7ee8ab79dcd48bce360b0d72d695d26818ae83bd8d0c5a0754f0cf114e889f07",
+  "gaps": [
+    {
+      "id": "c5fd5f7e8e502c3231bef3f245b2eadb9b1438d18b28788e45fafc6967d7fb94",
+      "status": "pending_remediation"
+    }
+  ],
+  "scope": "knowledge_gap_and_reflection_v1",
+  "evaluation_cases": [],
+  "out_of_scope": [],
+  "issue_reviews": [
+    {
+      "job_id": "7ee8ab79dcd48bce360b0d72d695d26818ae83bd8d0c5a0754f0cf114e889f07",
+      "message_id": 6,
+      "turn_id": 4,
+      "origin": "turn_detector",
+      "mechanism": "reflection",
+      "verified": true,
+      "claim": "Em xác nhận là không tạo thêm đơn mới nào nữa.",
+      "assessment": "contradicts_evidence",
+      "evidence_paths": [
+        "prior_evidence.2.tool_calls.0.result"
+      ],
+      "rejection": null,
+      "rejection_reasons": [],
+      "format_retry": true,
+      "verifier_output": {
+        "valid": true,
+        "issue_scope": "reflection",
+        "claim": "Em xác nhận là không tạo thêm đơn mới nào nữa.",
+        "assessment": "contradicts_evidence",
+        "evidence_paths": [
+          "prior_evidence.2.tool_calls.0.result"
+        ],
+        "decision_reason": "The customer explicitly requested to place an order for the remaining cart items excluding the canceled Xiaomi Air Fryer, but the agent incorrectly stated that no new order would be created and failed to fulfill the order placement request.",
+        "audit": {
+          "support_status": "supported",
+          "coverage": "complete",
+          "checked_paths": [
+            "prior_evidence.2.tool_calls.0.result"
+          ]
+        }
+      },
+      "candidate_claim": "Em xác nhận là không tạo thêm đơn mới nào nữa.",
+      "verification_basis": "referenced_evidence",
+      "evidence_inventory": [
+        "evidence.tool_calls.0.result",
+        "evidence.tool_calls.1.result",
+        "evidence.sources",
+        "evidence.promotions",
+        "prior_evidence.0.tool_calls",
+        "prior_evidence.0.sources",
+        "prior_evidence.0.promotions",
+        "prior_evidence.1.tool_calls.0.result",
+        "prior_evidence.1.tool_calls.1.result",
+        "prior_evidence.1.sources",
+        "prior_evidence.1.promotions",
+        "prior_evidence.2.tool_calls.0.result",
+        "prior_evidence.2.sources",
+        "prior_evidence.2.promotions"
+      ],
+      "lesson_status": "approved"
+    }
+  ],
+  "detector_error": null,
+  "guardrails": {
+    "version": "learning_guardrails_v1",
+    "input_findings": [],
+    "blocked_lessons": [],
+    "blocked_sources": []
+  },
+  "detection": {
+    "candidate_count": 1,
+    "open_question_count": 0,
+    "processed_count": 1,
+    "skipped_unmatched_question": 0,
+    "skipped_over_limit": 0,
+    "scan": {
+      "turns_available": 4,
+      "turns_scanned": 4,
+      "requests": 4,
+      "errors": [],
+      "schema_retries": 0,
+      "skipped_over_limit": 0
+    },
+    "alignment_rejections": []
+  },
+  "outcome": "gaps_processed",
+  "learning_duration_ms": 26533,
+  "learning_usage": {
+    "input_tokens": 12623,
+    "output_tokens": 510
+  }
+}

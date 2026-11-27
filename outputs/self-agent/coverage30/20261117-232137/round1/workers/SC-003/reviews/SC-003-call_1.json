@@ -1,0 +1,696 @@
+{
+  "schema_version": 1,
+  "guardrail_version": "learning_guardrails_v1",
+  "metadata": {
+    "evaluation_population": "single_session_no_baseline"
+  },
+  "warnings": [
+    "Chưa chạy judge: chỉ xem thay đổi câu trả lời và dấu vết lesson, chưa đánh giá cải thiện.",
+    "Không có cặp chấm hợp lệ: chưa thể kết luận cải thiện hay không có regression."
+  ],
+  "summary": {
+    "total_turns": 3,
+    "judged_pair_count": 0,
+    "round0_turns": 0,
+    "round1_turns": 3,
+    "stored_frozen_case_count": 0,
+    "injected_turns": 3,
+    "changed_answers": 0,
+    "counts": {
+      "improved_resolution": 0,
+      "safer_unresolved": 0,
+      "regression": 0,
+      "unchanged": 0,
+      "needs_review": 0,
+      "not_evaluated": 3,
+      "unpaired": 0,
+      "question_changed": 0,
+      "excluded": 0
+    }
+  },
+  "rows": [
+    {
+      "call": "SC-003/call_1",
+      "turn_id": 1,
+      "question": "Em ơi, chị đang cân nhắc Máy lọc không khí Xiaomi Smart 4 Pro.",
+      "baseline_question": null,
+      "classification": "not_evaluated",
+      "case_id": null,
+      "gap_id": null,
+      "answer_changed": false,
+      "injected": true,
+      "lesson_trace": {
+        "lessons_loaded": 25,
+        "selected_lessons": [
+          {
+            "id": "0e7e90c0ebef8ff9c32f68b6dc37e5e29d91f60a2b499f75ecd877036ecf29bb",
+            "hash": "0b334693cdf926b3101254ee7a690f2a2e7fc1eee39df75bb1acd210c2fa3838",
+            "mechanism": "knowledge_gap"
+          }
+        ],
+        "injected": true,
+        "mode": "memory_only",
+        "response_modified": false,
+        "routing": "selected",
+        "routing_ms": 8350.119,
+        "routing_usage": {
+          "input_tokens": 4844,
+          "output_tokens": 70
+        },
+        "guardrails": {
+          "version": "learning_guardrails_v1",
+          "blocked_lessons": []
+        },
+        "injected_chars": 785,
+        "injected_lesson_count": 1,
+        "wrapper_total_ms": 15244.436
+      },
+      "round0": {
+        "answer": null,
+        "verdict": {
+          "status": null
+        },
+        "latency": null,
+        "evidence": {
+          "current": {},
+          "earlier": []
+        }
+      },
+      "round1": {
+        "answer": "Dạ em chào chị [private]. Sản phẩm Máy lọc không khí Xiaomi Smart 4 Pro hiện tại bên em đang tạm hết hàng và dự kiến sẽ về hàng lại vào ngày 19/10/2026 ạ. \n\nSản phẩm này phù hợp cho phòng diện tích khoảng 60m², trang bị màng lọc HEPA, màn hình OLED và kết nối qua ứng dụng Mi Home rất tiện lợi. Chị có muốn em ghi chú lại thông tin để khi hàng về ngày 19/10 em liên hệ báo ngay cho chị không ạ?",
+        "verdict": {
+          "status": null
+        },
+        "latency": {
+          "ttft_ms": 6893,
+          "total_ms": 6893,
+          "ttfa_ms": null,
+          "measurement_mode": "non_streaming",
+          "timing_boundary": "response_ready_before_persistence",
+          "asr_ms": null,
+          "call_brief_ms": 3379,
+          "response_ready_ms": 6893,
+          "persistence_ms": 0.761,
+          "request_complete_ms": 6894.207,
+          "backend_total_ms": 6894.207,
+          "precomputed_parts": []
+        },
+        "evidence": {
+          "current": {
+            "turn_id": 1,
+            "agent_response": "Dạ em chào chị [private]. Sản phẩm Máy lọc không khí Xiaomi Smart 4 Pro hiện tại bên em đang tạm hết hàng và dự kiến sẽ về hàng lại vào ngày 19/10/2026 ạ. \n\nSản phẩm này phù hợp cho phòng diện tích khoảng 60m², trang bị màng lọc HEPA, màn hình OLED và kết nối qua ứng dụng Mi Home rất tiện lợi. Chị có muốn em ghi chú lại thông tin để khi hàng về ngày 19/10 em liên hệ báo ngay cho chị không ạ?",
+            "tool_calls": [
+              {
+                "name": "catalog.search",
+                "args": {
+                  "query": "Máy lọc không khí Xiaomi Smart 4 Pro",
+                  "on": "2026-10-15"
+                },
+                "result": {
+                  "items": [
+                    {
+                      "sku": "SKU-XM-4P",
+                      "name": "[private]",
+                      "category": "gia-dung/may-loc-khong-khi",
+                      "brand": "Xiaomi",
+                      "list_price_vnd": 5490000.0,
+                      "discontinued": false,
+                      "successor_sku": null,
+                      "attributes": {
+                        "features": "HEPA, màn OLED, app Mi Home",
+                        "room_area_m2": 60,
+                        "child_safe_lock": false,
+                        "warranty_months": 24
+                      },
+                      "variants": []
+                    }
+                  ],
+                  "total": 1
+                }
+              },
+              {
+                "name": "inventory.check",
+                "args": {
+                  "sku": "SKU-XM-4P",
+                  "on": "2026-10-15"
+                },
+                "result": {
+                  "sku": "SKU-XM-4P",
+                  "found": true,
+                  "in_stock": false,
+                  "qty": 0,
+                  "discontinued": false,
+                  "restock_expected": "2026-10-19"
+                }
+              }
+            ],
+            "sources": [
+              {
+                "sku": "SKU-XM-4P",
+                "name": "[private]",
+                "category": "gia-dung/may-loc-khong-khi",
+                "brand": "Xiaomi",
+                "list_price_vnd": 5490000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "features": "HEPA, màn OLED, app Mi Home",
+                  "room_area_m2": 60,
+                  "child_safe_lock": false,
+                  "warranty_months": 24
+                },
+                "variants": []
+              }
+            ],
+            "promotions": []
+          },
+          "earlier": []
+        }
+      }
+    },
+    {
+      "call": "SC-003/call_1",
+      "turn_id": 2,
+      "question": "Chị xem giá 5.490.000 đồng; em kiểm tra giúp giá và hàng hiện tại nhé. Ngân sách của chị là 5.790.000 đồng.",
+      "baseline_question": null,
+      "classification": "not_evaluated",
+      "case_id": null,
+      "gap_id": null,
+      "answer_changed": false,
+      "injected": true,
+      "lesson_trace": {
+        "lessons_loaded": 25,
+        "selected_lessons": [
+          {
+            "id": "91705e9fbf7144fc3e7376513f61ca3b790078f033f0efed5c4591452febe2ba",
+            "hash": "0b79efc34d78367dd44c15d622e578359cc166594ce784ad69462c8fff79c8c0",
+            "mechanism": "reflection"
+          },
+          {
+            "id": "1f653209866834d6367f23c31729113c40f0115c3b57e24259f6a546142c8918",
+            "hash": "1a645eeafa1a0b141b2a085f39f3f642835e940a3d31b496cff48615fcd8fb3b",
+            "mechanism": "knowledge_gap"
+          }
+        ],
+        "injected": true,
+        "mode": "memory_only",
+        "response_modified": false,
+        "routing": "selected",
+        "routing_ms": 2804.502,
+        "routing_usage": {
+          "input_tokens": 5220,
+          "output_tokens": 135
+        },
+        "guardrails": {
+          "version": "learning_guardrails_v1",
+          "blocked_lessons": []
+        },
+        "injected_chars": 1178,
+        "injected_lesson_count": 2,
+        "wrapper_total_ms": 12138.963
+      },
+      "round0": {
+        "answer": null,
+        "verdict": {
+          "status": null
+        },
+        "latency": null,
+        "evidence": {
+          "current": {},
+          "earlier": []
+        }
+      },
+      "round1": {
+        "answer": "Dạ em chào chị [private]. Giá hiện tại của Máy lọc không khí Xiaomi Smart 4 Pro đúng bằng mức chị đã xem là 5.490.000 đồng, nằm trong ngân sách 5.790.000 đồng của chị ạ. Khi mua sản phẩm này, chị còn được tặng kèm màng lọc SKU-XM-FLT và miễn phí vận chuyển. \n\nTuy nhiên, hiện tại sản phẩm đang tạm hết hàng và dự kiến sẽ về hàng lại vào ngày 19/10/2026. Khi hàng về, em gọi lại báo chị ngay nhé?",
+        "verdict": {
+          "status": null
+        },
+        "latency": {
+          "ttft_ms": 9334,
+          "total_ms": 9334,
+          "ttfa_ms": null,
+          "measurement_mode": "non_streaming",
+          "timing_boundary": "response_ready_before_persistence",
+          "asr_ms": null,
+          "call_brief_ms": null,
+          "response_ready_ms": 9334,
+          "persistence_ms": 0.122,
+          "request_complete_ms": 9334.317,
+          "backend_total_ms": 9334.317,
+          "precomputed_parts": [
+            "persisted_facts"
+          ]
+        },
+        "evidence": {
+          "current": {
+            "turn_id": 2,
+            "agent_response": "Dạ em chào chị [private]. Giá hiện tại của Máy lọc không khí Xiaomi Smart 4 Pro đúng bằng mức chị đã xem là 5.490.000 đồng, nằm trong ngân sách 5.790.000 đồng của chị ạ. Khi mua sản phẩm này, chị còn được tặng kèm màng lọc SKU-XM-FLT và miễn phí vận chuyển. \n\nTuy nhiên, hiện tại sản phẩm đang tạm hết hàng và dự kiến sẽ về hàng lại vào ngày 19/10/2026. Khi hàng về, em gọi lại báo chị ngay nhé?",
+            "tool_calls": [
+              {
+                "name": "catalog.search",
+                "args": {
+                  "query": "Chị xem giá 5.490.000 đồng; em kiểm tra giúp giá và hàng hiện tại nhé. Ngân sách của chị là 5.790.000 đồng.",
+                  "on": "2026-10-15"
+                },
+                "result": {
+                  "items": [],
+                  "total": 0
+                }
+              },
+              {
+                "name": "pricing.get_quote",
+                "args": {
+                  "on": "2026-10-15",
+                  "customer_phone": "[private]",
+                  "customer_id": "[private]",
+                  "sku": "SKU-XM-4P",
+                  "qty": 1
+                },
+                "result": {
+                  "sku": "SKU-XM-4P",
+                  "list_price_vnd": 5490000,
+                  "final_price_vnd": 5490000,
+                  "applied_promos": [
+                    {
+                      "promo_code": "COD-0",
+                      "type": "freecod",
+                      "discount_vnd": 0
+                    },
+                    {
+                      "promo_code": "XM-COMBO",
+                      "type": "gift",
+                      "discount_vnd": 0,
+                      "gift_sku": "SKU-XM-FLT"
+                    }
+                  ],
+                  "expired_promos": [],
+                  "ineligible_promos": [
+                    {
+                      "promo_code": "AIR-2ND-50",
+                      "reason": "min_qty"
+                    },
+                    {
+                      "promo_code": "NAM-SHIP0",
+                      "reason": "region"
+                    }
+                  ],
+                  "not_applied_exclusive": [],
+                  "freeship": true
+                }
+              },
+              {
+                "name": "inventory.check",
+                "args": {
+                  "on": "2026-10-15",
+                  "sku": "SKU-XM-4P"
+                },
+                "result": {
+                  "sku": "SKU-XM-4P",
+                  "found": true,
+                  "in_stock": false,
+                  "qty": 0,
+                  "discontinued": false,
+                  "restock_expected": "2026-10-19"
+                }
+              }
+            ],
+            "sources": [],
+            "promotions": []
+          },
+          "earlier": [
+            {
+              "turn_id": 1,
+              "tool_calls": [
+                {
+                  "name": "catalog.search",
+                  "args": {
+                    "query": "Máy lọc không khí Xiaomi Smart 4 Pro",
+                    "on": "2026-10-15"
+                  },
+                  "result": {
+                    "items": [
+                      {
+                        "sku": "SKU-XM-4P",
+                        "name": "[private]",
+                        "category": "gia-dung/may-loc-khong-khi",
+                        "brand": "Xiaomi",
+                        "list_price_vnd": 5490000.0,
+                        "discontinued": false,
+                        "successor_sku": null,
+                        "attributes": {
+                          "features": "HEPA, màn OLED, app Mi Home",
+                          "room_area_m2": 60,
+                          "child_safe_lock": false,
+                          "warranty_months": 24
+                        },
+                        "variants": []
+                      }
+                    ],
+                    "total": 1
+                  }
+                },
+                {
+                  "name": "inventory.check",
+                  "args": {
+                    "sku": "SKU-XM-4P",
+                    "on": "2026-10-15"
+                  },
+                  "result": {
+                    "sku": "SKU-XM-4P",
+                    "found": true,
+                    "in_stock": false,
+                    "qty": 0,
+                    "discontinued": false,
+                    "restock_expected": "2026-10-19"
+                  }
+                }
+              ],
+              "sources": [
+                {
+                  "sku": "SKU-XM-4P",
+                  "name": "[private]",
+                  "category": "gia-dung/may-loc-khong-khi",
+                  "brand": "Xiaomi",
+                  "list_price_vnd": 5490000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "features": "HEPA, màn OLED, app Mi Home",
+                    "room_area_m2": 60,
+                    "child_safe_lock": false,
+                    "warranty_months": 24
+                  },
+                  "variants": []
+                }
+              ],
+              "promotions": []
+            }
+          ]
+        }
+      }
+    },
+    {
+      "call": "SC-003/call_1",
+      "turn_id": 3,
+      "question": "Chị còn phải hỏi người nhà. Gọi lại cho chị lúc 10 giờ ngày 2026-10-20 nhé, chưa lên đơn.",
+      "baseline_question": null,
+      "classification": "not_evaluated",
+      "case_id": null,
+      "gap_id": null,
+      "answer_changed": false,
+      "injected": true,
+      "lesson_trace": {
+        "lessons_loaded": 25,
+        "selected_lessons": [
+          {
+            "id": "2428465dd6aebd918b246b218ea61f077e2a4a03ca7a10bb6c10ca1cd078d1a6",
+            "hash": "a6ef6e56d1a0afa44afce603254ba8380a79684f4316ec30047adabc7375818d",
+            "mechanism": "knowledge_gap"
+          }
+        ],
+        "injected": true,
+        "mode": "memory_only",
+        "response_modified": false,
+        "routing": "selected",
+        "routing_ms": 3097.83,
+        "routing_usage": {
+          "input_tokens": 5598,
+          "output_tokens": 69
+        },
+        "guardrails": {
+          "version": "learning_guardrails_v1",
+          "blocked_lessons": []
+        },
+        "injected_chars": 892,
+        "injected_lesson_count": 1,
+        "wrapper_total_ms": 7099.646
+      },
+      "round0": {
+        "answer": null,
+        "verdict": {
+          "status": null
+        },
+        "latency": null,
+        "evidence": {
+          "current": {},
+          "earlier": []
+        }
+      },
+      "round1": {
+        "answer": "Dạ em đã ghi nhận lịch hẹn gọi lại cho chị [private] vào lúc 10:00 ngày 20/10/2026 rồi ạ. Em sẽ liên hệ lại với chị sau khi chị thảo luận xong với người nhà nhé. Em cảm ơn chị và chúc chị một ngày vui vẻ ạ!",
+        "verdict": {
+          "status": null
+        },
+        "latency": {
+          "ttft_ms": 4002,
+          "total_ms": 4002,
+          "ttfa_ms": null,
+          "measurement_mode": "non_streaming",
+          "timing_boundary": "response_ready_before_persistence",
+          "asr_ms": null,
+          "call_brief_ms": null,
+          "response_ready_ms": 4002,
+          "persistence_ms": 0.105,
+          "request_complete_ms": 4001.7,
+          "backend_total_ms": 4001.7,
+          "precomputed_parts": [
+            "persisted_facts"
+          ]
+        },
+        "evidence": {
+          "current": {
+            "turn_id": 3,
+            "agent_response": "Dạ em đã ghi nhận lịch hẹn gọi lại cho chị [private] vào lúc 10:00 ngày 20/10/2026 rồi ạ. Em sẽ liên hệ lại với chị sau khi chị thảo luận xong với người nhà nhé. Em cảm ơn chị và chúc chị một ngày vui vẻ ạ!",
+            "tool_calls": [
+              {
+                "name": "schedule.callback",
+                "args": {
+                  "customer_phone": "[private]",
+                  "callback_at": "2026-10-20T10:00",
+                  "note": "Chị còn phải hỏi người nhà. Gọi lại cho chị lúc 10 giờ ngày 2026-10-20 nhé, chưa lên đơn.",
+                  "on": "2026-10-15"
+                },
+                "result": {
+                  "callback_id": "CB-6A8B86",
+                  "customer_phone": "[private]",
+                  "callback_at": "2026-10-20T10:00",
+                  "moved_from": null,
+                  "note": "Chị còn phải hỏi người nhà. Gọi lại cho chị lúc 10 giờ ngày 2026-10-20 nhé, chưa lên đơn."
+                }
+              }
+            ],
+            "sources": [],
+            "promotions": []
+          },
+          "earlier": [
+            {
+              "turn_id": 1,
+              "tool_calls": [
+                {
+                  "name": "catalog.search",
+                  "args": {
+                    "query": "Máy lọc không khí Xiaomi Smart 4 Pro",
+                    "on": "2026-10-15"
+                  },
+                  "result": {
+                    "items": [
+                      {
+                        "sku": "SKU-XM-4P",
+                        "name": "[private]",
+                        "category": "gia-dung/may-loc-khong-khi",
+                        "brand": "Xiaomi",
+                        "list_price_vnd": 5490000.0,
+                        "discontinued": false,
+                        "successor_sku": null,
+                        "attributes": {
+                          "features": "HEPA, màn OLED, app Mi Home",
+                          "room_area_m2": 60,
+                          "child_safe_lock": false,
+                          "warranty_months": 24
+                        },
+                        "variants": []
+                      }
+                    ],
+                    "total": 1
+                  }
+                },
+                {
+                  "name": "inventory.check",
+                  "args": {
+                    "sku": "SKU-XM-4P",
+                    "on": "2026-10-15"
+                  },
+                  "result": {
+                    "sku": "SKU-XM-4P",
+                    "found": true,
+                    "in_stock": false,
+                    "qty": 0,
+                    "discontinued": false,
+                    "restock_expected": "2026-10-19"
+                  }
+                }
+              ],
+              "sources": [
+                {
+                  "sku": "SKU-XM-4P",
+                  "name": "[private]",
+                  "category": "gia-dung/may-loc-khong-khi",
+                  "brand": "Xiaomi",
+                  "list_price_vnd": 5490000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "features": "HEPA, màn OLED, app Mi Home",
+                    "room_area_m2": 60,
+                    "child_safe_lock": false,
+                    "warranty_months": 24
+                  },
+                  "variants": []
+                }
+              ],
+              "promotions": []
+            },
+            {
+              "turn_id": 2,
+              "tool_calls": [
+                {
+                  "name": "catalog.search",
+                  "args": {
+                    "query": "Chị xem giá 5.490.000 đồng; em kiểm tra giúp giá và hàng hiện tại nhé. Ngân sách của chị là 5.790.000 đồng.",
+                    "on": "2026-10-15"
+                  },
+                  "result": {
+                    "items": [],
+                    "total": 0
+                  }
+                },
+                {
+                  "name": "pricing.get_quote",
+                  "args": {
+                    "on": "2026-10-15",
+                    "customer_phone": "[private]",
+                    "customer_id": "[private]",
+                    "sku": "SKU-XM-4P",
+                    "qty": 1
+                  },
+                  "result": {
+                    "sku": "SKU-XM-4P",
+                    "list_price_vnd": 5490000,
+                    "final_price_vnd": 5490000,
+                    "applied_promos": [
+                      {
+                        "promo_code": "COD-0",
+                        "type": "freecod",
+                        "discount_vnd": 0
+                      },
+                      {
+                        "promo_code": "XM-COMBO",
+                        "type": "gift",
+                        "discount_vnd": 0,
+                        "gift_sku": "SKU-XM-FLT"
+                      }
+                    ],
+                    "expired_promos": [],
+                    "ineligible_promos": [
+                      {
+                        "promo_code": "AIR-2ND-50",
+                        "reason": "min_qty"
+                      },
+                      {
+                        "promo_code": "NAM-SHIP0",
+                        "reason": "region"
+                      }
+                    ],
+                    "not_applied_exclusive": [],
+                    "freeship": true
+                  }
+                },
+                {
+                  "name": "inventory.check",
+                  "args": {
+                    "on": "2026-10-15",
+                    "sku": "SKU-XM-4P"
+                  },
+                  "result": {
+                    "sku": "SKU-XM-4P",
+                    "found": true,
+                    "in_stock": false,
+                    "qty": 0,
+                    "discontinued": false,
+                    "restock_expected": "2026-10-19"
+                  }
+                }
+              ],
+              "sources": [],
+              "promotions": []
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "lessons": [],
+  "sessions": [
+    {
+      "call": "SC-003/call_1",
+      "round0": {
+        "job": null,
+        "error": null,
+        "learning": null,
+        "observed_input_findings": []
+      },
+      "round1": {
+        "job": {
+          "status": "done",
+          "job_id": "435058d7244c879a871086c1d1f8223f0ebcf3e0230839819880ee6ce6024aae",
+          "error": null
+        },
+        "error": null,
+        "learning": {
+          "job_id": "435058d7244c879a871086c1d1f8223f0ebcf3e0230839819880ee6ce6024aae",
+          "gaps": [],
+          "scope": "knowledge_gap_and_reflection_v1",
+          "evaluation_cases": [],
+          "out_of_scope": [],
+          "issue_reviews": [],
+          "detector_error": null,
+          "guardrails": {
+            "version": "learning_guardrails_v1",
+            "input_findings": [],
+            "blocked_lessons": [],
+            "blocked_sources": []
+          },
+          "detection": {
+            "candidate_count": 0,
+            "open_question_count": 0,
+            "processed_count": 0,
+            "skipped_unmatched_question": 0,
+            "skipped_over_limit": 0,
+            "scan": {
+              "turns_available": 3,
+              "turns_scanned": 3,
+              "requests": 3,
+              "errors": [],
+              "schema_retries": 0,
+              "skipped_over_limit": 0
+            },
+            "alignment_rejections": []
+          },
+          "outcome": "no_candidates",
+          "learning_duration_ms": 3994,
+          "learning_usage": {
+            "input_tokens": 4645,
+            "output_tokens": 13
+          }
+        },
+        "observed_input_findings": []
+      }
+    }
+  ],
+  "limitations": [
+    "Verdict kiểm tra được reference vẫn cần người đọc xác nhận ngữ nghĩa và độ đầy đủ.",
+    "Câu trả lời thay đổi hoặc được inject lesson chưa chứng minh lesson gây ra cải thiện.",
+    "Reflection chưa được chấm chất lượng; learning job done/lesson approved không phải điểm chất lượng.",
+    "Guardrail mẫu có giới hạn; không phát hiện mẫu không đồng nghĩa không có prompt injection."
+  ]
+}

@@ -1,0 +1,729 @@
+{
+  "schema_version": 1,
+  "guardrail_version": "learning_guardrails_v1",
+  "metadata": {
+    "evaluation_population": "single_session_no_baseline"
+  },
+  "warnings": [
+    "Chưa chạy judge: chỉ xem thay đổi câu trả lời và dấu vết lesson, chưa đánh giá cải thiện.",
+    "Không có cặp chấm hợp lệ: chưa thể kết luận cải thiện hay không có regression."
+  ],
+  "summary": {
+    "total_turns": 3,
+    "judged_pair_count": 0,
+    "round0_turns": 0,
+    "round1_turns": 3,
+    "stored_frozen_case_count": 0,
+    "injected_turns": 3,
+    "changed_answers": 0,
+    "counts": {
+      "improved_resolution": 0,
+      "safer_unresolved": 0,
+      "regression": 0,
+      "unchanged": 0,
+      "needs_review": 0,
+      "not_evaluated": 3,
+      "unpaired": 0,
+      "question_changed": 0,
+      "excluded": 0
+    }
+  },
+  "rows": [
+    {
+      "call": "SC-044/call_1",
+      "turn_id": 1,
+      "question": "cho minh hoi chut nhe, anh muon mot quat dung dc inverter panasonic f-409, gia dang la 2.450.000 dong dung khong?",
+      "baseline_question": null,
+      "classification": "not_evaluated",
+      "case_id": null,
+      "gap_id": null,
+      "answer_changed": false,
+      "injected": true,
+      "lesson_trace": {
+        "lessons_loaded": 25,
+        "selected_lessons": [
+          {
+            "id": "0e7e90c0ebef8ff9c32f68b6dc37e5e29d91f60a2b499f75ecd877036ecf29bb",
+            "hash": "0b334693cdf926b3101254ee7a690f2a2e7fc1eee39df75bb1acd210c2fa3838",
+            "mechanism": "knowledge_gap"
+          }
+        ],
+        "injected": true,
+        "mode": "memory_only",
+        "response_modified": false,
+        "routing": "selected",
+        "routing_ms": 3324.361,
+        "routing_usage": {
+          "input_tokens": 4892,
+          "output_tokens": 69
+        },
+        "guardrails": {
+          "version": "learning_guardrails_v1",
+          "blocked_lessons": []
+        },
+        "injected_chars": 785,
+        "injected_lesson_count": 1,
+        "wrapper_total_ms": 14879.053
+      },
+      "round0": {
+        "answer": null,
+        "verdict": {
+          "status": null
+        },
+        "latency": null,
+        "evidence": {
+          "current": {},
+          "earlier": []
+        }
+      },
+      "round1": {
+        "answer": "Dạ đúng rồi anh [private], quạt đứng DC inverter Panasonic F-409 hiện có giá chính xác là 2.450.000 đồng ạ. \n\nAnh có cần em hỗ trợ kiểm tra tồn kho hoặc tư vấn thêm thông tin gì về sản phẩm này không anh?",
+        "verdict": {
+          "status": null
+        },
+        "latency": {
+          "ttft_ms": 11554,
+          "total_ms": 11554,
+          "ttfa_ms": null,
+          "measurement_mode": "non_streaming",
+          "timing_boundary": "response_ready_before_persistence",
+          "asr_ms": null,
+          "call_brief_ms": 4012,
+          "response_ready_ms": 11554,
+          "persistence_ms": 0.641,
+          "request_complete_ms": 11554.571,
+          "backend_total_ms": 11554.571,
+          "precomputed_parts": []
+        },
+        "evidence": {
+          "current": {
+            "turn_id": 1,
+            "agent_response": "Dạ đúng rồi anh [private], quạt đứng DC inverter Panasonic F-409 hiện có giá chính xác là 2.450.000 đồng ạ. \n\nAnh có cần em hỗ trợ kiểm tra tồn kho hoặc tư vấn thêm thông tin gì về sản phẩm này không anh?",
+            "tool_calls": [
+              {
+                "name": "catalog.search",
+                "args": {
+                  "query": "quat dung",
+                  "on": "2026-10-19"
+                },
+                "result": {
+                  "items": [],
+                  "total": 0
+                }
+              },
+              {
+                "name": "catalog.search",
+                "args": {
+                  "query": "Panasonic F-409",
+                  "on": "2026-10-19"
+                },
+                "result": {
+                  "items": [
+                    {
+                      "sku": "SKU-FAN-DC1",
+                      "name": "[private]",
+                      "category": "gia-dung/quat",
+                      "brand": "Panasonic",
+                      "list_price_vnd": 2450000.0,
+                      "discontinued": false,
+                      "successor_sku": null,
+                      "attributes": {
+                        "warranty_months": 12
+                      },
+                      "variants": []
+                    }
+                  ],
+                  "total": 1
+                }
+              },
+              {
+                "name": "pricing.get_quote",
+                "args": {
+                  "on": "2026-10-19",
+                  "sku": "SKU-FAN-DC1"
+                },
+                "result": {
+                  "sku": "SKU-FAN-DC1",
+                  "list_price_vnd": 2450000,
+                  "final_price_vnd": 2450000,
+                  "applied_promos": [
+                    {
+                      "promo_code": "COD-0",
+                      "type": "freecod",
+                      "discount_vnd": 0
+                    }
+                  ],
+                  "expired_promos": [],
+                  "ineligible_promos": [
+                    {
+                      "promo_code": "NAM-SHIP0",
+                      "reason": "region"
+                    }
+                  ],
+                  "not_applied_exclusive": [],
+                  "freeship": true
+                }
+              }
+            ],
+            "sources": [
+              {
+                "sku": "SKU-FAN-DC1",
+                "name": "[private]",
+                "category": "gia-dung/quat",
+                "brand": "Panasonic",
+                "list_price_vnd": 2450000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "warranty_months": 12
+                },
+                "variants": []
+              },
+              {
+                "sku": "SKU-FAN-DC1",
+                "name": "[private]",
+                "category": "gia-dung/quat",
+                "brand": "Panasonic",
+                "list_price_vnd": 2450000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "warranty_months": 12
+                },
+                "variants": []
+              }
+            ],
+            "promotions": []
+          },
+          "earlier": []
+        }
+      }
+    },
+    {
+      "call": "SC-044/call_1",
+      "turn_id": 2,
+      "question": "dia chi cua anh la 103 duong kiem thu, ha noi; thanh toan cod. hom nay chua chot.",
+      "baseline_question": null,
+      "classification": "not_evaluated",
+      "case_id": null,
+      "gap_id": null,
+      "answer_changed": false,
+      "injected": true,
+      "lesson_trace": {
+        "lessons_loaded": 25,
+        "selected_lessons": [
+          {
+            "id": "2428465dd6aebd918b246b218ea61f077e2a4a03ca7a10bb6c10ca1cd078d1a6",
+            "hash": "a6ef6e56d1a0afa44afce603254ba8380a79684f4316ec30047adabc7375818d",
+            "mechanism": "knowledge_gap"
+          }
+        ],
+        "injected": true,
+        "mode": "memory_only",
+        "response_modified": false,
+        "routing": "selected",
+        "routing_ms": 2562.994,
+        "routing_usage": {
+          "input_tokens": 5120,
+          "output_tokens": 69
+        },
+        "guardrails": {
+          "version": "learning_guardrails_v1",
+          "blocked_lessons": []
+        },
+        "injected_chars": 892,
+        "injected_lesson_count": 1,
+        "wrapper_total_ms": 6252.446
+      },
+      "round0": {
+        "answer": null,
+        "verdict": {
+          "status": null
+        },
+        "latency": null,
+        "evidence": {
+          "current": {},
+          "earlier": []
+        }
+      },
+      "round1": {
+        "answer": "Dạ em đã ghi nhận địa chỉ [address]",
+        "verdict": {
+          "status": null
+        },
+        "latency": {
+          "ttft_ms": 3689,
+          "total_ms": 3689,
+          "ttfa_ms": null,
+          "measurement_mode": "non_streaming",
+          "timing_boundary": "response_ready_before_persistence",
+          "asr_ms": null,
+          "call_brief_ms": null,
+          "response_ready_ms": 3689,
+          "persistence_ms": 0.128,
+          "request_complete_ms": 3689.335,
+          "backend_total_ms": 3689.335,
+          "precomputed_parts": [
+            "persisted_facts"
+          ]
+        },
+        "evidence": {
+          "current": {
+            "turn_id": 2,
+            "agent_response": "Dạ em đã ghi nhận địa chỉ [address]",
+            "tool_calls": [],
+            "sources": [
+              {
+                "sku": "SKU-FAN-DC1",
+                "name": "[private]",
+                "category": "gia-dung/quat",
+                "brand": "Panasonic",
+                "list_price_vnd": 2450000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "warranty_months": 12
+                },
+                "variants": []
+              },
+              {
+                "sku": "SKU-FAN-DC1",
+                "name": "[private]",
+                "category": "gia-dung/quat",
+                "brand": "Panasonic",
+                "list_price_vnd": 2450000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "warranty_months": 12
+                },
+                "variants": []
+              }
+            ],
+            "promotions": []
+          },
+          "earlier": [
+            {
+              "turn_id": 1,
+              "tool_calls": [
+                {
+                  "name": "catalog.search",
+                  "args": {
+                    "query": "quat dung",
+                    "on": "2026-10-19"
+                  },
+                  "result": {
+                    "items": [],
+                    "total": 0
+                  }
+                },
+                {
+                  "name": "catalog.search",
+                  "args": {
+                    "query": "Panasonic F-409",
+                    "on": "2026-10-19"
+                  },
+                  "result": {
+                    "items": [
+                      {
+                        "sku": "SKU-FAN-DC1",
+                        "name": "[private]",
+                        "category": "gia-dung/quat",
+                        "brand": "Panasonic",
+                        "list_price_vnd": 2450000.0,
+                        "discontinued": false,
+                        "successor_sku": null,
+                        "attributes": {
+                          "warranty_months": 12
+                        },
+                        "variants": []
+                      }
+                    ],
+                    "total": 1
+                  }
+                },
+                {
+                  "name": "pricing.get_quote",
+                  "args": {
+                    "on": "2026-10-19",
+                    "sku": "SKU-FAN-DC1"
+                  },
+                  "result": {
+                    "sku": "SKU-FAN-DC1",
+                    "list_price_vnd": 2450000,
+                    "final_price_vnd": 2450000,
+                    "applied_promos": [
+                      {
+                        "promo_code": "COD-0",
+                        "type": "freecod",
+                        "discount_vnd": 0
+                      }
+                    ],
+                    "expired_promos": [],
+                    "ineligible_promos": [
+                      {
+                        "promo_code": "NAM-SHIP0",
+                        "reason": "region"
+                      }
+                    ],
+                    "not_applied_exclusive": [],
+                    "freeship": true
+                  }
+                }
+              ],
+              "sources": [
+                {
+                  "sku": "SKU-FAN-DC1",
+                  "name": "[private]",
+                  "category": "gia-dung/quat",
+                  "brand": "Panasonic",
+                  "list_price_vnd": 2450000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "warranty_months": 12
+                  },
+                  "variants": []
+                },
+                {
+                  "sku": "SKU-FAN-DC1",
+                  "name": "[private]",
+                  "category": "gia-dung/quat",
+                  "brand": "Panasonic",
+                  "list_price_vnd": 2450000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "warranty_months": 12
+                  },
+                  "variants": []
+                }
+              ],
+              "promotions": []
+            }
+          ]
+        }
+      }
+    },
+    {
+      "call": "SC-044/call_1",
+      "turn_id": 3,
+      "question": "em goi lai luc 10 gio ngay 2026-10-21 nhe.",
+      "baseline_question": null,
+      "classification": "not_evaluated",
+      "case_id": null,
+      "gap_id": null,
+      "answer_changed": false,
+      "injected": true,
+      "lesson_trace": {
+        "lessons_loaded": 25,
+        "selected_lessons": [
+          {
+            "id": "2428465dd6aebd918b246b218ea61f077e2a4a03ca7a10bb6c10ca1cd078d1a6",
+            "hash": "a6ef6e56d1a0afa44afce603254ba8380a79684f4316ec30047adabc7375818d",
+            "mechanism": "knowledge_gap"
+          }
+        ],
+        "injected": true,
+        "mode": "memory_only",
+        "response_modified": false,
+        "routing": "selected",
+        "routing_ms": 2403.21,
+        "routing_usage": {
+          "input_tokens": 5204,
+          "output_tokens": 69
+        },
+        "guardrails": {
+          "version": "learning_guardrails_v1",
+          "blocked_lessons": []
+        },
+        "injected_chars": 892,
+        "injected_lesson_count": 1,
+        "wrapper_total_ms": 5228.525
+      },
+      "round0": {
+        "answer": null,
+        "verdict": {
+          "status": null
+        },
+        "latency": null,
+        "evidence": {
+          "current": {},
+          "earlier": []
+        }
+      },
+      "round1": {
+        "answer": "Dạ em đã đặt lịch hẹn sẽ gọi lại cho anh [private] vào lúc 10:00 ngày 21/10/2026 rồi ạ. Em cảm ơn anh và chúc anh một ngày tốt lành!",
+        "verdict": {
+          "status": null
+        },
+        "latency": {
+          "ttft_ms": 2825,
+          "total_ms": 2825,
+          "ttfa_ms": null,
+          "measurement_mode": "non_streaming",
+          "timing_boundary": "response_ready_before_persistence",
+          "asr_ms": null,
+          "call_brief_ms": null,
+          "response_ready_ms": 2825,
+          "persistence_ms": 0.094,
+          "request_complete_ms": 2825.213,
+          "backend_total_ms": 2825.213,
+          "precomputed_parts": [
+            "persisted_facts"
+          ]
+        },
+        "evidence": {
+          "current": {
+            "turn_id": 3,
+            "agent_response": "Dạ em đã đặt lịch hẹn sẽ gọi lại cho anh [private] vào lúc 10:00 ngày 21/10/2026 rồi ạ. Em cảm ơn anh và chúc anh một ngày tốt lành!",
+            "tool_calls": [
+              {
+                "name": "schedule.callback",
+                "args": {
+                  "customer_phone": "[private]",
+                  "callback_at": "2026-10-21T10:00",
+                  "note": "Em gọi lại luc 10 gio ngay 2026-10-21 nhé.",
+                  "on": "2026-10-19"
+                },
+                "result": {
+                  "callback_id": "CB-CA0E82",
+                  "customer_phone": "[private]",
+                  "callback_at": "2026-10-21T10:00",
+                  "moved_from": null,
+                  "note": "Em gọi lại luc 10 gio ngay 2026-10-21 nhé."
+                }
+              }
+            ],
+            "sources": [
+              {
+                "sku": "SKU-FAN-DC1",
+                "name": "[private]",
+                "category": "gia-dung/quat",
+                "brand": "Panasonic",
+                "list_price_vnd": 2450000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "warranty_months": 12
+                },
+                "variants": []
+              },
+              {
+                "sku": "SKU-FAN-DC1",
+                "name": "[private]",
+                "category": "gia-dung/quat",
+                "brand": "Panasonic",
+                "list_price_vnd": 2450000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "warranty_months": 12
+                },
+                "variants": []
+              }
+            ],
+            "promotions": []
+          },
+          "earlier": [
+            {
+              "turn_id": 1,
+              "tool_calls": [
+                {
+                  "name": "catalog.search",
+                  "args": {
+                    "query": "quat dung",
+                    "on": "2026-10-19"
+                  },
+                  "result": {
+                    "items": [],
+                    "total": 0
+                  }
+                },
+                {
+                  "name": "catalog.search",
+                  "args": {
+                    "query": "Panasonic F-409",
+                    "on": "2026-10-19"
+                  },
+                  "result": {
+                    "items": [
+                      {
+                        "sku": "SKU-FAN-DC1",
+                        "name": "[private]",
+                        "category": "gia-dung/quat",
+                        "brand": "Panasonic",
+                        "list_price_vnd": 2450000.0,
+                        "discontinued": false,
+                        "successor_sku": null,
+                        "attributes": {
+                          "warranty_months": 12
+                        },
+                        "variants": []
+                      }
+                    ],
+                    "total": 1
+                  }
+                },
+                {
+                  "name": "pricing.get_quote",
+                  "args": {
+                    "on": "2026-10-19",
+                    "sku": "SKU-FAN-DC1"
+                  },
+                  "result": {
+                    "sku": "SKU-FAN-DC1",
+                    "list_price_vnd": 2450000,
+                    "final_price_vnd": 2450000,
+                    "applied_promos": [
+                      {
+                        "promo_code": "COD-0",
+                        "type": "freecod",
+                        "discount_vnd": 0
+                      }
+                    ],
+                    "expired_promos": [],
+                    "ineligible_promos": [
+                      {
+                        "promo_code": "NAM-SHIP0",
+                        "reason": "region"
+                      }
+                    ],
+                    "not_applied_exclusive": [],
+                    "freeship": true
+                  }
+                }
+              ],
+              "sources": [
+                {
+                  "sku": "SKU-FAN-DC1",
+                  "name": "[private]",
+                  "category": "gia-dung/quat",
+                  "brand": "Panasonic",
+                  "list_price_vnd": 2450000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "warranty_months": 12
+                  },
+                  "variants": []
+                },
+                {
+                  "sku": "SKU-FAN-DC1",
+                  "name": "[private]",
+                  "category": "gia-dung/quat",
+                  "brand": "Panasonic",
+                  "list_price_vnd": 2450000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "warranty_months": 12
+                  },
+                  "variants": []
+                }
+              ],
+              "promotions": []
+            },
+            {
+              "turn_id": 2,
+              "tool_calls": [],
+              "sources": [
+                {
+                  "sku": "SKU-FAN-DC1",
+                  "name": "[private]",
+                  "category": "gia-dung/quat",
+                  "brand": "Panasonic",
+                  "list_price_vnd": 2450000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "warranty_months": 12
+                  },
+                  "variants": []
+                },
+                {
+                  "sku": "SKU-FAN-DC1",
+                  "name": "[private]",
+                  "category": "gia-dung/quat",
+                  "brand": "Panasonic",
+                  "list_price_vnd": 2450000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "warranty_months": 12
+                  },
+                  "variants": []
+                }
+              ],
+              "promotions": []
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "lessons": [],
+  "sessions": [
+    {
+      "call": "SC-044/call_1",
+      "round0": {
+        "job": null,
+        "error": null,
+        "learning": null,
+        "observed_input_findings": []
+      },
+      "round1": {
+        "job": {
+          "status": "done",
+          "job_id": "875bbecd1aab4070ff0d7d3bd476834fe5f805151454a1d7e38893fbbe2305af",
+          "error": null
+        },
+        "error": null,
+        "learning": {
+          "job_id": "875bbecd1aab4070ff0d7d3bd476834fe5f805151454a1d7e38893fbbe2305af",
+          "gaps": [],
+          "scope": "knowledge_gap_and_reflection_v1",
+          "evaluation_cases": [],
+          "out_of_scope": [],
+          "issue_reviews": [],
+          "detector_error": null,
+          "guardrails": {
+            "version": "learning_guardrails_v1",
+            "input_findings": [],
+            "blocked_lessons": [],
+            "blocked_sources": []
+          },
+          "detection": {
+            "candidate_count": 0,
+            "open_question_count": 0,
+            "processed_count": 0,
+            "skipped_unmatched_question": 0,
+            "skipped_over_limit": 0,
+            "scan": {
+              "turns_available": 3,
+              "turns_scanned": 3,
+              "requests": 3,
+              "errors": [],
+              "schema_retries": 0,
+              "skipped_over_limit": 0
+            },
+            "alignment_rejections": []
+          },
+          "outcome": "no_candidates",
+          "learning_duration_ms": 4769,
+          "learning_usage": {
+            "input_tokens": 4109,
+            "output_tokens": 18
+          }
+        },
+        "observed_input_findings": []
+      }
+    }
+  ],
+  "limitations": [
+    "Verdict kiểm tra được reference vẫn cần người đọc xác nhận ngữ nghĩa và độ đầy đủ.",
+    "Câu trả lời thay đổi hoặc được inject lesson chưa chứng minh lesson gây ra cải thiện.",
+    "Reflection chưa được chấm chất lượng; learning job done/lesson approved không phải điểm chất lượng.",
+    "Guardrail mẫu có giới hạn; không phát hiện mẫu không đồng nghĩa không có prompt injection."
+  ]
+}

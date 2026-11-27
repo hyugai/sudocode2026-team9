@@ -1,0 +1,220 @@
+{
+  "id": "b07bcea5e6f88a2aadd9f7191a6a7b2b6174f6a5c28a677ac195ecd6a828ce3a",
+  "status": "done",
+  "attempts": 1,
+  "snapshot": {
+    "session": "40724c7b21380b59129b9fa93b9f96fc45756377adfb592fffd37bb2d920641f",
+    "revision": 5,
+    "messages": [
+      {
+        "message_id": 0,
+        "role": "customer",
+        "content": "Tôi là [private], số điện thoại [private], đang nhắn qua Zalo OA. Shop tư vấn giúp nhé, chị mua đồ cho nhà mới, đang tính Máy tiệt trùng sấy khô Moaz Bebe với Quạt đứng Senko TS16."
+      },
+      {
+        "message_id": 1,
+        "role": "agent",
+        "content": "Em chào chị [private] ạ. Em rất vui được hỗ trợ chị sắm đồ cho nhà mới!\n\nVề quạt đứng Senko TS16, bên em hiện đang sẵn hàng chị nhé. Còn mẫu máy tiệt trùng sấy khô Moaz BéBé thì chị đang quan tâm đến dòng máy tiệt trùng bằng tia UV hay máy tiệt trùng bằng hơi nước vậy chị, để em tư vấn kĩ hơn cho mình ạ?"
+      },
+      {
+        "message_id": 2,
+        "role": "customer",
+        "content": "À đổi ý, bỏ món thứ hai vừa nói, thay bằng Máy hâm sữa Fatz 4 chức năng. Mỗi loại một chiếc nhé."
+      },
+      {
+        "message_id": 3,
+        "role": "agent",
+        "content": "Dạ chị [private], em ghi nhận chị bỏ sản phẩm thứ hai và chuyển sang chọn 01 Máy hâm sữa Fatz 4 chức năng cùng với 01 Máy tiệt trùng sấy khô Moaz BéBé ạ. \n\nHiện tại để tư vấn chính xác nhất về dòng máy hâm sữa Fatz 4 chức năng này cũng như kiểm tra tình trạng còn hàng cho chị, chị cho em xin ít phút để kiểm tra thông tin chi tiết trên hệ thống nhé!"
+      },
+      {
+        "message_id": 4,
+        "role": "customer",
+        "content": "Ngân sách tổng của chị là 2.680.000 đồng. Hôm nay chỉ nhờ em ghi lại giỏ cuối cùng, chưa đặt."
+      },
+      {
+        "message_id": 5,
+        "role": "agent",
+        "content": "Dạ em chào chị [private], em ghi nhận ngân sách tổng của chị là 2.680.000 đồng ạ. Hiện tại chị chưa đặt hàng mà chỉ nhờ em ghi lại giỏ hàng cuối cùng. Chị có cần em hỗ trợ thêm thông tin gì về sản phẩm trước khi quyết định không ạ?"
+      },
+      {
+        "message_id": 6,
+        "role": "customer",
+        "content": "Tôi thấy bản chính sách tháng 6 ghi đổi trả trong 14 ngày. Với đơn mới đặt từ tháng 10/2026, hàng còn nguyên tem và không có lỗi kỹ thuật, thời hạn thông thường thực tế là bao nhiêu ngày? Hãy nói rõ mốc hiện hành trước khi tiếp tục yêu cầu chính của tôi."
+      },
+      {
+        "message_id": 7,
+        "role": "agent",
+        "content": "Dạ em chào chị [private]. Theo chính sách hiện hành áp dụng từ tháng 10/2026, thời hạn đổi trả thông thường đối với sản phẩm còn nguyên tem và không có lỗi kỹ thuật là **7 ngày** kể từ ngày chị nhận hàng ạ (bản cũ tháng 6 là 14 ngày).\n\nDạ chị cần em hỗ trợ thêm thông tin gì về sản phẩm hoặc yêu cầu nào khác không ạ?"
+      },
+      {
+        "message_id": 8,
+        "role": "customer",
+        "content": "Em xác nhận lại đúng hai món sau khi sửa giúp chị."
+      },
+      {
+        "message_id": 9,
+        "role": "agent",
+        "content": "Dạ chị [private], hiện tại trong hệ thống của em chưa ghi nhận đơn hàng nào được tạo trước đó để tiến hành điều chỉnh ạ. Chị có thể cho em xin thông tin chi tiết về 2 món sản phẩm chị muốn chọn để em hỗ trợ kiểm tra và lên đơn mới cho chị ngay nhé!"
+      }
+    ],
+    "open_questions": [],
+    "feedback": [],
+    "evidence_coverage": "per_turn_evidence",
+    "workflow_version": 4,
+    "turn_evidence": [
+      {
+        "turn_id": 1,
+        "agent_response": "Em chào chị [private] ạ. Em rất vui được hỗ trợ chị sắm đồ cho nhà mới!\n\nVề quạt đứng Senko TS16, bên em hiện đang sẵn hàng chị nhé. Còn mẫu máy tiệt trùng sấy khô Moaz BéBé thì chị đang quan tâm đến dòng máy tiệt trùng bằng tia UV hay máy tiệt trùng bằng hơi nước vậy chị, để em tư vấn kĩ hơn cho mình ạ?",
+        "tool_calls": [
+          {
+            "name": "catalog.search",
+            "args": {
+              "query": "Tôi là [private], số điện thoại [private], đang nhắn qua Zalo OA. Shop tư vấn giúp nhé, chị mua đồ cho nhà mới, đang tính Máy tiệt trùng sấy khô Moaz Bebe với Quạt đứng Senko TS16.",
+              "on": "2026-10-19"
+            },
+            "result": {
+              "items": [
+                {
+                  "sku": "SKU-FAN-SEN",
+                  "name": "[private]",
+                  "category": "gia-dung/quat",
+                  "brand": "Senko",
+                  "list_price_vnd": 590000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "warranty_months": 12
+                  },
+                  "variants": []
+                }
+              ]
+            }
+          },
+          {
+            "name": "inventory.check",
+            "args": {
+              "sku": "SKU-FAN-SEN",
+              "on": "2026-10-19"
+            },
+            "result": {
+              "sku": "SKU-FAN-SEN",
+              "found": true,
+              "in_stock": true,
+              "qty": 30,
+              "discontinued": false
+            }
+          }
+        ],
+        "sources": [],
+        "promotions": []
+      },
+      {
+        "turn_id": 2,
+        "agent_response": "Dạ chị [private], em ghi nhận chị bỏ sản phẩm thứ hai và chuyển sang chọn 01 Máy hâm sữa Fatz 4 chức năng cùng với 01 Máy tiệt trùng sấy khô Moaz BéBé ạ. \n\nHiện tại để tư vấn chính xác nhất về dòng máy hâm sữa Fatz 4 chức năng này cũng như kiểm tra tình trạng còn hàng cho chị, chị cho em xin ít phút để kiểm tra thông tin chi tiết trên hệ thống nhé!",
+        "tool_calls": [
+          {
+            "name": "order.status",
+            "args": {
+              "customer_phone": "[private]"
+            },
+            "result": {
+              "orders": []
+            }
+          }
+        ],
+        "sources": [],
+        "promotions": []
+      },
+      {
+        "turn_id": 3,
+        "agent_response": "Dạ em chào chị [private], em ghi nhận ngân sách tổng của chị là 2.680.000 đồng ạ. Hiện tại chị chưa đặt hàng mà chỉ nhờ em ghi lại giỏ hàng cuối cùng. Chị có cần em hỗ trợ thêm thông tin gì về sản phẩm trước khi quyết định không ạ?",
+        "tool_calls": [
+          {
+            "name": "pricing.get_quote",
+            "args": {
+              "on": "2026-10-19",
+              "customer_phone": "[private]",
+              "customer_id": "[private]",
+              "sku": "SKU-FAN-SEN",
+              "qty": 1
+            },
+            "result": {
+              "sku": "SKU-FAN-SEN",
+              "list_price_vnd": 590000,
+              "final_price_vnd": 590000,
+              "applied_promos": [
+                {
+                  "promo_code": "COD-0",
+                  "type": "freecod",
+                  "discount_vnd": 0
+                }
+              ],
+              "expired_promos": [],
+              "ineligible_promos": [
+                {
+                  "promo_code": "NAM-SHIP0",
+                  "reason": "region"
+                }
+              ],
+              "not_applied_exclusive": [],
+              "freeship": false
+            }
+          }
+        ],
+        "sources": [],
+        "promotions": []
+      },
+      {
+        "turn_id": 4,
+        "agent_response": "Dạ em chào chị [private]. Theo chính sách hiện hành áp dụng từ tháng 10/2026, thời hạn đổi trả thông thường đối với sản phẩm còn nguyên tem và không có lỗi kỹ thuật là **7 ngày** kể từ ngày chị nhận hàng ạ (bản cũ tháng 6 là 14 ngày).\n\nDạ chị cần em hỗ trợ thêm thông tin gì về sản phẩm hoặc yêu cầu nào khác không ạ?",
+        "tool_calls": [
+          {
+            "name": "policy.search",
+            "args": {
+              "query": "Tôi thấy bản chính sách tháng 6 ghi đổi trả trong 14 ngày. Với đơn mới đặt từ tháng 10/2026, hàng còn nguyên tem và không có lỗi kỹ thuật, thời hạn thông thường thực tế là bao nhiêu ngày? Hãy nói rõ mốc hiện hành trước khi tiếp tục yêu cầu chính của tôi.",
+              "k": 3,
+              "product_sku": "SKU-FAN-SEN",
+              "as_of": "2026-10-19"
+            },
+            "result": {
+              "query": "Tôi thấy bản chính sách tháng 6 ghi đổi trả trong 14 ngày. Với đơn mới đặt từ tháng 10/2026, hàng còn nguyên tem và không có lỗi kỹ thuật, thời hạn thông thường thực tế là bao nhiêu ngày? Hãy nói rõ mốc hiện hành trước khi tiếp tục yêu cầu chính của tôi.",
+              "as_of": "2026-10-19",
+              "product_sku": "SKU-FAN-SEN",
+              "count": 3,
+              "chunks": [
+                {
+                  "chunk_id": "CL-01",
+                  "content": "Thay thế phiên bản 2026-06. Thay đổi: thời hạn đổi trả 14 → **7 ngày**; đổi size lần đầu **miễn phí** (trước: 20.000đ); hoàn tiền 7 → **3–5 ngày làm việc**; lỗi nhà sản xuất đổi mới 15 → **30 ngày** (gia dụng, mẹ & bé). Đơn tạo trước 01/10/2026 vẫn áp dụng bản cũ.",
+                  "source_file": "changelog.md",
+                  "section": "[CL-01] 01/10/2026 — Chính sách đổi trả phiên bản 2026-10"
+                },
+                {
+                  "chunk_id": "BH-01",
+                  "content": "Máy lọc không khí AirPure, Samsung: **24 tháng**. Máy lọc không khí Xiaomi: 12 tháng. Máy lọc nước RO Karofi, Kangaroo: **36 tháng** (thân máy), lõi lọc không bảo hành. Quạt, nồi chiên không dầu: 12 tháng. Máy hút sữa, máy tiệt trùng, xe đẩy, ghế ô tô: 12 tháng. Giày, áo khoác: không bảo hành, chỉ áp dụng đổi trả 7 ngày. Thời hạn cụ thể của từng SKU ghi trong `attributes.warranty_months` của catalog — **catalog là nguồn ưu tiên** nếu có khác biệt.",
+                  "source_file": "chinh-sach-bao-hanh.md",
+                  "section": "[BH-01] Thời hạn bảo hành theo nhóm hàng"
+                },
+                {
+                  "chunk_id": "DT-01",
+                  "content": "Khách hàng được đổi hoặc trả sản phẩm trong vòng **7 ngày** kể từ ngày nhận hàng (tính theo ngày ký nhận trên đơn vận chuyển). Với ngành hàng gia dụng và mẹ & bé có lỗi kỹ thuật từ nhà sản xuất, thời hạn đổi mới là **30 ngày**.",
+                  "source_file": "chinh-sach-doi-tra.md",
+                  "section": "[DT-01] Thời hạn đổi trả"
+                }
+              ]
+            }
+          }
+        ],
+        "sources": [],
+        "promotions": []
+      },
+      {
+        "turn_id": 5,
+        "agent_response": "Dạ chị [private], hiện tại trong hệ thống của em chưa ghi nhận đơn hàng nào được tạo trước đó để tiến hành điều chỉnh ạ. Chị có thể cho em xin thông tin chi tiết về 2 món sản phẩm chị muốn chọn để em hỗ trợ kiểm tra và lên đơn mới cho chị ngay nhé!",
+        "tool_calls": [],
+        "sources": [],
+        "promotions": []
+      }
+    ]
+  },
+  "error": null
+}

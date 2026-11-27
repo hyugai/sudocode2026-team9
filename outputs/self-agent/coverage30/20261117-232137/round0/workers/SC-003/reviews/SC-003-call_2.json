@@ -1,0 +1,567 @@
+{
+  "schema_version": 1,
+  "guardrail_version": "learning_guardrails_v1",
+  "metadata": {
+    "evaluation_population": "single_session_no_baseline"
+  },
+  "warnings": [
+    "Chưa chạy judge: chỉ xem thay đổi câu trả lời và dấu vết lesson, chưa đánh giá cải thiện.",
+    "Không có cặp chấm hợp lệ: chưa thể kết luận cải thiện hay không có regression."
+  ],
+  "summary": {
+    "total_turns": 3,
+    "judged_pair_count": 0,
+    "round0_turns": 0,
+    "round1_turns": 3,
+    "stored_frozen_case_count": 0,
+    "injected_turns": 0,
+    "changed_answers": 0,
+    "counts": {
+      "improved_resolution": 0,
+      "safer_unresolved": 0,
+      "regression": 0,
+      "unchanged": 0,
+      "needs_review": 0,
+      "not_evaluated": 3,
+      "unpaired": 0,
+      "question_changed": 0,
+      "excluded": 0
+    }
+  },
+  "rows": [
+    {
+      "call": "SC-003/call_2",
+      "turn_id": 1,
+      "question": "Chị quay lại để chốt việc đang hỏi, người nhà đã đồng ý rồi.",
+      "baseline_question": null,
+      "classification": "not_evaluated",
+      "case_id": null,
+      "gap_id": null,
+      "answer_changed": false,
+      "injected": false,
+      "lesson_trace": {},
+      "round0": {
+        "answer": null,
+        "verdict": {
+          "status": null
+        },
+        "latency": null,
+        "evidence": {
+          "current": {},
+          "earlier": []
+        }
+      },
+      "round1": {
+        "answer": "Dạ em chào chị [private], mừng chị quay lại ạ! Thật tốt quá khi người nhà chị đã đồng ý rồi.\n\nSản phẩm máy lọc không khí (mã SKU-XM-4P) hiện vẫn đang còn hàng sẵn. \n\nĐể em hỗ trợ lên đơn ngay cho chị, chị cho em xin địa chỉ [address]",
+        "verdict": {
+          "status": null
+        },
+        "latency": {
+          "ttft_ms": 5296,
+          "total_ms": 5296,
+          "ttfa_ms": null,
+          "measurement_mode": "non_streaming",
+          "timing_boundary": "response_ready_before_persistence",
+          "asr_ms": null,
+          "call_brief_ms": 2848,
+          "response_ready_ms": 5296,
+          "persistence_ms": 0.117,
+          "request_complete_ms": 5296.308,
+          "backend_total_ms": 5296.308,
+          "precomputed_parts": [
+            "persisted_facts"
+          ]
+        },
+        "evidence": {
+          "current": {
+            "turn_id": 1,
+            "agent_response": "Dạ em chào chị [private], mừng chị quay lại ạ! Thật tốt quá khi người nhà chị đã đồng ý rồi.\n\nSản phẩm máy lọc không khí (mã SKU-XM-4P) hiện vẫn đang còn hàng sẵn. \n\nĐể em hỗ trợ lên đơn ngay cho chị, chị cho em xin địa chỉ [address]",
+            "tool_calls": [
+              {
+                "name": "inventory.check",
+                "args": {
+                  "sku": "SKU-XM-4P",
+                  "on": "2026-10-20"
+                },
+                "result": {
+                  "sku": "SKU-XM-4P",
+                  "found": true,
+                  "in_stock": true,
+                  "qty": 20,
+                  "discontinued": false
+                }
+              },
+              {
+                "name": "pricing.get_quote",
+                "args": {
+                  "on": "2026-10-20",
+                  "customer_phone": "[private]",
+                  "customer_id": "[private]",
+                  "sku": "SKU-XM-4P",
+                  "qty": 1
+                },
+                "result": {
+                  "sku": "SKU-XM-4P",
+                  "list_price_vnd": 5490000,
+                  "final_price_vnd": 5490000,
+                  "applied_promos": [
+                    {
+                      "promo_code": "COD-0",
+                      "type": "freecod",
+                      "discount_vnd": 0
+                    },
+                    {
+                      "promo_code": "XM-COMBO",
+                      "type": "gift",
+                      "discount_vnd": 0,
+                      "gift_sku": "SKU-XM-FLT"
+                    }
+                  ],
+                  "expired_promos": [],
+                  "ineligible_promos": [
+                    {
+                      "promo_code": "AIR-2ND-50",
+                      "reason": "min_qty"
+                    },
+                    {
+                      "promo_code": "NAM-SHIP0",
+                      "reason": "region"
+                    }
+                  ],
+                  "not_applied_exclusive": [],
+                  "freeship": true
+                }
+              }
+            ],
+            "sources": [],
+            "promotions": []
+          },
+          "earlier": []
+        }
+      }
+    },
+    {
+      "call": "SC-003/call_2",
+      "turn_id": 2,
+      "question": "Em nhắc lại mẫu và giá đã trao đổi giúp chị; hôm nay hàng có sẵn chưa?",
+      "baseline_question": null,
+      "classification": "not_evaluated",
+      "case_id": null,
+      "gap_id": null,
+      "answer_changed": false,
+      "injected": false,
+      "lesson_trace": {},
+      "round0": {
+        "answer": null,
+        "verdict": {
+          "status": null
+        },
+        "latency": null,
+        "evidence": {
+          "current": {},
+          "earlier": []
+        }
+      },
+      "round1": {
+        "answer": "Dạ, mẫu hôm trước em với chị trao đổi là Máy lọc không khí (mã SKU-XM-4P) với giá là 5.490.000 VNĐ ạ. Hôm nay sản phẩm này bên em đang có sẵn hàng trong kho chị nhé.\n\nChị cho em xin địa chỉ [address]",
+        "verdict": {
+          "status": null
+        },
+        "latency": {
+          "ttft_ms": 6768,
+          "total_ms": 6768,
+          "ttfa_ms": null,
+          "measurement_mode": "non_streaming",
+          "timing_boundary": "response_ready_before_persistence",
+          "asr_ms": null,
+          "call_brief_ms": null,
+          "response_ready_ms": 6768,
+          "persistence_ms": 0.099,
+          "request_complete_ms": 6767.911,
+          "backend_total_ms": 6767.911,
+          "precomputed_parts": [
+            "persisted_facts"
+          ]
+        },
+        "evidence": {
+          "current": {
+            "turn_id": 2,
+            "agent_response": "Dạ, mẫu hôm trước em với chị trao đổi là Máy lọc không khí (mã SKU-XM-4P) với giá là 5.490.000 VNĐ ạ. Hôm nay sản phẩm này bên em đang có sẵn hàng trong kho chị nhé.\n\nChị cho em xin địa chỉ [address]",
+            "tool_calls": [
+              {
+                "name": "catalog.search",
+                "args": {
+                  "query": "Em nhắc lại mẫu và giá đã trao đổi giúp chị; hôm nay hàng có sẵn chưa?",
+                  "on": "2026-10-20"
+                },
+                "result": {
+                  "items": [],
+                  "total": 0
+                }
+              },
+              {
+                "name": "inventory.check",
+                "args": {
+                  "sku": "SKU-XM-4P",
+                  "on": "2026-10-20"
+                },
+                "result": {
+                  "sku": "SKU-XM-4P",
+                  "found": true,
+                  "in_stock": true,
+                  "qty": 20,
+                  "discontinued": false
+                }
+              }
+            ],
+            "sources": [],
+            "promotions": []
+          },
+          "earlier": [
+            {
+              "turn_id": 1,
+              "tool_calls": [
+                {
+                  "name": "inventory.check",
+                  "args": {
+                    "sku": "SKU-XM-4P",
+                    "on": "2026-10-20"
+                  },
+                  "result": {
+                    "sku": "SKU-XM-4P",
+                    "found": true,
+                    "in_stock": true,
+                    "qty": 20,
+                    "discontinued": false
+                  }
+                },
+                {
+                  "name": "pricing.get_quote",
+                  "args": {
+                    "on": "2026-10-20",
+                    "customer_phone": "[private]",
+                    "customer_id": "[private]",
+                    "sku": "SKU-XM-4P",
+                    "qty": 1
+                  },
+                  "result": {
+                    "sku": "SKU-XM-4P",
+                    "list_price_vnd": 5490000,
+                    "final_price_vnd": 5490000,
+                    "applied_promos": [
+                      {
+                        "promo_code": "COD-0",
+                        "type": "freecod",
+                        "discount_vnd": 0
+                      },
+                      {
+                        "promo_code": "XM-COMBO",
+                        "type": "gift",
+                        "discount_vnd": 0,
+                        "gift_sku": "SKU-XM-FLT"
+                      }
+                    ],
+                    "expired_promos": [],
+                    "ineligible_promos": [
+                      {
+                        "promo_code": "AIR-2ND-50",
+                        "reason": "min_qty"
+                      },
+                      {
+                        "promo_code": "NAM-SHIP0",
+                        "reason": "region"
+                      }
+                    ],
+                    "not_applied_exclusive": [],
+                    "freeship": true
+                  }
+                }
+              ],
+              "sources": [],
+              "promotions": []
+            }
+          ]
+        }
+      }
+    },
+    {
+      "call": "SC-003/call_2",
+      "turn_id": 3,
+      "question": "Chị đồng ý giá hiện tại 5.490.000 đồng, mua một chiếc. Giao đến [address]",
+      "baseline_question": null,
+      "classification": "not_evaluated",
+      "case_id": null,
+      "gap_id": null,
+      "answer_changed": false,
+      "injected": false,
+      "lesson_trace": {},
+      "round0": {
+        "answer": null,
+        "verdict": {
+          "status": null
+        },
+        "latency": null,
+        "evidence": {
+          "current": {},
+          "earlier": []
+        }
+      },
+      "round1": {
+        "answer": "Dạ em đã tạo thành công đơn hàng Máy lọc không khí (SKU-XM-4P) cho chị [private] rồi ạ. \n\nMã đơn hàng của chị là **[order_id]** với tổng thanh toán là 5.490.000 VNĐ (thanh toán COD khi nhận hàng). Đơn hàng dự kiến sẽ được giao đến [address]\n\nEm cảm ơn chị đã ủng hộ cửa hàng, chúc chị một ngày tốt lành ạ!",
+        "verdict": {
+          "status": null
+        },
+        "latency": {
+          "ttft_ms": 5417,
+          "total_ms": 5417,
+          "ttfa_ms": null,
+          "measurement_mode": "non_streaming",
+          "timing_boundary": "response_ready_before_persistence",
+          "asr_ms": null,
+          "call_brief_ms": null,
+          "response_ready_ms": 5417,
+          "persistence_ms": 0.131,
+          "request_complete_ms": 5417.037,
+          "backend_total_ms": 5417.037,
+          "precomputed_parts": [
+            "persisted_facts"
+          ]
+        },
+        "evidence": {
+          "current": {
+            "turn_id": 3,
+            "agent_response": "Dạ em đã tạo thành công đơn hàng Máy lọc không khí (SKU-XM-4P) cho chị [private] rồi ạ. \n\nMã đơn hàng của chị là **[order_id]** với tổng thanh toán là 5.490.000 VNĐ (thanh toán COD khi nhận hàng). Đơn hàng dự kiến sẽ được giao đến [address]\n\nEm cảm ơn chị đã ủng hộ cửa hàng, chúc chị một ngày tốt lành ạ!",
+            "tool_calls": [
+              {
+                "name": "pricing.get_quote",
+                "args": {
+                  "on": "2026-10-20",
+                  "customer_phone": "[private]",
+                  "customer_id": "[private]",
+                  "address": "[private]",
+                  "sku": "SKU-XM-4P",
+                  "qty": 1
+                },
+                "result": {
+                  "sku": "SKU-XM-4P",
+                  "list_price_vnd": 5490000,
+                  "final_price_vnd": 5490000,
+                  "applied_promos": [
+                    {
+                      "promo_code": "COD-0",
+                      "type": "freecod",
+                      "discount_vnd": 0
+                    },
+                    {
+                      "promo_code": "XM-COMBO",
+                      "type": "gift",
+                      "discount_vnd": 0,
+                      "gift_sku": "SKU-XM-FLT"
+                    }
+                  ],
+                  "expired_promos": [],
+                  "ineligible_promos": [
+                    {
+                      "promo_code": "AIR-2ND-50",
+                      "reason": "min_qty"
+                    },
+                    {
+                      "promo_code": "NAM-SHIP0",
+                      "reason": "region"
+                    }
+                  ],
+                  "not_applied_exclusive": [],
+                  "freeship": true
+                }
+              },
+              {
+                "name": "order.create",
+                "args": {
+                  "customer_phone": "[private]",
+                  "customer_id": "[private]",
+                  "address": "[private]",
+                  "idempotency_key": "self-3ad73a16938b4b67a693f257612373a9-SC-003-call_2:call_2:create:SKU-XM-4P",
+                  "sku": "SKU-XM-4P",
+                  "qty": 1,
+                  "price_vnd": 5490000,
+                  "promo_code": "COD-0",
+                  "on": "2026-10-20",
+                  "payment": "COD"
+                },
+                "result": {
+                  "order_id": "[private]",
+                  "status": "created",
+                  "total_vnd": 5490000,
+                  "needs_confirmation_call": true,
+                  "estimated_delivery": "2026-10-22"
+                }
+              }
+            ],
+            "sources": [],
+            "promotions": []
+          },
+          "earlier": [
+            {
+              "turn_id": 1,
+              "tool_calls": [
+                {
+                  "name": "inventory.check",
+                  "args": {
+                    "sku": "SKU-XM-4P",
+                    "on": "2026-10-20"
+                  },
+                  "result": {
+                    "sku": "SKU-XM-4P",
+                    "found": true,
+                    "in_stock": true,
+                    "qty": 20,
+                    "discontinued": false
+                  }
+                },
+                {
+                  "name": "pricing.get_quote",
+                  "args": {
+                    "on": "2026-10-20",
+                    "customer_phone": "[private]",
+                    "customer_id": "[private]",
+                    "sku": "SKU-XM-4P",
+                    "qty": 1
+                  },
+                  "result": {
+                    "sku": "SKU-XM-4P",
+                    "list_price_vnd": 5490000,
+                    "final_price_vnd": 5490000,
+                    "applied_promos": [
+                      {
+                        "promo_code": "COD-0",
+                        "type": "freecod",
+                        "discount_vnd": 0
+                      },
+                      {
+                        "promo_code": "XM-COMBO",
+                        "type": "gift",
+                        "discount_vnd": 0,
+                        "gift_sku": "SKU-XM-FLT"
+                      }
+                    ],
+                    "expired_promos": [],
+                    "ineligible_promos": [
+                      {
+                        "promo_code": "AIR-2ND-50",
+                        "reason": "min_qty"
+                      },
+                      {
+                        "promo_code": "NAM-SHIP0",
+                        "reason": "region"
+                      }
+                    ],
+                    "not_applied_exclusive": [],
+                    "freeship": true
+                  }
+                }
+              ],
+              "sources": [],
+              "promotions": []
+            },
+            {
+              "turn_id": 2,
+              "tool_calls": [
+                {
+                  "name": "catalog.search",
+                  "args": {
+                    "query": "Em nhắc lại mẫu và giá đã trao đổi giúp chị; hôm nay hàng có sẵn chưa?",
+                    "on": "2026-10-20"
+                  },
+                  "result": {
+                    "items": [],
+                    "total": 0
+                  }
+                },
+                {
+                  "name": "inventory.check",
+                  "args": {
+                    "sku": "SKU-XM-4P",
+                    "on": "2026-10-20"
+                  },
+                  "result": {
+                    "sku": "SKU-XM-4P",
+                    "found": true,
+                    "in_stock": true,
+                    "qty": 20,
+                    "discontinued": false
+                  }
+                }
+              ],
+              "sources": [],
+              "promotions": []
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "lessons": [],
+  "sessions": [
+    {
+      "call": "SC-003/call_2",
+      "round0": {
+        "job": null,
+        "error": null,
+        "learning": null,
+        "observed_input_findings": []
+      },
+      "round1": {
+        "job": {
+          "status": "done",
+          "job_id": "b1529c59556aaf7cf6a8cfb819db5a6a1dc1f4e145fc97d0f2966e9aa4c8ab13",
+          "error": null
+        },
+        "error": null,
+        "learning": {
+          "job_id": "b1529c59556aaf7cf6a8cfb819db5a6a1dc1f4e145fc97d0f2966e9aa4c8ab13",
+          "gaps": [],
+          "scope": "knowledge_gap_and_reflection_v1",
+          "evaluation_cases": [],
+          "out_of_scope": [],
+          "issue_reviews": [],
+          "detector_error": null,
+          "guardrails": {
+            "version": "learning_guardrails_v1",
+            "input_findings": [],
+            "blocked_lessons": [],
+            "blocked_sources": []
+          },
+          "detection": {
+            "candidate_count": 0,
+            "open_question_count": 0,
+            "processed_count": 0,
+            "skipped_unmatched_question": 0,
+            "skipped_over_limit": 0,
+            "scan": {
+              "turns_available": 3,
+              "turns_scanned": 3,
+              "requests": 3,
+              "errors": [],
+              "schema_retries": 0,
+              "skipped_over_limit": 0
+            },
+            "alignment_rejections": []
+          },
+          "outcome": "no_candidates",
+          "learning_duration_ms": 3121,
+          "learning_usage": {
+            "input_tokens": 3827,
+            "output_tokens": 18
+          }
+        },
+        "observed_input_findings": []
+      }
+    }
+  ],
+  "limitations": [
+    "Verdict kiểm tra được reference vẫn cần người đọc xác nhận ngữ nghĩa và độ đầy đủ.",
+    "Câu trả lời thay đổi hoặc được inject lesson chưa chứng minh lesson gây ra cải thiện.",
+    "Reflection chưa được chấm chất lượng; learning job done/lesson approved không phải điểm chất lượng.",
+    "Guardrail mẫu có giới hạn; không phát hiện mẫu không đồng nghĩa không có prompt injection."
+  ]
+}

@@ -1,0 +1,225 @@
+{
+  "job_id": "40ff648d24eda08f0e6743f46fb494fa93061e62326d3427abc6b2953e1c71a9",
+  "gaps": [
+    {
+      "id": "1456c3617f18ee21fa9f5d3b5fdeeed82c1bc390d8c69d2629492018e910fb79",
+      "status": "pending_remediation"
+    },
+    {
+      "id": "158c4605d001a90326c4a5e89a809a0f6103e776005dea1f66f74b523f8ca16d",
+      "status": "pending_remediation"
+    },
+    {
+      "id": "ecbef9b777f4260ab50daaa7ba7a0f6246613d860661f7d0cdae7a976b6d9e25",
+      "status": "pending_remediation"
+    }
+  ],
+  "scope": "knowledge_gap_and_reflection_v1",
+  "evaluation_cases": [
+    {
+      "id": "b1172190ff0df5e817e7ca037d45f2fe465b076da7b9362c277df100533b5a66",
+      "gap_id": "1456c3617f18ee21fa9f5d3b5fdeeed82c1bc390d8c69d2629492018e910fb79",
+      "turn_id": 2,
+      "question": "Em nhắc lại mẫu và giá đã báo trong chat giúp nhé.",
+      "reason": "unsupported_claim",
+      "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments."
+    },
+    {
+      "id": "b6c8b00562e8c96458bf4d1d6c4bf6867afe48c91f0d056e2d244c0d76faa367",
+      "gap_id": "ecbef9b777f4260ab50daaa7ba7a0f6246613d860661f7d0cdae7a976b6d9e25",
+      "turn_id": 3,
+      "question": "Anh đồng ý giá hôm nay 2.450.000 đồng, một chiếc, giao 103 đường Kiểm Thử, TP. Hồ Chí Minh, cod.",
+      "reason": "unsupported_claim",
+      "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments."
+    }
+  ],
+  "out_of_scope": [],
+  "issue_reviews": [
+    {
+      "job_id": "40ff648d24eda08f0e6743f46fb494fa93061e62326d3427abc6b2953e1c71a9",
+      "message_id": 2,
+      "turn_id": 2,
+      "origin": "turn_detector",
+      "mechanism": "knowledge_gap",
+      "verified": true,
+      "claim": "sản phẩm trước đó bên em tư vấn cho anh là mẫu **SKU-FAN-DC1**",
+      "assessment": "unsupported_by_evidence",
+      "evidence_paths": [],
+      "rejection": null,
+      "rejection_reasons": [],
+      "format_retry": false,
+      "verifier_output": {
+        "valid": true,
+        "issue_scope": "business_knowledge",
+        "claim": "sản phẩm trước đó bên em tư vấn cho anh là mẫu **SKU-FAN-DC1**",
+        "assessment": "unsupported_by_evidence",
+        "evidence_paths": [],
+        "decision_reason": "None of the tool call results, sources, or conversation history contain evidence of a prior consultation confirming SKU-FAN-DC1 was previously advised to the customer.",
+        "audit": {
+          "support_status": "not_established",
+          "coverage": "complete",
+          "checked_paths": [
+            "evidence.tool_calls.0.result",
+            "evidence.tool_calls.1.result",
+            "evidence.tool_calls.2.result",
+            "evidence.sources",
+            "evidence.promotions",
+            "prior_evidence.0.tool_calls",
+            "prior_evidence.0.sources",
+            "prior_evidence.0.promotions"
+          ]
+        }
+      },
+      "candidate_claim": "sản phẩm trước đó bên em tư vấn cho anh là mẫu **SKU-FAN-DC1**",
+      "verification_basis": "evidence_inventory_audit",
+      "evidence_inventory": [
+        "evidence.tool_calls.0.result",
+        "evidence.tool_calls.1.result",
+        "evidence.tool_calls.2.result",
+        "evidence.sources",
+        "evidence.promotions",
+        "prior_evidence.0.tool_calls",
+        "prior_evidence.0.sources",
+        "prior_evidence.0.promotions"
+      ],
+      "lesson_status": "approved"
+    },
+    {
+      "job_id": "40ff648d24eda08f0e6743f46fb494fa93061e62326d3427abc6b2953e1c71a9",
+      "message_id": 2,
+      "turn_id": 2,
+      "origin": "turn_detector",
+      "mechanism": "knowledge_gap",
+      "verified": true,
+      "claim": "giá hiện tại là **2.450.000 VNĐ**",
+      "assessment": "unsupported_by_evidence",
+      "evidence_paths": [],
+      "rejection": null,
+      "rejection_reasons": [],
+      "format_retry": false,
+      "verifier_output": {
+        "valid": true,
+        "issue_scope": "business_knowledge",
+        "claim": "giá hiện tại là **2.450.000 VNĐ**",
+        "assessment": "unsupported_by_evidence",
+        "evidence_paths": [],
+        "decision_reason": "The candidate claim about the price previously quoted in the chat is not supported by the provided conversation history or tool outputs.",
+        "audit": {
+          "support_status": "not_established",
+          "coverage": "complete",
+          "checked_paths": [
+            "evidence.tool_calls.0.result",
+            "evidence.tool_calls.1.result",
+            "evidence.tool_calls.2.result",
+            "evidence.sources",
+            "evidence.promotions",
+            "prior_evidence.0.tool_calls",
+            "prior_evidence.0.sources",
+            "prior_evidence.0.promotions"
+          ]
+        }
+      },
+      "candidate_claim": "giá hiện tại là **2.450.000 VNĐ**",
+      "verification_basis": "evidence_inventory_audit",
+      "evidence_inventory": [
+        "evidence.tool_calls.0.result",
+        "evidence.tool_calls.1.result",
+        "evidence.tool_calls.2.result",
+        "evidence.sources",
+        "evidence.promotions",
+        "prior_evidence.0.tool_calls",
+        "prior_evidence.0.sources",
+        "prior_evidence.0.promotions"
+      ],
+      "lesson_status": "approved"
+    },
+    {
+      "job_id": "40ff648d24eda08f0e6743f46fb494fa93061e62326d3427abc6b2953e1c71a9",
+      "message_id": 4,
+      "turn_id": 3,
+      "origin": "turn_detector",
+      "mechanism": "knowledge_gap",
+      "verified": true,
+      "claim": "Dự kiến hàng sẽ được giao đến [address]",
+      "assessment": "unsupported_by_evidence",
+      "evidence_paths": [],
+      "rejection": null,
+      "rejection_reasons": [],
+      "format_retry": false,
+      "verifier_output": {
+        "valid": true,
+        "issue_scope": "business_knowledge",
+        "claim": "Dự kiến hàng sẽ được giao đến [address]",
+        "assessment": "unsupported_by_evidence",
+        "evidence_paths": [],
+        "decision_reason": "The agent claims the item is expected to be delivered to [address[address]",
+        "audit": {
+          "support_status": "not_established",
+          "coverage": "complete",
+          "checked_paths": [
+            "evidence.tool_calls.0.result",
+            "evidence.tool_calls.1.result",
+            "evidence.tool_calls.2.result",
+            "evidence.sources",
+            "evidence.promotions",
+            "prior_evidence.0.tool_calls",
+            "prior_evidence.0.sources",
+            "prior_evidence.0.promotions",
+            "prior_evidence.1.tool_calls.0.result",
+            "prior_evidence.1.tool_calls.1.result",
+            "prior_evidence.1.tool_calls.2.result",
+            "prior_evidence.1.sources",
+            "prior_evidence.1.promotions"
+          ]
+        }
+      },
+      "candidate_claim": "Dự kiến hàng sẽ được giao đến [address]",
+      "verification_basis": "evidence_inventory_audit",
+      "evidence_inventory": [
+        "evidence.tool_calls.0.result",
+        "evidence.tool_calls.1.result",
+        "evidence.tool_calls.2.result",
+        "evidence.sources",
+        "evidence.promotions",
+        "prior_evidence.0.tool_calls",
+        "prior_evidence.0.sources",
+        "prior_evidence.0.promotions",
+        "prior_evidence.1.tool_calls.0.result",
+        "prior_evidence.1.tool_calls.1.result",
+        "prior_evidence.1.tool_calls.2.result",
+        "prior_evidence.1.sources",
+        "prior_evidence.1.promotions"
+      ],
+      "lesson_status": "pending_lesson"
+    }
+  ],
+  "detector_error": null,
+  "guardrails": {
+    "version": "learning_guardrails_v1",
+    "input_findings": [],
+    "blocked_lessons": [],
+    "blocked_sources": []
+  },
+  "detection": {
+    "candidate_count": 3,
+    "open_question_count": 0,
+    "processed_count": 3,
+    "skipped_unmatched_question": 0,
+    "skipped_over_limit": 0,
+    "scan": {
+      "turns_available": 3,
+      "turns_scanned": 3,
+      "requests": 3,
+      "errors": [],
+      "schema_retries": 0,
+      "skipped_over_limit": 0
+    },
+    "alignment_rejections": []
+  },
+  "outcome": "gaps_processed",
+  "learning_duration_ms": 19330,
+  "learning_usage": {
+    "input_tokens": 14878,
+    "output_tokens": 1201
+  }
+}

@@ -1,0 +1,99 @@
+{
+  "job_id": "d49d4adc843c44ab5161691a8adb279d2f2e9f75cb6b74e0020ae8d9ec186be3",
+  "gaps": [
+    {
+      "id": "4cb5864cfecfe6494694e5a70b426381af66e416c4f340796b31a56ae0c5531e",
+      "status": "pending_remediation"
+    }
+  ],
+  "scope": "knowledge_gap_and_reflection_v1",
+  "evaluation_cases": [
+    {
+      "id": "6b3f6123a9161087739fa03e9b7f9251527b4513906f6d3008591f732c136d2d",
+      "gap_id": "4cb5864cfecfe6494694e5a70b426381af66e416c4f340796b31a56ae0c5531e",
+      "turn_id": 2,
+      "question": "Sao giá lại khác vậy? Em nhắc lại mức cũ và giải thích giúp anh.",
+      "reason": "unsupported_claim",
+      "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments."
+    }
+  ],
+  "out_of_scope": [],
+  "issue_reviews": [
+    {
+      "job_id": "d49d4adc843c44ab5161691a8adb279d2f2e9f75cb6b74e0020ae8d9ec186be3",
+      "message_id": 2,
+      "turn_id": 2,
+      "origin": "turn_detector",
+      "mechanism": "knowledge_gap",
+      "verified": true,
+      "claim": "ở lần trao đổi trước, giá máy lọc không khí (SKU-AP-X) là 4.390.000đ nhờ áp dụng mã giảm giá AP-SEP ạ.",
+      "assessment": "unsupported_by_evidence",
+      "evidence_paths": [],
+      "rejection": null,
+      "rejection_reasons": [],
+      "format_retry": false,
+      "verifier_output": {
+        "valid": true,
+        "issue_scope": "business_knowledge",
+        "claim": "ở lần trao đổi trước, giá máy lọc không khí (SKU-AP-X) là 4.390.000đ nhờ áp dụng mã giảm giá AP-SEP ạ.",
+        "assessment": "unsupported_by_evidence",
+        "evidence_paths": [],
+        "decision_reason": "None of the tool call results or available sources specify that the previous price under promo AP-SEP was 4,390,000 VND.",
+        "audit": {
+          "support_status": "not_established",
+          "coverage": "complete",
+          "checked_paths": [
+            "evidence.tool_calls.0.result",
+            "evidence.sources",
+            "evidence.promotions",
+            "prior_evidence.0.tool_calls.0.result",
+            "prior_evidence.0.tool_calls.1.result",
+            "prior_evidence.0.sources",
+            "prior_evidence.0.promotions"
+          ]
+        }
+      },
+      "candidate_claim": "ở lần trao đổi trước, giá máy lọc không khí (SKU-AP-X) là 4.390.000đ nhờ áp dụng mã giảm giá AP-SEP ạ.",
+      "verification_basis": "evidence_inventory_audit",
+      "evidence_inventory": [
+        "evidence.tool_calls.0.result",
+        "evidence.sources",
+        "evidence.promotions",
+        "prior_evidence.0.tool_calls.0.result",
+        "prior_evidence.0.tool_calls.1.result",
+        "prior_evidence.0.sources",
+        "prior_evidence.0.promotions"
+      ],
+      "lesson_status": "approved"
+    }
+  ],
+  "detector_error": null,
+  "guardrails": {
+    "version": "learning_guardrails_v1",
+    "input_findings": [],
+    "blocked_lessons": [],
+    "blocked_sources": []
+  },
+  "detection": {
+    "candidate_count": 1,
+    "open_question_count": 0,
+    "processed_count": 1,
+    "skipped_unmatched_question": 0,
+    "skipped_over_limit": 0,
+    "scan": {
+      "turns_available": 3,
+      "turns_scanned": 3,
+      "requests": 3,
+      "errors": [],
+      "schema_retries": 0,
+      "skipped_over_limit": 0
+    },
+    "alignment_rejections": []
+  },
+  "outcome": "gaps_processed",
+  "learning_duration_ms": 13578,
+  "learning_usage": {
+    "input_tokens": 8206,
+    "output_tokens": 426
+  }
+}

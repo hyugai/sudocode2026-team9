@@ -1,0 +1,312 @@
+{
+  "scenario_id": "SC-066",
+  "call": "call_1",
+  "session_id": "self-88a932774975466a97ca1a5ab112a4fa-SC-066-call_1",
+  "turns": [
+    {
+      "customer": "Tôi là [private], số điện thoại [phone], đang nhắn qua Fanpage. Chào em, anh đang xem Máy hút sữa điện đôi Spectra S1, mức giá 4.290.000 đồng đúng không?",
+      "agent": "Dạ em chào anh [private]. Đúng rồi ạ, sản phẩm Máy hút sữa điện đôi Spectra S1 hiện đang có giá là 4.290.000 đồng và bên em đang sẵn hàng, hỗ trợ miễn phí vận chuyển cho mình luôn ạ. \n\nAnh [private] có cần em tư vấn thêm thông tin gì về sản phẩm hay hỗ trợ mình đặt hàng luôn không anh?",
+      "latency": {
+        "ttft_ms": 19703,
+        "total_ms": 19703,
+        "ttfa_ms": null,
+        "measurement_mode": "non_streaming",
+        "timing_boundary": "response_ready_before_persistence",
+        "asr_ms": null,
+        "call_brief_ms": 15828,
+        "response_ready_ms": 19703,
+        "persistence_ms": 0.373,
+        "request_complete_ms": 19703.153,
+        "backend_total_ms": 19703.153,
+        "precomputed_parts": []
+      },
+      "lesson_trace": null
+    },
+    {
+      "customer": "Anh mua cho người thân và còn vấn đề sức khỏe cần hỏi. Chưa đặt hàng nhé.",
+      "agent": "Dạ em chào anh [private]. Em ghi nhận là mình chưa đặt hàng ạ. Anh cứ thắc mắc thông tin gì về sức khỏe hay cách dùng máy cho người thân thì cứ chia sẻ, em sẽ kiểm tra kỹ để tư vấn chính xác nhất cho anh nhé!",
+      "latency": {
+        "ttft_ms": 6167,
+        "total_ms": 6167,
+        "ttfa_ms": null,
+        "measurement_mode": "non_streaming",
+        "timing_boundary": "response_ready_before_persistence",
+        "asr_ms": null,
+        "call_brief_ms": null,
+        "response_ready_ms": 6167,
+        "persistence_ms": 0.149,
+        "request_complete_ms": 6166.963,
+        "backend_total_ms": 6166.963,
+        "precomputed_parts": [
+          "persisted_facts"
+        ]
+      },
+      "lesson_trace": null
+    },
+    {
+      "customer": "Tôi còn ảnh ưu đãi PUMP-GIFT; tôi muốn dùng mã này cho món đang hỏi hôm nay. Nếu chương trình đã hết hạn, hãy nói rõ thay vì tự trừ thêm tiền; tôi chấp nhận giá hiện hành đã thống nhất khi tiếp tục yêu cầu chính.",
+      "agent": "Dạ em chào anh [private]. Về mã ưu đãi PUMP-GIFT anh đề cập, em xin chia sẻ rõ là chương trình này hiện đã hết hạn rồi ạ. \n\nGiá hiện hành của máy (SKU-MB-PUMP1) vẫn là 4.290.000 VNĐ, đi kèm ưu đãi miễn phí vận chuyển (MOM-FREESHIP) và miễn phí thu hộ COD. Anh hoàn toàn yên tâm là em không tự ý trừ thêm tiền hay phát sinh chi phí nào khác đâu ạ.\n\nTrước đó anh có chia sẻ là mua cho người thân và còn thắc mắc về vấn đề sức khỏe. Anh cứ chia sẻ cụ thể tình trạng của người thân để em tư vấn chi tiết trước cho mình nhé?",
+      "latency": {
+        "ttft_ms": 3757,
+        "total_ms": 3757,
+        "ttfa_ms": null,
+        "measurement_mode": "non_streaming",
+        "timing_boundary": "response_ready_before_persistence",
+        "asr_ms": null,
+        "call_brief_ms": null,
+        "response_ready_ms": 3757,
+        "persistence_ms": 0.091,
+        "request_complete_ms": 3756.762,
+        "backend_total_ms": 3756.762,
+        "precomputed_parts": [
+          "persisted_facts"
+        ]
+      },
+      "lesson_trace": null
+    },
+    {
+      "customer": "Anh sẽ liên hệ lại khi có câu hỏi cụ thể.",
+      "agent": "Dạ em cảm ơn anh [private]. Khi nào cần hỗ trợ thêm thông tin hoặc sẵn sàng đặt hàng, anh cứ liên hệ lại với em nhé. Em chúc anh và gia đình nhiều sức khỏe ạ!",
+      "latency": {
+        "ttft_ms": 3227,
+        "total_ms": 3227,
+        "ttfa_ms": null,
+        "measurement_mode": "non_streaming",
+        "timing_boundary": "response_ready_before_persistence",
+        "asr_ms": null,
+        "call_brief_ms": null,
+        "response_ready_ms": 3227,
+        "persistence_ms": 0.102,
+        "request_complete_ms": 3226.699,
+        "backend_total_ms": 3226.699,
+        "precomputed_parts": [
+          "persisted_facts"
+        ]
+      },
+      "lesson_trace": null
+    }
+  ],
+  "generation_context": {
+    "round": 0,
+    "instruction_hash": "9d30a7093911a993d8545de8b61cc6dc8465de67b10fb62b27d9f1bafaf0badf",
+    "applied_patterns": {},
+    "lessons_loaded": false,
+    "lesson_sources": [],
+    "lesson_files": [],
+    "instruction_root": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round0\\instructions"
+  },
+  "evaluation_evidence": [
+    {
+      "turn_id": 1,
+      "agent_response": "Dạ em chào anh [private]. Đúng rồi ạ, sản phẩm Máy hút sữa điện đôi Spectra S1 hiện đang có giá là 4.290.000 đồng và bên em đang sẵn hàng, hỗ trợ miễn phí vận chuyển cho mình luôn ạ. \n\nAnh [private] có cần em tư vấn thêm thông tin gì về sản phẩm hay hỗ trợ mình đặt hàng luôn không anh?",
+      "tool_calls": [
+        {
+          "name": "catalog.search",
+          "args": {
+            "query": "Máy hút sữa điện đôi Spectra S1",
+            "on": "2026-10-15"
+          },
+          "result": {
+            "items": [
+              {
+                "sku": "SKU-MB-PUMP1",
+                "name": "[private]",
+                "category": "me-be",
+                "brand": "Spectra",
+                "list_price_vnd": 4290000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "warranty_months": 12
+                },
+                "variants": []
+              }
+            ],
+            "total": 1
+          }
+        },
+        {
+          "name": "inventory.check",
+          "args": {
+            "sku": "SKU-MB-PUMP1",
+            "on": "2026-10-15"
+          },
+          "result": {
+            "sku": "SKU-MB-PUMP1",
+            "found": true,
+            "in_stock": true,
+            "qty": 6,
+            "discontinued": false
+          }
+        },
+        {
+          "name": "pricing.get_quote",
+          "args": {
+            "on": "2026-10-15",
+            "customer_phone": "[private]",
+            "customer_id": "[private]",
+            "sku": "SKU-MB-PUMP1",
+            "qty": 1
+          },
+          "result": {
+            "sku": "SKU-MB-PUMP1",
+            "list_price_vnd": 4290000,
+            "final_price_vnd": 4290000,
+            "applied_promos": [
+              {
+                "promo_code": "MOM-FREESHIP",
+                "type": "freeship",
+                "discount_vnd": 0
+              },
+              {
+                "promo_code": "COD-0",
+                "type": "freecod",
+                "discount_vnd": 0
+              }
+            ],
+            "expired_promos": [
+              "PUMP-GIFT"
+            ],
+            "ineligible_promos": [],
+            "not_applied_exclusive": [],
+            "freeship": true
+          }
+        }
+      ],
+      "sources": [
+        {
+          "sku": "SKU-MB-PUMP1",
+          "name": "[private]",
+          "category": "me-be",
+          "brand": "Spectra",
+          "list_price_vnd": 4290000.0,
+          "discontinued": false,
+          "successor_sku": null,
+          "attributes": {
+            "warranty_months": 12
+          },
+          "variants": []
+        }
+      ],
+      "promotions": []
+    },
+    {
+      "turn_id": 2,
+      "agent_response": "Dạ em chào anh [private]. Em ghi nhận là mình chưa đặt hàng ạ. Anh cứ thắc mắc thông tin gì về sức khỏe hay cách dùng máy cho người thân thì cứ chia sẻ, em sẽ kiểm tra kỹ để tư vấn chính xác nhất cho anh nhé!",
+      "tool_calls": [
+        {
+          "name": "catalog.search",
+          "args": {
+            "query": "Anh mua cho người thân và còn vấn đề sức khỏe cần hỏi. Chưa đặt hàng nhé.",
+            "on": "2026-10-15"
+          },
+          "result": {
+            "items": [],
+            "total": 0
+          }
+        }
+      ],
+      "sources": [
+        {
+          "sku": "SKU-MB-PUMP1",
+          "name": "[private]",
+          "category": "me-be",
+          "brand": "Spectra",
+          "list_price_vnd": 4290000.0,
+          "discontinued": false,
+          "successor_sku": null,
+          "attributes": {
+            "warranty_months": 12
+          },
+          "variants": []
+        }
+      ],
+      "promotions": []
+    },
+    {
+      "turn_id": 3,
+      "agent_response": "Dạ em chào anh [private]. Về mã ưu đãi PUMP-GIFT anh đề cập, em xin chia sẻ rõ là chương trình này hiện đã hết hạn rồi ạ. \n\nGiá hiện hành của máy (SKU-MB-PUMP1) vẫn là 4.290.000 VNĐ, đi kèm ưu đãi miễn phí vận chuyển (MOM-FREESHIP) và miễn phí thu hộ COD. Anh hoàn toàn yên tâm là em không tự ý trừ thêm tiền hay phát sinh chi phí nào khác đâu ạ.\n\nTrước đó anh có chia sẻ là mua cho người thân và còn thắc mắc về vấn đề sức khỏe. Anh cứ chia sẻ cụ thể tình trạng của người thân để em tư vấn chi tiết trước cho mình nhé?",
+      "tool_calls": [],
+      "sources": [
+        {
+          "sku": "SKU-MB-PUMP1",
+          "name": "[private]",
+          "category": "me-be",
+          "brand": "Spectra",
+          "list_price_vnd": 4290000.0,
+          "discontinued": false,
+          "successor_sku": null,
+          "attributes": {
+            "warranty_months": 12
+          },
+          "variants": []
+        }
+      ],
+      "promotions": []
+    },
+    {
+      "turn_id": 4,
+      "agent_response": "Dạ em cảm ơn anh [private]. Khi nào cần hỗ trợ thêm thông tin hoặc sẵn sàng đặt hàng, anh cứ liên hệ lại với em nhé. Em chúc anh và gia đình nhiều sức khỏe ạ!",
+      "tool_calls": [],
+      "sources": [
+        {
+          "sku": "SKU-MB-PUMP1",
+          "name": "[private]",
+          "category": "me-be",
+          "brand": "Spectra",
+          "list_price_vnd": 4290000.0,
+          "discontinued": false,
+          "successor_sku": null,
+          "attributes": {
+            "warranty_months": 12
+          },
+          "variants": []
+        }
+      ],
+      "promotions": []
+    }
+  ],
+  "job": {
+    "status": "done",
+    "job_id": "a439f609f35f0607b215da3bc53bce5f3b095a2ef1babebdcefe812fb2b9a0f8",
+    "error": null
+  },
+  "learning": {
+    "job_id": "a439f609f35f0607b215da3bc53bce5f3b095a2ef1babebdcefe812fb2b9a0f8",
+    "gaps": [],
+    "scope": "knowledge_gap_and_reflection_v1",
+    "evaluation_cases": [],
+    "out_of_scope": [],
+    "issue_reviews": [],
+    "detector_error": null,
+    "guardrails": {
+      "version": "learning_guardrails_v1",
+      "input_findings": [],
+      "blocked_lessons": [],
+      "blocked_sources": []
+    },
+    "detection": {
+      "candidate_count": 0,
+      "open_question_count": 0,
+      "processed_count": 0,
+      "skipped_unmatched_question": 0,
+      "skipped_over_limit": 0,
+      "scan": {
+        "turns_available": 4,
+        "turns_scanned": 4,
+        "requests": 4,
+        "errors": [],
+        "schema_retries": 0,
+        "skipped_over_limit": 0
+      },
+      "alignment_rejections": []
+    },
+    "outcome": "no_candidates",
+    "learning_duration_ms": 20331,
+    "learning_usage": {
+      "input_tokens": 6088,
+      "output_tokens": 14
+    }
+  },
+  "artifact_changes": []
+}

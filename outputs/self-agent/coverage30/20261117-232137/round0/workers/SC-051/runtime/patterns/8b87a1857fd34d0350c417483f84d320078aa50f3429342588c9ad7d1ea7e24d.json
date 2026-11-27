@@ -1,0 +1,46 @@
+{
+  "id": "8b87a1857fd34d0350c417483f84d320078aa50f3429342588c9ad7d1ea7e24d",
+  "reason": "unsupported_claim",
+  "pattern": "Do not state an unverified claim as a fact.",
+  "status": "approved",
+  "scope": "general",
+  "mechanism": "knowledge_gap",
+  "criterion": "Do not state an unverified claim as a fact.",
+  "evidence_refs": [
+    {
+      "job_id": "7fd0b5fd036e3c9f4602f0339906a9bb1d8f37941e18e169076829b4019dafcc",
+      "message_id": 2,
+      "turn_id": 2,
+      "origin": "turn_detector"
+    }
+  ],
+  "assessment": "unsupported_by_evidence",
+  "report_ref": "7fd0b5fd036e3c9f4602f0339906a9bb1d8f37941e18e169076829b4019dafcc",
+  "lesson": {
+    "title": "Verify chat history before confirming quoted items",
+    "when": "the customer asks to recall or confirm details from a previous chat or channel history and no official source verifies that specific history",
+    "do": "state that the chat history cannot be verified or accessed",
+    "otherwise": "express uncertainty about the unverified chat history without confirming or denying what was previously discussed",
+    "triggers": [
+      "nhắc lại mẫu và giá trong chat",
+      "kiểm tra lịch sử chat fanpage",
+      "bên em còn nội dung chat không",
+      "xác nhận thông tin đã báo trong chat"
+    ],
+    "id": "6d3a903bb52f3a640c309b28927834d92f20386b301897d64d113e666ac598eb",
+    "status": "approved",
+    "scope": "general",
+    "mechanism": "knowledge_gap",
+    "source_refs": [
+      {
+        "job_id": "7fd0b5fd036e3c9f4602f0339906a9bb1d8f37941e18e169076829b4019dafcc",
+        "message_id": 2,
+        "turn_id": 2,
+        "origin": "turn_detector"
+      }
+    ],
+    "version": 2
+  },
+  "lesson_path": "lessons\\approved\\6d3a903bb52f3a640c309b28927834d92f20386b301897d64d113e666ac598eb.md",
+  "lesson_hash": "bd7c1d98408e012643105ff779f8998825343efc3ad8d86909611a3ab07548bd"
+}

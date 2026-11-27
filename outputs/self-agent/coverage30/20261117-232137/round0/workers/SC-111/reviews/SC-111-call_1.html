@@ -1,0 +1,770 @@
+<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src 'none'; base-uri 'none'; form-action 'none'"><title>Review self-learning</title><style>body{margin:0;background:#f5f2ed;color:#292824;font:16px/1.6 system-ui,sans-serif}main{max-width:1180px;margin:auto;padding:24px}h1,h2,h3{line-height:1.3}article,.box{background:#fffdf9;border:1px solid #ddd7cc;border-radius:12px;padding:18px;margin:16px 0}.columns{display:grid;grid-template-columns:1fr 1fr;gap:18px}.answer{white-space:pre-wrap}mark{background:#fff0a6;color:#292824}del{background:#fbe2df;text-decoration:line-through}.warn{border-left:5px solid #a66b16}.regression{border-left:5px solid #a43131}.improved_resolution{border-left:5px solid #367458}.muted{color:#635f57}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#f3f1eb;padding:12px;border-radius:8px}body,td,p,div,summary{overflow-wrap:anywhere}table{border-collapse:collapse;width:100%}th,td{text-align:left;padding:8px;border-bottom:1px solid #e3ded5;vertical-align:top}summary{cursor:pointer;padding:8px 0}summary:focus-visible,a:focus-visible{outline:3px solid #8c5517}a{color:#754610}nav{display:flex;flex-wrap:wrap;gap:14px}@media(max-width:650px){main{padding:12px}.columns{grid-template-columns:1fr}article,.box{padding:12px}}</style></head><body><main><h1>Review self-learning</h1><p>Học sau khi kết thúc session. Báo cáo dựng từ artifact đã lưu, không gọi thêm LLM.</p><nav><a href="#overview">Tổng quan</a><a href="#turns">Trước / sau</a><a href="#lessons">Lesson</a><a href="#sessions">Học &amp; guardrail</a></nav><section id="overview"><h2>Tổng quan</h2><p class="box warn">Chưa chạy judge: chỉ xem thay đổi câu trả lời và dấu vết lesson, chưa đánh giá cải thiện.</p><p class="box warn">Không có cặp chấm hợp lệ: chưa thể kết luận cải thiện hay không có regression.</p><p><b>0</b> cặp chấm hợp lệ / 0 case được lưu trong comparison. 0/4 lượt trong session được inject.</p><table><tr><th>Phân loại</th><th>Số lượt</th></tr><tr><td>Giải quyết được thêm · cần xác nhận</td><td>0</td></tr><tr><td>Thận trọng hơn · vẫn chưa giải quyết</td><td>0</td></tr><tr><td>Có dấu hiệu regression · cần xác nhận</td><td>0</td></tr><tr><td>Không đổi trạng thái chấm</td><td>0</td></tr><tr><td>Chưa đủ kết quả chấm hợp lệ</td><td>0</td></tr><tr><td>Chưa được judge chấm</td><td>4</td></tr><tr><td>Thiếu một vòng</td><td>0</td></tr><tr><td>Câu hỏi hai vòng khác nhau</td><td>0</td></tr><tr><td>Bị loại khỏi phép so sánh</td><td>0</td></tr></table><details><summary>Phạm vi, nguồn baseline và exclusions</summary><pre>{
+  &quot;evaluation_population&quot;: &quot;single_session_no_baseline&quot;
+}</pre></details><p class="muted">Verdict kiểm tra được reference vẫn cần người đọc xác nhận ngữ nghĩa và độ đầy đủ.</p><p class="muted">Câu trả lời thay đổi hoặc được inject lesson chưa chứng minh lesson gây ra cải thiện.</p><p class="muted">Reflection chưa được chấm chất lượng; learning job done/lesson approved không phải điểm chất lượng.</p><p class="muted">Guardrail mẫu có giới hạn; không phát hiện mẫu không đồng nghĩa không có prompt injection.</p></section><section id="turns"><h2>Cải thiện ở đâu? Đọc từng lượt</h2><h3>Chưa được judge chấm (4)</h3><article id="turn-0" class="not_evaluated"><h3>SC-111/call_1 · lượt 1</h3><p><b>Khách:</b> Tôi là [private], số điện thoại [phone], đang nhắn qua Fanpage. Shop ơi, anh mua đồ cho nhà mới, đang tính Nồi chiên không dầu Philips 6.2L với Quạt đứng Senko TS16.</p><p class="muted">Câu trả lời không đổi/thiếu cặp · Lesson chưa inject.</p><div class="columns"><div><h3>Phiên vừa kết thúc</h3><p><b>Chưa có verdict hợp lệ</b></p><div class="answer">Em chào anh [private] ạ. Chúc mừng anh sắp chuyển sang nhà mới nhé!
+
+Cả hai sản phẩm Nồi chiên không dầu Philips 6.2L và Quạt đứng Senko TS16 bên em đều đang sẵn hàng đầy đủ để phục vụ anh. 
+
+Không biết anh cần em tư vấn thêm thông tin chi tiết của sản phẩm nào hay muốn hỗ trợ lên đơn hàng luôn ạ?</div><details><summary>Claims, trích dẫn và verdict gốc</summary><pre>{
+  &quot;status&quot;: null
+}</pre></details><details><summary>Evidence hiện tại và trước lượt này</summary><pre>{
+  &quot;current&quot;: {
+    &quot;turn_id&quot;: 1,
+    &quot;agent_response&quot;: &quot;Em chào anh [private] ạ. Chúc mừng anh sắp chuyển sang nhà mới nhé!\n\nCả hai sản phẩm Nồi chiên không dầu Philips 6.2L và Quạt đứng Senko TS16 bên em đều đang sẵn hàng đầy đủ để phục vụ anh. \n\nKhông biết anh cần em tư vấn thêm thông tin chi tiết của sản phẩm nào hay muốn hỗ trợ lên đơn hàng luôn ạ?&quot;,
+    &quot;tool_calls&quot;: [
+      {
+        &quot;name&quot;: &quot;catalog.search&quot;,
+        &quot;args&quot;: {
+          &quot;query&quot;: &quot;Tôi là [private], số điện thoại [private], đang nhắn qua Fanpage. Shop ơi, anh mua đồ cho nhà mới, đang tính Nồi chiên không dầu Philips 6.2L với Quạt đứng Senko TS16.&quot;,
+          &quot;on&quot;: &quot;2026-10-15&quot;
+        },
+        &quot;result&quot;: {
+          &quot;items&quot;: [
+            {
+              &quot;sku&quot;: &quot;SKU-AF-6L&quot;,
+              &quot;name&quot;: &quot;[private]&quot;,
+              &quot;category&quot;: &quot;gia-dung/noi-chien&quot;,
+              &quot;brand&quot;: &quot;Philips&quot;,
+              &quot;list_price_vnd&quot;: 3990000.0,
+              &quot;discontinued&quot;: false,
+              &quot;successor_sku&quot;: null,
+              &quot;attributes&quot;: {
+                &quot;warranty_months&quot;: 12
+              },
+              &quot;variants&quot;: []
+            },
+            {
+              &quot;sku&quot;: &quot;SKU-FAN-SEN&quot;,
+              &quot;name&quot;: &quot;[private]&quot;,
+              &quot;category&quot;: &quot;gia-dung/quat&quot;,
+              &quot;brand&quot;: &quot;Senko&quot;,
+              &quot;list_price_vnd&quot;: 590000.0,
+              &quot;discontinued&quot;: false,
+              &quot;successor_sku&quot;: null,
+              &quot;attributes&quot;: {
+                &quot;warranty_months&quot;: 12
+              },
+              &quot;variants&quot;: []
+            }
+          ]
+        }
+      },
+      {
+        &quot;name&quot;: &quot;inventory.check&quot;,
+        &quot;args&quot;: {
+          &quot;sku&quot;: &quot;SKU-AF-6L&quot;,
+          &quot;on&quot;: &quot;2026-10-15&quot;
+        },
+        &quot;result&quot;: {
+          &quot;sku&quot;: &quot;SKU-AF-6L&quot;,
+          &quot;found&quot;: true,
+          &quot;in_stock&quot;: true,
+          &quot;qty&quot;: 25,
+          &quot;discontinued&quot;: false
+        }
+      },
+      {
+        &quot;name&quot;: &quot;inventory.check&quot;,
+        &quot;args&quot;: {
+          &quot;sku&quot;: &quot;SKU-FAN-SEN&quot;,
+          &quot;on&quot;: &quot;2026-10-15&quot;
+        },
+        &quot;result&quot;: {
+          &quot;sku&quot;: &quot;SKU-FAN-SEN&quot;,
+          &quot;found&quot;: true,
+          &quot;in_stock&quot;: true,
+          &quot;qty&quot;: 30,
+          &quot;discontinued&quot;: false
+        }
+      }
+    ],
+    &quot;sources&quot;: [
+      {
+        &quot;sku&quot;: &quot;SKU-AF-6L&quot;,
+        &quot;name&quot;: &quot;[private]&quot;,
+        &quot;category&quot;: &quot;gia-dung/noi-chien&quot;,
+        &quot;brand&quot;: &quot;Philips&quot;,
+        &quot;list_price_vnd&quot;: 3990000.0,
+        &quot;discontinued&quot;: false,
+        &quot;successor_sku&quot;: null,
+        &quot;attributes&quot;: {
+          &quot;warranty_months&quot;: 12
+        },
+        &quot;variants&quot;: []
+      },
+      {
+        &quot;sku&quot;: &quot;SKU-AF-6L&quot;,
+        &quot;name&quot;: &quot;[private]&quot;,
+        &quot;category&quot;: &quot;gia-dung/noi-chien&quot;,
+        &quot;brand&quot;: &quot;Philips&quot;,
+        &quot;list_price_vnd&quot;: 3990000.0,
+        &quot;discontinued&quot;: false,
+        &quot;successor_sku&quot;: null,
+        &quot;attributes&quot;: {
+          &quot;warranty_months&quot;: 12
+        },
+        &quot;variants&quot;: []
+      }
+    ],
+    &quot;promotions&quot;: []
+  },
+  &quot;earlier&quot;: []
+}</pre></details></div></div><details><summary>Lesson ID, routing, token và injection trace</summary><pre>{}</pre></details></article><article id="turn-1" class="not_evaluated"><h3>SC-111/call_1 · lượt 2</h3><p><b>Khách:</b> À đổi ý, bỏ món thứ hai vừa nói, thay bằng Quạt đứng DC inverter Panasonic F-409. Mỗi loại một chiếc nhé.</p><p class="muted">Câu trả lời không đổi/thiếu cặp · Lesson chưa inject.</p><div class="columns"><div><h3>Phiên vừa kết thúc</h3><p><b>Chưa có verdict hợp lệ</b></p><div class="answer">Dạ em đã cập nhật lại danh sách chọn của anh [private] gồm: 01 Nồi chiên không dầu Philips 6.2L và 01 Quạt đứng DC inverter Panasonic F-409 (sản phẩm này bên em đang có sẵn hàng ạ). 
+
+Anh cho em xin địa chỉ [address]</div><details><summary>Claims, trích dẫn và verdict gốc</summary><pre>{
+  &quot;status&quot;: null
+}</pre></details><details><summary>Evidence hiện tại và trước lượt này</summary><pre>{
+  &quot;current&quot;: {
+    &quot;turn_id&quot;: 2,
+    &quot;agent_response&quot;: &quot;Dạ em đã cập nhật lại danh sách chọn của anh [private] gồm: 01 Nồi chiên không dầu Philips 6.2L và 01 Quạt đứng DC inverter Panasonic F-409 (sản phẩm này bên em đang có sẵn hàng ạ). \n\nAnh cho em xin địa chỉ [address]&quot;,
+    &quot;tool_calls&quot;: [
+      {
+        &quot;name&quot;: &quot;catalog.search&quot;,
+        &quot;args&quot;: {
+          &quot;query&quot;: &quot;Quạt đứng DC inverter Panasonic F-409&quot;,
+          &quot;on&quot;: &quot;2026-10-15&quot;
+        },
+        &quot;result&quot;: {
+          &quot;items&quot;: [
+            {
+              &quot;sku&quot;: &quot;SKU-FAN-DC1&quot;,
+              &quot;name&quot;: &quot;[private]&quot;,
+              &quot;category&quot;: &quot;gia-dung/quat&quot;,
+              &quot;brand&quot;: &quot;Panasonic&quot;,
+              &quot;list_price_vnd&quot;: 2450000.0,
+              &quot;discontinued&quot;: false,
+              &quot;successor_sku&quot;: null,
+              &quot;attributes&quot;: {
+                &quot;warranty_months&quot;: 12
+              },
+              &quot;variants&quot;: []
+            }
+          ],
+          &quot;total&quot;: 1
+        }
+      },
+      {
+        &quot;name&quot;: &quot;inventory.check&quot;,
+        &quot;args&quot;: {
+          &quot;sku&quot;: &quot;SKU-FAN-DC1&quot;,
+          &quot;on&quot;: &quot;2026-10-15&quot;
+        },
+        &quot;result&quot;: {
+          &quot;sku&quot;: &quot;SKU-FAN-DC1&quot;,
+          &quot;found&quot;: true,
+          &quot;in_stock&quot;: true,
+          &quot;qty&quot;: 30,
+          &quot;discontinued&quot;: false
+        }
+      }
+    ],
+    &quot;sources&quot;: [],
+    &quot;promotions&quot;: []
+  },
+  &quot;earlier&quot;: [
+    {
+      &quot;turn_id&quot;: 1,
+      &quot;tool_calls&quot;: [
+        {
+          &quot;name&quot;: &quot;catalog.search&quot;,
+          &quot;args&quot;: {
+            &quot;query&quot;: &quot;Tôi là [private], số điện thoại [private], đang nhắn qua Fanpage. Shop ơi, anh mua đồ cho nhà mới, đang tính Nồi chiên không dầu Philips 6.2L với Quạt đứng Senko TS16.&quot;,
+            &quot;on&quot;: &quot;2026-10-15&quot;
+          },
+          &quot;result&quot;: {
+            &quot;items&quot;: [
+              {
+                &quot;sku&quot;: &quot;SKU-AF-6L&quot;,
+                &quot;name&quot;: &quot;[private]&quot;,
+                &quot;category&quot;: &quot;gia-dung/noi-chien&quot;,
+                &quot;brand&quot;: &quot;Philips&quot;,
+                &quot;list_price_vnd&quot;: 3990000.0,
+                &quot;discontinued&quot;: false,
+                &quot;successor_sku&quot;: null,
+                &quot;attributes&quot;: {
+                  &quot;warranty_months&quot;: 12
+                },
+                &quot;variants&quot;: []
+              },
+              {
+                &quot;sku&quot;: &quot;SKU-FAN-SEN&quot;,
+                &quot;name&quot;: &quot;[private]&quot;,
+                &quot;category&quot;: &quot;gia-dung/quat&quot;,
+                &quot;brand&quot;: &quot;Senko&quot;,
+                &quot;list_price_vnd&quot;: 590000.0,
+                &quot;discontinued&quot;: false,
+                &quot;successor_sku&quot;: null,
+                &quot;attributes&quot;: {
+                  &quot;warranty_months&quot;: 12
+                },
+                &quot;variants&quot;: []
+              }
+            ]
+          }
+        },
+        {
+          &quot;name&quot;: &quot;inventory.check&quot;,
+          &quot;args&quot;: {
+            &quot;sku&quot;: &quot;SKU-AF-6L&quot;,
+            &quot;on&quot;: &quot;2026-10-15&quot;
+          },
+          &quot;result&quot;: {
+            &quot;sku&quot;: &quot;SKU-AF-6L&quot;,
+            &quot;found&quot;: true,
+            &quot;in_stock&quot;: true,
+            &quot;qty&quot;: 25,
+            &quot;discontinued&quot;: false
+          }
+        },
+        {
+          &quot;name&quot;: &quot;inventory.check&quot;,
+          &quot;args&quot;: {
+            &quot;sku&quot;: &quot;SKU-FAN-SEN&quot;,
+            &quot;on&quot;: &quot;2026-10-15&quot;
+          },
+          &quot;result&quot;: {
+            &quot;sku&quot;: &quot;SKU-FAN-SEN&quot;,
+            &quot;found&quot;: true,
+            &quot;in_stock&quot;: true,
+            &quot;qty&quot;: 30,
+            &quot;discontinued&quot;: false
+          }
+        }
+      ],
+      &quot;sources&quot;: [
+        {
+          &quot;sku&quot;: &quot;SKU-AF-6L&quot;,
+          &quot;name&quot;: &quot;[private]&quot;,
+          &quot;category&quot;: &quot;gia-dung/noi-chien&quot;,
+          &quot;brand&quot;: &quot;Philips&quot;,
+          &quot;list_price_vnd&quot;: 3990000.0,
+          &quot;discontinued&quot;: false,
+          &quot;successor_sku&quot;: null,
+          &quot;attributes&quot;: {
+            &quot;warranty_months&quot;: 12
+          },
+          &quot;variants&quot;: []
+        },
+        {
+          &quot;sku&quot;: &quot;SKU-AF-6L&quot;,
+          &quot;name&quot;: &quot;[private]&quot;,
+          &quot;category&quot;: &quot;gia-dung/noi-chien&quot;,
+          &quot;brand&quot;: &quot;Philips&quot;,
+          &quot;list_price_vnd&quot;: 3990000.0,
+          &quot;discontinued&quot;: false,
+          &quot;successor_sku&quot;: null,
+          &quot;attributes&quot;: {
+            &quot;warranty_months&quot;: 12
+          },
+          &quot;variants&quot;: []
+        }
+      ],
+      &quot;promotions&quot;: []
+    }
+  ]
+}</pre></details></div></div><details><summary>Lesson ID, routing, token và injection trace</summary><pre>{}</pre></details></article><article id="turn-2" class="not_evaluated"><h3>SC-111/call_1 · lượt 3</h3><p><b>Khách:</b> Ngân sách tổng của anh là 6.740.000 đồng. Hôm nay chỉ nhờ em ghi lại giỏ cuối cùng, chưa đặt.</p><p class="muted">Câu trả lời không đổi/thiếu cặp · Lesson chưa inject.</p><div class="columns"><div><h3>Phiên vừa kết thúc</h3><p><b>Chưa có verdict hợp lệ</b></p><div class="answer">Dạ em ghi nhận thông tin ngân sách của anh [private] là 6.740.000 đồng và ghi lại danh sách giỏ hàng cuối cùng gồm:
+- 01 Nồi chiên không dầu Philips 6.2L
+- 01 Quạt đứng DC inverter Panasonic F-409
+
+Tổng giá trị giỏ hàng hiện tại là 6.440.000 đồng, hoàn toàn nằm trong ngân sách của anh ạ. Em đã lưu lại thông tin và chưa lên đơn. Khi nào anh muốn tiến hành đặt hàng thì cứ báo em nhé!</div><details><summary>Claims, trích dẫn và verdict gốc</summary><pre>{
+  &quot;status&quot;: null
+}</pre></details><details><summary>Evidence hiện tại và trước lượt này</summary><pre>{
+  &quot;current&quot;: {
+    &quot;turn_id&quot;: 3,
+    &quot;agent_response&quot;: &quot;Dạ em ghi nhận thông tin ngân sách của anh [private] là 6.740.000 đồng và ghi lại danh sách giỏ hàng cuối cùng gồm:\n- 01 Nồi chiên không dầu Philips 6.2L\n- 01 Quạt đứng DC inverter Panasonic F-409\n\nTổng giá trị giỏ hàng hiện tại là 6.440.000 đồng, hoàn toàn nằm trong ngân sách của anh ạ. Em đã lưu lại thông tin và chưa lên đơn. Khi nào anh muốn tiến hành đặt hàng thì cứ báo em nhé!&quot;,
+    &quot;tool_calls&quot;: [
+      {
+        &quot;name&quot;: &quot;pricing.quote_order&quot;,
+        &quot;args&quot;: {
+          &quot;on&quot;: &quot;2026-10-15&quot;,
+          &quot;customer_phone&quot;: &quot;[private]&quot;,
+          &quot;customer_id&quot;: &quot;[private]&quot;,
+          &quot;lines&quot;: [
+            {
+              &quot;sku&quot;: &quot;SKU-AF-6L&quot;,
+              &quot;qty&quot;: 1
+            },
+            {
+              &quot;sku&quot;: &quot;SKU-FAN-DC1&quot;,
+              &quot;qty&quot;: 1
+            }
+          ]
+        },
+        &quot;result&quot;: {
+          &quot;units&quot;: [
+            {
+              &quot;unit&quot;: 1,
+              &quot;line&quot;: 0,
+              &quot;sku&quot;: &quot;SKU-AF-6L&quot;,
+              &quot;list_price_vnd&quot;: 3990000,
+              &quot;final_price_vnd&quot;: 3990000,
+              &quot;applied_promos&quot;: []
+            },
+            {
+              &quot;unit&quot;: 2,
+              &quot;line&quot;: 1,
+              &quot;sku&quot;: &quot;SKU-FAN-DC1&quot;,
+              &quot;list_price_vnd&quot;: 2450000,
+              &quot;final_price_vnd&quot;: 2450000,
+              &quot;applied_promos&quot;: []
+            }
+          ],
+          &quot;lines&quot;: [
+            {
+              &quot;sku&quot;: &quot;SKU-AF-6L&quot;,
+              &quot;qty&quot;: 1,
+              &quot;unit_prices_vnd&quot;: [
+                3990000
+              ],
+              &quot;line_total_vnd&quot;: 3990000
+            },
+            {
+              &quot;sku&quot;: &quot;SKU-FAN-DC1&quot;,
+              &quot;qty&quot;: 1,
+              &quot;unit_prices_vnd&quot;: [
+                2450000
+              ],
+              &quot;line_total_vnd&quot;: 2450000
+            }
+          ],
+          &quot;total_vnd&quot;: 6440000,
+          &quot;order_promos&quot;: [
+            {
+              &quot;promo_code&quot;: &quot;COD-0&quot;,
+              &quot;type&quot;: &quot;freecod&quot;,
+              &quot;discount_vnd&quot;: 0
+            }
+          ],
+          &quot;freeship&quot;: true,
+          &quot;note&quot;: &quot;Khi giá trong một dòng khác nhau (VD 2 máy cùng SKU, 1 máy được giảm 50%), tạo đơn bằng mỗi máy một dòng qty=1.&quot;
+        }
+      }
+    ],
+    &quot;sources&quot;: [],
+    &quot;promotions&quot;: []
+  },
+  &quot;earlier&quot;: [
+    {
+      &quot;turn_id&quot;: 1,
+      &quot;tool_calls&quot;: [
+        {
+          &quot;name&quot;: &quot;catalog.search&quot;,
+          &quot;args&quot;: {
+            &quot;query&quot;: &quot;Tôi là [private], số điện thoại [private], đang nhắn qua Fanpage. Shop ơi, anh mua đồ cho nhà mới, đang tính Nồi chiên không dầu Philips 6.2L với Quạt đứng Senko TS16.&quot;,
+            &quot;on&quot;: &quot;2026-10-15&quot;
+          },
+          &quot;result&quot;: {
+            &quot;items&quot;: [
+              {
+                &quot;sku&quot;: &quot;SKU-AF-6L&quot;,
+                &quot;name&quot;: &quot;[private]&quot;,
+                &quot;category&quot;: &quot;gia-dung/noi-chien&quot;,
+                &quot;brand&quot;: &quot;Philips&quot;,
+                &quot;list_price_vnd&quot;: 3990000.0,
+                &quot;discontinued&quot;: false,
+                &quot;successor_sku&quot;: null,
+                &quot;attributes&quot;: {
+                  &quot;warranty_months&quot;: 12
+                },
+                &quot;variants&quot;: []
+              },
+              {
+                &quot;sku&quot;: &quot;SKU-FAN-SEN&quot;,
+                &quot;name&quot;: &quot;[private]&quot;,
+                &quot;category&quot;: &quot;gia-dung/quat&quot;,
+                &quot;brand&quot;: &quot;Senko&quot;,
+                &quot;list_price_vnd&quot;: 590000.0,
+                &quot;discontinued&quot;: false,
+                &quot;successor_sku&quot;: null,
+                &quot;attributes&quot;: {
+                  &quot;warranty_months&quot;: 12
+                },
+                &quot;variants&quot;: []
+              }
+            ]
+          }
+        },
+        {
+          &quot;name&quot;: &quot;inventory.check&quot;,
+          &quot;args&quot;: {
+            &quot;sku&quot;: &quot;SKU-AF-6L&quot;,
+            &quot;on&quot;: &quot;2026-10-15&quot;
+          },
+          &quot;result&quot;: {
+            &quot;sku&quot;: &quot;SKU-AF-6L&quot;,
+            &quot;found&quot;: true,
+            &quot;in_stock&quot;: true,
+            &quot;qty&quot;: 25,
+            &quot;discontinued&quot;: false
+          }
+        },
+        {
+          &quot;name&quot;: &quot;inventory.check&quot;,
+          &quot;args&quot;: {
+            &quot;sku&quot;: &quot;SKU-FAN-SEN&quot;,
+            &quot;on&quot;: &quot;2026-10-15&quot;
+          },
+          &quot;result&quot;: {
+            &quot;sku&quot;: &quot;SKU-FAN-SEN&quot;,
+            &quot;found&quot;: true,
+            &quot;in_stock&quot;: true,
+            &quot;qty&quot;: 30,
+            &quot;discontinued&quot;: false
+          }
+        }
+      ],
+      &quot;sources&quot;: [
+        {
+          &quot;sku&quot;: &quot;SKU-AF-6L&quot;,
+          &quot;name&quot;: &quot;[private]&quot;,
+          &quot;category&quot;: &quot;gia-dung/noi-chien&quot;,
+          &quot;brand&quot;: &quot;Philips&quot;,
+          &quot;list_price_vnd&quot;: 3990000.0,
+          &quot;discontinued&quot;: false,
+          &quot;successor_sku&quot;: null,
+          &quot;attributes&quot;: {
+            &quot;warranty_months&quot;: 12
+          },
+          &quot;variants&quot;: []
+        },
+        {
+          &quot;sku&quot;: &quot;SKU-AF-6L&quot;,
+          &quot;name&quot;: &quot;[private]&quot;,
+          &quot;category&quot;: &quot;gia-dung/noi-chien&quot;,
+          &quot;brand&quot;: &quot;Philips&quot;,
+          &quot;list_price_vnd&quot;: 3990000.0,
+          &quot;discontinued&quot;: false,
+          &quot;successor_sku&quot;: null,
+          &quot;attributes&quot;: {
+            &quot;warranty_months&quot;: 12
+          },
+          &quot;variants&quot;: []
+        }
+      ],
+      &quot;promotions&quot;: []
+    },
+    {
+      &quot;turn_id&quot;: 2,
+      &quot;tool_calls&quot;: [
+        {
+          &quot;name&quot;: &quot;catalog.search&quot;,
+          &quot;args&quot;: {
+            &quot;query&quot;: &quot;Quạt đứng DC inverter Panasonic F-409&quot;,
+            &quot;on&quot;: &quot;2026-10-15&quot;
+          },
+          &quot;result&quot;: {
+            &quot;items&quot;: [
+              {
+                &quot;sku&quot;: &quot;SKU-FAN-DC1&quot;,
+                &quot;name&quot;: &quot;[private]&quot;,
+                &quot;category&quot;: &quot;gia-dung/quat&quot;,
+                &quot;brand&quot;: &quot;Panasonic&quot;,
+                &quot;list_price_vnd&quot;: 2450000.0,
+                &quot;discontinued&quot;: false,
+                &quot;successor_sku&quot;: null,
+                &quot;attributes&quot;: {
+                  &quot;warranty_months&quot;: 12
+                },
+                &quot;variants&quot;: []
+              }
+            ],
+            &quot;total&quot;: 1
+          }
+        },
+        {
+          &quot;name&quot;: &quot;inventory.check&quot;,
+          &quot;args&quot;: {
+            &quot;sku&quot;: &quot;SKU-FAN-DC1&quot;,
+            &quot;on&quot;: &quot;2026-10-15&quot;
+          },
+          &quot;result&quot;: {
+            &quot;sku&quot;: &quot;SKU-FAN-DC1&quot;,
+            &quot;found&quot;: true,
+            &quot;in_stock&quot;: true,
+            &quot;qty&quot;: 30,
+            &quot;discontinued&quot;: false
+          }
+        }
+      ],
+      &quot;sources&quot;: [],
+      &quot;promotions&quot;: []
+    }
+  ]
+}</pre></details></div></div><details><summary>Lesson ID, routing, token và injection trace</summary><pre>{}</pre></details></article><article id="turn-3" class="not_evaluated"><h3>SC-111/call_1 · lượt 4</h3><p><b>Khách:</b> Em xác nhận lại đúng hai món sau khi sửa giúp anh.</p><p class="muted">Câu trả lời không đổi/thiếu cặp · Lesson chưa inject.</p><div class="columns"><div><h3>Phiên vừa kết thúc</h3><p><b>Chưa có verdict hợp lệ</b></p><div class="answer">Dạ giỏ hàng cuối cùng của mình gồm:
+1. Nồi chiên không dầu Philips 6.2L
+2. Quạt đứng DC inverter Panasonic F-409
+Em đã ghi nhận đúng 2 món này ạ.</div><details><summary>Claims, trích dẫn và verdict gốc</summary><pre>{
+  &quot;status&quot;: null
+}</pre></details><details><summary>Evidence hiện tại và trước lượt này</summary><pre>{
+  &quot;current&quot;: {
+    &quot;turn_id&quot;: 4,
+    &quot;agent_response&quot;: &quot;Dạ giỏ hàng cuối cùng của mình gồm:\n1. Nồi chiên không dầu Philips 6.2L\n2. Quạt đứng DC inverter Panasonic F-409\nEm đã ghi nhận đúng 2 món này ạ.&quot;,
+    &quot;tool_calls&quot;: [],
+    &quot;sources&quot;: [],
+    &quot;promotions&quot;: []
+  },
+  &quot;earlier&quot;: [
+    {
+      &quot;turn_id&quot;: 1,
+      &quot;tool_calls&quot;: [
+        {
+          &quot;name&quot;: &quot;catalog.search&quot;,
+          &quot;args&quot;: {
+            &quot;query&quot;: &quot;Tôi là [private], số điện thoại [private], đang nhắn qua Fanpage. Shop ơi, anh mua đồ cho nhà mới, đang tính Nồi chiên không dầu Philips 6.2L với Quạt đứng Senko TS16.&quot;,
+            &quot;on&quot;: &quot;2026-10-15&quot;
+          },
+          &quot;result&quot;: {
+            &quot;items&quot;: [
+              {
+                &quot;sku&quot;: &quot;SKU-AF-6L&quot;,
+                &quot;name&quot;: &quot;[private]&quot;,
+                &quot;category&quot;: &quot;gia-dung/noi-chien&quot;,
+                &quot;brand&quot;: &quot;Philips&quot;,
+                &quot;list_price_vnd&quot;: 3990000.0,
+                &quot;discontinued&quot;: false,
+                &quot;successor_sku&quot;: null,
+                &quot;attributes&quot;: {
+                  &quot;warranty_months&quot;: 12
+                },
+                &quot;variants&quot;: []
+              },
+              {
+                &quot;sku&quot;: &quot;SKU-FAN-SEN&quot;,
+                &quot;name&quot;: &quot;[private]&quot;,
+                &quot;category&quot;: &quot;gia-dung/quat&quot;,
+                &quot;brand&quot;: &quot;Senko&quot;,
+                &quot;list_price_vnd&quot;: 590000.0,
+                &quot;discontinued&quot;: false,
+                &quot;successor_sku&quot;: null,
+                &quot;attributes&quot;: {
+                  &quot;warranty_months&quot;: 12
+                },
+                &quot;variants&quot;: []
+              }
+            ]
+          }
+        },
+        {
+          &quot;name&quot;: &quot;inventory.check&quot;,
+          &quot;args&quot;: {
+            &quot;sku&quot;: &quot;SKU-AF-6L&quot;,
+            &quot;on&quot;: &quot;2026-10-15&quot;
+          },
+          &quot;result&quot;: {
+            &quot;sku&quot;: &quot;SKU-AF-6L&quot;,
+            &quot;found&quot;: true,
+            &quot;in_stock&quot;: true,
+            &quot;qty&quot;: 25,
+            &quot;discontinued&quot;: false
+          }
+        },
+        {
+          &quot;name&quot;: &quot;inventory.check&quot;,
+          &quot;args&quot;: {
+            &quot;sku&quot;: &quot;SKU-FAN-SEN&quot;,
+            &quot;on&quot;: &quot;2026-10-15&quot;
+          },
+          &quot;result&quot;: {
+            &quot;sku&quot;: &quot;SKU-FAN-SEN&quot;,
+            &quot;found&quot;: true,
+            &quot;in_stock&quot;: true,
+            &quot;qty&quot;: 30,
+            &quot;discontinued&quot;: false
+          }
+        }
+      ],
+      &quot;sources&quot;: [
+        {
+          &quot;sku&quot;: &quot;SKU-AF-6L&quot;,
+          &quot;name&quot;: &quot;[private]&quot;,
+          &quot;category&quot;: &quot;gia-dung/noi-chien&quot;,
+          &quot;brand&quot;: &quot;Philips&quot;,
+          &quot;list_price_vnd&quot;: 3990000.0,
+          &quot;discontinued&quot;: false,
+          &quot;successor_sku&quot;: null,
+          &quot;attributes&quot;: {
+            &quot;warranty_months&quot;: 12
+          },
+          &quot;variants&quot;: []
+        },
+        {
+          &quot;sku&quot;: &quot;SKU-AF-6L&quot;,
+          &quot;name&quot;: &quot;[private]&quot;,
+          &quot;category&quot;: &quot;gia-dung/noi-chien&quot;,
+          &quot;brand&quot;: &quot;Philips&quot;,
+          &quot;list_price_vnd&quot;: 3990000.0,
+          &quot;discontinued&quot;: false,
+          &quot;successor_sku&quot;: null,
+          &quot;attributes&quot;: {
+            &quot;warranty_months&quot;: 12
+          },
+          &quot;variants&quot;: []
+        }
+      ],
+      &quot;promotions&quot;: []
+    },
+    {
+      &quot;turn_id&quot;: 2,
+      &quot;tool_calls&quot;: [
+        {
+          &quot;name&quot;: &quot;catalog.search&quot;,
+          &quot;args&quot;: {
+            &quot;query&quot;: &quot;Quạt đứng DC inverter Panasonic F-409&quot;,
+            &quot;on&quot;: &quot;2026-10-15&quot;
+          },
+          &quot;result&quot;: {
+            &quot;items&quot;: [
+              {
+                &quot;sku&quot;: &quot;SKU-FAN-DC1&quot;,
+                &quot;name&quot;: &quot;[private]&quot;,
+                &quot;category&quot;: &quot;gia-dung/quat&quot;,
+                &quot;brand&quot;: &quot;Panasonic&quot;,
+                &quot;list_price_vnd&quot;: 2450000.0,
+                &quot;discontinued&quot;: false,
+                &quot;successor_sku&quot;: null,
+                &quot;attributes&quot;: {
+                  &quot;warranty_months&quot;: 12
+                },
+                &quot;variants&quot;: []
+              }
+            ],
+            &quot;total&quot;: 1
+          }
+        },
+        {
+          &quot;name&quot;: &quot;inventory.check&quot;,
+          &quot;args&quot;: {
+            &quot;sku&quot;: &quot;SKU-FAN-DC1&quot;,
+            &quot;on&quot;: &quot;2026-10-15&quot;
+          },
+          &quot;result&quot;: {
+            &quot;sku&quot;: &quot;SKU-FAN-DC1&quot;,
+            &quot;found&quot;: true,
+            &quot;in_stock&quot;: true,
+            &quot;qty&quot;: 30,
+            &quot;discontinued&quot;: false
+          }
+        }
+      ],
+      &quot;sources&quot;: [],
+      &quot;promotions&quot;: []
+    },
+    {
+      &quot;turn_id&quot;: 3,
+      &quot;tool_calls&quot;: [
+        {
+          &quot;name&quot;: &quot;pricing.quote_order&quot;,
+          &quot;args&quot;: {
+            &quot;on&quot;: &quot;2026-10-15&quot;,
+            &quot;customer_phone&quot;: &quot;[private]&quot;,
+            &quot;customer_id&quot;: &quot;[private]&quot;,
+            &quot;lines&quot;: [
+              {
+                &quot;sku&quot;: &quot;SKU-AF-6L&quot;,
+                &quot;qty&quot;: 1
+              },
+              {
+                &quot;sku&quot;: &quot;SKU-FAN-DC1&quot;,
+                &quot;qty&quot;: 1
+              }
+            ]
+          },
+          &quot;result&quot;: {
+            &quot;units&quot;: [
+              {
+                &quot;unit&quot;: 1,
+                &quot;line&quot;: 0,
+                &quot;sku&quot;: &quot;SKU-AF-6L&quot;,
+                &quot;list_price_vnd&quot;: 3990000,
+                &quot;final_price_vnd&quot;: 3990000,
+                &quot;applied_promos&quot;: []
+              },
+              {
+                &quot;unit&quot;: 2,
+                &quot;line&quot;: 1,
+                &quot;sku&quot;: &quot;SKU-FAN-DC1&quot;,
+                &quot;list_price_vnd&quot;: 2450000,
+                &quot;final_price_vnd&quot;: 2450000,
+                &quot;applied_promos&quot;: []
+              }
+            ],
+            &quot;lines&quot;: [
+              {
+                &quot;sku&quot;: &quot;SKU-AF-6L&quot;,
+                &quot;qty&quot;: 1,
+                &quot;unit_prices_vnd&quot;: [
+                  3990000
+                ],
+                &quot;line_total_vnd&quot;: 3990000
+              },
+              {
+                &quot;sku&quot;: &quot;SKU-FAN-DC1&quot;,
+                &quot;qty&quot;: 1,
+                &quot;unit_prices_vnd&quot;: [
+                  2450000
+                ],
+                &quot;line_total_vnd&quot;: 2450000
+              }
+            ],
+            &quot;total_vnd&quot;: 6440000,
+            &quot;order_promos&quot;: [
+              {
+                &quot;promo_code&quot;: &quot;COD-0&quot;,
+                &quot;type&quot;: &quot;freecod&quot;,
+                &quot;discount_vnd&quot;: 0
+              }
+            ],
+            &quot;freeship&quot;: true,
+            &quot;note&quot;: &quot;Khi giá trong một dòng khác nhau (VD 2 máy cùng SKU, 1 máy được giảm 50%), tạo đơn bằng mỗi máy một dòng qty=1.&quot;
+          }
+        }
+      ],
+      &quot;sources&quot;: [],
+      &quot;promotions&quot;: []
+    }
+  ]
+}</pre></details></div></div><details><summary>Lesson ID, routing, token và injection trace</summary><pre>{}</pre></details></article></section><section id="lessons"><h2>Lesson mới sinh sau session</h2><p>Approved là trạng thái duyệt lesson, chưa chứng minh chất lượng câu trả lời.</p></section><section id="sessions"><h2>Học sau session &amp; guardrail</h2><p>Input finding là cảnh báo mẫu, không phải verdict khách nói sai hoặc bằng chứng tấn công thành công. Run cũ thiếu guardrail trace sẽ được ghi rõ.</p><article><h3>SC-111/call_1</h3><h3>Vòng 1</h3><p>Job: done · Issue xác nhận: 0 · Guardrail: có trace</p><details><summary>Vấn đề, trạng thái học và guardrail chi tiết</summary><pre>{
+  &quot;job&quot;: {
+    &quot;status&quot;: &quot;done&quot;,
+    &quot;job_id&quot;: &quot;77299085d9723023c1827ef654cfa55940b524cf39a46d6ead18924fcfd4bd13&quot;,
+    &quot;error&quot;: null
+  },
+  &quot;error&quot;: null,
+  &quot;learning&quot;: {
+    &quot;job_id&quot;: &quot;77299085d9723023c1827ef654cfa55940b524cf39a46d6ead18924fcfd4bd13&quot;,
+    &quot;gaps&quot;: [],
+    &quot;scope&quot;: &quot;knowledge_gap_and_reflection_v1&quot;,
+    &quot;evaluation_cases&quot;: [],
+    &quot;out_of_scope&quot;: [],
+    &quot;issue_reviews&quot;: [],
+    &quot;detector_error&quot;: null,
+    &quot;guardrails&quot;: {
+      &quot;version&quot;: &quot;learning_guardrails_v1&quot;,
+      &quot;input_findings&quot;: [],
+      &quot;blocked_lessons&quot;: [],
+      &quot;blocked_sources&quot;: []
+    },
+    &quot;detection&quot;: {
+      &quot;candidate_count&quot;: 0,
+      &quot;open_question_count&quot;: 0,
+      &quot;processed_count&quot;: 0,
+      &quot;skipped_unmatched_question&quot;: 0,
+      &quot;skipped_over_limit&quot;: 0,
+      &quot;scan&quot;: {
+        &quot;turns_available&quot;: 4,
+        &quot;turns_scanned&quot;: 4,
+        &quot;requests&quot;: 4,
+        &quot;errors&quot;: [],
+        &quot;schema_retries&quot;: 0,
+        &quot;skipped_over_limit&quot;: 0
+      },
+      &quot;alignment_rejections&quot;: []
+    },
+    &quot;outcome&quot;: &quot;no_candidates&quot;,
+    &quot;learning_duration_ms&quot;: 4951,
+    &quot;learning_usage&quot;: {
+      &quot;input_tokens&quot;: 7191,
+      &quot;output_tokens&quot;: 14
+    }
+  },
+  &quot;observed_input_findings&quot;: []
+}</pre></details></article></section></main></body></html>

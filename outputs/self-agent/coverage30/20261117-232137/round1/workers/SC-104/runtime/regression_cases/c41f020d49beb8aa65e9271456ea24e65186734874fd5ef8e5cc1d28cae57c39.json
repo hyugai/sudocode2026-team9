@@ -1,0 +1,19 @@
+{
+  "id": "c41f020d49beb8aa65e9271456ea24e65186734874fd5ef8e5cc1d28cae57c39",
+  "reason": "unsupported_claim",
+  "pattern": "Do not state an unverified claim as a fact.",
+  "status": "pending_lesson",
+  "scope": "general",
+  "mechanism": "knowledge_gap",
+  "criterion": "Do not state an unverified claim as a fact.",
+  "evidence_refs": [
+    {
+      "job_id": "df25ae2daeee10451fc59194297bf652c30ae7e028a440fce750381ff98a814c",
+      "message_id": 4,
+      "turn_id": 3,
+      "origin": "turn_detector"
+    }
+  ],
+  "assessment": "unsupported_by_evidence",
+  "report_ref": "df25ae2daeee10451fc59194297bf652c30ae7e028a440fce750381ff98a814c"
+}

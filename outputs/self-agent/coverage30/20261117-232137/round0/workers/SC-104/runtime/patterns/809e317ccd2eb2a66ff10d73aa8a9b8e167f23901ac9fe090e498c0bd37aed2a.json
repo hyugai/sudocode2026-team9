@@ -1,0 +1,45 @@
+{
+  "id": "809e317ccd2eb2a66ff10d73aa8a9b8e167f23901ac9fe090e498c0bd37aed2a",
+  "reason": "unsupported_claim",
+  "pattern": "Do not state an unverified claim as a fact.",
+  "status": "approved",
+  "scope": "general",
+  "mechanism": "knowledge_gap",
+  "criterion": "Do not state an unverified claim as a fact.",
+  "evidence_refs": [
+    {
+      "job_id": "e8b1ec7a4d5ccc7005d575724e613818c45309b0c5271211cc96ff9e4102ee87",
+      "message_id": 0,
+      "turn_id": 1,
+      "origin": "turn_detector"
+    }
+  ],
+  "assessment": "unsupported_by_evidence",
+  "report_ref": "e8b1ec7a4d5ccc7005d575724e613818c45309b0c5271211cc96ff9e4102ee87",
+  "lesson": {
+    "title": "Verify Prior Order History Before Claiming Past Details",
+    "when": "A customer references a previous interaction or order without prior conversation history or tool evidence provided in context",
+    "do": "Ask for necessary details or check verified source data before stating specific past order numbers or previous discussion details",
+    "otherwise": "Express uncertainty about past interaction details instead of inventing unverified order numbers or previous topics",
+    "triggers": [
+      "tiếp tục phần tư vấn lần trước",
+      "kiểm tra lịch sử đơn hàng cũ",
+      "xác nhận thông tin trao đổi trước"
+    ],
+    "id": "62b31704255689e0a0e9d302ff0dc99126722deddfe71f38a7843aa310652759",
+    "status": "approved",
+    "scope": "general",
+    "mechanism": "knowledge_gap",
+    "source_refs": [
+      {
+        "job_id": "e8b1ec7a4d5ccc7005d575724e613818c45309b0c5271211cc96ff9e4102ee87",
+        "message_id": 0,
+        "turn_id": 1,
+        "origin": "turn_detector"
+      }
+    ],
+    "version": 2
+  },
+  "lesson_path": "lessons\\approved\\62b31704255689e0a0e9d302ff0dc99126722deddfe71f38a7843aa310652759.md",
+  "lesson_hash": "9c522bf9b3655447e3404b8afbd976dd4213afeb1800ad4b527bd9e0c0a645b4"
+}

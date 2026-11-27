@@ -1,0 +1,637 @@
+{
+  "scenario_id": "SC-104",
+  "call": "call_2",
+  "session_id": "self-02874d9fe2774ead8b44002b2f654bcc-SC-104-call_2",
+  "turns": [
+    {
+      "customer": "Tôi là [private], số điện thoại [phone], đang nhắn qua Zalo OA. Chị muốn tiếp tục phần tư vấn lần trước, người nhà đồng ý đổi máy rồi.",
+      "agent": "Em chào chị [private]! Rất vui được hỗ trợ chị tiếp tục. Em thấy lần trước mình có trao đổi về chương trình thu cũ đổi mới cho sản phẩm máy lọc không khí (đơn hàng OD188213). \n\nHiện tại người nhà chị đã đồng ý đổi máy rồi, chị muốn em hỗ trợ chốt đơn đăng ký chương trình thu cũ đổi mới cho mình luôn hay chị cần em tư vấn thêm thông tin gì nữa không ạ?",
+      "latency": {
+        "ttft_ms": 4961,
+        "total_ms": 4961,
+        "ttfa_ms": null,
+        "measurement_mode": "non_streaming",
+        "timing_boundary": "response_ready_before_persistence",
+        "asr_ms": null,
+        "call_brief_ms": 3385,
+        "response_ready_ms": 4961,
+        "persistence_ms": 0.106,
+        "request_complete_ms": 4961.478,
+        "backend_total_ms": 4961.478,
+        "precomputed_parts": [
+          "persisted_facts"
+        ]
+      },
+      "lesson_trace": null
+    },
+    {
+      "customer": "Em nhắc lại máy mới, giá sau thu cũ đổi mới và dùng địa chỉ [address]",
+      "agent": "Dạ chị [private], sản phẩm máy mới trong chương trình thu cũ đổi mới là **Máy lọc không khí AirPure X**. Hiện tại, giá sau khi áp dụng ưu đãi thu cũ đổi mới (mã TRADE-IN-AP giảm 400.000đ) là **4.490.000đ**.\n\nEm chưa có sẵn thông tin địa chỉ [address]",
+      "latency": {
+        "ttft_ms": 12963,
+        "total_ms": 12963,
+        "ttfa_ms": null,
+        "measurement_mode": "non_streaming",
+        "timing_boundary": "response_ready_before_persistence",
+        "asr_ms": null,
+        "call_brief_ms": null,
+        "response_ready_ms": 12963,
+        "persistence_ms": 0.153,
+        "request_complete_ms": 12963.261,
+        "backend_total_ms": 12963.261,
+        "precomputed_parts": [
+          "persisted_facts"
+        ]
+      },
+      "lesson_trace": null
+    },
+    {
+      "customer": "Chị đồng ý 4.490.000 đồng, một máy, COD. Khi giao em thu máy cũ theo chương trình.",
+      "agent": "Dạ em cảm ơn chị [private] đã xác nhận đặt Máy lọc không khí AirPure X với giá 4.490.000đ thanh toán COD và tham gia thu cũ đổi mới ạ. \n\nHiện tại em còn thiếu thông tin địa chỉ [address]",
+      "latency": {
+        "ttft_ms": 4210,
+        "total_ms": 4210,
+        "ttfa_ms": null,
+        "measurement_mode": "non_streaming",
+        "timing_boundary": "response_ready_before_persistence",
+        "asr_ms": null,
+        "call_brief_ms": null,
+        "response_ready_ms": 4210,
+        "persistence_ms": 0.137,
+        "request_complete_ms": 4210.345,
+        "backend_total_ms": 4210.345,
+        "precomputed_parts": [
+          "persisted_facts"
+        ]
+      },
+      "lesson_trace": null
+    }
+  ],
+  "generation_context": {
+    "round": 0,
+    "instruction_hash": "9d30a7093911a993d8545de8b61cc6dc8465de67b10fb62b27d9f1bafaf0badf",
+    "applied_patterns": {},
+    "lessons_loaded": false,
+    "lesson_sources": [],
+    "lesson_files": [],
+    "instruction_root": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round0\\instructions"
+  },
+  "evaluation_evidence": [
+    {
+      "turn_id": 1,
+      "agent_response": "Em chào chị [private]! Rất vui được hỗ trợ chị tiếp tục. Em thấy lần trước mình có trao đổi về chương trình thu cũ đổi mới cho sản phẩm máy lọc không khí (đơn hàng OD188213). \n\nHiện tại người nhà chị đã đồng ý đổi máy rồi, chị muốn em hỗ trợ chốt đơn đăng ký chương trình thu cũ đổi mới cho mình luôn hay chị cần em tư vấn thêm thông tin gì nữa không ạ?",
+      "tool_calls": [],
+      "sources": [],
+      "promotions": []
+    },
+    {
+      "turn_id": 2,
+      "agent_response": "Dạ chị [private], sản phẩm máy mới trong chương trình thu cũ đổi mới là **Máy lọc không khí AirPure X**. Hiện tại, giá sau khi áp dụng ưu đãi thu cũ đổi mới (mã TRADE-IN-AP giảm 400.000đ) là **4.490.000đ**.\n\nEm chưa có sẵn thông tin địa chỉ [address]",
+      "tool_calls": [
+        {
+          "name": "catalog.search",
+          "args": {
+            "query": "Em nhắc lại máy mới, giá sau thu cũ đổi mới và dùng địa chỉ [address]",
+            "on": "2026-10-27"
+          },
+          "result": {
+            "items": [],
+            "total": 0
+          }
+        },
+        {
+          "name": "pricing.get_quote",
+          "args": {
+            "on": "2026-10-27",
+            "customer_phone": "[private]",
+            "customer_id": "[private]",
+            "sku": "SKU-AP-X",
+            "qty": 1
+          },
+          "result": {
+            "sku": "SKU-AP-X",
+            "list_price_vnd": 4890000,
+            "final_price_vnd": 4490000,
+            "applied_promos": [
+              {
+                "promo_code": "COD-0",
+                "type": "freecod",
+                "discount_vnd": 0
+              },
+              {
+                "promo_code": "TRADE-IN-AP",
+                "type": "fixed",
+                "discount_vnd": 400000
+              }
+            ],
+            "expired_promos": [
+              "GIFT-FILTER",
+              "AP-SEP"
+            ],
+            "ineligible_promos": [
+              {
+                "promo_code": "AIR-2ND-50",
+                "reason": "min_qty"
+              },
+              {
+                "promo_code": "NAM-SHIP0",
+                "reason": "region"
+              }
+            ],
+            "not_applied_exclusive": [],
+            "freeship": true
+          }
+        },
+        {
+          "name": "inventory.check",
+          "args": {
+            "sku": "SKU-AP-X",
+            "on": "2026-10-27"
+          },
+          "result": {
+            "sku": "SKU-AP-X",
+            "found": true,
+            "in_stock": true,
+            "qty": 40,
+            "discontinued": false
+          }
+        },
+        {
+          "name": "catalog.search",
+          "args": {
+            "on": "2026-10-27",
+            "sku": "SKU-AP-X"
+          },
+          "result": {
+            "items": [
+              {
+                "sku": "SKU-AP-X",
+                "name": "[private]",
+                "category": "gia-dung/may-loc-khong-khi",
+                "brand": "AirPure",
+                "list_price_vnd": 4890000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "features": "HEPA H13, cảm biến PM2.5, chế độ ngủ",
+                  "room_area_m2": 25,
+                  "child_safe_lock": false,
+                  "warranty_months": 24
+                },
+                "variants": []
+              }
+            ],
+            "total": 1
+          }
+        }
+      ],
+      "sources": [],
+      "promotions": []
+    },
+    {
+      "turn_id": 3,
+      "agent_response": "Dạ em cảm ơn chị [private] đã xác nhận đặt Máy lọc không khí AirPure X với giá 4.490.000đ thanh toán COD và tham gia thu cũ đổi mới ạ. \n\nHiện tại em còn thiếu thông tin địa chỉ [address]",
+      "tool_calls": [
+        {
+          "name": "inventory.check",
+          "args": {
+            "sku": "SKU-AP-X",
+            "on": "2026-10-27"
+          },
+          "result": {
+            "sku": "SKU-AP-X",
+            "found": true,
+            "in_stock": true,
+            "qty": 40,
+            "discontinued": false
+          }
+        }
+      ],
+      "sources": [],
+      "promotions": []
+    }
+  ],
+  "job": {
+    "status": "done",
+    "job_id": "e8b1ec7a4d5ccc7005d575724e613818c45309b0c5271211cc96ff9e4102ee87",
+    "error": null
+  },
+  "learning": {
+    "job_id": "e8b1ec7a4d5ccc7005d575724e613818c45309b0c5271211cc96ff9e4102ee87",
+    "gaps": [
+      {
+        "id": "809e317ccd2eb2a66ff10d73aa8a9b8e167f23901ac9fe090e498c0bd37aed2a",
+        "status": "pending_remediation"
+      },
+      {
+        "id": "d9eb9cd68d2cb75188336a8bd59fab7eb5d622a72af20a057a7afc2a3ba4ff19",
+        "status": "pending_remediation"
+      }
+    ],
+    "scope": "knowledge_gap_and_reflection_v1",
+    "evaluation_cases": [
+      {
+        "id": "ac05d9caf6724ce375d5208723dd08663d5c90eff2d796459b31215060d27f8f",
+        "gap_id": "809e317ccd2eb2a66ff10d73aa8a9b8e167f23901ac9fe090e498c0bd37aed2a",
+        "turn_id": 1,
+        "question": "Tôi là [private], số điện thoại [private], đang nhắn qua Zalo OA. Chị muốn tiếp tục phần tư vấn lần trước, người nhà đồng ý đổi máy rồi.",
+        "reason": "unsupported_claim",
+        "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments."
+      },
+      {
+        "id": "301cd7cd9d571d1537e0982cef2d835e50fd9043bd8cb22d243e340c51e7246d",
+        "gap_id": "d9eb9cd68d2cb75188336a8bd59fab7eb5d622a72af20a057a7afc2a3ba4ff19",
+        "turn_id": 2,
+        "question": "Em nhắc lại máy mới, giá sau thu cũ đổi mới và dùng địa chỉ [address]",
+        "reason": "unsupported_claim",
+        "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments."
+      }
+    ],
+    "out_of_scope": [],
+    "issue_reviews": [
+      {
+        "job_id": "e8b1ec7a4d5ccc7005d575724e613818c45309b0c5271211cc96ff9e4102ee87",
+        "message_id": 0,
+        "turn_id": 1,
+        "origin": "turn_detector",
+        "mechanism": "knowledge_gap",
+        "verified": true,
+        "claim": "Em thấy lần trước mình có trao đổi về chương trình thu cũ đổi mới cho sản phẩm máy lọc không khí (đơn hàng OD188213).",
+        "assessment": "unsupported_by_evidence",
+        "evidence_paths": [],
+        "rejection": null,
+        "rejection_reasons": [],
+        "format_retry": false,
+        "verifier_output": {
+          "valid": true,
+          "issue_scope": "business_knowledge",
+          "claim": "Em thấy lần trước mình có trao đổi về chương trình thu cũ đổi mới cho sản phẩm máy lọc không khí (đơn hàng OD188213).",
+          "assessment": "unsupported_by_evidence",
+          "evidence_paths": [],
+          "decision_reason": "The candidate claim references specific past conversation details and order code OD188213 for customer [private], but there are no tool calls, sources, or prior conversation evidence to verify this past interaction.",
+          "audit": {
+            "support_status": "not_established",
+            "coverage": "complete",
+            "checked_paths": [
+              "evidence.tool_calls",
+              "evidence.sources",
+              "evidence.promotions"
+            ]
+          }
+        },
+        "candidate_claim": "Em thấy lần trước mình có trao đổi về chương trình thu cũ đổi mới cho sản phẩm máy lọc không khí (đơn hàng OD188213).",
+        "verification_basis": "evidence_inventory_audit",
+        "evidence_inventory": [
+          "evidence.tool_calls",
+          "evidence.sources",
+          "evidence.promotions"
+        ],
+        "lesson_status": "approved"
+      },
+      {
+        "job_id": "e8b1ec7a4d5ccc7005d575724e613818c45309b0c5271211cc96ff9e4102ee87",
+        "message_id": 2,
+        "turn_id": 2,
+        "origin": "turn_detector",
+        "mechanism": "knowledge_gap",
+        "verified": true,
+        "claim": "sản phẩm máy mới trong chương trình thu cũ đổi mới là **Máy lọc không khí AirPure X**",
+        "assessment": "unsupported_by_evidence",
+        "evidence_paths": [],
+        "rejection": null,
+        "rejection_reasons": [],
+        "format_retry": false,
+        "verifier_output": {
+          "valid": true,
+          "issue_scope": "business_knowledge",
+          "claim": "sản phẩm máy mới trong chương trình thu cũ đổi mới là **Máy lọc không khí AirPure X**",
+          "assessment": "unsupported_by_evidence",
+          "evidence_paths": [],
+          "decision_reason": "The catalog search result returned '[private]' as the product name for SKU-AP-X, so claiming the product name is 'Máy lọc không khí AirPure X' is not supported by the evidence.",
+          "audit": {
+            "support_status": "not_established",
+            "coverage": "complete",
+            "checked_paths": [
+              "evidence.tool_calls.0.result",
+              "evidence.tool_calls.1.result",
+              "evidence.tool_calls.2.result",
+              "evidence.tool_calls.3.result",
+              "evidence.sources",
+              "evidence.promotions",
+              "prior_evidence.0.tool_calls",
+              "prior_evidence.0.sources",
+              "prior_evidence.0.promotions"
+            ]
+          }
+        },
+        "candidate_claim": "sản phẩm máy mới trong chương trình thu cũ đổi mới là **Máy lọc không khí AirPure X**",
+        "verification_basis": "evidence_inventory_audit",
+        "evidence_inventory": [
+          "evidence.tool_calls.0.result",
+          "evidence.tool_calls.1.result",
+          "evidence.tool_calls.2.result",
+          "evidence.tool_calls.3.result",
+          "evidence.sources",
+          "evidence.promotions",
+          "prior_evidence.0.tool_calls",
+          "prior_evidence.0.sources",
+          "prior_evidence.0.promotions"
+        ],
+        "lesson_status": "approved"
+      }
+    ],
+    "detector_error": null,
+    "guardrails": {
+      "version": "learning_guardrails_v1",
+      "input_findings": [],
+      "blocked_lessons": [],
+      "blocked_sources": []
+    },
+    "detection": {
+      "candidate_count": 2,
+      "open_question_count": 0,
+      "processed_count": 2,
+      "skipped_unmatched_question": 0,
+      "skipped_over_limit": 0,
+      "scan": {
+        "turns_available": 3,
+        "turns_scanned": 3,
+        "requests": 3,
+        "errors": [],
+        "schema_retries": 0,
+        "skipped_over_limit": 0
+      },
+      "alignment_rejections": []
+    },
+    "outcome": "gaps_processed",
+    "learning_duration_ms": 49170,
+    "learning_usage": {
+      "input_tokens": 10303,
+      "output_tokens": 746
+    }
+  },
+  "artifact_changes": [
+    {
+      "path": "gaps/809e317ccd2eb2a66ff10d73aa8a9b8e167f23901ac9fe090e498c0bd37aed2a.json",
+      "change": "created",
+      "value": {
+        "id": "809e317ccd2eb2a66ff10d73aa8a9b8e167f23901ac9fe090e498c0bd37aed2a",
+        "question": "Đổi size và đổi trả áp dụng điều kiện nào?",
+        "occurrences": [
+          "e8b1ec7a4d5ccc7005d575724e613818c45309b0c5271211cc96ff9e4102ee87"
+        ],
+        "reason": "unsupported_claim",
+        "mechanism": "knowledge_gap",
+        "status": "pending_remediation",
+        "evidence_refs": [
+          {
+            "job_id": "e8b1ec7a4d5ccc7005d575724e613818c45309b0c5271211cc96ff9e4102ee87",
+            "message_id": 0,
+            "turn_id": 1,
+            "origin": "turn_detector"
+          }
+        ],
+        "pattern_ref": "809e317ccd2eb2a66ff10d73aa8a9b8e167f23901ac9fe090e498c0bd37aed2a",
+        "test_refs": [
+          "809e317ccd2eb2a66ff10d73aa8a9b8e167f23901ac9fe090e498c0bd37aed2a"
+        ]
+      }
+    },
+    {
+      "path": "gaps/d9eb9cd68d2cb75188336a8bd59fab7eb5d622a72af20a057a7afc2a3ba4ff19.json",
+      "change": "created",
+      "value": {
+        "id": "d9eb9cd68d2cb75188336a8bd59fab7eb5d622a72af20a057a7afc2a3ba4ff19",
+        "question": "Đổi size và đổi trả áp dụng điều kiện nào?",
+        "occurrences": [
+          "e8b1ec7a4d5ccc7005d575724e613818c45309b0c5271211cc96ff9e4102ee87"
+        ],
+        "reason": "unsupported_claim",
+        "mechanism": "knowledge_gap",
+        "status": "pending_remediation",
+        "evidence_refs": [
+          {
+            "job_id": "e8b1ec7a4d5ccc7005d575724e613818c45309b0c5271211cc96ff9e4102ee87",
+            "message_id": 2,
+            "turn_id": 2,
+            "origin": "turn_detector"
+          }
+        ],
+        "pattern_ref": "d9eb9cd68d2cb75188336a8bd59fab7eb5d622a72af20a057a7afc2a3ba4ff19",
+        "test_refs": [
+          "d9eb9cd68d2cb75188336a8bd59fab7eb5d622a72af20a057a7afc2a3ba4ff19"
+        ]
+      }
+    },
+    {
+      "path": "patterns/809e317ccd2eb2a66ff10d73aa8a9b8e167f23901ac9fe090e498c0bd37aed2a.json",
+      "change": "created",
+      "value": {
+        "id": "809e317ccd2eb2a66ff10d73aa8a9b8e167f23901ac9fe090e498c0bd37aed2a",
+        "reason": "unsupported_claim",
+        "pattern": "Do not state an unverified claim as a fact.",
+        "status": "approved",
+        "scope": "general",
+        "mechanism": "knowledge_gap",
+        "criterion": "Do not state an unverified claim as a fact.",
+        "evidence_refs": [
+          {
+            "job_id": "e8b1ec7a4d5ccc7005d575724e613818c45309b0c5271211cc96ff9e4102ee87",
+            "message_id": 0,
+            "turn_id": 1,
+            "origin": "turn_detector"
+          }
+        ],
+        "assessment": "unsupported_by_evidence",
+        "report_ref": "e8b1ec7a4d5ccc7005d575724e613818c45309b0c5271211cc96ff9e4102ee87",
+        "lesson": {
+          "title": "Verify Prior Order History Before Claiming Past Details",
+          "when": "A customer references a previous interaction or order without prior conversation history or tool evidence provided in context",
+          "do": "Ask for necessary details or check verified source data before stating specific past order numbers or previous discussion details",
+          "otherwise": "Express uncertainty about past interaction details instead of inventing unverified order numbers or previous topics",
+          "triggers": [
+            "tiếp tục phần tư vấn lần trước",
+            "kiểm tra lịch sử đơn hàng cũ",
+            "xác nhận thông tin trao đổi trước"
+          ],
+          "id": "62b31704255689e0a0e9d302ff0dc99126722deddfe71f38a7843aa310652759",
+          "status": "approved",
+          "scope": "general",
+          "mechanism": "knowledge_gap",
+          "source_refs": [
+            {
+              "job_id": "e8b1ec7a4d5ccc7005d575724e613818c45309b0c5271211cc96ff9e4102ee87",
+              "message_id": 0,
+              "turn_id": 1,
+              "origin": "turn_detector"
+            }
+          ],
+          "version": 2
+        },
+        "lesson_path": "lessons\\approved\\62b31704255689e0a0e9d302ff0dc99126722deddfe71f38a7843aa310652759.md",
+        "lesson_hash": "9c522bf9b3655447e3404b8afbd976dd4213afeb1800ad4b527bd9e0c0a645b4"
+      }
+    },
+    {
+      "path": "patterns/d9eb9cd68d2cb75188336a8bd59fab7eb5d622a72af20a057a7afc2a3ba4ff19.json",
+      "change": "created",
+      "value": {
+        "id": "d9eb9cd68d2cb75188336a8bd59fab7eb5d622a72af20a057a7afc2a3ba4ff19",
+        "reason": "unsupported_claim",
+        "pattern": "Do not state an unverified claim as a fact.",
+        "status": "approved",
+        "scope": "general",
+        "mechanism": "knowledge_gap",
+        "criterion": "Do not state an unverified claim as a fact.",
+        "evidence_refs": [
+          {
+            "job_id": "e8b1ec7a4d5ccc7005d575724e613818c45309b0c5271211cc96ff9e4102ee87",
+            "message_id": 2,
+            "turn_id": 2,
+            "origin": "turn_detector"
+          }
+        ],
+        "assessment": "unsupported_by_evidence",
+        "report_ref": "e8b1ec7a4d5ccc7005d575724e613818c45309b0c5271211cc96ff9e4102ee87",
+        "lesson": {
+          "title": "Use Exact Catalog Product Names",
+          "when": "Answering a customer query about product details after performing catalog or tool lookups",
+          "do": "State only the exact product name returned in the verified catalog sources or tool results",
+          "otherwise": "Express uncertainty about the specific product name instead of inferring or inventing one",
+          "triggers": [
+            "confirm product name",
+            "máy mới thu cũ đổi mới",
+            "xác nhận tên sản phẩm"
+          ],
+          "id": "0e7e90c0ebef8ff9c32f68b6dc37e5e29d91f60a2b499f75ecd877036ecf29bb",
+          "status": "approved",
+          "scope": "general",
+          "mechanism": "knowledge_gap",
+          "source_refs": [
+            {
+              "job_id": "e8b1ec7a4d5ccc7005d575724e613818c45309b0c5271211cc96ff9e4102ee87",
+              "message_id": 2,
+              "turn_id": 2,
+              "origin": "turn_detector"
+            }
+          ],
+          "version": 2
+        },
+        "lesson_path": "lessons\\approved\\0e7e90c0ebef8ff9c32f68b6dc37e5e29d91f60a2b499f75ecd877036ecf29bb.md",
+        "lesson_hash": "0b334693cdf926b3101254ee7a690f2a2e7fc1eee39df75bb1acd210c2fa3838"
+      }
+    },
+    {
+      "path": "regression_cases/809e317ccd2eb2a66ff10d73aa8a9b8e167f23901ac9fe090e498c0bd37aed2a.json",
+      "change": "created",
+      "value": {
+        "id": "809e317ccd2eb2a66ff10d73aa8a9b8e167f23901ac9fe090e498c0bd37aed2a",
+        "reason": "unsupported_claim",
+        "pattern": "Do not state an unverified claim as a fact.",
+        "status": "approved",
+        "scope": "general",
+        "mechanism": "knowledge_gap",
+        "criterion": "Do not state an unverified claim as a fact.",
+        "evidence_refs": [
+          {
+            "job_id": "e8b1ec7a4d5ccc7005d575724e613818c45309b0c5271211cc96ff9e4102ee87",
+            "message_id": 0,
+            "turn_id": 1,
+            "origin": "turn_detector"
+          }
+        ],
+        "assessment": "unsupported_by_evidence",
+        "report_ref": "e8b1ec7a4d5ccc7005d575724e613818c45309b0c5271211cc96ff9e4102ee87",
+        "lesson": {
+          "title": "Verify Prior Order History Before Claiming Past Details",
+          "when": "A customer references a previous interaction or order without prior conversation history or tool evidence provided in context",
+          "do": "Ask for necessary details or check verified source data before stating specific past order numbers or previous discussion details",
+          "otherwise": "Express uncertainty about past interaction details instead of inventing unverified order numbers or previous topics",
+          "triggers": [
+            "tiếp tục phần tư vấn lần trước",
+            "kiểm tra lịch sử đơn hàng cũ",
+            "xác nhận thông tin trao đổi trước"
+          ],
+          "id": "62b31704255689e0a0e9d302ff0dc99126722deddfe71f38a7843aa310652759",
+          "status": "approved",
+          "scope": "general",
+          "mechanism": "knowledge_gap",
+          "source_refs": [
+            {
+              "job_id": "e8b1ec7a4d5ccc7005d575724e613818c45309b0c5271211cc96ff9e4102ee87",
+              "message_id": 0,
+              "turn_id": 1,
+              "origin": "turn_detector"
+            }
+          ],
+          "version": 2
+        },
+        "lesson_path": "lessons\\approved\\62b31704255689e0a0e9d302ff0dc99126722deddfe71f38a7843aa310652759.md",
+        "lesson_hash": "9c522bf9b3655447e3404b8afbd976dd4213afeb1800ad4b527bd9e0c0a645b4"
+      }
+    },
+    {
+      "path": "regression_cases/d9eb9cd68d2cb75188336a8bd59fab7eb5d622a72af20a057a7afc2a3ba4ff19.json",
+      "change": "created",
+      "value": {
+        "id": "d9eb9cd68d2cb75188336a8bd59fab7eb5d622a72af20a057a7afc2a3ba4ff19",
+        "reason": "unsupported_claim",
+        "pattern": "Do not state an unverified claim as a fact.",
+        "status": "approved",
+        "scope": "general",
+        "mechanism": "knowledge_gap",
+        "criterion": "Do not state an unverified claim as a fact.",
+        "evidence_refs": [
+          {
+            "job_id": "e8b1ec7a4d5ccc7005d575724e613818c45309b0c5271211cc96ff9e4102ee87",
+            "message_id": 2,
+            "turn_id": 2,
+            "origin": "turn_detector"
+          }
+        ],
+        "assessment": "unsupported_by_evidence",
+        "report_ref": "e8b1ec7a4d5ccc7005d575724e613818c45309b0c5271211cc96ff9e4102ee87",
+        "lesson": {
+          "title": "Use Exact Catalog Product Names",
+          "when": "Answering a customer query about product details after performing catalog or tool lookups",
+          "do": "State only the exact product name returned in the verified catalog sources or tool results",
+          "otherwise": "Express uncertainty about the specific product name instead of inferring or inventing one",
+          "triggers": [
+            "confirm product name",
+            "máy mới thu cũ đổi mới",
+            "xác nhận tên sản phẩm"
+          ],
+          "id": "0e7e90c0ebef8ff9c32f68b6dc37e5e29d91f60a2b499f75ecd877036ecf29bb",
+          "status": "approved",
+          "scope": "general",
+          "mechanism": "knowledge_gap",
+          "source_refs": [
+            {
+              "job_id": "e8b1ec7a4d5ccc7005d575724e613818c45309b0c5271211cc96ff9e4102ee87",
+              "message_id": 2,
+              "turn_id": 2,
+              "origin": "turn_detector"
+            }
+          ],
+          "version": 2
+        },
+        "lesson_path": "lessons\\approved\\0e7e90c0ebef8ff9c32f68b6dc37e5e29d91f60a2b499f75ecd877036ecf29bb.md",
+        "lesson_hash": "0b334693cdf926b3101254ee7a690f2a2e7fc1eee39df75bb1acd210c2fa3838"
+      }
+    },
+    {
+      "path": "lessons/approved/0e7e90c0ebef8ff9c32f68b6dc37e5e29d91f60a2b499f75ecd877036ecf29bb.md",
+      "change": "created",
+      "value": {
+        "content": "---\n{\"do\": \"State only the exact product name returned in the verified catalog sources or tool results\", \"id\": \"0e7e90c0ebef8ff9c32f68b6dc37e5e29d91f60a2b499f75ecd877036ecf29bb\", \"mechanism\": \"knowledge_gap\", \"otherwise\": \"Express uncertainty about the specific product name instead of inferring or inventing one\", \"scope\": \"general\", \"source_refs\": [{\"job_id\": \"e8b1ec7a4d5ccc7005d575724e613818c45309b0c5271211cc96ff9e4102ee87\", \"message_id\": 2, \"origin\": \"turn_detector\", \"turn_id\": 2}], \"status\": \"approved\", \"title\": \"Use Exact Catalog Product Names\", \"triggers\": [\"confirm product name\", \"máy mới thu cũ đổi mới\", \"xác nhận tên sản phẩm\"], \"version\": 2, \"when\": \"Answering a customer query about product details after performing catalog or tool lookups\"}\n---\n\n# Use Exact Catalog Product Names\n\n## When\nAnswering a customer query about product details after performing catalog or tool lookups\n\n## Do\nState only the exact product name returned in the verified catalog sources or tool results\n\n## Otherwise\nExpress uncertainty about the specific product name instead of inferring or inventing one\n"
+      }
+    },
+    {
+      "path": "lessons/approved/62b31704255689e0a0e9d302ff0dc99126722deddfe71f38a7843aa310652759.md",
+      "change": "created",
+      "value": {
+        "content": "---\n{\"do\": \"Ask for necessary details or check verified source data before stating specific past order numbers or previous discussion details\", \"id\": \"62b31704255689e0a0e9d302ff0dc99126722deddfe71f38a7843aa310652759\", \"mechanism\": \"knowledge_gap\", \"otherwise\": \"Express uncertainty about past interaction details instead of inventing unverified order numbers or previous topics\", \"scope\": \"general\", \"source_refs\": [{\"job_id\": \"e8b1ec7a4d5ccc7005d575724e613818c45309b0c5271211cc96ff9e4102ee87\", \"message_id\": 0, \"origin\": \"turn_detector\", \"turn_id\": 1}], \"status\": \"approved\", \"title\": \"Verify Prior Order History Before Claiming Past Details\", \"triggers\": [\"tiếp tục phần tư vấn lần trước\", \"kiểm tra lịch sử đơn hàng cũ\", \"xác nhận thông tin trao đổi trước\"], \"version\": 2, \"when\": \"A customer references a previous interaction or order without prior conversation history or tool evidence provided in context\"}\n---\n\n# Verify Prior Order History Before Claiming Past Details\n\n## When\nA customer references a previous interaction or order without prior conversation history or tool evidence provided in context\n\n## Do\nAsk for necessary details or check verified source data before stating specific past order numbers or previous discussion details\n\n## Otherwise\nExpress uncertainty about past interaction details instead of inventing unverified order numbers or previous topics\n"
+      }
+    }
+  ]
+}

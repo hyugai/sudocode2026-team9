@@ -1,0 +1,46 @@
+{
+  "id": "bda55be5717b7d3239ed44ed484935a5a1c972b3c053ef54f075b1d09c226a45",
+  "reason": "unsupported_claim",
+  "pattern": "Do not state an unverified claim as a fact.",
+  "status": "approved",
+  "scope": "general",
+  "mechanism": "knowledge_gap",
+  "criterion": "Do not state an unverified claim as a fact.",
+  "evidence_refs": [
+    {
+      "job_id": "e844e4ff829fea47ada16ba72038ee522fcdfbe6c0edb91526312914cb2cb382",
+      "message_id": 0,
+      "turn_id": 1,
+      "origin": "turn_detector"
+    }
+  ],
+  "assessment": "unsupported_by_evidence",
+  "report_ref": "e844e4ff829fea47ada16ba72038ee522fcdfbe6c0edb91526312914cb2cb382",
+  "lesson": {
+    "title": "Verify Customer History Before Claiming Prior Consultations",
+    "when": "A customer asks about a previously discussed item or past consultation and the interaction history is not available in verified evidence",
+    "do": "Ask the customer directly to clarify their intended item without making specific product claims",
+    "otherwise": "State clearly that the past consultation details cannot be confirmed right now",
+    "triggers": [
+      "quên lịch sử tư vấn",
+      "hỏi lại món đã cân nhắc",
+      "không có lịch sử Zalo OA",
+      "customer past consultation missing"
+    ],
+    "id": "a53d7897ea5ae7fb18c486d611077ce64ec0c8c7b668037b50d44ae825b2a5f1",
+    "status": "approved",
+    "scope": "general",
+    "mechanism": "knowledge_gap",
+    "source_refs": [
+      {
+        "job_id": "e844e4ff829fea47ada16ba72038ee522fcdfbe6c0edb91526312914cb2cb382",
+        "message_id": 0,
+        "turn_id": 1,
+        "origin": "turn_detector"
+      }
+    ],
+    "version": 2
+  },
+  "lesson_path": "lessons\\approved\\a53d7897ea5ae7fb18c486d611077ce64ec0c8c7b668037b50d44ae825b2a5f1.md",
+  "lesson_hash": "314026bd78147fc85e19ce1ae3ff6dc9b50851204316655cd14ca0dc1040d6c2"
+}

@@ -1,0 +1,138 @@
+{
+  "job_id": "4ae5ad4e262312a18b7effd853628ecb8a4a5acad756039b49676d895161a70d",
+  "gaps": [
+    {
+      "id": "ce363818ce3c9ca75e46ad4040623447282e2d020365f4e20b945371119d3809",
+      "status": "pending_remediation"
+    },
+    {
+      "id": "a1a92860172677ce2cf3285e96de3e49f3a82e8e3aef9576198a235d8448289d",
+      "status": "pending_remediation"
+    }
+  ],
+  "scope": "knowledge_gap_and_reflection_v1",
+  "evaluation_cases": [
+    {
+      "id": "3a2fa51969b6bdf189535b57706a6dc00f896ba032dee4ffe4029f85a7b29226",
+      "gap_id": "ce363818ce3c9ca75e46ad4040623447282e2d020365f4e20b945371119d3809",
+      "turn_id": 1,
+      "question": "Tôi là [private], số điện thoại [private], đang nhắn qua Zalo OA. Anh gọi tiếp về món đã hỏi, về sản phẩm đã hỏi.",
+      "reason": "unsupported_claim",
+      "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments."
+    }
+  ],
+  "out_of_scope": [],
+  "issue_reviews": [
+    {
+      "job_id": "4ae5ad4e262312a18b7effd853628ecb8a4a5acad756039b49676d895161a70d",
+      "message_id": 0,
+      "turn_id": 1,
+      "origin": "turn_detector",
+      "mechanism": "knowledge_gap",
+      "verified": true,
+      "claim": "Em gọi lại cho anh về máy hút sữa (SKU-MB-PUMP1) mà mình đã trao đổi hôm trước đây ạ.",
+      "assessment": "unsupported_by_evidence",
+      "evidence_paths": [],
+      "rejection": null,
+      "rejection_reasons": [],
+      "format_retry": false,
+      "verifier_output": {
+        "valid": true,
+        "issue_scope": "business_knowledge",
+        "claim": "Em gọi lại cho anh về máy hút sữa (SKU-MB-PUMP1) mà mình đã trao đổi hôm trước đây ạ.",
+        "assessment": "unsupported_by_evidence",
+        "evidence_paths": [],
+        "decision_reason": "There is no interaction history or source evidence confirming the customer previously inquired about breast pump SKU-MB-PUMP1.",
+        "audit": {
+          "support_status": "not_established",
+          "coverage": "complete",
+          "checked_paths": [
+            "evidence.tool_calls.0.result",
+            "evidence.tool_calls.1.result",
+            "evidence.sources",
+            "evidence.promotions"
+          ]
+        }
+      },
+      "candidate_claim": "Em gọi lại cho anh về máy hút sữa (SKU-MB-PUMP1) mà mình đã trao đổi hôm trước đây ạ.",
+      "verification_basis": "evidence_inventory_audit",
+      "evidence_inventory": [
+        "evidence.tool_calls.0.result",
+        "evidence.tool_calls.1.result",
+        "evidence.sources",
+        "evidence.promotions"
+      ],
+      "lesson_status": "approved"
+    },
+    {
+      "job_id": "4ae5ad4e262312a18b7effd853628ecb8a4a5acad756039b49676d895161a70d",
+      "message_id": 0,
+      "turn_id": 1,
+      "origin": "turn_detector",
+      "mechanism": "knowledge_gap",
+      "verified": true,
+      "claim": "Lần trước anh có chia sẻ là mua cho người thân và còn thắc mắc về vấn đề sức khỏe.",
+      "assessment": "unsupported_by_evidence",
+      "evidence_paths": [],
+      "rejection": null,
+      "rejection_reasons": [],
+      "format_retry": false,
+      "verifier_output": {
+        "valid": true,
+        "issue_scope": "business_knowledge",
+        "claim": "Lần trước anh có chia sẻ là mua cho người thân và còn thắc mắc về vấn đề sức khỏe.",
+        "assessment": "unsupported_by_evidence",
+        "evidence_paths": [],
+        "decision_reason": "The claim that the customer previously mentioned buying for a relative and having health concerns is not supported by any evidence in the provided evidence_inventory.",
+        "audit": {
+          "support_status": "not_established",
+          "coverage": "complete",
+          "checked_paths": [
+            "evidence.tool_calls.0.result",
+            "evidence.tool_calls.1.result",
+            "evidence.sources",
+            "evidence.promotions"
+          ]
+        }
+      },
+      "candidate_claim": "Lần trước anh có chia sẻ là mua cho người thân và còn thắc mắc về vấn đề sức khỏe.",
+      "verification_basis": "evidence_inventory_audit",
+      "evidence_inventory": [
+        "evidence.tool_calls.0.result",
+        "evidence.tool_calls.1.result",
+        "evidence.sources",
+        "evidence.promotions"
+      ],
+      "lesson_status": "approved"
+    }
+  ],
+  "detector_error": null,
+  "guardrails": {
+    "version": "learning_guardrails_v1",
+    "input_findings": [],
+    "blocked_lessons": [],
+    "blocked_sources": []
+  },
+  "detection": {
+    "candidate_count": 2,
+    "open_question_count": 0,
+    "processed_count": 2,
+    "skipped_unmatched_question": 0,
+    "skipped_over_limit": 0,
+    "scan": {
+      "turns_available": 3,
+      "turns_scanned": 3,
+      "requests": 3,
+      "errors": [],
+      "schema_retries": 0,
+      "skipped_over_limit": 0
+    },
+    "alignment_rejections": []
+  },
+  "outcome": "gaps_processed",
+  "learning_duration_ms": 13988,
+  "learning_usage": {
+    "input_tokens": 17171,
+    "output_tokens": 689
+  }
+}

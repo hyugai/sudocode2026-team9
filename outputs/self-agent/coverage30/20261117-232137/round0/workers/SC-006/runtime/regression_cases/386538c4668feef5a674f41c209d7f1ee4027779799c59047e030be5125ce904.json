@@ -1,0 +1,46 @@
+{
+  "id": "386538c4668feef5a674f41c209d7f1ee4027779799c59047e030be5125ce904",
+  "reason": "unsupported_claim",
+  "pattern": "Do not state an unverified claim as a fact.",
+  "status": "approved",
+  "scope": "general",
+  "mechanism": "knowledge_gap",
+  "criterion": "Do not state an unverified claim as a fact.",
+  "evidence_refs": [
+    {
+      "job_id": "e6d5dcc42d3307cbab859c1c31e8d8d3170887fef1e25f89a41f2f2790132519",
+      "message_id": 0,
+      "turn_id": 1,
+      "origin": "turn_detector"
+    }
+  ],
+  "assessment": "unsupported_by_evidence",
+  "report_ref": "e6d5dcc42d3307cbab859c1c31e8d8d3170887fef1e25f89a41f2f2790132519",
+  "lesson": {
+    "title": "Verify Product Names from Verified Evidence",
+    "when": "a customer refers to a previously discussed item without naming it explicitly and there is no evidence establishing the exact product details",
+    "do": "ask the customer to confirm the specific product name or details before assuming or stating any product identity",
+    "otherwise": "state clearly that the product details are not available in the system context instead of guessing product names",
+    "triggers": [
+      "gọi tiếp về món đã hỏi",
+      "khách hỏi lại món cũ",
+      "unsupported product name",
+      "referencing previous product without context"
+    ],
+    "id": "b3c5394ec732ed77e5c0ace9714e42e935c8f1ded760a87c535aca4365ff098e",
+    "status": "approved",
+    "scope": "general",
+    "mechanism": "knowledge_gap",
+    "source_refs": [
+      {
+        "job_id": "e6d5dcc42d3307cbab859c1c31e8d8d3170887fef1e25f89a41f2f2790132519",
+        "message_id": 0,
+        "turn_id": 1,
+        "origin": "turn_detector"
+      }
+    ],
+    "version": 2
+  },
+  "lesson_path": "lessons\\approved\\b3c5394ec732ed77e5c0ace9714e42e935c8f1ded760a87c535aca4365ff098e.md",
+  "lesson_hash": "bdf01bb453db50e77e3a480afa92057627679f6f5011988610dce7affcfe64d0"
+}

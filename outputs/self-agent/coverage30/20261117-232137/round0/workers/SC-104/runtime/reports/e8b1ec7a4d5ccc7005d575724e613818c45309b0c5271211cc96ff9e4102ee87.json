@@ -1,0 +1,154 @@
+{
+  "job_id": "e8b1ec7a4d5ccc7005d575724e613818c45309b0c5271211cc96ff9e4102ee87",
+  "gaps": [
+    {
+      "id": "809e317ccd2eb2a66ff10d73aa8a9b8e167f23901ac9fe090e498c0bd37aed2a",
+      "status": "pending_remediation"
+    },
+    {
+      "id": "d9eb9cd68d2cb75188336a8bd59fab7eb5d622a72af20a057a7afc2a3ba4ff19",
+      "status": "pending_remediation"
+    }
+  ],
+  "scope": "knowledge_gap_and_reflection_v1",
+  "evaluation_cases": [
+    {
+      "id": "ac05d9caf6724ce375d5208723dd08663d5c90eff2d796459b31215060d27f8f",
+      "gap_id": "809e317ccd2eb2a66ff10d73aa8a9b8e167f23901ac9fe090e498c0bd37aed2a",
+      "turn_id": 1,
+      "question": "Tôi là [private], số điện thoại [private], đang nhắn qua Zalo OA. Chị muốn tiếp tục phần tư vấn lần trước, người nhà đồng ý đổi máy rồi.",
+      "reason": "unsupported_claim",
+      "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments."
+    },
+    {
+      "id": "301cd7cd9d571d1537e0982cef2d835e50fd9043bd8cb22d243e340c51e7246d",
+      "gap_id": "d9eb9cd68d2cb75188336a8bd59fab7eb5d622a72af20a057a7afc2a3ba4ff19",
+      "turn_id": 2,
+      "question": "Em nhắc lại máy mới, giá sau thu cũ đổi mới và dùng địa chỉ [address]",
+      "reason": "unsupported_claim",
+      "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments."
+    }
+  ],
+  "out_of_scope": [],
+  "issue_reviews": [
+    {
+      "job_id": "e8b1ec7a4d5ccc7005d575724e613818c45309b0c5271211cc96ff9e4102ee87",
+      "message_id": 0,
+      "turn_id": 1,
+      "origin": "turn_detector",
+      "mechanism": "knowledge_gap",
+      "verified": true,
+      "claim": "Em thấy lần trước mình có trao đổi về chương trình thu cũ đổi mới cho sản phẩm máy lọc không khí (đơn hàng OD188213).",
+      "assessment": "unsupported_by_evidence",
+      "evidence_paths": [],
+      "rejection": null,
+      "rejection_reasons": [],
+      "format_retry": false,
+      "verifier_output": {
+        "valid": true,
+        "issue_scope": "business_knowledge",
+        "claim": "Em thấy lần trước mình có trao đổi về chương trình thu cũ đổi mới cho sản phẩm máy lọc không khí (đơn hàng OD188213).",
+        "assessment": "unsupported_by_evidence",
+        "evidence_paths": [],
+        "decision_reason": "The candidate claim references specific past conversation details and order code OD188213 for customer [private], but there are no tool calls, sources, or prior conversation evidence to verify this past interaction.",
+        "audit": {
+          "support_status": "not_established",
+          "coverage": "complete",
+          "checked_paths": [
+            "evidence.tool_calls",
+            "evidence.sources",
+            "evidence.promotions"
+          ]
+        }
+      },
+      "candidate_claim": "Em thấy lần trước mình có trao đổi về chương trình thu cũ đổi mới cho sản phẩm máy lọc không khí (đơn hàng OD188213).",
+      "verification_basis": "evidence_inventory_audit",
+      "evidence_inventory": [
+        "evidence.tool_calls",
+        "evidence.sources",
+        "evidence.promotions"
+      ],
+      "lesson_status": "approved"
+    },
+    {
+      "job_id": "e8b1ec7a4d5ccc7005d575724e613818c45309b0c5271211cc96ff9e4102ee87",
+      "message_id": 2,
+      "turn_id": 2,
+      "origin": "turn_detector",
+      "mechanism": "knowledge_gap",
+      "verified": true,
+      "claim": "sản phẩm máy mới trong chương trình thu cũ đổi mới là **Máy lọc không khí AirPure X**",
+      "assessment": "unsupported_by_evidence",
+      "evidence_paths": [],
+      "rejection": null,
+      "rejection_reasons": [],
+      "format_retry": false,
+      "verifier_output": {
+        "valid": true,
+        "issue_scope": "business_knowledge",
+        "claim": "sản phẩm máy mới trong chương trình thu cũ đổi mới là **Máy lọc không khí AirPure X**",
+        "assessment": "unsupported_by_evidence",
+        "evidence_paths": [],
+        "decision_reason": "The catalog search result returned '[private]' as the product name for SKU-AP-X, so claiming the product name is 'Máy lọc không khí AirPure X' is not supported by the evidence.",
+        "audit": {
+          "support_status": "not_established",
+          "coverage": "complete",
+          "checked_paths": [
+            "evidence.tool_calls.0.result",
+            "evidence.tool_calls.1.result",
+            "evidence.tool_calls.2.result",
+            "evidence.tool_calls.3.result",
+            "evidence.sources",
+            "evidence.promotions",
+            "prior_evidence.0.tool_calls",
+            "prior_evidence.0.sources",
+            "prior_evidence.0.promotions"
+          ]
+        }
+      },
+      "candidate_claim": "sản phẩm máy mới trong chương trình thu cũ đổi mới là **Máy lọc không khí AirPure X**",
+      "verification_basis": "evidence_inventory_audit",
+      "evidence_inventory": [
+        "evidence.tool_calls.0.result",
+        "evidence.tool_calls.1.result",
+        "evidence.tool_calls.2.result",
+        "evidence.tool_calls.3.result",
+        "evidence.sources",
+        "evidence.promotions",
+        "prior_evidence.0.tool_calls",
+        "prior_evidence.0.sources",
+        "prior_evidence.0.promotions"
+      ],
+      "lesson_status": "approved"
+    }
+  ],
+  "detector_error": null,
+  "guardrails": {
+    "version": "learning_guardrails_v1",
+    "input_findings": [],
+    "blocked_lessons": [],
+    "blocked_sources": []
+  },
+  "detection": {
+    "candidate_count": 2,
+    "open_question_count": 0,
+    "processed_count": 2,
+    "skipped_unmatched_question": 0,
+    "skipped_over_limit": 0,
+    "scan": {
+      "turns_available": 3,
+      "turns_scanned": 3,
+      "requests": 3,
+      "errors": [],
+      "schema_retries": 0,
+      "skipped_over_limit": 0
+    },
+    "alignment_rejections": []
+  },
+  "outcome": "gaps_processed",
+  "learning_duration_ms": 49170,
+  "learning_usage": {
+    "input_tokens": 10303,
+    "output_tokens": 746
+  }
+}

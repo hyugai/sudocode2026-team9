@@ -1,0 +1,91 @@
+{
+  "job_id": "c822205dd5ce473adbcdf72529e9e10a7b7939074dd960c557990de4d0f0b065",
+  "gaps": [
+    {
+      "id": "bfd7751a56c6c78392017e4ef2219624f9c7ce8c3f919828a01386f58f753598",
+      "status": "pending_remediation"
+    }
+  ],
+  "scope": "knowledge_gap_and_reflection_v1",
+  "evaluation_cases": [
+    {
+      "id": "214c31ce011deea042a298a1b4673b1c278fa0eb3551f0deb0b57dd4b74f0ac0",
+      "gap_id": "bfd7751a56c6c78392017e4ef2219624f9c7ce8c3f919828a01386f58f753598",
+      "turn_id": 1,
+      "question": "Anh liên hệ lại theo lịch, vẫn đang cân nhắc món đã hỏi.",
+      "reason": "unsupported_claim",
+      "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments."
+    }
+  ],
+  "out_of_scope": [],
+  "issue_reviews": [
+    {
+      "job_id": "c822205dd5ce473adbcdf72529e9e10a7b7939074dd960c557990de4d0f0b065",
+      "message_id": 0,
+      "turn_id": 1,
+      "origin": "turn_detector",
+      "mechanism": "knowledge_gap",
+      "verified": true,
+      "claim": "Lần trước mình có tham khảo mẫu áo gió (mã SKU-JK-WND-M-NAVY) và anh còn đang băn khoăn về điều kiện đổi size đúng không ạ?",
+      "assessment": "unsupported_by_evidence",
+      "evidence_paths": [],
+      "rejection": null,
+      "rejection_reasons": [],
+      "format_retry": false,
+      "verifier_output": {
+        "valid": true,
+        "issue_scope": "business_knowledge",
+        "claim": "Lần trước mình có tham khảo mẫu áo gió (mã SKU-JK-WND-M-NAVY) và anh còn đang băn khoăn về điều kiện đổi size đúng không ạ?",
+        "assessment": "unsupported_by_evidence",
+        "evidence_paths": [],
+        "decision_reason": "The agent claims the customer previously inquired about a specific SKU (SKU-JK-WND-M-NAVY) and size exchange conditions, but there are no tool calls, sources, or prior conversation evidence to support this claim.",
+        "audit": {
+          "support_status": "not_established",
+          "coverage": "complete",
+          "checked_paths": [
+            "evidence.tool_calls",
+            "evidence.sources",
+            "evidence.promotions"
+          ]
+        }
+      },
+      "candidate_claim": "Lần trước mình có tham khảo mẫu áo gió (mã SKU-JK-WND-M-NAVY) và anh còn đang băn khoăn về điều kiện đổi size đúng không ạ?",
+      "verification_basis": "evidence_inventory_audit",
+      "evidence_inventory": [
+        "evidence.tool_calls",
+        "evidence.sources",
+        "evidence.promotions"
+      ],
+      "lesson_status": "approved"
+    }
+  ],
+  "detector_error": null,
+  "guardrails": {
+    "version": "learning_guardrails_v1",
+    "input_findings": [],
+    "blocked_lessons": [],
+    "blocked_sources": []
+  },
+  "detection": {
+    "candidate_count": 1,
+    "open_question_count": 0,
+    "processed_count": 1,
+    "skipped_unmatched_question": 0,
+    "skipped_over_limit": 0,
+    "scan": {
+      "turns_available": 4,
+      "turns_scanned": 4,
+      "requests": 4,
+      "errors": [],
+      "schema_retries": 0,
+      "skipped_over_limit": 0
+    },
+    "alignment_rejections": []
+  },
+  "outcome": "gaps_processed",
+  "learning_duration_ms": 12151,
+  "learning_usage": {
+    "input_tokens": 8278,
+    "output_tokens": 390
+  }
+}

@@ -1,0 +1,191 @@
+<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src 'none'; base-uri 'none'; form-action 'none'"><title>Review self-learning</title><style>body{margin:0;background:#f5f2ed;color:#292824;font:16px/1.6 system-ui,sans-serif}main{max-width:1180px;margin:auto;padding:24px}h1,h2,h3{line-height:1.3}article,.box{background:#fffdf9;border:1px solid #ddd7cc;border-radius:12px;padding:18px;margin:16px 0}.columns{display:grid;grid-template-columns:1fr 1fr;gap:18px}.answer{white-space:pre-wrap}mark{background:#fff0a6;color:#292824}del{background:#fbe2df;text-decoration:line-through}.warn{border-left:5px solid #a66b16}.regression{border-left:5px solid #a43131}.improved_resolution{border-left:5px solid #367458}.muted{color:#635f57}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#f3f1eb;padding:12px;border-radius:8px}body,td,p,div,summary{overflow-wrap:anywhere}table{border-collapse:collapse;width:100%}th,td{text-align:left;padding:8px;border-bottom:1px solid #e3ded5;vertical-align:top}summary{cursor:pointer;padding:8px 0}summary:focus-visible,a:focus-visible{outline:3px solid #8c5517}a{color:#754610}nav{display:flex;flex-wrap:wrap;gap:14px}@media(max-width:650px){main{padding:12px}.columns{grid-template-columns:1fr}article,.box{padding:12px}}</style></head><body><main><h1>Review self-learning</h1><p>Học sau khi kết thúc session. Báo cáo dựng từ artifact đã lưu, không gọi thêm LLM.</p><nav><a href="#overview">Tổng quan</a><a href="#turns">Trước / sau</a><a href="#lessons">Lesson</a><a href="#sessions">Học &amp; guardrail</a></nav><section id="overview"><h2>Tổng quan</h2><p class="box warn">Chưa chạy judge: chỉ xem thay đổi câu trả lời và dấu vết lesson, chưa đánh giá cải thiện.</p><p class="box warn">Không có cặp chấm hợp lệ: chưa thể kết luận cải thiện hay không có regression.</p><p><b>0</b> cặp chấm hợp lệ / 0 case được lưu trong comparison. 0/2 lượt trong session được inject.</p><table><tr><th>Phân loại</th><th>Số lượt</th></tr><tr><td>Giải quyết được thêm · cần xác nhận</td><td>0</td></tr><tr><td>Thận trọng hơn · vẫn chưa giải quyết</td><td>0</td></tr><tr><td>Có dấu hiệu regression · cần xác nhận</td><td>0</td></tr><tr><td>Không đổi trạng thái chấm</td><td>0</td></tr><tr><td>Chưa đủ kết quả chấm hợp lệ</td><td>0</td></tr><tr><td>Chưa được judge chấm</td><td>2</td></tr><tr><td>Thiếu một vòng</td><td>0</td></tr><tr><td>Câu hỏi hai vòng khác nhau</td><td>0</td></tr><tr><td>Bị loại khỏi phép so sánh</td><td>0</td></tr></table><details><summary>Phạm vi, nguồn baseline và exclusions</summary><pre>{
+  &quot;evaluation_population&quot;: &quot;single_session_no_baseline&quot;
+}</pre></details><p class="muted">Verdict kiểm tra được reference vẫn cần người đọc xác nhận ngữ nghĩa và độ đầy đủ.</p><p class="muted">Câu trả lời thay đổi hoặc được inject lesson chưa chứng minh lesson gây ra cải thiện.</p><p class="muted">Reflection chưa được chấm chất lượng; learning job done/lesson approved không phải điểm chất lượng.</p><p class="muted">Guardrail mẫu có giới hạn; không phát hiện mẫu không đồng nghĩa không có prompt injection.</p></section><section id="turns"><h2>Cải thiện ở đâu? Đọc từng lượt</h2><h3>Chưa được judge chấm (2)</h3><article id="turn-0" class="not_evaluated"><h3>SC-044/call_3 · lượt 1</h3><p><b>Khách:</b> Anh gọi lần thứ ba rồi. Chốt một chiếc như đã trao đổi nhé.</p><p class="muted">Câu trả lời không đổi/thiếu cặp · Lesson chưa inject.</p><div class="columns"><div><h3>Phiên vừa kết thúc</h3><p><b>Chưa có verdict hợp lệ</b></p><div class="answer">Dạ em cảm ơn anh [private] ạ. Em đã ghi nhận anh chốt lấy 1 chiếc quạt mát SKU-FAN-DC1 với giá 2.450.000đ và thanh toán khi nhận hàng (COD). 
+
+Hiện tại em chỉ còn thiếu địa chỉ [address]</div><details><summary>Claims, trích dẫn và verdict gốc</summary><pre>{
+  &quot;status&quot;: null
+}</pre></details><details><summary>Evidence hiện tại và trước lượt này</summary><pre>{
+  &quot;current&quot;: {
+    &quot;turn_id&quot;: 1,
+    &quot;agent_response&quot;: &quot;Dạ em cảm ơn anh [private] ạ. Em đã ghi nhận anh chốt lấy 1 chiếc quạt mát SKU-FAN-DC1 với giá 2.450.000đ và thanh toán khi nhận hàng (COD). \n\nHiện tại em chỉ còn thiếu địa chỉ [address]&quot;,
+    &quot;tool_calls&quot;: [
+      {
+        &quot;name&quot;: &quot;inventory.check&quot;,
+        &quot;args&quot;: {
+          &quot;sku&quot;: &quot;SKU-FAN-DC1&quot;,
+          &quot;on&quot;: &quot;2026-10-23&quot;
+        },
+        &quot;result&quot;: {
+          &quot;sku&quot;: &quot;SKU-FAN-DC1&quot;,
+          &quot;found&quot;: true,
+          &quot;in_stock&quot;: true,
+          &quot;qty&quot;: 30,
+          &quot;discontinued&quot;: false
+        }
+      },
+      {
+        &quot;name&quot;: &quot;order.status&quot;,
+        &quot;args&quot;: {
+          &quot;customer_phone&quot;: &quot;[private]&quot;
+        },
+        &quot;result&quot;: {
+          &quot;orders&quot;: []
+        }
+      },
+      {
+        &quot;name&quot;: &quot;pricing.get_quote&quot;,
+        &quot;args&quot;: {
+          &quot;on&quot;: &quot;2026-10-23&quot;,
+          &quot;customer_phone&quot;: &quot;[private]&quot;,
+          &quot;customer_id&quot;: &quot;[private]&quot;,
+          &quot;sku&quot;: &quot;SKU-FAN-DC1&quot;,
+          &quot;qty&quot;: 1
+        },
+        &quot;result&quot;: {
+          &quot;sku&quot;: &quot;SKU-FAN-DC1&quot;,
+          &quot;list_price_vnd&quot;: 2450000,
+          &quot;final_price_vnd&quot;: 2450000,
+          &quot;applied_promos&quot;: [
+            {
+              &quot;promo_code&quot;: &quot;COD-0&quot;,
+              &quot;type&quot;: &quot;freecod&quot;,
+              &quot;discount_vnd&quot;: 0
+            }
+          ],
+          &quot;expired_promos&quot;: [],
+          &quot;ineligible_promos&quot;: [
+            {
+              &quot;promo_code&quot;: &quot;NAM-SHIP0&quot;,
+              &quot;reason&quot;: &quot;region&quot;
+            }
+          ],
+          &quot;not_applied_exclusive&quot;: [],
+          &quot;freeship&quot;: true
+        }
+      }
+    ],
+    &quot;sources&quot;: [],
+    &quot;promotions&quot;: []
+  },
+  &quot;earlier&quot;: []
+}</pre></details></div></div><details><summary>Lesson ID, routing, token và injection trace</summary><pre>{}</pre></details></article><article id="turn-1" class="not_evaluated"><h3>SC-044/call_3 · lượt 2</h3><p><b>Khách:</b> Giá 2.450.000 đồng thì anh đồng ý. Địa chỉ [address]</p><p class="muted">Câu trả lời không đổi/thiếu cặp · Lesson chưa inject.</p><div class="columns"><div><h3>Phiên vừa kết thúc</h3><p><b>Chưa có verdict hợp lệ</b></p><div class="answer">Dạ vâng, em đã ghi nhận anh [private] chốt 1 chiếc quạt mát SKU-FAN-DC1 với giá 2.450.000đ và hình thức thanh toán COD rồi ạ. 
+
+Do trong hệ thống của em hiện tại chưa lưu địa chỉ [address]</div><details><summary>Claims, trích dẫn và verdict gốc</summary><pre>{
+  &quot;status&quot;: null
+}</pre></details><details><summary>Evidence hiện tại và trước lượt này</summary><pre>{
+  &quot;current&quot;: {
+    &quot;turn_id&quot;: 2,
+    &quot;agent_response&quot;: &quot;Dạ vâng, em đã ghi nhận anh [private] chốt 1 chiếc quạt mát SKU-FAN-DC1 với giá 2.450.000đ và hình thức thanh toán COD rồi ạ. \n\nDo trong hệ thống của em hiện tại chưa lưu địa chỉ [address]&quot;,
+    &quot;tool_calls&quot;: [],
+    &quot;sources&quot;: [],
+    &quot;promotions&quot;: []
+  },
+  &quot;earlier&quot;: [
+    {
+      &quot;turn_id&quot;: 1,
+      &quot;tool_calls&quot;: [
+        {
+          &quot;name&quot;: &quot;inventory.check&quot;,
+          &quot;args&quot;: {
+            &quot;sku&quot;: &quot;SKU-FAN-DC1&quot;,
+            &quot;on&quot;: &quot;2026-10-23&quot;
+          },
+          &quot;result&quot;: {
+            &quot;sku&quot;: &quot;SKU-FAN-DC1&quot;,
+            &quot;found&quot;: true,
+            &quot;in_stock&quot;: true,
+            &quot;qty&quot;: 30,
+            &quot;discontinued&quot;: false
+          }
+        },
+        {
+          &quot;name&quot;: &quot;order.status&quot;,
+          &quot;args&quot;: {
+            &quot;customer_phone&quot;: &quot;[private]&quot;
+          },
+          &quot;result&quot;: {
+            &quot;orders&quot;: []
+          }
+        },
+        {
+          &quot;name&quot;: &quot;pricing.get_quote&quot;,
+          &quot;args&quot;: {
+            &quot;on&quot;: &quot;2026-10-23&quot;,
+            &quot;customer_phone&quot;: &quot;[private]&quot;,
+            &quot;customer_id&quot;: &quot;[private]&quot;,
+            &quot;sku&quot;: &quot;SKU-FAN-DC1&quot;,
+            &quot;qty&quot;: 1
+          },
+          &quot;result&quot;: {
+            &quot;sku&quot;: &quot;SKU-FAN-DC1&quot;,
+            &quot;list_price_vnd&quot;: 2450000,
+            &quot;final_price_vnd&quot;: 2450000,
+            &quot;applied_promos&quot;: [
+              {
+                &quot;promo_code&quot;: &quot;COD-0&quot;,
+                &quot;type&quot;: &quot;freecod&quot;,
+                &quot;discount_vnd&quot;: 0
+              }
+            ],
+            &quot;expired_promos&quot;: [],
+            &quot;ineligible_promos&quot;: [
+              {
+                &quot;promo_code&quot;: &quot;NAM-SHIP0&quot;,
+                &quot;reason&quot;: &quot;region&quot;
+              }
+            ],
+            &quot;not_applied_exclusive&quot;: [],
+            &quot;freeship&quot;: true
+          }
+        }
+      ],
+      &quot;sources&quot;: [],
+      &quot;promotions&quot;: []
+    }
+  ]
+}</pre></details></div></div><details><summary>Lesson ID, routing, token và injection trace</summary><pre>{}</pre></details></article></section><section id="lessons"><h2>Lesson mới sinh sau session</h2><p>Approved là trạng thái duyệt lesson, chưa chứng minh chất lượng câu trả lời.</p></section><section id="sessions"><h2>Học sau session &amp; guardrail</h2><p>Input finding là cảnh báo mẫu, không phải verdict khách nói sai hoặc bằng chứng tấn công thành công. Run cũ thiếu guardrail trace sẽ được ghi rõ.</p><article><h3>SC-044/call_3</h3><h3>Vòng 1</h3><p>Job: done · Issue xác nhận: 0 · Guardrail: có trace</p><details><summary>Vấn đề, trạng thái học và guardrail chi tiết</summary><pre>{
+  &quot;job&quot;: {
+    &quot;status&quot;: &quot;done&quot;,
+    &quot;job_id&quot;: &quot;fd95da9bce6a2bbdfd469e81ffd1fa0f5d82f1cdebfa61c94d91b61c514f20e0&quot;,
+    &quot;error&quot;: null
+  },
+  &quot;error&quot;: null,
+  &quot;learning&quot;: {
+    &quot;job_id&quot;: &quot;fd95da9bce6a2bbdfd469e81ffd1fa0f5d82f1cdebfa61c94d91b61c514f20e0&quot;,
+    &quot;gaps&quot;: [],
+    &quot;scope&quot;: &quot;knowledge_gap_and_reflection_v1&quot;,
+    &quot;evaluation_cases&quot;: [],
+    &quot;out_of_scope&quot;: [],
+    &quot;issue_reviews&quot;: [],
+    &quot;detector_error&quot;: null,
+    &quot;guardrails&quot;: {
+      &quot;version&quot;: &quot;learning_guardrails_v1&quot;,
+      &quot;input_findings&quot;: [],
+      &quot;blocked_lessons&quot;: [],
+      &quot;blocked_sources&quot;: []
+    },
+    &quot;detection&quot;: {
+      &quot;candidate_count&quot;: 0,
+      &quot;open_question_count&quot;: 0,
+      &quot;processed_count&quot;: 0,
+      &quot;skipped_unmatched_question&quot;: 0,
+      &quot;skipped_over_limit&quot;: 0,
+      &quot;scan&quot;: {
+        &quot;turns_available&quot;: 2,
+        &quot;turns_scanned&quot;: 2,
+        &quot;requests&quot;: 2,
+        &quot;errors&quot;: [],
+        &quot;schema_retries&quot;: 0,
+        &quot;skipped_over_limit&quot;: 0
+      },
+      &quot;alignment_rejections&quot;: []
+    },
+    &quot;outcome&quot;: &quot;no_candidates&quot;,
+    &quot;learning_duration_ms&quot;: 2071,
+    &quot;learning_usage&quot;: {
+      &quot;input_tokens&quot;: 1774,
+      &quot;output_tokens&quot;: 12
+    }
+  },
+  &quot;observed_input_findings&quot;: []
+}</pre></details></article></section></main></body></html>

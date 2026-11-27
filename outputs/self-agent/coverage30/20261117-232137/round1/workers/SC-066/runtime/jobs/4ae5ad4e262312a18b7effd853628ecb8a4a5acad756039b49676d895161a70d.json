@@ -1,0 +1,873 @@
+{
+  "id": "4ae5ad4e262312a18b7effd853628ecb8a4a5acad756039b49676d895161a70d",
+  "status": "done",
+  "attempts": 1,
+  "snapshot": {
+    "session": "9821c0fad07512e0a02821d02cc0ff35c33c28d4917c323f15386c383b663c04",
+    "revision": 3,
+    "messages": [
+      {
+        "message_id": 0,
+        "role": "customer",
+        "content": "Tôi là [private], số điện thoại [private], đang nhắn qua Zalo OA. Anh gọi tiếp về món đã hỏi, về sản phẩm đã hỏi."
+      },
+      {
+        "message_id": 1,
+        "role": "agent",
+        "content": "Em chào anh [private] ạ. Em gọi lại cho anh về máy hút sữa (SKU-MB-PUMP1) mà mình đã trao đổi hôm trước đây ạ. \n\nLần trước anh có chia sẻ là mua cho người thân và còn thắc mắc về vấn đề sức khỏe. Anh có thể chia sẻ cụ thể hơn băn khoăn của mình để em hỗ trợ anh tốt nhất được không ạ?"
+      },
+      {
+        "message_id": 2,
+        "role": "customer",
+        "content": "Tôi đang dùng thuốc kê đơn, dùng máy này có làm thay đổi liều thuốc cần uống không?"
+      },
+      {
+        "message_id": 3,
+        "role": "agent",
+        "content": "Dạ anh [private] ơi, vấn đề liều lượng thuốc kê đơn là thông tin y tế chuyên môn liên quan trực tiếp đến sức khỏe. Để đảm bảo an toàn tuyệt đối cho người thân, em xin phép chuyển thông tin này cho bộ phận chuyên trách/bác sĩ chuyên khoa liên hệ tư vấn kĩ hơn cho anh nhé. \n\nAnh có tiện nghe máy vào thời gian nào để chuyên viên bên em hỗ trợ trực tiếp cho anh không ạ?"
+      },
+      {
+        "message_id": 4,
+        "role": "customer",
+        "content": "Nếu vượt phạm vi tư vấn của shop, em chuyển người phụ trách giúp anh. Nhớ bàn giao sản phẩm, giá và câu hỏi để anh không nói lại."
+      },
+      {
+        "message_id": 5,
+        "role": "agent",
+        "content": "Dạ anh [private] yên tâm, em đã bàn giao đầy đủ thông tin về sản phẩm (SKU-MB-PUMP1), giá 4.290.000đ cùng câu hỏi chuyên môn của anh về việc dùng thuốc kê đơn sang bộ phận chuyên trách rồi ạ. \n\nMã yêu cầu hỗ trợ của anh là TKT-8C9B08D9. Chuyên viên sẽ liên hệ lại để tư vấn chi tiết và an toàn nhất cho anh trong thời gian sớm nhất nhé. Em cảm ơn anh!"
+      }
+    ],
+    "open_questions": [],
+    "feedback": [],
+    "evidence_coverage": "per_turn_evidence",
+    "workflow_version": 4,
+    "turn_evidence": [
+      {
+        "turn_id": 1,
+        "agent_response": "Em chào anh [private] ạ. Em gọi lại cho anh về máy hút sữa (SKU-MB-PUMP1) mà mình đã trao đổi hôm trước đây ạ. \n\nLần trước anh có chia sẻ là mua cho người thân và còn thắc mắc về vấn đề sức khỏe. Anh có thể chia sẻ cụ thể hơn băn khoăn của mình để em hỗ trợ anh tốt nhất được không ạ?",
+        "tool_calls": [
+          {
+            "name": "catalog.search",
+            "args": {
+              "query": "Tôi là [private], số điện thoại [private], đang nhắn qua Zalo OA. Anh gọi tiếp về món đã hỏi, về sản phẩm đã hỏi.",
+              "on": "2026-10-17"
+            },
+            "result": {
+              "items": [],
+              "total": 0
+            }
+          },
+          {
+            "name": "inventory.check",
+            "args": {
+              "on": "2026-10-17",
+              "sku": "SKU-MB-PUMP1"
+            },
+            "result": {
+              "sku": "SKU-MB-PUMP1",
+              "found": true,
+              "in_stock": true,
+              "qty": 6,
+              "discontinued": false
+            }
+          }
+        ],
+        "sources": [],
+        "promotions": []
+      },
+      {
+        "turn_id": 2,
+        "agent_response": "Dạ anh [private] ơi, vấn đề liều lượng thuốc kê đơn là thông tin y tế chuyên môn liên quan trực tiếp đến sức khỏe. Để đảm bảo an toàn tuyệt đối cho người thân, em xin phép chuyển thông tin này cho bộ phận chuyên trách/bác sĩ chuyên khoa liên hệ tư vấn kĩ hơn cho anh nhé. \n\nAnh có tiện nghe máy vào thời gian nào để chuyên viên bên em hỗ trợ trực tiếp cho anh không ạ?",
+        "tool_calls": [
+          {
+            "name": "catalog.search",
+            "args": {
+              "query": "máy",
+              "on": "2026-10-17"
+            },
+            "result": {
+              "items": [
+                {
+                  "sku": "SKU-AP-X",
+                  "name": "[private]",
+                  "category": "gia-dung/may-loc-khong-khi",
+                  "brand": "AirPure",
+                  "list_price_vnd": 4890000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "features": "HEPA H13, cảm biến PM2.5, chế độ ngủ",
+                    "room_area_m2": 25,
+                    "child_safe_lock": false,
+                    "warranty_months": 24
+                  },
+                  "variants": []
+                },
+                {
+                  "sku": "SKU-AP-Y",
+                  "name": "[private]",
+                  "category": "gia-dung/may-loc-khong-khi",
+                  "brand": "AirPure",
+                  "list_price_vnd": 5200000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "features": "HEPA H13 + than hoạt tính, app điều khiển",
+                    "room_area_m2": 30,
+                    "child_safe_lock": true,
+                    "warranty_months": 24
+                  },
+                  "variants": []
+                },
+                {
+                  "sku": "SKU-AP-MINI",
+                  "name": "[private]",
+                  "category": "gia-dung/may-loc-khong-khi",
+                  "brand": "AirPure",
+                  "list_price_vnd": 2190000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "features": "HEPA H11, để bàn",
+                    "room_area_m2": 12,
+                    "child_safe_lock": false,
+                    "warranty_months": 24
+                  },
+                  "variants": []
+                },
+                {
+                  "sku": "SKU-AP-PRO",
+                  "name": "[private]",
+                  "category": "gia-dung/may-loc-khong-khi",
+                  "brand": "AirPure",
+                  "list_price_vnd": 7990000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "features": "HEPA H13, UV, diệt khuẩn",
+                    "room_area_m2": 45,
+                    "child_safe_lock": true,
+                    "warranty_months": 24
+                  },
+                  "variants": []
+                },
+                {
+                  "sku": "SKU-XM-4L",
+                  "name": "[private]",
+                  "category": "gia-dung/may-loc-khong-khi",
+                  "brand": "Xiaomi",
+                  "list_price_vnd": 2990000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "features": "HEPA, app Mi Home",
+                    "room_area_m2": 43,
+                    "child_safe_lock": false,
+                    "warranty_months": 24
+                  },
+                  "variants": []
+                },
+                {
+                  "sku": "SKU-XM-4P",
+                  "name": "[private]",
+                  "category": "gia-dung/may-loc-khong-khi",
+                  "brand": "Xiaomi",
+                  "list_price_vnd": 5490000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "features": "HEPA, màn OLED, app Mi Home",
+                    "room_area_m2": 60,
+                    "child_safe_lock": false,
+                    "warranty_months": 24
+                  },
+                  "variants": []
+                },
+                {
+                  "sku": "SKU-SS-AX40",
+                  "name": "[private]",
+                  "category": "gia-dung/may-loc-khong-khi",
+                  "brand": "Samsung",
+                  "list_price_vnd": 6490000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "features": "HEPA, lọc khử mùi, cảm biến bụi",
+                    "room_area_m2": 40,
+                    "child_safe_lock": true,
+                    "warranty_months": 24
+                  },
+                  "variants": []
+                },
+                {
+                  "sku": "SKU-WF-RO9",
+                  "name": "[private]",
+                  "category": "gia-dung/may-loc-nuoc",
+                  "brand": "Karofi",
+                  "list_price_vnd": 5990000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "stages": 9,
+                    "warranty_months": 36
+                  },
+                  "variants": []
+                },
+                {
+                  "sku": "SKU-WF-RO10",
+                  "name": "[private]",
+                  "category": "gia-dung/may-loc-nuoc",
+                  "brand": "Kangaroo",
+                  "list_price_vnd": 6890000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "stages": 0,
+                    "warranty_months": 36
+                  },
+                  "variants": []
+                },
+                {
+                  "sku": "SKU-WF-UF",
+                  "name": "[private]",
+                  "category": "gia-dung/may-loc-nuoc",
+                  "brand": "Sunhouse",
+                  "list_price_vnd": 3290000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "stages": 5,
+                    "warranty_months": 36
+                  },
+                  "variants": []
+                },
+                {
+                  "sku": "SKU-MB-PUMP1",
+                  "name": "[private]",
+                  "category": "me-be",
+                  "brand": "Spectra",
+                  "list_price_vnd": 4290000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "warranty_months": 12
+                  },
+                  "variants": []
+                },
+                {
+                  "sku": "SKU-MB-PUMP2",
+                  "name": "[private]",
+                  "category": "me-be",
+                  "brand": "Medela",
+                  "list_price_vnd": 5990000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "warranty_months": 12
+                  },
+                  "variants": []
+                },
+                {
+                  "sku": "SKU-MB-MON",
+                  "name": "[private]",
+                  "category": "me-be",
+                  "brand": "Fatz",
+                  "list_price_vnd": 490000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "warranty_months": 12
+                  },
+                  "variants": []
+                },
+                {
+                  "sku": "SKU-MB-STER",
+                  "name": "[private]",
+                  "category": "me-be",
+                  "brand": "Moaz",
+                  "list_price_vnd": 1890000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "warranty_months": 12
+                  },
+                  "variants": []
+                },
+                {
+                  "sku": "SKU-BDL-MOM",
+                  "name": "[private]",
+                  "category": "me-be",
+                  "brand": "Spectra",
+                  "list_price_vnd": 4790000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "bundle_of": [
+                      "SKU-MB-PUMP1",
+                      "SKU-MB-MON",
+                      "SKU-MB-BAG"
+                    ],
+                    "saving_vnd": 109000,
+                    "warranty_months": 12
+                  },
+                  "variants": []
+                }
+              ],
+              "total": 15
+            }
+          },
+          {
+            "name": "inventory.check",
+            "args": {
+              "sku": "SKU-MB-PUMP1"
+            },
+            "result": {
+              "sku": "SKU-MB-PUMP1",
+              "found": true,
+              "in_stock": true,
+              "qty": 6,
+              "discontinued": false
+            }
+          },
+          {
+            "name": "handoff.transfer",
+            "args": {
+              "brief": {
+                "reason": "Khách hàng thắc mắc về việc sử dụng máy hút sữa có làm thay đổi liều thuốc kê đơn đang dùng hay không. Đây là vấn đề y tế/sức khỏe nằm ngoài phạm vi bán lẻ."
+              }
+            },
+            "result": "Error executing tool mcp_escalate_to_human: 1 validation error for mcp_escalate_to_humanArguments\nbrief\n  Field required [type=missing, input_value={'reason': 'Khách hàng ...i phạm vi bán lẻ.'}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.13/v/missing"
+          }
+        ],
+        "sources": [
+          {
+            "sku": "SKU-AP-X",
+            "name": "[private]",
+            "category": "gia-dung/may-loc-khong-khi",
+            "brand": "AirPure",
+            "list_price_vnd": 4890000.0,
+            "discontinued": false,
+            "successor_sku": null,
+            "attributes": {
+              "features": "HEPA H13, cảm biến PM2.5, chế độ ngủ",
+              "room_area_m2": 25,
+              "child_safe_lock": false,
+              "warranty_months": 24
+            },
+            "variants": []
+          },
+          {
+            "sku": "SKU-AP-Y",
+            "name": "[private]",
+            "category": "gia-dung/may-loc-khong-khi",
+            "brand": "AirPure",
+            "list_price_vnd": 5200000.0,
+            "discontinued": false,
+            "successor_sku": null,
+            "attributes": {
+              "features": "HEPA H13 + than hoạt tính, app điều khiển",
+              "room_area_m2": 30,
+              "child_safe_lock": true,
+              "warranty_months": 24
+            },
+            "variants": []
+          },
+          {
+            "sku": "SKU-AP-MINI",
+            "name": "[private]",
+            "category": "gia-dung/may-loc-khong-khi",
+            "brand": "AirPure",
+            "list_price_vnd": 2190000.0,
+            "discontinued": false,
+            "successor_sku": null,
+            "attributes": {
+              "features": "HEPA H11, để bàn",
+              "room_area_m2": 12,
+              "child_safe_lock": false,
+              "warranty_months": 24
+            },
+            "variants": []
+          },
+          {
+            "sku": "SKU-AP-PRO",
+            "name": "[private]",
+            "category": "gia-dung/may-loc-khong-khi",
+            "brand": "AirPure",
+            "list_price_vnd": 7990000.0,
+            "discontinued": false,
+            "successor_sku": null,
+            "attributes": {
+              "features": "HEPA H13, UV, diệt khuẩn",
+              "room_area_m2": 45,
+              "child_safe_lock": true,
+              "warranty_months": 24
+            },
+            "variants": []
+          },
+          {
+            "sku": "SKU-XM-4L",
+            "name": "[private]",
+            "category": "gia-dung/may-loc-khong-khi",
+            "brand": "Xiaomi",
+            "list_price_vnd": 2990000.0,
+            "discontinued": false,
+            "successor_sku": null,
+            "attributes": {
+              "features": "HEPA, app Mi Home",
+              "room_area_m2": 43,
+              "child_safe_lock": false,
+              "warranty_months": 24
+            },
+            "variants": []
+          },
+          {
+            "sku": "SKU-XM-4P",
+            "name": "[private]",
+            "category": "gia-dung/may-loc-khong-khi",
+            "brand": "Xiaomi",
+            "list_price_vnd": 5490000.0,
+            "discontinued": false,
+            "successor_sku": null,
+            "attributes": {
+              "features": "HEPA, màn OLED, app Mi Home",
+              "room_area_m2": 60,
+              "child_safe_lock": false,
+              "warranty_months": 24
+            },
+            "variants": []
+          },
+          {
+            "sku": "SKU-SS-AX40",
+            "name": "[private]",
+            "category": "gia-dung/may-loc-khong-khi",
+            "brand": "Samsung",
+            "list_price_vnd": 6490000.0,
+            "discontinued": false,
+            "successor_sku": null,
+            "attributes": {
+              "features": "HEPA, lọc khử mùi, cảm biến bụi",
+              "room_area_m2": 40,
+              "child_safe_lock": true,
+              "warranty_months": 24
+            },
+            "variants": []
+          },
+          {
+            "sku": "SKU-WF-RO9",
+            "name": "[private]",
+            "category": "gia-dung/may-loc-nuoc",
+            "brand": "Karofi",
+            "list_price_vnd": 5990000.0,
+            "discontinued": false,
+            "successor_sku": null,
+            "attributes": {
+              "stages": 9,
+              "warranty_months": 36
+            },
+            "variants": []
+          },
+          {
+            "sku": "SKU-WF-RO10",
+            "name": "[private]",
+            "category": "gia-dung/may-loc-nuoc",
+            "brand": "Kangaroo",
+            "list_price_vnd": 6890000.0,
+            "discontinued": false,
+            "successor_sku": null,
+            "attributes": {
+              "stages": 0,
+              "warranty_months": 36
+            },
+            "variants": []
+          },
+          {
+            "sku": "SKU-WF-UF",
+            "name": "[private]",
+            "category": "gia-dung/may-loc-nuoc",
+            "brand": "Sunhouse",
+            "list_price_vnd": 3290000.0,
+            "discontinued": false,
+            "successor_sku": null,
+            "attributes": {
+              "stages": 5,
+              "warranty_months": 36
+            },
+            "variants": []
+          },
+          {
+            "sku": "SKU-MB-PUMP1",
+            "name": "[private]",
+            "category": "me-be",
+            "brand": "Spectra",
+            "list_price_vnd": 4290000.0,
+            "discontinued": false,
+            "successor_sku": null,
+            "attributes": {
+              "warranty_months": 12
+            },
+            "variants": []
+          },
+          {
+            "sku": "SKU-MB-PUMP2",
+            "name": "[private]",
+            "category": "me-be",
+            "brand": "Medela",
+            "list_price_vnd": 5990000.0,
+            "discontinued": false,
+            "successor_sku": null,
+            "attributes": {
+              "warranty_months": 12
+            },
+            "variants": []
+          },
+          {
+            "sku": "SKU-MB-MON",
+            "name": "[private]",
+            "category": "me-be",
+            "brand": "Fatz",
+            "list_price_vnd": 490000.0,
+            "discontinued": false,
+            "successor_sku": null,
+            "attributes": {
+              "warranty_months": 12
+            },
+            "variants": []
+          },
+          {
+            "sku": "SKU-MB-STER",
+            "name": "[private]",
+            "category": "me-be",
+            "brand": "Moaz",
+            "list_price_vnd": 1890000.0,
+            "discontinued": false,
+            "successor_sku": null,
+            "attributes": {
+              "warranty_months": 12
+            },
+            "variants": []
+          },
+          {
+            "sku": "SKU-BDL-MOM",
+            "name": "[private]",
+            "category": "me-be",
+            "brand": "Spectra",
+            "list_price_vnd": 4790000.0,
+            "discontinued": false,
+            "successor_sku": null,
+            "attributes": {
+              "bundle_of": [
+                "SKU-MB-PUMP1",
+                "SKU-MB-MON",
+                "SKU-MB-BAG"
+              ],
+              "saving_vnd": 109000,
+              "warranty_months": 12
+            },
+            "variants": []
+          }
+        ],
+        "promotions": []
+      },
+      {
+        "turn_id": 3,
+        "agent_response": "Dạ anh [private] yên tâm, em đã bàn giao đầy đủ thông tin về sản phẩm (SKU-MB-PUMP1), giá 4.290.000đ cùng câu hỏi chuyên môn của anh về việc dùng thuốc kê đơn sang bộ phận chuyên trách rồi ạ. \n\nMã yêu cầu hỗ trợ của anh là TKT-8C9B08D9. Chuyên viên sẽ liên hệ lại để tư vấn chi tiết và an toàn nhất cho anh trong thời gian sớm nhất nhé. Em cảm ơn anh!",
+        "tool_calls": [
+          {
+            "name": "pricing.get_quote",
+            "args": {
+              "on": "2026-10-17",
+              "customer_phone": "[private]",
+              "customer_id": "[private]",
+              "sku": "SKU-MB-PUMP1",
+              "qty": 1
+            },
+            "result": {
+              "sku": "SKU-MB-PUMP1",
+              "list_price_vnd": 4290000,
+              "final_price_vnd": 4290000,
+              "applied_promos": [
+                {
+                  "promo_code": "MOM-FREESHIP",
+                  "type": "freeship",
+                  "discount_vnd": 0
+                },
+                {
+                  "promo_code": "COD-0",
+                  "type": "freecod",
+                  "discount_vnd": 0
+                }
+              ],
+              "expired_promos": [
+                "PUMP-GIFT"
+              ],
+              "ineligible_promos": [],
+              "not_applied_exclusive": [],
+              "freeship": true
+            }
+          },
+          {
+            "name": "handoff.transfer",
+            "args": {
+              "brief": {
+                "customer_id": "[private]",
+                "customer_phone": "[private]",
+                "customer_name": "[private]",
+                "escalation_reason": "cau_hoi_y_te",
+                "conversation_summary": "Khách yêu cầu tư vấn y tế ngoài phạm vi bán hàng. Customer facts: product_advised: SKU-MB-PUMP1, price_vnd: 4290000, price_quoted_vnd: 4290000",
+                "product_advised": "SKU-MB-PUMP1",
+                "price_quoted_vnd": 4290000,
+                "open_questions": [
+                  "Tôi đang dùng thuốc kê đơn, dùng máy này có làm thay đổi liều thuốc cần uống không?"
+                ],
+                "facts_confirmed": {
+                  "product_advised": "SKU-MB-PUMP1",
+                  "price_vnd": 4290000,
+                  "price_quoted_vnd": 4290000,
+                  "promo_code": "MOM-FREESHIP",
+                  "blocker": "mua cho người thân và có vấn đề sức khỏe",
+                  "medical_question": "Tôi đang dùng thuốc kê đơn, dùng máy này có làm thay đổi liều thuốc cần uống không?"
+                },
+                "next_action": "Nhân viên có chuyên môn tiếp nhận và tư vấn an toàn.",
+                "generated_at": "2026-10-17T00:00:00+07:00"
+              }
+            },
+            "result": {
+              "ticket_id": "TKT-8C9B08D9",
+              "status": "queued",
+              "brief_ok": true
+            }
+          }
+        ],
+        "sources": [
+          {
+            "sku": "SKU-AP-X",
+            "name": "[private]",
+            "category": "gia-dung/may-loc-khong-khi",
+            "brand": "AirPure",
+            "list_price_vnd": 4890000.0,
+            "discontinued": false,
+            "successor_sku": null,
+            "attributes": {
+              "features": "HEPA H13, cảm biến PM2.5, chế độ ngủ",
+              "room_area_m2": 25,
+              "child_safe_lock": false,
+              "warranty_months": 24
+            },
+            "variants": []
+          },
+          {
+            "sku": "SKU-AP-Y",
+            "name": "[private]",
+            "category": "gia-dung/may-loc-khong-khi",
+            "brand": "AirPure",
+            "list_price_vnd": 5200000.0,
+            "discontinued": false,
+            "successor_sku": null,
+            "attributes": {
+              "features": "HEPA H13 + than hoạt tính, app điều khiển",
+              "room_area_m2": 30,
+              "child_safe_lock": true,
+              "warranty_months": 24
+            },
+            "variants": []
+          },
+          {
+            "sku": "SKU-AP-MINI",
+            "name": "[private]",
+            "category": "gia-dung/may-loc-khong-khi",
+            "brand": "AirPure",
+            "list_price_vnd": 2190000.0,
+            "discontinued": false,
+            "successor_sku": null,
+            "attributes": {
+              "features": "HEPA H11, để bàn",
+              "room_area_m2": 12,
+              "child_safe_lock": false,
+              "warranty_months": 24
+            },
+            "variants": []
+          },
+          {
+            "sku": "SKU-AP-PRO",
+            "name": "[private]",
+            "category": "gia-dung/may-loc-khong-khi",
+            "brand": "AirPure",
+            "list_price_vnd": 7990000.0,
+            "discontinued": false,
+            "successor_sku": null,
+            "attributes": {
+              "features": "HEPA H13, UV, diệt khuẩn",
+              "room_area_m2": 45,
+              "child_safe_lock": true,
+              "warranty_months": 24
+            },
+            "variants": []
+          },
+          {
+            "sku": "SKU-XM-4L",
+            "name": "[private]",
+            "category": "gia-dung/may-loc-khong-khi",
+            "brand": "Xiaomi",
+            "list_price_vnd": 2990000.0,
+            "discontinued": false,
+            "successor_sku": null,
+            "attributes": {
+              "features": "HEPA, app Mi Home",
+              "room_area_m2": 43,
+              "child_safe_lock": false,
+              "warranty_months": 24
+            },
+            "variants": []
+          },
+          {
+            "sku": "SKU-XM-4P",
+            "name": "[private]",
+            "category": "gia-dung/may-loc-khong-khi",
+            "brand": "Xiaomi",
+            "list_price_vnd": 5490000.0,
+            "discontinued": false,
+            "successor_sku": null,
+            "attributes": {
+              "features": "HEPA, màn OLED, app Mi Home",
+              "room_area_m2": 60,
+              "child_safe_lock": false,
+              "warranty_months": 24
+            },
+            "variants": []
+          },
+          {
+            "sku": "SKU-SS-AX40",
+            "name": "[private]",
+            "category": "gia-dung/may-loc-khong-khi",
+            "brand": "Samsung",
+            "list_price_vnd": 6490000.0,
+            "discontinued": false,
+            "successor_sku": null,
+            "attributes": {
+              "features": "HEPA, lọc khử mùi, cảm biến bụi",
+              "room_area_m2": 40,
+              "child_safe_lock": true,
+              "warranty_months": 24
+            },
+            "variants": []
+          },
+          {
+            "sku": "SKU-WF-RO9",
+            "name": "[private]",
+            "category": "gia-dung/may-loc-nuoc",
+            "brand": "Karofi",
+            "list_price_vnd": 5990000.0,
+            "discontinued": false,
+            "successor_sku": null,
+            "attributes": {
+              "stages": 9,
+              "warranty_months": 36
+            },
+            "variants": []
+          },
+          {
+            "sku": "SKU-WF-RO10",
+            "name": "[private]",
+            "category": "gia-dung/may-loc-nuoc",
+            "brand": "Kangaroo",
+            "list_price_vnd": 6890000.0,
+            "discontinued": false,
+            "successor_sku": null,
+            "attributes": {
+              "stages": 0,
+              "warranty_months": 36
+            },
+            "variants": []
+          },
+          {
+            "sku": "SKU-WF-UF",
+            "name": "[private]",
+            "category": "gia-dung/may-loc-nuoc",
+            "brand": "Sunhouse",
+            "list_price_vnd": 3290000.0,
+            "discontinued": false,
+            "successor_sku": null,
+            "attributes": {
+              "stages": 5,
+              "warranty_months": 36
+            },
+            "variants": []
+          },
+          {
+            "sku": "SKU-MB-PUMP1",
+            "name": "[private]",
+            "category": "me-be",
+            "brand": "Spectra",
+            "list_price_vnd": 4290000.0,
+            "discontinued": false,
+            "successor_sku": null,
+            "attributes": {
+              "warranty_months": 12
+            },
+            "variants": []
+          },
+          {
+            "sku": "SKU-MB-PUMP2",
+            "name": "[private]",
+            "category": "me-be",
+            "brand": "Medela",
+            "list_price_vnd": 5990000.0,
+            "discontinued": false,
+            "successor_sku": null,
+            "attributes": {
+              "warranty_months": 12
+            },
+            "variants": []
+          },
+          {
+            "sku": "SKU-MB-MON",
+            "name": "[private]",
+            "category": "me-be",
+            "brand": "Fatz",
+            "list_price_vnd": 490000.0,
+            "discontinued": false,
+            "successor_sku": null,
+            "attributes": {
+              "warranty_months": 12
+            },
+            "variants": []
+          },
+          {
+            "sku": "SKU-MB-STER",
+            "name": "[private]",
+            "category": "me-be",
+            "brand": "Moaz",
+            "list_price_vnd": 1890000.0,
+            "discontinued": false,
+            "successor_sku": null,
+            "attributes": {
+              "warranty_months": 12
+            },
+            "variants": []
+          },
+          {
+            "sku": "SKU-BDL-MOM",
+            "name": "[private]",
+            "category": "me-be",
+            "brand": "Spectra",
+            "list_price_vnd": 4790000.0,
+            "discontinued": false,
+            "successor_sku": null,
+            "attributes": {
+              "bundle_of": [
+                "SKU-MB-PUMP1",
+                "SKU-MB-MON",
+                "SKU-MB-BAG"
+              ],
+              "saving_vnd": 109000,
+              "warranty_months": 12
+            },
+            "variants": []
+          }
+        ],
+        "promotions": []
+      }
+    ]
+  },
+  "error": null
+}

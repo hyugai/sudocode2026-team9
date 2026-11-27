@@ -1,0 +1,46 @@
+{
+  "id": "02c7a5e0ae4b8b0a4da1b6ae9ad904df8223f9c57d341a481b6c1d45d0b38d41",
+  "reason": "unsupported_claim",
+  "pattern": "Do not state an unverified claim as a fact.",
+  "status": "approved",
+  "scope": "general",
+  "mechanism": "knowledge_gap",
+  "criterion": "Do not state an unverified claim as a fact.",
+  "evidence_refs": [
+    {
+      "job_id": "84db64a7e711d8ba9b346fadf76e7521ef381edabf32c31811fbb7f5ac86f61c",
+      "message_id": 0,
+      "turn_id": 1,
+      "origin": "turn_detector"
+    }
+  ],
+  "assessment": "unsupported_by_evidence",
+  "report_ref": "84db64a7e711d8ba9b346fadf76e7521ef381edabf32c31811fbb7f5ac86f61c",
+  "lesson": {
+    "title": "Express Uncertainty Without System Status Claims",
+    "when": "A customer asks for specific detail or past context that is missing from provided sources or tool results",
+    "do": "State clearly that the information is unavailable in the provided data and express uncertainty without inventing specific system limitation details",
+    "otherwise": "Do not claim that the system lacks specific confirmation records or functionality unless explicitly supported by sources",
+    "triggers": [
+      "unsupported missing information claim",
+      "claiming system status without evidence",
+      "unsupported system limitation statement",
+      "hỏi thông tin không có trong dữ liệu"
+    ],
+    "id": "e839841d39ba8ead00458782103f8efc1ca7f45a5a21fb69a75e661d206e7f56",
+    "status": "approved",
+    "scope": "general",
+    "mechanism": "knowledge_gap",
+    "source_refs": [
+      {
+        "job_id": "84db64a7e711d8ba9b346fadf76e7521ef381edabf32c31811fbb7f5ac86f61c",
+        "message_id": 0,
+        "turn_id": 1,
+        "origin": "turn_detector"
+      }
+    ],
+    "version": 2
+  },
+  "lesson_path": "lessons\\approved\\e839841d39ba8ead00458782103f8efc1ca7f45a5a21fb69a75e661d206e7f56.md",
+  "lesson_hash": "815658651146ef9f2e80375f1a8354150ac994c3c1af0032f8e534a61f26ab6a"
+}

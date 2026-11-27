@@ -1,0 +1,46 @@
+{
+  "id": "463022fc6e28237bb932c9d722c758bc67c90db08be2e6bd1ce5423330f39a07",
+  "reason": "unsupported_claim",
+  "pattern": "Do not state an unverified claim as a fact.",
+  "status": "approved",
+  "scope": "general",
+  "mechanism": "knowledge_gap",
+  "criterion": "Do not state an unverified claim as a fact.",
+  "evidence_refs": [
+    {
+      "job_id": "c5529f86ff40e4de69bc4d48802f3437cc6f256f60ae16397642218adb52aa6b",
+      "message_id": 2,
+      "turn_id": 2,
+      "origin": "turn_detector"
+    }
+  ],
+  "assessment": "unsupported_by_evidence",
+  "report_ref": "c5529f86ff40e4de69bc4d48802f3437cc6f256f60ae16397642218adb52aa6b",
+  "lesson": {
+    "title": "Verify Shopping Cart Contents Before Stating Cart Items",
+    "when": "A customer asks to confirm or check items in their cart, but source evidence does not establish the contents of their cart",
+    "do": "Search and verify the actual cart contents using source tools before claiming specific items are in the cart",
+    "otherwise": "State uncertainty regarding the current cart contents instead of asserting specific products are present",
+    "triggers": [
+      "kiểm tra giỏ hàng",
+      "thông tin giỏ hàng",
+      "xác nhận sản phẩm trong giỏ",
+      "check customer cart"
+    ],
+    "id": "06ff1b4965779534fc63d85a8f5b0897b62bfd328afb826884b3154de024352a",
+    "status": "approved",
+    "scope": "general",
+    "mechanism": "knowledge_gap",
+    "source_refs": [
+      {
+        "job_id": "c5529f86ff40e4de69bc4d48802f3437cc6f256f60ae16397642218adb52aa6b",
+        "message_id": 2,
+        "turn_id": 2,
+        "origin": "turn_detector"
+      }
+    ],
+    "version": 2
+  },
+  "lesson_path": "lessons\\approved\\06ff1b4965779534fc63d85a8f5b0897b62bfd328afb826884b3154de024352a.md",
+  "lesson_hash": "f3289368eb9d320c1b82387913ba3aa5513d8470a2036488c9c5eb3f512173b4"
+}

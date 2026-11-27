@@ -1,0 +1,188 @@
+{
+  "round": 0,
+  "signature": {
+    "tests": "39a166820e4019166c34c80cb00257d57efba52d19d1d5b54b8654244ed16333",
+    "base_instructions": "9d30a7093911a993d8545de8b61cc6dc8465de67b10fb62b27d9f1bafaf0badf",
+    "settings": {
+      "LLM_PROVIDER": "gemini",
+      "LLM_MODEL": "gemini-3.6-flash",
+      "GROQ_MODEL": "",
+      "GEMINI_MODEL": "",
+      "DEEPAGENT_THINKING_LEVEL": "minimal",
+      "DEEPAGENT_CHECKPOINT_SCOPE": "",
+      "KNOWLEDGE_BACKEND": "pinecone",
+      "PINECONE_INDEX_NAME": "policy-telesale",
+      "PINECONE_NAMESPACE": "policy-prod"
+    },
+    "customer_memory": "empty_ram_shared_between_calls_only",
+    "learning_scope": "knowledge_gap_and_reflection_v1",
+    "lesson_runtime": "memory_only_v2"
+  },
+  "applied_patterns": {},
+  "scenario_hashes": {
+    "SC-001": "d4c0fce5b3cca9093b6b5b02419145a444bd85fa5465f4201f9dfcdb4f5f53f7",
+    "SC-003": "def69b07c5fa654ad3f0f1e08cf6b9d599bc08d6c9c0dda8d90fb0c515fd0f12",
+    "SC-006": "6bae43176f02e968c1e34a1ad355e93de958806b9b0b3fae837d8cf8f60b8831",
+    "SC-012": "35160cdb71ea3579f5448c759a6edfd2f57d8ba28527ca25c9b816b50ea97867",
+    "SC-019": "9e4e1b06d1a71d29ec4199579311411a8f4c4fcc73675e0f5f282441c907c935",
+    "SC-021": "e4ef9cc46de26734c973dd14031145eeac2a382a503dd0203c9a1e75694e13bf",
+    "SC-026": "dcf638906da72bbda1f753597cc87592ab0bac1f0239d8bbc6344fbc033e1b44",
+    "SC-031": "39981d9be55b5dcef763c9232340e3e3898d73ef291398c161a9efa5a5f11f0a",
+    "SC-032": "fc24c2451daab088f48c9954fc291bab7d850c362f644656284a29f52f7893da",
+    "SC-041": "01f86c346f7f77910b208d80dac6577cddd4eee1e209fbbe60ad852e3053f637",
+    "SC-044": "5d9d6b2734bf5405d6eb44346f7e7d74c0639e33e52e3e568cea1ed05d618895",
+    "SC-045": "9082485c15e2da6e41e0602eb59487842dfb26cb37aa75aca1e021d3c32dc563",
+    "SC-051": "c69f7ac9426a07c4d98451fedcd97b320b42b121bd37e8da6d3733f4f131ece3",
+    "SC-054": "61c53093896c6863e3d78e59515f46a1676591c673522df8caf5f151844376de",
+    "SC-062": "5a604c9a0d68742fddf202ca444b175e36284555e0aa3ddb2f698a724c7c6668",
+    "SC-066": "3f56f3d4ebb0cf77448fd2a3f4512216ffee0a444cc1602bb55d7ef32215c900",
+    "SC-071": "953df83a1600e5323f85d3f903aa9ee5c4233e6d310803394054d4200fa8f945",
+    "SC-074": "a72e496366ba3368f663e563e07394270a2f7d3cb94c260c0b4016ac83923c1e",
+    "SC-075": "8d6a6062db7b9fa64ee01e55a0d6e5553d1dac43cdaf397c1ae47eb6a9de58ae",
+    "SC-081": "a43f3b393c58f917750131219392e528ab81186bc140ebc15c6cfbf4be81f94c",
+    "SC-084": "4d91e30e1ac37ec6025197f60cde107c7296532121d956b4d9263a3514d21d20",
+    "SC-085": "a25b16461ec964a0c3a88469bbc50d3e477671f264979f39ea58900af5f16d95",
+    "SC-091": "2f43a2b0bacc552927526252d9587447b92da98289eb3bf67bdb2b0a51e5080b",
+    "SC-095": "36da375676a633f20af0b5fcf849f65a190d79fec14d07f63a7557cd0fcc77bc",
+    "SC-101": "754eb734b26d98784c6f60da9b014e497e5668eb74546d1670b567bff7db5a8e",
+    "SC-104": "7f3f1f5078071b0f7aa6e341ef91d16445d21ade09d8e25c2c26e26d7e95435b",
+    "SC-110": "3afaff03c5c488e800e3a7c6bc1bc8541e79965fadaeec3840ba9e3a6e51170e",
+    "SC-111": "ce69d01b3cf8262f14522455e3cae6616be9e8f6a72b072dcd1ed8def0c63e22",
+    "SC-114": "f630cfec8a988d790b1e4b3061db73dd3cbf8efdd4c5950afd94d410646d2d6d",
+    "SC-115": "25c969412cd274a06f5c78dc737eb9f74f6222157ea33fabb30508b17621b400"
+  },
+  "scenario_calls": {
+    "SC-001": [
+      "call_1",
+      "call_2"
+    ],
+    "SC-003": [
+      "call_1",
+      "call_2"
+    ],
+    "SC-006": [
+      "call_1",
+      "call_2"
+    ],
+    "SC-012": [
+      "call_1",
+      "call_2"
+    ],
+    "SC-019": [
+      "call_1",
+      "call_2"
+    ],
+    "SC-021": [
+      "call_1",
+      "call_2"
+    ],
+    "SC-026": [
+      "call_1",
+      "call_2"
+    ],
+    "SC-031": [
+      "call_1",
+      "call_2"
+    ],
+    "SC-032": [
+      "call_1",
+      "call_2"
+    ],
+    "SC-041": [
+      "call_1",
+      "call_2",
+      "call_3"
+    ],
+    "SC-044": [
+      "call_1",
+      "call_2",
+      "call_3"
+    ],
+    "SC-045": [
+      "call_1",
+      "call_2",
+      "call_3"
+    ],
+    "SC-051": [
+      "call_1",
+      "call_2"
+    ],
+    "SC-054": [
+      "call_1",
+      "call_2"
+    ],
+    "SC-062": [
+      "call_1",
+      "call_2"
+    ],
+    "SC-066": [
+      "call_1",
+      "call_2"
+    ],
+    "SC-071": [
+      "call_1",
+      "call_2"
+    ],
+    "SC-074": [
+      "call_1",
+      "call_2"
+    ],
+    "SC-075": [
+      "call_1",
+      "call_2"
+    ],
+    "SC-081": [
+      "call_1",
+      "call_2"
+    ],
+    "SC-084": [
+      "call_1",
+      "call_2"
+    ],
+    "SC-085": [
+      "call_1",
+      "call_2"
+    ],
+    "SC-091": [
+      "call_1",
+      "call_2"
+    ],
+    "SC-095": [
+      "call_1",
+      "call_2"
+    ],
+    "SC-101": [
+      "call_1",
+      "call_2"
+    ],
+    "SC-104": [
+      "call_1",
+      "call_2"
+    ],
+    "SC-110": [
+      "call_1",
+      "call_2"
+    ],
+    "SC-111": [
+      "call_1",
+      "call_2"
+    ],
+    "SC-114": [
+      "call_1",
+      "call_2"
+    ],
+    "SC-115": [
+      "call_1",
+      "call_2"
+    ]
+  },
+  "baseline_excluded_calls": [],
+  "lessons_loaded": false,
+  "lesson_sources": [],
+  "lesson_mechanisms": {},
+  "gap_cases": [],
+  "gap_cases_hash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+  "lesson_files": [],
+  "instruction_hash": "9d30a7093911a993d8545de8b61cc6dc8465de67b10fb62b27d9f1bafaf0badf",
+  "limitations": "External DB/catalog/policy must be kept equivalent by operator."
+}

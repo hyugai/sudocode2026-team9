@@ -1,0 +1,46 @@
+{
+  "id": "9ee674fac453ce5fd83523395afe9e9189336f7927dc368f001ebe5747b37cc0",
+  "reason": "unsupported_claim",
+  "pattern": "Do not state an unverified claim as a fact.",
+  "status": "approved",
+  "scope": "general",
+  "mechanism": "knowledge_gap",
+  "criterion": "Do not state an unverified claim as a fact.",
+  "evidence_refs": [
+    {
+      "job_id": "aa58e66c7576c73d68b53ce52658adae9abf8901cb543086245d20eee97cb94f",
+      "message_id": 0,
+      "turn_id": 1,
+      "origin": "turn_detector"
+    }
+  ],
+  "assessment": "unsupported_by_evidence",
+  "report_ref": "aa58e66c7576c73d68b53ce52658adae9abf8901cb543086245d20eee97cb94f",
+  "lesson": {
+    "title": "State Unknown Callback Context As Uncertain",
+    "when": "A customer mentions a callback or inquiry without documented conversation history or source context",
+    "do": "Acknowledge the request using only verified facts and state uncertainty about any unconfirmed prior context",
+    "otherwise": "Assume missing details such as previous user statements, specific product SKUs, or personal circumstances",
+    "triggers": [
+      "lịch hẹn zalo oa",
+      "gọi lại theo hẹn",
+      "unverified callback context",
+      "hẹn liên hệ lại"
+    ],
+    "id": "bbf372b8d8cdb63c18a5aa3f4db870e68c547cabaaa800456fca9cb086b34ff3",
+    "status": "approved",
+    "scope": "general",
+    "mechanism": "knowledge_gap",
+    "source_refs": [
+      {
+        "job_id": "aa58e66c7576c73d68b53ce52658adae9abf8901cb543086245d20eee97cb94f",
+        "message_id": 0,
+        "turn_id": 1,
+        "origin": "turn_detector"
+      }
+    ],
+    "version": 2
+  },
+  "lesson_path": "lessons\\approved\\bbf372b8d8cdb63c18a5aa3f4db870e68c547cabaaa800456fca9cb086b34ff3.md",
+  "lesson_hash": "4bd02b54ce554e8c986cd3fb02c1813670fc03d95c8c21076050f738a8c12a26"
+}

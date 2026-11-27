@@ -1,0 +1,46 @@
+{
+  "id": "3fba218bf01eb007ab88c0fc5664c289b91c39e641e8ac1fa568c7c8e4e9ed52",
+  "reason": "unsupported_claim",
+  "pattern": "Do not state an unverified claim as a fact.",
+  "status": "approved",
+  "scope": "general",
+  "mechanism": "knowledge_gap",
+  "criterion": "Do not state an unverified claim as a fact.",
+  "evidence_refs": [
+    {
+      "job_id": "9aa6fff7b01d9c4be9a18b024fd3d16b8c977a315d8859213c546ded401a8c91",
+      "message_id": 4,
+      "turn_id": 3,
+      "origin": "turn_detector"
+    }
+  ],
+  "assessment": "unsupported_by_evidence",
+  "report_ref": "9aa6fff7b01d9c4be9a18b024fd3d16b8c977a315d8859213c546ded401a8c91",
+  "lesson": {
+    "title": "Verify product data before confirming cart contents",
+    "when": "a customer requests adding or recording an item in their cart that has not been fetched or validated via catalog or inventory tools",
+    "do": "state that you need to check the product availability or information first before confirming the cart update",
+    "otherwise": "express uncertainty about whether the item is available or can be added",
+    "triggers": [
+      "ghi nhan gio hang san pham moi",
+      "confirm cart item without catalog check",
+      "record cart without tool verification",
+      "unverified cart item"
+    ],
+    "id": "7527dfdf992b78bb583e04572d7377ce600b2e89258a61dbe39a51a95405fb99",
+    "status": "approved",
+    "scope": "general",
+    "mechanism": "knowledge_gap",
+    "source_refs": [
+      {
+        "job_id": "9aa6fff7b01d9c4be9a18b024fd3d16b8c977a315d8859213c546ded401a8c91",
+        "message_id": 4,
+        "turn_id": 3,
+        "origin": "turn_detector"
+      }
+    ],
+    "version": 2
+  },
+  "lesson_path": "lessons\\approved\\7527dfdf992b78bb583e04572d7377ce600b2e89258a61dbe39a51a95405fb99.md",
+  "lesson_hash": "b03eaa0a58086f186441716ce524bb4afa3dc2a8d5775a455179ba118c727d8e"
+}

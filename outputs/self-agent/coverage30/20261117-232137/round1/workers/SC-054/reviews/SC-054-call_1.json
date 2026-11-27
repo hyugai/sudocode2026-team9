@@ -1,0 +1,923 @@
+{
+  "schema_version": 1,
+  "guardrail_version": "learning_guardrails_v1",
+  "metadata": {
+    "evaluation_population": "single_session_no_baseline"
+  },
+  "warnings": [
+    "Chưa chạy judge: chỉ xem thay đổi câu trả lời và dấu vết lesson, chưa đánh giá cải thiện.",
+    "Không có cặp chấm hợp lệ: chưa thể kết luận cải thiện hay không có regression."
+  ],
+  "summary": {
+    "total_turns": 4,
+    "judged_pair_count": 0,
+    "round0_turns": 0,
+    "round1_turns": 4,
+    "stored_frozen_case_count": 0,
+    "injected_turns": 1,
+    "changed_answers": 0,
+    "counts": {
+      "improved_resolution": 0,
+      "safer_unresolved": 0,
+      "regression": 0,
+      "unchanged": 0,
+      "needs_review": 0,
+      "not_evaluated": 4,
+      "unpaired": 0,
+      "question_changed": 0,
+      "excluded": 0
+    }
+  },
+  "rows": [
+    {
+      "call": "SC-054/call_1",
+      "turn_id": 1,
+      "question": "toi la duc, so dien thoai [phone], dang nhan qua fanpage. shop oi, anh muon hoi quat dung dc inverter panasonic f-409.",
+      "baseline_question": null,
+      "classification": "not_evaluated",
+      "case_id": null,
+      "gap_id": null,
+      "answer_changed": false,
+      "injected": false,
+      "lesson_trace": {
+        "lessons_loaded": 25,
+        "selected_lessons": [],
+        "injected": false,
+        "mode": "memory_only",
+        "response_modified": false,
+        "routing": "failed",
+        "routing_error": "ValueError",
+        "routing_ms": 1711.701,
+        "routing_usage": {
+          "input_tokens": 4502,
+          "output_tokens": 1
+        },
+        "wrapper_total_ms": 13623.135
+      },
+      "round0": {
+        "answer": null,
+        "verdict": {
+          "status": null
+        },
+        "latency": null,
+        "evidence": {
+          "current": {},
+          "earlier": []
+        }
+      },
+      "round1": {
+        "answer": "Dạ em chào anh [private]. Quạt đứng DC Inverter Panasonic F-409 bên em hiện đang có sẵn hàng ạ. Quạt chạy động cơ DC Inverter rất tiết kiệm điện, êm ái và được bảo hành chính hãng 12 tháng.\n\nAnh [private] đang muốn tư vấn thêm chi tiết về thông số của dòng quạt này hay mình muốn đặt hàng luôn ạ?",
+        "verdict": {
+          "status": null
+        },
+        "latency": {
+          "ttft_ms": 11910,
+          "total_ms": 11910,
+          "ttfa_ms": null,
+          "measurement_mode": "non_streaming",
+          "timing_boundary": "response_ready_before_persistence",
+          "asr_ms": null,
+          "call_brief_ms": 3951,
+          "response_ready_ms": 11910,
+          "persistence_ms": 0.89,
+          "request_complete_ms": 11911.34,
+          "backend_total_ms": 11911.34,
+          "precomputed_parts": []
+        },
+        "evidence": {
+          "current": {
+            "turn_id": 1,
+            "agent_response": "Dạ em chào anh [private]. Quạt đứng DC Inverter Panasonic F-409 bên em hiện đang có sẵn hàng ạ. Quạt chạy động cơ DC Inverter rất tiết kiệm điện, êm ái và được bảo hành chính hãng 12 tháng.\n\nAnh [private] đang muốn tư vấn thêm chi tiết về thông số của dòng quạt này hay mình muốn đặt hàng luôn ạ?",
+            "tool_calls": [
+              {
+                "name": "catalog.search",
+                "args": {
+                  "query": "quat dung được inverter panasonic f-409",
+                  "on": "2026-10-19"
+                },
+                "result": {
+                  "items": [],
+                  "total": 0
+                }
+              },
+              {
+                "name": "catalog.search",
+                "args": {
+                  "on": "2026-10-19",
+                  "query": "Panasonic F-409"
+                },
+                "result": {
+                  "items": [
+                    {
+                      "sku": "SKU-FAN-DC1",
+                      "name": "[private]",
+                      "category": "gia-dung/quat",
+                      "brand": "Panasonic",
+                      "list_price_vnd": 2450000.0,
+                      "discontinued": false,
+                      "successor_sku": null,
+                      "attributes": {
+                        "warranty_months": 12
+                      },
+                      "variants": []
+                    }
+                  ],
+                  "total": 1
+                }
+              },
+              {
+                "name": "inventory.check",
+                "args": {
+                  "sku": "SKU-FAN-DC1",
+                  "on": "2026-10-19"
+                },
+                "result": {
+                  "sku": "SKU-FAN-DC1",
+                  "found": true,
+                  "in_stock": true,
+                  "qty": 30,
+                  "discontinued": false
+                }
+              }
+            ],
+            "sources": [
+              {
+                "sku": "SKU-FAN-DC1",
+                "name": "[private]",
+                "category": "gia-dung/quat",
+                "brand": "Panasonic",
+                "list_price_vnd": 2450000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "warranty_months": 12
+                },
+                "variants": []
+              }
+            ],
+            "promotions": []
+          },
+          "earlier": []
+        }
+      }
+    },
+    {
+      "call": "SC-054/call_1",
+      "turn_id": 2,
+      "question": "gia 2.450.000 dong dung ko? anh can mot chiec, so dien thoai la [phone].",
+      "baseline_question": null,
+      "classification": "not_evaluated",
+      "case_id": null,
+      "gap_id": null,
+      "answer_changed": false,
+      "injected": false,
+      "lesson_trace": {
+        "lessons_loaded": 25,
+        "selected_lessons": [],
+        "injected": false,
+        "mode": "memory_only",
+        "response_modified": false,
+        "routing": "failed",
+        "routing_error": "ValueError",
+        "routing_ms": 1046.418,
+        "routing_usage": {
+          "input_tokens": 4637,
+          "output_tokens": 1
+        },
+        "wrapper_total_ms": 8488.049
+      },
+      "round0": {
+        "answer": null,
+        "verdict": {
+          "status": null
+        },
+        "latency": null,
+        "evidence": {
+          "current": {},
+          "earlier": []
+        }
+      },
+      "round1": {
+        "answer": "Dạ đúng rồi anh [private] ơi, quạt đứng DC Inverter Panasonic F-409 hiện có giá chính xác là 2.450.000 VNĐ, sản phẩm đang sẵn hàng và được miễn phí vận chuyển ạ.\n\nĐể em hỗ trợ lên đơn cho mình luôn, anh cho em xin địa chỉ [address]",
+        "verdict": {
+          "status": null
+        },
+        "latency": {
+          "ttft_ms": 7441,
+          "total_ms": 7441,
+          "ttfa_ms": null,
+          "measurement_mode": "non_streaming",
+          "timing_boundary": "response_ready_before_persistence",
+          "asr_ms": null,
+          "call_brief_ms": null,
+          "response_ready_ms": 7441,
+          "persistence_ms": 0.126,
+          "request_complete_ms": 7441.543,
+          "backend_total_ms": 7441.543,
+          "precomputed_parts": [
+            "persisted_facts"
+          ]
+        },
+        "evidence": {
+          "current": {
+            "turn_id": 2,
+            "agent_response": "Dạ đúng rồi anh [private] ơi, quạt đứng DC Inverter Panasonic F-409 hiện có giá chính xác là 2.450.000 VNĐ, sản phẩm đang sẵn hàng và được miễn phí vận chuyển ạ.\n\nĐể em hỗ trợ lên đơn cho mình luôn, anh cho em xin địa chỉ [address]",
+            "tool_calls": [
+              {
+                "name": "catalog.search",
+                "args": {
+                  "query": "Giá 2.450.000 dong dung không? anh cần mot chiec, số điện thoại la [private].",
+                  "on": "2026-10-19"
+                },
+                "result": {
+                  "items": [],
+                  "total": 0
+                }
+              },
+              {
+                "name": "inventory.check",
+                "args": {
+                  "sku": "SKU-FAN-DC1",
+                  "on": "2026-10-19"
+                },
+                "result": {
+                  "sku": "SKU-FAN-DC1",
+                  "found": true,
+                  "in_stock": true,
+                  "qty": 30,
+                  "discontinued": false
+                }
+              },
+              {
+                "name": "pricing.get_quote",
+                "args": {
+                  "on": "2026-10-19",
+                  "customer_phone": "[private]",
+                  "customer_id": "[private]",
+                  "sku": "SKU-FAN-DC1",
+                  "qty": 1
+                },
+                "result": {
+                  "sku": "SKU-FAN-DC1",
+                  "list_price_vnd": 2450000,
+                  "final_price_vnd": 2450000,
+                  "applied_promos": [
+                    {
+                      "promo_code": "COD-0",
+                      "type": "freecod",
+                      "discount_vnd": 0
+                    }
+                  ],
+                  "expired_promos": [],
+                  "ineligible_promos": [
+                    {
+                      "promo_code": "NAM-SHIP0",
+                      "reason": "region"
+                    }
+                  ],
+                  "not_applied_exclusive": [],
+                  "freeship": true
+                }
+              }
+            ],
+            "sources": [],
+            "promotions": []
+          },
+          "earlier": [
+            {
+              "turn_id": 1,
+              "tool_calls": [
+                {
+                  "name": "catalog.search",
+                  "args": {
+                    "query": "quat dung được inverter panasonic f-409",
+                    "on": "2026-10-19"
+                  },
+                  "result": {
+                    "items": [],
+                    "total": 0
+                  }
+                },
+                {
+                  "name": "catalog.search",
+                  "args": {
+                    "on": "2026-10-19",
+                    "query": "Panasonic F-409"
+                  },
+                  "result": {
+                    "items": [
+                      {
+                        "sku": "SKU-FAN-DC1",
+                        "name": "[private]",
+                        "category": "gia-dung/quat",
+                        "brand": "Panasonic",
+                        "list_price_vnd": 2450000.0,
+                        "discontinued": false,
+                        "successor_sku": null,
+                        "attributes": {
+                          "warranty_months": 12
+                        },
+                        "variants": []
+                      }
+                    ],
+                    "total": 1
+                  }
+                },
+                {
+                  "name": "inventory.check",
+                  "args": {
+                    "sku": "SKU-FAN-DC1",
+                    "on": "2026-10-19"
+                  },
+                  "result": {
+                    "sku": "SKU-FAN-DC1",
+                    "found": true,
+                    "in_stock": true,
+                    "qty": 30,
+                    "discontinued": false
+                  }
+                }
+              ],
+              "sources": [
+                {
+                  "sku": "SKU-FAN-DC1",
+                  "name": "[private]",
+                  "category": "gia-dung/quat",
+                  "brand": "Panasonic",
+                  "list_price_vnd": 2450000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "warranty_months": 12
+                  },
+                  "variants": []
+                }
+              ],
+              "promotions": []
+            }
+          ]
+        }
+      }
+    },
+    {
+      "call": "SC-054/call_1",
+      "turn_id": 3,
+      "question": "toi thay ban chinh sach thang 6 ghi doi tra trong 14 ngay. voi don moi dat tu thang 10/2026, hang con nguyen tem va ko co loi ky thuat, thoi han thong thuong thuc te la bao nhieu ngay? hay noi ro moc hien hanh truoc khi tiep tuc yeu cau chinh cua toi.",
+      "baseline_question": null,
+      "classification": "not_evaluated",
+      "case_id": null,
+      "gap_id": null,
+      "answer_changed": false,
+      "injected": false,
+      "lesson_trace": {
+        "lessons_loaded": 25,
+        "selected_lessons": [],
+        "injected": false,
+        "mode": "memory_only",
+        "response_modified": false,
+        "routing": "no_match",
+        "routing_ms": 2463.96,
+        "routing_usage": {
+          "input_tokens": 5514,
+          "output_tokens": 12
+        },
+        "wrapper_total_ms": 8495.724
+      },
+      "round0": {
+        "answer": null,
+        "verdict": {
+          "status": null
+        },
+        "latency": null,
+        "evidence": {
+          "current": {},
+          "earlier": []
+        }
+      },
+      "round1": {
+        "answer": "Dạ anh [private] ơi, theo chính sách hiện hành áp dụng từ ngày 01/10/2026, đối với các đơn hàng mới phát sinh từ tháng 10/2026, thời hạn đổi trả sản phẩm thông thường (còn nguyên tem, không có lỗi kỹ thuật) là **7 ngày** kể từ ngày anh nhận hàng ạ.\n\nAnh có thể cung cấp thêm địa chỉ [address]",
+        "verdict": {
+          "status": null
+        },
+        "latency": {
+          "ttft_ms": 6032,
+          "total_ms": 6032,
+          "ttfa_ms": null,
+          "measurement_mode": "non_streaming",
+          "timing_boundary": "response_ready_before_persistence",
+          "asr_ms": null,
+          "call_brief_ms": null,
+          "response_ready_ms": 6032,
+          "persistence_ms": 0.092,
+          "request_complete_ms": 6031.642,
+          "backend_total_ms": 6031.642,
+          "precomputed_parts": [
+            "persisted_facts"
+          ]
+        },
+        "evidence": {
+          "current": {
+            "turn_id": 3,
+            "agent_response": "Dạ anh [private] ơi, theo chính sách hiện hành áp dụng từ ngày 01/10/2026, đối với các đơn hàng mới phát sinh từ tháng 10/2026, thời hạn đổi trả sản phẩm thông thường (còn nguyên tem, không có lỗi kỹ thuật) là **7 ngày** kể từ ngày anh nhận hàng ạ.\n\nAnh có thể cung cấp thêm địa chỉ [address]",
+            "tool_calls": [
+              {
+                "name": "policy.search",
+                "args": {
+                  "query": "Tôi thay ban chính sách thang 6 ghi đổi trả trong 14 ngay. với don moi dat tu thang 10/2026, hang con nguyen tem và không co loi ky thuat, thoi han thong thuong thuc te la bao nhiêu ngay? hay noi ro moc hien hanh truoc khi tiep tuc yeu cau chinh của tôi.",
+                  "k": 3,
+                  "product_sku": "SKU-FAN-DC1",
+                  "as_of": "2026-10-19"
+                },
+                "result": {
+                  "query": "Tôi thay ban chính sách thang 6 ghi đổi trả trong 14 ngay. với don moi dat tu thang 10/2026, hang con nguyen tem và không co loi ky thuat, thoi han thong thuong thuc te la bao nhiêu ngay? hay noi ro moc hien hanh truoc khi tiep tuc yeu cau chinh của tôi.",
+                  "as_of": "2026-10-19",
+                  "product_sku": "SKU-FAN-DC1",
+                  "count": 3,
+                  "chunks": [
+                    {
+                      "chunk_id": "CL-01",
+                      "content": "Thay thế phiên bản 2026-06. Thay đổi: thời hạn đổi trả 14 → **7 ngày**; đổi size lần đầu **miễn phí** (trước: 20.000đ); hoàn tiền 7 → **3–5 ngày làm việc**; lỗi nhà sản xuất đổi mới 15 → **30 ngày** (gia dụng, mẹ & bé). Đơn tạo trước 01/10/2026 vẫn áp dụng bản cũ.",
+                      "source_file": "changelog.md",
+                      "section": "[CL-01] 01/10/2026 — Chính sách đổi trả phiên bản 2026-10"
+                    },
+                    {
+                      "chunk_id": "BH-01",
+                      "content": "Máy lọc không khí AirPure, Samsung: **24 tháng**. Máy lọc không khí Xiaomi: 12 tháng. Máy lọc nước RO Karofi, Kangaroo: **36 tháng** (thân máy), lõi lọc không bảo hành. Quạt, nồi chiên không dầu: 12 tháng. Máy hút sữa, máy tiệt trùng, xe đẩy, ghế ô tô: 12 tháng. Giày, áo khoác: không bảo hành, chỉ áp dụng đổi trả 7 ngày. Thời hạn cụ thể của từng SKU ghi trong `attributes.warranty_months` của catalog — **catalog là nguồn ưu tiên** nếu có khác biệt.",
+                      "source_file": "chinh-sach-bao-hanh.md",
+                      "section": "[BH-01] Thời hạn bảo hành theo nhóm hàng"
+                    },
+                    {
+                      "chunk_id": "DT-01",
+                      "content": "Khách hàng được đổi hoặc trả sản phẩm trong vòng **7 ngày** kể từ ngày nhận hàng (tính theo ngày ký nhận trên đơn vận chuyển). Với ngành hàng gia dụng và mẹ & bé có lỗi kỹ thuật từ nhà sản xuất, thời hạn đổi mới là **30 ngày**.",
+                      "source_file": "chinh-sach-doi-tra.md",
+                      "section": "[DT-01] Thời hạn đổi trả"
+                    }
+                  ]
+                }
+              }
+            ],
+            "sources": [],
+            "promotions": []
+          },
+          "earlier": [
+            {
+              "turn_id": 1,
+              "tool_calls": [
+                {
+                  "name": "catalog.search",
+                  "args": {
+                    "query": "quat dung được inverter panasonic f-409",
+                    "on": "2026-10-19"
+                  },
+                  "result": {
+                    "items": [],
+                    "total": 0
+                  }
+                },
+                {
+                  "name": "catalog.search",
+                  "args": {
+                    "on": "2026-10-19",
+                    "query": "Panasonic F-409"
+                  },
+                  "result": {
+                    "items": [
+                      {
+                        "sku": "SKU-FAN-DC1",
+                        "name": "[private]",
+                        "category": "gia-dung/quat",
+                        "brand": "Panasonic",
+                        "list_price_vnd": 2450000.0,
+                        "discontinued": false,
+                        "successor_sku": null,
+                        "attributes": {
+                          "warranty_months": 12
+                        },
+                        "variants": []
+                      }
+                    ],
+                    "total": 1
+                  }
+                },
+                {
+                  "name": "inventory.check",
+                  "args": {
+                    "sku": "SKU-FAN-DC1",
+                    "on": "2026-10-19"
+                  },
+                  "result": {
+                    "sku": "SKU-FAN-DC1",
+                    "found": true,
+                    "in_stock": true,
+                    "qty": 30,
+                    "discontinued": false
+                  }
+                }
+              ],
+              "sources": [
+                {
+                  "sku": "SKU-FAN-DC1",
+                  "name": "[private]",
+                  "category": "gia-dung/quat",
+                  "brand": "Panasonic",
+                  "list_price_vnd": 2450000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "warranty_months": 12
+                  },
+                  "variants": []
+                }
+              ],
+              "promotions": []
+            },
+            {
+              "turn_id": 2,
+              "tool_calls": [
+                {
+                  "name": "catalog.search",
+                  "args": {
+                    "query": "Giá 2.450.000 dong dung không? anh cần mot chiec, số điện thoại la [private].",
+                    "on": "2026-10-19"
+                  },
+                  "result": {
+                    "items": [],
+                    "total": 0
+                  }
+                },
+                {
+                  "name": "inventory.check",
+                  "args": {
+                    "sku": "SKU-FAN-DC1",
+                    "on": "2026-10-19"
+                  },
+                  "result": {
+                    "sku": "SKU-FAN-DC1",
+                    "found": true,
+                    "in_stock": true,
+                    "qty": 30,
+                    "discontinued": false
+                  }
+                },
+                {
+                  "name": "pricing.get_quote",
+                  "args": {
+                    "on": "2026-10-19",
+                    "customer_phone": "[private]",
+                    "customer_id": "[private]",
+                    "sku": "SKU-FAN-DC1",
+                    "qty": 1
+                  },
+                  "result": {
+                    "sku": "SKU-FAN-DC1",
+                    "list_price_vnd": 2450000,
+                    "final_price_vnd": 2450000,
+                    "applied_promos": [
+                      {
+                        "promo_code": "COD-0",
+                        "type": "freecod",
+                        "discount_vnd": 0
+                      }
+                    ],
+                    "expired_promos": [],
+                    "ineligible_promos": [
+                      {
+                        "promo_code": "NAM-SHIP0",
+                        "reason": "region"
+                      }
+                    ],
+                    "not_applied_exclusive": [],
+                    "freeship": true
+                  }
+                }
+              ],
+              "sources": [],
+              "promotions": []
+            }
+          ]
+        }
+      }
+    },
+    {
+      "call": "SC-054/call_1",
+      "turn_id": 4,
+      "question": "anh se goi hotline sau, chua dat nhe.",
+      "baseline_question": null,
+      "classification": "not_evaluated",
+      "case_id": null,
+      "gap_id": null,
+      "answer_changed": false,
+      "injected": true,
+      "lesson_trace": {
+        "lessons_loaded": 25,
+        "selected_lessons": [
+          {
+            "id": "2428465dd6aebd918b246b218ea61f077e2a4a03ca7a10bb6c10ca1cd078d1a6",
+            "hash": "a6ef6e56d1a0afa44afce603254ba8380a79684f4316ec30047adabc7375818d",
+            "mechanism": "knowledge_gap"
+          }
+        ],
+        "injected": true,
+        "mode": "memory_only",
+        "response_modified": false,
+        "routing": "selected",
+        "routing_ms": 2458.023,
+        "routing_usage": {
+          "input_tokens": 5480,
+          "output_tokens": 69
+        },
+        "guardrails": {
+          "version": "learning_guardrails_v1",
+          "blocked_lessons": []
+        },
+        "injected_chars": 892,
+        "injected_lesson_count": 1,
+        "wrapper_total_ms": 5627.099
+      },
+      "round0": {
+        "answer": null,
+        "verdict": {
+          "status": null
+        },
+        "latency": null,
+        "evidence": {
+          "current": {},
+          "earlier": []
+        }
+      },
+      "round1": {
+        "answer": "Dạ em cảm ơn anh [private]. Em đã ghi nhận thông tin và sẽ chưa đặt đơn cho mình ạ. Khi nào rảnh anh cứ gọi lại qua hotline để bên em hỗ trợ anh lên đơn nhé. Em chúc anh một ngày tốt lành!",
+        "verdict": {
+          "status": null
+        },
+        "latency": {
+          "ttft_ms": 3169,
+          "total_ms": 3169,
+          "ttfa_ms": null,
+          "measurement_mode": "non_streaming",
+          "timing_boundary": "response_ready_before_persistence",
+          "asr_ms": null,
+          "call_brief_ms": null,
+          "response_ready_ms": 3169,
+          "persistence_ms": 0.093,
+          "request_complete_ms": 3168.97,
+          "backend_total_ms": 3168.97,
+          "precomputed_parts": [
+            "persisted_facts"
+          ]
+        },
+        "evidence": {
+          "current": {
+            "turn_id": 4,
+            "agent_response": "Dạ em cảm ơn anh [private]. Em đã ghi nhận thông tin và sẽ chưa đặt đơn cho mình ạ. Khi nào rảnh anh cứ gọi lại qua hotline để bên em hỗ trợ anh lên đơn nhé. Em chúc anh một ngày tốt lành!",
+            "tool_calls": [],
+            "sources": [],
+            "promotions": []
+          },
+          "earlier": [
+            {
+              "turn_id": 1,
+              "tool_calls": [
+                {
+                  "name": "catalog.search",
+                  "args": {
+                    "query": "quat dung được inverter panasonic f-409",
+                    "on": "2026-10-19"
+                  },
+                  "result": {
+                    "items": [],
+                    "total": 0
+                  }
+                },
+                {
+                  "name": "catalog.search",
+                  "args": {
+                    "on": "2026-10-19",
+                    "query": "Panasonic F-409"
+                  },
+                  "result": {
+                    "items": [
+                      {
+                        "sku": "SKU-FAN-DC1",
+                        "name": "[private]",
+                        "category": "gia-dung/quat",
+                        "brand": "Panasonic",
+                        "list_price_vnd": 2450000.0,
+                        "discontinued": false,
+                        "successor_sku": null,
+                        "attributes": {
+                          "warranty_months": 12
+                        },
+                        "variants": []
+                      }
+                    ],
+                    "total": 1
+                  }
+                },
+                {
+                  "name": "inventory.check",
+                  "args": {
+                    "sku": "SKU-FAN-DC1",
+                    "on": "2026-10-19"
+                  },
+                  "result": {
+                    "sku": "SKU-FAN-DC1",
+                    "found": true,
+                    "in_stock": true,
+                    "qty": 30,
+                    "discontinued": false
+                  }
+                }
+              ],
+              "sources": [
+                {
+                  "sku": "SKU-FAN-DC1",
+                  "name": "[private]",
+                  "category": "gia-dung/quat",
+                  "brand": "Panasonic",
+                  "list_price_vnd": 2450000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "warranty_months": 12
+                  },
+                  "variants": []
+                }
+              ],
+              "promotions": []
+            },
+            {
+              "turn_id": 2,
+              "tool_calls": [
+                {
+                  "name": "catalog.search",
+                  "args": {
+                    "query": "Giá 2.450.000 dong dung không? anh cần mot chiec, số điện thoại la [private].",
+                    "on": "2026-10-19"
+                  },
+                  "result": {
+                    "items": [],
+                    "total": 0
+                  }
+                },
+                {
+                  "name": "inventory.check",
+                  "args": {
+                    "sku": "SKU-FAN-DC1",
+                    "on": "2026-10-19"
+                  },
+                  "result": {
+                    "sku": "SKU-FAN-DC1",
+                    "found": true,
+                    "in_stock": true,
+                    "qty": 30,
+                    "discontinued": false
+                  }
+                },
+                {
+                  "name": "pricing.get_quote",
+                  "args": {
+                    "on": "2026-10-19",
+                    "customer_phone": "[private]",
+                    "customer_id": "[private]",
+                    "sku": "SKU-FAN-DC1",
+                    "qty": 1
+                  },
+                  "result": {
+                    "sku": "SKU-FAN-DC1",
+                    "list_price_vnd": 2450000,
+                    "final_price_vnd": 2450000,
+                    "applied_promos": [
+                      {
+                        "promo_code": "COD-0",
+                        "type": "freecod",
+                        "discount_vnd": 0
+                      }
+                    ],
+                    "expired_promos": [],
+                    "ineligible_promos": [
+                      {
+                        "promo_code": "NAM-SHIP0",
+                        "reason": "region"
+                      }
+                    ],
+                    "not_applied_exclusive": [],
+                    "freeship": true
+                  }
+                }
+              ],
+              "sources": [],
+              "promotions": []
+            },
+            {
+              "turn_id": 3,
+              "tool_calls": [
+                {
+                  "name": "policy.search",
+                  "args": {
+                    "query": "Tôi thay ban chính sách thang 6 ghi đổi trả trong 14 ngay. với don moi dat tu thang 10/2026, hang con nguyen tem và không co loi ky thuat, thoi han thong thuong thuc te la bao nhiêu ngay? hay noi ro moc hien hanh truoc khi tiep tuc yeu cau chinh của tôi.",
+                    "k": 3,
+                    "product_sku": "SKU-FAN-DC1",
+                    "as_of": "2026-10-19"
+                  },
+                  "result": {
+                    "query": "Tôi thay ban chính sách thang 6 ghi đổi trả trong 14 ngay. với don moi dat tu thang 10/2026, hang con nguyen tem và không co loi ky thuat, thoi han thong thuong thuc te la bao nhiêu ngay? hay noi ro moc hien hanh truoc khi tiep tuc yeu cau chinh của tôi.",
+                    "as_of": "2026-10-19",
+                    "product_sku": "SKU-FAN-DC1",
+                    "count": 3,
+                    "chunks": [
+                      {
+                        "chunk_id": "CL-01",
+                        "content": "Thay thế phiên bản 2026-06. Thay đổi: thời hạn đổi trả 14 → **7 ngày**; đổi size lần đầu **miễn phí** (trước: 20.000đ); hoàn tiền 7 → **3–5 ngày làm việc**; lỗi nhà sản xuất đổi mới 15 → **30 ngày** (gia dụng, mẹ & bé). Đơn tạo trước 01/10/2026 vẫn áp dụng bản cũ.",
+                        "source_file": "changelog.md",
+                        "section": "[CL-01] 01/10/2026 — Chính sách đổi trả phiên bản 2026-10"
+                      },
+                      {
+                        "chunk_id": "BH-01",
+                        "content": "Máy lọc không khí AirPure, Samsung: **24 tháng**. Máy lọc không khí Xiaomi: 12 tháng. Máy lọc nước RO Karofi, Kangaroo: **36 tháng** (thân máy), lõi lọc không bảo hành. Quạt, nồi chiên không dầu: 12 tháng. Máy hút sữa, máy tiệt trùng, xe đẩy, ghế ô tô: 12 tháng. Giày, áo khoác: không bảo hành, chỉ áp dụng đổi trả 7 ngày. Thời hạn cụ thể của từng SKU ghi trong `attributes.warranty_months` của catalog — **catalog là nguồn ưu tiên** nếu có khác biệt.",
+                        "source_file": "chinh-sach-bao-hanh.md",
+                        "section": "[BH-01] Thời hạn bảo hành theo nhóm hàng"
+                      },
+                      {
+                        "chunk_id": "DT-01",
+                        "content": "Khách hàng được đổi hoặc trả sản phẩm trong vòng **7 ngày** kể từ ngày nhận hàng (tính theo ngày ký nhận trên đơn vận chuyển). Với ngành hàng gia dụng và mẹ & bé có lỗi kỹ thuật từ nhà sản xuất, thời hạn đổi mới là **30 ngày**.",
+                        "source_file": "chinh-sach-doi-tra.md",
+                        "section": "[DT-01] Thời hạn đổi trả"
+                      }
+                    ]
+                  }
+                }
+              ],
+              "sources": [],
+              "promotions": []
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "lessons": [],
+  "sessions": [
+    {
+      "call": "SC-054/call_1",
+      "round0": {
+        "job": null,
+        "error": null,
+        "learning": null,
+        "observed_input_findings": []
+      },
+      "round1": {
+        "job": {
+          "status": "done",
+          "job_id": "2576738ea3ddb77cdae53ac56a3675bf3d914f8f4e33e4629b16dff88e57069e",
+          "error": null
+        },
+        "error": null,
+        "learning": {
+          "job_id": "2576738ea3ddb77cdae53ac56a3675bf3d914f8f4e33e4629b16dff88e57069e",
+          "gaps": [],
+          "scope": "knowledge_gap_and_reflection_v1",
+          "evaluation_cases": [],
+          "out_of_scope": [],
+          "issue_reviews": [],
+          "detector_error": null,
+          "guardrails": {
+            "version": "learning_guardrails_v1",
+            "input_findings": [],
+            "blocked_lessons": [],
+            "blocked_sources": []
+          },
+          "detection": {
+            "candidate_count": 0,
+            "open_question_count": 0,
+            "processed_count": 0,
+            "skipped_unmatched_question": 0,
+            "skipped_over_limit": 0,
+            "scan": {
+              "turns_available": 4,
+              "turns_scanned": 4,
+              "requests": 4,
+              "errors": [],
+              "schema_retries": 0,
+              "skipped_over_limit": 0
+            },
+            "alignment_rejections": []
+          },
+          "outcome": "no_candidates",
+          "learning_duration_ms": 4579,
+          "learning_usage": {
+            "input_tokens": 7250,
+            "output_tokens": 14
+          }
+        },
+        "observed_input_findings": []
+      }
+    }
+  ],
+  "limitations": [
+    "Verdict kiểm tra được reference vẫn cần người đọc xác nhận ngữ nghĩa và độ đầy đủ.",
+    "Câu trả lời thay đổi hoặc được inject lesson chưa chứng minh lesson gây ra cải thiện.",
+    "Reflection chưa được chấm chất lượng; learning job done/lesson approved không phải điểm chất lượng.",
+    "Guardrail mẫu có giới hạn; không phát hiện mẫu không đồng nghĩa không có prompt injection."
+  ]
+}

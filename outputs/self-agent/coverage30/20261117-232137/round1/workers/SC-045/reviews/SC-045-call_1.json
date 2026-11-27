@@ -1,0 +1,978 @@
+{
+  "schema_version": 1,
+  "guardrail_version": "learning_guardrails_v1",
+  "metadata": {
+    "evaluation_population": "single_session_no_baseline"
+  },
+  "warnings": [
+    "Chưa chạy judge: chỉ xem thay đổi câu trả lời và dấu vết lesson, chưa đánh giá cải thiện.",
+    "Không có cặp chấm hợp lệ: chưa thể kết luận cải thiện hay không có regression."
+  ],
+  "summary": {
+    "total_turns": 4,
+    "judged_pair_count": 0,
+    "round0_turns": 0,
+    "round1_turns": 4,
+    "stored_frozen_case_count": 0,
+    "injected_turns": 3,
+    "changed_answers": 0,
+    "counts": {
+      "improved_resolution": 0,
+      "safer_unresolved": 0,
+      "regression": 0,
+      "unchanged": 0,
+      "needs_review": 0,
+      "not_evaluated": 4,
+      "unpaired": 0,
+      "question_changed": 0,
+      "excluded": 0
+    }
+  },
+  "rows": [
+    {
+      "call": "SC-045/call_1",
+      "turn_id": 1,
+      "question": "Shop tư vấn giúp nhé, chị muốn một Quạt đứng Senko TS16, giá đang là 590.000 đồng đúng không?",
+      "baseline_question": null,
+      "classification": "not_evaluated",
+      "case_id": null,
+      "gap_id": null,
+      "answer_changed": false,
+      "injected": true,
+      "lesson_trace": {
+        "lessons_loaded": 25,
+        "selected_lessons": [
+          {
+            "id": "0e7e90c0ebef8ff9c32f68b6dc37e5e29d91f60a2b499f75ecd877036ecf29bb",
+            "hash": "0b334693cdf926b3101254ee7a690f2a2e7fc1eee39df75bb1acd210c2fa3838",
+            "mechanism": "knowledge_gap"
+          }
+        ],
+        "injected": true,
+        "mode": "memory_only",
+        "response_modified": false,
+        "routing": "selected",
+        "routing_ms": 3541.796,
+        "routing_usage": {
+          "input_tokens": 4876,
+          "output_tokens": 69
+        },
+        "guardrails": {
+          "version": "learning_guardrails_v1",
+          "blocked_lessons": []
+        },
+        "injected_chars": 785,
+        "injected_lesson_count": 1,
+        "wrapper_total_ms": 11517.769
+      },
+      "round0": {
+        "answer": null,
+        "verdict": {
+          "status": null
+        },
+        "latency": null,
+        "evidence": {
+          "current": {},
+          "earlier": []
+        }
+      },
+      "round1": {
+        "answer": "Dạ đúng rồi chị [private] ơi, sản phẩm Quạt đứng Senko TS16 bên em hiện đang có giá là 590.000 đồng và hàng đang có sẵn ạ. \n\nChị có muốn em hỗ trợ đặt mua sản phẩm này luôn không ạ?",
+        "verdict": {
+          "status": null
+        },
+        "latency": {
+          "ttft_ms": 7975,
+          "total_ms": 7975,
+          "ttfa_ms": null,
+          "measurement_mode": "non_streaming",
+          "timing_boundary": "response_ready_before_persistence",
+          "asr_ms": null,
+          "call_brief_ms": 4769,
+          "response_ready_ms": 7975,
+          "persistence_ms": 0.384,
+          "request_complete_ms": 7975.842,
+          "backend_total_ms": 7975.842,
+          "precomputed_parts": []
+        },
+        "evidence": {
+          "current": {
+            "turn_id": 1,
+            "agent_response": "Dạ đúng rồi chị [private] ơi, sản phẩm Quạt đứng Senko TS16 bên em hiện đang có giá là 590.000 đồng và hàng đang có sẵn ạ. \n\nChị có muốn em hỗ trợ đặt mua sản phẩm này luôn không ạ?",
+            "tool_calls": [
+              {
+                "name": "catalog.search",
+                "args": {
+                  "query": "Quạt đứng Senko TS16",
+                  "on": "2026-10-19"
+                },
+                "result": {
+                  "items": [
+                    {
+                      "sku": "SKU-FAN-SEN",
+                      "name": "[private]",
+                      "category": "gia-dung/quat",
+                      "brand": "Senko",
+                      "list_price_vnd": 590000.0,
+                      "discontinued": false,
+                      "successor_sku": null,
+                      "attributes": {
+                        "warranty_months": 12
+                      },
+                      "variants": []
+                    }
+                  ],
+                  "total": 1
+                }
+              },
+              {
+                "name": "inventory.check",
+                "args": {
+                  "sku": "SKU-FAN-SEN",
+                  "on": "2026-10-19"
+                },
+                "result": {
+                  "sku": "SKU-FAN-SEN",
+                  "found": true,
+                  "in_stock": true,
+                  "qty": 30,
+                  "discontinued": false
+                }
+              },
+              {
+                "name": "pricing.get_quote",
+                "args": {
+                  "on": "2026-10-19",
+                  "customer_phone": "[private]",
+                  "customer_id": "[private]",
+                  "sku": "SKU-FAN-SEN",
+                  "qty": 1
+                },
+                "result": {
+                  "sku": "SKU-FAN-SEN",
+                  "list_price_vnd": 590000,
+                  "final_price_vnd": 590000,
+                  "applied_promos": [
+                    {
+                      "promo_code": "COD-0",
+                      "type": "freecod",
+                      "discount_vnd": 0
+                    }
+                  ],
+                  "expired_promos": [],
+                  "ineligible_promos": [
+                    {
+                      "promo_code": "NAM-SHIP0",
+                      "reason": "region"
+                    }
+                  ],
+                  "not_applied_exclusive": [],
+                  "freeship": false
+                }
+              }
+            ],
+            "sources": [
+              {
+                "sku": "SKU-FAN-SEN",
+                "name": "[private]",
+                "category": "gia-dung/quat",
+                "brand": "Senko",
+                "list_price_vnd": 590000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "warranty_months": 12
+                },
+                "variants": []
+              }
+            ],
+            "promotions": []
+          },
+          "earlier": []
+        }
+      }
+    },
+    {
+      "call": "SC-045/call_1",
+      "turn_id": 2,
+      "question": "Địa chỉ [address]; thanh toán COD. Hôm nay chưa chốt.",
+      "baseline_question": null,
+      "classification": "not_evaluated",
+      "case_id": null,
+      "gap_id": null,
+      "answer_changed": false,
+      "injected": true,
+      "lesson_trace": {
+        "lessons_loaded": 25,
+        "selected_lessons": [
+          {
+            "id": "2428465dd6aebd918b246b218ea61f077e2a4a03ca7a10bb6c10ca1cd078d1a6",
+            "hash": "a6ef6e56d1a0afa44afce603254ba8380a79684f4316ec30047adabc7375818d",
+            "mechanism": "knowledge_gap"
+          }
+        ],
+        "injected": true,
+        "mode": "memory_only",
+        "response_modified": false,
+        "routing": "selected",
+        "routing_ms": 2697.452,
+        "routing_usage": {
+          "input_tokens": 5074,
+          "output_tokens": 69
+        },
+        "guardrails": {
+          "version": "learning_guardrails_v1",
+          "blocked_lessons": []
+        },
+        "injected_chars": 892,
+        "injected_lesson_count": 1,
+        "wrapper_total_ms": 5824.093
+      },
+      "round0": {
+        "answer": null,
+        "verdict": {
+          "status": null
+        },
+        "latency": null,
+        "evidence": {
+          "current": {},
+          "earlier": []
+        }
+      },
+      "round1": {
+        "answer": "Dạ em cảm ơn chị [private] ạ. Em đã lưu lại thông tin địa chỉ [address]\n\nKhi nào chị sẵn sàng đặt hàng hoặc cần em hỗ trợ thêm thông tin gì về sản phẩm Quạt đứng Senko TS16, chị cứ báo em nhé!",
+        "verdict": {
+          "status": null
+        },
+        "latency": {
+          "ttft_ms": 3126,
+          "total_ms": 3126,
+          "ttfa_ms": null,
+          "measurement_mode": "non_streaming",
+          "timing_boundary": "response_ready_before_persistence",
+          "asr_ms": null,
+          "call_brief_ms": null,
+          "response_ready_ms": 3126,
+          "persistence_ms": 0.102,
+          "request_complete_ms": 3126.514,
+          "backend_total_ms": 3126.514,
+          "precomputed_parts": [
+            "persisted_facts"
+          ]
+        },
+        "evidence": {
+          "current": {
+            "turn_id": 2,
+            "agent_response": "Dạ em cảm ơn chị [private] ạ. Em đã lưu lại thông tin địa chỉ [address]\n\nKhi nào chị sẵn sàng đặt hàng hoặc cần em hỗ trợ thêm thông tin gì về sản phẩm Quạt đứng Senko TS16, chị cứ báo em nhé!",
+            "tool_calls": [],
+            "sources": [
+              {
+                "sku": "SKU-FAN-SEN",
+                "name": "[private]",
+                "category": "gia-dung/quat",
+                "brand": "Senko",
+                "list_price_vnd": 590000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "warranty_months": 12
+                },
+                "variants": []
+              }
+            ],
+            "promotions": []
+          },
+          "earlier": [
+            {
+              "turn_id": 1,
+              "tool_calls": [
+                {
+                  "name": "catalog.search",
+                  "args": {
+                    "query": "Quạt đứng Senko TS16",
+                    "on": "2026-10-19"
+                  },
+                  "result": {
+                    "items": [
+                      {
+                        "sku": "SKU-FAN-SEN",
+                        "name": "[private]",
+                        "category": "gia-dung/quat",
+                        "brand": "Senko",
+                        "list_price_vnd": 590000.0,
+                        "discontinued": false,
+                        "successor_sku": null,
+                        "attributes": {
+                          "warranty_months": 12
+                        },
+                        "variants": []
+                      }
+                    ],
+                    "total": 1
+                  }
+                },
+                {
+                  "name": "inventory.check",
+                  "args": {
+                    "sku": "SKU-FAN-SEN",
+                    "on": "2026-10-19"
+                  },
+                  "result": {
+                    "sku": "SKU-FAN-SEN",
+                    "found": true,
+                    "in_stock": true,
+                    "qty": 30,
+                    "discontinued": false
+                  }
+                },
+                {
+                  "name": "pricing.get_quote",
+                  "args": {
+                    "on": "2026-10-19",
+                    "customer_phone": "[private]",
+                    "customer_id": "[private]",
+                    "sku": "SKU-FAN-SEN",
+                    "qty": 1
+                  },
+                  "result": {
+                    "sku": "SKU-FAN-SEN",
+                    "list_price_vnd": 590000,
+                    "final_price_vnd": 590000,
+                    "applied_promos": [
+                      {
+                        "promo_code": "COD-0",
+                        "type": "freecod",
+                        "discount_vnd": 0
+                      }
+                    ],
+                    "expired_promos": [],
+                    "ineligible_promos": [
+                      {
+                        "promo_code": "NAM-SHIP0",
+                        "reason": "region"
+                      }
+                    ],
+                    "not_applied_exclusive": [],
+                    "freeship": false
+                  }
+                }
+              ],
+              "sources": [
+                {
+                  "sku": "SKU-FAN-SEN",
+                  "name": "[private]",
+                  "category": "gia-dung/quat",
+                  "brand": "Senko",
+                  "list_price_vnd": 590000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "warranty_months": 12
+                  },
+                  "variants": []
+                }
+              ],
+              "promotions": []
+            }
+          ]
+        }
+      }
+    },
+    {
+      "call": "SC-045/call_1",
+      "turn_id": 3,
+      "question": "Tôi thấy bản chính sách tháng 6 ghi đổi trả trong 14 ngày. Với đơn mới đặt từ tháng 10/2026, hàng còn nguyên tem và không có lỗi kỹ thuật, thời hạn thông thường thực tế là bao nhiêu ngày? Hãy nói rõ mốc hiện hành trước khi tiếp tục yêu cầu chính của tôi.",
+      "baseline_question": null,
+      "classification": "not_evaluated",
+      "case_id": null,
+      "gap_id": null,
+      "answer_changed": false,
+      "injected": false,
+      "lesson_trace": {
+        "lessons_loaded": 25,
+        "selected_lessons": [],
+        "injected": false,
+        "mode": "memory_only",
+        "response_modified": false,
+        "routing": "failed",
+        "routing_error": "ValueError",
+        "routing_ms": 1160.075,
+        "routing_usage": {
+          "input_tokens": 4748,
+          "output_tokens": 1
+        },
+        "wrapper_total_ms": 8420.987
+      },
+      "round0": {
+        "answer": null,
+        "verdict": {
+          "status": null
+        },
+        "latency": null,
+        "evidence": {
+          "current": {},
+          "earlier": []
+        }
+      },
+      "round1": {
+        "answer": "Dạ em chào chị [private]. Theo chính sách hiện hành áp dụng từ tháng 10/2026, thời hạn đổi trả thông thường đối với sản phẩm còn nguyên tem và không có lỗi kỹ thuật là **7 ngày** kể từ ngày nhận hàng ạ (bản cũ tháng 6 là 14 ngày).\n\nDạ không biết chị cần em hỗ trợ thêm thông tin gì về sản phẩm Quạt đứng Senko TS16 hay mình muốn tiến hành lên đơn luôn ạ?",
+        "verdict": {
+          "status": null
+        },
+        "latency": {
+          "ttft_ms": 7261,
+          "total_ms": 7261,
+          "ttfa_ms": null,
+          "measurement_mode": "non_streaming",
+          "timing_boundary": "response_ready_before_persistence",
+          "asr_ms": null,
+          "call_brief_ms": null,
+          "response_ready_ms": 7261,
+          "persistence_ms": 0.104,
+          "request_complete_ms": 7260.796,
+          "backend_total_ms": 7260.796,
+          "precomputed_parts": [
+            "persisted_facts"
+          ]
+        },
+        "evidence": {
+          "current": {
+            "turn_id": 3,
+            "agent_response": "Dạ em chào chị [private]. Theo chính sách hiện hành áp dụng từ tháng 10/2026, thời hạn đổi trả thông thường đối với sản phẩm còn nguyên tem và không có lỗi kỹ thuật là **7 ngày** kể từ ngày nhận hàng ạ (bản cũ tháng 6 là 14 ngày).\n\nDạ không biết chị cần em hỗ trợ thêm thông tin gì về sản phẩm Quạt đứng Senko TS16 hay mình muốn tiến hành lên đơn luôn ạ?",
+            "tool_calls": [
+              {
+                "name": "policy.search",
+                "args": {
+                  "query": "Tôi thấy bản chính sách tháng 6 ghi đổi trả trong 14 ngày. Với đơn mới đặt từ tháng 10/2026, hàng còn nguyên tem và không có lỗi kỹ thuật, thời hạn thông thường thực tế là bao nhiêu ngày? Hãy nói rõ mốc hiện hành trước khi tiếp tục yêu cầu chính của tôi.",
+                  "k": 3,
+                  "product_sku": "SKU-FAN-SEN",
+                  "as_of": "2026-10-19"
+                },
+                "result": {
+                  "query": "Tôi thấy bản chính sách tháng 6 ghi đổi trả trong 14 ngày. Với đơn mới đặt từ tháng 10/2026, hàng còn nguyên tem và không có lỗi kỹ thuật, thời hạn thông thường thực tế là bao nhiêu ngày? Hãy nói rõ mốc hiện hành trước khi tiếp tục yêu cầu chính của tôi.",
+                  "as_of": "2026-10-19",
+                  "product_sku": "SKU-FAN-SEN",
+                  "count": 3,
+                  "chunks": [
+                    {
+                      "chunk_id": "CL-01",
+                      "content": "Thay thế phiên bản 2026-06. Thay đổi: thời hạn đổi trả 14 → **7 ngày**; đổi size lần đầu **miễn phí** (trước: 20.000đ); hoàn tiền 7 → **3–5 ngày làm việc**; lỗi nhà sản xuất đổi mới 15 → **30 ngày** (gia dụng, mẹ & bé). Đơn tạo trước 01/10/2026 vẫn áp dụng bản cũ.",
+                      "source_file": "changelog.md",
+                      "section": "[CL-01] 01/10/2026 — Chính sách đổi trả phiên bản 2026-10"
+                    },
+                    {
+                      "chunk_id": "BH-01",
+                      "content": "Máy lọc không khí AirPure, Samsung: **24 tháng**. Máy lọc không khí Xiaomi: 12 tháng. Máy lọc nước RO Karofi, Kangaroo: **36 tháng** (thân máy), lõi lọc không bảo hành. Quạt, nồi chiên không dầu: 12 tháng. Máy hút sữa, máy tiệt trùng, xe đẩy, ghế ô tô: 12 tháng. Giày, áo khoác: không bảo hành, chỉ áp dụng đổi trả 7 ngày. Thời hạn cụ thể của từng SKU ghi trong `attributes.warranty_months` của catalog — **catalog là nguồn ưu tiên** nếu có khác biệt.",
+                      "source_file": "chinh-sach-bao-hanh.md",
+                      "section": "[BH-01] Thời hạn bảo hành theo nhóm hàng"
+                    },
+                    {
+                      "chunk_id": "DT-01",
+                      "content": "Khách hàng được đổi hoặc trả sản phẩm trong vòng **7 ngày** kể từ ngày nhận hàng (tính theo ngày ký nhận trên đơn vận chuyển). Với ngành hàng gia dụng và mẹ & bé có lỗi kỹ thuật từ nhà sản xuất, thời hạn đổi mới là **30 ngày**.",
+                      "source_file": "chinh-sach-doi-tra.md",
+                      "section": "[DT-01] Thời hạn đổi trả"
+                    }
+                  ]
+                }
+              },
+              {
+                "name": "pricing.get_quote",
+                "args": {
+                  "on": "2026-10-19",
+                  "customer_phone": "[private]",
+                  "customer_id": "[private]",
+                  "address": "[private]",
+                  "sku": "SKU-FAN-SEN",
+                  "qty": 1
+                },
+                "result": {
+                  "sku": "SKU-FAN-SEN",
+                  "list_price_vnd": 590000,
+                  "final_price_vnd": 590000,
+                  "applied_promos": [
+                    {
+                      "promo_code": "COD-0",
+                      "type": "freecod",
+                      "discount_vnd": 0
+                    }
+                  ],
+                  "expired_promos": [],
+                  "ineligible_promos": [
+                    {
+                      "promo_code": "NAM-SHIP0",
+                      "reason": "region"
+                    }
+                  ],
+                  "not_applied_exclusive": [],
+                  "freeship": false
+                }
+              }
+            ],
+            "sources": [],
+            "promotions": []
+          },
+          "earlier": [
+            {
+              "turn_id": 1,
+              "tool_calls": [
+                {
+                  "name": "catalog.search",
+                  "args": {
+                    "query": "Quạt đứng Senko TS16",
+                    "on": "2026-10-19"
+                  },
+                  "result": {
+                    "items": [
+                      {
+                        "sku": "SKU-FAN-SEN",
+                        "name": "[private]",
+                        "category": "gia-dung/quat",
+                        "brand": "Senko",
+                        "list_price_vnd": 590000.0,
+                        "discontinued": false,
+                        "successor_sku": null,
+                        "attributes": {
+                          "warranty_months": 12
+                        },
+                        "variants": []
+                      }
+                    ],
+                    "total": 1
+                  }
+                },
+                {
+                  "name": "inventory.check",
+                  "args": {
+                    "sku": "SKU-FAN-SEN",
+                    "on": "2026-10-19"
+                  },
+                  "result": {
+                    "sku": "SKU-FAN-SEN",
+                    "found": true,
+                    "in_stock": true,
+                    "qty": 30,
+                    "discontinued": false
+                  }
+                },
+                {
+                  "name": "pricing.get_quote",
+                  "args": {
+                    "on": "2026-10-19",
+                    "customer_phone": "[private]",
+                    "customer_id": "[private]",
+                    "sku": "SKU-FAN-SEN",
+                    "qty": 1
+                  },
+                  "result": {
+                    "sku": "SKU-FAN-SEN",
+                    "list_price_vnd": 590000,
+                    "final_price_vnd": 590000,
+                    "applied_promos": [
+                      {
+                        "promo_code": "COD-0",
+                        "type": "freecod",
+                        "discount_vnd": 0
+                      }
+                    ],
+                    "expired_promos": [],
+                    "ineligible_promos": [
+                      {
+                        "promo_code": "NAM-SHIP0",
+                        "reason": "region"
+                      }
+                    ],
+                    "not_applied_exclusive": [],
+                    "freeship": false
+                  }
+                }
+              ],
+              "sources": [
+                {
+                  "sku": "SKU-FAN-SEN",
+                  "name": "[private]",
+                  "category": "gia-dung/quat",
+                  "brand": "Senko",
+                  "list_price_vnd": 590000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "warranty_months": 12
+                  },
+                  "variants": []
+                }
+              ],
+              "promotions": []
+            },
+            {
+              "turn_id": 2,
+              "tool_calls": [],
+              "sources": [
+                {
+                  "sku": "SKU-FAN-SEN",
+                  "name": "[private]",
+                  "category": "gia-dung/quat",
+                  "brand": "Senko",
+                  "list_price_vnd": 590000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "warranty_months": 12
+                  },
+                  "variants": []
+                }
+              ],
+              "promotions": []
+            }
+          ]
+        }
+      }
+    },
+    {
+      "call": "SC-045/call_1",
+      "turn_id": 4,
+      "question": "Em gọi lại lúc 10 giờ ngày 2026-10-21 nhé.",
+      "baseline_question": null,
+      "classification": "not_evaluated",
+      "case_id": null,
+      "gap_id": null,
+      "answer_changed": false,
+      "injected": true,
+      "lesson_trace": {
+        "lessons_loaded": 25,
+        "selected_lessons": [
+          {
+            "id": "2428465dd6aebd918b246b218ea61f077e2a4a03ca7a10bb6c10ca1cd078d1a6",
+            "hash": "a6ef6e56d1a0afa44afce603254ba8380a79684f4316ec30047adabc7375818d",
+            "mechanism": "knowledge_gap"
+          }
+        ],
+        "injected": true,
+        "mode": "memory_only",
+        "response_modified": false,
+        "routing": "selected",
+        "routing_ms": 2881.108,
+        "routing_usage": {
+          "input_tokens": 5436,
+          "output_tokens": 69
+        },
+        "guardrails": {
+          "version": "learning_guardrails_v1",
+          "blocked_lessons": []
+        },
+        "injected_chars": 892,
+        "injected_lesson_count": 1,
+        "wrapper_total_ms": 5400.167
+      },
+      "round0": {
+        "answer": null,
+        "verdict": {
+          "status": null
+        },
+        "latency": null,
+        "evidence": {
+          "current": {},
+          "earlier": []
+        }
+      },
+      "round1": {
+        "answer": "Dạ em đã ghi nhận lịch hẹn gọi lại cho chị [private] vào lúc 10:00 ngày 21/10/2026 rồi ạ. Em cảm ơn chị và chúc chị một ngày tốt lành!",
+        "verdict": {
+          "status": null
+        },
+        "latency": {
+          "ttft_ms": 2519,
+          "total_ms": 2519,
+          "ttfa_ms": null,
+          "measurement_mode": "non_streaming",
+          "timing_boundary": "response_ready_before_persistence",
+          "asr_ms": null,
+          "call_brief_ms": null,
+          "response_ready_ms": 2519,
+          "persistence_ms": 0.094,
+          "request_complete_ms": 2518.953,
+          "backend_total_ms": 2518.953,
+          "precomputed_parts": [
+            "persisted_facts"
+          ]
+        },
+        "evidence": {
+          "current": {
+            "turn_id": 4,
+            "agent_response": "Dạ em đã ghi nhận lịch hẹn gọi lại cho chị [private] vào lúc 10:00 ngày 21/10/2026 rồi ạ. Em cảm ơn chị và chúc chị một ngày tốt lành!",
+            "tool_calls": [
+              {
+                "name": "schedule.callback",
+                "args": {
+                  "customer_phone": "[private]",
+                  "callback_at": "2026-10-21T10:00",
+                  "note": "Em gọi lại lúc 10 giờ ngày 2026-10-21 nhé.",
+                  "on": "2026-10-19"
+                },
+                "result": {
+                  "callback_id": "CB-3067E4",
+                  "customer_phone": "[private]",
+                  "callback_at": "2026-10-21T10:00",
+                  "moved_from": null,
+                  "note": "Em gọi lại lúc 10 giờ ngày 2026-10-21 nhé."
+                }
+              }
+            ],
+            "sources": [],
+            "promotions": []
+          },
+          "earlier": [
+            {
+              "turn_id": 1,
+              "tool_calls": [
+                {
+                  "name": "catalog.search",
+                  "args": {
+                    "query": "Quạt đứng Senko TS16",
+                    "on": "2026-10-19"
+                  },
+                  "result": {
+                    "items": [
+                      {
+                        "sku": "SKU-FAN-SEN",
+                        "name": "[private]",
+                        "category": "gia-dung/quat",
+                        "brand": "Senko",
+                        "list_price_vnd": 590000.0,
+                        "discontinued": false,
+                        "successor_sku": null,
+                        "attributes": {
+                          "warranty_months": 12
+                        },
+                        "variants": []
+                      }
+                    ],
+                    "total": 1
+                  }
+                },
+                {
+                  "name": "inventory.check",
+                  "args": {
+                    "sku": "SKU-FAN-SEN",
+                    "on": "2026-10-19"
+                  },
+                  "result": {
+                    "sku": "SKU-FAN-SEN",
+                    "found": true,
+                    "in_stock": true,
+                    "qty": 30,
+                    "discontinued": false
+                  }
+                },
+                {
+                  "name": "pricing.get_quote",
+                  "args": {
+                    "on": "2026-10-19",
+                    "customer_phone": "[private]",
+                    "customer_id": "[private]",
+                    "sku": "SKU-FAN-SEN",
+                    "qty": 1
+                  },
+                  "result": {
+                    "sku": "SKU-FAN-SEN",
+                    "list_price_vnd": 590000,
+                    "final_price_vnd": 590000,
+                    "applied_promos": [
+                      {
+                        "promo_code": "COD-0",
+                        "type": "freecod",
+                        "discount_vnd": 0
+                      }
+                    ],
+                    "expired_promos": [],
+                    "ineligible_promos": [
+                      {
+                        "promo_code": "NAM-SHIP0",
+                        "reason": "region"
+                      }
+                    ],
+                    "not_applied_exclusive": [],
+                    "freeship": false
+                  }
+                }
+              ],
+              "sources": [
+                {
+                  "sku": "SKU-FAN-SEN",
+                  "name": "[private]",
+                  "category": "gia-dung/quat",
+                  "brand": "Senko",
+                  "list_price_vnd": 590000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "warranty_months": 12
+                  },
+                  "variants": []
+                }
+              ],
+              "promotions": []
+            },
+            {
+              "turn_id": 2,
+              "tool_calls": [],
+              "sources": [
+                {
+                  "sku": "SKU-FAN-SEN",
+                  "name": "[private]",
+                  "category": "gia-dung/quat",
+                  "brand": "Senko",
+                  "list_price_vnd": 590000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "warranty_months": 12
+                  },
+                  "variants": []
+                }
+              ],
+              "promotions": []
+            },
+            {
+              "turn_id": 3,
+              "tool_calls": [
+                {
+                  "name": "policy.search",
+                  "args": {
+                    "query": "Tôi thấy bản chính sách tháng 6 ghi đổi trả trong 14 ngày. Với đơn mới đặt từ tháng 10/2026, hàng còn nguyên tem và không có lỗi kỹ thuật, thời hạn thông thường thực tế là bao nhiêu ngày? Hãy nói rõ mốc hiện hành trước khi tiếp tục yêu cầu chính của tôi.",
+                    "k": 3,
+                    "product_sku": "SKU-FAN-SEN",
+                    "as_of": "2026-10-19"
+                  },
+                  "result": {
+                    "query": "Tôi thấy bản chính sách tháng 6 ghi đổi trả trong 14 ngày. Với đơn mới đặt từ tháng 10/2026, hàng còn nguyên tem và không có lỗi kỹ thuật, thời hạn thông thường thực tế là bao nhiêu ngày? Hãy nói rõ mốc hiện hành trước khi tiếp tục yêu cầu chính của tôi.",
+                    "as_of": "2026-10-19",
+                    "product_sku": "SKU-FAN-SEN",
+                    "count": 3,
+                    "chunks": [
+                      {
+                        "chunk_id": "CL-01",
+                        "content": "Thay thế phiên bản 2026-06. Thay đổi: thời hạn đổi trả 14 → **7 ngày**; đổi size lần đầu **miễn phí** (trước: 20.000đ); hoàn tiền 7 → **3–5 ngày làm việc**; lỗi nhà sản xuất đổi mới 15 → **30 ngày** (gia dụng, mẹ & bé). Đơn tạo trước 01/10/2026 vẫn áp dụng bản cũ.",
+                        "source_file": "changelog.md",
+                        "section": "[CL-01] 01/10/2026 — Chính sách đổi trả phiên bản 2026-10"
+                      },
+                      {
+                        "chunk_id": "BH-01",
+                        "content": "Máy lọc không khí AirPure, Samsung: **24 tháng**. Máy lọc không khí Xiaomi: 12 tháng. Máy lọc nước RO Karofi, Kangaroo: **36 tháng** (thân máy), lõi lọc không bảo hành. Quạt, nồi chiên không dầu: 12 tháng. Máy hút sữa, máy tiệt trùng, xe đẩy, ghế ô tô: 12 tháng. Giày, áo khoác: không bảo hành, chỉ áp dụng đổi trả 7 ngày. Thời hạn cụ thể của từng SKU ghi trong `attributes.warranty_months` của catalog — **catalog là nguồn ưu tiên** nếu có khác biệt.",
+                        "source_file": "chinh-sach-bao-hanh.md",
+                        "section": "[BH-01] Thời hạn bảo hành theo nhóm hàng"
+                      },
+                      {
+                        "chunk_id": "DT-01",
+                        "content": "Khách hàng được đổi hoặc trả sản phẩm trong vòng **7 ngày** kể từ ngày nhận hàng (tính theo ngày ký nhận trên đơn vận chuyển). Với ngành hàng gia dụng và mẹ & bé có lỗi kỹ thuật từ nhà sản xuất, thời hạn đổi mới là **30 ngày**.",
+                        "source_file": "chinh-sach-doi-tra.md",
+                        "section": "[DT-01] Thời hạn đổi trả"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "name": "pricing.get_quote",
+                  "args": {
+                    "on": "2026-10-19",
+                    "customer_phone": "[private]",
+                    "customer_id": "[private]",
+                    "address": "[private]",
+                    "sku": "SKU-FAN-SEN",
+                    "qty": 1
+                  },
+                  "result": {
+                    "sku": "SKU-FAN-SEN",
+                    "list_price_vnd": 590000,
+                    "final_price_vnd": 590000,
+                    "applied_promos": [
+                      {
+                        "promo_code": "COD-0",
+                        "type": "freecod",
+                        "discount_vnd": 0
+                      }
+                    ],
+                    "expired_promos": [],
+                    "ineligible_promos": [
+                      {
+                        "promo_code": "NAM-SHIP0",
+                        "reason": "region"
+                      }
+                    ],
+                    "not_applied_exclusive": [],
+                    "freeship": false
+                  }
+                }
+              ],
+              "sources": [],
+              "promotions": []
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "lessons": [],
+  "sessions": [
+    {
+      "call": "SC-045/call_1",
+      "round0": {
+        "job": null,
+        "error": null,
+        "learning": null,
+        "observed_input_findings": []
+      },
+      "round1": {
+        "job": {
+          "status": "done",
+          "job_id": "20e8e458285d778faef5c00b5c23424112673448638bd477b7bd7112b8e7102f",
+          "error": null
+        },
+        "error": null,
+        "learning": {
+          "job_id": "20e8e458285d778faef5c00b5c23424112673448638bd477b7bd7112b8e7102f",
+          "gaps": [],
+          "scope": "knowledge_gap_and_reflection_v1",
+          "evaluation_cases": [],
+          "out_of_scope": [],
+          "issue_reviews": [],
+          "detector_error": null,
+          "guardrails": {
+            "version": "learning_guardrails_v1",
+            "input_findings": [],
+            "blocked_lessons": [],
+            "blocked_sources": []
+          },
+          "detection": {
+            "candidate_count": 0,
+            "open_question_count": 0,
+            "processed_count": 0,
+            "skipped_unmatched_question": 0,
+            "skipped_over_limit": 0,
+            "scan": {
+              "turns_available": 4,
+              "turns_scanned": 4,
+              "requests": 4,
+              "errors": [],
+              "schema_retries": 0,
+              "skipped_over_limit": 0
+            },
+            "alignment_rejections": []
+          },
+          "outcome": "no_candidates",
+          "learning_duration_ms": 4844,
+          "learning_usage": {
+            "input_tokens": 7275,
+            "output_tokens": 9
+          }
+        },
+        "observed_input_findings": []
+      }
+    }
+  ],
+  "limitations": [
+    "Verdict kiểm tra được reference vẫn cần người đọc xác nhận ngữ nghĩa và độ đầy đủ.",
+    "Câu trả lời thay đổi hoặc được inject lesson chưa chứng minh lesson gây ra cải thiện.",
+    "Reflection chưa được chấm chất lượng; learning job done/lesson approved không phải điểm chất lượng.",
+    "Guardrail mẫu có giới hạn; không phát hiện mẫu không đồng nghĩa không có prompt injection."
+  ]
+}

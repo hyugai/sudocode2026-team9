@@ -1,0 +1,46 @@
+{
+  "id": "d3803d576fcc04307599bfeffd8e82f9005b398cefa6dd367fdd95006b93f429",
+  "reason": "unsupported_claim",
+  "pattern": "Do not state an unverified claim as a fact.",
+  "status": "approved",
+  "scope": "general",
+  "mechanism": "knowledge_gap",
+  "criterion": "Do not state an unverified claim as a fact.",
+  "evidence_refs": [
+    {
+      "job_id": "d8ad223aa73b5dd1223bae1039155a7783385f46bf104cfa45c5d7d4facf571a",
+      "message_id": 0,
+      "turn_id": 1,
+      "origin": "turn_detector"
+    }
+  ],
+  "assessment": "unsupported_by_evidence",
+  "report_ref": "d8ad223aa73b5dd1223bae1039155a7783385f46bf104cfa45c5d7d4facf571a",
+  "lesson": {
+    "title": "Do Not Invent Prior Conversational History",
+    "when": "Responding to a customer referencing past offline or unrecorded communications",
+    "do": "Answer based strictly on available tool results and verified records without inventing specific prior conversation details or model choices",
+    "otherwise": "State clearly that past conversation details are not recorded in the system instead of assuming prior discussion facts",
+    "triggers": [
+      "người nhà đồng ý đổi máy",
+      "nhắn qua Zalo",
+      "chuyện hôm trước",
+      "trao đổi trước đó"
+    ],
+    "id": "e45dc72c5fe31056f074ee827287d8fbe6b10a70731330b3a772124cd2242342",
+    "status": "approved",
+    "scope": "general",
+    "mechanism": "knowledge_gap",
+    "source_refs": [
+      {
+        "job_id": "d8ad223aa73b5dd1223bae1039155a7783385f46bf104cfa45c5d7d4facf571a",
+        "message_id": 0,
+        "turn_id": 1,
+        "origin": "turn_detector"
+      }
+    ],
+    "version": 2
+  },
+  "lesson_path": "lessons\\approved\\e45dc72c5fe31056f074ee827287d8fbe6b10a70731330b3a772124cd2242342.md",
+  "lesson_hash": "c3c9962f401a34a0bc3b270b1e74ead584c41c64cb4e1470f5fee6bce8f68555"
+}

@@ -1,0 +1,670 @@
+<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src 'none'; base-uri 'none'; form-action 'none'"><title>Review self-learning</title><style>body{margin:0;background:#f5f2ed;color:#292824;font:16px/1.6 system-ui,sans-serif}main{max-width:1180px;margin:auto;padding:24px}h1,h2,h3{line-height:1.3}article,.box{background:#fffdf9;border:1px solid #ddd7cc;border-radius:12px;padding:18px;margin:16px 0}.columns{display:grid;grid-template-columns:1fr 1fr;gap:18px}.answer{white-space:pre-wrap}mark{background:#fff0a6;color:#292824}del{background:#fbe2df;text-decoration:line-through}.warn{border-left:5px solid #a66b16}.regression{border-left:5px solid #a43131}.improved_resolution{border-left:5px solid #367458}.muted{color:#635f57}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#f3f1eb;padding:12px;border-radius:8px}body,td,p,div,summary{overflow-wrap:anywhere}table{border-collapse:collapse;width:100%}th,td{text-align:left;padding:8px;border-bottom:1px solid #e3ded5;vertical-align:top}summary{cursor:pointer;padding:8px 0}summary:focus-visible,a:focus-visible{outline:3px solid #8c5517}a{color:#754610}nav{display:flex;flex-wrap:wrap;gap:14px}@media(max-width:650px){main{padding:12px}.columns{grid-template-columns:1fr}article,.box{padding:12px}}</style></head><body><main><h1>Review self-learning</h1><p>Học sau khi kết thúc session. Báo cáo dựng từ artifact đã lưu, không gọi thêm LLM.</p><nav><a href="#overview">Tổng quan</a><a href="#turns">Trước / sau</a><a href="#lessons">Lesson</a><a href="#sessions">Học &amp; guardrail</a></nav><section id="overview"><h2>Tổng quan</h2><p class="box warn">Chưa chạy judge: chỉ xem thay đổi câu trả lời và dấu vết lesson, chưa đánh giá cải thiện.</p><p class="box warn">Không có cặp chấm hợp lệ: chưa thể kết luận cải thiện hay không có regression.</p><p><b>0</b> cặp chấm hợp lệ / 0 case được lưu trong comparison. 1/4 lượt trong session được inject.</p><table><tr><th>Phân loại</th><th>Số lượt</th></tr><tr><td>Giải quyết được thêm · cần xác nhận</td><td>0</td></tr><tr><td>Thận trọng hơn · vẫn chưa giải quyết</td><td>0</td></tr><tr><td>Có dấu hiệu regression · cần xác nhận</td><td>0</td></tr><tr><td>Không đổi trạng thái chấm</td><td>0</td></tr><tr><td>Chưa đủ kết quả chấm hợp lệ</td><td>0</td></tr><tr><td>Chưa được judge chấm</td><td>4</td></tr><tr><td>Thiếu một vòng</td><td>0</td></tr><tr><td>Câu hỏi hai vòng khác nhau</td><td>0</td></tr><tr><td>Bị loại khỏi phép so sánh</td><td>0</td></tr></table><details><summary>Phạm vi, nguồn baseline và exclusions</summary><pre>{
+  &quot;evaluation_population&quot;: &quot;single_session_no_baseline&quot;
+}</pre></details><p class="muted">Verdict kiểm tra được reference vẫn cần người đọc xác nhận ngữ nghĩa và độ đầy đủ.</p><p class="muted">Câu trả lời thay đổi hoặc được inject lesson chưa chứng minh lesson gây ra cải thiện.</p><p class="muted">Reflection chưa được chấm chất lượng; learning job done/lesson approved không phải điểm chất lượng.</p><p class="muted">Guardrail mẫu có giới hạn; không phát hiện mẫu không đồng nghĩa không có prompt injection.</p></section><section id="turns"><h2>Cải thiện ở đâu? Đọc từng lượt</h2><h3>Chưa được judge chấm (4)</h3><article id="turn-0" class="not_evaluated"><h3>SC-066/call_1 · lượt 1</h3><p><b>Khách:</b> Tôi là [private], số điện thoại [phone], đang nhắn qua Fanpage. Chào em, anh đang xem Máy hút sữa điện đôi Spectra S1, mức giá 4.290.000 đồng đúng không?</p><p class="muted">Câu trả lời không đổi/thiếu cặp · Lesson đã inject.</p><div class="columns"><div><h3>Phiên vừa kết thúc</h3><p><b>Chưa có verdict hợp lệ</b></p><div class="answer">Dạ em chào anh [private]. Đúng rồi ạ, sản phẩm Máy hút sữa điện đôi Spectra S1 hiện đang có giá là 4.290.000 đồng và hàng đang có sẵn ạ. 
+
+Anh có cần em hỗ trợ tư vấn thêm về sản phẩm hay mình muốn lên đơn đặt hàng luôn không ạ?</div><details><summary>Claims, trích dẫn và verdict gốc</summary><pre>{
+  &quot;status&quot;: null
+}</pre></details><details><summary>Evidence hiện tại và trước lượt này</summary><pre>{
+  &quot;current&quot;: {
+    &quot;turn_id&quot;: 1,
+    &quot;agent_response&quot;: &quot;Dạ em chào anh [private]. Đúng rồi ạ, sản phẩm Máy hút sữa điện đôi Spectra S1 hiện đang có giá là 4.290.000 đồng và hàng đang có sẵn ạ. \n\nAnh có cần em hỗ trợ tư vấn thêm về sản phẩm hay mình muốn lên đơn đặt hàng luôn không ạ?&quot;,
+    &quot;tool_calls&quot;: [
+      {
+        &quot;name&quot;: &quot;catalog.search&quot;,
+        &quot;args&quot;: {
+          &quot;query&quot;: &quot;Máy hút sữa điện đôi Spectra S1&quot;,
+          &quot;on&quot;: &quot;2026-10-15&quot;
+        },
+        &quot;result&quot;: {
+          &quot;items&quot;: [
+            {
+              &quot;sku&quot;: &quot;SKU-MB-PUMP1&quot;,
+              &quot;name&quot;: &quot;[private]&quot;,
+              &quot;category&quot;: &quot;me-be&quot;,
+              &quot;brand&quot;: &quot;Spectra&quot;,
+              &quot;list_price_vnd&quot;: 4290000.0,
+              &quot;discontinued&quot;: false,
+              &quot;successor_sku&quot;: null,
+              &quot;attributes&quot;: {
+                &quot;warranty_months&quot;: 12
+              },
+              &quot;variants&quot;: []
+            }
+          ],
+          &quot;total&quot;: 1
+        }
+      },
+      {
+        &quot;name&quot;: &quot;inventory.check&quot;,
+        &quot;args&quot;: {
+          &quot;sku&quot;: &quot;SKU-MB-PUMP1&quot;,
+          &quot;on&quot;: &quot;2026-10-15&quot;
+        },
+        &quot;result&quot;: {
+          &quot;sku&quot;: &quot;SKU-MB-PUMP1&quot;,
+          &quot;found&quot;: true,
+          &quot;in_stock&quot;: true,
+          &quot;qty&quot;: 6,
+          &quot;discontinued&quot;: false
+        }
+      },
+      {
+        &quot;name&quot;: &quot;pricing.get_quote&quot;,
+        &quot;args&quot;: {
+          &quot;on&quot;: &quot;2026-10-15&quot;,
+          &quot;customer_phone&quot;: &quot;[private]&quot;,
+          &quot;customer_id&quot;: &quot;[private]&quot;,
+          &quot;sku&quot;: &quot;SKU-MB-PUMP1&quot;,
+          &quot;qty&quot;: 1
+        },
+        &quot;result&quot;: {
+          &quot;sku&quot;: &quot;SKU-MB-PUMP1&quot;,
+          &quot;list_price_vnd&quot;: 4290000,
+          &quot;final_price_vnd&quot;: 4290000,
+          &quot;applied_promos&quot;: [
+            {
+              &quot;promo_code&quot;: &quot;MOM-FREESHIP&quot;,
+              &quot;type&quot;: &quot;freeship&quot;,
+              &quot;discount_vnd&quot;: 0
+            },
+            {
+              &quot;promo_code&quot;: &quot;COD-0&quot;,
+              &quot;type&quot;: &quot;freecod&quot;,
+              &quot;discount_vnd&quot;: 0
+            }
+          ],
+          &quot;expired_promos&quot;: [
+            &quot;PUMP-GIFT&quot;
+          ],
+          &quot;ineligible_promos&quot;: [],
+          &quot;not_applied_exclusive&quot;: [],
+          &quot;freeship&quot;: true
+        }
+      }
+    ],
+    &quot;sources&quot;: [
+      {
+        &quot;sku&quot;: &quot;SKU-MB-PUMP1&quot;,
+        &quot;name&quot;: &quot;[private]&quot;,
+        &quot;category&quot;: &quot;me-be&quot;,
+        &quot;brand&quot;: &quot;Spectra&quot;,
+        &quot;list_price_vnd&quot;: 4290000.0,
+        &quot;discontinued&quot;: false,
+        &quot;successor_sku&quot;: null,
+        &quot;attributes&quot;: {
+          &quot;warranty_months&quot;: 12
+        },
+        &quot;variants&quot;: []
+      }
+    ],
+    &quot;promotions&quot;: []
+  },
+  &quot;earlier&quot;: []
+}</pre></details></div></div><details><summary>Lesson ID, routing, token và injection trace</summary><pre>{
+  &quot;lessons_loaded&quot;: 25,
+  &quot;selected_lessons&quot;: [
+    {
+      &quot;id&quot;: &quot;0e7e90c0ebef8ff9c32f68b6dc37e5e29d91f60a2b499f75ecd877036ecf29bb&quot;,
+      &quot;hash&quot;: &quot;0b334693cdf926b3101254ee7a690f2a2e7fc1eee39df75bb1acd210c2fa3838&quot;,
+      &quot;mechanism&quot;: &quot;knowledge_gap&quot;
+    }
+  ],
+  &quot;injected&quot;: true,
+  &quot;mode&quot;: &quot;memory_only&quot;,
+  &quot;response_modified&quot;: false,
+  &quot;routing&quot;: &quot;selected&quot;,
+  &quot;routing_ms&quot;: 3287.74,
+  &quot;routing_usage&quot;: {
+    &quot;input_tokens&quot;: 4906,
+    &quot;output_tokens&quot;: 69
+  },
+  &quot;guardrails&quot;: {
+    &quot;version&quot;: &quot;learning_guardrails_v1&quot;,
+    &quot;blocked_lessons&quot;: []
+  },
+  &quot;injected_chars&quot;: 785,
+  &quot;injected_lesson_count&quot;: 1,
+  &quot;wrapper_total_ms&quot;: 11015.221
+}</pre></details></article><article id="turn-1" class="not_evaluated"><h3>SC-066/call_1 · lượt 2</h3><p><b>Khách:</b> Anh mua cho người thân và còn vấn đề sức khỏe cần hỏi. Chưa đặt hàng nhé.</p><p class="muted">Câu trả lời không đổi/thiếu cặp · Lesson chưa inject.</p><div class="columns"><div><h3>Phiên vừa kết thúc</h3><p><b>Chưa có verdict hợp lệ</b></p><div class="answer">Dạ em chào anh [private]. Anh cứ thoải mái chia sẻ thêm về tình trạng sức khỏe hay thắc mắc của người thân ạ, em sẽ tư vấn chi tiết giúp mình trước khi anh quyết định nhé. Anh đang cần hỗ trợ vấn đề gì ạ?</div><details><summary>Claims, trích dẫn và verdict gốc</summary><pre>{
+  &quot;status&quot;: null
+}</pre></details><details><summary>Evidence hiện tại và trước lượt này</summary><pre>{
+  &quot;current&quot;: {
+    &quot;turn_id&quot;: 2,
+    &quot;agent_response&quot;: &quot;Dạ em chào anh [private]. Anh cứ thoải mái chia sẻ thêm về tình trạng sức khỏe hay thắc mắc của người thân ạ, em sẽ tư vấn chi tiết giúp mình trước khi anh quyết định nhé. Anh đang cần hỗ trợ vấn đề gì ạ?&quot;,
+    &quot;tool_calls&quot;: [
+      {
+        &quot;name&quot;: &quot;catalog.search&quot;,
+        &quot;args&quot;: {
+          &quot;query&quot;: &quot;Anh mua cho người thân và còn vấn đề sức khỏe cần hỏi. Chưa đặt hàng nhé.&quot;,
+          &quot;on&quot;: &quot;2026-10-15&quot;
+        },
+        &quot;result&quot;: {
+          &quot;items&quot;: [],
+          &quot;total&quot;: 0
+        }
+      }
+    ],
+    &quot;sources&quot;: [
+      {
+        &quot;sku&quot;: &quot;SKU-MB-PUMP1&quot;,
+        &quot;name&quot;: &quot;[private]&quot;,
+        &quot;category&quot;: &quot;me-be&quot;,
+        &quot;brand&quot;: &quot;Spectra&quot;,
+        &quot;list_price_vnd&quot;: 4290000.0,
+        &quot;discontinued&quot;: false,
+        &quot;successor_sku&quot;: null,
+        &quot;attributes&quot;: {
+          &quot;warranty_months&quot;: 12
+        },
+        &quot;variants&quot;: []
+      }
+    ],
+    &quot;promotions&quot;: []
+  },
+  &quot;earlier&quot;: [
+    {
+      &quot;turn_id&quot;: 1,
+      &quot;tool_calls&quot;: [
+        {
+          &quot;name&quot;: &quot;catalog.search&quot;,
+          &quot;args&quot;: {
+            &quot;query&quot;: &quot;Máy hút sữa điện đôi Spectra S1&quot;,
+            &quot;on&quot;: &quot;2026-10-15&quot;
+          },
+          &quot;result&quot;: {
+            &quot;items&quot;: [
+              {
+                &quot;sku&quot;: &quot;SKU-MB-PUMP1&quot;,
+                &quot;name&quot;: &quot;[private]&quot;,
+                &quot;category&quot;: &quot;me-be&quot;,
+                &quot;brand&quot;: &quot;Spectra&quot;,
+                &quot;list_price_vnd&quot;: 4290000.0,
+                &quot;discontinued&quot;: false,
+                &quot;successor_sku&quot;: null,
+                &quot;attributes&quot;: {
+                  &quot;warranty_months&quot;: 12
+                },
+                &quot;variants&quot;: []
+              }
+            ],
+            &quot;total&quot;: 1
+          }
+        },
+        {
+          &quot;name&quot;: &quot;inventory.check&quot;,
+          &quot;args&quot;: {
+            &quot;sku&quot;: &quot;SKU-MB-PUMP1&quot;,
+            &quot;on&quot;: &quot;2026-10-15&quot;
+          },
+          &quot;result&quot;: {
+            &quot;sku&quot;: &quot;SKU-MB-PUMP1&quot;,
+            &quot;found&quot;: true,
+            &quot;in_stock&quot;: true,
+            &quot;qty&quot;: 6,
+            &quot;discontinued&quot;: false
+          }
+        },
+        {
+          &quot;name&quot;: &quot;pricing.get_quote&quot;,
+          &quot;args&quot;: {
+            &quot;on&quot;: &quot;2026-10-15&quot;,
+            &quot;customer_phone&quot;: &quot;[private]&quot;,
+            &quot;customer_id&quot;: &quot;[private]&quot;,
+            &quot;sku&quot;: &quot;SKU-MB-PUMP1&quot;,
+            &quot;qty&quot;: 1
+          },
+          &quot;result&quot;: {
+            &quot;sku&quot;: &quot;SKU-MB-PUMP1&quot;,
+            &quot;list_price_vnd&quot;: 4290000,
+            &quot;final_price_vnd&quot;: 4290000,
+            &quot;applied_promos&quot;: [
+              {
+                &quot;promo_code&quot;: &quot;MOM-FREESHIP&quot;,
+                &quot;type&quot;: &quot;freeship&quot;,
+                &quot;discount_vnd&quot;: 0
+              },
+              {
+                &quot;promo_code&quot;: &quot;COD-0&quot;,
+                &quot;type&quot;: &quot;freecod&quot;,
+                &quot;discount_vnd&quot;: 0
+              }
+            ],
+            &quot;expired_promos&quot;: [
+              &quot;PUMP-GIFT&quot;
+            ],
+            &quot;ineligible_promos&quot;: [],
+            &quot;not_applied_exclusive&quot;: [],
+            &quot;freeship&quot;: true
+          }
+        }
+      ],
+      &quot;sources&quot;: [
+        {
+          &quot;sku&quot;: &quot;SKU-MB-PUMP1&quot;,
+          &quot;name&quot;: &quot;[private]&quot;,
+          &quot;category&quot;: &quot;me-be&quot;,
+          &quot;brand&quot;: &quot;Spectra&quot;,
+          &quot;list_price_vnd&quot;: 4290000.0,
+          &quot;discontinued&quot;: false,
+          &quot;successor_sku&quot;: null,
+          &quot;attributes&quot;: {
+            &quot;warranty_months&quot;: 12
+          },
+          &quot;variants&quot;: []
+        }
+      ],
+      &quot;promotions&quot;: []
+    }
+  ]
+}</pre></details></div></div><details><summary>Lesson ID, routing, token và injection trace</summary><pre>{
+  &quot;lessons_loaded&quot;: 25,
+  &quot;selected_lessons&quot;: [],
+  &quot;injected&quot;: false,
+  &quot;mode&quot;: &quot;memory_only&quot;,
+  &quot;response_modified&quot;: false,
+  &quot;routing&quot;: &quot;no_match&quot;,
+  &quot;routing_ms&quot;: 2455.839,
+  &quot;routing_usage&quot;: {
+    &quot;input_tokens&quot;: 5132,
+    &quot;output_tokens&quot;: 12
+  },
+  &quot;wrapper_total_ms&quot;: 7902.596
+}</pre></details></article><article id="turn-2" class="not_evaluated"><h3>SC-066/call_1 · lượt 3</h3><p><b>Khách:</b> Tôi còn ảnh ưu đãi PUMP-GIFT; tôi muốn dùng mã này cho món đang hỏi hôm nay. Nếu chương trình đã hết hạn, hãy nói rõ thay vì tự trừ thêm tiền; tôi chấp nhận giá hiện hành đã thống nhất khi tiếp tục yêu cầu chính.</p><p class="muted">Câu trả lời không đổi/thiếu cặp · Lesson chưa inject.</p><div class="columns"><div><h3>Phiên vừa kết thúc</h3><p><b>Chưa có verdict hợp lệ</b></p><div class="answer">Dạ em chào anh [private]. 
+
+Về mã ưu đãi PUMP-GIFT anh có ảnh chụp, em đã kiểm tra trên hệ thống thì mã này hiện tại đã hết hạn rồi ạ. Do đó, sản phẩm Máy hút sữa (SKU-MB-PUMP1) sẽ áp dụng theo giá hiện hành là 4.290.000đ, đi kèm ưu đãi miễn phí vận chuyển (MOM-FREESHIP) và miễn phí COD như em đã thông tin.
+
+Trước đó anh có chia sẻ là mua cho người thân và còn vấn đề sức khỏe cần thắc mắc, anh có thể chia sẻ cụ thể hơn để em tư vấn kĩ cho mình trước khi quyết định không ạ?</div><details><summary>Claims, trích dẫn và verdict gốc</summary><pre>{
+  &quot;status&quot;: null
+}</pre></details><details><summary>Evidence hiện tại và trước lượt này</summary><pre>{
+  &quot;current&quot;: {
+    &quot;turn_id&quot;: 3,
+    &quot;agent_response&quot;: &quot;Dạ em chào anh [private]. \n\nVề mã ưu đãi PUMP-GIFT anh có ảnh chụp, em đã kiểm tra trên hệ thống thì mã này hiện tại đã hết hạn rồi ạ. Do đó, sản phẩm Máy hút sữa (SKU-MB-PUMP1) sẽ áp dụng theo giá hiện hành là 4.290.000đ, đi kèm ưu đãi miễn phí vận chuyển (MOM-FREESHIP) và miễn phí COD như em đã thông tin.\n\nTrước đó anh có chia sẻ là mua cho người thân và còn vấn đề sức khỏe cần thắc mắc, anh có thể chia sẻ cụ thể hơn để em tư vấn kĩ cho mình trước khi quyết định không ạ?&quot;,
+    &quot;tool_calls&quot;: [],
+    &quot;sources&quot;: [
+      {
+        &quot;sku&quot;: &quot;SKU-MB-PUMP1&quot;,
+        &quot;name&quot;: &quot;[private]&quot;,
+        &quot;category&quot;: &quot;me-be&quot;,
+        &quot;brand&quot;: &quot;Spectra&quot;,
+        &quot;list_price_vnd&quot;: 4290000.0,
+        &quot;discontinued&quot;: false,
+        &quot;successor_sku&quot;: null,
+        &quot;attributes&quot;: {
+          &quot;warranty_months&quot;: 12
+        },
+        &quot;variants&quot;: []
+      }
+    ],
+    &quot;promotions&quot;: []
+  },
+  &quot;earlier&quot;: [
+    {
+      &quot;turn_id&quot;: 1,
+      &quot;tool_calls&quot;: [
+        {
+          &quot;name&quot;: &quot;catalog.search&quot;,
+          &quot;args&quot;: {
+            &quot;query&quot;: &quot;Máy hút sữa điện đôi Spectra S1&quot;,
+            &quot;on&quot;: &quot;2026-10-15&quot;
+          },
+          &quot;result&quot;: {
+            &quot;items&quot;: [
+              {
+                &quot;sku&quot;: &quot;SKU-MB-PUMP1&quot;,
+                &quot;name&quot;: &quot;[private]&quot;,
+                &quot;category&quot;: &quot;me-be&quot;,
+                &quot;brand&quot;: &quot;Spectra&quot;,
+                &quot;list_price_vnd&quot;: 4290000.0,
+                &quot;discontinued&quot;: false,
+                &quot;successor_sku&quot;: null,
+                &quot;attributes&quot;: {
+                  &quot;warranty_months&quot;: 12
+                },
+                &quot;variants&quot;: []
+              }
+            ],
+            &quot;total&quot;: 1
+          }
+        },
+        {
+          &quot;name&quot;: &quot;inventory.check&quot;,
+          &quot;args&quot;: {
+            &quot;sku&quot;: &quot;SKU-MB-PUMP1&quot;,
+            &quot;on&quot;: &quot;2026-10-15&quot;
+          },
+          &quot;result&quot;: {
+            &quot;sku&quot;: &quot;SKU-MB-PUMP1&quot;,
+            &quot;found&quot;: true,
+            &quot;in_stock&quot;: true,
+            &quot;qty&quot;: 6,
+            &quot;discontinued&quot;: false
+          }
+        },
+        {
+          &quot;name&quot;: &quot;pricing.get_quote&quot;,
+          &quot;args&quot;: {
+            &quot;on&quot;: &quot;2026-10-15&quot;,
+            &quot;customer_phone&quot;: &quot;[private]&quot;,
+            &quot;customer_id&quot;: &quot;[private]&quot;,
+            &quot;sku&quot;: &quot;SKU-MB-PUMP1&quot;,
+            &quot;qty&quot;: 1
+          },
+          &quot;result&quot;: {
+            &quot;sku&quot;: &quot;SKU-MB-PUMP1&quot;,
+            &quot;list_price_vnd&quot;: 4290000,
+            &quot;final_price_vnd&quot;: 4290000,
+            &quot;applied_promos&quot;: [
+              {
+                &quot;promo_code&quot;: &quot;MOM-FREESHIP&quot;,
+                &quot;type&quot;: &quot;freeship&quot;,
+                &quot;discount_vnd&quot;: 0
+              },
+              {
+                &quot;promo_code&quot;: &quot;COD-0&quot;,
+                &quot;type&quot;: &quot;freecod&quot;,
+                &quot;discount_vnd&quot;: 0
+              }
+            ],
+            &quot;expired_promos&quot;: [
+              &quot;PUMP-GIFT&quot;
+            ],
+            &quot;ineligible_promos&quot;: [],
+            &quot;not_applied_exclusive&quot;: [],
+            &quot;freeship&quot;: true
+          }
+        }
+      ],
+      &quot;sources&quot;: [
+        {
+          &quot;sku&quot;: &quot;SKU-MB-PUMP1&quot;,
+          &quot;name&quot;: &quot;[private]&quot;,
+          &quot;category&quot;: &quot;me-be&quot;,
+          &quot;brand&quot;: &quot;Spectra&quot;,
+          &quot;list_price_vnd&quot;: 4290000.0,
+          &quot;discontinued&quot;: false,
+          &quot;successor_sku&quot;: null,
+          &quot;attributes&quot;: {
+            &quot;warranty_months&quot;: 12
+          },
+          &quot;variants&quot;: []
+        }
+      ],
+      &quot;promotions&quot;: []
+    },
+    {
+      &quot;turn_id&quot;: 2,
+      &quot;tool_calls&quot;: [
+        {
+          &quot;name&quot;: &quot;catalog.search&quot;,
+          &quot;args&quot;: {
+            &quot;query&quot;: &quot;Anh mua cho người thân và còn vấn đề sức khỏe cần hỏi. Chưa đặt hàng nhé.&quot;,
+            &quot;on&quot;: &quot;2026-10-15&quot;
+          },
+          &quot;result&quot;: {
+            &quot;items&quot;: [],
+            &quot;total&quot;: 0
+          }
+        }
+      ],
+      &quot;sources&quot;: [
+        {
+          &quot;sku&quot;: &quot;SKU-MB-PUMP1&quot;,
+          &quot;name&quot;: &quot;[private]&quot;,
+          &quot;category&quot;: &quot;me-be&quot;,
+          &quot;brand&quot;: &quot;Spectra&quot;,
+          &quot;list_price_vnd&quot;: 4290000.0,
+          &quot;discontinued&quot;: false,
+          &quot;successor_sku&quot;: null,
+          &quot;attributes&quot;: {
+            &quot;warranty_months&quot;: 12
+          },
+          &quot;variants&quot;: []
+        }
+      ],
+      &quot;promotions&quot;: []
+    }
+  ]
+}</pre></details></div></div><details><summary>Lesson ID, routing, token và injection trace</summary><pre>{
+  &quot;lessons_loaded&quot;: 25,
+  &quot;selected_lessons&quot;: [],
+  &quot;injected&quot;: false,
+  &quot;mode&quot;: &quot;memory_only&quot;,
+  &quot;response_modified&quot;: false,
+  &quot;routing&quot;: &quot;failed&quot;,
+  &quot;routing_error&quot;: &quot;ValueError&quot;,
+  &quot;routing_ms&quot;: 1412.011,
+  &quot;routing_usage&quot;: {
+    &quot;input_tokens&quot;: 4757,
+    &quot;output_tokens&quot;: 1
+  },
+  &quot;wrapper_total_ms&quot;: 4810.229
+}</pre></details></article><article id="turn-3" class="not_evaluated"><h3>SC-066/call_1 · lượt 4</h3><p><b>Khách:</b> Anh sẽ liên hệ lại khi có câu hỏi cụ thể.</p><p class="muted">Câu trả lời không đổi/thiếu cặp · Lesson chưa inject.</p><div class="columns"><div><h3>Phiên vừa kết thúc</h3><p><b>Chưa có verdict hợp lệ</b></p><div class="answer">Dạ vâng, em cảm ơn anh [private] ạ. Khi nào anh cần hỗ trợ thêm thông tin hoặc có thắc mắc gì, anh cứ liên hệ lại với bên em nhé. Em chúc anh một ngày tốt lành!</div><details><summary>Claims, trích dẫn và verdict gốc</summary><pre>{
+  &quot;status&quot;: null
+}</pre></details><details><summary>Evidence hiện tại và trước lượt này</summary><pre>{
+  &quot;current&quot;: {
+    &quot;turn_id&quot;: 4,
+    &quot;agent_response&quot;: &quot;Dạ vâng, em cảm ơn anh [private] ạ. Khi nào anh cần hỗ trợ thêm thông tin hoặc có thắc mắc gì, anh cứ liên hệ lại với bên em nhé. Em chúc anh một ngày tốt lành!&quot;,
+    &quot;tool_calls&quot;: [],
+    &quot;sources&quot;: [
+      {
+        &quot;sku&quot;: &quot;SKU-MB-PUMP1&quot;,
+        &quot;name&quot;: &quot;[private]&quot;,
+        &quot;category&quot;: &quot;me-be&quot;,
+        &quot;brand&quot;: &quot;Spectra&quot;,
+        &quot;list_price_vnd&quot;: 4290000.0,
+        &quot;discontinued&quot;: false,
+        &quot;successor_sku&quot;: null,
+        &quot;attributes&quot;: {
+          &quot;warranty_months&quot;: 12
+        },
+        &quot;variants&quot;: []
+      }
+    ],
+    &quot;promotions&quot;: []
+  },
+  &quot;earlier&quot;: [
+    {
+      &quot;turn_id&quot;: 1,
+      &quot;tool_calls&quot;: [
+        {
+          &quot;name&quot;: &quot;catalog.search&quot;,
+          &quot;args&quot;: {
+            &quot;query&quot;: &quot;Máy hút sữa điện đôi Spectra S1&quot;,
+            &quot;on&quot;: &quot;2026-10-15&quot;
+          },
+          &quot;result&quot;: {
+            &quot;items&quot;: [
+              {
+                &quot;sku&quot;: &quot;SKU-MB-PUMP1&quot;,
+                &quot;name&quot;: &quot;[private]&quot;,
+                &quot;category&quot;: &quot;me-be&quot;,
+                &quot;brand&quot;: &quot;Spectra&quot;,
+                &quot;list_price_vnd&quot;: 4290000.0,
+                &quot;discontinued&quot;: false,
+                &quot;successor_sku&quot;: null,
+                &quot;attributes&quot;: {
+                  &quot;warranty_months&quot;: 12
+                },
+                &quot;variants&quot;: []
+              }
+            ],
+            &quot;total&quot;: 1
+          }
+        },
+        {
+          &quot;name&quot;: &quot;inventory.check&quot;,
+          &quot;args&quot;: {
+            &quot;sku&quot;: &quot;SKU-MB-PUMP1&quot;,
+            &quot;on&quot;: &quot;2026-10-15&quot;
+          },
+          &quot;result&quot;: {
+            &quot;sku&quot;: &quot;SKU-MB-PUMP1&quot;,
+            &quot;found&quot;: true,
+            &quot;in_stock&quot;: true,
+            &quot;qty&quot;: 6,
+            &quot;discontinued&quot;: false
+          }
+        },
+        {
+          &quot;name&quot;: &quot;pricing.get_quote&quot;,
+          &quot;args&quot;: {
+            &quot;on&quot;: &quot;2026-10-15&quot;,
+            &quot;customer_phone&quot;: &quot;[private]&quot;,
+            &quot;customer_id&quot;: &quot;[private]&quot;,
+            &quot;sku&quot;: &quot;SKU-MB-PUMP1&quot;,
+            &quot;qty&quot;: 1
+          },
+          &quot;result&quot;: {
+            &quot;sku&quot;: &quot;SKU-MB-PUMP1&quot;,
+            &quot;list_price_vnd&quot;: 4290000,
+            &quot;final_price_vnd&quot;: 4290000,
+            &quot;applied_promos&quot;: [
+              {
+                &quot;promo_code&quot;: &quot;MOM-FREESHIP&quot;,
+                &quot;type&quot;: &quot;freeship&quot;,
+                &quot;discount_vnd&quot;: 0
+              },
+              {
+                &quot;promo_code&quot;: &quot;COD-0&quot;,
+                &quot;type&quot;: &quot;freecod&quot;,
+                &quot;discount_vnd&quot;: 0
+              }
+            ],
+            &quot;expired_promos&quot;: [
+              &quot;PUMP-GIFT&quot;
+            ],
+            &quot;ineligible_promos&quot;: [],
+            &quot;not_applied_exclusive&quot;: [],
+            &quot;freeship&quot;: true
+          }
+        }
+      ],
+      &quot;sources&quot;: [
+        {
+          &quot;sku&quot;: &quot;SKU-MB-PUMP1&quot;,
+          &quot;name&quot;: &quot;[private]&quot;,
+          &quot;category&quot;: &quot;me-be&quot;,
+          &quot;brand&quot;: &quot;Spectra&quot;,
+          &quot;list_price_vnd&quot;: 4290000.0,
+          &quot;discontinued&quot;: false,
+          &quot;successor_sku&quot;: null,
+          &quot;attributes&quot;: {
+            &quot;warranty_months&quot;: 12
+          },
+          &quot;variants&quot;: []
+        }
+      ],
+      &quot;promotions&quot;: []
+    },
+    {
+      &quot;turn_id&quot;: 2,
+      &quot;tool_calls&quot;: [
+        {
+          &quot;name&quot;: &quot;catalog.search&quot;,
+          &quot;args&quot;: {
+            &quot;query&quot;: &quot;Anh mua cho người thân và còn vấn đề sức khỏe cần hỏi. Chưa đặt hàng nhé.&quot;,
+            &quot;on&quot;: &quot;2026-10-15&quot;
+          },
+          &quot;result&quot;: {
+            &quot;items&quot;: [],
+            &quot;total&quot;: 0
+          }
+        }
+      ],
+      &quot;sources&quot;: [
+        {
+          &quot;sku&quot;: &quot;SKU-MB-PUMP1&quot;,
+          &quot;name&quot;: &quot;[private]&quot;,
+          &quot;category&quot;: &quot;me-be&quot;,
+          &quot;brand&quot;: &quot;Spectra&quot;,
+          &quot;list_price_vnd&quot;: 4290000.0,
+          &quot;discontinued&quot;: false,
+          &quot;successor_sku&quot;: null,
+          &quot;attributes&quot;: {
+            &quot;warranty_months&quot;: 12
+          },
+          &quot;variants&quot;: []
+        }
+      ],
+      &quot;promotions&quot;: []
+    },
+    {
+      &quot;turn_id&quot;: 3,
+      &quot;tool_calls&quot;: [],
+      &quot;sources&quot;: [
+        {
+          &quot;sku&quot;: &quot;SKU-MB-PUMP1&quot;,
+          &quot;name&quot;: &quot;[private]&quot;,
+          &quot;category&quot;: &quot;me-be&quot;,
+          &quot;brand&quot;: &quot;Spectra&quot;,
+          &quot;list_price_vnd&quot;: 4290000.0,
+          &quot;discontinued&quot;: false,
+          &quot;successor_sku&quot;: null,
+          &quot;attributes&quot;: {
+            &quot;warranty_months&quot;: 12
+          },
+          &quot;variants&quot;: []
+        }
+      ],
+      &quot;promotions&quot;: []
+    }
+  ]
+}</pre></details></div></div><details><summary>Lesson ID, routing, token và injection trace</summary><pre>{
+  &quot;lessons_loaded&quot;: 25,
+  &quot;selected_lessons&quot;: [],
+  &quot;injected&quot;: false,
+  &quot;mode&quot;: &quot;memory_only&quot;,
+  &quot;response_modified&quot;: false,
+  &quot;routing&quot;: &quot;no_match&quot;,
+  &quot;routing_ms&quot;: 2525.166,
+  &quot;routing_usage&quot;: {
+    &quot;input_tokens&quot;: 5486,
+    &quot;output_tokens&quot;: 12
+  },
+  &quot;wrapper_total_ms&quot;: 5537.132
+}</pre></details></article></section><section id="lessons"><h2>Lesson mới sinh sau session</h2><p>Approved là trạng thái duyệt lesson, chưa chứng minh chất lượng câu trả lời.</p></section><section id="sessions"><h2>Học sau session &amp; guardrail</h2><p>Input finding là cảnh báo mẫu, không phải verdict khách nói sai hoặc bằng chứng tấn công thành công. Run cũ thiếu guardrail trace sẽ được ghi rõ.</p><article><h3>SC-066/call_1</h3><h3>Vòng 1</h3><p>Job: done · Issue xác nhận: 0 · Guardrail: có trace</p><details><summary>Vấn đề, trạng thái học và guardrail chi tiết</summary><pre>{
+  &quot;job&quot;: {
+    &quot;status&quot;: &quot;done&quot;,
+    &quot;job_id&quot;: &quot;37ca0dde6e0fef7a5575a54e96f740322c70ecdb2af7afd3c05ee8fba2cf9a0c&quot;,
+    &quot;error&quot;: null
+  },
+  &quot;error&quot;: null,
+  &quot;learning&quot;: {
+    &quot;job_id&quot;: &quot;37ca0dde6e0fef7a5575a54e96f740322c70ecdb2af7afd3c05ee8fba2cf9a0c&quot;,
+    &quot;gaps&quot;: [],
+    &quot;scope&quot;: &quot;knowledge_gap_and_reflection_v1&quot;,
+    &quot;evaluation_cases&quot;: [],
+    &quot;out_of_scope&quot;: [],
+    &quot;issue_reviews&quot;: [],
+    &quot;detector_error&quot;: null,
+    &quot;guardrails&quot;: {
+      &quot;version&quot;: &quot;learning_guardrails_v1&quot;,
+      &quot;input_findings&quot;: [],
+      &quot;blocked_lessons&quot;: [],
+      &quot;blocked_sources&quot;: []
+    },
+    &quot;detection&quot;: {
+      &quot;candidate_count&quot;: 0,
+      &quot;open_question_count&quot;: 0,
+      &quot;processed_count&quot;: 0,
+      &quot;skipped_unmatched_question&quot;: 0,
+      &quot;skipped_over_limit&quot;: 0,
+      &quot;scan&quot;: {
+        &quot;turns_available&quot;: 4,
+        &quot;turns_scanned&quot;: 4,
+        &quot;requests&quot;: 4,
+        &quot;errors&quot;: [],
+        &quot;schema_retries&quot;: 0,
+        &quot;skipped_over_limit&quot;: 0
+      },
+      &quot;alignment_rejections&quot;: []
+    },
+    &quot;outcome&quot;: &quot;no_candidates&quot;,
+    &quot;learning_duration_ms&quot;: 4696,
+    &quot;learning_usage&quot;: {
+      &quot;input_tokens&quot;: 6013,
+      &quot;output_tokens&quot;: 24
+    }
+  },
+  &quot;observed_input_findings&quot;: []
+}</pre></details></article></section></main></body></html>

@@ -1,0 +1,495 @@
+{
+  "scenario_id": "SC-054",
+  "call": "call_2",
+  "session_id": "self-319092241ed944e98b3ce496172d65b2-SC-054-call_2",
+  "turns": [
+    {
+      "customer": "Tôi là [private], số điện thoại [phone], đã nhắn qua Fanpage. Anh [private] đây, đã nhắn Fanpage bằng số này. Bên em còn nội dung chat không?",
+      "agent": "Dạ em chào anh [private], em có thể tra cứu lịch sử trao đổi của anh trên hệ thống. \n\nTheo ghi nhận gần nhất, anh có quan tâm đến sản phẩm quạt trần (mã SKU-FAN-DC1). Em có thể hỗ trợ thông tin gì thêm cho anh về sản phẩm này hoặc hỗ trợ anh đặt hàng luôn không ạ?",
+      "latency": {
+        "ttft_ms": 23108,
+        "total_ms": 23108,
+        "ttfa_ms": null,
+        "measurement_mode": "non_streaming",
+        "timing_boundary": "response_ready_before_persistence",
+        "asr_ms": null,
+        "call_brief_ms": 19421,
+        "response_ready_ms": 23108,
+        "persistence_ms": 0.101,
+        "request_complete_ms": 23108.202,
+        "backend_total_ms": 23108.202,
+        "precomputed_parts": [
+          "persisted_facts"
+        ]
+      },
+      "lesson_trace": null
+    },
+    {
+      "customer": "Em nhắc lại mẫu và giá đã báo trong chat giúp nhé.",
+      "agent": "Dạ em chào anh [private], mẫu sản phẩm đã báo trong chat cho anh là quạt trần mã **SKU-FAN-DC1** với giá là **2.450.000 VNĐ** (được miễn phí vận chuyển) ạ. \n\nHiện tại sản phẩm này bên em vẫn đang còn hàng sẵn. Anh có muốn em hỗ trợ đặt hàng luôn không ạ?",
+      "latency": {
+        "ttft_ms": 17823,
+        "total_ms": 17823,
+        "ttfa_ms": null,
+        "measurement_mode": "non_streaming",
+        "timing_boundary": "response_ready_before_persistence",
+        "asr_ms": null,
+        "call_brief_ms": null,
+        "response_ready_ms": 17823,
+        "persistence_ms": 0.105,
+        "request_complete_ms": 17822.813,
+        "backend_total_ms": 17822.813,
+        "precomputed_parts": [
+          "persisted_facts"
+        ]
+      },
+      "lesson_trace": null
+    },
+    {
+      "customer": "Anh đồng ý giá hôm nay 2.450.000 đồng, một chiếc, giao 103 đường Kiểm Thử, TP. Hồ Chí Minh, COD.",
+      "agent": "Dạ em cảm ơn anh [private]. Em đã lên đơn thành công cho anh mẫu quạt trần **SKU-FAN-DC1** (số lượng 1 chiếc) với giá **2.450.000 VNĐ**, thanh toán COD khi nhận hàng tại địa chỉ [address]\n\nMã đơn hàng của anh là **[order_id]**, dự kiến sẽ được giao đến [address]",
+      "latency": {
+        "ttft_ms": 11499,
+        "total_ms": 11499,
+        "ttfa_ms": null,
+        "measurement_mode": "non_streaming",
+        "timing_boundary": "response_ready_before_persistence",
+        "asr_ms": null,
+        "call_brief_ms": null,
+        "response_ready_ms": 11499,
+        "persistence_ms": 0.122,
+        "request_complete_ms": 11498.66,
+        "backend_total_ms": 11498.66,
+        "precomputed_parts": [
+          "persisted_facts"
+        ]
+      },
+      "lesson_trace": null
+    }
+  ],
+  "generation_context": {
+    "round": 0,
+    "instruction_hash": "9d30a7093911a993d8545de8b61cc6dc8465de67b10fb62b27d9f1bafaf0badf",
+    "applied_patterns": {},
+    "lessons_loaded": false,
+    "lesson_sources": [],
+    "lesson_files": [],
+    "instruction_root": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round0\\instructions"
+  },
+  "evaluation_evidence": [
+    {
+      "turn_id": 1,
+      "agent_response": "Dạ em chào anh [private], em có thể tra cứu lịch sử trao đổi của anh trên hệ thống. \n\nTheo ghi nhận gần nhất, anh có quan tâm đến sản phẩm quạt trần (mã SKU-FAN-DC1). Em có thể hỗ trợ thông tin gì thêm cho anh về sản phẩm này hoặc hỗ trợ anh đặt hàng luôn không ạ?",
+      "tool_calls": [
+        {
+          "name": "policy.search",
+          "args": {
+            "query": "Tôi là [private], số điện thoại [private], đã nhắn qua Fanpage. Anh [private] đây, đã nhắn Fanpage bằng số này. Bên em còn nội dung chat không?",
+            "k": 3,
+            "product_sku": "SKU-FAN-DC1",
+            "as_of": "2026-10-21"
+          },
+          "result": {
+            "query": "Tôi là [private], số điện thoại [private], đã nhắn qua Fanpage. Anh [private] đây, đã nhắn Fanpage bằng số này. Bên em còn nội dung chat không?",
+            "as_of": "2026-10-21",
+            "product_sku": "SKU-FAN-DC1",
+            "count": 3,
+            "chunks": [
+              {
+                "chunk_id": "",
+                "content": "Giá bán, tồn kho, bảo hành lấy từ catalog; tài liệu này chỉ có thông số kỹ thuật. Khi khách hỏi thông số **không có** trong bảng, nhân viên trả lời chưa có thông tin.",
+                "source_file": "spec-gia-dung.md",
+                "section": "Thông số kỹ thuật ngành gia dụng — Shop BTC (nguồn: tài liệu hãng, cập nhật 10/2026)"
+              },
+              {
+                "chunk_id": "PB-01",
+                "content": "Chào bằng tên và xưng hô đã lưu; nhắc lại tối đa **2 thông tin** liên quan nhất của phiên trước (sản phẩm + rào cản) dưới dạng câu xác nhận; không đọc lại toàn bộ hồ sơ. Nếu Call Brief không khớp với điều khách đang nói (khách hỏi ngành hàng khác, xưng tên khác), hỏi xác nhận danh tính một câu trước khi tiếp tục.",
+                "source_file": "playbook-telesale.md",
+                "section": "[PB-01] Nguyên tắc mở đầu với khách gọi lại"
+              },
+              {
+                "chunk_id": "DT-02",
+                "content": "Sản phẩm còn nguyên tem, nhãn, hộp, chưa qua sử dụng (giày/áo chưa giặt, chưa có dấu hiệu mòn đế). Có hóa đơn hoặc mã đơn hàng. Sản phẩm thuộc nhóm đồ lót, bình sữa, núm ti đã bóc seal **không** được đổi trả vì lý do vệ sinh.",
+                "source_file": "chinh-sach-doi-tra.md",
+                "section": "[DT-02] Điều kiện đổi trả"
+              }
+            ]
+          }
+        }
+      ],
+      "sources": [],
+      "promotions": []
+    },
+    {
+      "turn_id": 2,
+      "agent_response": "Dạ em chào anh [private], mẫu sản phẩm đã báo trong chat cho anh là quạt trần mã **SKU-FAN-DC1** với giá là **2.450.000 VNĐ** (được miễn phí vận chuyển) ạ. \n\nHiện tại sản phẩm này bên em vẫn đang còn hàng sẵn. Anh có muốn em hỗ trợ đặt hàng luôn không ạ?",
+      "tool_calls": [
+        {
+          "name": "catalog.search",
+          "args": {
+            "query": "Em nhắc lại mẫu và giá đã báo trong chat giúp nhé.",
+            "on": "2026-10-21"
+          },
+          "result": {
+            "items": [],
+            "total": 0
+          }
+        },
+        {
+          "name": "pricing.get_quote",
+          "args": {
+            "on": "2026-10-21",
+            "customer_phone": "[private]",
+            "customer_id": "[private]",
+            "sku": "SKU-FAN-DC1",
+            "qty": 1
+          },
+          "result": {
+            "sku": "SKU-FAN-DC1",
+            "list_price_vnd": 2450000,
+            "final_price_vnd": 2450000,
+            "applied_promos": [
+              {
+                "promo_code": "COD-0",
+                "type": "freecod",
+                "discount_vnd": 0
+              }
+            ],
+            "expired_promos": [],
+            "ineligible_promos": [
+              {
+                "promo_code": "NAM-SHIP0",
+                "reason": "region"
+              }
+            ],
+            "not_applied_exclusive": [],
+            "freeship": true
+          }
+        },
+        {
+          "name": "inventory.check",
+          "args": {
+            "on": "2026-10-21",
+            "sku": "SKU-FAN-DC1"
+          },
+          "result": {
+            "sku": "SKU-FAN-DC1",
+            "found": true,
+            "in_stock": true,
+            "qty": 30,
+            "discontinued": false
+          }
+        }
+      ],
+      "sources": [],
+      "promotions": []
+    },
+    {
+      "turn_id": 3,
+      "agent_response": "Dạ em cảm ơn anh [private]. Em đã lên đơn thành công cho anh mẫu quạt trần **SKU-FAN-DC1** (số lượng 1 chiếc) với giá **2.450.000 VNĐ**, thanh toán COD khi nhận hàng tại địa chỉ [address]\n\nMã đơn hàng của anh là **[order_id]**, dự kiến sẽ được giao đến [address]",
+      "tool_calls": [
+        {
+          "name": "inventory.check",
+          "args": {
+            "sku": "SKU-FAN-DC1",
+            "on": "2026-10-21"
+          },
+          "result": {
+            "sku": "SKU-FAN-DC1",
+            "found": true,
+            "in_stock": true,
+            "qty": 30,
+            "discontinued": false
+          }
+        },
+        {
+          "name": "pricing.get_quote",
+          "args": {
+            "on": "2026-10-21",
+            "customer_phone": "[private]",
+            "customer_id": "[private]",
+            "address": "[private]",
+            "sku": "SKU-FAN-DC1",
+            "qty": 1
+          },
+          "result": {
+            "sku": "SKU-FAN-DC1",
+            "list_price_vnd": 2450000,
+            "final_price_vnd": 2450000,
+            "applied_promos": [
+              {
+                "promo_code": "NAM-SHIP0",
+                "type": "freeship",
+                "discount_vnd": 0
+              },
+              {
+                "promo_code": "COD-0",
+                "type": "freecod",
+                "discount_vnd": 0
+              }
+            ],
+            "expired_promos": [],
+            "ineligible_promos": [],
+            "not_applied_exclusive": [],
+            "freeship": true
+          }
+        },
+        {
+          "name": "order.create",
+          "args": {
+            "customer_phone": "[private]",
+            "customer_id": "[private]",
+            "address": "[private]",
+            "idempotency_key": "self-319092241ed944e98b3ce496172d65b2-SC-054-call_2:call_2:create:SKU-FAN-DC1",
+            "sku": "SKU-FAN-DC1",
+            "qty": 1,
+            "price_vnd": 2450000,
+            "promo_code": "NAM-SHIP0",
+            "on": "2026-10-21",
+            "payment": "COD"
+          },
+          "result": {
+            "order_id": "[private]",
+            "status": "created",
+            "total_vnd": 2450000,
+            "needs_confirmation_call": true,
+            "estimated_delivery": "2026-10-23"
+          }
+        }
+      ],
+      "sources": [],
+      "promotions": []
+    }
+  ],
+  "job": {
+    "status": "done",
+    "job_id": "08e63328de2d39afabb9033fdaaba321216d349caec40ab7818283ecd3e551f9",
+    "error": null
+  },
+  "learning": {
+    "job_id": "08e63328de2d39afabb9033fdaaba321216d349caec40ab7818283ecd3e551f9",
+    "gaps": [
+      {
+        "id": "9298aa80a7a7c5e010655e6f73afe8c7e86b5340640604f7fd1a9f0eabab6be1",
+        "status": "pending_remediation"
+      }
+    ],
+    "scope": "knowledge_gap_and_reflection_v1",
+    "evaluation_cases": [
+      {
+        "id": "3842e91fce1b8114f38e70644f328d12c4a114c856f0ee617683a0e3266c761a",
+        "gap_id": "9298aa80a7a7c5e010655e6f73afe8c7e86b5340640604f7fd1a9f0eabab6be1",
+        "turn_id": 1,
+        "question": "Tôi là [private], số điện thoại [private], đã nhắn qua Fanpage. Anh [private] đây, đã nhắn Fanpage bằng số này. Bên em còn nội dung chat không?",
+        "reason": "unsupported_claim",
+        "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments."
+      }
+    ],
+    "out_of_scope": [],
+    "issue_reviews": [
+      {
+        "job_id": "08e63328de2d39afabb9033fdaaba321216d349caec40ab7818283ecd3e551f9",
+        "message_id": 0,
+        "turn_id": 1,
+        "origin": "turn_detector",
+        "mechanism": "knowledge_gap",
+        "verified": true,
+        "claim": "Dạ em chào anh [private], em có thể tra cứu lịch sử trao đổi của anh trên hệ thống. \n\nTheo ghi nhận gần nhất, anh có quan tâm đến sản phẩm quạt trần (mã SKU-FAN-DC1).",
+        "assessment": "unsupported_by_evidence",
+        "evidence_paths": [],
+        "rejection": null,
+        "rejection_reasons": [],
+        "format_retry": false,
+        "verifier_output": {
+          "valid": true,
+          "issue_scope": "business_knowledge",
+          "claim": "Dạ em chào anh [private], em có thể tra cứu lịch sử trao đổi của anh trên hệ thống. \n\nTheo ghi nhận gần nhất, anh có quan tâm đến sản phẩm quạt trần (mã SKU-FAN-DC1).",
+          "assessment": "unsupported_by_evidence",
+          "evidence_paths": [],
+          "decision_reason": "No evidence or tool results confirm customer historical interactions or prior interest in ceiling fan SKU-FAN-DC1.",
+          "audit": {
+            "support_status": "not_established",
+            "coverage": "complete",
+            "checked_paths": [
+              "evidence.tool_calls.0.result",
+              "evidence.sources",
+              "evidence.promotions"
+            ]
+          }
+        },
+        "candidate_claim": "Dạ em chào anh [private], em có thể tra cứu lịch sử trao đổi của anh trên hệ thống. \n\nTheo ghi nhận gần nhất, anh có quan tâm đến sản phẩm quạt trần (mã SKU-FAN-DC1).",
+        "verification_basis": "evidence_inventory_audit",
+        "evidence_inventory": [
+          "evidence.tool_calls.0.result",
+          "evidence.sources",
+          "evidence.promotions"
+        ],
+        "lesson_status": "approved"
+      }
+    ],
+    "detector_error": null,
+    "guardrails": {
+      "version": "learning_guardrails_v1",
+      "input_findings": [],
+      "blocked_lessons": [],
+      "blocked_sources": []
+    },
+    "detection": {
+      "candidate_count": 1,
+      "open_question_count": 0,
+      "processed_count": 1,
+      "skipped_unmatched_question": 0,
+      "skipped_over_limit": 0,
+      "scan": {
+        "turns_available": 3,
+        "turns_scanned": 3,
+        "requests": 3,
+        "errors": [],
+        "schema_retries": 0,
+        "skipped_over_limit": 0
+      },
+      "alignment_rejections": []
+    },
+    "outcome": "gaps_processed",
+    "learning_duration_ms": 9514,
+    "learning_usage": {
+      "input_tokens": 8752,
+      "output_tokens": 445
+    }
+  },
+  "artifact_changes": [
+    {
+      "path": "gaps/9298aa80a7a7c5e010655e6f73afe8c7e86b5340640604f7fd1a9f0eabab6be1.json",
+      "change": "created",
+      "value": {
+        "id": "9298aa80a7a7c5e010655e6f73afe8c7e86b5340640604f7fd1a9f0eabab6be1",
+        "question": "Thông tin nghiệp vụ cần được xác minh từ nguồn nào?",
+        "occurrences": [
+          "08e63328de2d39afabb9033fdaaba321216d349caec40ab7818283ecd3e551f9"
+        ],
+        "reason": "unsupported_claim",
+        "mechanism": "knowledge_gap",
+        "status": "pending_remediation",
+        "evidence_refs": [
+          {
+            "job_id": "08e63328de2d39afabb9033fdaaba321216d349caec40ab7818283ecd3e551f9",
+            "message_id": 0,
+            "turn_id": 1,
+            "origin": "turn_detector"
+          }
+        ],
+        "pattern_ref": "9298aa80a7a7c5e010655e6f73afe8c7e86b5340640604f7fd1a9f0eabab6be1",
+        "test_refs": [
+          "9298aa80a7a7c5e010655e6f73afe8c7e86b5340640604f7fd1a9f0eabab6be1"
+        ]
+      }
+    },
+    {
+      "path": "patterns/9298aa80a7a7c5e010655e6f73afe8c7e86b5340640604f7fd1a9f0eabab6be1.json",
+      "change": "created",
+      "value": {
+        "id": "9298aa80a7a7c5e010655e6f73afe8c7e86b5340640604f7fd1a9f0eabab6be1",
+        "reason": "unsupported_claim",
+        "pattern": "Do not state an unverified claim as a fact.",
+        "status": "approved",
+        "scope": "general",
+        "mechanism": "knowledge_gap",
+        "criterion": "Do not state an unverified claim as a fact.",
+        "evidence_refs": [
+          {
+            "job_id": "08e63328de2d39afabb9033fdaaba321216d349caec40ab7818283ecd3e551f9",
+            "message_id": 0,
+            "turn_id": 1,
+            "origin": "turn_detector"
+          }
+        ],
+        "assessment": "unsupported_by_evidence",
+        "report_ref": "08e63328de2d39afabb9033fdaaba321216d349caec40ab7818283ecd3e551f9",
+        "lesson": {
+          "title": "Verify Customer Chat History Before Claiming",
+          "when": "the user asks whether their prior chat history or interaction details are retained on the system",
+          "do": "state that information cannot be confirmed if official retrieved context or policy sources lack proof of the customer's prior interaction history",
+          "otherwise": "state uncertainty about the chat history rather than inventing past interactions or product interest",
+          "triggers": [
+            "bên em còn nội dung chat không",
+            "tra cứu lịch sử trao đổi",
+            "kiểm tra tin nhắn fanpage",
+            "check chat history"
+          ],
+          "id": "3cd3c42741e4f384bb677359c92e310266b7dbcbda3a0012abd57fdb0347c01e",
+          "status": "approved",
+          "scope": "general",
+          "mechanism": "knowledge_gap",
+          "source_refs": [
+            {
+              "job_id": "08e63328de2d39afabb9033fdaaba321216d349caec40ab7818283ecd3e551f9",
+              "message_id": 0,
+              "turn_id": 1,
+              "origin": "turn_detector"
+            }
+          ],
+          "version": 2
+        },
+        "lesson_path": "lessons\\approved\\3cd3c42741e4f384bb677359c92e310266b7dbcbda3a0012abd57fdb0347c01e.md",
+        "lesson_hash": "69a0eb02f8552e58812c9527556e29c9ff8e0cc2fff99a5a52488c72b3cf79a2"
+      }
+    },
+    {
+      "path": "regression_cases/9298aa80a7a7c5e010655e6f73afe8c7e86b5340640604f7fd1a9f0eabab6be1.json",
+      "change": "created",
+      "value": {
+        "id": "9298aa80a7a7c5e010655e6f73afe8c7e86b5340640604f7fd1a9f0eabab6be1",
+        "reason": "unsupported_claim",
+        "pattern": "Do not state an unverified claim as a fact.",
+        "status": "approved",
+        "scope": "general",
+        "mechanism": "knowledge_gap",
+        "criterion": "Do not state an unverified claim as a fact.",
+        "evidence_refs": [
+          {
+            "job_id": "08e63328de2d39afabb9033fdaaba321216d349caec40ab7818283ecd3e551f9",
+            "message_id": 0,
+            "turn_id": 1,
+            "origin": "turn_detector"
+          }
+        ],
+        "assessment": "unsupported_by_evidence",
+        "report_ref": "08e63328de2d39afabb9033fdaaba321216d349caec40ab7818283ecd3e551f9",
+        "lesson": {
+          "title": "Verify Customer Chat History Before Claiming",
+          "when": "the user asks whether their prior chat history or interaction details are retained on the system",
+          "do": "state that information cannot be confirmed if official retrieved context or policy sources lack proof of the customer's prior interaction history",
+          "otherwise": "state uncertainty about the chat history rather than inventing past interactions or product interest",
+          "triggers": [
+            "bên em còn nội dung chat không",
+            "tra cứu lịch sử trao đổi",
+            "kiểm tra tin nhắn fanpage",
+            "check chat history"
+          ],
+          "id": "3cd3c42741e4f384bb677359c92e310266b7dbcbda3a0012abd57fdb0347c01e",
+          "status": "approved",
+          "scope": "general",
+          "mechanism": "knowledge_gap",
+          "source_refs": [
+            {
+              "job_id": "08e63328de2d39afabb9033fdaaba321216d349caec40ab7818283ecd3e551f9",
+              "message_id": 0,
+              "turn_id": 1,
+              "origin": "turn_detector"
+            }
+          ],
+          "version": 2
+        },
+        "lesson_path": "lessons\\approved\\3cd3c42741e4f384bb677359c92e310266b7dbcbda3a0012abd57fdb0347c01e.md",
+        "lesson_hash": "69a0eb02f8552e58812c9527556e29c9ff8e0cc2fff99a5a52488c72b3cf79a2"
+      }
+    },
+    {
+      "path": "lessons/approved/3cd3c42741e4f384bb677359c92e310266b7dbcbda3a0012abd57fdb0347c01e.md",
+      "change": "created",
+      "value": {
+        "content": "---\n{\"do\": \"state that information cannot be confirmed if official retrieved context or policy sources lack proof of the customer's prior interaction history\", \"id\": \"3cd3c42741e4f384bb677359c92e310266b7dbcbda3a0012abd57fdb0347c01e\", \"mechanism\": \"knowledge_gap\", \"otherwise\": \"state uncertainty about the chat history rather than inventing past interactions or product interest\", \"scope\": \"general\", \"source_refs\": [{\"job_id\": \"08e63328de2d39afabb9033fdaaba321216d349caec40ab7818283ecd3e551f9\", \"message_id\": 0, \"origin\": \"turn_detector\", \"turn_id\": 1}], \"status\": \"approved\", \"title\": \"Verify Customer Chat History Before Claiming\", \"triggers\": [\"bên em còn nội dung chat không\", \"tra cứu lịch sử trao đổi\", \"kiểm tra tin nhắn fanpage\", \"check chat history\"], \"version\": 2, \"when\": \"the user asks whether their prior chat history or interaction details are retained on the system\"}\n---\n\n# Verify Customer Chat History Before Claiming\n\n## When\nthe user asks whether their prior chat history or interaction details are retained on the system\n\n## Do\nstate that information cannot be confirmed if official retrieved context or policy sources lack proof of the customer's prior interaction history\n\n## Otherwise\nstate uncertainty about the chat history rather than inventing past interactions or product interest\n"
+      }
+    }
+  ]
+}

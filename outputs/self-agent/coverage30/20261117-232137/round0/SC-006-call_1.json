@@ -1,0 +1,292 @@
+{
+  "scenario_id": "SC-006",
+  "call": "call_1",
+  "session_id": "self-9f5f626cd9a14376bf1c729e4736eb38-SC-006-call_1",
+  "turns": [
+    {
+      "customer": "Chào em, anh đang cân nhắc Máy lọc không khí AirPure Pro.",
+      "agent": "Dòng máy này rất tốt cho gia đình khi sở hữu màng lọc HEPA H13, đèn UV diệt khuẩn, dùng cho phòng rộng tới 45m² và có cả khóa an toàn cho trẻ em. Anh [private] có muốn em lưu thông tin để khi hàng về vào ngày 21/10 em liên hệ báo mình ngay không ạ? Em cần kiểm tra lại tồn kho trước khi xác nhận cho mình ạ.",
+      "latency": {
+        "ttft_ms": 6404,
+        "total_ms": 6404,
+        "ttfa_ms": null,
+        "measurement_mode": "non_streaming",
+        "timing_boundary": "response_ready_before_persistence",
+        "asr_ms": null,
+        "call_brief_ms": 3200,
+        "response_ready_ms": 6404,
+        "persistence_ms": 0.795,
+        "request_complete_ms": 6404.606,
+        "backend_total_ms": 6404.606,
+        "precomputed_parts": []
+      },
+      "lesson_trace": null
+    },
+    {
+      "customer": "Anh xem giá 7.690.000 đồng; em kiểm tra giúp giá và hàng hiện tại nhé. Ngân sách của anh là 7.990.000 đồng.",
+      "agent": "Dạ em chào anh [private], em đã kiểm tra thông tin giúp mình rồi ạ. \n\nMẫu **Máy lọc không khí AirPure Pro** hiện có giá ưu đãi là **7.690.000 đồng** (giá gốc 7.990.000 đồng, đang được giảm 300.000 đồng và nằm trong ngân sách của anh ạ). \n\nTuy nhiên, hiện tại sản phẩm đang tạm hết hàng và dự kiến sẽ về hàng lại vào ngày **21/10/2026**. Khi hàng về, em liên hệ lại ngay để báo anh nhé?",
+      "latency": {
+        "ttft_ms": 8769,
+        "total_ms": 8769,
+        "ttfa_ms": null,
+        "measurement_mode": "non_streaming",
+        "timing_boundary": "response_ready_before_persistence",
+        "asr_ms": null,
+        "call_brief_ms": null,
+        "response_ready_ms": 8769,
+        "persistence_ms": 0.123,
+        "request_complete_ms": 8769.172,
+        "backend_total_ms": 8769.172,
+        "precomputed_parts": [
+          "persisted_facts"
+        ]
+      },
+      "lesson_trace": null
+    },
+    {
+      "customer": "Anh còn phải hỏi người nhà. Gọi lại cho anh lúc 10 giờ ngày 2026-10-22 nhé, chưa lên đơn.",
+      "agent": "Dạ em hiểu rồi ạ. Em đã hẹn lịch gọi lại cho anh [private] vào lúc 10:00 sáng ngày 22/10/2026 để hỗ trợ mình sau khi thảo luận với gia đình rồi nhé. \n\nEm cảm ơn anh, chúc anh một ngày tốt lành ạ!",
+      "latency": {
+        "ttft_ms": 2829,
+        "total_ms": 2829,
+        "ttfa_ms": null,
+        "measurement_mode": "non_streaming",
+        "timing_boundary": "response_ready_before_persistence",
+        "asr_ms": null,
+        "call_brief_ms": null,
+        "response_ready_ms": 2829,
+        "persistence_ms": 0.098,
+        "request_complete_ms": 2828.872,
+        "backend_total_ms": 2828.872,
+        "precomputed_parts": [
+          "persisted_facts"
+        ]
+      },
+      "lesson_trace": null
+    }
+  ],
+  "generation_context": {
+    "round": 0,
+    "instruction_hash": "9d30a7093911a993d8545de8b61cc6dc8465de67b10fb62b27d9f1bafaf0badf",
+    "applied_patterns": {},
+    "lessons_loaded": false,
+    "lesson_sources": [],
+    "lesson_files": [],
+    "instruction_root": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round0\\instructions"
+  },
+  "evaluation_evidence": [
+    {
+      "turn_id": 1,
+      "agent_response": "Dòng máy này rất tốt cho gia đình khi sở hữu màng lọc HEPA H13, đèn UV diệt khuẩn, dùng cho phòng rộng tới 45m² và có cả khóa an toàn cho trẻ em. Anh [private] có muốn em lưu thông tin để khi hàng về vào ngày 21/10 em liên hệ báo mình ngay không ạ? Em cần kiểm tra lại tồn kho trước khi xác nhận cho mình ạ.",
+      "tool_calls": [
+        {
+          "name": "catalog.search",
+          "args": {
+            "query": "Máy lọc không khí AirPure Pro",
+            "on": "2026-10-19"
+          },
+          "result": {
+            "items": [
+              {
+                "sku": "SKU-AP-PRO",
+                "name": "[private]",
+                "category": "gia-dung/may-loc-khong-khi",
+                "brand": "AirPure",
+                "list_price_vnd": 7990000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "features": "HEPA H13, UV, diệt khuẩn",
+                  "room_area_m2": 45,
+                  "child_safe_lock": true,
+                  "warranty_months": 24
+                },
+                "variants": []
+              }
+            ],
+            "total": 1
+          }
+        },
+        {
+          "name": "inventory.check",
+          "args": {
+            "sku": "SKU-AP-PRO",
+            "on": "2026-10-19"
+          },
+          "result": {
+            "sku": "SKU-AP-PRO",
+            "found": true,
+            "in_stock": false,
+            "qty": 0,
+            "discontinued": false,
+            "restock_expected": "2026-10-21"
+          }
+        }
+      ],
+      "sources": [
+        {
+          "sku": "SKU-AP-PRO",
+          "name": "[private]",
+          "category": "gia-dung/may-loc-khong-khi",
+          "brand": "AirPure",
+          "list_price_vnd": 7990000.0,
+          "discontinued": false,
+          "successor_sku": null,
+          "attributes": {
+            "features": "HEPA H13, UV, diệt khuẩn",
+            "room_area_m2": 45,
+            "child_safe_lock": true,
+            "warranty_months": 24
+          },
+          "variants": []
+        }
+      ],
+      "promotions": []
+    },
+    {
+      "turn_id": 2,
+      "agent_response": "Dạ em chào anh [private], em đã kiểm tra thông tin giúp mình rồi ạ. \n\nMẫu **Máy lọc không khí AirPure Pro** hiện có giá ưu đãi là **7.690.000 đồng** (giá gốc 7.990.000 đồng, đang được giảm 300.000 đồng và nằm trong ngân sách của anh ạ). \n\nTuy nhiên, hiện tại sản phẩm đang tạm hết hàng và dự kiến sẽ về hàng lại vào ngày **21/10/2026**. Khi hàng về, em liên hệ lại ngay để báo anh nhé?",
+      "tool_calls": [
+        {
+          "name": "catalog.search",
+          "args": {
+            "query": "Anh xem giá 7.690.000 đồng; em kiểm tra giúp giá và hàng hiện tại nhé. Ngân sách của anh là 7.990.000 đồng.",
+            "on": "2026-10-19"
+          },
+          "result": {
+            "items": [],
+            "total": 0
+          }
+        },
+        {
+          "name": "pricing.get_quote",
+          "args": {
+            "on": "2026-10-19",
+            "customer_phone": "[private]",
+            "customer_id": "[private]",
+            "sku": "SKU-AP-PRO",
+            "qty": 1
+          },
+          "result": {
+            "sku": "SKU-AP-PRO",
+            "list_price_vnd": 7990000,
+            "final_price_vnd": 7690000,
+            "applied_promos": [
+              {
+                "promo_code": "COD-0",
+                "type": "freecod",
+                "discount_vnd": 0
+              },
+              {
+                "promo_code": "AIR-OCT",
+                "type": "fixed",
+                "discount_vnd": 300000
+              }
+            ],
+            "expired_promos": [],
+            "ineligible_promos": [
+              {
+                "promo_code": "AIR-2ND-50",
+                "reason": "min_qty"
+              },
+              {
+                "promo_code": "[private]-SHIP0",
+                "reason": "region"
+              },
+              {
+                "promo_code": "TRADE-IN-AP",
+                "reason": "requires_owned_sku"
+              }
+            ],
+            "not_applied_exclusive": [],
+            "freeship": true
+          }
+        },
+        {
+          "name": "inventory.check",
+          "args": {
+            "sku": "SKU-AP-PRO",
+            "on": "2026-10-19"
+          },
+          "result": {
+            "sku": "SKU-AP-PRO",
+            "found": true,
+            "in_stock": false,
+            "qty": 0,
+            "discontinued": false,
+            "restock_expected": "2026-10-21"
+          }
+        }
+      ],
+      "sources": [],
+      "promotions": []
+    },
+    {
+      "turn_id": 3,
+      "agent_response": "Dạ em hiểu rồi ạ. Em đã hẹn lịch gọi lại cho anh [private] vào lúc 10:00 sáng ngày 22/10/2026 để hỗ trợ mình sau khi thảo luận với gia đình rồi nhé. \n\nEm cảm ơn anh, chúc anh một ngày tốt lành ạ!",
+      "tool_calls": [
+        {
+          "name": "schedule.callback",
+          "args": {
+            "customer_phone": "[private]",
+            "callback_at": "2026-10-22T10:00",
+            "note": "Anh còn phải hỏi người nhà. Gọi lại cho anh lúc 10 giờ ngày 2026-10-22 nhé, chưa lên đơn.",
+            "on": "2026-10-19"
+          },
+          "result": {
+            "callback_id": "CB-5E86F5",
+            "customer_phone": "[private]",
+            "callback_at": "2026-10-22T10:00",
+            "moved_from": null,
+            "note": "Anh còn phải hỏi người nhà. Gọi lại cho anh lúc 10 giờ ngày 2026-10-22 nhé, chưa lên đơn."
+          }
+        }
+      ],
+      "sources": [],
+      "promotions": []
+    }
+  ],
+  "job": {
+    "status": "done",
+    "job_id": "bdb8d6b16dbeb5b402aa77967e0bebfba7096fb05d28f09017d6c5a8e9839d43",
+    "error": null
+  },
+  "learning": {
+    "job_id": "bdb8d6b16dbeb5b402aa77967e0bebfba7096fb05d28f09017d6c5a8e9839d43",
+    "gaps": [],
+    "scope": "knowledge_gap_and_reflection_v1",
+    "evaluation_cases": [],
+    "out_of_scope": [],
+    "issue_reviews": [],
+    "detector_error": null,
+    "guardrails": {
+      "version": "learning_guardrails_v1",
+      "input_findings": [],
+      "blocked_lessons": [],
+      "blocked_sources": []
+    },
+    "detection": {
+      "candidate_count": 0,
+      "open_question_count": 0,
+      "processed_count": 0,
+      "skipped_unmatched_question": 0,
+      "skipped_over_limit": 0,
+      "scan": {
+        "turns_available": 3,
+        "turns_scanned": 3,
+        "requests": 3,
+        "errors": [],
+        "schema_retries": 0,
+        "skipped_over_limit": 0
+      },
+      "alignment_rejections": []
+    },
+    "outcome": "no_candidates",
+    "learning_duration_ms": 3952,
+    "learning_usage": {
+      "input_tokens": 4561,
+      "output_tokens": 18
+    }
+  },
+  "artifact_changes": []
+}

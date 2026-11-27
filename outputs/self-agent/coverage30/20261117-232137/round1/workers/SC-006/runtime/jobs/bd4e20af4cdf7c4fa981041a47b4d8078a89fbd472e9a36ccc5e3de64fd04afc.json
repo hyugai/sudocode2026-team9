@@ -1,0 +1,218 @@
+{
+  "id": "bd4e20af4cdf7c4fa981041a47b4d8078a89fbd472e9a36ccc5e3de64fd04afc",
+  "status": "done",
+  "attempts": 1,
+  "snapshot": {
+    "session": "cb8cf0e51f7a60aa8aba8d8c69d1af11e8c184253ed27c8e60f276890388c62c",
+    "revision": 3,
+    "messages": [
+      {
+        "message_id": 0,
+        "role": "customer",
+        "content": "Chào em, anh đang cân nhắc Máy lọc không khí AirPure Pro."
+      },
+      {
+        "message_id": 1,
+        "role": "agent",
+        "content": "Dạ em chào anh [private]! Dòng máy này dùng cho phòng 45m², có màng lọc HEPA H13, đèn UV diệt khuẩn và khóa an toàn cho trẻ em rất tiện lợi. Anh có muốn em hẹn lịch gọi lại hỗ trợ mình khi hàng về không ạ? Em cần kiểm tra lại tồn kho trước khi xác nhận cho mình ạ."
+      },
+      {
+        "message_id": 2,
+        "role": "customer",
+        "content": "Anh xem giá 7.690.000 đồng; em kiểm tra giúp giá và hàng hiện tại nhé. Ngân sách của anh là 7.990.000 đồng."
+      },
+      {
+        "message_id": 3,
+        "role": "agent",
+        "content": "Dạ em chào anh [private]! Em đã kiểm tra giúp anh: mẫu Máy lọc không khí AirPure Pro hiện có giá ưu đãi là 7.690.000 đồng (được giảm 300.000 đồng từ giá niêm yết 7.990.000 đồng và nằm đúng trong ngân sách của anh).\n\nTuy nhiên, sản phẩm này hiện đang tạm hết hàng và dự kiến về lại kho vào ngày 21/10/2026. Anh có muốn em hẹn lịch gọi lại hỗ trợ mình khi hàng về không ạ?"
+      },
+      {
+        "message_id": 4,
+        "role": "customer",
+        "content": "Anh còn phải hỏi người nhà. Gọi lại cho anh lúc 10 giờ ngày 2026-10-22 nhé, chưa lên đơn."
+      },
+      {
+        "message_id": 5,
+        "role": "agent",
+        "content": "Dạ vâng, em đã hẹn lịch gọi lại cho anh [private] vào lúc 10:00 ngày 22/10/2026 rồi ạ. Anh cứ thong thả trao đổi thêm với người nhà nhé. Em cảm ơn anh và chúc anh một ngày tốt lành!"
+      }
+    ],
+    "open_questions": [],
+    "feedback": [],
+    "evidence_coverage": "per_turn_evidence",
+    "workflow_version": 4,
+    "turn_evidence": [
+      {
+        "turn_id": 1,
+        "agent_response": "Dạ em chào anh [private]! Dòng máy này dùng cho phòng 45m², có màng lọc HEPA H13, đèn UV diệt khuẩn và khóa an toàn cho trẻ em rất tiện lợi. Anh có muốn em hẹn lịch gọi lại hỗ trợ mình khi hàng về không ạ? Em cần kiểm tra lại tồn kho trước khi xác nhận cho mình ạ.",
+        "tool_calls": [
+          {
+            "name": "catalog.search",
+            "args": {
+              "query": "Máy lọc không khí AirPure Pro",
+              "on": "2026-10-19"
+            },
+            "result": {
+              "items": [
+                {
+                  "sku": "SKU-AP-PRO",
+                  "name": "[private]",
+                  "category": "gia-dung/may-loc-khong-khi",
+                  "brand": "AirPure",
+                  "list_price_vnd": 7990000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "features": "HEPA H13, UV, diệt khuẩn",
+                    "room_area_m2": 45,
+                    "child_safe_lock": true,
+                    "warranty_months": 24
+                  },
+                  "variants": []
+                }
+              ],
+              "total": 1
+            }
+          },
+          {
+            "name": "inventory.check",
+            "args": {
+              "sku": "SKU-AP-PRO",
+              "on": "2026-10-19"
+            },
+            "result": {
+              "sku": "SKU-AP-PRO",
+              "found": true,
+              "in_stock": false,
+              "qty": 0,
+              "discontinued": false,
+              "restock_expected": "2026-10-21"
+            }
+          }
+        ],
+        "sources": [
+          {
+            "sku": "SKU-AP-PRO",
+            "name": "[private]",
+            "category": "gia-dung/may-loc-khong-khi",
+            "brand": "AirPure",
+            "list_price_vnd": 7990000.0,
+            "discontinued": false,
+            "successor_sku": null,
+            "attributes": {
+              "features": "HEPA H13, UV, diệt khuẩn",
+              "room_area_m2": 45,
+              "child_safe_lock": true,
+              "warranty_months": 24
+            },
+            "variants": []
+          }
+        ],
+        "promotions": []
+      },
+      {
+        "turn_id": 2,
+        "agent_response": "Dạ em chào anh [private]! Em đã kiểm tra giúp anh: mẫu Máy lọc không khí AirPure Pro hiện có giá ưu đãi là 7.690.000 đồng (được giảm 300.000 đồng từ giá niêm yết 7.990.000 đồng và nằm đúng trong ngân sách của anh).\n\nTuy nhiên, sản phẩm này hiện đang tạm hết hàng và dự kiến về lại kho vào ngày 21/10/2026. Anh có muốn em hẹn lịch gọi lại hỗ trợ mình khi hàng về không ạ?",
+        "tool_calls": [
+          {
+            "name": "catalog.search",
+            "args": {
+              "query": "Anh xem giá 7.690.000 đồng; em kiểm tra giúp giá và hàng hiện tại nhé. Ngân sách của anh là 7.990.000 đồng.",
+              "on": "2026-10-19"
+            },
+            "result": {
+              "items": [],
+              "total": 0
+            }
+          },
+          {
+            "name": "pricing.get_quote",
+            "args": {
+              "on": "2026-10-19",
+              "customer_phone": "[private]",
+              "customer_id": "[private]",
+              "sku": "SKU-AP-PRO",
+              "qty": 1
+            },
+            "result": {
+              "sku": "SKU-AP-PRO",
+              "list_price_vnd": 7990000,
+              "final_price_vnd": 7690000,
+              "applied_promos": [
+                {
+                  "promo_code": "COD-0",
+                  "type": "freecod",
+                  "discount_vnd": 0
+                },
+                {
+                  "promo_code": "AIR-OCT",
+                  "type": "fixed",
+                  "discount_vnd": 300000
+                }
+              ],
+              "expired_promos": [],
+              "ineligible_promos": [
+                {
+                  "promo_code": "AIR-2ND-50",
+                  "reason": "min_qty"
+                },
+                {
+                  "promo_code": "[private]-SHIP0",
+                  "reason": "region"
+                },
+                {
+                  "promo_code": "TRADE-IN-AP",
+                  "reason": "requires_owned_sku"
+                }
+              ],
+              "not_applied_exclusive": [],
+              "freeship": true
+            }
+          },
+          {
+            "name": "inventory.check",
+            "args": {
+              "sku": "SKU-AP-PRO",
+              "on": "2026-10-19"
+            },
+            "result": {
+              "sku": "SKU-AP-PRO",
+              "found": true,
+              "in_stock": false,
+              "qty": 0,
+              "discontinued": false,
+              "restock_expected": "2026-10-21"
+            }
+          }
+        ],
+        "sources": [],
+        "promotions": []
+      },
+      {
+        "turn_id": 3,
+        "agent_response": "Dạ vâng, em đã hẹn lịch gọi lại cho anh [private] vào lúc 10:00 ngày 22/10/2026 rồi ạ. Anh cứ thong thả trao đổi thêm với người nhà nhé. Em cảm ơn anh và chúc anh một ngày tốt lành!",
+        "tool_calls": [
+          {
+            "name": "schedule.callback",
+            "args": {
+              "customer_phone": "[private]",
+              "callback_at": "2026-10-22T10:00",
+              "note": "Anh còn phải hỏi người nhà. Gọi lại cho anh lúc 10 giờ ngày 2026-10-22 nhé, chưa lên đơn.",
+              "on": "2026-10-19"
+            },
+            "result": {
+              "callback_id": "CB-769499",
+              "customer_phone": "[private]",
+              "callback_at": "2026-10-22T10:00",
+              "moved_from": null,
+              "note": "Anh còn phải hỏi người nhà. Gọi lại cho anh lúc 10 giờ ngày 2026-10-22 nhé, chưa lên đơn."
+            }
+          }
+        ],
+        "sources": [],
+        "promotions": []
+      }
+    ]
+  },
+  "error": null
+}

@@ -1,0 +1,195 @@
+{
+  "job_id": "0edf0988d816019ee95e4782f1d2b7ab87b4165a448ffd1d8a108064c3830d1c",
+  "gaps": [
+    {
+      "id": "b5f8023b2d1c2a9881fae431cd89e3ae17b4269e59f06ad13c639d2cb207f89a",
+      "status": "pending_remediation"
+    },
+    {
+      "id": "2a536ce3a3cc67e815c5372c8fbc9ebc7e0e712d6e9572d3bd6bf789106af49f",
+      "status": "pending_remediation"
+    },
+    {
+      "id": "c5a2ea9356339e4451a2344a2add81d6bf4db263a8cc293eef80ca8cb5007c64",
+      "status": "pending_remediation"
+    }
+  ],
+  "scope": "knowledge_gap_and_reflection_v1",
+  "evaluation_cases": [
+    {
+      "id": "3e5c3234097f52eed0932dd1a6b9727a3d5aac1f0bddbf1e87ee2d0d2df82933",
+      "gap_id": "b5f8023b2d1c2a9881fae431cd89e3ae17b4269e59f06ad13c639d2cb207f89a",
+      "turn_id": 1,
+      "question": "Tôi là [private], số điện thoại [private], đã nhắn qua Fanpage. Chị [private] đây, đã nhắn Fanpage bằng số này. Bên em còn nội dung chat không?",
+      "reason": "unsupported_claim",
+      "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments."
+    },
+    {
+      "id": "acb93f1299a4cee437c7b194b398ff43414a0d057e868f9cb4738584d4c8d1fa",
+      "gap_id": "c5a2ea9356339e4451a2344a2add81d6bf4db263a8cc293eef80ca8cb5007c64",
+      "turn_id": 2,
+      "question": "Em nhắc lại mẫu và giá đã báo trong chat giúp nhé.",
+      "reason": "unsupported_claim",
+      "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments."
+    }
+  ],
+  "out_of_scope": [],
+  "issue_reviews": [
+    {
+      "job_id": "0edf0988d816019ee95e4782f1d2b7ab87b4165a448ffd1d8a108064c3830d1c",
+      "message_id": 0,
+      "turn_id": 1,
+      "origin": "turn_detector",
+      "mechanism": "knowledge_gap",
+      "verified": true,
+      "claim": "Hiện tại hệ thống của em không kiểm tra được lịch sử nội dung tin nhắn cũ trên Fanpage của chị.",
+      "assessment": "unsupported_by_evidence",
+      "evidence_paths": [],
+      "rejection": null,
+      "rejection_reasons": [],
+      "format_retry": false,
+      "verifier_output": {
+        "valid": true,
+        "issue_scope": "business_knowledge",
+        "claim": "Hiện tại hệ thống của em không kiểm tra được lịch sử nội dung tin nhắn cũ trên Fanpage của chị.",
+        "assessment": "unsupported_by_evidence",
+        "evidence_paths": [],
+        "decision_reason": "The claim regarding the inability to check old Fanpage chat history is not supported by any retrieved policy or tool result.",
+        "audit": {
+          "support_status": "not_established",
+          "coverage": "complete",
+          "checked_paths": [
+            "evidence.tool_calls.0.result",
+            "evidence.sources",
+            "evidence.promotions"
+          ]
+        }
+      },
+      "candidate_claim": "Hiện tại hệ thống của em không kiểm tra được lịch sử nội dung tin nhắn cũ trên Fanpage của chị.",
+      "verification_basis": "evidence_inventory_audit",
+      "evidence_inventory": [
+        "evidence.tool_calls.0.result",
+        "evidence.sources",
+        "evidence.promotions"
+      ],
+      "lesson_status": "approved"
+    },
+    {
+      "job_id": "0edf0988d816019ee95e4782f1d2b7ab87b4165a448ffd1d8a108064c3830d1c",
+      "message_id": 0,
+      "turn_id": 1,
+      "origin": "turn_detector",
+      "mechanism": "knowledge_gap",
+      "verified": true,
+      "claim": "em thấy trên thông tin hỗ trợ gần nhất chị đang quan tâm đến sản phẩm Nồi chiên không dầu (SKU-AP-X)",
+      "assessment": "unsupported_by_evidence",
+      "evidence_paths": [],
+      "rejection": null,
+      "rejection_reasons": [],
+      "format_retry": false,
+      "verifier_output": {
+        "valid": true,
+        "issue_scope": "business_knowledge",
+        "claim": "em thấy trên thông tin hỗ trợ gần nhất chị đang quan tâm đến sản phẩm Nồi chiên không dầu (SKU-AP-X)",
+        "assessment": "unsupported_by_evidence",
+        "evidence_paths": [],
+        "decision_reason": "None of the provided tool results or sources mention a previous customer inquiry history for Air Fryer SKU-AP-X.",
+        "audit": {
+          "support_status": "not_established",
+          "coverage": "complete",
+          "checked_paths": [
+            "evidence.tool_calls.0.result",
+            "evidence.sources",
+            "evidence.promotions"
+          ]
+        }
+      },
+      "candidate_claim": "em thấy trên thông tin hỗ trợ gần nhất chị đang quan tâm đến sản phẩm Nồi chiên không dầu (SKU-AP-X)",
+      "verification_basis": "evidence_inventory_audit",
+      "evidence_inventory": [
+        "evidence.tool_calls.0.result",
+        "evidence.sources",
+        "evidence.promotions"
+      ],
+      "lesson_status": "pending_lesson"
+    },
+    {
+      "job_id": "0edf0988d816019ee95e4782f1d2b7ab87b4165a448ffd1d8a108064c3830d1c",
+      "message_id": 2,
+      "turn_id": 2,
+      "origin": "turn_detector",
+      "mechanism": "knowledge_gap",
+      "verified": true,
+      "claim": "Vì hệ thống telesales không trực tiếp lưu nội dung chat Fanpage trước đó, nhưng thông tin gần nhất ghi nhận chị đang quan tâm mẫu Nồi chiên không dầu (mã SKU-AP-X).",
+      "assessment": "unsupported_by_evidence",
+      "evidence_paths": [],
+      "rejection": null,
+      "rejection_reasons": [],
+      "format_retry": false,
+      "verifier_output": {
+        "valid": true,
+        "issue_scope": "business_knowledge",
+        "claim": "Vì hệ thống telesales không trực tiếp lưu nội dung chat Fanpage trước đó, nhưng thông tin gần nhất ghi nhận chị đang quan tâm mẫu Nồi chiên không dầu (mã SKU-AP-X).",
+        "assessment": "unsupported_by_evidence",
+        "evidence_paths": [],
+        "decision_reason": "No evidence source confirms that the telesales system does not save Fanpage chat history or verifies that SKU-AP-X corresponds to the specific Fanpage chat item.",
+        "audit": {
+          "support_status": "not_established",
+          "coverage": "complete",
+          "checked_paths": [
+            "evidence.tool_calls.0.result",
+            "evidence.tool_calls.1.result",
+            "evidence.tool_calls.2.result",
+            "evidence.sources",
+            "evidence.promotions",
+            "prior_evidence.0.tool_calls.0.result",
+            "prior_evidence.0.sources",
+            "prior_evidence.0.promotions"
+          ]
+        }
+      },
+      "candidate_claim": "Vì hệ thống telesales không trực tiếp lưu nội dung chat Fanpage trước đó, nhưng thông tin gần nhất ghi nhận chị đang quan tâm mẫu Nồi chiên không dầu (mã SKU-AP-X).",
+      "verification_basis": "evidence_inventory_audit",
+      "evidence_inventory": [
+        "evidence.tool_calls.0.result",
+        "evidence.tool_calls.1.result",
+        "evidence.tool_calls.2.result",
+        "evidence.sources",
+        "evidence.promotions",
+        "prior_evidence.0.tool_calls.0.result",
+        "prior_evidence.0.sources",
+        "prior_evidence.0.promotions"
+      ],
+      "lesson_status": "approved"
+    }
+  ],
+  "detector_error": null,
+  "guardrails": {
+    "version": "learning_guardrails_v1",
+    "input_findings": [],
+    "blocked_lessons": [],
+    "blocked_sources": []
+  },
+  "detection": {
+    "candidate_count": 3,
+    "open_question_count": 0,
+    "processed_count": 3,
+    "skipped_unmatched_question": 0,
+    "skipped_over_limit": 0,
+    "scan": {
+      "turns_available": 3,
+      "turns_scanned": 3,
+      "requests": 3,
+      "errors": [],
+      "schema_retries": 0,
+      "skipped_over_limit": 0
+    },
+    "alignment_rejections": []
+  },
+  "outcome": "gaps_processed",
+  "learning_duration_ms": 34596,
+  "learning_usage": {
+    "input_tokens": 18466,
+    "output_tokens": 1011
+  }
+}

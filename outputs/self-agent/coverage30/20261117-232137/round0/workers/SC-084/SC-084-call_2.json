@@ -1,0 +1,308 @@
+{
+  "scenario_id": "SC-084",
+  "call": "call_2",
+  "session_id": "self-fbc6f492dff74e3f918851ca930c3dc4-SC-084-call_2",
+  "turns": [
+    {
+      "customer": "Tôi là [private], số điện thoại [phone], đang nhắn qua Zalo OA. Anh [private], đã nhắn Fanpage. Sao giá ở kênh này khác mức đã báo trong chat?",
+      "agent": "Em chào anh [private]. Em rất hiểu thắc mắc của mình ạ. \n\nGiá hiện tại cho đôi giày chạy bộ size 41 màu xám (mã SKU-SN-RUN2-41-XAM) hôm nay ngày 19/10/2026 là 1.521.000 VNĐ (đã áp dụng mã giảm giá RUN-10 giảm 169.000 VNĐ từ giá niêm yết 1.690.000 VNĐ). Mức giá có sự chênh lệch so với lần tư vấn trước do chương trình ưu đãi RUN2-SALE đã hết hạn ạ.\n\nAnh [private] cho em hỏi mình có muốn em hỗ trợ lên đơn theo mức giá ưu đãi hiện tại luôn không ạ?",
+      "latency": {
+        "ttft_ms": 6116,
+        "total_ms": 6116,
+        "ttfa_ms": null,
+        "measurement_mode": "non_streaming",
+        "timing_boundary": "response_ready_before_persistence",
+        "asr_ms": null,
+        "call_brief_ms": 3366,
+        "response_ready_ms": 6116,
+        "persistence_ms": 0.131,
+        "request_complete_ms": 6116.157,
+        "backend_total_ms": 6116.157,
+        "precomputed_parts": [
+          "persisted_facts"
+        ]
+      },
+      "lesson_trace": null
+    },
+    {
+      "customer": "Anh muốn em nhắc lại giá cũ, xin lỗi và giải thích rõ chương trình nào đã thay đổi.",
+      "agent": "Dạ, em thành thật xin lỗi anh [private] vì sự bất tiện và nhầm lẫn về thông tin giá khiến anh bận tâm ạ. \n\nTrước đó, anh từng nhận thông tin mức giá ưu đãi theo chương trình khuyến mãi **RUN2-SALE**. Tuy nhiên, hiện tại chương trình **RUN2-SALE** này đã hết hạn. Mức giá hiện tại của đôi giày chạy bộ size 41 màu xám (SKU-SN-RUN2-41-XAM) là 1.521.000 VNĐ, sau khi đã áp dụng mã giảm giá mới **RUN-10** (giảm 169.000 VNĐ từ giá niêm yết 1.690.000 VNĐ) ạ.\n\nEm rất mong anh thông cảm cho sự thay đổi về chương trình ưu đãi này. Anh [private] có cần em hỗ trợ giải đáp thêm thông tin nào khác về sản phẩm không ạ?",
+      "latency": {
+        "ttft_ms": 4296,
+        "total_ms": 4296,
+        "ttfa_ms": null,
+        "measurement_mode": "non_streaming",
+        "timing_boundary": "response_ready_before_persistence",
+        "asr_ms": null,
+        "call_brief_ms": null,
+        "response_ready_ms": 4296,
+        "persistence_ms": 0.108,
+        "request_complete_ms": 4296.085,
+        "backend_total_ms": 4296.085,
+        "precomputed_parts": [
+          "persisted_facts"
+        ]
+      },
+      "lesson_trace": null
+    },
+    {
+      "customer": "Nếu giá đúng hôm nay là 1.521.000 đồng thì anh đồng ý một đôi theo size, màu đã hỏi. Giao 103 đường Kiểm Thử, TP. Hồ Chí Minh, COD.",
+      "agent": "Dạ em đã lên đơn thành công cho anh [private] đôi giày chạy bộ (size 41, màu xám - mã SKU-SN-RUN2-41-XAM) với mã đơn hàng là **[order_id]** ạ. \n\nTổng tiền thanh toán khi nhận hàng (COD) đúng như giá hôm nay là **1.521.000 đồng** và đơn hàng sẽ được giao đến [address]",
+      "latency": {
+        "ttft_ms": 14840,
+        "total_ms": 14840,
+        "ttfa_ms": null,
+        "measurement_mode": "non_streaming",
+        "timing_boundary": "response_ready_before_persistence",
+        "asr_ms": null,
+        "call_brief_ms": null,
+        "response_ready_ms": 14840,
+        "persistence_ms": 0.131,
+        "request_complete_ms": 14840.552,
+        "backend_total_ms": 14840.552,
+        "precomputed_parts": [
+          "persisted_facts"
+        ]
+      },
+      "lesson_trace": null
+    }
+  ],
+  "generation_context": {
+    "round": 0,
+    "instruction_hash": "9d30a7093911a993d8545de8b61cc6dc8465de67b10fb62b27d9f1bafaf0badf",
+    "applied_patterns": {},
+    "lessons_loaded": false,
+    "lesson_sources": [],
+    "lesson_files": [],
+    "instruction_root": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round0\\instructions"
+  },
+  "evaluation_evidence": [
+    {
+      "turn_id": 1,
+      "agent_response": "Em chào anh [private]. Em rất hiểu thắc mắc của mình ạ. \n\nGiá hiện tại cho đôi giày chạy bộ size 41 màu xám (mã SKU-SN-RUN2-41-XAM) hôm nay ngày 19/10/2026 là 1.521.000 VNĐ (đã áp dụng mã giảm giá RUN-10 giảm 169.000 VNĐ từ giá niêm yết 1.690.000 VNĐ). Mức giá có sự chênh lệch so với lần tư vấn trước do chương trình ưu đãi RUN2-SALE đã hết hạn ạ.\n\nAnh [private] cho em hỏi mình có muốn em hỗ trợ lên đơn theo mức giá ưu đãi hiện tại luôn không ạ?",
+      "tool_calls": [
+        {
+          "name": "pricing.get_quote",
+          "args": {
+            "on": "2026-10-19",
+            "customer_phone": "[private]",
+            "customer_id": "[private]",
+            "sku": "SKU-SN-RUN2-41-XAM",
+            "qty": 1
+          },
+          "result": {
+            "sku": "SKU-SN-RUN2-41-XAM",
+            "list_price_vnd": 1690000,
+            "final_price_vnd": 1521000,
+            "applied_promos": [
+              {
+                "promo_code": "COD-0",
+                "type": "freecod",
+                "discount_vnd": 0
+              },
+              {
+                "promo_code": "RUN-10",
+                "type": "percent",
+                "discount_vnd": 169000
+              }
+            ],
+            "expired_promos": [
+              "RUN2-SALE"
+            ],
+            "ineligible_promos": [],
+            "not_applied_exclusive": [],
+            "freeship": false
+          }
+        }
+      ],
+      "sources": [],
+      "promotions": []
+    },
+    {
+      "turn_id": 2,
+      "agent_response": "Dạ, em thành thật xin lỗi anh [private] vì sự bất tiện và nhầm lẫn về thông tin giá khiến anh bận tâm ạ. \n\nTrước đó, anh từng nhận thông tin mức giá ưu đãi theo chương trình khuyến mãi **RUN2-SALE**. Tuy nhiên, hiện tại chương trình **RUN2-SALE** này đã hết hạn. Mức giá hiện tại của đôi giày chạy bộ size 41 màu xám (SKU-SN-RUN2-41-XAM) là 1.521.000 VNĐ, sau khi đã áp dụng mã giảm giá mới **RUN-10** (giảm 169.000 VNĐ từ giá niêm yết 1.690.000 VNĐ) ạ.\n\nEm rất mong anh thông cảm cho sự thay đổi về chương trình ưu đãi này. Anh [private] có cần em hỗ trợ giải đáp thêm thông tin nào khác về sản phẩm không ạ?",
+      "tool_calls": [
+        {
+          "name": "order.status",
+          "args": {
+            "customer_phone": "[private]"
+          },
+          "result": {
+            "orders": []
+          }
+        }
+      ],
+      "sources": [],
+      "promotions": []
+    },
+    {
+      "turn_id": 3,
+      "agent_response": "Dạ em đã lên đơn thành công cho anh [private] đôi giày chạy bộ (size 41, màu xám - mã SKU-SN-RUN2-41-XAM) với mã đơn hàng là **[order_id]** ạ. \n\nTổng tiền thanh toán khi nhận hàng (COD) đúng như giá hôm nay là **1.521.000 đồng** và đơn hàng sẽ được giao đến [address]",
+      "tool_calls": [
+        {
+          "name": "catalog.search",
+          "args": {
+            "query": "Nếu giá đúng hôm nay là 1.521.000 đồng thì anh đồng ý một đôi theo size, màu đã hỏi. Giao 103 đường Kiểm Thử, TP. Hồ Chí Minh, cod.",
+            "on": "2026-10-19"
+          },
+          "result": {
+            "items": [],
+            "total": 0
+          }
+        },
+        {
+          "name": "inventory.check",
+          "args": {
+            "sku": "SKU-SN-RUN2-41-XAM",
+            "on": "2026-10-19"
+          },
+          "result": {
+            "sku": "SKU-SN-RUN2-41-XAM",
+            "found": true,
+            "in_stock": true,
+            "qty": 9,
+            "discontinued": false
+          }
+        },
+        {
+          "name": "pricing.get_quote",
+          "args": {
+            "on": "2026-10-19",
+            "customer_phone": "[private]",
+            "customer_id": "[private]",
+            "address": "[private]",
+            "sku": "SKU-SN-RUN2-41-XAM",
+            "qty": 1
+          },
+          "result": {
+            "sku": "SKU-SN-RUN2-41-XAM",
+            "list_price_vnd": 1690000,
+            "final_price_vnd": 1521000,
+            "applied_promos": [
+              {
+                "promo_code": "COD-0",
+                "type": "freecod",
+                "discount_vnd": 0
+              },
+              {
+                "promo_code": "RUN-10",
+                "type": "percent",
+                "discount_vnd": 169000
+              }
+            ],
+            "expired_promos": [
+              "RUN2-SALE"
+            ],
+            "ineligible_promos": [],
+            "not_applied_exclusive": [],
+            "freeship": false
+          }
+        },
+        {
+          "name": "order.create",
+          "args": {
+            "customer_phone": "[private]",
+            "customer_id": "[private]",
+            "address": "[private]",
+            "idempotency_key": "self-fbc6f492dff74e3f918851ca930c3dc4-SC-084-call_2:call_2:create:SKU-SN-RUN2-41-XAM",
+            "sku": "SKU-SN-RUN2-41-XAM",
+            "qty": 1,
+            "price_vnd": 1521000,
+            "promo_code": "RUN-10",
+            "on": "2026-10-19",
+            "payment": "COD"
+          },
+          "result": {
+            "order_id": "[private]",
+            "status": "created",
+            "total_vnd": 1521000,
+            "needs_confirmation_call": false,
+            "estimated_delivery": "2026-10-21"
+          }
+        }
+      ],
+      "sources": [],
+      "promotions": []
+    }
+  ],
+  "job": {
+    "status": "done",
+    "job_id": "72a2105e1290b0107f1b9946c2cd4e68c42b4e8be1ca802ac033c9be613a45ee",
+    "error": null
+  },
+  "learning": {
+    "job_id": "72a2105e1290b0107f1b9946c2cd4e68c42b4e8be1ca802ac033c9be613a45ee",
+    "gaps": [
+      {
+        "id": "9f3c093085e116dad02e773b4187093c6c459a98b7335e8f685055ef8d71f239",
+        "status": "pending_evidence"
+      }
+    ],
+    "scope": "knowledge_gap_and_reflection_v1",
+    "evaluation_cases": [
+      {
+        "id": "196601ad1d049c787026332466e0d357624a0f57e44d89716f6c65b4bcc3d9de",
+        "gap_id": "9f3c093085e116dad02e773b4187093c6c459a98b7335e8f685055ef8d71f239",
+        "turn_id": 2,
+        "question": "Anh muốn em nhắc lại giá cũ, xin lỗi và giải thích rõ chương trình nào đã thay đổi.",
+        "reason": "missing_knowledge",
+        "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments."
+      }
+    ],
+    "out_of_scope": [],
+    "issue_reviews": [],
+    "detector_error": null,
+    "guardrails": {
+      "version": "learning_guardrails_v1",
+      "input_findings": [],
+      "blocked_lessons": [],
+      "blocked_sources": []
+    },
+    "detection": {
+      "candidate_count": 1,
+      "open_question_count": 0,
+      "processed_count": 1,
+      "skipped_unmatched_question": 0,
+      "skipped_over_limit": 0,
+      "scan": {
+        "turns_available": 3,
+        "turns_scanned": 3,
+        "requests": 3,
+        "errors": [],
+        "schema_retries": 0,
+        "skipped_over_limit": 0
+      },
+      "alignment_rejections": []
+    },
+    "outcome": "gaps_processed",
+    "learning_duration_ms": 6923,
+    "learning_usage": {
+      "input_tokens": 4800,
+      "output_tokens": 71
+    }
+  },
+  "artifact_changes": [
+    {
+      "path": "gaps/9f3c093085e116dad02e773b4187093c6c459a98b7335e8f685055ef8d71f239.json",
+      "change": "created",
+      "value": {
+        "id": "9f3c093085e116dad02e773b4187093c6c459a98b7335e8f685055ef8d71f239",
+        "question": "Đổi size và đổi trả áp dụng điều kiện nào?",
+        "occurrences": [
+          "72a2105e1290b0107f1b9946c2cd4e68c42b4e8be1ca802ac033c9be613a45ee"
+        ],
+        "reason": "missing_knowledge",
+        "mechanism": "knowledge_gap",
+        "status": "pending_evidence",
+        "evidence_refs": [
+          {
+            "job_id": "72a2105e1290b0107f1b9946c2cd4e68c42b4e8be1ca802ac033c9be613a45ee",
+            "message_id": 2,
+            "turn_id": 2,
+            "origin": "turn_detector"
+          }
+        ]
+      }
+    }
+  ]
+}

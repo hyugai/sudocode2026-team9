@@ -1,0 +1,620 @@
+{
+  "schema_version": 1,
+  "guardrail_version": "learning_guardrails_v1",
+  "metadata": {
+    "evaluation_population": "single_session_no_baseline"
+  },
+  "warnings": [
+    "Chưa chạy judge: chỉ xem thay đổi câu trả lời và dấu vết lesson, chưa đánh giá cải thiện.",
+    "Không có cặp chấm hợp lệ: chưa thể kết luận cải thiện hay không có regression."
+  ],
+  "summary": {
+    "total_turns": 3,
+    "judged_pair_count": 0,
+    "round0_turns": 0,
+    "round1_turns": 3,
+    "stored_frozen_case_count": 0,
+    "injected_turns": 2,
+    "changed_answers": 0,
+    "counts": {
+      "improved_resolution": 0,
+      "safer_unresolved": 0,
+      "regression": 0,
+      "unchanged": 0,
+      "needs_review": 0,
+      "not_evaluated": 3,
+      "unpaired": 0,
+      "question_changed": 0,
+      "excluded": 0
+    }
+  },
+  "rows": [
+    {
+      "call": "SC-110/call_2",
+      "turn_id": 1,
+      "question": "Tôi là [private], số điện thoại [phone], đang nhắn qua Zalo OA. Chị liên hệ lại như đã hẹn, người nhà đồng ý đổi máy rồi.",
+      "baseline_question": null,
+      "classification": "not_evaluated",
+      "case_id": null,
+      "gap_id": null,
+      "answer_changed": false,
+      "injected": true,
+      "lesson_trace": {
+        "lessons_loaded": 25,
+        "selected_lessons": [
+          {
+            "id": "e45dc72c5fe31056f074ee827287d8fbe6b10a70731330b3a772124cd2242342",
+            "hash": "c3c9962f401a34a0bc3b270b1e74ead584c41c64cb4e1470f5fee6bce8f68555",
+            "mechanism": "knowledge_gap"
+          },
+          {
+            "id": "affe9cae1d31968e6c92f5e33da85c05d11d7a8268cd36edab06b9697276486f",
+            "hash": "d8b42b91cc75639394431c361a1bb933ad5e2d4677d1ae98ca780aa2240081ae",
+            "mechanism": "knowledge_gap"
+          },
+          {
+            "id": "01a913544fdac1395d75b0f5a4ffe75a884011933f924d54d788a5911dd30e2a",
+            "hash": "35760691b8afd42847dc28985828043d1f77db8ba2940641f67649bf0726476a",
+            "mechanism": "knowledge_gap"
+          }
+        ],
+        "injected": true,
+        "mode": "memory_only",
+        "response_modified": false,
+        "routing": "selected",
+        "routing_ms": 2684.511,
+        "routing_usage": {
+          "input_tokens": 4880,
+          "output_tokens": 191
+        },
+        "guardrails": {
+          "version": "learning_guardrails_v1",
+          "blocked_lessons": []
+        },
+        "injected_chars": 1570,
+        "injected_lesson_count": 3,
+        "wrapper_total_ms": 7987.902
+      },
+      "round0": {
+        "answer": null,
+        "verdict": {
+          "status": null
+        },
+        "latency": null,
+        "evidence": {
+          "current": {},
+          "earlier": []
+        }
+      },
+      "round1": {
+        "answer": "Dạ em chào chị [private]! Em rất vui khi nhận được phản hồi từ chị. \n\nDạ hiện tại đơn hàng đơn hàng cũ **OD188213** của chị với sản phẩm máy lọc không khí (mã SKU-AP-X-2024) đã được ghi nhận giao thành công. Chị cho em hỏi người nhà mình đã thống nhất muốn đổi sang mẫu máy cụ thể nào để em hỗ trợ kiểm tra và làm thủ tục đổi máy cho chị ngay ạ?",
+        "verdict": {
+          "status": null
+        },
+        "latency": {
+          "ttft_ms": 5303,
+          "total_ms": 5303,
+          "ttfa_ms": null,
+          "measurement_mode": "non_streaming",
+          "timing_boundary": "response_ready_before_persistence",
+          "asr_ms": null,
+          "call_brief_ms": 3190,
+          "response_ready_ms": 5303,
+          "persistence_ms": 0.124,
+          "request_complete_ms": 5303.251,
+          "backend_total_ms": 5303.251,
+          "precomputed_parts": [
+            "persisted_facts"
+          ]
+        },
+        "evidence": {
+          "current": {
+            "turn_id": 1,
+            "agent_response": "Dạ em chào chị [private]! Em rất vui khi nhận được phản hồi từ chị. \n\nDạ hiện tại đơn hàng đơn hàng cũ **OD188213** của chị với sản phẩm máy lọc không khí (mã SKU-AP-X-2024) đã được ghi nhận giao thành công. Chị cho em hỏi người nhà mình đã thống nhất muốn đổi sang mẫu máy cụ thể nào để em hỗ trợ kiểm tra và làm thủ tục đổi máy cho chị ngay ạ?",
+            "tool_calls": [
+              {
+                "name": "order.status",
+                "args": {
+                  "order_id": "[private]"
+                },
+                "result": {
+                  "orders": [
+                    {
+                      "order_id": "[private]",
+                      "customer_id": "[private]",
+                      "customer_phone": "[private]",
+                      "sku": "SKU-AP-X-2024",
+                      "qty": 1,
+                      "price_vnd": 4290000,
+                      "lines": [
+                        {
+                          "sku": "SKU-AP-X-2024",
+                          "qty": 1,
+                          "price_vnd": 4290000
+                        }
+                      ],
+                      "total_vnd": 4290000,
+                      "promos": [],
+                      "promo_code": null,
+                      "payment": "COD",
+                      "address": "[private]",
+                      "status": "delivered",
+                      "created_on": "2026-02-17",
+                      "exchange_count": 0
+                    }
+                  ]
+                }
+              }
+            ],
+            "sources": [],
+            "promotions": []
+          },
+          "earlier": []
+        }
+      }
+    },
+    {
+      "call": "SC-110/call_2",
+      "turn_id": 2,
+      "question": "Em nhắc lại máy mới, giá sau thu cũ đổi mới và dùng địa chỉ [address]",
+      "baseline_question": null,
+      "classification": "not_evaluated",
+      "case_id": null,
+      "gap_id": null,
+      "answer_changed": false,
+      "injected": true,
+      "lesson_trace": {
+        "lessons_loaded": 25,
+        "selected_lessons": [
+          {
+            "id": "e45dc72c5fe31056f074ee827287d8fbe6b10a70731330b3a772124cd2242342",
+            "hash": "c3c9962f401a34a0bc3b270b1e74ead584c41c64cb4e1470f5fee6bce8f68555",
+            "mechanism": "knowledge_gap"
+          },
+          {
+            "id": "01a913544fdac1395d75b0f5a4ffe75a884011933f924d54d788a5911dd30e2a",
+            "hash": "35760691b8afd42847dc28985828043d1f77db8ba2940641f67649bf0726476a",
+            "mechanism": "knowledge_gap"
+          },
+          {
+            "id": "62b31704255689e0a0e9d302ff0dc99126722deddfe71f38a7843aa310652759",
+            "hash": "9c522bf9b3655447e3404b8afbd976dd4213afeb1800ad4b527bd9e0c0a645b4",
+            "mechanism": "knowledge_gap"
+          }
+        ],
+        "injected": true,
+        "mode": "memory_only",
+        "response_modified": false,
+        "routing": "selected",
+        "routing_ms": 2726.906,
+        "routing_usage": {
+          "input_tokens": 5174,
+          "output_tokens": 192
+        },
+        "guardrails": {
+          "version": "learning_guardrails_v1",
+          "blocked_lessons": []
+        },
+        "injected_chars": 1629,
+        "injected_lesson_count": 3,
+        "wrapper_total_ms": 12248.751
+      },
+      "round0": {
+        "answer": null,
+        "verdict": {
+          "status": null
+        },
+        "latency": null,
+        "evidence": {
+          "current": {},
+          "earlier": []
+        }
+      },
+      "round1": {
+        "answer": "Dạ chị [private], sản phẩm mới mình chọn đổi là máy lọc không khí **SKU-AP-X**. Giá hiện tại sau khi áp dụng chương trình thu cũ đổi mới (mã TRADE-IN-AP giảm 400.000đ) là **4.490.000đ** ạ.\n\nTuy nhiên, em kiểm tra trên hệ thống thì chưa lưu lại thông tin địa chỉ [address]",
+        "verdict": {
+          "status": null
+        },
+        "latency": {
+          "ttft_ms": 9522,
+          "total_ms": 9522,
+          "ttfa_ms": null,
+          "measurement_mode": "non_streaming",
+          "timing_boundary": "response_ready_before_persistence",
+          "asr_ms": null,
+          "call_brief_ms": null,
+          "response_ready_ms": 9522,
+          "persistence_ms": 0.123,
+          "request_complete_ms": 9521.687,
+          "backend_total_ms": 9521.687,
+          "precomputed_parts": [
+            "persisted_facts"
+          ]
+        },
+        "evidence": {
+          "current": {
+            "turn_id": 2,
+            "agent_response": "Dạ chị [private], sản phẩm mới mình chọn đổi là máy lọc không khí **SKU-AP-X**. Giá hiện tại sau khi áp dụng chương trình thu cũ đổi mới (mã TRADE-IN-AP giảm 400.000đ) là **4.490.000đ** ạ.\n\nTuy nhiên, em kiểm tra trên hệ thống thì chưa lưu lại thông tin địa chỉ [address]",
+            "tool_calls": [
+              {
+                "name": "catalog.search",
+                "args": {
+                  "query": "Em nhắc lại máy mới, giá sau thu cũ đổi mới và dùng địa chỉ [address]",
+                  "on": "2026-10-29"
+                },
+                "result": {
+                  "items": [],
+                  "total": 0
+                }
+              },
+              {
+                "name": "pricing.get_quote",
+                "args": {
+                  "on": "2026-10-29",
+                  "customer_phone": "[private]",
+                  "customer_id": "[private]",
+                  "sku": "SKU-AP-X",
+                  "qty": 1
+                },
+                "result": {
+                  "sku": "SKU-AP-X",
+                  "list_price_vnd": 4890000,
+                  "final_price_vnd": 4490000,
+                  "applied_promos": [
+                    {
+                      "promo_code": "COD-0",
+                      "type": "freecod",
+                      "discount_vnd": 0
+                    },
+                    {
+                      "promo_code": "TRADE-IN-AP",
+                      "type": "fixed",
+                      "discount_vnd": 400000
+                    }
+                  ],
+                  "expired_promos": [
+                    "GIFT-FILTER",
+                    "AP-SEP"
+                  ],
+                  "ineligible_promos": [
+                    {
+                      "promo_code": "AIR-2ND-50",
+                      "reason": "min_qty"
+                    },
+                    {
+                      "promo_code": "NAM-SHIP0",
+                      "reason": "region"
+                    }
+                  ],
+                  "not_applied_exclusive": [],
+                  "freeship": true
+                }
+              },
+              {
+                "name": "inventory.check",
+                "args": {
+                  "on": "2026-10-29",
+                  "sku": "SKU-AP-X"
+                },
+                "result": {
+                  "sku": "SKU-AP-X",
+                  "found": true,
+                  "in_stock": true,
+                  "qty": 40,
+                  "discontinued": false
+                }
+              }
+            ],
+            "sources": [],
+            "promotions": []
+          },
+          "earlier": [
+            {
+              "turn_id": 1,
+              "tool_calls": [
+                {
+                  "name": "order.status",
+                  "args": {
+                    "order_id": "[private]"
+                  },
+                  "result": {
+                    "orders": [
+                      {
+                        "order_id": "[private]",
+                        "customer_id": "[private]",
+                        "customer_phone": "[private]",
+                        "sku": "SKU-AP-X-2024",
+                        "qty": 1,
+                        "price_vnd": 4290000,
+                        "lines": [
+                          {
+                            "sku": "SKU-AP-X-2024",
+                            "qty": 1,
+                            "price_vnd": 4290000
+                          }
+                        ],
+                        "total_vnd": 4290000,
+                        "promos": [],
+                        "promo_code": null,
+                        "payment": "COD",
+                        "address": "[private]",
+                        "status": "delivered",
+                        "created_on": "2026-02-17",
+                        "exchange_count": 0
+                      }
+                    ]
+                  }
+                }
+              ],
+              "sources": [],
+              "promotions": []
+            }
+          ]
+        }
+      }
+    },
+    {
+      "call": "SC-110/call_2",
+      "turn_id": 3,
+      "question": "Chị đồng ý 4.490.000 đồng, một máy, COD. Khi giao em thu máy cũ theo chương trình.",
+      "baseline_question": null,
+      "classification": "not_evaluated",
+      "case_id": null,
+      "gap_id": null,
+      "answer_changed": false,
+      "injected": false,
+      "lesson_trace": {
+        "lessons_loaded": 25,
+        "selected_lessons": [],
+        "injected": false,
+        "mode": "memory_only",
+        "response_modified": false,
+        "routing": "no_match",
+        "routing_ms": 2736.457,
+        "routing_usage": {
+          "input_tokens": 5472,
+          "output_tokens": 14
+        },
+        "wrapper_total_ms": 6538.657
+      },
+      "round0": {
+        "answer": null,
+        "verdict": {
+          "status": null
+        },
+        "latency": null,
+        "evidence": {
+          "current": {},
+          "earlier": []
+        }
+      },
+      "round1": {
+        "answer": "Dạ em cảm ơn chị [private] đã xác nhận đặt hàng máy lọc không khí SKU-AP-X với giá 4.490.000đ thanh toán COD ạ. \n\nDo thông tin địa chỉ [address]",
+        "verdict": {
+          "status": null
+        },
+        "latency": {
+          "ttft_ms": 3802,
+          "total_ms": 3802,
+          "ttfa_ms": null,
+          "measurement_mode": "non_streaming",
+          "timing_boundary": "response_ready_before_persistence",
+          "asr_ms": null,
+          "call_brief_ms": null,
+          "response_ready_ms": 3802,
+          "persistence_ms": 0.132,
+          "request_complete_ms": 3802.112,
+          "backend_total_ms": 3802.112,
+          "precomputed_parts": [
+            "persisted_facts"
+          ]
+        },
+        "evidence": {
+          "current": {
+            "turn_id": 3,
+            "agent_response": "Dạ em cảm ơn chị [private] đã xác nhận đặt hàng máy lọc không khí SKU-AP-X với giá 4.490.000đ thanh toán COD ạ. \n\nDo thông tin địa chỉ [address]",
+            "tool_calls": [
+              {
+                "name": "inventory.check",
+                "args": {
+                  "sku": "SKU-AP-X",
+                  "on": "2026-10-29"
+                },
+                "result": {
+                  "sku": "SKU-AP-X",
+                  "found": true,
+                  "in_stock": true,
+                  "qty": 40,
+                  "discontinued": false
+                }
+              }
+            ],
+            "sources": [],
+            "promotions": []
+          },
+          "earlier": [
+            {
+              "turn_id": 1,
+              "tool_calls": [
+                {
+                  "name": "order.status",
+                  "args": {
+                    "order_id": "[private]"
+                  },
+                  "result": {
+                    "orders": [
+                      {
+                        "order_id": "[private]",
+                        "customer_id": "[private]",
+                        "customer_phone": "[private]",
+                        "sku": "SKU-AP-X-2024",
+                        "qty": 1,
+                        "price_vnd": 4290000,
+                        "lines": [
+                          {
+                            "sku": "SKU-AP-X-2024",
+                            "qty": 1,
+                            "price_vnd": 4290000
+                          }
+                        ],
+                        "total_vnd": 4290000,
+                        "promos": [],
+                        "promo_code": null,
+                        "payment": "COD",
+                        "address": "[private]",
+                        "status": "delivered",
+                        "created_on": "2026-02-17",
+                        "exchange_count": 0
+                      }
+                    ]
+                  }
+                }
+              ],
+              "sources": [],
+              "promotions": []
+            },
+            {
+              "turn_id": 2,
+              "tool_calls": [
+                {
+                  "name": "catalog.search",
+                  "args": {
+                    "query": "Em nhắc lại máy mới, giá sau thu cũ đổi mới và dùng địa chỉ [address]",
+                    "on": "2026-10-29"
+                  },
+                  "result": {
+                    "items": [],
+                    "total": 0
+                  }
+                },
+                {
+                  "name": "pricing.get_quote",
+                  "args": {
+                    "on": "2026-10-29",
+                    "customer_phone": "[private]",
+                    "customer_id": "[private]",
+                    "sku": "SKU-AP-X",
+                    "qty": 1
+                  },
+                  "result": {
+                    "sku": "SKU-AP-X",
+                    "list_price_vnd": 4890000,
+                    "final_price_vnd": 4490000,
+                    "applied_promos": [
+                      {
+                        "promo_code": "COD-0",
+                        "type": "freecod",
+                        "discount_vnd": 0
+                      },
+                      {
+                        "promo_code": "TRADE-IN-AP",
+                        "type": "fixed",
+                        "discount_vnd": 400000
+                      }
+                    ],
+                    "expired_promos": [
+                      "GIFT-FILTER",
+                      "AP-SEP"
+                    ],
+                    "ineligible_promos": [
+                      {
+                        "promo_code": "AIR-2ND-50",
+                        "reason": "min_qty"
+                      },
+                      {
+                        "promo_code": "NAM-SHIP0",
+                        "reason": "region"
+                      }
+                    ],
+                    "not_applied_exclusive": [],
+                    "freeship": true
+                  }
+                },
+                {
+                  "name": "inventory.check",
+                  "args": {
+                    "on": "2026-10-29",
+                    "sku": "SKU-AP-X"
+                  },
+                  "result": {
+                    "sku": "SKU-AP-X",
+                    "found": true,
+                    "in_stock": true,
+                    "qty": 40,
+                    "discontinued": false
+                  }
+                }
+              ],
+              "sources": [],
+              "promotions": []
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "lessons": [],
+  "sessions": [
+    {
+      "call": "SC-110/call_2",
+      "round0": {
+        "job": null,
+        "error": null,
+        "learning": null,
+        "observed_input_findings": []
+      },
+      "round1": {
+        "job": {
+          "status": "done",
+          "job_id": "63ddf68f6294d73ffc144ac3591bd6155ccade2f8678242cc5bba7577b37db72",
+          "error": null
+        },
+        "error": null,
+        "learning": {
+          "job_id": "63ddf68f6294d73ffc144ac3591bd6155ccade2f8678242cc5bba7577b37db72",
+          "gaps": [],
+          "scope": "knowledge_gap_and_reflection_v1",
+          "evaluation_cases": [],
+          "out_of_scope": [],
+          "issue_reviews": [],
+          "detector_error": null,
+          "guardrails": {
+            "version": "learning_guardrails_v1",
+            "input_findings": [],
+            "blocked_lessons": [],
+            "blocked_sources": []
+          },
+          "detection": {
+            "candidate_count": 0,
+            "open_question_count": 0,
+            "processed_count": 0,
+            "skipped_unmatched_question": 0,
+            "skipped_over_limit": 0,
+            "scan": {
+              "turns_available": 3,
+              "turns_scanned": 3,
+              "requests": 3,
+              "errors": [],
+              "schema_retries": 0,
+              "skipped_over_limit": 0
+            },
+            "alignment_rejections": []
+          },
+          "outcome": "no_candidates",
+          "learning_duration_ms": 3424,
+          "learning_usage": {
+            "input_tokens": 3685,
+            "output_tokens": 18
+          }
+        },
+        "observed_input_findings": []
+      }
+    }
+  ],
+  "limitations": [
+    "Verdict kiểm tra được reference vẫn cần người đọc xác nhận ngữ nghĩa và độ đầy đủ.",
+    "Câu trả lời thay đổi hoặc được inject lesson chưa chứng minh lesson gây ra cải thiện.",
+    "Reflection chưa được chấm chất lượng; learning job done/lesson approved không phải điểm chất lượng.",
+    "Guardrail mẫu có giới hạn; không phát hiện mẫu không đồng nghĩa không có prompt injection."
+  ]
+}

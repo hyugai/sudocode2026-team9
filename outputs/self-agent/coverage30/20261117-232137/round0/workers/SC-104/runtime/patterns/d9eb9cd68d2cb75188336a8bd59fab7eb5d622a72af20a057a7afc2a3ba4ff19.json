@@ -1,0 +1,45 @@
+{
+  "id": "d9eb9cd68d2cb75188336a8bd59fab7eb5d622a72af20a057a7afc2a3ba4ff19",
+  "reason": "unsupported_claim",
+  "pattern": "Do not state an unverified claim as a fact.",
+  "status": "approved",
+  "scope": "general",
+  "mechanism": "knowledge_gap",
+  "criterion": "Do not state an unverified claim as a fact.",
+  "evidence_refs": [
+    {
+      "job_id": "e8b1ec7a4d5ccc7005d575724e613818c45309b0c5271211cc96ff9e4102ee87",
+      "message_id": 2,
+      "turn_id": 2,
+      "origin": "turn_detector"
+    }
+  ],
+  "assessment": "unsupported_by_evidence",
+  "report_ref": "e8b1ec7a4d5ccc7005d575724e613818c45309b0c5271211cc96ff9e4102ee87",
+  "lesson": {
+    "title": "Use Exact Catalog Product Names",
+    "when": "Answering a customer query about product details after performing catalog or tool lookups",
+    "do": "State only the exact product name returned in the verified catalog sources or tool results",
+    "otherwise": "Express uncertainty about the specific product name instead of inferring or inventing one",
+    "triggers": [
+      "confirm product name",
+      "máy mới thu cũ đổi mới",
+      "xác nhận tên sản phẩm"
+    ],
+    "id": "0e7e90c0ebef8ff9c32f68b6dc37e5e29d91f60a2b499f75ecd877036ecf29bb",
+    "status": "approved",
+    "scope": "general",
+    "mechanism": "knowledge_gap",
+    "source_refs": [
+      {
+        "job_id": "e8b1ec7a4d5ccc7005d575724e613818c45309b0c5271211cc96ff9e4102ee87",
+        "message_id": 2,
+        "turn_id": 2,
+        "origin": "turn_detector"
+      }
+    ],
+    "version": 2
+  },
+  "lesson_path": "lessons\\approved\\0e7e90c0ebef8ff9c32f68b6dc37e5e29d91f60a2b499f75ecd877036ecf29bb.md",
+  "lesson_hash": "0b334693cdf926b3101254ee7a690f2a2e7fc1eee39df75bb1acd210c2fa3838"
+}

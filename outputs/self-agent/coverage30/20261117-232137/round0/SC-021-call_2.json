@@ -1,0 +1,276 @@
+{
+  "scenario_id": "SC-021",
+  "call": "call_2",
+  "session_id": "self-25404f1e9aaa481599c5f3ef7b28665d-SC-021-call_2",
+  "turns": [
+    {
+      "customer": "Chị gọi lại chuyện hôm trước. Đơn OD600001 đã nhận hôm qua; sản phẩm hơi chật.",
+      "agent": "Dạ em chào chị [private], em đã ghi nhận thông tin mình đã nhận đơn hàng nhưng sản phẩm bị hơi chật ạ. \n\nChị cho em hỏi hiện tại mình đang muốn đổi sang size lớn hơn hay cần hỗ trợ cụ thể như thế nào đối với sản phẩm này ạ?",
+      "latency": {
+        "ttft_ms": 4642,
+        "total_ms": 4642,
+        "ttfa_ms": null,
+        "measurement_mode": "non_streaming",
+        "timing_boundary": "response_ready_before_persistence",
+        "asr_ms": null,
+        "call_brief_ms": 2747,
+        "response_ready_ms": 4642,
+        "persistence_ms": 0.109,
+        "request_complete_ms": 4642.609,
+        "backend_total_ms": 4642.609,
+        "precomputed_parts": [
+          "persisted_facts"
+        ]
+      },
+      "lesson_trace": null
+    },
+    {
+      "customer": "Chị muốn đổi từ size 38 sang 39, giữ màu cũ. Đây là lần đổi đầu tiên; hàng còn nguyên tem, hộp và chưa sử dụng.",
+      "agent": "Chị cho em xác nhận lại là mình muốn chốt đổi sang size 39 cho đơn [order_id] này để em tiến hành lên đơn đổi mới cho chị ngay nhé? Em cần kiểm tra lại tồn kho trước khi xác nhận cho mình ạ.",
+      "latency": {
+        "ttft_ms": 6136,
+        "total_ms": 6136,
+        "ttfa_ms": null,
+        "measurement_mode": "non_streaming",
+        "timing_boundary": "response_ready_before_persistence",
+        "asr_ms": null,
+        "call_brief_ms": null,
+        "response_ready_ms": 6136,
+        "persistence_ms": 0.131,
+        "request_complete_ms": 6136.187,
+        "backend_total_ms": 6136.187,
+        "precomputed_parts": [
+          "persisted_facts"
+        ]
+      },
+      "lesson_trace": null
+    },
+    {
+      "customer": "Phí đổi size lần đầu thế nào? Chị đồng ý làm thủ tục đổi, lấy hàng tại địa chỉ [address]",
+      "agent": "Dạ chị [private], theo chính sách của bên em thì lần đổi size đầu tiên này hoàn toàn **miễn phí** và shop sẽ chịu phí vận chuyển 2 chiều ạ (theo quy định DT-03). Bên vận chuyển sẽ đến tận địa chỉ [address]",
+      "latency": {
+        "ttft_ms": 9111,
+        "total_ms": 9111,
+        "ttfa_ms": null,
+        "measurement_mode": "non_streaming",
+        "timing_boundary": "response_ready_before_persistence",
+        "asr_ms": null,
+        "call_brief_ms": null,
+        "response_ready_ms": 9111,
+        "persistence_ms": 0.12,
+        "request_complete_ms": 9111.256,
+        "backend_total_ms": 9111.256,
+        "precomputed_parts": [
+          "persisted_facts"
+        ]
+      },
+      "lesson_trace": null
+    }
+  ],
+  "generation_context": {
+    "round": 0,
+    "instruction_hash": "9d30a7093911a993d8545de8b61cc6dc8465de67b10fb62b27d9f1bafaf0badf",
+    "applied_patterns": {},
+    "lessons_loaded": false,
+    "lesson_sources": [],
+    "lesson_files": [],
+    "instruction_root": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round0\\instructions"
+  },
+  "evaluation_evidence": [
+    {
+      "turn_id": 1,
+      "agent_response": "Dạ em chào chị [private], em đã ghi nhận thông tin mình đã nhận đơn hàng nhưng sản phẩm bị hơi chật ạ. \n\nChị cho em hỏi hiện tại mình đang muốn đổi sang size lớn hơn hay cần hỗ trợ cụ thể như thế nào đối với sản phẩm này ạ?",
+      "tool_calls": [
+        {
+          "name": "order.status",
+          "args": {
+            "order_id": "[private]"
+          },
+          "result": {
+            "orders": []
+          }
+        }
+      ],
+      "sources": [],
+      "promotions": []
+    },
+    {
+      "turn_id": 2,
+      "agent_response": "Chị cho em xác nhận lại là mình muốn chốt đổi sang size 39 cho đơn [order_id] này để em tiến hành lên đơn đổi mới cho chị ngay nhé? Em cần kiểm tra lại tồn kho trước khi xác nhận cho mình ạ.",
+      "tool_calls": [
+        {
+          "name": "catalog.search",
+          "args": {
+            "query": "Chị muốn đổi từ size 38 sang 39, giữ màu cũ. Đây là lần đổi đầu tiên; hàng còn nguyên tem, hộp và chưa sử dụng.",
+            "on": "2026-10-06"
+          },
+          "result": {
+            "items": [],
+            "total": 0
+          }
+        },
+        {
+          "name": "order.status",
+          "args": {
+            "order_id": "[private]"
+          },
+          "result": {
+            "orders": [
+              {
+                "order_id": "[private]",
+                "customer_id": "[private]",
+                "customer_phone": "[private]",
+                "sku": "SKU-SN-CAS-38-TRANG",
+                "qty": 1,
+                "price_vnd": 890000,
+                "lines": [
+                  {
+                    "qty": 1,
+                    "sku": "SKU-SN-CAS-38-TRANG",
+                    "promos": [
+                      "COD-0"
+                    ],
+                    "price_vnd": 890000
+                  }
+                ],
+                "total_vnd": 890000,
+                "promos": [
+                  "COD-0"
+                ],
+                "promo_code": "COD-0",
+                "payment": "COD",
+                "address": "[private]",
+                "status": "created",
+                "created_on": "2026-10-02",
+                "exchange_count": 0
+              }
+            ]
+          }
+        },
+        {
+          "name": "inventory.check",
+          "args": {
+            "sku": "SKU-SN-CAS-39-TRANG",
+            "on": "2026-10-06"
+          },
+          "result": {
+            "sku": "SKU-SN-CAS-39-TRANG",
+            "found": true,
+            "in_stock": true,
+            "qty": 5,
+            "discontinued": false
+          }
+        }
+      ],
+      "sources": [],
+      "promotions": []
+    },
+    {
+      "turn_id": 3,
+      "agent_response": "Dạ chị [private], theo chính sách của bên em thì lần đổi size đầu tiên này hoàn toàn **miễn phí** và shop sẽ chịu phí vận chuyển 2 chiều ạ (theo quy định DT-03). Bên vận chuyển sẽ đến tận địa chỉ [address]",
+      "tool_calls": [
+        {
+          "name": "policy.search",
+          "args": {
+            "query": "Phí đổi size lần đầu thế nào? Chị đồng ý làm thủ tục đổi, lấy hàng tại địa chỉ [address]",
+            "k": 3,
+            "product_sku": "SKU-SN-CAS-38-TRANG",
+            "as_of": "2026-10-06"
+          },
+          "result": {
+            "query": "Phí đổi size lần đầu thế nào? Chị đồng ý làm thủ tục đổi, lấy hàng tại địa chỉ [address]",
+            "as_of": "2026-10-06",
+            "product_sku": "SKU-SN-CAS-38-TRANG",
+            "count": 3,
+            "chunks": [
+              {
+                "chunk_id": "DT-03",
+                "content": "Đổi size hoặc màu lần **đầu tiên** cho cùng một đơn hàng: **miễn phí**, shop chịu phí vận chuyển hai chiều. Từ lần đổi thứ hai trở đi: khách chịu phí vận chuyển 30.000đ/chiều. Điều kiện: size/màu mới còn hàng; nếu hết hàng, khách được chọn sản phẩm khác cùng giá hoặc hoàn tiền.",
+                "source_file": "chinh-sach-doi-tra.md",
+                "section": "[DT-03] Đổi size / màu (thời trang)"
+              },
+              {
+                "chunk_id": "VC-01",
+                "content": "| Khu vực | Thời gian (ngày làm việc) | Ghi chú | |---|---|---| | Nội thành Hà Nội, TP.HCM, Đà Nẵng | 1–2 | Đặt sau 16h tính từ ngày kế tiếp | | Ngoại thành 3 thành phố trên; Bình Dương, Đồng Nai, Hải Phòng, Cần Thơ | 2–3 | | | Tỉnh thành khác | 2–4 | Tây Nguyên, Tây Bắc: 3–5 | | Vùng sâu, hải đảo (Phú Quốc, Côn Đảo, Lý Sơn…) | 5–7 | Không nhận hàng cồng kềnh | \"Ngày làm việc\" không gồm Chủ nhật, ngày lễ và ngày nghỉ nội bộ (xem `thong-bao-lich-nghi.md`).",
+                "source_file": "chinh-sach-van-chuyen-thanh-toan.md",
+                "section": "[VC-01] Thời gian giao hàng"
+              },
+              {
+                "chunk_id": "VC-07",
+                "content": "Đơn vị vận chuyển giao tối đa 3 lần. Sau 3 lần không thành công, hàng hoàn về kho; khách muốn giao lại phải đặt đơn mới.",
+                "source_file": "chinh-sach-van-chuyen-thanh-toan.md",
+                "section": "[VC-07] Giao hàng thất bại"
+              }
+            ]
+          }
+        },
+        {
+          "name": "order.update",
+          "args": {
+            "order_id": "[private]",
+            "action": "exchange_size",
+            "new_variant_sku": "SKU-SN-CAS-39-TRANG",
+            "reason": "Phí đổi size lần đầu thế nào? Chị đồng ý làm thủ tục đổi, lấy hàng tại địa chỉ [address]",
+            "on": "2026-10-06"
+          },
+          "result": {
+            "order_id": "[private]",
+            "action": "exchange_size",
+            "new_variant_sku": "SKU-SN-CAS-39-TRANG",
+            "fee_vnd": 0,
+            "price_diff_vnd": 0,
+            "refund_vnd": 0,
+            "extra_payment_vnd": 0,
+            "refund_days": "3-5 ngày làm việc",
+            "status": "pickup_scheduled"
+          }
+        }
+      ],
+      "sources": [],
+      "promotions": []
+    }
+  ],
+  "job": {
+    "status": "done",
+    "job_id": "dcc3d1b7a440b4cf86ecce7268a413d64bb9fe10f799c8e76beb0281ff116f9e",
+    "error": null
+  },
+  "learning": {
+    "job_id": "dcc3d1b7a440b4cf86ecce7268a413d64bb9fe10f799c8e76beb0281ff116f9e",
+    "gaps": [],
+    "scope": "knowledge_gap_and_reflection_v1",
+    "evaluation_cases": [],
+    "out_of_scope": [],
+    "issue_reviews": [],
+    "detector_error": null,
+    "guardrails": {
+      "version": "learning_guardrails_v1",
+      "input_findings": [],
+      "blocked_lessons": [],
+      "blocked_sources": []
+    },
+    "detection": {
+      "candidate_count": 0,
+      "open_question_count": 0,
+      "processed_count": 0,
+      "skipped_unmatched_question": 0,
+      "skipped_over_limit": 0,
+      "scan": {
+        "turns_available": 3,
+        "turns_scanned": 3,
+        "requests": 3,
+        "errors": [],
+        "schema_retries": 0,
+        "skipped_over_limit": 0
+      },
+      "alignment_rejections": []
+    },
+    "outcome": "no_candidates",
+    "learning_duration_ms": 2788,
+    "learning_usage": {
+      "input_tokens": 3692,
+      "output_tokens": 13
+    }
+  },
+  "artifact_changes": []
+}

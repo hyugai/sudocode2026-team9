@@ -1,0 +1,46 @@
+{
+  "id": "02c7a5e0ae4b8b0a4da1b6ae9ad904df8223f9c57d341a481b6c1d45d0b38d41",
+  "reason": "unsupported_claim",
+  "pattern": "Do not state an unverified claim as a fact.",
+  "status": "approved",
+  "scope": "general",
+  "mechanism": "knowledge_gap",
+  "criterion": "Do not state an unverified claim as a fact.",
+  "evidence_refs": [
+    {
+      "job_id": "c6aa16533eecb9d888fd96bee509aa43869dbef8cf89c00347efebcb2e0809d7",
+      "message_id": 0,
+      "turn_id": 1,
+      "origin": "turn_detector"
+    }
+  ],
+  "assessment": "unsupported_by_evidence",
+  "report_ref": "c6aa16533eecb9d888fd96bee509aa43869dbef8cf89c00347efebcb2e0809d7",
+  "lesson": {
+    "title": "Acknowledge missing knowledge without unsupported system claims",
+    "when": "Answering a query where required business knowledge or specific product information is missing from sources",
+    "do": "State clearly that the specific information is not available in the provided sources",
+    "otherwise": "Do not claim system state, missing system data, or inability to answer due to unverified system conditions",
+    "triggers": [
+      "nhắn qua Fanpage",
+      "câu hỏi lần trước",
+      "không có thông tin hệ thống",
+      "chưa thể trả lời chính xác"
+    ],
+    "id": "5e744cd26a7b628e89aa1594375df1ec57b16ce73d99777949720b9b04bef43a",
+    "status": "approved",
+    "scope": "general",
+    "mechanism": "knowledge_gap",
+    "source_refs": [
+      {
+        "job_id": "c6aa16533eecb9d888fd96bee509aa43869dbef8cf89c00347efebcb2e0809d7",
+        "message_id": 0,
+        "turn_id": 1,
+        "origin": "turn_detector"
+      }
+    ],
+    "version": 2
+  },
+  "lesson_path": "lessons\\approved\\5e744cd26a7b628e89aa1594375df1ec57b16ce73d99777949720b9b04bef43a.md",
+  "lesson_hash": "6ee62f159ecc50e03ec172d746854ae75b6ac63d0798343cb0ec192df24398be"
+}

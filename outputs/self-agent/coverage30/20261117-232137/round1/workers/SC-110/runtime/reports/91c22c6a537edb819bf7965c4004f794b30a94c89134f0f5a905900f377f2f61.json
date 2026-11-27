@@ -1,0 +1,115 @@
+{
+  "job_id": "91c22c6a537edb819bf7965c4004f794b30a94c89134f0f5a905900f377f2f61",
+  "gaps": [
+    {
+      "id": "0c8b631b4fb487223de1988ffc4c07518a1c667b44b34c5cd5aaa26effdfafcf",
+      "status": "pending_remediation"
+    }
+  ],
+  "scope": "knowledge_gap_and_reflection_v1",
+  "evaluation_cases": [
+    {
+      "id": "df7ab59a630c1c53c572050ceedfd106426a475bafa8d403c9d72334a4679e20",
+      "gap_id": "0c8b631b4fb487223de1988ffc4c07518a1c667b44b34c5cd5aaa26effdfafcf",
+      "turn_id": 4,
+      "question": "Tôi con anh uu dai gift-filter; tôi muốn dung ma này cho mon dang hỏi hôm nay. neu chuong trinh da het han, hay noi ro thay vi tu tru them tiền; tôi chap nhận giá hien hanh da thong nhat khi tiep tuc yeu cau chinh.",
+      "reason": "unsupported_claim",
+      "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments."
+    }
+  ],
+  "out_of_scope": [],
+  "issue_reviews": [
+    {
+      "job_id": "91c22c6a537edb819bf7965c4004f794b30a94c89134f0f5a905900f377f2f61",
+      "message_id": 6,
+      "turn_id": 4,
+      "origin": "turn_detector",
+      "mechanism": "knowledge_gap",
+      "verified": true,
+      "claim": "mã này không áp dụng cho sản phẩm máy lọc không khí AirPure X ạ.",
+      "assessment": "unsupported_by_evidence",
+      "evidence_paths": [],
+      "rejection": null,
+      "rejection_reasons": [],
+      "format_retry": false,
+      "verifier_output": {
+        "valid": true,
+        "issue_scope": "business_knowledge",
+        "claim": "mã này không áp dụng cho sản phẩm máy lọc không khí AirPure X ạ.",
+        "assessment": "unsupported_by_evidence",
+        "evidence_paths": [],
+        "decision_reason": "The system tool results show that GIFT-FILTER is listed under expired_promos (expired promotion), not ineligible_promos (product-ineligible), making the claim that it does not apply to AirPure X unsupported by the evidence.",
+        "audit": {
+          "support_status": "not_established",
+          "coverage": "complete",
+          "checked_paths": [
+            "evidence.tool_calls.0.result",
+            "evidence.sources",
+            "evidence.promotions",
+            "prior_evidence.0.tool_calls.0.result",
+            "prior_evidence.0.sources",
+            "prior_evidence.0.promotions",
+            "prior_evidence.1.tool_calls.0.result",
+            "prior_evidence.1.tool_calls.1.result",
+            "prior_evidence.1.tool_calls.2.result",
+            "prior_evidence.1.sources",
+            "prior_evidence.1.promotions",
+            "prior_evidence.2.tool_calls.0.result",
+            "prior_evidence.2.tool_calls.1.result",
+            "prior_evidence.2.sources",
+            "prior_evidence.2.promotions"
+          ]
+        }
+      },
+      "candidate_claim": "mã này không áp dụng cho sản phẩm máy lọc không khí AirPure X ạ.",
+      "verification_basis": "evidence_inventory_audit",
+      "evidence_inventory": [
+        "evidence.tool_calls.0.result",
+        "evidence.sources",
+        "evidence.promotions",
+        "prior_evidence.0.tool_calls.0.result",
+        "prior_evidence.0.sources",
+        "prior_evidence.0.promotions",
+        "prior_evidence.1.tool_calls.0.result",
+        "prior_evidence.1.tool_calls.1.result",
+        "prior_evidence.1.tool_calls.2.result",
+        "prior_evidence.1.sources",
+        "prior_evidence.1.promotions",
+        "prior_evidence.2.tool_calls.0.result",
+        "prior_evidence.2.tool_calls.1.result",
+        "prior_evidence.2.sources",
+        "prior_evidence.2.promotions"
+      ],
+      "lesson_status": "approved"
+    }
+  ],
+  "detector_error": null,
+  "guardrails": {
+    "version": "learning_guardrails_v1",
+    "input_findings": [],
+    "blocked_lessons": [],
+    "blocked_sources": []
+  },
+  "detection": {
+    "candidate_count": 1,
+    "open_question_count": 0,
+    "processed_count": 1,
+    "skipped_unmatched_question": 0,
+    "skipped_over_limit": 0,
+    "scan": {
+      "turns_available": 5,
+      "turns_scanned": 5,
+      "requests": 5,
+      "errors": [],
+      "schema_retries": 0,
+      "skipped_over_limit": 0
+    },
+    "alignment_rejections": []
+  },
+  "outcome": "gaps_processed",
+  "learning_duration_ms": 15930,
+  "learning_usage": {
+    "input_tokens": 23282,
+    "output_tokens": 532
+  }
+}

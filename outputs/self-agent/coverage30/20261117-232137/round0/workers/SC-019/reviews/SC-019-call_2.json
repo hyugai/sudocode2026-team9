@@ -1,0 +1,563 @@
+{
+  "schema_version": 1,
+  "guardrail_version": "learning_guardrails_v1",
+  "metadata": {
+    "evaluation_population": "single_session_no_baseline"
+  },
+  "warnings": [
+    "Chưa chạy judge: chỉ xem thay đổi câu trả lời và dấu vết lesson, chưa đánh giá cải thiện.",
+    "Không có cặp chấm hợp lệ: chưa thể kết luận cải thiện hay không có regression."
+  ],
+  "summary": {
+    "total_turns": 3,
+    "judged_pair_count": 0,
+    "round0_turns": 0,
+    "round1_turns": 3,
+    "stored_frozen_case_count": 0,
+    "injected_turns": 0,
+    "changed_answers": 0,
+    "counts": {
+      "improved_resolution": 0,
+      "safer_unresolved": 0,
+      "regression": 0,
+      "unchanged": 0,
+      "needs_review": 0,
+      "not_evaluated": 3,
+      "unpaired": 0,
+      "question_changed": 0,
+      "excluded": 0
+    }
+  },
+  "rows": [
+    {
+      "call": "SC-019/call_2",
+      "turn_id": 1,
+      "question": "Chị muốn xác nhận trước khi quyết, lấy máy theo chương trình lần trước nhé.",
+      "baseline_question": null,
+      "classification": "not_evaluated",
+      "case_id": null,
+      "gap_id": null,
+      "answer_changed": false,
+      "injected": false,
+      "lesson_trace": {},
+      "round0": {
+        "answer": null,
+        "verdict": {
+          "status": null
+        },
+        "latency": null,
+        "evidence": {
+          "current": {},
+          "earlier": []
+        }
+      },
+      "round1": {
+        "answer": "Dạ em chào chị [private], em thấy sản phẩm SKU-AP-X chị quan tâm hiện vẫn còn hàng ạ. \n\nTuy nhiên, em xin phép thông tin lại là chương trình ưu đãi mã AP-SEP đợt trước (giá 4.390.000 đ) hiện đã hết hạn. Hôm nay (09/10/2026), giá của máy là 4.890.000 đ, chị sẽ được miễn phí vận chuyển và nhận kèm quà tặng là 1 màng lọc SKU-AP-FLT-X ạ.\n\nDạ chị có muốn chốt đặt hàng sản phẩm này với mức giá và quà tặng hiện tại luôn không ạ?",
+        "verdict": {
+          "status": null
+        },
+        "latency": {
+          "ttft_ms": 6079,
+          "total_ms": 6079,
+          "ttfa_ms": null,
+          "measurement_mode": "non_streaming",
+          "timing_boundary": "response_ready_before_persistence",
+          "asr_ms": null,
+          "call_brief_ms": 2900,
+          "response_ready_ms": 6079,
+          "persistence_ms": 0.11,
+          "request_complete_ms": 6079.128,
+          "backend_total_ms": 6079.128,
+          "precomputed_parts": [
+            "persisted_facts"
+          ]
+        },
+        "evidence": {
+          "current": {
+            "turn_id": 1,
+            "agent_response": "Dạ em chào chị [private], em thấy sản phẩm SKU-AP-X chị quan tâm hiện vẫn còn hàng ạ. \n\nTuy nhiên, em xin phép thông tin lại là chương trình ưu đãi mã AP-SEP đợt trước (giá 4.390.000 đ) hiện đã hết hạn. Hôm nay (09/10/2026), giá của máy là 4.890.000 đ, chị sẽ được miễn phí vận chuyển và nhận kèm quà tặng là 1 màng lọc SKU-AP-FLT-X ạ.\n\nDạ chị có muốn chốt đặt hàng sản phẩm này với mức giá và quà tặng hiện tại luôn không ạ?",
+            "tool_calls": [
+              {
+                "name": "inventory.check",
+                "args": {
+                  "sku": "SKU-AP-X",
+                  "on": "2026-10-09"
+                },
+                "result": {
+                  "sku": "SKU-AP-X",
+                  "found": true,
+                  "in_stock": true,
+                  "qty": 40,
+                  "discontinued": false
+                }
+              },
+              {
+                "name": "pricing.get_quote",
+                "args": {
+                  "on": "2026-10-09",
+                  "customer_phone": "[private]",
+                  "customer_id": "[private]",
+                  "sku": "SKU-AP-X",
+                  "qty": 1
+                },
+                "result": {
+                  "sku": "SKU-AP-X",
+                  "list_price_vnd": 4890000,
+                  "final_price_vnd": 4890000,
+                  "applied_promos": [
+                    {
+                      "promo_code": "COD-0",
+                      "type": "freecod",
+                      "discount_vnd": 0
+                    },
+                    {
+                      "promo_code": "GIFT-FILTER",
+                      "type": "gift",
+                      "discount_vnd": 0,
+                      "gift_sku": "SKU-AP-FLT-X"
+                    }
+                  ],
+                  "expired_promos": [
+                    "AP-SEP"
+                  ],
+                  "ineligible_promos": [
+                    {
+                      "promo_code": "AIR-2ND-50",
+                      "reason": "min_qty"
+                    },
+                    {
+                      "promo_code": "NAM-SHIP0",
+                      "reason": "region"
+                    },
+                    {
+                      "promo_code": "TRADE-IN-AP",
+                      "reason": "requires_owned_sku"
+                    }
+                  ],
+                  "not_applied_exclusive": [],
+                  "freeship": true
+                }
+              }
+            ],
+            "sources": [],
+            "promotions": []
+          },
+          "earlier": []
+        }
+      }
+    },
+    {
+      "call": "SC-019/call_2",
+      "turn_id": 2,
+      "question": "Sao giá lại khác vậy? Em nhắc lại mức cũ và giải thích giúp chị.",
+      "baseline_question": null,
+      "classification": "not_evaluated",
+      "case_id": null,
+      "gap_id": null,
+      "answer_changed": false,
+      "injected": false,
+      "lesson_trace": {},
+      "round0": {
+        "answer": null,
+        "verdict": {
+          "status": null
+        },
+        "latency": null,
+        "evidence": {
+          "current": {},
+          "earlier": []
+        }
+      },
+      "round1": {
+        "answer": "Dạ chị [private], em xin phép làm rõ lại ạ. \n\nỞ lần tư vấn trước, máy lọc không khí SKU-AP-X áp dụng ưu đãi mã AP-SEP có giá là 4.390.000 đ. Tuy nhiên, chương trình ưu đãi đó hiện đã hết hạn. \n\nHôm nay (09/10/2026), giá niêm yết của máy là 4.890.000 đ, đi kèm chính sách miễn phí vận chuyển và quà tặng kèm là 1 màng lọc SKU-AP-FLT-X ạ. Mức giá này vẫn hoàn toàn nằm trong ngân sách 4.990.000 đ của chị. \n\nDạ chị có muốn em hỗ trợ lên đơn đặt hàng sản phẩm này luôn không ạ?",
+        "verdict": {
+          "status": null
+        },
+        "latency": {
+          "ttft_ms": 5936,
+          "total_ms": 5936,
+          "ttfa_ms": null,
+          "measurement_mode": "non_streaming",
+          "timing_boundary": "response_ready_before_persistence",
+          "asr_ms": null,
+          "call_brief_ms": null,
+          "response_ready_ms": 5936,
+          "persistence_ms": 0.102,
+          "request_complete_ms": 5935.84,
+          "backend_total_ms": 5935.84,
+          "precomputed_parts": [
+            "persisted_facts"
+          ]
+        },
+        "evidence": {
+          "current": {
+            "turn_id": 2,
+            "agent_response": "Dạ chị [private], em xin phép làm rõ lại ạ. \n\nỞ lần tư vấn trước, máy lọc không khí SKU-AP-X áp dụng ưu đãi mã AP-SEP có giá là 4.390.000 đ. Tuy nhiên, chương trình ưu đãi đó hiện đã hết hạn. \n\nHôm nay (09/10/2026), giá niêm yết của máy là 4.890.000 đ, đi kèm chính sách miễn phí vận chuyển và quà tặng kèm là 1 màng lọc SKU-AP-FLT-X ạ. Mức giá này vẫn hoàn toàn nằm trong ngân sách 4.990.000 đ của chị. \n\nDạ chị có muốn em hỗ trợ lên đơn đặt hàng sản phẩm này luôn không ạ?",
+            "tool_calls": [
+              {
+                "name": "catalog.search",
+                "args": {
+                  "query": "Sao giá lại khác vậy? Em nhắc lại mức cũ và giải thích giúp chị.",
+                  "on": "2026-10-09"
+                },
+                "result": {
+                  "items": [],
+                  "total": 0
+                }
+              }
+            ],
+            "sources": [],
+            "promotions": []
+          },
+          "earlier": [
+            {
+              "turn_id": 1,
+              "tool_calls": [
+                {
+                  "name": "inventory.check",
+                  "args": {
+                    "sku": "SKU-AP-X",
+                    "on": "2026-10-09"
+                  },
+                  "result": {
+                    "sku": "SKU-AP-X",
+                    "found": true,
+                    "in_stock": true,
+                    "qty": 40,
+                    "discontinued": false
+                  }
+                },
+                {
+                  "name": "pricing.get_quote",
+                  "args": {
+                    "on": "2026-10-09",
+                    "customer_phone": "[private]",
+                    "customer_id": "[private]",
+                    "sku": "SKU-AP-X",
+                    "qty": 1
+                  },
+                  "result": {
+                    "sku": "SKU-AP-X",
+                    "list_price_vnd": 4890000,
+                    "final_price_vnd": 4890000,
+                    "applied_promos": [
+                      {
+                        "promo_code": "COD-0",
+                        "type": "freecod",
+                        "discount_vnd": 0
+                      },
+                      {
+                        "promo_code": "GIFT-FILTER",
+                        "type": "gift",
+                        "discount_vnd": 0,
+                        "gift_sku": "SKU-AP-FLT-X"
+                      }
+                    ],
+                    "expired_promos": [
+                      "AP-SEP"
+                    ],
+                    "ineligible_promos": [
+                      {
+                        "promo_code": "AIR-2ND-50",
+                        "reason": "min_qty"
+                      },
+                      {
+                        "promo_code": "NAM-SHIP0",
+                        "reason": "region"
+                      },
+                      {
+                        "promo_code": "TRADE-IN-AP",
+                        "reason": "requires_owned_sku"
+                      }
+                    ],
+                    "not_applied_exclusive": [],
+                    "freeship": true
+                  }
+                }
+              ],
+              "sources": [],
+              "promotions": []
+            }
+          ]
+        }
+      }
+    },
+    {
+      "call": "SC-019/call_2",
+      "turn_id": 3,
+      "question": "Nếu ưu đãi cũ đã hết thì chị chấp nhận 4.890.000 đồng. Một máy, COD, giao 108 đường Kiểm Thử, Đà Nẵng.",
+      "baseline_question": null,
+      "classification": "not_evaluated",
+      "case_id": null,
+      "gap_id": null,
+      "answer_changed": false,
+      "injected": false,
+      "lesson_trace": {},
+      "round0": {
+        "answer": null,
+        "verdict": {
+          "status": null
+        },
+        "latency": null,
+        "evidence": {
+          "current": {},
+          "earlier": []
+        }
+      },
+      "round1": {
+        "answer": "Dạ em đã lên thành công đơn hàng cho chị [private] rồi ạ! \n\nThông tin đơn hàng của chị:\n- **Mã đơn hàng:** [order_id]\n- **Sản phẩm:** 1 Máy lọc không khí (SKU-AP-X)\n- **Tổng tiền:** 4.890.000 đồng (thanh toán COD khi nhận hàng)\n- **Địa chỉ [address]\n- **Dự kiến giao hàng:** 12/10/2026\n\nEm cảm ơn chị đã ủng hộ cửa hàng, chúc chị một ngày tốt lành ạ!",
+        "verdict": {
+          "status": null
+        },
+        "latency": {
+          "ttft_ms": 5903,
+          "total_ms": 5903,
+          "ttfa_ms": null,
+          "measurement_mode": "non_streaming",
+          "timing_boundary": "response_ready_before_persistence",
+          "asr_ms": null,
+          "call_brief_ms": null,
+          "response_ready_ms": 5903,
+          "persistence_ms": 0.131,
+          "request_complete_ms": 5903.519,
+          "backend_total_ms": 5903.519,
+          "precomputed_parts": [
+            "persisted_facts"
+          ]
+        },
+        "evidence": {
+          "current": {
+            "turn_id": 3,
+            "agent_response": "Dạ em đã lên thành công đơn hàng cho chị [private] rồi ạ! \n\nThông tin đơn hàng của chị:\n- **Mã đơn hàng:** [order_id]\n- **Sản phẩm:** 1 Máy lọc không khí (SKU-AP-X)\n- **Tổng tiền:** 4.890.000 đồng (thanh toán COD khi nhận hàng)\n- **Địa chỉ [address]\n- **Dự kiến giao hàng:** 12/10/2026\n\nEm cảm ơn chị đã ủng hộ cửa hàng, chúc chị một ngày tốt lành ạ!",
+            "tool_calls": [
+              {
+                "name": "pricing.get_quote",
+                "args": {
+                  "on": "2026-10-09",
+                  "customer_phone": "[private]",
+                  "customer_id": "[private]",
+                  "address": "[private]",
+                  "sku": "SKU-AP-X",
+                  "qty": 1
+                },
+                "result": {
+                  "sku": "SKU-AP-X",
+                  "list_price_vnd": 4890000,
+                  "final_price_vnd": 4890000,
+                  "applied_promos": [
+                    {
+                      "promo_code": "COD-0",
+                      "type": "freecod",
+                      "discount_vnd": 0
+                    },
+                    {
+                      "promo_code": "GIFT-FILTER",
+                      "type": "gift",
+                      "discount_vnd": 0,
+                      "gift_sku": "SKU-AP-FLT-X"
+                    }
+                  ],
+                  "expired_promos": [
+                    "AP-SEP"
+                  ],
+                  "ineligible_promos": [
+                    {
+                      "promo_code": "AIR-2ND-50",
+                      "reason": "min_qty"
+                    },
+                    {
+                      "promo_code": "NAM-SHIP0",
+                      "reason": "region"
+                    },
+                    {
+                      "promo_code": "TRADE-IN-AP",
+                      "reason": "requires_owned_sku"
+                    }
+                  ],
+                  "not_applied_exclusive": [],
+                  "freeship": true
+                }
+              },
+              {
+                "name": "order.create",
+                "args": {
+                  "customer_phone": "[private]",
+                  "customer_id": "[private]",
+                  "address": "[private]",
+                  "idempotency_key": "self-87a6c5c0e2c74809923ddda6d63c41a7-SC-019-call_2:call_2:create:SKU-AP-X",
+                  "sku": "SKU-AP-X",
+                  "qty": 1,
+                  "price_vnd": 4890000,
+                  "promo_code": "COD-0",
+                  "on": "2026-10-09",
+                  "payment": "COD"
+                },
+                "result": {
+                  "order_id": "[private]",
+                  "status": "created",
+                  "total_vnd": 4890000,
+                  "needs_confirmation_call": true,
+                  "estimated_delivery": "2026-10-12"
+                }
+              }
+            ],
+            "sources": [],
+            "promotions": []
+          },
+          "earlier": [
+            {
+              "turn_id": 1,
+              "tool_calls": [
+                {
+                  "name": "inventory.check",
+                  "args": {
+                    "sku": "SKU-AP-X",
+                    "on": "2026-10-09"
+                  },
+                  "result": {
+                    "sku": "SKU-AP-X",
+                    "found": true,
+                    "in_stock": true,
+                    "qty": 40,
+                    "discontinued": false
+                  }
+                },
+                {
+                  "name": "pricing.get_quote",
+                  "args": {
+                    "on": "2026-10-09",
+                    "customer_phone": "[private]",
+                    "customer_id": "[private]",
+                    "sku": "SKU-AP-X",
+                    "qty": 1
+                  },
+                  "result": {
+                    "sku": "SKU-AP-X",
+                    "list_price_vnd": 4890000,
+                    "final_price_vnd": 4890000,
+                    "applied_promos": [
+                      {
+                        "promo_code": "COD-0",
+                        "type": "freecod",
+                        "discount_vnd": 0
+                      },
+                      {
+                        "promo_code": "GIFT-FILTER",
+                        "type": "gift",
+                        "discount_vnd": 0,
+                        "gift_sku": "SKU-AP-FLT-X"
+                      }
+                    ],
+                    "expired_promos": [
+                      "AP-SEP"
+                    ],
+                    "ineligible_promos": [
+                      {
+                        "promo_code": "AIR-2ND-50",
+                        "reason": "min_qty"
+                      },
+                      {
+                        "promo_code": "NAM-SHIP0",
+                        "reason": "region"
+                      },
+                      {
+                        "promo_code": "TRADE-IN-AP",
+                        "reason": "requires_owned_sku"
+                      }
+                    ],
+                    "not_applied_exclusive": [],
+                    "freeship": true
+                  }
+                }
+              ],
+              "sources": [],
+              "promotions": []
+            },
+            {
+              "turn_id": 2,
+              "tool_calls": [
+                {
+                  "name": "catalog.search",
+                  "args": {
+                    "query": "Sao giá lại khác vậy? Em nhắc lại mức cũ và giải thích giúp chị.",
+                    "on": "2026-10-09"
+                  },
+                  "result": {
+                    "items": [],
+                    "total": 0
+                  }
+                }
+              ],
+              "sources": [],
+              "promotions": []
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "lessons": [],
+  "sessions": [
+    {
+      "call": "SC-019/call_2",
+      "round0": {
+        "job": null,
+        "error": null,
+        "learning": null,
+        "observed_input_findings": []
+      },
+      "round1": {
+        "job": {
+          "status": "done",
+          "job_id": "12251f80231229e8dc209900534852ad531c7f3d9272e24cdea19eaaf14395f7",
+          "error": null
+        },
+        "error": null,
+        "learning": {
+          "job_id": "12251f80231229e8dc209900534852ad531c7f3d9272e24cdea19eaaf14395f7",
+          "gaps": [],
+          "scope": "knowledge_gap_and_reflection_v1",
+          "evaluation_cases": [],
+          "out_of_scope": [],
+          "issue_reviews": [],
+          "detector_error": null,
+          "guardrails": {
+            "version": "learning_guardrails_v1",
+            "input_findings": [],
+            "blocked_lessons": [],
+            "blocked_sources": []
+          },
+          "detection": {
+            "candidate_count": 0,
+            "open_question_count": 0,
+            "processed_count": 0,
+            "skipped_unmatched_question": 0,
+            "skipped_over_limit": 0,
+            "scan": {
+              "turns_available": 3,
+              "turns_scanned": 3,
+              "requests": 3,
+              "errors": [],
+              "schema_retries": 0,
+              "skipped_over_limit": 0
+            },
+            "alignment_rejections": []
+          },
+          "outcome": "no_candidates",
+          "learning_duration_ms": 3482,
+          "learning_usage": {
+            "input_tokens": 4269,
+            "output_tokens": 13
+          }
+        },
+        "observed_input_findings": []
+      }
+    }
+  ],
+  "limitations": [
+    "Verdict kiểm tra được reference vẫn cần người đọc xác nhận ngữ nghĩa và độ đầy đủ.",
+    "Câu trả lời thay đổi hoặc được inject lesson chưa chứng minh lesson gây ra cải thiện.",
+    "Reflection chưa được chấm chất lượng; learning job done/lesson approved không phải điểm chất lượng.",
+    "Guardrail mẫu có giới hạn; không phát hiện mẫu không đồng nghĩa không có prompt injection."
+  ]
+}

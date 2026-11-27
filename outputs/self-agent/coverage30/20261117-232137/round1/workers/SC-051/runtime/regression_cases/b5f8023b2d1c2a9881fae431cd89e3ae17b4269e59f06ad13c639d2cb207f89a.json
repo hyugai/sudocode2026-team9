@@ -1,0 +1,46 @@
+{
+  "id": "b5f8023b2d1c2a9881fae431cd89e3ae17b4269e59f06ad13c639d2cb207f89a",
+  "reason": "unsupported_claim",
+  "pattern": "Do not state an unverified claim as a fact.",
+  "status": "approved",
+  "scope": "general",
+  "mechanism": "knowledge_gap",
+  "criterion": "Do not state an unverified claim as a fact.",
+  "evidence_refs": [
+    {
+      "job_id": "0edf0988d816019ee95e4782f1d2b7ab87b4165a448ffd1d8a108064c3830d1c",
+      "message_id": 0,
+      "turn_id": 1,
+      "origin": "turn_detector"
+    }
+  ],
+  "assessment": "unsupported_by_evidence",
+  "report_ref": "0edf0988d816019ee95e4782f1d2b7ab87b4165a448ffd1d8a108064c3830d1c",
+  "lesson": {
+    "title": "State Uncertainty For Missing System Capabilities",
+    "when": "Answering a customer query about system capabilities or chat history without direct source evidence",
+    "do": "Express uncertainty or state that the required information is unavailable",
+    "otherwise": "Make absolute claims about what the system or store can or cannot check",
+    "triggers": [
+      "kiem tra tin nhan fanpage",
+      "lich su chat fanpage",
+      "system capability check",
+      "missing policy chat history"
+    ],
+    "id": "f1cc735d3e63f5f9567ed0df45fd11ac28c68d9df5a98984ce2d4366fee20103",
+    "status": "approved",
+    "scope": "general",
+    "mechanism": "knowledge_gap",
+    "source_refs": [
+      {
+        "job_id": "0edf0988d816019ee95e4782f1d2b7ab87b4165a448ffd1d8a108064c3830d1c",
+        "message_id": 0,
+        "turn_id": 1,
+        "origin": "turn_detector"
+      }
+    ],
+    "version": 2
+  },
+  "lesson_path": "lessons\\approved\\f1cc735d3e63f5f9567ed0df45fd11ac28c68d9df5a98984ce2d4366fee20103.md",
+  "lesson_hash": "9c505661352d9998b8ff22cc7bc7897d075bf6d2c958d04155f8aba50e923c7d"
+}

@@ -1,0 +1,578 @@
+{
+  "schema_version": 1,
+  "guardrail_version": "learning_guardrails_v1",
+  "metadata": {
+    "evaluation_population": "single_session_no_baseline"
+  },
+  "warnings": [
+    "Chưa chạy judge: chỉ xem thay đổi câu trả lời và dấu vết lesson, chưa đánh giá cải thiện.",
+    "Không có cặp chấm hợp lệ: chưa thể kết luận cải thiện hay không có regression."
+  ],
+  "summary": {
+    "total_turns": 3,
+    "judged_pair_count": 0,
+    "round0_turns": 0,
+    "round1_turns": 3,
+    "stored_frozen_case_count": 0,
+    "injected_turns": 3,
+    "changed_answers": 0,
+    "counts": {
+      "improved_resolution": 0,
+      "safer_unresolved": 0,
+      "regression": 0,
+      "unchanged": 0,
+      "needs_review": 0,
+      "not_evaluated": 3,
+      "unpaired": 0,
+      "question_changed": 0,
+      "excluded": 0
+    }
+  },
+  "rows": [
+    {
+      "call": "SC-071/call_1",
+      "turn_id": 1,
+      "question": "Tôi là Hà, số điện thoại [phone], đang nhắn qua Zalo OA. Shop ơi, chị đang quan tâm Máy lọc không khí AirPure X.",
+      "baseline_question": null,
+      "classification": "not_evaluated",
+      "case_id": null,
+      "gap_id": null,
+      "answer_changed": false,
+      "injected": true,
+      "lesson_trace": {
+        "lessons_loaded": 25,
+        "selected_lessons": [
+          {
+            "id": "0e7e90c0ebef8ff9c32f68b6dc37e5e29d91f60a2b499f75ecd877036ecf29bb",
+            "hash": "0b334693cdf926b3101254ee7a690f2a2e7fc1eee39df75bb1acd210c2fa3838",
+            "mechanism": "knowledge_gap"
+          }
+        ],
+        "injected": true,
+        "mode": "memory_only",
+        "response_modified": false,
+        "routing": "selected",
+        "routing_ms": 19962.968,
+        "routing_usage": {
+          "input_tokens": 4874,
+          "output_tokens": 69
+        },
+        "guardrails": {
+          "version": "learning_guardrails_v1",
+          "blocked_lessons": []
+        },
+        "injected_chars": 785,
+        "injected_lesson_count": 1,
+        "wrapper_total_ms": 27228.934
+      },
+      "round0": {
+        "answer": null,
+        "verdict": {
+          "status": null
+        },
+        "latency": null,
+        "evidence": {
+          "current": {},
+          "earlier": []
+        }
+      },
+      "round1": {
+        "answer": "Dạ em chào chị Hà, em rất vui được hỗ trợ chị qua Zalo. Sản phẩm Máy lọc không khí AirPure X bên em hiện đang có sẵn hàng chị nhé. \n\nMáy sử dụng màng lọc HEPA H13 giúp lọc bụi mịn PM2.5 rất tốt, phù hợp cho phòng diện tích khoảng 25m² và có chế độ vận hành êm ái khi ngủ, cùng bảo hành chính hãng 24 tháng ạ.\n\nChị Hà đang muốn tư vấn thêm thông tin gì về máy hay muốn hỗ trợ đặt hàng luôn ạ?",
+        "verdict": {
+          "status": null
+        },
+        "latency": {
+          "ttft_ms": 7265,
+          "total_ms": 7265,
+          "ttfa_ms": null,
+          "measurement_mode": "non_streaming",
+          "timing_boundary": "response_ready_before_persistence",
+          "asr_ms": null,
+          "call_brief_ms": 4017,
+          "response_ready_ms": 7265,
+          "persistence_ms": 0.824,
+          "request_complete_ms": 7265.839,
+          "backend_total_ms": 7265.839,
+          "precomputed_parts": []
+        },
+        "evidence": {
+          "current": {
+            "turn_id": 1,
+            "agent_response": "Dạ em chào chị Hà, em rất vui được hỗ trợ chị qua Zalo. Sản phẩm Máy lọc không khí AirPure X bên em hiện đang có sẵn hàng chị nhé. \n\nMáy sử dụng màng lọc HEPA H13 giúp lọc bụi mịn PM2.5 rất tốt, phù hợp cho phòng diện tích khoảng 25m² và có chế độ vận hành êm ái khi ngủ, cùng bảo hành chính hãng 24 tháng ạ.\n\nChị Hà đang muốn tư vấn thêm thông tin gì về máy hay muốn hỗ trợ đặt hàng luôn ạ?",
+            "tool_calls": [
+              {
+                "name": "catalog.search",
+                "args": {
+                  "query": "Máy lọc không khí AirPure X",
+                  "on": "2026-10-15"
+                },
+                "result": {
+                  "items": [
+                    {
+                      "sku": "SKU-AP-X",
+                      "name": "[private]",
+                      "category": "gia-dung/may-loc-khong-khi",
+                      "brand": "AirPure",
+                      "list_price_vnd": 4890000.0,
+                      "discontinued": false,
+                      "successor_sku": null,
+                      "attributes": {
+                        "features": "HEPA H13, cảm biến PM2.5, chế độ ngủ",
+                        "room_area_m2": 25,
+                        "child_safe_lock": false,
+                        "warranty_months": 24
+                      },
+                      "variants": []
+                    }
+                  ],
+                  "total": 1
+                }
+              },
+              {
+                "name": "inventory.check",
+                "args": {
+                  "sku": "SKU-AP-X",
+                  "on": "2026-10-15"
+                },
+                "result": {
+                  "sku": "SKU-AP-X",
+                  "found": true,
+                  "in_stock": true,
+                  "qty": 40,
+                  "discontinued": false
+                }
+              }
+            ],
+            "sources": [
+              {
+                "sku": "SKU-AP-X",
+                "name": "[private]",
+                "category": "gia-dung/may-loc-khong-khi",
+                "brand": "AirPure",
+                "list_price_vnd": 4890000.0,
+                "discontinued": false,
+                "successor_sku": null,
+                "attributes": {
+                  "features": "HEPA H13, cảm biến PM2.5, chế độ ngủ",
+                  "room_area_m2": 25,
+                  "child_safe_lock": false,
+                  "warranty_months": 24
+                },
+                "variants": []
+              }
+            ],
+            "promotions": []
+          },
+          "earlier": []
+        }
+      }
+    },
+    {
+      "call": "SC-071/call_1",
+      "turn_id": 2,
+      "question": "Mã sê-ri chính xác của chiếc sẽ giao cho tôi là gì?",
+      "baseline_question": null,
+      "classification": "not_evaluated",
+      "case_id": null,
+      "gap_id": null,
+      "answer_changed": false,
+      "injected": true,
+      "lesson_trace": {
+        "lessons_loaded": 25,
+        "selected_lessons": [
+          {
+            "id": "65937ee9eef2c4d974bef3006d8de98f5b9b9b10c16ff5760d49d6e188a9241e",
+            "hash": "91350f240162b4483ce53673eee782a9312256a594edaea6ce1e4964ad422cba",
+            "mechanism": "knowledge_gap"
+          },
+          {
+            "id": "e839841d39ba8ead00458782103f8efc1ca7f45a5a21fb69a75e661d206e7f56",
+            "hash": "815658651146ef9f2e80375f1a8354150ac994c3c1af0032f8e534a61f26ab6a",
+            "mechanism": "knowledge_gap"
+          }
+        ],
+        "injected": true,
+        "mode": "memory_only",
+        "response_modified": false,
+        "routing": "selected",
+        "routing_ms": 3109.271,
+        "routing_usage": {
+          "input_tokens": 5196,
+          "output_tokens": 131
+        },
+        "guardrails": {
+          "version": "learning_guardrails_v1",
+          "blocked_lessons": []
+        },
+        "injected_chars": 1282,
+        "injected_lesson_count": 2,
+        "wrapper_total_ms": 8539.679
+      },
+      "round0": {
+        "answer": null,
+        "verdict": {
+          "status": null
+        },
+        "latency": null,
+        "evidence": {
+          "current": {},
+          "earlier": []
+        }
+      },
+      "round1": {
+        "answer": "Dạ về câu hỏi của mình: “Mã sê-ri chính xác của chiếc sẽ giao cho tôi là gì?”. Hiện hệ thống không có thông tin xác nhận cho đúng chiếc hàng sẽ giao, nên em chưa thể trả lời chính xác ạ.",
+        "verdict": {
+          "status": null
+        },
+        "latency": {
+          "ttft_ms": 5430,
+          "total_ms": 5430,
+          "ttfa_ms": null,
+          "measurement_mode": "non_streaming",
+          "timing_boundary": "response_ready_before_persistence",
+          "asr_ms": null,
+          "call_brief_ms": null,
+          "response_ready_ms": 5430,
+          "persistence_ms": 0.106,
+          "request_complete_ms": 5430.276,
+          "backend_total_ms": 5430.276,
+          "precomputed_parts": [
+            "persisted_facts"
+          ]
+        },
+        "evidence": {
+          "current": {
+            "turn_id": 2,
+            "agent_response": "Dạ về câu hỏi của mình: “Mã sê-ri chính xác của chiếc sẽ giao cho tôi là gì?”. Hiện hệ thống không có thông tin xác nhận cho đúng chiếc hàng sẽ giao, nên em chưa thể trả lời chính xác ạ.",
+            "tool_calls": [
+              {
+                "name": "catalog.search",
+                "args": {
+                  "query": "Mã sê-ri chính xác của chiếc sẽ giao cho tôi là gì?",
+                  "on": "2026-10-15"
+                },
+                "result": {
+                  "items": [],
+                  "total": 0
+                }
+              }
+            ],
+            "sources": [],
+            "promotions": []
+          },
+          "earlier": [
+            {
+              "turn_id": 1,
+              "tool_calls": [
+                {
+                  "name": "catalog.search",
+                  "args": {
+                    "query": "Máy lọc không khí AirPure X",
+                    "on": "2026-10-15"
+                  },
+                  "result": {
+                    "items": [
+                      {
+                        "sku": "SKU-AP-X",
+                        "name": "[private]",
+                        "category": "gia-dung/may-loc-khong-khi",
+                        "brand": "AirPure",
+                        "list_price_vnd": 4890000.0,
+                        "discontinued": false,
+                        "successor_sku": null,
+                        "attributes": {
+                          "features": "HEPA H13, cảm biến PM2.5, chế độ ngủ",
+                          "room_area_m2": 25,
+                          "child_safe_lock": false,
+                          "warranty_months": 24
+                        },
+                        "variants": []
+                      }
+                    ],
+                    "total": 1
+                  }
+                },
+                {
+                  "name": "inventory.check",
+                  "args": {
+                    "sku": "SKU-AP-X",
+                    "on": "2026-10-15"
+                  },
+                  "result": {
+                    "sku": "SKU-AP-X",
+                    "found": true,
+                    "in_stock": true,
+                    "qty": 40,
+                    "discontinued": false
+                  }
+                }
+              ],
+              "sources": [
+                {
+                  "sku": "SKU-AP-X",
+                  "name": "[private]",
+                  "category": "gia-dung/may-loc-khong-khi",
+                  "brand": "AirPure",
+                  "list_price_vnd": 4890000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "features": "HEPA H13, cảm biến PM2.5, chế độ ngủ",
+                    "room_area_m2": 25,
+                    "child_safe_lock": false,
+                    "warranty_months": 24
+                  },
+                  "variants": []
+                }
+              ],
+              "promotions": []
+            }
+          ]
+        }
+      }
+    },
+    {
+      "call": "SC-071/call_1",
+      "turn_id": 3,
+      "question": "Nếu hồ sơ không có thì em nói rõ giúp chị; chưa đặt hàng.",
+      "baseline_question": null,
+      "classification": "not_evaluated",
+      "case_id": null,
+      "gap_id": null,
+      "answer_changed": false,
+      "injected": true,
+      "lesson_trace": {
+        "lessons_loaded": 25,
+        "selected_lessons": [
+          {
+            "id": "e839841d39ba8ead00458782103f8efc1ca7f45a5a21fb69a75e661d206e7f56",
+            "hash": "815658651146ef9f2e80375f1a8354150ac994c3c1af0032f8e534a61f26ab6a",
+            "mechanism": "knowledge_gap"
+          }
+        ],
+        "injected": true,
+        "mode": "memory_only",
+        "response_modified": false,
+        "routing": "selected",
+        "routing_ms": 2508.385,
+        "routing_usage": {
+          "input_tokens": 5376,
+          "output_tokens": 71
+        },
+        "guardrails": {
+          "version": "learning_guardrails_v1",
+          "blocked_lessons": []
+        },
+        "injected_chars": 889,
+        "injected_lesson_count": 1,
+        "wrapper_total_ms": 5839.24
+      },
+      "round0": {
+        "answer": null,
+        "verdict": {
+          "status": null
+        },
+        "latency": null,
+        "evidence": {
+          "current": {},
+          "earlier": []
+        }
+      },
+      "round1": {
+        "answer": "Dạ em còn lưu câu hỏi lần trước: “Mã sê-ri chính xác của chiếc sẽ giao cho tôi là gì?”. Hiện hệ thống không có thông tin xác nhận cho đúng chiếc hàng sẽ giao, nên em chưa thể trả lời chính xác ạ.",
+        "verdict": {
+          "status": null
+        },
+        "latency": {
+          "ttft_ms": 3331,
+          "total_ms": 3331,
+          "ttfa_ms": null,
+          "measurement_mode": "non_streaming",
+          "timing_boundary": "response_ready_before_persistence",
+          "asr_ms": null,
+          "call_brief_ms": null,
+          "response_ready_ms": 3331,
+          "persistence_ms": 0.08,
+          "request_complete_ms": 3330.736,
+          "backend_total_ms": 3330.736,
+          "precomputed_parts": [
+            "persisted_facts"
+          ]
+        },
+        "evidence": {
+          "current": {
+            "turn_id": 3,
+            "agent_response": "Dạ em còn lưu câu hỏi lần trước: “Mã sê-ri chính xác của chiếc sẽ giao cho tôi là gì?”. Hiện hệ thống không có thông tin xác nhận cho đúng chiếc hàng sẽ giao, nên em chưa thể trả lời chính xác ạ.",
+            "tool_calls": [],
+            "sources": [],
+            "promotions": []
+          },
+          "earlier": [
+            {
+              "turn_id": 1,
+              "tool_calls": [
+                {
+                  "name": "catalog.search",
+                  "args": {
+                    "query": "Máy lọc không khí AirPure X",
+                    "on": "2026-10-15"
+                  },
+                  "result": {
+                    "items": [
+                      {
+                        "sku": "SKU-AP-X",
+                        "name": "[private]",
+                        "category": "gia-dung/may-loc-khong-khi",
+                        "brand": "AirPure",
+                        "list_price_vnd": 4890000.0,
+                        "discontinued": false,
+                        "successor_sku": null,
+                        "attributes": {
+                          "features": "HEPA H13, cảm biến PM2.5, chế độ ngủ",
+                          "room_area_m2": 25,
+                          "child_safe_lock": false,
+                          "warranty_months": 24
+                        },
+                        "variants": []
+                      }
+                    ],
+                    "total": 1
+                  }
+                },
+                {
+                  "name": "inventory.check",
+                  "args": {
+                    "sku": "SKU-AP-X",
+                    "on": "2026-10-15"
+                  },
+                  "result": {
+                    "sku": "SKU-AP-X",
+                    "found": true,
+                    "in_stock": true,
+                    "qty": 40,
+                    "discontinued": false
+                  }
+                }
+              ],
+              "sources": [
+                {
+                  "sku": "SKU-AP-X",
+                  "name": "[private]",
+                  "category": "gia-dung/may-loc-khong-khi",
+                  "brand": "AirPure",
+                  "list_price_vnd": 4890000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "features": "HEPA H13, cảm biến PM2.5, chế độ ngủ",
+                    "room_area_m2": 25,
+                    "child_safe_lock": false,
+                    "warranty_months": 24
+                  },
+                  "variants": []
+                }
+              ],
+              "promotions": []
+            },
+            {
+              "turn_id": 2,
+              "tool_calls": [
+                {
+                  "name": "catalog.search",
+                  "args": {
+                    "query": "Mã sê-ri chính xác của chiếc sẽ giao cho tôi là gì?",
+                    "on": "2026-10-15"
+                  },
+                  "result": {
+                    "items": [],
+                    "total": 0
+                  }
+                }
+              ],
+              "sources": [],
+              "promotions": []
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "lessons": [],
+  "sessions": [
+    {
+      "call": "SC-071/call_1",
+      "round0": {
+        "job": null,
+        "error": null,
+        "learning": null,
+        "observed_input_findings": []
+      },
+      "round1": {
+        "job": {
+          "status": "done",
+          "job_id": "00b124d14c125748eccb1aa96007dfd5013fc25e85d1b41110561189bb45093d",
+          "error": null
+        },
+        "error": null,
+        "learning": {
+          "job_id": "00b124d14c125748eccb1aa96007dfd5013fc25e85d1b41110561189bb45093d",
+          "gaps": [
+            {
+              "id": "2a4a5d845594e8f9ab9ae5af021f0d569ba7b8d4f5561aab09a0cf07c93edf07",
+              "status": "pending_evidence"
+            }
+          ],
+          "scope": "knowledge_gap_and_reflection_v1",
+          "evaluation_cases": [
+            {
+              "id": "6c01f5b39e50a2bc04dc222567dd68bcd8989f2bc177565e1cb979b8dc69f61e",
+              "gap_id": "2a4a5d845594e8f9ab9ae5af021f0d569ba7b8d4f5561aab09a0cf07c93edf07",
+              "turn_id": 2,
+              "question": "Mã sê-ri chính xác của chiếc sẽ giao cho tôi là gì?",
+              "reason": "missing_knowledge",
+              "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments."
+            }
+          ],
+          "out_of_scope": [],
+          "issue_reviews": [],
+          "detector_error": null,
+          "guardrails": {
+            "version": "learning_guardrails_v1",
+            "input_findings": [],
+            "blocked_lessons": [],
+            "blocked_sources": []
+          },
+          "detection": {
+            "candidate_count": 1,
+            "open_question_count": 1,
+            "processed_count": 1,
+            "skipped_unmatched_question": 0,
+            "skipped_over_limit": 0,
+            "scan": {
+              "turns_available": 3,
+              "turns_scanned": 3,
+              "requests": 3,
+              "errors": [],
+              "schema_retries": 0,
+              "skipped_over_limit": 0
+            },
+            "alignment_rejections": []
+          },
+          "outcome": "gaps_processed",
+          "learning_duration_ms": 3832,
+          "learning_usage": {
+            "input_tokens": 3505,
+            "output_tokens": 56
+          }
+        },
+        "observed_input_findings": []
+      }
+    }
+  ],
+  "limitations": [
+    "Verdict kiểm tra được reference vẫn cần người đọc xác nhận ngữ nghĩa và độ đầy đủ.",
+    "Câu trả lời thay đổi hoặc được inject lesson chưa chứng minh lesson gây ra cải thiện.",
+    "Reflection chưa được chấm chất lượng; learning job done/lesson approved không phải điểm chất lượng.",
+    "Guardrail mẫu có giới hạn; không phát hiện mẫu không đồng nghĩa không có prompt injection."
+  ]
+}

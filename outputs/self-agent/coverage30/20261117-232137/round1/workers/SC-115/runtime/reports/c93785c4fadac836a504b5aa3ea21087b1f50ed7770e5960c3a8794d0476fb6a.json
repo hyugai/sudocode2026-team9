@@ -1,0 +1,108 @@
+{
+  "job_id": "c93785c4fadac836a504b5aa3ea21087b1f50ed7770e5960c3a8794d0476fb6a",
+  "gaps": [
+    {
+      "id": "fdabffeb147722a4f1f8dc9dc53bc3845d8a3db51703afb0b610c17ae49795f8",
+      "status": "pending_evidence"
+    },
+    {
+      "id": "7ea32c8665a9d99852967908c540b3146898f504402895f37fd16786a4890a81",
+      "status": "pending_remediation"
+    }
+  ],
+  "scope": "knowledge_gap_and_reflection_v1",
+  "evaluation_cases": [
+    {
+      "id": "72fc879b554a636906fa96e9cb2ba478e38054c2c944434857029ce3e57a7f27",
+      "gap_id": "fdabffeb147722a4f1f8dc9dc53bc3845d8a3db51703afb0b610c17ae49795f8",
+      "turn_id": 1,
+      "question": "Tôi là [private], số điện thoại [private], đang nhắn qua Fanpage. Chị đã cân nhắc xong rồi. Em nhắc đúng hai món cuối cùng sau khi sửa và tổng tiền nhé.",
+      "reason": "missing_knowledge",
+      "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments."
+    }
+  ],
+  "out_of_scope": [],
+  "issue_reviews": [
+    {
+      "job_id": "c93785c4fadac836a504b5aa3ea21087b1f50ed7770e5960c3a8794d0476fb6a",
+      "message_id": 6,
+      "turn_id": 4,
+      "origin": "turn_detector",
+      "mechanism": "reflection",
+      "verified": true,
+      "claim": "Dạ em đã tạo đơn hàng thành công cho chị [private] rồi ạ! \n\nMã đơn hàng của chị là **[order_id]** gồm 01 Quạt đứng Senko TS16 (SKU-FAN-SEN), tổng tiền 590.000đ, thanh toán COD và giao về 104 đường Kiểm Thử, Đà Nẵng.",
+      "assessment": "context_mismatch",
+      "evidence_paths": [
+        "evidence.tool_calls.2.result"
+      ],
+      "rejection": null,
+      "rejection_reasons": [],
+      "format_retry": false,
+      "verifier_output": {
+        "valid": true,
+        "issue_scope": "reflection",
+        "claim": "Dạ em đã tạo đơn hàng thành công cho chị [private] rồi ạ! \n\nMã đơn hàng của chị là **[order_id]** gồm 01 Quạt đứng Senko TS16 (SKU-FAN-SEN), tổng tiền 590.000đ, thanh toán COD và giao về 104 đường Kiểm Thử, Đà Nẵng.",
+        "assessment": "context_mismatch",
+        "evidence_paths": [
+          "evidence.tool_calls.2.result"
+        ],
+        "decision_reason": "The customer requested to exclude/remove the cancelled Senko TS16 fan ('bỏ món Quạt đứng Senko TS16 đã hủy nhé'), but the agent executed an order creation tool call and created an order containing SKU-FAN-SEN.",
+        "audit": {
+          "support_status": "contradicted",
+          "coverage": "complete",
+          "checked_paths": [
+            "evidence.tool_calls.2.result"
+          ]
+        }
+      },
+      "candidate_claim": "Dạ em đã tạo đơn hàng thành công cho chị [private] rồi ạ! \n\nMã đơn hàng của chị là **[order_id]** gồm 01 Quạt đứng Senko TS16 (SKU-FAN-SEN), tổng tiền 590.000đ, thanh toán COD và giao về 104 đường Kiểm Thử, Đà Nẵng.",
+      "verification_basis": "referenced_evidence",
+      "evidence_inventory": [
+        "evidence.tool_calls.0.result",
+        "evidence.tool_calls.1.result",
+        "evidence.tool_calls.2.result",
+        "evidence.sources",
+        "evidence.promotions",
+        "prior_evidence.0.tool_calls",
+        "prior_evidence.0.sources",
+        "prior_evidence.0.promotions",
+        "prior_evidence.1.tool_calls.0.result",
+        "prior_evidence.1.sources",
+        "prior_evidence.1.promotions",
+        "prior_evidence.2.tool_calls",
+        "prior_evidence.2.sources",
+        "prior_evidence.2.promotions"
+      ],
+      "lesson_status": "approved"
+    }
+  ],
+  "detector_error": null,
+  "guardrails": {
+    "version": "learning_guardrails_v1",
+    "input_findings": [],
+    "blocked_lessons": [],
+    "blocked_sources": []
+  },
+  "detection": {
+    "candidate_count": 2,
+    "open_question_count": 0,
+    "processed_count": 2,
+    "skipped_unmatched_question": 0,
+    "skipped_over_limit": 0,
+    "scan": {
+      "turns_available": 4,
+      "turns_scanned": 4,
+      "requests": 4,
+      "errors": [],
+      "schema_retries": 0,
+      "skipped_over_limit": 0
+    },
+    "alignment_rejections": []
+  },
+  "outcome": "gaps_processed",
+  "learning_duration_ms": 14614,
+  "learning_usage": {
+    "input_tokens": 10143,
+    "output_tokens": 553
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "job_id": "3aa34d25aa1dc0c43d98025352621e4b801dd448adab3af56f31b9a0c2ad2cd8",
+  "gaps": [],
+  "scope": "knowledge_gap_and_reflection_v1",
+  "evaluation_cases": [],
+  "out_of_scope": [
+    {
+      "message_id": 4,
+      "reason": null
+    }
+  ],
+  "issue_reviews": [],
+  "detector_error": null,
+  "guardrails": {
+    "version": "learning_guardrails_v1",
+    "input_findings": [],
+    "blocked_lessons": [],
+    "blocked_sources": []
+  },
+  "detection": {
+    "candidate_count": 1,
+    "open_question_count": 0,
+    "processed_count": 0,
+    "skipped_unmatched_question": 0,
+    "skipped_over_limit": 0,
+    "scan": {
+      "turns_available": 3,
+      "turns_scanned": 3,
+      "requests": 3,
+      "errors": [],
+      "schema_retries": 0,
+      "skipped_over_limit": 0
+    },
+    "alignment_rejections": []
+  },
+  "outcome": "all_candidates_filtered",
+  "learning_duration_ms": 5010,
+  "learning_usage": {
+    "input_tokens": 6031,
+    "output_tokens": 123
+  }
+}

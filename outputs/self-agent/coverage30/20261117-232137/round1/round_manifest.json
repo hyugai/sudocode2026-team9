@@ -1,0 +1,849 @@
+{
+  "round": 1,
+  "signature": {
+    "tests": "39a166820e4019166c34c80cb00257d57efba52d19d1d5b54b8654244ed16333",
+    "base_instructions": "9d30a7093911a993d8545de8b61cc6dc8465de67b10fb62b27d9f1bafaf0badf",
+    "settings": {
+      "LLM_PROVIDER": "gemini",
+      "LLM_MODEL": "gemini-3.6-flash",
+      "GROQ_MODEL": "",
+      "GEMINI_MODEL": "",
+      "DEEPAGENT_THINKING_LEVEL": "minimal",
+      "DEEPAGENT_CHECKPOINT_SCOPE": "",
+      "KNOWLEDGE_BACKEND": "pinecone",
+      "PINECONE_INDEX_NAME": "policy-telesale",
+      "PINECONE_NAMESPACE": "policy-prod"
+    },
+    "customer_memory": "empty_ram_shared_between_calls_only",
+    "learning_scope": "knowledge_gap_and_reflection_v1",
+    "lesson_runtime": "memory_only_v2"
+  },
+  "applied_patterns": {
+    "reasoning_failure": "Check the answer against evidence and preserve all applicable conditions.",
+    "unsupported_claim": "Do not state an unverified claim as a fact."
+  },
+  "scenario_hashes": {
+    "SC-001": "d4c0fce5b3cca9093b6b5b02419145a444bd85fa5465f4201f9dfcdb4f5f53f7",
+    "SC-003": "def69b07c5fa654ad3f0f1e08cf6b9d599bc08d6c9c0dda8d90fb0c515fd0f12",
+    "SC-006": "6bae43176f02e968c1e34a1ad355e93de958806b9b0b3fae837d8cf8f60b8831",
+    "SC-012": "35160cdb71ea3579f5448c759a6edfd2f57d8ba28527ca25c9b816b50ea97867",
+    "SC-019": "9e4e1b06d1a71d29ec4199579311411a8f4c4fcc73675e0f5f282441c907c935",
+    "SC-021": "e4ef9cc46de26734c973dd14031145eeac2a382a503dd0203c9a1e75694e13bf",
+    "SC-026": "dcf638906da72bbda1f753597cc87592ab0bac1f0239d8bbc6344fbc033e1b44",
+    "SC-031": "39981d9be55b5dcef763c9232340e3e3898d73ef291398c161a9efa5a5f11f0a",
+    "SC-032": "fc24c2451daab088f48c9954fc291bab7d850c362f644656284a29f52f7893da",
+    "SC-041": "01f86c346f7f77910b208d80dac6577cddd4eee1e209fbbe60ad852e3053f637",
+    "SC-044": "5d9d6b2734bf5405d6eb44346f7e7d74c0639e33e52e3e568cea1ed05d618895",
+    "SC-045": "9082485c15e2da6e41e0602eb59487842dfb26cb37aa75aca1e021d3c32dc563",
+    "SC-051": "c69f7ac9426a07c4d98451fedcd97b320b42b121bd37e8da6d3733f4f131ece3",
+    "SC-054": "61c53093896c6863e3d78e59515f46a1676591c673522df8caf5f151844376de",
+    "SC-062": "5a604c9a0d68742fddf202ca444b175e36284555e0aa3ddb2f698a724c7c6668",
+    "SC-066": "3f56f3d4ebb0cf77448fd2a3f4512216ffee0a444cc1602bb55d7ef32215c900",
+    "SC-071": "953df83a1600e5323f85d3f903aa9ee5c4233e6d310803394054d4200fa8f945",
+    "SC-074": "a72e496366ba3368f663e563e07394270a2f7d3cb94c260c0b4016ac83923c1e",
+    "SC-075": "8d6a6062db7b9fa64ee01e55a0d6e5553d1dac43cdaf397c1ae47eb6a9de58ae",
+    "SC-081": "a43f3b393c58f917750131219392e528ab81186bc140ebc15c6cfbf4be81f94c",
+    "SC-084": "4d91e30e1ac37ec6025197f60cde107c7296532121d956b4d9263a3514d21d20",
+    "SC-085": "a25b16461ec964a0c3a88469bbc50d3e477671f264979f39ea58900af5f16d95",
+    "SC-091": "2f43a2b0bacc552927526252d9587447b92da98289eb3bf67bdb2b0a51e5080b",
+    "SC-095": "36da375676a633f20af0b5fcf849f65a190d79fec14d07f63a7557cd0fcc77bc",
+    "SC-101": "754eb734b26d98784c6f60da9b014e497e5668eb74546d1670b567bff7db5a8e",
+    "SC-104": "7f3f1f5078071b0f7aa6e341ef91d16445d21ade09d8e25c2c26e26d7e95435b",
+    "SC-110": "3afaff03c5c488e800e3a7c6bc1bc8541e79965fadaeec3840ba9e3a6e51170e",
+    "SC-111": "ce69d01b3cf8262f14522455e3cae6616be9e8f6a72b072dcd1ed8def0c63e22",
+    "SC-114": "f630cfec8a988d790b1e4b3061db73dd3cbf8efdd4c5950afd94d410646d2d6d",
+    "SC-115": "25c969412cd274a06f5c78dc737eb9f74f6222157ea33fabb30508b17621b400"
+  },
+  "scenario_calls": {
+    "SC-001": [
+      "call_1",
+      "call_2"
+    ],
+    "SC-003": [
+      "call_1",
+      "call_2"
+    ],
+    "SC-006": [
+      "call_1",
+      "call_2"
+    ],
+    "SC-012": [
+      "call_1",
+      "call_2"
+    ],
+    "SC-019": [
+      "call_1",
+      "call_2"
+    ],
+    "SC-021": [
+      "call_1",
+      "call_2"
+    ],
+    "SC-026": [
+      "call_1",
+      "call_2"
+    ],
+    "SC-031": [
+      "call_1",
+      "call_2"
+    ],
+    "SC-032": [
+      "call_1",
+      "call_2"
+    ],
+    "SC-041": [
+      "call_1",
+      "call_2",
+      "call_3"
+    ],
+    "SC-044": [
+      "call_1",
+      "call_2",
+      "call_3"
+    ],
+    "SC-045": [
+      "call_1",
+      "call_2",
+      "call_3"
+    ],
+    "SC-051": [
+      "call_1",
+      "call_2"
+    ],
+    "SC-054": [
+      "call_1",
+      "call_2"
+    ],
+    "SC-062": [
+      "call_1",
+      "call_2"
+    ],
+    "SC-066": [
+      "call_1",
+      "call_2"
+    ],
+    "SC-071": [
+      "call_1",
+      "call_2"
+    ],
+    "SC-074": [
+      "call_1",
+      "call_2"
+    ],
+    "SC-075": [
+      "call_1",
+      "call_2"
+    ],
+    "SC-081": [
+      "call_1",
+      "call_2"
+    ],
+    "SC-084": [
+      "call_1",
+      "call_2"
+    ],
+    "SC-085": [
+      "call_1",
+      "call_2"
+    ],
+    "SC-091": [
+      "call_1",
+      "call_2"
+    ],
+    "SC-095": [
+      "call_1",
+      "call_2"
+    ],
+    "SC-101": [
+      "call_1",
+      "call_2"
+    ],
+    "SC-104": [
+      "call_1",
+      "call_2"
+    ],
+    "SC-110": [
+      "call_1",
+      "call_2"
+    ],
+    "SC-111": [
+      "call_1",
+      "call_2"
+    ],
+    "SC-114": [
+      "call_1",
+      "call_2"
+    ],
+    "SC-115": [
+      "call_1",
+      "call_2"
+    ]
+  },
+  "baseline_excluded_calls": [],
+  "lessons_loaded": true,
+  "lesson_sources": [
+    {
+      "pattern_id": "cee25c0d9bfcb44f534a7cc06f72d6844ccbfbd8846fd4e363086c4ff427ced0",
+      "job_id": "3c9aba8cefccf09a016fe2e6ee3578140780bdf501d462e6d209792679a89f5f",
+      "scenario_id": "SC-003",
+      "call": "call_1"
+    },
+    {
+      "pattern_id": "386538c4668feef5a674f41c209d7f1ee4027779799c59047e030be5125ce904",
+      "job_id": "e6d5dcc42d3307cbab859c1c31e8d8d3170887fef1e25f89a41f2f2790132519",
+      "scenario_id": "SC-006",
+      "call": "call_2"
+    },
+    {
+      "pattern_id": "c8541bcf63d0360d3bce30ac56cf4d795b83922809eca3bd6ad56a2481b82d95",
+      "job_id": "29560d2f478952272ead255c0b7034dd33448bb3b87365820ec5b90fb54b4126",
+      "scenario_id": "SC-012",
+      "call": "call_1"
+    },
+    {
+      "pattern_id": "fe66fd00c093489108e8a98f38f6add924c0958b432092c00443152a599580b4",
+      "job_id": "29560d2f478952272ead255c0b7034dd33448bb3b87365820ec5b90fb54b4126",
+      "scenario_id": "SC-012",
+      "call": "call_1"
+    },
+    {
+      "pattern_id": "4cb5864cfecfe6494694e5a70b426381af66e416c4f340796b31a56ae0c5531e",
+      "job_id": "d49d4adc843c44ab5161691a8adb279d2f2e9f75cb6b74e0020ae8d9ec186be3",
+      "scenario_id": "SC-012",
+      "call": "call_2"
+    },
+    {
+      "pattern_id": "7ef335d147da97f11eb8346bf3feeeb91809c12454e07256ff7b66551d5ca1f5",
+      "job_id": "b8e88dc12397744981c41f4e67d8a6db8af1c4032479a9ecb7b8be76a57aa0a5",
+      "scenario_id": "SC-019",
+      "call": "call_1"
+    },
+    {
+      "pattern_id": "e0fc8292e7f785cf58fdb4df5b49da6a2b1f2228d3eb696df3eb61d72052bbf4",
+      "job_id": "9f35c922d159f4e6888b84e0fa52eb9920af697ac72371ddf8201fa45d497761",
+      "scenario_id": "SC-026",
+      "call": "call_2"
+    },
+    {
+      "pattern_id": "030740da8e075223ac89a531849f982f132011d2e0d9d0238fff372e7d6d2b15",
+      "job_id": "c00902fa1419b5b558cdf371d877e1f30605afe637b516900f11b303a56144e4",
+      "scenario_id": "SC-031",
+      "call": "call_2"
+    },
+    {
+      "pattern_id": "cd2fe0321127d8f5c7d54af123dc8865aa478ec6ba6f9f96039b6b0af8139eb7",
+      "job_id": "e110e43902f11c466044ea97b3398ad09c7d856334dce298f0ad13519bb55877",
+      "scenario_id": "SC-032",
+      "call": "call_2"
+    },
+    {
+      "pattern_id": "b7f69b20e2c0e24193162b3f34acc7e277b1929307d54548c5e67acdee61ea30",
+      "job_id": "99b9f19efa550134751c0aefb1a8ef643f3ae947b5097b147f1b7ec2f2010c58",
+      "scenario_id": "SC-041",
+      "call": "call_2"
+    },
+    {
+      "pattern_id": "85d8954991cf5f9c9a36ec67917032d4a88d71c4e4e34fb0b694d41eaf118095",
+      "job_id": "d827a3f0d62f1bc219891f3b807739bd04017a76c78bfa5de4da07f24a9f3b2a",
+      "scenario_id": "SC-041",
+      "call": "call_3"
+    },
+    {
+      "pattern_id": "8b87a1857fd34d0350c417483f84d320078aa50f3429342588c9ad7d1ea7e24d",
+      "job_id": "7fd0b5fd036e3c9f4602f0339906a9bb1d8f37941e18e169076829b4019dafcc",
+      "scenario_id": "SC-051",
+      "call": "call_2"
+    },
+    {
+      "pattern_id": "9298aa80a7a7c5e010655e6f73afe8c7e86b5340640604f7fd1a9f0eabab6be1",
+      "job_id": "08e63328de2d39afabb9033fdaaba321216d349caec40ab7818283ecd3e551f9",
+      "scenario_id": "SC-054",
+      "call": "call_2"
+    },
+    {
+      "pattern_id": "02c7a5e0ae4b8b0a4da1b6ae9ad904df8223f9c57d341a481b6c1d45d0b38d41",
+      "job_id": "84db64a7e711d8ba9b346fadf76e7521ef381edabf32c31811fbb7f5ac86f61c",
+      "scenario_id": "SC-074",
+      "call": "call_2"
+    },
+    {
+      "pattern_id": "87a7cae8ba8ce7e8b0134737bd189a50f211fb9978ccbaad280b4a042efafe54",
+      "job_id": "5413a0c76530da5e34641b885e4226f520e2582f7427c64e7727a97e7edfab4f",
+      "scenario_id": "SC-084",
+      "call": "call_1"
+    },
+    {
+      "pattern_id": "97b6948c7ae86f698b4a637006ae302197e230228b37179ea151766555efda3a",
+      "job_id": "6f29a1c98cf8cc98db8461d30e0461ebc8f8db1286683de5cd18501ddc9eb1c4",
+      "scenario_id": "SC-085",
+      "call": "call_2"
+    },
+    {
+      "pattern_id": "a45ad3e7ffa95b791a8700464d19d315f7bc63acc02435307172dded324e1e4f",
+      "job_id": "61790e94c38f06f9c49abf49b6d39460eaaacf68feb9665b830be1d96c68a013",
+      "scenario_id": "SC-091",
+      "call": "call_2"
+    },
+    {
+      "pattern_id": "0bdb6614c71bdc0485110ae00e0ead9063519b10a4317ce0df934476a03c6fc2",
+      "job_id": "65daad45cf0c9160d1cb3402c5c1ac94d41109edc388d61615a92639bc340c29",
+      "scenario_id": "SC-095",
+      "call": "call_2"
+    },
+    {
+      "pattern_id": "d3803d576fcc04307599bfeffd8e82f9005b398cefa6dd367fdd95006b93f429",
+      "job_id": "d8ad223aa73b5dd1223bae1039155a7783385f46bf104cfa45c5d7d4facf571a",
+      "scenario_id": "SC-101",
+      "call": "call_2"
+    },
+    {
+      "pattern_id": "809e317ccd2eb2a66ff10d73aa8a9b8e167f23901ac9fe090e498c0bd37aed2a",
+      "job_id": "e8b1ec7a4d5ccc7005d575724e613818c45309b0c5271211cc96ff9e4102ee87",
+      "scenario_id": "SC-104",
+      "call": "call_2"
+    },
+    {
+      "pattern_id": "d9eb9cd68d2cb75188336a8bd59fab7eb5d622a72af20a057a7afc2a3ba4ff19",
+      "job_id": "e8b1ec7a4d5ccc7005d575724e613818c45309b0c5271211cc96ff9e4102ee87",
+      "scenario_id": "SC-104",
+      "call": "call_2"
+    },
+    {
+      "pattern_id": "6d77e8ff6447ed2f86e21104323b6a08b042afbbe2e5ddb1008e728cd5f1f74a",
+      "job_id": "6db2feeccbc2033b414e1f8fe01408f6fba429423d5134d163dfdeef614f2ec7",
+      "scenario_id": "SC-114",
+      "call": "call_1"
+    },
+    {
+      "pattern_id": "93d22d2b04b5b12adc5f39c8ca4ec7659a9f88dbfa70677283a6ff2f097f6384",
+      "job_id": "6db2feeccbc2033b414e1f8fe01408f6fba429423d5134d163dfdeef614f2ec7",
+      "scenario_id": "SC-114",
+      "call": "call_1"
+    },
+    {
+      "pattern_id": "c5fd5f7e8e502c3231bef3f245b2eadb9b1438d18b28788e45fafc6967d7fb94",
+      "job_id": "7ee8ab79dcd48bce360b0d72d695d26818ae83bd8d0c5a0754f0cf114e889f07",
+      "scenario_id": "SC-114",
+      "call": "call_2"
+    },
+    {
+      "pattern_id": "58efe0c7de9ba8679dcab2859648730d98c05df06e33aad607f79af7a285e5d3",
+      "job_id": "caefb64fa427dbd76044a7093dc4783a360cb862f345c0717651890f627404c4",
+      "scenario_id": "SC-115",
+      "call": "call_1"
+    },
+    {
+      "pattern_id": "5907e3354af099f21f3ed097cf3eee1dd205358cc08bd99e73b275c343573e48",
+      "job_id": "caefb64fa427dbd76044a7093dc4783a360cb862f345c0717651890f627404c4",
+      "scenario_id": "SC-115",
+      "call": "call_1"
+    },
+    {
+      "pattern_id": "463022fc6e28237bb932c9d722c758bc67c90db08be2e6bd1ce5423330f39a07",
+      "job_id": "c5529f86ff40e4de69bc4d48802f3437cc6f256f60ae16397642218adb52aa6b",
+      "scenario_id": "SC-115",
+      "call": "call_2"
+    }
+  ],
+  "lesson_mechanisms": {
+    "91705e9fbf7144fc3e7376513f61ca3b790078f033f0efed5c4591452febe2ba": "reflection",
+    "b3c5394ec732ed77e5c0ace9714e42e935c8f1ded760a87c535aca4365ff098e": "knowledge_gap",
+    "ebdb88d3ac6bba59ce51eccbeb427106df41d30d0a6154c8cf2ace2f55abf52b": "knowledge_gap",
+    "1f653209866834d6367f23c31729113c40f0115c3b57e24259f6a546142c8918": "knowledge_gap",
+    "03891405b6fdd1b2208a4a2a608eda5307f8f4f3fd0e018e081ca0219ed4f9f9": "knowledge_gap",
+    "65937ee9eef2c4d974bef3006d8de98f5b9b9b10c16ff5760d49d6e188a9241e": "knowledge_gap",
+    "cffc7f339760409834ac6700f1221939af0b7c60fd44cecc3660162c23ff2bde": "knowledge_gap",
+    "affe9cae1d31968e6c92f5e33da85c05d11d7a8268cd36edab06b9697276486f": "knowledge_gap",
+    "515c421124f6b3312adad4f15c8f4440e7f3b61d194c2fab38b632c3468485ea": "knowledge_gap",
+    "6d3a903bb52f3a640c309b28927834d92f20386b301897d64d113e666ac598eb": "knowledge_gap",
+    "3cd3c42741e4f384bb677359c92e310266b7dbcbda3a0012abd57fdb0347c01e": "knowledge_gap",
+    "e839841d39ba8ead00458782103f8efc1ca7f45a5a21fb69a75e661d206e7f56": "knowledge_gap",
+    "2428465dd6aebd918b246b218ea61f077e2a4a03ca7a10bb6c10ca1cd078d1a6": "knowledge_gap",
+    "94e316736b3f6ea8bc8e21ce34d8bf6e14b4260e1a978fee33128b11f9351e3f": "knowledge_gap",
+    "067cab30799242ca80db4b2157296d7f5a22ba5d647108378c9b389e961cbf1b": "knowledge_gap",
+    "01a913544fdac1395d75b0f5a4ffe75a884011933f924d54d788a5911dd30e2a": "knowledge_gap",
+    "e45dc72c5fe31056f074ee827287d8fbe6b10a70731330b3a772124cd2242342": "knowledge_gap",
+    "62b31704255689e0a0e9d302ff0dc99126722deddfe71f38a7843aa310652759": "knowledge_gap",
+    "0e7e90c0ebef8ff9c32f68b6dc37e5e29d91f60a2b499f75ecd877036ecf29bb": "knowledge_gap",
+    "65ef30c9a2e0620b3db09ca98555f52ddcd4a932a02b06bd73995f8addf18008": "knowledge_gap",
+    "87c9c05b05da094ee7037247552de108a33c2862cd4340fb35cc1a7414e8e02f": "knowledge_gap",
+    "dc6ebfe25fabba3883481c83924143a5415eb8a7db3e874bc6addb0b5f2d2d71": "reflection",
+    "6b279393ba00d688163b02eb4600ee2bf0f957d5ad048d71703e46ba140bb722": "knowledge_gap",
+    "7beaea49d57761bd76ac9969b03a3453a5adfa4b39eecdd21ddf7edb8e5c9d13": "knowledge_gap",
+    "06ff1b4965779534fc63d85a8f5b0897b62bfd328afb826884b3154de024352a": "knowledge_gap"
+  },
+  "gap_cases": [
+    {
+      "id": "6056612f05971a5e1deb6f0029c89edc45a405494e88418eacaa207b4eecbfce",
+      "gap_id": "386538c4668feef5a674f41c209d7f1ee4027779799c59047e030be5125ce904",
+      "turn_id": 1,
+      "question": "Anh gọi tiếp về món đã hỏi, người nhà đã đồng ý rồi.",
+      "reason": "unsupported_claim",
+      "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments.",
+      "call": "SC-006/call_2"
+    },
+    {
+      "id": "2c0862a7adc9673e4037214fcd489c70bf42e0ade131e008b38fb131a2e4044d",
+      "gap_id": "fe66fd00c093489108e8a98f38f6add924c0958b432092c00443152a599580b4",
+      "turn_id": 2,
+      "question": "Anh ưu tiên giá, ngân sách tối đa 4.990.000 đồng. Ưu đãi này hết ngày 30/09 phải không?",
+      "reason": "unsupported_claim",
+      "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments.",
+      "call": "SC-012/call_1"
+    },
+    {
+      "id": "54ae23c282440d52bd672269c9d1031ec4286982e6b9fe1e70ba1024c8128ecb",
+      "gap_id": "c8541bcf63d0360d3bce30ac56cf4d795b83922809eca3bd6ad56a2481b82d95",
+      "turn_id": 3,
+      "question": "Chưa mua ngay đâu em, anh cần cân nhắc thêm.",
+      "reason": "unsupported_claim",
+      "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments.",
+      "call": "SC-012/call_1"
+    },
+    {
+      "id": "6b3f6123a9161087739fa03e9b7f9251527b4513906f6d3008591f732c136d2d",
+      "gap_id": "4cb5864cfecfe6494694e5a70b426381af66e416c4f340796b31a56ae0c5531e",
+      "turn_id": 2,
+      "question": "Sao giá lại khác vậy? Em nhắc lại mức cũ và giải thích giúp anh.",
+      "reason": "unsupported_claim",
+      "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments.",
+      "call": "SC-012/call_2"
+    },
+    {
+      "id": "df6878f44df8fff11d934d34f6de2cc0e2b984972dacc455beb8b1ca12be6bc4",
+      "gap_id": "7ef335d147da97f11eb8346bf3feeeb91809c12454e07256ff7b66551d5ca1f5",
+      "turn_id": 2,
+      "question": "Chị ưu tiên giá, ngân sách tối đa 4.990.000 đồng. Ưu đãi này hết ngày 30/09 phải không?",
+      "reason": "unsupported_claim",
+      "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments.",
+      "call": "SC-019/call_1"
+    },
+    {
+      "id": "ad5de0720b0277214f86ce56922b933cc46824077b2f5218038f0c7fb6accc54",
+      "gap_id": "5e65bb0cdd177bcf3e1f6f94c454759ac6813cd190c19d9b5d5daeeb87ed072e",
+      "turn_id": 3,
+      "question": "Chưa mua ngay đâu em, chị cần cân nhắc thêm.",
+      "reason": "unsupported_claim",
+      "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments.",
+      "call": "SC-019/call_1"
+    },
+    {
+      "id": "595180c44418701434040e2483cc4fb6101b5e6de0bace9865695e313847bce5",
+      "gap_id": "e0fc8292e7f785cf58fdb4df5b49da6a2b1f2228d3eb696df3eb61d72052bbf4",
+      "turn_id": 1,
+      "question": "Anh gọi tiếp về món đã hỏi. Đơn OD600001 đã nhận hôm qua; sản phẩm hơi chật.",
+      "reason": "unsupported_claim",
+      "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments.",
+      "call": "SC-026/call_2"
+    },
+    {
+      "id": "4f040d63924f20aef3c30ee57b550aa7acb7cd520b35b9eef3840d1c69e7e744",
+      "gap_id": "030740da8e075223ac89a531849f982f132011d2e0d9d0238fff372e7d6d2b15",
+      "turn_id": 1,
+      "question": "Chị gọi lại chuyện hôm trước, vẫn đang cân nhắc món đã hỏi.",
+      "reason": "unsupported_claim",
+      "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments.",
+      "call": "SC-031/call_2"
+    },
+    {
+      "id": "a08ef3a86bd48def5bcaf07b04b00a0b022dd5166dc7cb478386dfc1d113a7e2",
+      "gap_id": "cd2fe0321127d8f5c7d54af123dc8865aa478ec6ba6f9f96039b6b0af8139eb7",
+      "turn_id": 1,
+      "question": "Anh liên hệ lại theo lịch, vẫn đang cân nhắc món đã hỏi.",
+      "reason": "unsupported_claim",
+      "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments.",
+      "call": "SC-032/call_2"
+    },
+    {
+      "id": "100d689f2e606e88a7d19195d63c8ffed9783795d186385ce1d0d6b4ce95cd6b",
+      "gap_id": "b7f69b20e2c0e24193162b3f34acc7e277b1929307d54548c5e67acdee61ea30",
+      "turn_id": 1,
+      "question": "Chị gọi lại chuyện hôm trước. Mẫu, số lượng, địa chỉ [address]",
+      "reason": "unsupported_claim",
+      "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments.",
+      "call": "SC-041/call_2"
+    },
+    {
+      "id": "8fc0c34af34d9d377cecef57abe0f0161f090f5520c2f09799ffeae082ae0457",
+      "gap_id": "85d8954991cf5f9c9a36ec67917032d4a88d71c4e4e34fb0b694d41eaf118095",
+      "turn_id": 2,
+      "question": "Giá 4.890.000 đồng thì chị đồng ý. Địa chỉ [address]",
+      "reason": "unsupported_claim",
+      "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments.",
+      "call": "SC-041/call_3"
+    },
+    {
+      "id": "5ff909644998935cf39805a34dc336d3d8d525ffbe1deac11c622068124fa7fa",
+      "gap_id": "a0e017d3d8cd493cc138c495398b891fa771f6cae7467f9c1efbb6ae2ca3960e",
+      "turn_id": 1,
+      "question": "Anh muốn tiếp tục phần tư vấn lần trước. Mẫu, số lượng, địa chỉ [address]",
+      "reason": "unsupported_claim",
+      "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments.",
+      "call": "SC-044/call_2"
+    },
+    {
+      "id": "e8ce0af97c9d279135bcdf79b817c3a0c2117a619ad4b7a206d081f75296868a",
+      "gap_id": "8b87a1857fd34d0350c417483f84d320078aa50f3429342588c9ad7d1ea7e24d",
+      "turn_id": 2,
+      "question": "Em nhắc lại mẫu và giá đã báo trong chat giúp nhé.",
+      "reason": "unsupported_claim",
+      "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments.",
+      "call": "SC-051/call_2"
+    },
+    {
+      "id": "3842e91fce1b8114f38e70644f328d12c4a114c856f0ee617683a0e3266c761a",
+      "gap_id": "9298aa80a7a7c5e010655e6f73afe8c7e86b5340640604f7fd1a9f0eabab6be1",
+      "turn_id": 1,
+      "question": "Tôi là [private], số điện thoại [private], đã nhắn qua Fanpage. Anh [private] đây, đã nhắn Fanpage bằng số này. Bên em còn nội dung chat không?",
+      "reason": "unsupported_claim",
+      "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments.",
+      "call": "SC-054/call_2"
+    },
+    {
+      "id": "c4d97bfdded9a5012f716ea27fe2dc4061e2dd8aab731d1347e65fb60d775b1e",
+      "gap_id": "2a4a5d845594e8f9ab9ae5af021f0d569ba7b8d4f5561aab09a0cf07c93edf07",
+      "turn_id": 2,
+      "question": "Mã sê-ri chính xác của chiếc sẽ giao cho tôi là gì?",
+      "reason": "missing_knowledge",
+      "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments.",
+      "call": "SC-071/call_1"
+    },
+    {
+      "id": "6eaa7e5bb89e347db05e88c3203f52776766919fe026eccc94e966856c6c3b00",
+      "gap_id": "fdabffeb147722a4f1f8dc9dc53bc3845d8a3db51703afb0b610c17ae49795f8",
+      "turn_id": 2,
+      "question": "Em nhắc lại câu hỏi đó và cho chị biết đã có nguồn xác nhận chưa. Đừng đoán theo sản phẩm khác.",
+      "reason": "missing_knowledge",
+      "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments.",
+      "call": "SC-071/call_2"
+    },
+    {
+      "id": "23836226e27bd3c61cfaef07f82eaa06f82f3cb6726408708f45ec0efd6e5717",
+      "gap_id": "fdabffeb147722a4f1f8dc9dc53bc3845d8a3db51703afb0b610c17ae49795f8",
+      "turn_id": 2,
+      "question": "ten ky thuat vien da kiem dinh chinh chiec se giao cho tôi là ai?",
+      "reason": "missing_knowledge",
+      "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments.",
+      "call": "SC-074/call_1"
+    },
+    {
+      "id": "1493987cbfdc767513bace318e2874f596fde7724d549a2454890640723ce266",
+      "gap_id": "02c7a5e0ae4b8b0a4da1b6ae9ad904df8223f9c57d341a481b6c1d45d0b38d41",
+      "turn_id": 1,
+      "question": "Tôi là [private], số điện thoại [private], đang nhắn qua Zalo OA. Chị muốn tiếp tục phần tư vấn lần trước. Câu hỏi cụ thể lần trước em còn lưu chứ?",
+      "reason": "unsupported_claim",
+      "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments.",
+      "call": "SC-074/call_2"
+    },
+    {
+      "id": "200d4ecc30870270b848b7228509723f51516ccce1535190d39f7600315e6355",
+      "gap_id": "fdabffeb147722a4f1f8dc9dc53bc3845d8a3db51703afb0b610c17ae49795f8",
+      "turn_id": 2,
+      "question": "Em nhắc lại câu hỏi đó và cho chị biết đã có nguồn xác nhận chưa. Đừng đoán theo sản phẩm khác.",
+      "reason": "missing_knowledge",
+      "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments.",
+      "call": "SC-074/call_2"
+    },
+    {
+      "id": "ec5bf6716ef2486c378ed0fca62b6ffa2741da09b2db882b573f9182ddb5bd97",
+      "gap_id": "2a4a5d845594e8f9ab9ae5af021f0d569ba7b8d4f5561aab09a0cf07c93edf07",
+      "turn_id": 2,
+      "question": "Chiếc sẽ giao có mã biên bản kiểm tra chất lượng riêng là gì?",
+      "reason": "missing_knowledge",
+      "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments.",
+      "call": "SC-075/call_1"
+    },
+    {
+      "id": "95d4de3d07ee0bda2468652e114bb26d2ab854b0a3352ca078f06186d73fc347",
+      "gap_id": "fdabffeb147722a4f1f8dc9dc53bc3845d8a3db51703afb0b610c17ae49795f8",
+      "turn_id": 2,
+      "question": "Em nhắc lại câu hỏi đó và cho anh biết đã có nguồn xác nhận chưa. Đừng đoán theo sản phẩm khác.",
+      "reason": "missing_knowledge",
+      "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments.",
+      "call": "SC-075/call_2"
+    },
+    {
+      "id": "b0adbd2c962b75986d7846c488b594a4bad48b86b78cf174b055513c3340551a",
+      "gap_id": "190df3a70be21e59981c928c19e406a63a0c7151d884ff4ef3ad85d880554ff1",
+      "turn_id": 1,
+      "question": "Tôi là duc, số điện thoại [private], dang nhận qua fanpage. cho mình hỏi chut nhé, anh xem giày chay bo runlite 2 pro, size 41, màu xám con 1.352.000 dong theo run2-sale dung không?",
+      "reason": "missing_knowledge",
+      "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments.",
+      "call": "SC-084/call_1"
+    },
+    {
+      "id": "e20220c105b30ff1dfcbce9bf8eb1d88797baf95a12917d367823817d1e78c2f",
+      "gap_id": "87a7cae8ba8ce7e8b0134737bd189a50f211fb9978ccbaad280b4a042efafe54",
+      "turn_id": 3,
+      "question": "Anh chua mua ngay, de cần nhac them.",
+      "reason": "unsupported_claim",
+      "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments.",
+      "call": "SC-084/call_1"
+    },
+    {
+      "id": "196601ad1d049c787026332466e0d357624a0f57e44d89716f6c65b4bcc3d9de",
+      "gap_id": "9f3c093085e116dad02e773b4187093c6c459a98b7335e8f685055ef8d71f239",
+      "turn_id": 2,
+      "question": "Anh muốn em nhắc lại giá cũ, xin lỗi và giải thích rõ chương trình nào đã thay đổi.",
+      "reason": "missing_knowledge",
+      "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments.",
+      "call": "SC-084/call_2"
+    },
+    {
+      "id": "d4fc92cd0c480f16c1b167b354d660bf0783b9a8bb0f24cb53fabe6c03919812",
+      "gap_id": "97b6948c7ae86f698b4a637006ae302197e230228b37179ea151766555efda3a",
+      "turn_id": 1,
+      "question": "Tôi là [private], số điện thoại [private], đang nhắn qua Fanpage. Chị [private], đã nhắn Zalo OA. Sao giá ở kênh này khác mức đã báo trong chat?",
+      "reason": "unsupported_claim",
+      "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments.",
+      "call": "SC-085/call_2"
+    },
+    {
+      "id": "5761a75e075ecc573f8019e412d2413820ab549a4c936bbf0a47b88045605db7",
+      "gap_id": "a45ad3e7ffa95b791a8700464d19d315f7bc63acc02435307172dded324e1e4f",
+      "turn_id": 1,
+      "question": "Tôi là [private], số điện thoại [private], đang nhắn qua Fanpage. Chị [private] đây, chị liên hệ lại chuyện hôm trước. Em nhắc đúng món của chị nhé, đừng lấy nhu cầu của mẹ.",
+      "reason": "unsupported_claim",
+      "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments.",
+      "call": "SC-091/call_2"
+    },
+    {
+      "id": "33c9a909b6173276bad959317a65e59edc79c4e10de862472090c482d9238fa6",
+      "gap_id": "0bdb6614c71bdc0485110ae00e0ead9063519b10a4317ce0df934476a03c6fc2",
+      "turn_id": 1,
+      "question": "Tôi là [private], số điện thoại [private], đã nhắn qua Zalo OA. Chị [private] đây, chị đã cân nhắc xong rồi. Em nhắc đúng món của chị nhé, đừng lấy nhu cầu của mẹ.",
+      "reason": "unsupported_claim",
+      "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments.",
+      "call": "SC-095/call_2"
+    },
+    {
+      "id": "7563e0d6e504ccd4a76cf25dc1b5fadf1a6485fa5b1a50f4308b7b4ce58794df",
+      "gap_id": "d3803d576fcc04307599bfeffd8e82f9005b398cefa6dd367fdd95006b93f429",
+      "turn_id": 1,
+      "question": "Tôi là [private], số điện thoại [private], đã nhắn qua Zalo OA. Chị gọi lại chuyện hôm trước, người nhà đồng ý đổi máy rồi.",
+      "reason": "unsupported_claim",
+      "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments.",
+      "call": "SC-101/call_2"
+    },
+    {
+      "id": "ac05d9caf6724ce375d5208723dd08663d5c90eff2d796459b31215060d27f8f",
+      "gap_id": "809e317ccd2eb2a66ff10d73aa8a9b8e167f23901ac9fe090e498c0bd37aed2a",
+      "turn_id": 1,
+      "question": "Tôi là [private], số điện thoại [private], đang nhắn qua Zalo OA. Chị muốn tiếp tục phần tư vấn lần trước, người nhà đồng ý đổi máy rồi.",
+      "reason": "unsupported_claim",
+      "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments.",
+      "call": "SC-104/call_2"
+    },
+    {
+      "id": "301cd7cd9d571d1537e0982cef2d835e50fd9043bd8cb22d243e340c51e7246d",
+      "gap_id": "d9eb9cd68d2cb75188336a8bd59fab7eb5d622a72af20a057a7afc2a3ba4ff19",
+      "turn_id": 2,
+      "question": "Em nhắc lại máy mới, giá sau thu cũ đổi mới và dùng địa chỉ [address]",
+      "reason": "unsupported_claim",
+      "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments.",
+      "call": "SC-104/call_2"
+    },
+    {
+      "id": "71c6efc8a5ca645e74a864fc336e420df3a60204f0211f5e8960c1eb068fd3df",
+      "gap_id": "d91bf10a12efc47aac3d44d675e9d05161fea770d423d39c9e8a0b39179a96e0",
+      "turn_id": 2,
+      "question": "Em nhắc lại máy mới, giá sau thu cũ đổi mới và dùng địa chỉ [address]",
+      "reason": "unsupported_claim",
+      "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments.",
+      "call": "SC-110/call_2"
+    },
+    {
+      "id": "21bc80bd40df8b1d92a726f9661cc0990e6eabd5dc47291455d91b20f8ddb21c",
+      "gap_id": "fdabffeb147722a4f1f8dc9dc53bc3845d8a3db51703afb0b610c17ae49795f8",
+      "turn_id": 3,
+      "question": "Chị đồng ý 4.490.000 đồng, một máy, cod. Khi giao em thu máy cũ theo chương trình.",
+      "reason": "missing_knowledge",
+      "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments.",
+      "call": "SC-110/call_2"
+    },
+    {
+      "id": "37bb7fb6919a10cea50df81fa92c8a78c7f80aacc7daf25f4c5eb1a587d652f1",
+      "gap_id": "6d77e8ff6447ed2f86e21104323b6a08b042afbbe2e5ddb1008e728cd5f1f74a",
+      "turn_id": 3,
+      "question": "ngan sach tong của anh la 6.880.000 dong. hôm nay chi nho em ghi lai gio cuoi cung, chua dat.",
+      "reason": "unsupported_claim",
+      "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments.",
+      "call": "SC-114/call_1"
+    },
+    {
+      "id": "41cd1c2fe5eb049c86c6bb1854928ffe074de9d77d89044fdfca37dd9928cb6b",
+      "gap_id": "93d22d2b04b5b12adc5f39c8ca4ec7659a9f88dbfa70677283a6ff2f097f6384",
+      "turn_id": 4,
+      "question": "Em xac nhận lai dung hai mon sau khi sua giúp anh.",
+      "reason": "unsupported_claim",
+      "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments.",
+      "call": "SC-114/call_1"
+    },
+    {
+      "id": "43c11581cacba17c382241f70578a4e0ce48f551f70c4109c39901d7db233102",
+      "gap_id": "58efe0c7de9ba8679dcab2859648730d98c05df06e33aad607f79af7a285e5d3",
+      "turn_id": 2,
+      "question": "À đổi ý, bỏ món thứ hai vừa nói, thay bằng Máy hâm sữa Fatz 4 chức năng. Mỗi loại một chiếc nhé.",
+      "reason": "unsupported_claim",
+      "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments.",
+      "call": "SC-115/call_1"
+    },
+    {
+      "id": "61fee9c6d3f0d1471922ec56bd7b56e1bdc88d42b07cc502e61bb32cb93abb4a",
+      "gap_id": "5907e3354af099f21f3ed097cf3eee1dd205358cc08bd99e73b275c343573e48",
+      "turn_id": 3,
+      "question": "Ngân sách tổng của chị là 2.680.000 đồng. Hôm nay chỉ nhờ em ghi lại giỏ cuối cùng, chưa đặt.",
+      "reason": "unsupported_claim",
+      "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments.",
+      "call": "SC-115/call_1"
+    },
+    {
+      "id": "2904f73d2d41a1acdb887523f4e3ef0de1531aab6a5bf07c6d29ab436b7a2408",
+      "gap_id": "463022fc6e28237bb932c9d722c758bc67c90db08be2e6bd1ce5423330f39a07",
+      "turn_id": 2,
+      "question": "Tổng 2.380.000 đồng nằm trong ngân sách, mỗi món một chiếc, giao 104 đường Kiểm Thử, Đà Nẵng.",
+      "reason": "unsupported_claim",
+      "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments.",
+      "call": "SC-115/call_2"
+    },
+    {
+      "id": "ead01483a63eadb25deaee7f42fa7efc939eaeae5dd7cf43b08a7cb94b1ff73d",
+      "gap_id": "1ad31e78bf2534431c4d510f1ef4cb8bed9bd84c20d9ddd669a6250993d1e93a",
+      "turn_id": 3,
+      "question": "Chị chọn thanh toán cod.",
+      "reason": "unsupported_claim",
+      "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments.",
+      "call": "SC-115/call_2"
+    }
+  ],
+  "gap_cases_hash": "fd957f4b6e9645c0f0a2a1f595a035790481892be0c8d721a6ddff4b3c010448",
+  "lesson_files": [
+    {
+      "id": "91705e9fbf7144fc3e7376513f61ca3b790078f033f0efed5c4591452febe2ba",
+      "hash": "0b79efc34d78367dd44c15d622e578359cc166594ce784ad69462c8fff79c8c0",
+      "path": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round1\\lessons\\approved\\91705e9fbf7144fc3e7376513f61ca3b790078f033f0efed5c4591452febe2ba.md"
+    },
+    {
+      "id": "b3c5394ec732ed77e5c0ace9714e42e935c8f1ded760a87c535aca4365ff098e",
+      "hash": "bdf01bb453db50e77e3a480afa92057627679f6f5011988610dce7affcfe64d0",
+      "path": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round1\\lessons\\approved\\b3c5394ec732ed77e5c0ace9714e42e935c8f1ded760a87c535aca4365ff098e.md"
+    },
+    {
+      "id": "ebdb88d3ac6bba59ce51eccbeb427106df41d30d0a6154c8cf2ace2f55abf52b",
+      "hash": "1f5dd36725f4a96e30e414bd2e21f8fb7413649efe7e2fc4b2f60267f49510c4",
+      "path": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round1\\lessons\\approved\\ebdb88d3ac6bba59ce51eccbeb427106df41d30d0a6154c8cf2ace2f55abf52b.md"
+    },
+    {
+      "id": "1f653209866834d6367f23c31729113c40f0115c3b57e24259f6a546142c8918",
+      "hash": "1a645eeafa1a0b141b2a085f39f3f642835e940a3d31b496cff48615fcd8fb3b",
+      "path": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round1\\lessons\\approved\\1f653209866834d6367f23c31729113c40f0115c3b57e24259f6a546142c8918.md"
+    },
+    {
+      "id": "03891405b6fdd1b2208a4a2a608eda5307f8f4f3fd0e018e081ca0219ed4f9f9",
+      "hash": "e2267d70b6be3277034ae90375678f331c69f1bdbf2dd2adaffad0a947b7100e",
+      "path": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round1\\lessons\\approved\\03891405b6fdd1b2208a4a2a608eda5307f8f4f3fd0e018e081ca0219ed4f9f9.md"
+    },
+    {
+      "id": "65937ee9eef2c4d974bef3006d8de98f5b9b9b10c16ff5760d49d6e188a9241e",
+      "hash": "91350f240162b4483ce53673eee782a9312256a594edaea6ce1e4964ad422cba",
+      "path": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round1\\lessons\\approved\\65937ee9eef2c4d974bef3006d8de98f5b9b9b10c16ff5760d49d6e188a9241e.md"
+    },
+    {
+      "id": "cffc7f339760409834ac6700f1221939af0b7c60fd44cecc3660162c23ff2bde",
+      "hash": "6ffa35f87c415855b53761a7baabf6149650e46342246e4cf657808b319faf4c",
+      "path": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round1\\lessons\\approved\\cffc7f339760409834ac6700f1221939af0b7c60fd44cecc3660162c23ff2bde.md"
+    },
+    {
+      "id": "affe9cae1d31968e6c92f5e33da85c05d11d7a8268cd36edab06b9697276486f",
+      "hash": "d8b42b91cc75639394431c361a1bb933ad5e2d4677d1ae98ca780aa2240081ae",
+      "path": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round1\\lessons\\approved\\affe9cae1d31968e6c92f5e33da85c05d11d7a8268cd36edab06b9697276486f.md"
+    },
+    {
+      "id": "515c421124f6b3312adad4f15c8f4440e7f3b61d194c2fab38b632c3468485ea",
+      "hash": "eb4cfea3ac7b78f8b1cee6ea6cd6ff589f7cb09fd5a43a00c0d60e53e5754c81",
+      "path": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round1\\lessons\\approved\\515c421124f6b3312adad4f15c8f4440e7f3b61d194c2fab38b632c3468485ea.md"
+    },
+    {
+      "id": "6d3a903bb52f3a640c309b28927834d92f20386b301897d64d113e666ac598eb",
+      "hash": "bd7c1d98408e012643105ff779f8998825343efc3ad8d86909611a3ab07548bd",
+      "path": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round1\\lessons\\approved\\6d3a903bb52f3a640c309b28927834d92f20386b301897d64d113e666ac598eb.md"
+    },
+    {
+      "id": "3cd3c42741e4f384bb677359c92e310266b7dbcbda3a0012abd57fdb0347c01e",
+      "hash": "69a0eb02f8552e58812c9527556e29c9ff8e0cc2fff99a5a52488c72b3cf79a2",
+      "path": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round1\\lessons\\approved\\3cd3c42741e4f384bb677359c92e310266b7dbcbda3a0012abd57fdb0347c01e.md"
+    },
+    {
+      "id": "e839841d39ba8ead00458782103f8efc1ca7f45a5a21fb69a75e661d206e7f56",
+      "hash": "815658651146ef9f2e80375f1a8354150ac994c3c1af0032f8e534a61f26ab6a",
+      "path": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round1\\lessons\\approved\\e839841d39ba8ead00458782103f8efc1ca7f45a5a21fb69a75e661d206e7f56.md"
+    },
+    {
+      "id": "2428465dd6aebd918b246b218ea61f077e2a4a03ca7a10bb6c10ca1cd078d1a6",
+      "hash": "a6ef6e56d1a0afa44afce603254ba8380a79684f4316ec30047adabc7375818d",
+      "path": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round1\\lessons\\approved\\2428465dd6aebd918b246b218ea61f077e2a4a03ca7a10bb6c10ca1cd078d1a6.md"
+    },
+    {
+      "id": "94e316736b3f6ea8bc8e21ce34d8bf6e14b4260e1a978fee33128b11f9351e3f",
+      "hash": "60dec2604a12ad8c57f2042bb47762df738fb8d54a8c75b3ee2ee6a32dec5c3a",
+      "path": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round1\\lessons\\approved\\94e316736b3f6ea8bc8e21ce34d8bf6e14b4260e1a978fee33128b11f9351e3f.md"
+    },
+    {
+      "id": "067cab30799242ca80db4b2157296d7f5a22ba5d647108378c9b389e961cbf1b",
+      "hash": "dfdf9a416d03aa36b483f8b6f47a61d41541634993a94e95f9dd04bb8e2b9d1d",
+      "path": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round1\\lessons\\approved\\067cab30799242ca80db4b2157296d7f5a22ba5d647108378c9b389e961cbf1b.md"
+    },
+    {
+      "id": "01a913544fdac1395d75b0f5a4ffe75a884011933f924d54d788a5911dd30e2a",
+      "hash": "35760691b8afd42847dc28985828043d1f77db8ba2940641f67649bf0726476a",
+      "path": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round1\\lessons\\approved\\01a913544fdac1395d75b0f5a4ffe75a884011933f924d54d788a5911dd30e2a.md"
+    },
+    {
+      "id": "e45dc72c5fe31056f074ee827287d8fbe6b10a70731330b3a772124cd2242342",
+      "hash": "c3c9962f401a34a0bc3b270b1e74ead584c41c64cb4e1470f5fee6bce8f68555",
+      "path": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round1\\lessons\\approved\\e45dc72c5fe31056f074ee827287d8fbe6b10a70731330b3a772124cd2242342.md"
+    },
+    {
+      "id": "62b31704255689e0a0e9d302ff0dc99126722deddfe71f38a7843aa310652759",
+      "hash": "9c522bf9b3655447e3404b8afbd976dd4213afeb1800ad4b527bd9e0c0a645b4",
+      "path": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round1\\lessons\\approved\\62b31704255689e0a0e9d302ff0dc99126722deddfe71f38a7843aa310652759.md"
+    },
+    {
+      "id": "0e7e90c0ebef8ff9c32f68b6dc37e5e29d91f60a2b499f75ecd877036ecf29bb",
+      "hash": "0b334693cdf926b3101254ee7a690f2a2e7fc1eee39df75bb1acd210c2fa3838",
+      "path": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round1\\lessons\\approved\\0e7e90c0ebef8ff9c32f68b6dc37e5e29d91f60a2b499f75ecd877036ecf29bb.md"
+    },
+    {
+      "id": "65ef30c9a2e0620b3db09ca98555f52ddcd4a932a02b06bd73995f8addf18008",
+      "hash": "c576438b6fa1584d4cb3939de9d02c489a3a844cf651f05363e1e1fc6e678c06",
+      "path": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round1\\lessons\\approved\\65ef30c9a2e0620b3db09ca98555f52ddcd4a932a02b06bd73995f8addf18008.md"
+    },
+    {
+      "id": "87c9c05b05da094ee7037247552de108a33c2862cd4340fb35cc1a7414e8e02f",
+      "hash": "4a4c0d7935ef16c063e3d7878c4110712629d56b2dc78b58ffb238660a144ff6",
+      "path": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round1\\lessons\\approved\\87c9c05b05da094ee7037247552de108a33c2862cd4340fb35cc1a7414e8e02f.md"
+    },
+    {
+      "id": "dc6ebfe25fabba3883481c83924143a5415eb8a7db3e874bc6addb0b5f2d2d71",
+      "hash": "e253023649f3f79ff5852a53ae2d4fbaf4c0b41674b024784fa035dd878638b3",
+      "path": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round1\\lessons\\approved\\dc6ebfe25fabba3883481c83924143a5415eb8a7db3e874bc6addb0b5f2d2d71.md"
+    },
+    {
+      "id": "6b279393ba00d688163b02eb4600ee2bf0f957d5ad048d71703e46ba140bb722",
+      "hash": "fc26a1f20867c6924ba69ae0c06dfaa18ad587346a624b48685484b5a90dde4c",
+      "path": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round1\\lessons\\approved\\6b279393ba00d688163b02eb4600ee2bf0f957d5ad048d71703e46ba140bb722.md"
+    },
+    {
+      "id": "7beaea49d57761bd76ac9969b03a3453a5adfa4b39eecdd21ddf7edb8e5c9d13",
+      "hash": "7ec249cbbc1c1d3e2dafd45c6c3a40ca64a590036a6507f65a68de1d8176b590",
+      "path": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round1\\lessons\\approved\\7beaea49d57761bd76ac9969b03a3453a5adfa4b39eecdd21ddf7edb8e5c9d13.md"
+    },
+    {
+      "id": "06ff1b4965779534fc63d85a8f5b0897b62bfd328afb826884b3154de024352a",
+      "hash": "f3289368eb9d320c1b82387913ba3aa5513d8470a2036488c9c5eb3f512173b4",
+      "path": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round1\\lessons\\approved\\06ff1b4965779534fc63d85a8f5b0897b62bfd328afb826884b3154de024352a.md"
+    }
+  ],
+  "instruction_hash": "9d30a7093911a993d8545de8b61cc6dc8465de67b10fb62b27d9f1bafaf0badf",
+  "limitations": "External DB/catalog/policy must be kept equivalent by operator."
+}

@@ -1,0 +1,107 @@
+{
+  "id": "a03e81ea1d1706685425a45cdfe258566720c5328d4901b3efd0eccf68afd6de",
+  "status": "done",
+  "attempts": 1,
+  "snapshot": {
+    "session": "fd8579e4e91ac8c314f186d7e0615e5cb7cf7e0ace0abb2ba26825fdf2f9db4c",
+    "revision": 2,
+    "messages": [
+      {
+        "message_id": 0,
+        "role": "customer",
+        "content": "Anh gọi lần thứ ba rồi. Chốt một chiếc như đã trao đổi nhé."
+      },
+      {
+        "message_id": 1,
+        "role": "agent",
+        "content": "Dạ em xin lỗi anh [private] vì sự bất tiện khiến anh phải gọi lại lần thứ ba ạ. \n\nEm đã ghi nhận anh chốt lấy 1 chiếc quạt (SKU-FAN-DC1) với hình thức thanh toán COD. Hiện em chỉ còn thiếu địa chỉ [address]"
+      },
+      {
+        "message_id": 2,
+        "role": "customer",
+        "content": "Giá 2.450.000 đồng thì anh đồng ý. Địa chỉ [address]"
+      },
+      {
+        "message_id": 3,
+        "role": "agent",
+        "content": "Dạ em cảm ơn anh [private] ạ. Mức giá 2.450.000 đồng cho quạt SKU-FAN-DC1 và hình thức thanh toán COD đã được xác nhận đúng rồi ạ. \n\nTuy nhiên, trong thông tin lưu trữ của hệ thống hiện vẫn chưa có địa chỉ [address]"
+      }
+    ],
+    "open_questions": [],
+    "feedback": [],
+    "evidence_coverage": "per_turn_evidence",
+    "workflow_version": 4,
+    "turn_evidence": [
+      {
+        "turn_id": 1,
+        "agent_response": "Dạ em xin lỗi anh [private] vì sự bất tiện khiến anh phải gọi lại lần thứ ba ạ. \n\nEm đã ghi nhận anh chốt lấy 1 chiếc quạt (SKU-FAN-DC1) với hình thức thanh toán COD. Hiện em chỉ còn thiếu địa chỉ [address]",
+        "tool_calls": [
+          {
+            "name": "inventory.check",
+            "args": {
+              "sku": "SKU-FAN-DC1",
+              "on": "2026-10-23"
+            },
+            "result": {
+              "sku": "SKU-FAN-DC1",
+              "found": true,
+              "in_stock": true,
+              "qty": 30,
+              "discontinued": false
+            }
+          },
+          {
+            "name": "order.status",
+            "args": {
+              "customer_phone": "[private]"
+            },
+            "result": {
+              "orders": []
+            }
+          },
+          {
+            "name": "pricing.get_quote",
+            "args": {
+              "on": "2026-10-23",
+              "customer_phone": "[private]",
+              "customer_id": "[private]",
+              "sku": "SKU-FAN-DC1",
+              "qty": 1
+            },
+            "result": {
+              "sku": "SKU-FAN-DC1",
+              "list_price_vnd": 2450000,
+              "final_price_vnd": 2450000,
+              "applied_promos": [
+                {
+                  "promo_code": "COD-0",
+                  "type": "freecod",
+                  "discount_vnd": 0
+                }
+              ],
+              "expired_promos": [],
+              "ineligible_promos": [
+                {
+                  "promo_code": "NAM-SHIP0",
+                  "reason": "region"
+                }
+              ],
+              "not_applied_exclusive": [],
+              "freeship": true
+            }
+          }
+        ],
+        "sources": [],
+        "promotions": []
+      },
+      {
+        "turn_id": 2,
+        "agent_response": "Dạ em cảm ơn anh [private] ạ. Mức giá 2.450.000 đồng cho quạt SKU-FAN-DC1 và hình thức thanh toán COD đã được xác nhận đúng rồi ạ. \n\nTuy nhiên, trong thông tin lưu trữ của hệ thống hiện vẫn chưa có địa chỉ [address]",
+        "tool_calls": [],
+        "sources": [],
+        "promotions": []
+      }
+    ]
+  },
+  "error": null
+}

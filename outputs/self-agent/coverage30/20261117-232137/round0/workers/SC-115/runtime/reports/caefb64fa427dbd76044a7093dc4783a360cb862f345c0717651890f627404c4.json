@@ -1,0 +1,168 @@
+{
+  "job_id": "caefb64fa427dbd76044a7093dc4783a360cb862f345c0717651890f627404c4",
+  "gaps": [
+    {
+      "id": "58efe0c7de9ba8679dcab2859648730d98c05df06e33aad607f79af7a285e5d3",
+      "status": "pending_remediation"
+    },
+    {
+      "id": "190df3a70be21e59981c928c19e406a63a0c7151d884ff4ef3ad85d880554ff1",
+      "status": "pending_evidence"
+    },
+    {
+      "id": "5907e3354af099f21f3ed097cf3eee1dd205358cc08bd99e73b275c343573e48",
+      "status": "pending_remediation"
+    }
+  ],
+  "scope": "knowledge_gap_and_reflection_v1",
+  "evaluation_cases": [
+    {
+      "id": "43c11581cacba17c382241f70578a4e0ce48f551f70c4109c39901d7db233102",
+      "gap_id": "58efe0c7de9ba8679dcab2859648730d98c05df06e33aad607f79af7a285e5d3",
+      "turn_id": 2,
+      "question": "À đổi ý, bỏ món thứ hai vừa nói, thay bằng Máy hâm sữa Fatz 4 chức năng. Mỗi loại một chiếc nhé.",
+      "reason": "unsupported_claim",
+      "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments."
+    },
+    {
+      "id": "61fee9c6d3f0d1471922ec56bd7b56e1bdc88d42b07cc502e61bb32cb93abb4a",
+      "gap_id": "5907e3354af099f21f3ed097cf3eee1dd205358cc08bd99e73b275c343573e48",
+      "turn_id": 3,
+      "question": "Ngân sách tổng của chị là 2.680.000 đồng. Hôm nay chỉ nhờ em ghi lại giỏ cuối cùng, chưa đặt.",
+      "reason": "unsupported_claim",
+      "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments."
+    }
+  ],
+  "out_of_scope": [],
+  "issue_reviews": [
+    {
+      "job_id": "caefb64fa427dbd76044a7093dc4783a360cb862f345c0717651890f627404c4",
+      "message_id": 2,
+      "turn_id": 2,
+      "origin": "turn_detector",
+      "mechanism": "knowledge_gap",
+      "verified": true,
+      "claim": "Dạ em đã ghi nhận chị [private] muốn đổi món thứ hai thành Máy hâm sữa Fatz 4 chức năng, mỗi loại 1 chiếc (gồm Máy tiệt trùng sấy khô Moaz BéBé 1 chiếc và Máy hâm sữa Fatz 4 chức năng 1 chiếc) ạ.",
+      "assessment": "unsupported_by_evidence",
+      "evidence_paths": [],
+      "rejection": null,
+      "rejection_reasons": [],
+      "format_retry": false,
+      "verifier_output": {
+        "valid": true,
+        "issue_scope": "business_knowledge",
+        "claim": "Dạ em đã ghi nhận chị [private] muốn đổi món thứ hai thành Máy hâm sữa Fatz 4 chức năng, mỗi loại 1 chiếc (gồm Máy tiệt trùng sấy khô Moaz BéBé 1 chiếc và Máy hâm sữa Fatz 4 chức năng 1 chiếc) ạ.",
+        "assessment": "unsupported_by_evidence",
+        "evidence_paths": [],
+        "decision_reason": "The agent confirmed adding/changing to 'Máy hâm sữa Fatz 4 chức năng' without searching the catalog or verifying product availability/details in the evidence.",
+        "audit": {
+          "support_status": "not_established",
+          "coverage": "complete",
+          "checked_paths": [
+            "evidence.tool_calls.0.result",
+            "evidence.sources",
+            "evidence.promotions",
+            "prior_evidence.0.tool_calls.0.result",
+            "prior_evidence.0.tool_calls.1.result",
+            "prior_evidence.0.sources",
+            "prior_evidence.0.promotions"
+          ]
+        }
+      },
+      "candidate_claim": "Dạ em đã ghi nhận chị [private] muốn đổi món thứ hai thành Máy hâm sữa Fatz 4 chức năng, mỗi loại 1 chiếc (gồm Máy tiệt trùng sấy khô Moaz BéBé 1 chiếc và Máy hâm sữa Fatz 4 chức năng 1 chiếc) ạ.",
+      "verification_basis": "evidence_inventory_audit",
+      "evidence_inventory": [
+        "evidence.tool_calls.0.result",
+        "evidence.sources",
+        "evidence.promotions",
+        "prior_evidence.0.tool_calls.0.result",
+        "prior_evidence.0.tool_calls.1.result",
+        "prior_evidence.0.sources",
+        "prior_evidence.0.promotions"
+      ],
+      "lesson_status": "approved"
+    },
+    {
+      "job_id": "caefb64fa427dbd76044a7093dc4783a360cb862f345c0717651890f627404c4",
+      "message_id": 4,
+      "turn_id": 3,
+      "origin": "turn_detector",
+      "mechanism": "knowledge_gap",
+      "verified": true,
+      "claim": "lưu lại giỏ hàng gồm 1 Máy tiệt trùng sấy khô Moaz BéBé và 1 Máy hâm sữa Fatz 4 chức năng với tổng ngân sách của chị là 2.680.000 đồng",
+      "assessment": "unsupported_by_evidence",
+      "evidence_paths": [],
+      "rejection": null,
+      "rejection_reasons": [],
+      "format_retry": false,
+      "verifier_output": {
+        "valid": true,
+        "issue_scope": "business_knowledge",
+        "claim": "lưu lại giỏ hàng gồm 1 Máy tiệt trùng sấy khô Moaz BéBé và 1 Máy hâm sữa Fatz 4 chức năng với tổng ngân sách của chị là 2.680.000 đồng",
+        "assessment": "unsupported_by_evidence",
+        "evidence_paths": [],
+        "decision_reason": "The total cost of 2,680,000 VND and the specific SKUs for the Moaz BéBé sterilizer dryer and Fatz 4-function bottle warmer are not verified or calculated by any tool call results or sources in the evidence.",
+        "audit": {
+          "support_status": "not_established",
+          "coverage": "complete",
+          "checked_paths": [
+            "evidence.tool_calls.0.result",
+            "evidence.sources",
+            "evidence.promotions",
+            "prior_evidence.0.tool_calls.0.result",
+            "prior_evidence.0.tool_calls.1.result",
+            "prior_evidence.0.sources",
+            "prior_evidence.0.promotions",
+            "prior_evidence.1.tool_calls.0.result",
+            "prior_evidence.1.sources",
+            "prior_evidence.1.promotions"
+          ]
+        }
+      },
+      "candidate_claim": "lưu lại giỏ hàng gồm 1 Máy tiệt trùng sấy khô Moaz BéBé và 1 Máy hâm sữa Fatz 4 chức năng với tổng ngân sách của chị là 2.680.000 đồng",
+      "verification_basis": "evidence_inventory_audit",
+      "evidence_inventory": [
+        "evidence.tool_calls.0.result",
+        "evidence.sources",
+        "evidence.promotions",
+        "prior_evidence.0.tool_calls.0.result",
+        "prior_evidence.0.tool_calls.1.result",
+        "prior_evidence.0.sources",
+        "prior_evidence.0.promotions",
+        "prior_evidence.1.tool_calls.0.result",
+        "prior_evidence.1.sources",
+        "prior_evidence.1.promotions"
+      ],
+      "lesson_status": "approved"
+    }
+  ],
+  "detector_error": null,
+  "guardrails": {
+    "version": "learning_guardrails_v1",
+    "input_findings": [],
+    "blocked_lessons": [],
+    "blocked_sources": []
+  },
+  "detection": {
+    "candidate_count": 3,
+    "open_question_count": 0,
+    "processed_count": 3,
+    "skipped_unmatched_question": 0,
+    "skipped_over_limit": 0,
+    "scan": {
+      "turns_available": 5,
+      "turns_scanned": 5,
+      "requests": 5,
+      "errors": [],
+      "schema_retries": 0,
+      "skipped_over_limit": 0
+    },
+    "alignment_rejections": []
+  },
+  "outcome": "gaps_processed",
+  "learning_duration_ms": 38245,
+  "learning_usage": {
+    "input_tokens": 18291,
+    "output_tokens": 1084
+  }
+}

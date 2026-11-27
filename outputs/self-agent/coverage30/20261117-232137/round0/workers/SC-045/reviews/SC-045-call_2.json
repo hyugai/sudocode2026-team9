@@ -1,0 +1,325 @@
+{
+  "schema_version": 1,
+  "guardrail_version": "learning_guardrails_v1",
+  "metadata": {
+    "evaluation_population": "single_session_no_baseline"
+  },
+  "warnings": [
+    "Chưa chạy judge: chỉ xem thay đổi câu trả lời và dấu vết lesson, chưa đánh giá cải thiện.",
+    "Không có cặp chấm hợp lệ: chưa thể kết luận cải thiện hay không có regression."
+  ],
+  "summary": {
+    "total_turns": 2,
+    "judged_pair_count": 0,
+    "round0_turns": 0,
+    "round1_turns": 2,
+    "stored_frozen_case_count": 0,
+    "injected_turns": 0,
+    "changed_answers": 0,
+    "counts": {
+      "improved_resolution": 0,
+      "safer_unresolved": 0,
+      "regression": 0,
+      "unchanged": 0,
+      "needs_review": 0,
+      "not_evaluated": 2,
+      "unpaired": 0,
+      "question_changed": 0,
+      "excluded": 0
+    }
+  },
+  "rows": [
+    {
+      "call": "SC-045/call_2",
+      "turn_id": 1,
+      "question": "Chị đã cân nhắc xong rồi. Mẫu, số lượng, địa chỉ [address]",
+      "baseline_question": null,
+      "classification": "not_evaluated",
+      "case_id": null,
+      "gap_id": null,
+      "answer_changed": false,
+      "injected": false,
+      "lesson_trace": {},
+      "round0": {
+        "answer": null,
+        "verdict": {
+          "status": null
+        },
+        "latency": null,
+        "evidence": {
+          "current": {},
+          "earlier": []
+        }
+      },
+      "round1": {
+        "answer": "Dạ em cảm ơn chị [private] đã cân nhắc ạ. \n\nTuy nhiên, câu \"giữ nguyên\" của chị giúp em xác nhận thông tin giao hàng và thanh toán, nhưng em vẫn cần xác nhận chắc chắn từ chị: Chị có đồng ý chốt lên đơn đặt hàng sản phẩm Quạt Sennai này ngay bây giờ không ạ? \n\nNếu chị đồng ý, em sẽ tiến hành tạo đơn hàng ngay cho chị ạ.",
+        "verdict": {
+          "status": null
+        },
+        "latency": {
+          "ttft_ms": 5722,
+          "total_ms": 5722,
+          "ttfa_ms": null,
+          "measurement_mode": "non_streaming",
+          "timing_boundary": "response_ready_before_persistence",
+          "asr_ms": null,
+          "call_brief_ms": 2920,
+          "response_ready_ms": 5722,
+          "persistence_ms": 0.111,
+          "request_complete_ms": 5722.596,
+          "backend_total_ms": 5722.596,
+          "precomputed_parts": [
+            "persisted_facts"
+          ]
+        },
+        "evidence": {
+          "current": {
+            "turn_id": 1,
+            "agent_response": "Dạ em cảm ơn chị [private] đã cân nhắc ạ. \n\nTuy nhiên, câu \"giữ nguyên\" của chị giúp em xác nhận thông tin giao hàng và thanh toán, nhưng em vẫn cần xác nhận chắc chắn từ chị: Chị có đồng ý chốt lên đơn đặt hàng sản phẩm Quạt Sennai này ngay bây giờ không ạ? \n\nNếu chị đồng ý, em sẽ tiến hành tạo đơn hàng ngay cho chị ạ.",
+            "tool_calls": [
+              {
+                "name": "inventory.check",
+                "args": {
+                  "sku": "SKU-FAN-SEN",
+                  "on": "2026-10-21"
+                },
+                "result": {
+                  "sku": "SKU-FAN-SEN",
+                  "found": true,
+                  "in_stock": true,
+                  "qty": 30,
+                  "discontinued": false
+                }
+              },
+              {
+                "name": "pricing.get_quote",
+                "args": {
+                  "on": "2026-10-21",
+                  "customer_phone": "[private]",
+                  "customer_id": "[private]",
+                  "address": "[private]",
+                  "sku": "SKU-FAN-SEN",
+                  "qty": 1
+                },
+                "result": {
+                  "sku": "SKU-FAN-SEN",
+                  "list_price_vnd": 590000,
+                  "final_price_vnd": 590000,
+                  "applied_promos": [
+                    {
+                      "promo_code": "COD-0",
+                      "type": "freecod",
+                      "discount_vnd": 0
+                    }
+                  ],
+                  "expired_promos": [],
+                  "ineligible_promos": [
+                    {
+                      "promo_code": "NAM-SHIP0",
+                      "reason": "region"
+                    }
+                  ],
+                  "not_applied_exclusive": [],
+                  "freeship": false
+                }
+              }
+            ],
+            "sources": [],
+            "promotions": []
+          },
+          "earlier": []
+        }
+      }
+    },
+    {
+      "call": "SC-045/call_2",
+      "turn_id": 2,
+      "question": "Chị còn bận, em gọi lại lúc 10 giờ ngày 2026-10-23. Đừng bắt chị nói lại thông tin nữa nhé.",
+      "baseline_question": null,
+      "classification": "not_evaluated",
+      "case_id": null,
+      "gap_id": null,
+      "answer_changed": false,
+      "injected": false,
+      "lesson_trace": {},
+      "round0": {
+        "answer": null,
+        "verdict": {
+          "status": null
+        },
+        "latency": null,
+        "evidence": {
+          "current": {},
+          "earlier": []
+        }
+      },
+      "round1": {
+        "answer": "Dạ em đã ghi nhận và hẹn gọi lại cho chị [private] vào lúc 10:00 ngày 23/10/2026 ạ. Em đã lưu toàn bộ thông tin về sản phẩm, địa chỉ [address]",
+        "verdict": {
+          "status": null
+        },
+        "latency": {
+          "ttft_ms": 3494,
+          "total_ms": 3494,
+          "ttfa_ms": null,
+          "measurement_mode": "non_streaming",
+          "timing_boundary": "response_ready_before_persistence",
+          "asr_ms": null,
+          "call_brief_ms": null,
+          "response_ready_ms": 3494,
+          "persistence_ms": 0.102,
+          "request_complete_ms": 3494.162,
+          "backend_total_ms": 3494.162,
+          "precomputed_parts": [
+            "persisted_facts"
+          ]
+        },
+        "evidence": {
+          "current": {
+            "turn_id": 2,
+            "agent_response": "Dạ em đã ghi nhận và hẹn gọi lại cho chị [private] vào lúc 10:00 ngày 23/10/2026 ạ. Em đã lưu toàn bộ thông tin về sản phẩm, địa chỉ [address]",
+            "tool_calls": [
+              {
+                "name": "schedule.callback",
+                "args": {
+                  "customer_phone": "[private]",
+                  "callback_at": "2026-10-23T10:00",
+                  "note": "Chị còn bận, em gọi lại lúc 10 giờ ngày 2026-10-23. Đừng bắt chị nói lại thông tin nữa nhé.",
+                  "on": "2026-10-21"
+                },
+                "result": {
+                  "callback_id": "CB-972CA3",
+                  "customer_phone": "[private]",
+                  "callback_at": "2026-10-23T10:00",
+                  "moved_from": null,
+                  "note": "Chị còn bận, em gọi lại lúc 10 giờ ngày 2026-10-23. Đừng bắt chị nói lại thông tin nữa nhé."
+                }
+              }
+            ],
+            "sources": [],
+            "promotions": []
+          },
+          "earlier": [
+            {
+              "turn_id": 1,
+              "tool_calls": [
+                {
+                  "name": "inventory.check",
+                  "args": {
+                    "sku": "SKU-FAN-SEN",
+                    "on": "2026-10-21"
+                  },
+                  "result": {
+                    "sku": "SKU-FAN-SEN",
+                    "found": true,
+                    "in_stock": true,
+                    "qty": 30,
+                    "discontinued": false
+                  }
+                },
+                {
+                  "name": "pricing.get_quote",
+                  "args": {
+                    "on": "2026-10-21",
+                    "customer_phone": "[private]",
+                    "customer_id": "[private]",
+                    "address": "[private]",
+                    "sku": "SKU-FAN-SEN",
+                    "qty": 1
+                  },
+                  "result": {
+                    "sku": "SKU-FAN-SEN",
+                    "list_price_vnd": 590000,
+                    "final_price_vnd": 590000,
+                    "applied_promos": [
+                      {
+                        "promo_code": "COD-0",
+                        "type": "freecod",
+                        "discount_vnd": 0
+                      }
+                    ],
+                    "expired_promos": [],
+                    "ineligible_promos": [
+                      {
+                        "promo_code": "NAM-SHIP0",
+                        "reason": "region"
+                      }
+                    ],
+                    "not_applied_exclusive": [],
+                    "freeship": false
+                  }
+                }
+              ],
+              "sources": [],
+              "promotions": []
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "lessons": [],
+  "sessions": [
+    {
+      "call": "SC-045/call_2",
+      "round0": {
+        "job": null,
+        "error": null,
+        "learning": null,
+        "observed_input_findings": []
+      },
+      "round1": {
+        "job": {
+          "status": "done",
+          "job_id": "148d28a6bd2748f3c0f82e4eef1593efb046c14ca93580df8fd3b8e5ab604f12",
+          "error": null
+        },
+        "error": null,
+        "learning": {
+          "job_id": "148d28a6bd2748f3c0f82e4eef1593efb046c14ca93580df8fd3b8e5ab604f12",
+          "gaps": [],
+          "scope": "knowledge_gap_and_reflection_v1",
+          "evaluation_cases": [],
+          "out_of_scope": [],
+          "issue_reviews": [],
+          "detector_error": null,
+          "guardrails": {
+            "version": "learning_guardrails_v1",
+            "input_findings": [],
+            "blocked_lessons": [],
+            "blocked_sources": []
+          },
+          "detection": {
+            "candidate_count": 0,
+            "open_question_count": 0,
+            "processed_count": 0,
+            "skipped_unmatched_question": 0,
+            "skipped_over_limit": 0,
+            "scan": {
+              "turns_available": 2,
+              "turns_scanned": 2,
+              "requests": 2,
+              "errors": [],
+              "schema_retries": 0,
+              "skipped_over_limit": 0
+            },
+            "alignment_rejections": []
+          },
+          "outcome": "no_candidates",
+          "learning_duration_ms": 2435,
+          "learning_usage": {
+            "input_tokens": 1996,
+            "output_tokens": 12
+          }
+        },
+        "observed_input_findings": []
+      }
+    }
+  ],
+  "limitations": [
+    "Verdict kiểm tra được reference vẫn cần người đọc xác nhận ngữ nghĩa và độ đầy đủ.",
+    "Câu trả lời thay đổi hoặc được inject lesson chưa chứng minh lesson gây ra cải thiện.",
+    "Reflection chưa được chấm chất lượng; learning job done/lesson approved không phải điểm chất lượng.",
+    "Guardrail mẫu có giới hạn; không phát hiện mẫu không đồng nghĩa không có prompt injection."
+  ]
+}

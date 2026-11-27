@@ -1,0 +1,311 @@
+{
+  "id": "6ded8160307a4c1a46a91af18ef56ff009605542d18cc9882e9f3d32bfeb6de1",
+  "status": "done",
+  "attempts": 1,
+  "snapshot": {
+    "session": "43fa182fcd5e8cef5153e4ed58513142742d692efaf10ac02372685b61314ed7",
+    "revision": 4,
+    "messages": [
+      {
+        "message_id": 0,
+        "role": "customer",
+        "content": "Tôi là [private], số điện thoại [private], đang nhắn qua Zalo OA. Chị [private] đây. Hồi tháng hai chị mua AirPure X bản 2024 của shop, giờ muốn đổi máy."
+      },
+      {
+        "message_id": 1,
+        "role": "agent",
+        "content": "Em chào chị [private] ạ. Em đã kiểm tra trên hệ thống thì thấy đơn hàng OD188213 sản phẩm Máy lọc không khí AirPure X 2024 của chị được giao thành công từ tháng 02/2026. \n\nChị cho em hỏi máy của mình đang gặp vấn đề gì hay chị đang muốn đổi sang dòng sản phẩm nào khác ạ?"
+      },
+      {
+        "message_id": 2,
+        "role": "customer",
+        "content": "Chị đang xem Máy lọc không khí AirPure X. Với máy cũ trong đơn OD188213, chị có được áp thu cũ đổi mới không?"
+      },
+      {
+        "message_id": 3,
+        "role": "agent",
+        "content": "Dạ được chị [private] nhé. Vì chị đã mua máy AirPure X 2024 (đơn OD188213), chị sẽ được áp dụng chương trình thu cũ đổi mới, hỗ trợ giảm 400.000đ khi mua máy lọc không khí AirPure X mới ạ. \n\nĐơn vị vận chuyển sẽ thu lại máy cũ khi giao máy mới cho chị và shop không bắt buộc máy cũ phải còn hoạt động ạ. \n\nChị [private] có muốn em hỗ trợ lên đơn máy AirPure X mới luôn không chị?"
+      },
+      {
+        "message_id": 4,
+        "role": "customer",
+        "content": "Chị xem giá sau ưu đãi là 4.490.000 đồng. Địa chỉ [address]; giờ giao 100 đường Kiểm Thử, Hà Nội."
+      },
+      {
+        "message_id": 5,
+        "role": "agent",
+        "content": "Dạ em ghi nhận địa chỉ [address]\n\nVề giá sản phẩm Máy lọc không khí AirPure X, niêm yết là 4.890.000đ. Khi áp dụng ưu đãi Thu cũ đổi mới giảm 400.000đ thì giá thanh toán chính xác hiện tại là 4.490.000đ và được miễn phí vận chuyển chị nhé. (Chương trình KM cũ AP-SEP trước đó đã hết hạn rồi ạ).\n\nChị có muốn em lên đơn đặt mua luôn máy lọc không khí AirPure X về địa chỉ [address]"
+      },
+      {
+        "message_id": 6,
+        "role": "customer",
+        "content": "Chị còn hỏi người nhà, liên hệ lại lúc 10 giờ ngày 2026-10-23 nhé."
+      },
+      {
+        "message_id": 7,
+        "role": "agent",
+        "content": "Dạ em cảm ơn chị [private] ạ. Em đã đặt lịch hẹn gọi lại cho chị vào lúc 10:00 sáng ngày 23/10/2026 rồi ạ. \n\nChúc chị và gia đình một ngày vui vẻ, em chào chị nhé!"
+      }
+    ],
+    "open_questions": [],
+    "feedback": [],
+    "evidence_coverage": "per_turn_evidence",
+    "workflow_version": 4,
+    "turn_evidence": [
+      {
+        "turn_id": 1,
+        "agent_response": "Em chào chị [private] ạ. Em đã kiểm tra trên hệ thống thì thấy đơn hàng OD188213 sản phẩm Máy lọc không khí AirPure X 2024 của chị được giao thành công từ tháng 02/2026. \n\nChị cho em hỏi máy của mình đang gặp vấn đề gì hay chị đang muốn đổi sang dòng sản phẩm nào khác ạ?",
+        "tool_calls": [
+          {
+            "name": "order.status",
+            "args": {
+              "customer_phone": "[private]"
+            },
+            "result": {
+              "orders": [
+                {
+                  "order_id": "[private]",
+                  "customer_id": "[private]",
+                  "customer_phone": "[private]",
+                  "sku": "SKU-AP-X-2024",
+                  "qty": 1,
+                  "price_vnd": 4290000,
+                  "lines": [
+                    {
+                      "sku": "SKU-AP-X-2024",
+                      "qty": 1,
+                      "price_vnd": 4290000
+                    }
+                  ],
+                  "total_vnd": 4290000,
+                  "promos": [],
+                  "promo_code": null,
+                  "payment": "COD",
+                  "address": "[private]",
+                  "status": "delivered",
+                  "created_on": "2026-02-17",
+                  "exchange_count": 0
+                }
+              ]
+            }
+          }
+        ],
+        "sources": [],
+        "promotions": []
+      },
+      {
+        "turn_id": 2,
+        "agent_response": "Dạ được chị [private] nhé. Vì chị đã mua máy AirPure X 2024 (đơn OD188213), chị sẽ được áp dụng chương trình thu cũ đổi mới, hỗ trợ giảm 400.000đ khi mua máy lọc không khí AirPure X mới ạ. \n\nĐơn vị vận chuyển sẽ thu lại máy cũ khi giao máy mới cho chị và shop không bắt buộc máy cũ phải còn hoạt động ạ. \n\nChị [private] có muốn em hỗ trợ lên đơn máy AirPure X mới luôn không chị?",
+        "tool_calls": [
+          {
+            "name": "policy.search",
+            "args": {
+              "query": "Chị đang xem Máy lọc không khí AirPure X. Với máy cũ trong đơn OD188213, chị có được áp thu cũ đổi mới không?",
+              "k": 3,
+              "as_of": "2026-10-21"
+            },
+            "result": {
+              "query": "Chị đang xem Máy lọc không khí AirPure X. Với máy cũ trong đơn OD188213, chị có được áp thu cũ đổi mới không?",
+              "as_of": "2026-10-21",
+              "product_sku": null,
+              "count": 3,
+              "chunks": [
+                {
+                  "chunk_id": "KM-09",
+                  "content": "TRADE-IN-AP: khách có đơn đã giao chứa SKU-AP-X-2024 trong CRM được trừ 400.000đ khi mua AirPure X/Y/Pro; máy cũ do đơn vị vận chuyển thu khi giao máy mới; không yêu cầu máy cũ còn hoạt động. Không cộng với AIR-OCT.",
+                  "source_file": "dieu-khoan-khuyen-mai.md",
+                  "section": "[KM-09] Thu cũ đổi mới"
+                },
+                {
+                  "chunk_id": "FAQ-03",
+                  "content": "HEPA H13 lọc bụi mịn PM2.5, phấn hoa, lông thú, vi khuẩn bám bụi. Than hoạt tính (AirPure Y, Samsung AX40) khử mùi, khói bếp, VOC nhẹ. Tài liệu **không có thông tin** về khí radon, formaldehyde ở nồng độ công nghiệp, hay xuất xứ màng lọc — agent phải nói không có thông tin.",
+                  "source_file": "faq.md",
+                  "section": "[FAQ-03] Máy lọc không khí lọc được gì"
+                },
+                {
+                  "chunk_id": "FAQ-04",
+                  "content": "Y có thêm than hoạt tính, app điều khiển, khóa trẻ em; giá cao hơn X 310.000đ theo catalog. Cùng dùng màng lọc thay thế SKU-AP-FLT-X.",
+                  "source_file": "faq.md",
+                  "section": "[FAQ-04] Máy lọc không khí khác nhau giữa AirPure X và Y"
+                }
+              ]
+            }
+          },
+          {
+            "name": "catalog.search",
+            "args": {
+              "query": "Máy lọc không khí AirPure X",
+              "on": "2026-10-21"
+            },
+            "result": {
+              "items": [
+                {
+                  "sku": "SKU-AP-X",
+                  "name": "[private]",
+                  "category": "gia-dung/may-loc-khong-khi",
+                  "brand": "AirPure",
+                  "list_price_vnd": 4890000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "features": "HEPA H13, cảm biến PM2.5, chế độ ngủ",
+                    "room_area_m2": 25,
+                    "child_safe_lock": false,
+                    "warranty_months": 24
+                  },
+                  "variants": []
+                }
+              ],
+              "total": 1
+            }
+          },
+          {
+            "name": "inventory.check",
+            "args": {
+              "sku": "SKU-AP-X",
+              "on": "2026-10-21"
+            },
+            "result": {
+              "sku": "SKU-AP-X",
+              "found": true,
+              "in_stock": true,
+              "qty": 40,
+              "discontinued": false
+            }
+          }
+        ],
+        "sources": [
+          {
+            "sku": "SKU-AP-X",
+            "name": "[private]",
+            "category": "gia-dung/may-loc-khong-khi",
+            "brand": "AirPure",
+            "list_price_vnd": 4890000.0,
+            "discontinued": false,
+            "successor_sku": null,
+            "attributes": {
+              "features": "HEPA H13, cảm biến PM2.5, chế độ ngủ",
+              "room_area_m2": 25,
+              "child_safe_lock": false,
+              "warranty_months": 24
+            },
+            "variants": []
+          }
+        ],
+        "promotions": []
+      },
+      {
+        "turn_id": 3,
+        "agent_response": "Dạ em ghi nhận địa chỉ [address]\n\nVề giá sản phẩm Máy lọc không khí AirPure X, niêm yết là 4.890.000đ. Khi áp dụng ưu đãi Thu cũ đổi mới giảm 400.000đ thì giá thanh toán chính xác hiện tại là 4.490.000đ và được miễn phí vận chuyển chị nhé. (Chương trình KM cũ AP-SEP trước đó đã hết hạn rồi ạ).\n\nChị có muốn em lên đơn đặt mua luôn máy lọc không khí AirPure X về địa chỉ [address]",
+        "tool_calls": [
+          {
+            "name": "pricing.get_quote",
+            "args": {
+              "on": "2026-10-21",
+              "customer_phone": "[private]",
+              "customer_id": "[private]",
+              "address": "[private]",
+              "sku": "SKU-AP-X",
+              "qty": 1
+            },
+            "result": {
+              "sku": "SKU-AP-X",
+              "list_price_vnd": 4890000,
+              "final_price_vnd": 4490000,
+              "applied_promos": [
+                {
+                  "promo_code": "COD-0",
+                  "type": "freecod",
+                  "discount_vnd": 0
+                },
+                {
+                  "promo_code": "TRADE-IN-AP",
+                  "type": "fixed",
+                  "discount_vnd": 400000
+                }
+              ],
+              "expired_promos": [
+                "AP-SEP"
+              ],
+              "ineligible_promos": [
+                {
+                  "promo_code": "AIR-2ND-50",
+                  "reason": "min_qty"
+                },
+                {
+                  "promo_code": "NAM-SHIP0",
+                  "reason": "region"
+                }
+              ],
+              "not_applied_exclusive": [
+                "GIFT-FILTER"
+              ],
+              "freeship": true
+            }
+          }
+        ],
+        "sources": [
+          {
+            "sku": "SKU-AP-X",
+            "name": "[private]",
+            "category": "gia-dung/may-loc-khong-khi",
+            "brand": "AirPure",
+            "list_price_vnd": 4890000.0,
+            "discontinued": false,
+            "successor_sku": null,
+            "attributes": {
+              "features": "HEPA H13, cảm biến PM2.5, chế độ ngủ",
+              "room_area_m2": 25,
+              "child_safe_lock": false,
+              "warranty_months": 24
+            },
+            "variants": []
+          }
+        ],
+        "promotions": []
+      },
+      {
+        "turn_id": 4,
+        "agent_response": "Dạ em cảm ơn chị [private] ạ. Em đã đặt lịch hẹn gọi lại cho chị vào lúc 10:00 sáng ngày 23/10/2026 rồi ạ. \n\nChúc chị và gia đình một ngày vui vẻ, em chào chị nhé!",
+        "tool_calls": [
+          {
+            "name": "schedule.callback",
+            "args": {
+              "customer_phone": "[private]",
+              "callback_at": "2026-10-23T10:00",
+              "note": "Chị còn hỏi người nhà, liên hệ lại lúc 10 giờ ngày 2026-10-23 nhé.",
+              "on": "2026-10-21"
+            },
+            "result": {
+              "callback_id": "CB-41BD6D",
+              "customer_phone": "[private]",
+              "callback_at": "2026-10-23T10:00",
+              "moved_from": null,
+              "note": "Chị còn hỏi người nhà, liên hệ lại lúc 10 giờ ngày 2026-10-23 nhé."
+            }
+          }
+        ],
+        "sources": [
+          {
+            "sku": "SKU-AP-X",
+            "name": "[private]",
+            "category": "gia-dung/may-loc-khong-khi",
+            "brand": "AirPure",
+            "list_price_vnd": 4890000.0,
+            "discontinued": false,
+            "successor_sku": null,
+            "attributes": {
+              "features": "HEPA H13, cảm biến PM2.5, chế độ ngủ",
+              "room_area_m2": 25,
+              "child_safe_lock": false,
+              "warranty_months": 24
+            },
+            "variants": []
+          }
+        ],
+        "promotions": []
+      }
+    ]
+  },
+  "error": null
+}

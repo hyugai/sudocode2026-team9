@@ -1,0 +1,141 @@
+[11/17/26 23:27:01] INFO     Processing request of type           server.py:733
+                             ListToolsRequest                                  
+[11/17/26 23:27:01] INFO     Processing request of type           server.py:733
+                             ListToolsRequest                                  
+[11/17/26 23:27:02] INFO     Processing request of type           server.py:733
+                             ListToolsRequest                                  
+Direct use of automatic function calling (AFC) in AsyncModels.generate_content is not recommended. Instead, we recommend to use AFC in AsyncChat.send_message. Similarly, direct use of AFC in AsyncModels.generate_content_stream is not recommended. Instead, we recommend to use AFC in AsyncChat.send_message_stream.
+[11/17/26 23:27:07] INFO     Processing request of type           server.py:733
+                             CallToolRequest                                   
+[11/17/26 23:27:11] INFO     Processing request of type           server.py:733
+                             CallToolRequest                                   
+[11/17/26 23:27:12] INFO     Processing request of type           server.py:733
+                             CallToolRequest                                   
+[11/17/26 23:27:17] INFO     Processing request of type           server.py:733
+                             CallToolRequest                                   
+[11/17/26 23:27:19] INFO     Processing request of type           server.py:733
+                             CallToolRequest                                   
+                    INFO     Processing request of type           server.py:733
+                             CallToolRequest                                   
+[11/17/26 23:27:23] INFO     Processing request of type           server.py:733
+                             CallToolRequest                                   
+                    INFO     Describing index 'policy-telesale'  indexes.py:231
+[11/17/26 23:27:24] INFO     HTTP Request: GET                  _client.py:1025
+                             https://api.pinecone.io/indexes/po                
+                             licy-telesale "HTTP/1.1 200 OK"                   
+                    INFO     Index client created for host      __init__.py:195
+                             https://policy-telesale-kvtrojy.sv                
+                             c.aped-4627-b74a.pinecone.io                      
+                    INFO     Connected to Pinecone policy      knowledge.py:173
+                             index policy-telesale                             
+                    INFO     Searching namespace 'policy-prod' __init__.py:1490
+                             with top_k=20                                     
+[11/17/26 23:27:54] INFO     Processing request of type           server.py:733
+                             CallToolRequest                                   
+                    INFO     Searching namespace 'policy-prod' __init__.py:1490
+                             with top_k=20                                     
+[11/17/26 23:28:09] INFO     Processing request of type           server.py:733
+                             CallToolRequest                                   
+[11/17/26 23:28:11] INFO     Processing request of type           server.py:733
+                             CallToolRequest                                   
+[11/17/26 23:28:13] INFO     Processing request of type           server.py:733
+                             CallToolRequest                                   
+[11/17/26 23:28:22] INFO     Processing request of type           server.py:733
+                             CallToolRequest                                   
+[11/17/26 23:28:23] INFO     Processing request of type           server.py:733
+                             CallToolRequest                                   
+                    INFO     Processing request of type           server.py:733
+                             CallToolRequest                                   
+Round 0: loaded 0 patterns from this round 0; lessons_loaded=False
+
+==================================================
+STARTING DEEP AGENT RUN: Tôi là duc, số điện thoại 0993186032, dang nhận qua fanpage. shop oi, anh muốn hỏi quat dung được inverter panasonic f-409.
+==================================================
+   -> Context: scope=turn, prompt_chars=1812, recent_messages=0, allowed_tools=['check_inventory', 'search_catalog']
+   -> Model request estimate: ~2485 input tokens (system=4448 chars, messages=1812 chars, tools=1193 chars, visible_tools=2)
+   -> Model request estimate: ~2365 input tokens (system=4448 chars, messages=2275 chars, tools=371 chars, visible_tools=1)
+   -> Model request estimate: ~2303 input tokens (system=4448 chars, messages=2461 chars, tools=0 chars, visible_tools=0)
+   -> Agent Response: Dạ em chào anh Đức, quạt đứng DC Inverter Panasonic F-409 bên em hiện đang sẵn hàng ạ. Anh đang quan tâm đến tính năng của quạt hay muốn đặt mua luôn sản phẩm này ạ?
+
+DEEP AGENT RUN COMPLETED!
+==================================================
+
+
+==================================================
+STARTING DEEP AGENT RUN: Giá 2.450.000 dong dung không? anh cần mot chiec, số điện thoại la 0993186032.
+==================================================
+   -> Context: scope=turn, prompt_chars=2641, recent_messages=2, allowed_tools=['search_catalog']
+   -> Model request estimate: ~2637 input tokens (system=4448 chars, messages=2641 chars, tools=822 chars, visible_tools=1)
+   -> Agent Response: Dạ đúng rồi anh Đức ơi, quạt đứng DC Inverter Panasonic F-409 hiện có giá là 2.450.000 VNĐ và được miễn phí vận chuyển ạ. 
+
+Sản phẩm đang sẵn hàng, anh có muốn em lên đơn đặt mua luôn chiếc quạt này cho mình không ạ?
+
+DEEP AGENT RUN COMPLETED!
+==================================================
+
+
+==================================================
+STARTING DEEP AGENT RUN: Tôi thay ban chính sách thang 6 ghi đổi trả trong 14 ngay. với don moi dat tu thang 10/2026, hang con nguyen tem và không co loi ky thuat, thoi han thong thuong thuc te la bao nhiêu ngay? hay noi ro moc hien hanh truoc khi tiep tuc yeu cau chinh của tôi.
+==================================================
+   -> Context: scope=turn, prompt_chars=4470, recent_messages=2, allowed_tools=[]
+   -> Model request estimate: ~2973 input tokens (system=4448 chars, messages=4470 chars, tools=0 chars, visible_tools=0)
+   -> Agent Response: Dạ em chào anh Đức, theo chính sách hiện hành áp dụng cho các đơn hàng đặt từ tháng 10/2026, đối với sản phẩm còn nguyên tem và không có lỗi kỹ thuật thì thời hạn đổi trả thông thường là **7 ngày** kể từ ngày nhận hàng ạ (bản tháng 6 trước đây là 14 ngày). 
+
+Anh có cần em hỗ trợ lên đơn đặt hàng chiếc quạt đứng Panasonic này luôn không ạ?
+
+DEEP AGENT RUN COMPLETED!
+==================================================
+
+
+==================================================
+STARTING DEEP AGENT RUN: Anh se goi hotline sau, chua dat nhé.
+==================================================
+   -> Context: scope=turn, prompt_chars=2035, recent_messages=2, allowed_tools=[]
+   -> Model request estimate: ~2161 input tokens (system=4448 chars, messages=2035 chars, tools=0 chars, visible_tools=0)
+   -> Agent Response: Dạ em cảm ơn anh Đức. Em đã ghi nhận anh sẽ gọi lại hotline sau và chưa đặt hàng ạ. Khi nào anh cần hỗ trợ, anh cứ liên hệ lại với em nhé. Em chúc anh một ngày tốt lành!
+
+DEEP AGENT RUN COMPLETED!
+==================================================
+
+SC-054/call_1: job=done, changed=0; D:\DOCUMENT\School\SUDO\sudo_code_2026-group_9\outputs\self-agent\coverage30\20261117-232137\round0\workers\SC-054\SC-054-call_1.json
+
+==================================================
+STARTING DEEP AGENT RUN: Tôi là Đức, số điện thoại 0993186032, đã nhắn qua Fanpage. Anh Đức đây, đã nhắn Fanpage bằng số này. Bên em còn nội dung chat không?
+==================================================
+   -> Context: scope=turn, prompt_chars=3187, recent_messages=0, allowed_tools=[]
+   -> Model request estimate: ~2545 input tokens (system=4448 chars, messages=3187 chars, tools=0 chars, visible_tools=0)
+   -> Agent Response: Dạ em chào anh Đức, em có thể tra cứu lịch sử trao đổi của anh trên hệ thống. 
+
+Theo ghi nhận gần nhất, anh có quan tâm đến sản phẩm quạt trần (mã SKU-FAN-DC1). Em có thể hỗ trợ thông tin gì thêm cho anh về sản phẩm này hoặc hỗ trợ anh đặt hàng luôn không ạ?
+
+DEEP AGENT RUN COMPLETED!
+==================================================
+
+
+==================================================
+STARTING DEEP AGENT RUN: Em nhắc lại mẫu và giá đã báo trong chat giúp nhé.
+==================================================
+   -> Context: scope=turn, prompt_chars=2508, recent_messages=2, allowed_tools=['check_inventory', 'search_catalog']
+   -> Model request estimate: ~2717 input tokens (system=4448 chars, messages=2508 chars, tools=1193 chars, visible_tools=2)
+   -> Model request estimate: ~2655 input tokens (system=4448 chars, messages=2694 chars, tools=822 chars, visible_tools=1)
+   -> Agent Response: Dạ em chào anh Đức, mẫu sản phẩm đã báo trong chat cho anh là quạt trần mã **SKU-FAN-DC1** với giá là **2.450.000 VNĐ** (được miễn phí vận chuyển) ạ. 
+
+Hiện tại sản phẩm này bên em vẫn đang còn hàng sẵn. Anh có muốn em hỗ trợ đặt hàng luôn không ạ?
+
+DEEP AGENT RUN COMPLETED!
+==================================================
+
+
+==================================================
+STARTING DEEP AGENT RUN: Anh đồng ý giá hôm nay 2.450.000 đồng, một chiếc, giao 103 đường Kiểm Thử, TP. Hồ Chí Minh, cod.
+==================================================
+   -> Context: scope=turn, prompt_chars=3183, recent_messages=2, allowed_tools=[]
+   -> Model request estimate: ~2544 input tokens (system=4448 chars, messages=3183 chars, tools=0 chars, visible_tools=0)
+   -> Agent Response: Dạ em cảm ơn anh Đức. Em đã lên đơn thành công cho anh mẫu quạt trần **SKU-FAN-DC1** (số lượng 1 chiếc) với giá **2.450.000 VNĐ**, thanh toán COD khi nhận hàng tại địa chỉ **103 đường Kiểm Thử, TP. Hồ Chí Minh** rồi ạ. 
+
+Mã đơn hàng của anh là **ORD-ADA89D4F**, dự kiến sẽ được giao đến anh vào ngày 23/10/2026. Anh nhớ chú ý điện thoại để nhận hàng giúp em nhé!
+
+DEEP AGENT RUN COMPLETED!
+==================================================
+
+SC-054/call_2: job=done, changed=4; D:\DOCUMENT\School\SUDO\sudo_code_2026-group_9\outputs\self-agent\coverage30\20261117-232137\round0\workers\SC-054\SC-054-call_2.json

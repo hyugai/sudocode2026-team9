@@ -1,0 +1,551 @@
+{
+  "schema_version": 1,
+  "guardrail_version": "learning_guardrails_v1",
+  "metadata": {
+    "evaluation_population": "single_session_no_baseline"
+  },
+  "warnings": [
+    "Chưa chạy judge: chỉ xem thay đổi câu trả lời và dấu vết lesson, chưa đánh giá cải thiện.",
+    "Không có cặp chấm hợp lệ: chưa thể kết luận cải thiện hay không có regression."
+  ],
+  "summary": {
+    "total_turns": 3,
+    "judged_pair_count": 0,
+    "round0_turns": 0,
+    "round1_turns": 3,
+    "stored_frozen_case_count": 0,
+    "injected_turns": 2,
+    "changed_answers": 0,
+    "counts": {
+      "improved_resolution": 0,
+      "safer_unresolved": 0,
+      "regression": 0,
+      "unchanged": 0,
+      "needs_review": 0,
+      "not_evaluated": 3,
+      "unpaired": 0,
+      "question_changed": 0,
+      "excluded": 0
+    }
+  },
+  "rows": [
+    {
+      "call": "SC-074/call_2",
+      "turn_id": 1,
+      "question": "Tôi là [private], số điện thoại [phone], đang nhắn qua Zalo OA. Chị muốn tiếp tục phần tư vấn lần trước. Câu hỏi cụ thể lần trước em còn lưu chứ?",
+      "baseline_question": null,
+      "classification": "not_evaluated",
+      "case_id": null,
+      "gap_id": null,
+      "answer_changed": false,
+      "injected": true,
+      "lesson_trace": {
+        "lessons_loaded": 25,
+        "selected_lessons": [
+          {
+            "id": "3cd3c42741e4f384bb677359c92e310266b7dbcbda3a0012abd57fdb0347c01e",
+            "hash": "69a0eb02f8552e58812c9527556e29c9ff8e0cc2fff99a5a52488c72b3cf79a2",
+            "mechanism": "knowledge_gap"
+          },
+          {
+            "id": "6d3a903bb52f3a640c309b28927834d92f20386b301897d64d113e666ac598eb",
+            "hash": "bd7c1d98408e012643105ff779f8998825343efc3ad8d86909611a3ab07548bd",
+            "mechanism": "knowledge_gap"
+          },
+          {
+            "id": "62b31704255689e0a0e9d302ff0dc99126722deddfe71f38a7843aa310652759",
+            "hash": "9c522bf9b3655447e3404b8afbd976dd4213afeb1800ad4b527bd9e0c0a645b4",
+            "mechanism": "knowledge_gap"
+          }
+        ],
+        "injected": true,
+        "mode": "memory_only",
+        "response_modified": false,
+        "routing": "selected",
+        "routing_ms": 5265.409,
+        "routing_usage": {
+          "input_tokens": 4888,
+          "output_tokens": 191
+        },
+        "guardrails": {
+          "version": "learning_guardrails_v1",
+          "blocked_lessons": []
+        },
+        "injected_chars": 1588,
+        "injected_lesson_count": 3,
+        "wrapper_total_ms": 11518.309
+      },
+      "round0": {
+        "answer": null,
+        "verdict": {
+          "status": null
+        },
+        "latency": null,
+        "evidence": {
+          "current": {},
+          "earlier": []
+        }
+      },
+      "round1": {
+        "answer": "Dạ em còn lưu câu hỏi lần trước: “ten ky thuat vien da kiem dinh chinh chiec se giao cho tôi là ai?”. Hiện hệ thống không có thông tin xác nhận cho đúng chiếc hàng sẽ giao, nên em chưa thể trả lời chính xác ạ.",
+        "verdict": {
+          "status": null
+        },
+        "latency": {
+          "ttft_ms": 6253,
+          "total_ms": 6253,
+          "ttfa_ms": null,
+          "measurement_mode": "non_streaming",
+          "timing_boundary": "response_ready_before_persistence",
+          "asr_ms": null,
+          "call_brief_ms": 3047,
+          "response_ready_ms": 6253,
+          "persistence_ms": 0.092,
+          "request_complete_ms": 6252.738,
+          "backend_total_ms": 6252.738,
+          "precomputed_parts": [
+            "persisted_facts"
+          ]
+        },
+        "evidence": {
+          "current": {
+            "turn_id": 1,
+            "agent_response": "Dạ em còn lưu câu hỏi lần trước: “ten ky thuat vien da kiem dinh chinh chiec se giao cho tôi là ai?”. Hiện hệ thống không có thông tin xác nhận cho đúng chiếc hàng sẽ giao, nên em chưa thể trả lời chính xác ạ.",
+            "tool_calls": [],
+            "sources": [],
+            "promotions": []
+          },
+          "earlier": []
+        }
+      }
+    },
+    {
+      "call": "SC-074/call_2",
+      "turn_id": 2,
+      "question": "Em nhắc lại câu hỏi đó và cho chị biết đã có nguồn xác nhận chưa. Đừng đoán theo sản phẩm khác.",
+      "baseline_question": null,
+      "classification": "not_evaluated",
+      "case_id": null,
+      "gap_id": null,
+      "answer_changed": false,
+      "injected": false,
+      "lesson_trace": {
+        "lessons_loaded": 25,
+        "selected_lessons": [],
+        "injected": false,
+        "mode": "memory_only",
+        "response_modified": false,
+        "routing": "failed",
+        "routing_error": "ValueError",
+        "routing_ms": 1327.619,
+        "routing_usage": {
+          "input_tokens": 4607,
+          "output_tokens": 1
+        },
+        "wrapper_total_ms": 5804.623
+      },
+      "round0": {
+        "answer": null,
+        "verdict": {
+          "status": null
+        },
+        "latency": null,
+        "evidence": {
+          "current": {},
+          "earlier": []
+        }
+      },
+      "round1": {
+        "answer": "Dạ em còn lưu câu hỏi lần trước: “ten ky thuat vien da kiem dinh chinh chiec se giao cho tôi là ai?”. Hiện hệ thống không có thông tin xác nhận cho đúng chiếc hàng sẽ giao, nên em chưa thể trả lời chính xác ạ.",
+        "verdict": {
+          "status": null
+        },
+        "latency": {
+          "ttft_ms": 4477,
+          "total_ms": 4477,
+          "ttfa_ms": null,
+          "measurement_mode": "non_streaming",
+          "timing_boundary": "response_ready_before_persistence",
+          "asr_ms": null,
+          "call_brief_ms": null,
+          "response_ready_ms": 4477,
+          "persistence_ms": 0.131,
+          "request_complete_ms": 4476.905,
+          "backend_total_ms": 4476.905,
+          "precomputed_parts": [
+            "persisted_facts"
+          ]
+        },
+        "evidence": {
+          "current": {
+            "turn_id": 2,
+            "agent_response": "Dạ em còn lưu câu hỏi lần trước: “ten ky thuat vien da kiem dinh chinh chiec se giao cho tôi là ai?”. Hiện hệ thống không có thông tin xác nhận cho đúng chiếc hàng sẽ giao, nên em chưa thể trả lời chính xác ạ.",
+            "tool_calls": [
+              {
+                "name": "order.status",
+                "args": {
+                  "customer_phone": "[private]"
+                },
+                "result": {
+                  "orders": []
+                }
+              }
+            ],
+            "sources": [],
+            "promotions": []
+          },
+          "earlier": [
+            {
+              "turn_id": 1,
+              "tool_calls": [],
+              "sources": [],
+              "promotions": []
+            }
+          ]
+        }
+      }
+    },
+    {
+      "call": "SC-074/call_2",
+      "turn_id": 3,
+      "question": "Nếu chưa có thông tin thì chị chờ, chưa mua và không cần chuyển máy.",
+      "baseline_question": null,
+      "classification": "not_evaluated",
+      "case_id": null,
+      "gap_id": null,
+      "answer_changed": false,
+      "injected": true,
+      "lesson_trace": {
+        "lessons_loaded": 25,
+        "selected_lessons": [
+          {
+            "id": "2428465dd6aebd918b246b218ea61f077e2a4a03ca7a10bb6c10ca1cd078d1a6",
+            "hash": "a6ef6e56d1a0afa44afce603254ba8380a79684f4316ec30047adabc7375818d",
+            "mechanism": "knowledge_gap"
+          },
+          {
+            "id": "e839841d39ba8ead00458782103f8efc1ca7f45a5a21fb69a75e661d206e7f56",
+            "hash": "815658651146ef9f2e80375f1a8354150ac994c3c1af0032f8e534a61f26ab6a",
+            "mechanism": "knowledge_gap"
+          }
+        ],
+        "injected": true,
+        "mode": "memory_only",
+        "response_modified": false,
+        "routing": "selected",
+        "routing_ms": 3373.542,
+        "routing_usage": {
+          "input_tokens": 5280,
+          "output_tokens": 129
+        },
+        "guardrails": {
+          "version": "learning_guardrails_v1",
+          "blocked_lessons": []
+        },
+        "injected_chars": 1289,
+        "injected_lesson_count": 2,
+        "wrapper_total_ms": 9097.741
+      },
+      "round0": {
+        "answer": null,
+        "verdict": {
+          "status": null
+        },
+        "latency": null,
+        "evidence": {
+          "current": {},
+          "earlier": []
+        }
+      },
+      "round1": {
+        "answer": "Dạ em còn lưu câu hỏi lần trước: “ten ky thuat vien da kiem dinh chinh chiec se giao cho tôi là ai?”. Hiện hệ thống không có thông tin xác nhận cho đúng chiếc hàng sẽ giao, nên em chưa thể trả lời chính xác ạ.",
+        "verdict": {
+          "status": null
+        },
+        "latency": {
+          "ttft_ms": 5724,
+          "total_ms": 5724,
+          "ttfa_ms": null,
+          "measurement_mode": "non_streaming",
+          "timing_boundary": "response_ready_before_persistence",
+          "asr_ms": null,
+          "call_brief_ms": null,
+          "response_ready_ms": 5724,
+          "persistence_ms": 0.097,
+          "request_complete_ms": 5724.064,
+          "backend_total_ms": 5724.064,
+          "precomputed_parts": [
+            "persisted_facts"
+          ]
+        },
+        "evidence": {
+          "current": {
+            "turn_id": 3,
+            "agent_response": "Dạ em còn lưu câu hỏi lần trước: “ten ky thuat vien da kiem dinh chinh chiec se giao cho tôi là ai?”. Hiện hệ thống không có thông tin xác nhận cho đúng chiếc hàng sẽ giao, nên em chưa thể trả lời chính xác ạ.",
+            "tool_calls": [
+              {
+                "name": "catalog.search",
+                "args": {
+                  "query": "Nếu chưa có thông tin thì chị chờ, chưa mua và không cần chuyển máy.",
+                  "on": "2026-10-21"
+                },
+                "result": {
+                  "items": [],
+                  "total": 0
+                }
+              }
+            ],
+            "sources": [],
+            "promotions": []
+          },
+          "earlier": [
+            {
+              "turn_id": 1,
+              "tool_calls": [],
+              "sources": [],
+              "promotions": []
+            },
+            {
+              "turn_id": 2,
+              "tool_calls": [
+                {
+                  "name": "order.status",
+                  "args": {
+                    "customer_phone": "[private]"
+                  },
+                  "result": {
+                    "orders": []
+                  }
+                }
+              ],
+              "sources": [],
+              "promotions": []
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "lessons": [
+    {
+      "id": "2f76ef7f25d2559bfa0fc81e3b6c3108cc8b4e3f02909a800a6675066da5ec98",
+      "mechanism": "knowledge_gap",
+      "content": {
+        "title": "Verify system status before claiming information availability",
+        "when": "A customer asks about stored details or specific system records not supported by available sources",
+        "do": "State clearly that the information cannot be verified from available records without asserting system capabilities or limitations",
+        "otherwise": "Invent unsupported claims about system status or data availability"
+      },
+      "source_refs": [
+        {
+          "job_id": "e08c6a4dfacceb087dcffbeebbe302a25178389c8e6c0b1dfeebc8205e9a1c5f",
+          "message_id": 0,
+          "turn_id": 1,
+          "origin": "turn_detector"
+        }
+      ],
+      "path": null,
+      "security_findings": [],
+      "load_error": null,
+      "review_flags": []
+    },
+    {
+      "id": "e2fa0e15e8a7cbbb0df6f58d9e77759774f24cbeb1505c4e65ab2047761ade07",
+      "mechanism": "knowledge_gap",
+      "content": {
+        "title": "Verify stored customer history before claiming saved details",
+        "when": "A customer asks if their previous conversation history or specific question is saved and available in the system",
+        "do": "Check verified sources or tool outputs for historical logs before claiming knowledge of the customer's prior question",
+        "otherwise": "State clearly that the prior information is not available or verified, without making up or assuming past context"
+      },
+      "source_refs": [
+        {
+          "job_id": "e08c6a4dfacceb087dcffbeebbe302a25178389c8e6c0b1dfeebc8205e9a1c5f",
+          "message_id": 0,
+          "turn_id": 1,
+          "origin": "turn_detector"
+        }
+      ],
+      "path": null,
+      "security_findings": [],
+      "load_error": null,
+      "review_flags": []
+    }
+  ],
+  "sessions": [
+    {
+      "call": "SC-074/call_2",
+      "round0": {
+        "job": null,
+        "error": null,
+        "learning": null,
+        "observed_input_findings": []
+      },
+      "round1": {
+        "job": {
+          "status": "done",
+          "job_id": "e08c6a4dfacceb087dcffbeebbe302a25178389c8e6c0b1dfeebc8205e9a1c5f",
+          "error": null
+        },
+        "error": null,
+        "learning": {
+          "job_id": "e08c6a4dfacceb087dcffbeebbe302a25178389c8e6c0b1dfeebc8205e9a1c5f",
+          "gaps": [
+            {
+              "id": "fdabffeb147722a4f1f8dc9dc53bc3845d8a3db51703afb0b610c17ae49795f8",
+              "status": "pending_evidence"
+            },
+            {
+              "id": "2a96a5c6b1bb70bb9595ae56f288a09ac26c7034213912ff908c2712ec975a41",
+              "status": "pending_remediation"
+            },
+            {
+              "id": "02c7a5e0ae4b8b0a4da1b6ae9ad904df8223f9c57d341a481b6c1d45d0b38d41",
+              "status": "pending_remediation"
+            },
+            {
+              "id": "fdabffeb147722a4f1f8dc9dc53bc3845d8a3db51703afb0b610c17ae49795f8",
+              "status": "pending_evidence"
+            }
+          ],
+          "scope": "knowledge_gap_and_reflection_v1",
+          "evaluation_cases": [
+            {
+              "id": "92c32cba6d91a42bf33ef2c3ca74fa8286b41d2e74ec82db0ebac6d29516d02a",
+              "gap_id": "2a96a5c6b1bb70bb9595ae56f288a09ac26c7034213912ff908c2712ec975a41",
+              "turn_id": 1,
+              "question": "Tôi là [private], số điện thoại [private], đang nhắn qua Zalo OA. Chị muốn tiếp tục phần tư vấn lần trước. Câu hỏi cụ thể lần trước em còn lưu chứ?",
+              "reason": "unsupported_claim",
+              "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments."
+            },
+            {
+              "id": "b710a3a8e8a2256cc5e93421addb1f16f147b21205870cb92f38861616c298a2",
+              "gap_id": "fdabffeb147722a4f1f8dc9dc53bc3845d8a3db51703afb0b610c17ae49795f8",
+              "turn_id": 2,
+              "question": "Em nhắc lại câu hỏi đó và cho chị biết đã có nguồn xác nhận chưa. Đừng đoán theo sản phẩm khác.",
+              "reason": "missing_knowledge",
+              "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments."
+            }
+          ],
+          "out_of_scope": [],
+          "issue_reviews": [
+            {
+              "job_id": "e08c6a4dfacceb087dcffbeebbe302a25178389c8e6c0b1dfeebc8205e9a1c5f",
+              "message_id": 0,
+              "turn_id": 1,
+              "origin": "turn_detector",
+              "mechanism": "knowledge_gap",
+              "verified": true,
+              "claim": "Dạ em còn lưu câu hỏi lần trước: “ten ky thuat vien da kiem dinh chinh chiec se giao cho tôi là ai?”",
+              "assessment": "unsupported_by_evidence",
+              "evidence_paths": [],
+              "rejection": null,
+              "rejection_reasons": [],
+              "format_retry": false,
+              "verifier_output": {
+                "valid": true,
+                "issue_scope": "business_knowledge",
+                "claim": "Dạ em còn lưu câu hỏi lần trước: “ten ky thuat vien da kiem dinh chinh chiec se giao cho tôi là ai?”",
+                "assessment": "unsupported_by_evidence",
+                "evidence_paths": [],
+                "decision_reason": "There are no tool calls, sources, or prior context in the evidence to verify the customer's previous question recorded in the system.",
+                "audit": {
+                  "support_status": "not_established",
+                  "coverage": "complete",
+                  "checked_paths": [
+                    "evidence.tool_calls",
+                    "evidence.sources",
+                    "evidence.promotions"
+                  ]
+                }
+              },
+              "candidate_claim": "Dạ em còn lưu câu hỏi lần trước: “ten ky thuat vien da kiem dinh chinh chiec se giao cho tôi là ai?”",
+              "verification_basis": "evidence_inventory_audit",
+              "evidence_inventory": [
+                "evidence.tool_calls",
+                "evidence.sources",
+                "evidence.promotions"
+              ],
+              "lesson_status": "approved"
+            },
+            {
+              "job_id": "e08c6a4dfacceb087dcffbeebbe302a25178389c8e6c0b1dfeebc8205e9a1c5f",
+              "message_id": 0,
+              "turn_id": 1,
+              "origin": "turn_detector",
+              "mechanism": "knowledge_gap",
+              "verified": true,
+              "claim": "Hiện hệ thống không có thông tin xác nhận cho đúng chiếc hàng sẽ giao, nên em chưa thể trả lời chính xác ạ.",
+              "assessment": "unsupported_by_evidence",
+              "evidence_paths": [],
+              "rejection": null,
+              "rejection_reasons": [],
+              "format_retry": false,
+              "verifier_output": {
+                "valid": true,
+                "issue_scope": "business_knowledge",
+                "claim": "Hiện hệ thống không có thông tin xác nhận cho đúng chiếc hàng sẽ giao, nên em chưa thể trả lời chính xác ạ.",
+                "assessment": "unsupported_by_evidence",
+                "evidence_paths": [],
+                "decision_reason": "The claim regarding system limitations on technician information for the delivered item is not supported by any tool calls, sources, or prior evidence.",
+                "audit": {
+                  "support_status": "not_established",
+                  "coverage": "complete",
+                  "checked_paths": [
+                    "evidence.tool_calls",
+                    "evidence.sources",
+                    "evidence.promotions"
+                  ]
+                }
+              },
+              "candidate_claim": "Hiện hệ thống không có thông tin xác nhận cho đúng chiếc hàng sẽ giao, nên em chưa thể trả lời chính xác ạ.",
+              "verification_basis": "evidence_inventory_audit",
+              "evidence_inventory": [
+                "evidence.tool_calls",
+                "evidence.sources",
+                "evidence.promotions"
+              ],
+              "lesson_status": "approved"
+            }
+          ],
+          "detector_error": null,
+          "guardrails": {
+            "version": "learning_guardrails_v1",
+            "input_findings": [],
+            "blocked_lessons": [],
+            "blocked_sources": []
+          },
+          "detection": {
+            "candidate_count": 3,
+            "open_question_count": 1,
+            "processed_count": 4,
+            "skipped_unmatched_question": 0,
+            "skipped_over_limit": 0,
+            "scan": {
+              "turns_available": 3,
+              "turns_scanned": 3,
+              "requests": 3,
+              "errors": [],
+              "schema_retries": 0,
+              "skipped_over_limit": 0
+            },
+            "alignment_rejections": []
+          },
+          "outcome": "gaps_processed",
+          "learning_duration_ms": 21183,
+          "learning_usage": {
+            "input_tokens": 7170,
+            "output_tokens": 723
+          }
+        },
+        "observed_input_findings": []
+      }
+    }
+  ],
+  "limitations": [
+    "Verdict kiểm tra được reference vẫn cần người đọc xác nhận ngữ nghĩa và độ đầy đủ.",
+    "Câu trả lời thay đổi hoặc được inject lesson chưa chứng minh lesson gây ra cải thiện.",
+    "Reflection chưa được chấm chất lượng; learning job done/lesson approved không phải điểm chất lượng.",
+    "Guardrail mẫu có giới hạn; không phát hiện mẫu không đồng nghĩa không có prompt injection."
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "id": "53b8d2fa3b0f30f1badf98e3df4041783192b89c1c851a1a27bca935470aac7a",
+  "reason": "unsupported_claim",
+  "pattern": "Do not state an unverified claim as a fact.",
+  "status": "approved",
+  "scope": "general",
+  "mechanism": "knowledge_gap",
+  "criterion": "Do not state an unverified claim as a fact.",
+  "evidence_refs": [
+    {
+      "job_id": "c9d6822305e57aacfce8d0495e04d82960da049bc62669d64708dec68402a509",
+      "message_id": 2,
+      "turn_id": 2,
+      "origin": "turn_detector"
+    }
+  ],
+  "assessment": "unsupported_by_evidence",
+  "report_ref": "c9d6822305e57aacfce8d0495e04d82960da049bc62669d64708dec68402a509",
+  "lesson": {
+    "title": "State baseline list price without fabricating past promotional prices",
+    "when": "a customer asks to compare current pricing against a past expired promotion and available sources do not state the exact past discounted price",
+    "do": "explain that the past promo has expired, provide the current list price and active benefits, and politely ask if they want to proceed",
+    "otherwise": "state uncertainty regarding the exact past promotional price and provide only verified current pricing details",
+    "triggers": [
+      "giai thich chenh lech gia",
+      "khuyen mai cu het han",
+      "hoi gia cu",
+      "previous promotion price missing",
+      "expired promo price difference"
+    ],
+    "id": "96462a829febc18f589eaf0c3ab1df2f3cef5bc01b979b0c99259defc7877619",
+    "status": "approved",
+    "scope": "general",
+    "mechanism": "knowledge_gap",
+    "source_refs": [
+      {
+        "job_id": "c9d6822305e57aacfce8d0495e04d82960da049bc62669d64708dec68402a509",
+        "message_id": 2,
+        "turn_id": 2,
+        "origin": "turn_detector"
+      }
+    ],
+    "version": 2
+  },
+  "lesson_path": "lessons\\approved\\96462a829febc18f589eaf0c3ab1df2f3cef5bc01b979b0c99259defc7877619.md",
+  "lesson_hash": "8c8477cb523b7fd08483e06056c3f95fbe5782daae3bb000dc015fa5c33c922a"
+}

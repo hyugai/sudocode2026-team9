@@ -1,0 +1,143 @@
+{
+  "id": "84bc07d12b19da77081e8e4b7e726b1849f7567fb5d2cc6a6f6405554b23a713",
+  "status": "done",
+  "attempts": 1,
+  "snapshot": {
+    "session": "15bfb5f7b386dd7fcda10d5d09bb8b8744baf08ae5137d9adecfef0c69188e38",
+    "revision": 3,
+    "messages": [
+      {
+        "message_id": 0,
+        "role": "customer",
+        "content": "Tôi là Hà, số điện thoại [private], đang nhắn qua Zalo OA. Shop ơi, chị đang quan tâm Máy lọc không khí AirPure X."
+      },
+      {
+        "message_id": 1,
+        "role": "agent",
+        "content": "Dạ em chào chị Hà! Máy lọc không khí AirPure X bên em hiện đang có sẵn hàng chị nha. Dòng này thích hợp cho phòng khoảng 25m², có màng lọc HEPA H13 và cảm biến bụi mịn PM2.5 rất hiệu quả ạ.\n\nChị đang muốn tìm máy lọc không khí cho không gian nào trong nhà mình vậy chị?"
+      },
+      {
+        "message_id": 2,
+        "role": "customer",
+        "content": "Mã sê-ri chính xác của chiếc sẽ giao cho tôi là gì?"
+      },
+      {
+        "message_id": 3,
+        "role": "agent",
+        "content": "Dạ về câu hỏi của mình: “Mã sê-ri chính xác của chiếc sẽ giao cho tôi là gì?”. Hiện hệ thống không có thông tin xác nhận cho đúng chiếc hàng sẽ giao, nên em chưa thể trả lời chính xác ạ."
+      },
+      {
+        "message_id": 4,
+        "role": "customer",
+        "content": "Nếu hồ sơ không có thì em nói rõ giúp chị; chưa đặt hàng."
+      },
+      {
+        "message_id": 5,
+        "role": "agent",
+        "content": "Dạ em còn lưu câu hỏi lần trước: “Mã sê-ri chính xác của chiếc sẽ giao cho tôi là gì?”. Hiện hệ thống không có thông tin xác nhận cho đúng chiếc hàng sẽ giao, nên em chưa thể trả lời chính xác ạ."
+      }
+    ],
+    "open_questions": [
+      "Mã sê-ri chính xác của chiếc sẽ giao cho tôi là gì?"
+    ],
+    "feedback": [],
+    "evidence_coverage": "per_turn_evidence",
+    "workflow_version": 4,
+    "turn_evidence": [
+      {
+        "turn_id": 1,
+        "agent_response": "Dạ em chào chị Hà! Máy lọc không khí AirPure X bên em hiện đang có sẵn hàng chị nha. Dòng này thích hợp cho phòng khoảng 25m², có màng lọc HEPA H13 và cảm biến bụi mịn PM2.5 rất hiệu quả ạ.\n\nChị đang muốn tìm máy lọc không khí cho không gian nào trong nhà mình vậy chị?",
+        "tool_calls": [
+          {
+            "name": "catalog.search",
+            "args": {
+              "query": "Máy lọc không khí AirPure X",
+              "on": "2026-10-15"
+            },
+            "result": {
+              "items": [
+                {
+                  "sku": "SKU-AP-X",
+                  "name": "[private]",
+                  "category": "gia-dung/may-loc-khong-khi",
+                  "brand": "AirPure",
+                  "list_price_vnd": 4890000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "features": "HEPA H13, cảm biến PM2.5, chế độ ngủ",
+                    "room_area_m2": 25,
+                    "child_safe_lock": false,
+                    "warranty_months": 24
+                  },
+                  "variants": []
+                }
+              ],
+              "total": 1
+            }
+          },
+          {
+            "name": "inventory.check",
+            "args": {
+              "sku": "SKU-AP-X",
+              "on": "2026-10-15"
+            },
+            "result": {
+              "sku": "SKU-AP-X",
+              "found": true,
+              "in_stock": true,
+              "qty": 40,
+              "discontinued": false
+            }
+          }
+        ],
+        "sources": [
+          {
+            "sku": "SKU-AP-X",
+            "name": "[private]",
+            "category": "gia-dung/may-loc-khong-khi",
+            "brand": "AirPure",
+            "list_price_vnd": 4890000.0,
+            "discontinued": false,
+            "successor_sku": null,
+            "attributes": {
+              "features": "HEPA H13, cảm biến PM2.5, chế độ ngủ",
+              "room_area_m2": 25,
+              "child_safe_lock": false,
+              "warranty_months": 24
+            },
+            "variants": []
+          }
+        ],
+        "promotions": []
+      },
+      {
+        "turn_id": 2,
+        "agent_response": "Dạ về câu hỏi của mình: “Mã sê-ri chính xác của chiếc sẽ giao cho tôi là gì?”. Hiện hệ thống không có thông tin xác nhận cho đúng chiếc hàng sẽ giao, nên em chưa thể trả lời chính xác ạ.",
+        "tool_calls": [
+          {
+            "name": "catalog.search",
+            "args": {
+              "query": "Mã sê-ri chính xác của chiếc sẽ giao cho tôi là gì?",
+              "on": "2026-10-15"
+            },
+            "result": {
+              "items": [],
+              "total": 0
+            }
+          }
+        ],
+        "sources": [],
+        "promotions": []
+      },
+      {
+        "turn_id": 3,
+        "agent_response": "Dạ em còn lưu câu hỏi lần trước: “Mã sê-ri chính xác của chiếc sẽ giao cho tôi là gì?”. Hiện hệ thống không có thông tin xác nhận cho đúng chiếc hàng sẽ giao, nên em chưa thể trả lời chính xác ạ.",
+        "tool_calls": [],
+        "sources": [],
+        "promotions": []
+      }
+    ]
+  },
+  "error": null
+}

@@ -1,0 +1,219 @@
+{
+  "id": "b1c879ff35c73b80a5130c5cdf853042beb83ab796836b7b5f84dfd1231b99dc",
+  "status": "done",
+  "attempts": 1,
+  "snapshot": {
+    "session": "d6b8a4652f960dc615a845740a463749f5fe97c4423492862c0f4e42f4705109",
+    "revision": 3,
+    "messages": [
+      {
+        "message_id": 0,
+        "role": "customer",
+        "content": "Alo em, chị đang cân nhắc Máy lọc không khí AirPure X."
+      },
+      {
+        "message_id": 1,
+        "role": "agent",
+        "content": "Dạ em chào chị [private], em cảm ơn chị đã quan tâm đến mẫu Máy lọc không khí AirPure X bên em ạ. \n\nDòng máy này rất thích hợp cho phòng khoảng 25m², sử dụng màng lọc HEPA H13 giúp lọc bụi mịn PM2.5 hiệu quả và có chế độ ngủ hoạt động rất êm ái. Hiện tại sản phẩm đang có sẵn hàng tại kho. \n\nKhông biết chị đang cần tìm máy lọc không khí cho không gian nào trong nhà mình vậy chị?"
+      },
+      {
+        "message_id": 2,
+        "role": "customer",
+        "content": "Chị xem giá 4.890.000 đồng; em kiểm tra giúp giá và hàng hiện tại nhé. Ngân sách của chị là 5.190.000 đồng."
+      },
+      {
+        "message_id": 3,
+        "role": "agent",
+        "content": "Dạ chị [private], em đã kiểm tra sản phẩm Máy lọc không khí AirPure X (mã SKU-AP-X) cho chị rồi ạ. \n\nHiện tại sản phẩm đang có sẵn hàng trong kho (còn 40 máy) với giá niêm yết chính xác là 4.890.000 đồng, hoàn toàn nằm trong ngân sách 5.190.000 đồng của chị ạ. Ngoài ra, khi mua máy chị còn được miễn phí giao hàng và tặng kèm 01 màng lọc thay thế.\n\nChị có muốn em hỗ trợ lên đơn đặt hàng cho mình luôn không ạ?"
+      },
+      {
+        "message_id": 4,
+        "role": "customer",
+        "content": "Chị còn phải hỏi người nhà. Gọi lại cho chị lúc 10 giờ ngày 2026-10-17 nhé, chưa lên đơn."
+      },
+      {
+        "message_id": 5,
+        "role": "agent",
+        "content": "Dạ em đã ghi nhận lịch hẹn gọi lại cho chị [private] vào lúc 10:00 ngày 17/10/2026 rồi ạ. \n\nChị cứ trao đổi thêm với người nhà nhé. Đến giờ hẹn em sẽ chủ động liên hệ lại để hỗ trợ chị ạ. Em cảm ơn chị, chúc chị một ngày tốt lành!"
+      }
+    ],
+    "open_questions": [],
+    "feedback": [],
+    "evidence_coverage": "per_turn_evidence",
+    "workflow_version": 4,
+    "turn_evidence": [
+      {
+        "turn_id": 1,
+        "agent_response": "Dạ em chào chị [private], em cảm ơn chị đã quan tâm đến mẫu Máy lọc không khí AirPure X bên em ạ. \n\nDòng máy này rất thích hợp cho phòng khoảng 25m², sử dụng màng lọc HEPA H13 giúp lọc bụi mịn PM2.5 hiệu quả và có chế độ ngủ hoạt động rất êm ái. Hiện tại sản phẩm đang có sẵn hàng tại kho. \n\nKhông biết chị đang cần tìm máy lọc không khí cho không gian nào trong nhà mình vậy chị?",
+        "tool_calls": [
+          {
+            "name": "catalog.search",
+            "args": {
+              "query": "Máy lọc không khí AirPure X",
+              "on": "2026-10-15"
+            },
+            "result": {
+              "items": [
+                {
+                  "sku": "SKU-AP-X",
+                  "name": "[private]",
+                  "category": "gia-dung/may-loc-khong-khi",
+                  "brand": "AirPure",
+                  "list_price_vnd": 4890000.0,
+                  "discontinued": false,
+                  "successor_sku": null,
+                  "attributes": {
+                    "features": "HEPA H13, cảm biến PM2.5, chế độ ngủ",
+                    "room_area_m2": 25,
+                    "child_safe_lock": false,
+                    "warranty_months": 24
+                  },
+                  "variants": []
+                }
+              ],
+              "total": 1
+            }
+          },
+          {
+            "name": "inventory.check",
+            "args": {
+              "sku": "SKU-AP-X",
+              "on": "2026-10-15"
+            },
+            "result": {
+              "sku": "SKU-AP-X",
+              "found": true,
+              "in_stock": true,
+              "qty": 40,
+              "discontinued": false
+            }
+          }
+        ],
+        "sources": [
+          {
+            "sku": "SKU-AP-X",
+            "name": "[private]",
+            "category": "gia-dung/may-loc-khong-khi",
+            "brand": "AirPure",
+            "list_price_vnd": 4890000.0,
+            "discontinued": false,
+            "successor_sku": null,
+            "attributes": {
+              "features": "HEPA H13, cảm biến PM2.5, chế độ ngủ",
+              "room_area_m2": 25,
+              "child_safe_lock": false,
+              "warranty_months": 24
+            },
+            "variants": []
+          }
+        ],
+        "promotions": []
+      },
+      {
+        "turn_id": 2,
+        "agent_response": "Dạ chị [private], em đã kiểm tra sản phẩm Máy lọc không khí AirPure X (mã SKU-AP-X) cho chị rồi ạ. \n\nHiện tại sản phẩm đang có sẵn hàng trong kho (còn 40 máy) với giá niêm yết chính xác là 4.890.000 đồng, hoàn toàn nằm trong ngân sách 5.190.000 đồng của chị ạ. Ngoài ra, khi mua máy chị còn được miễn phí giao hàng và tặng kèm 01 màng lọc thay thế.\n\nChị có muốn em hỗ trợ lên đơn đặt hàng cho mình luôn không ạ?",
+        "tool_calls": [
+          {
+            "name": "catalog.search",
+            "args": {
+              "query": "Chị xem giá 4.890.000 đồng; em kiểm tra giúp giá và hàng hiện tại nhé. Ngân sách của chị là 5.190.000 đồng.",
+              "on": "2026-10-15"
+            },
+            "result": {
+              "items": [],
+              "total": 0
+            }
+          },
+          {
+            "name": "pricing.get_quote",
+            "args": {
+              "on": "2026-10-15",
+              "customer_phone": "[private]",
+              "customer_id": "[private]",
+              "sku": "SKU-AP-X",
+              "qty": 1
+            },
+            "result": {
+              "sku": "SKU-AP-X",
+              "list_price_vnd": 4890000,
+              "final_price_vnd": 4890000,
+              "applied_promos": [
+                {
+                  "promo_code": "COD-0",
+                  "type": "freecod",
+                  "discount_vnd": 0
+                },
+                {
+                  "promo_code": "GIFT-FILTER",
+                  "type": "gift",
+                  "discount_vnd": 0,
+                  "gift_sku": "SKU-AP-FLT-X"
+                }
+              ],
+              "expired_promos": [
+                "AP-SEP"
+              ],
+              "ineligible_promos": [
+                {
+                  "promo_code": "AIR-2ND-50",
+                  "reason": "min_qty"
+                },
+                {
+                  "promo_code": "NAM-SHIP0",
+                  "reason": "region"
+                },
+                {
+                  "promo_code": "TRADE-IN-AP",
+                  "reason": "requires_owned_sku"
+                }
+              ],
+              "not_applied_exclusive": [],
+              "freeship": true
+            }
+          },
+          {
+            "name": "inventory.check",
+            "args": {
+              "sku": "SKU-AP-X",
+              "on": "2026-10-15"
+            },
+            "result": {
+              "sku": "SKU-AP-X",
+              "found": true,
+              "in_stock": true,
+              "qty": 40,
+              "discontinued": false
+            }
+          }
+        ],
+        "sources": [],
+        "promotions": []
+      },
+      {
+        "turn_id": 3,
+        "agent_response": "Dạ em đã ghi nhận lịch hẹn gọi lại cho chị [private] vào lúc 10:00 ngày 17/10/2026 rồi ạ. \n\nChị cứ trao đổi thêm với người nhà nhé. Đến giờ hẹn em sẽ chủ động liên hệ lại để hỗ trợ chị ạ. Em cảm ơn chị, chúc chị một ngày tốt lành!",
+        "tool_calls": [
+          {
+            "name": "schedule.callback",
+            "args": {
+              "customer_phone": "[private]",
+              "callback_at": "2026-10-17T10:00",
+              "note": "Chị còn phải hỏi người nhà. Gọi lại cho chị lúc 10 giờ ngày 2026-10-17 nhé, chưa lên đơn.",
+              "on": "2026-10-15"
+            },
+            "result": {
+              "callback_id": "CB-E0A0BC",
+              "customer_phone": "[private]",
+              "callback_at": "2026-10-17T10:00",
+              "moved_from": null,
+              "note": "Chị còn phải hỏi người nhà. Gọi lại cho chị lúc 10 giờ ngày 2026-10-17 nhé, chưa lên đơn."
+            }
+          }
+        ],
+        "sources": [],
+        "promotions": []
+      }
+    ]
+  },
+  "error": null
+}

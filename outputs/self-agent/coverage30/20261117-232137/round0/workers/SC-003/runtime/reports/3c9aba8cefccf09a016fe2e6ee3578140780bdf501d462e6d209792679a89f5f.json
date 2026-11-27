@@ -1,0 +1,85 @@
+{
+  "job_id": "3c9aba8cefccf09a016fe2e6ee3578140780bdf501d462e6d209792679a89f5f",
+  "gaps": [
+    {
+      "id": "cee25c0d9bfcb44f534a7cc06f72d6844ccbfbd8846fd4e363086c4ff427ced0",
+      "status": "pending_remediation"
+    }
+  ],
+  "scope": "knowledge_gap_and_reflection_v1",
+  "evaluation_cases": [],
+  "out_of_scope": [],
+  "issue_reviews": [
+    {
+      "job_id": "3c9aba8cefccf09a016fe2e6ee3578140780bdf501d462e6d209792679a89f5f",
+      "message_id": 0,
+      "turn_id": 1,
+      "origin": "turn_detector",
+      "mechanism": "reflection",
+      "verified": true,
+      "claim": "Em cần kiểm tra lại tồn kho trước khi xác nhận cho mình ạ.",
+      "assessment": "contradicts_evidence",
+      "evidence_paths": [
+        "evidence.tool_calls.1.result"
+      ],
+      "rejection": null,
+      "rejection_reasons": [],
+      "format_retry": false,
+      "verifier_output": {
+        "valid": true,
+        "issue_scope": "reflection",
+        "claim": "Em cần kiểm tra lại tồn kho trước khi xác nhận cho mình ạ.",
+        "assessment": "contradicts_evidence",
+        "evidence_paths": [
+          "evidence.tool_calls.1.result"
+        ],
+        "decision_reason": "The agent already performed inventory.check and knew the item was out of stock with expected restock on 2026-10-19, so stating that it needs to check inventory again contradicts the executed tool call results.",
+        "audit": {
+          "support_status": "contradicted",
+          "coverage": "complete",
+          "checked_paths": [
+            "evidence.tool_calls.1.result"
+          ]
+        }
+      },
+      "candidate_claim": "Em cần kiểm tra lại tồn kho trước khi xác nhận cho mình ạ.",
+      "verification_basis": "referenced_evidence",
+      "evidence_inventory": [
+        "evidence.tool_calls.0.result",
+        "evidence.tool_calls.1.result",
+        "evidence.sources",
+        "evidence.promotions"
+      ],
+      "lesson_status": "approved"
+    }
+  ],
+  "detector_error": null,
+  "guardrails": {
+    "version": "learning_guardrails_v1",
+    "input_findings": [],
+    "blocked_lessons": [],
+    "blocked_sources": []
+  },
+  "detection": {
+    "candidate_count": 1,
+    "open_question_count": 0,
+    "processed_count": 1,
+    "skipped_unmatched_question": 0,
+    "skipped_over_limit": 0,
+    "scan": {
+      "turns_available": 3,
+      "turns_scanned": 3,
+      "requests": 3,
+      "errors": [],
+      "schema_retries": 0,
+      "skipped_over_limit": 0
+    },
+    "alignment_rejections": []
+  },
+  "outcome": "gaps_processed",
+  "learning_duration_ms": 8916,
+  "learning_usage": {
+    "input_tokens": 10709,
+    "output_tokens": 348
+  }
+}

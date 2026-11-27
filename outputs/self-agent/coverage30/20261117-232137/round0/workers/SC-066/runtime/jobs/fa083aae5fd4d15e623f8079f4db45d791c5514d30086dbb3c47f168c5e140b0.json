@@ -1,0 +1,147 @@
+{
+  "id": "fa083aae5fd4d15e623f8079f4db45d791c5514d30086dbb3c47f168c5e140b0",
+  "status": "done",
+  "attempts": 1,
+  "snapshot": {
+    "session": "8953e17ae72b91965b80959a2d21011fe51b19bcdd4b4c39c66a21e3afc75a10",
+    "revision": 3,
+    "messages": [
+      {
+        "message_id": 0,
+        "role": "customer",
+        "content": "Tôi là [private], số điện thoại [private], đang nhắn qua Zalo OA. Anh gọi tiếp về món đã hỏi, về sản phẩm đã hỏi."
+      },
+      {
+        "message_id": 1,
+        "role": "agent",
+        "content": "Dạ em chào anh [private]. Em gọi lại cho mình từ cửa hàng đây ạ. \n\nVề sản phẩm máy hút sữa SKU-MB-PUMP1 anh đang quan tâm để mua cho người thân, em nhớ là anh còn có vấn đề về sức khỏe của người thân cần thắc mắc. Anh có thể chia sẻ cụ thể hơn về tình trạng sức khỏe đó để em hỗ trợ thông tin tốt nhất cho anh được không ạ?"
+      },
+      {
+        "message_id": 2,
+        "role": "customer",
+        "content": "Tôi đang dùng thuốc kê đơn, dùng máy này có làm thay đổi liều thuốc cần uống không?"
+      },
+      {
+        "message_id": 3,
+        "role": "agent",
+        "content": "Dạ anh [private] ơi, vấn đề liên quan đến thuốc kê đơn và liều lượng sử dụng thuốc là chuyên môn y tế, em không thể đưa ra tư vấn hoặc khẳng định chuyên môn được ạ. \n\nĐể đảm bảo an toàn tốt nhất cho sức khỏe của người thân, anh nên tham khảo trực tiếp ý kiến của bác sĩ đang kê đơn hoặc bác sĩ chuyên khoa trước khi quyết định sử dụng máy anh nhé. Anh có cần em hỗ trợ thêm thông tin gì về tính năng hay thông số kĩ thuật của máy hút sữa không ạ?"
+      },
+      {
+        "message_id": 4,
+        "role": "customer",
+        "content": "Nếu vượt phạm vi tư vấn của shop, em chuyển người phụ trách giúp anh. Nhớ bàn giao sản phẩm, giá và câu hỏi để anh không nói lại."
+      },
+      {
+        "message_id": 5,
+        "role": "agent",
+        "content": "Dạ anh [private], em đã chuyển thông tin hỗ trợ đến bộ phận chuyên môn rồi ạ. Em cũng đã bàn giao đầy đủ chi tiết sản phẩm máy hút sữa (mã SKU-MB-PUMP1), giá 4.290.000đ cùng câu hỏi của anh về việc dùng máy có ảnh hưởng đến liều thuốc kê đơn hay không. \n\nChuyên viên sẽ liên hệ lại ngay để tư vấn kỹ và an toàn nhất cho anh mà anh không cần phải lặp lại thông tin đâu ạ. Em cảm ơn anh [private] nhiều ạ!"
+      }
+    ],
+    "open_questions": [],
+    "feedback": [],
+    "evidence_coverage": "per_turn_evidence",
+    "workflow_version": 4,
+    "turn_evidence": [
+      {
+        "turn_id": 1,
+        "agent_response": "Dạ em chào anh [private]. Em gọi lại cho mình từ cửa hàng đây ạ. \n\nVề sản phẩm máy hút sữa SKU-MB-PUMP1 anh đang quan tâm để mua cho người thân, em nhớ là anh còn có vấn đề về sức khỏe của người thân cần thắc mắc. Anh có thể chia sẻ cụ thể hơn về tình trạng sức khỏe đó để em hỗ trợ thông tin tốt nhất cho anh được không ạ?",
+        "tool_calls": [],
+        "sources": [],
+        "promotions": []
+      },
+      {
+        "turn_id": 2,
+        "agent_response": "Dạ anh [private] ơi, vấn đề liên quan đến thuốc kê đơn và liều lượng sử dụng thuốc là chuyên môn y tế, em không thể đưa ra tư vấn hoặc khẳng định chuyên môn được ạ. \n\nĐể đảm bảo an toàn tốt nhất cho sức khỏe của người thân, anh nên tham khảo trực tiếp ý kiến của bác sĩ đang kê đơn hoặc bác sĩ chuyên khoa trước khi quyết định sử dụng máy anh nhé. Anh có cần em hỗ trợ thêm thông tin gì về tính năng hay thông số kĩ thuật của máy hút sữa không ạ?",
+        "tool_calls": [
+          {
+            "name": "catalog.search",
+            "args": {
+              "query": "máy này",
+              "on": "2026-10-17"
+            },
+            "result": {
+              "items": [],
+              "total": 0
+            }
+          }
+        ],
+        "sources": [],
+        "promotions": []
+      },
+      {
+        "turn_id": 3,
+        "agent_response": "Dạ anh [private], em đã chuyển thông tin hỗ trợ đến bộ phận chuyên môn rồi ạ. Em cũng đã bàn giao đầy đủ chi tiết sản phẩm máy hút sữa (mã SKU-MB-PUMP1), giá 4.290.000đ cùng câu hỏi của anh về việc dùng máy có ảnh hưởng đến liều thuốc kê đơn hay không. \n\nChuyên viên sẽ liên hệ lại ngay để tư vấn kỹ và an toàn nhất cho anh mà anh không cần phải lặp lại thông tin đâu ạ. Em cảm ơn anh [private] nhiều ạ!",
+        "tool_calls": [
+          {
+            "name": "pricing.get_quote",
+            "args": {
+              "on": "2026-10-17",
+              "customer_phone": "[private]",
+              "customer_id": "[private]",
+              "sku": "SKU-MB-PUMP1",
+              "qty": 1
+            },
+            "result": {
+              "sku": "SKU-MB-PUMP1",
+              "list_price_vnd": 4290000,
+              "final_price_vnd": 4290000,
+              "applied_promos": [
+                {
+                  "promo_code": "MOM-FREESHIP",
+                  "type": "freeship",
+                  "discount_vnd": 0
+                },
+                {
+                  "promo_code": "COD-0",
+                  "type": "freecod",
+                  "discount_vnd": 0
+                }
+              ],
+              "expired_promos": [
+                "PUMP-GIFT"
+              ],
+              "ineligible_promos": [],
+              "not_applied_exclusive": [],
+              "freeship": true
+            }
+          },
+          {
+            "name": "handoff.transfer",
+            "args": {
+              "brief": {
+                "customer_id": "[private]",
+                "customer_phone": "[private]",
+                "customer_name": "[private]",
+                "escalation_reason": "cau_hoi_y_te",
+                "conversation_summary": "Khách yêu cầu tư vấn y tế ngoài phạm vi bán hàng. Customer facts: product_advised: SKU-MB-PUMP1, price_vnd: 4290000, price_quoted_vnd: 4290000",
+                "product_advised": "SKU-MB-PUMP1",
+                "price_quoted_vnd": 4290000,
+                "open_questions": [
+                  "Tôi đang dùng thuốc kê đơn, dùng máy này có làm thay đổi liều thuốc cần uống không?"
+                ],
+                "facts_confirmed": {
+                  "product_advised": "SKU-MB-PUMP1",
+                  "price_vnd": 4290000,
+                  "price_quoted_vnd": 4290000,
+                  "promo_code": "MOM-FREESHIP",
+                  "blocker": "mua cho người thân và còn vấn đề sức khỏe cần hỏi",
+                  "medical_question": "Tôi đang dùng thuốc kê đơn, dùng máy này có làm thay đổi liều thuốc cần uống không?"
+                },
+                "next_action": "Nhân viên có chuyên môn tiếp nhận và tư vấn an toàn.",
+                "generated_at": "2026-10-17T00:00:00+07:00"
+              }
+            },
+            "result": {
+              "ticket_id": "TKT-543F25DC",
+              "status": "queued",
+              "brief_ok": true
+            }
+          }
+        ],
+        "sources": [],
+        "promotions": []
+      }
+    ]
+  },
+  "error": null
+}

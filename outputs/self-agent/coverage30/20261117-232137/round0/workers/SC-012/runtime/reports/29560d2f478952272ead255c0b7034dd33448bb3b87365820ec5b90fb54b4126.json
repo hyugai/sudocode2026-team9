@@ -1,0 +1,168 @@
+{
+  "job_id": "29560d2f478952272ead255c0b7034dd33448bb3b87365820ec5b90fb54b4126",
+  "gaps": [
+    {
+      "id": "fe66fd00c093489108e8a98f38f6add924c0958b432092c00443152a599580b4",
+      "status": "pending_remediation"
+    },
+    {
+      "id": "c8541bcf63d0360d3bce30ac56cf4d795b83922809eca3bd6ad56a2481b82d95",
+      "status": "pending_remediation"
+    }
+  ],
+  "scope": "knowledge_gap_and_reflection_v1",
+  "evaluation_cases": [
+    {
+      "id": "2c0862a7adc9673e4037214fcd489c70bf42e0ade131e008b38fb131a2e4044d",
+      "gap_id": "fe66fd00c093489108e8a98f38f6add924c0958b432092c00443152a599580b4",
+      "turn_id": 2,
+      "question": "Anh ưu tiên giá, ngân sách tối đa 4.990.000 đồng. Ưu đãi này hết ngày 30/09 phải không?",
+      "reason": "unsupported_claim",
+      "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments."
+    },
+    {
+      "id": "54ae23c282440d52bd672269c9d1031ec4286982e6b9fe1e70ba1024c8128ecb",
+      "gap_id": "c8541bcf63d0360d3bce30ac56cf4d795b83922809eca3bd6ad56a2481b82d95",
+      "turn_id": 3,
+      "question": "Chưa mua ngay đâu em, anh cần cân nhắc thêm.",
+      "reason": "unsupported_claim",
+      "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments."
+    }
+  ],
+  "out_of_scope": [],
+  "issue_reviews": [
+    {
+      "job_id": "29560d2f478952272ead255c0b7034dd33448bb3b87365820ec5b90fb54b4126",
+      "message_id": 2,
+      "turn_id": 2,
+      "origin": "turn_detector",
+      "mechanism": "knowledge_gap",
+      "verified": true,
+      "claim": "chương trình ưu đãi giảm 500.000 đồng với mã AP-SEP cho máy lọc không khí AirPure X áp dụng đến hết ngày 30/09/2026 ạ.",
+      "assessment": "unsupported_by_evidence",
+      "evidence_paths": [],
+      "rejection": null,
+      "rejection_reasons": [],
+      "format_retry": false,
+      "verifier_output": {
+        "valid": true,
+        "issue_scope": "business_knowledge",
+        "claim": "chương trình ưu đãi giảm 500.000 đồng với mã AP-SEP cho máy lọc không khí AirPure X áp dụng đến hết ngày 30/09/2026 ạ.",
+        "assessment": "unsupported_by_evidence",
+        "evidence_paths": [],
+        "decision_reason": "The exact end date of promotion AP-SEP is not provided or established in any tool results, sources, or promotions retrieved in turn 1 or turn 2.",
+        "audit": {
+          "support_status": "not_established",
+          "coverage": "complete",
+          "checked_paths": [
+            "evidence.tool_calls.0.result",
+            "evidence.sources",
+            "evidence.promotions",
+            "prior_evidence.0.tool_calls.0.result",
+            "prior_evidence.0.tool_calls.1.result",
+            "prior_evidence.0.tool_calls.2.result",
+            "prior_evidence.0.sources",
+            "prior_evidence.0.promotions"
+          ]
+        }
+      },
+      "candidate_claim": "chương trình ưu đãi giảm 500.000 đồng với mã AP-SEP cho máy lọc không khí AirPure X áp dụng đến hết ngày 30/09/2026 ạ.",
+      "verification_basis": "evidence_inventory_audit",
+      "evidence_inventory": [
+        "evidence.tool_calls.0.result",
+        "evidence.sources",
+        "evidence.promotions",
+        "prior_evidence.0.tool_calls.0.result",
+        "prior_evidence.0.tool_calls.1.result",
+        "prior_evidence.0.tool_calls.2.result",
+        "prior_evidence.0.sources",
+        "prior_evidence.0.promotions"
+      ],
+      "lesson_status": "approved"
+    },
+    {
+      "job_id": "29560d2f478952272ead255c0b7034dd33448bb3b87365820ec5b90fb54b4126",
+      "message_id": 4,
+      "turn_id": 3,
+      "origin": "turn_detector",
+      "mechanism": "knowledge_gap",
+      "verified": true,
+      "claim": "Ưu đãi giảm 500.000đ cho máy lọc không khí AirPure X vẫn áp dụng đến hết ngày 30/09/2026.",
+      "assessment": "unsupported_by_evidence",
+      "evidence_paths": [],
+      "rejection": null,
+      "rejection_reasons": [],
+      "format_retry": false,
+      "verifier_output": {
+        "valid": true,
+        "issue_scope": "business_knowledge",
+        "claim": "Ưu đãi giảm 500.000đ cho máy lọc không khí AirPure X vẫn áp dụng đến hết ngày 30/09/2026.",
+        "assessment": "unsupported_by_evidence",
+        "evidence_paths": [],
+        "decision_reason": "None of the tool call results, sources, or promotions retrieved across the conversation contain the expiration date (end date) of the AP-SEP promotion or the 500,000 VND discount offer.",
+        "audit": {
+          "support_status": "not_established",
+          "coverage": "complete",
+          "checked_paths": [
+            "evidence.tool_calls",
+            "evidence.sources",
+            "evidence.promotions",
+            "prior_evidence.0.tool_calls.0.result",
+            "prior_evidence.0.tool_calls.1.result",
+            "prior_evidence.0.tool_calls.2.result",
+            "prior_evidence.0.sources",
+            "prior_evidence.0.promotions",
+            "prior_evidence.1.tool_calls.0.result",
+            "prior_evidence.1.sources",
+            "prior_evidence.1.promotions"
+          ]
+        }
+      },
+      "candidate_claim": "Ưu đãi giảm 500.000đ cho máy lọc không khí AirPure X vẫn áp dụng đến hết ngày 30/09/2026.",
+      "verification_basis": "evidence_inventory_audit",
+      "evidence_inventory": [
+        "evidence.tool_calls",
+        "evidence.sources",
+        "evidence.promotions",
+        "prior_evidence.0.tool_calls.0.result",
+        "prior_evidence.0.tool_calls.1.result",
+        "prior_evidence.0.tool_calls.2.result",
+        "prior_evidence.0.sources",
+        "prior_evidence.0.promotions",
+        "prior_evidence.1.tool_calls.0.result",
+        "prior_evidence.1.sources",
+        "prior_evidence.1.promotions"
+      ],
+      "lesson_status": "approved"
+    }
+  ],
+  "detector_error": null,
+  "guardrails": {
+    "version": "learning_guardrails_v1",
+    "input_findings": [],
+    "blocked_lessons": [],
+    "blocked_sources": []
+  },
+  "detection": {
+    "candidate_count": 2,
+    "open_question_count": 0,
+    "processed_count": 2,
+    "skipped_unmatched_question": 0,
+    "skipped_over_limit": 0,
+    "scan": {
+      "turns_available": 3,
+      "turns_scanned": 3,
+      "requests": 3,
+      "errors": [],
+      "schema_retries": 0,
+      "skipped_over_limit": 0
+    },
+    "alignment_rejections": []
+  },
+  "outcome": "gaps_processed",
+  "learning_duration_ms": 33950,
+  "learning_usage": {
+    "input_tokens": 19293,
+    "output_tokens": 954
+  }
+}

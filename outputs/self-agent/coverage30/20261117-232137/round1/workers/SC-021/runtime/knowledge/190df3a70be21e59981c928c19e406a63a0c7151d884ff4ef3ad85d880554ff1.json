@@ -1,0 +1,9 @@
+{
+  "id": "190df3a70be21e59981c928c19e406a63a0c7151d884ff4ef3ad85d880554ff1",
+  "question": "Đổi size và đổi trả áp dụng điều kiện nào?",
+  "expected_content": "Đổi size hoặc màu lần **đầu tiên** cho cùng một đơn hàng: **miễn phí**, shop chịu phí vận chuyển hai chiều. Từ lần đổi thứ hai trở đi: khách chịu phí vận chuyển 30.000đ/chiều. Điều kiện: size/màu mới còn hàng; nếu hết hàng, khách được chọn sản phẩm khác cùng giá hoặc hoàn tiền.",
+  "source_file": "chinh-sach-doi-tra.md",
+  "chunk_id": "DT-03",
+  "source_hash": "3be0775c720408e801d311e98d06432c4e929dea8a558fb7996c08f4f2d28571",
+  "status": "approved"
+}

@@ -1,0 +1,181 @@
+{
+  "scenario_id": "SC-045",
+  "call": "call_2",
+  "session_id": "self-2dbd34d71b6b4659bfc3efc506d56d52-SC-045-call_2",
+  "turns": [
+    {
+      "customer": "Chị đã cân nhắc xong rồi. Mẫu, số lượng, địa chỉ [address]",
+      "agent": "Dạ em cảm ơn chị [private] đã cân nhắc ạ. \n\nTuy nhiên, câu \"giữ nguyên\" của chị giúp em xác nhận thông tin giao hàng và thanh toán, nhưng em vẫn cần xác nhận chắc chắn từ chị: Chị có đồng ý chốt lên đơn đặt hàng sản phẩm Quạt Sennai này ngay bây giờ không ạ? \n\nNếu chị đồng ý, em sẽ tiến hành tạo đơn hàng ngay cho chị ạ.",
+      "latency": {
+        "ttft_ms": 5722,
+        "total_ms": 5722,
+        "ttfa_ms": null,
+        "measurement_mode": "non_streaming",
+        "timing_boundary": "response_ready_before_persistence",
+        "asr_ms": null,
+        "call_brief_ms": 2920,
+        "response_ready_ms": 5722,
+        "persistence_ms": 0.111,
+        "request_complete_ms": 5722.596,
+        "backend_total_ms": 5722.596,
+        "precomputed_parts": [
+          "persisted_facts"
+        ]
+      },
+      "lesson_trace": null
+    },
+    {
+      "customer": "Chị còn bận, em gọi lại lúc 10 giờ ngày 2026-10-23. Đừng bắt chị nói lại thông tin nữa nhé.",
+      "agent": "Dạ em đã ghi nhận và hẹn gọi lại cho chị [private] vào lúc 10:00 ngày 23/10/2026 ạ. Em đã lưu toàn bộ thông tin về sản phẩm, địa chỉ [address]",
+      "latency": {
+        "ttft_ms": 3494,
+        "total_ms": 3494,
+        "ttfa_ms": null,
+        "measurement_mode": "non_streaming",
+        "timing_boundary": "response_ready_before_persistence",
+        "asr_ms": null,
+        "call_brief_ms": null,
+        "response_ready_ms": 3494,
+        "persistence_ms": 0.102,
+        "request_complete_ms": 3494.162,
+        "backend_total_ms": 3494.162,
+        "precomputed_parts": [
+          "persisted_facts"
+        ]
+      },
+      "lesson_trace": null
+    }
+  ],
+  "generation_context": {
+    "round": 0,
+    "instruction_hash": "9d30a7093911a993d8545de8b61cc6dc8465de67b10fb62b27d9f1bafaf0badf",
+    "applied_patterns": {},
+    "lessons_loaded": false,
+    "lesson_sources": [],
+    "lesson_files": [],
+    "instruction_root": "D:\\DOCUMENT\\School\\SUDO\\sudo_code_2026-group_9\\outputs\\self-agent\\coverage30\\20261117-232137\\round0\\instructions"
+  },
+  "evaluation_evidence": [
+    {
+      "turn_id": 1,
+      "agent_response": "Dạ em cảm ơn chị [private] đã cân nhắc ạ. \n\nTuy nhiên, câu \"giữ nguyên\" của chị giúp em xác nhận thông tin giao hàng và thanh toán, nhưng em vẫn cần xác nhận chắc chắn từ chị: Chị có đồng ý chốt lên đơn đặt hàng sản phẩm Quạt Sennai này ngay bây giờ không ạ? \n\nNếu chị đồng ý, em sẽ tiến hành tạo đơn hàng ngay cho chị ạ.",
+      "tool_calls": [
+        {
+          "name": "inventory.check",
+          "args": {
+            "sku": "SKU-FAN-SEN",
+            "on": "2026-10-21"
+          },
+          "result": {
+            "sku": "SKU-FAN-SEN",
+            "found": true,
+            "in_stock": true,
+            "qty": 30,
+            "discontinued": false
+          }
+        },
+        {
+          "name": "pricing.get_quote",
+          "args": {
+            "on": "2026-10-21",
+            "customer_phone": "[private]",
+            "customer_id": "[private]",
+            "address": "[private]",
+            "sku": "SKU-FAN-SEN",
+            "qty": 1
+          },
+          "result": {
+            "sku": "SKU-FAN-SEN",
+            "list_price_vnd": 590000,
+            "final_price_vnd": 590000,
+            "applied_promos": [
+              {
+                "promo_code": "COD-0",
+                "type": "freecod",
+                "discount_vnd": 0
+              }
+            ],
+            "expired_promos": [],
+            "ineligible_promos": [
+              {
+                "promo_code": "NAM-SHIP0",
+                "reason": "region"
+              }
+            ],
+            "not_applied_exclusive": [],
+            "freeship": false
+          }
+        }
+      ],
+      "sources": [],
+      "promotions": []
+    },
+    {
+      "turn_id": 2,
+      "agent_response": "Dạ em đã ghi nhận và hẹn gọi lại cho chị [private] vào lúc 10:00 ngày 23/10/2026 ạ. Em đã lưu toàn bộ thông tin về sản phẩm, địa chỉ [address]",
+      "tool_calls": [
+        {
+          "name": "schedule.callback",
+          "args": {
+            "customer_phone": "[private]",
+            "callback_at": "2026-10-23T10:00",
+            "note": "Chị còn bận, em gọi lại lúc 10 giờ ngày 2026-10-23. Đừng bắt chị nói lại thông tin nữa nhé.",
+            "on": "2026-10-21"
+          },
+          "result": {
+            "callback_id": "CB-972CA3",
+            "customer_phone": "[private]",
+            "callback_at": "2026-10-23T10:00",
+            "moved_from": null,
+            "note": "Chị còn bận, em gọi lại lúc 10 giờ ngày 2026-10-23. Đừng bắt chị nói lại thông tin nữa nhé."
+          }
+        }
+      ],
+      "sources": [],
+      "promotions": []
+    }
+  ],
+  "job": {
+    "status": "done",
+    "job_id": "148d28a6bd2748f3c0f82e4eef1593efb046c14ca93580df8fd3b8e5ab604f12",
+    "error": null
+  },
+  "learning": {
+    "job_id": "148d28a6bd2748f3c0f82e4eef1593efb046c14ca93580df8fd3b8e5ab604f12",
+    "gaps": [],
+    "scope": "knowledge_gap_and_reflection_v1",
+    "evaluation_cases": [],
+    "out_of_scope": [],
+    "issue_reviews": [],
+    "detector_error": null,
+    "guardrails": {
+      "version": "learning_guardrails_v1",
+      "input_findings": [],
+      "blocked_lessons": [],
+      "blocked_sources": []
+    },
+    "detection": {
+      "candidate_count": 0,
+      "open_question_count": 0,
+      "processed_count": 0,
+      "skipped_unmatched_question": 0,
+      "skipped_over_limit": 0,
+      "scan": {
+        "turns_available": 2,
+        "turns_scanned": 2,
+        "requests": 2,
+        "errors": [],
+        "schema_retries": 0,
+        "skipped_over_limit": 0
+      },
+      "alignment_rejections": []
+    },
+    "outcome": "no_candidates",
+    "learning_duration_ms": 2435,
+    "learning_usage": {
+      "input_tokens": 1996,
+      "output_tokens": 12
+    }
+  },
+  "artifact_changes": []
+}

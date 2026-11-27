@@ -1,0 +1,46 @@
+{
+  "id": "158c4605d001a90326c4a5e89a809a0f6103e776005dea1f66f74b523f8ca16d",
+  "reason": "unsupported_claim",
+  "pattern": "Do not state an unverified claim as a fact.",
+  "status": "approved",
+  "scope": "general",
+  "mechanism": "knowledge_gap",
+  "criterion": "Do not state an unverified claim as a fact.",
+  "evidence_refs": [
+    {
+      "job_id": "40ff648d24eda08f0e6743f46fb494fa93061e62326d3427abc6b2953e1c71a9",
+      "message_id": 2,
+      "turn_id": 2,
+      "origin": "turn_detector"
+    }
+  ],
+  "assessment": "unsupported_by_evidence",
+  "report_ref": "40ff648d24eda08f0e6743f46fb494fa93061e62326d3427abc6b2953e1c71a9",
+  "lesson": {
+    "title": "Verify Past Chat Information Before Stating Specific Details",
+    "when": "A customer asks to recall or repeat product details or quotes from past conversations, but official record sources do not contain evidence of that past interaction",
+    "do": "State clearly that the past chat details cannot be confirmed or retrieved, and ask the customer to clarify what item they need assistance with",
+    "otherwise": "Express uncertainty about being unable to check past records; do not state unverified specific product codes or prior recommendations",
+    "triggers": [
+      "nhắc lại mẫu và giá",
+      "xác nhận giá đã báo trong chat",
+      "recall previous chat price",
+      "check past message details"
+    ],
+    "id": "ca9b617791a704e6c107e84d5d7a8693c11fee6698c66f739131618511ab7eef",
+    "status": "approved",
+    "scope": "general",
+    "mechanism": "knowledge_gap",
+    "source_refs": [
+      {
+        "job_id": "40ff648d24eda08f0e6743f46fb494fa93061e62326d3427abc6b2953e1c71a9",
+        "message_id": 2,
+        "turn_id": 2,
+        "origin": "turn_detector"
+      }
+    ],
+    "version": 2
+  },
+  "lesson_path": "lessons\\approved\\ca9b617791a704e6c107e84d5d7a8693c11fee6698c66f739131618511ab7eef.md",
+  "lesson_hash": "43b408f96523615369e6bbc821e1cb8cb7b98067a85d3db7dce65e68b9eb0392"
+}

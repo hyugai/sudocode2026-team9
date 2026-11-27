@@ -1,0 +1,200 @@
+{
+  "id": "9bb33284f85d1dcbd5990d33456948f47561889c9a8d64ebca806776b2f03ceb",
+  "status": "done",
+  "attempts": 1,
+  "snapshot": {
+    "session": "07a3542a39d6832221b8d07b3646eddf74aa515ecc43592bd95e8db405d1b0d5",
+    "revision": 3,
+    "messages": [
+      {
+        "message_id": 0,
+        "role": "customer",
+        "content": "Anh gọi tiếp về món đã hỏi. Đơn OD600001 đã nhận hôm qua; sản phẩm hơi chật."
+      },
+      {
+        "message_id": 1,
+        "role": "agent",
+        "content": "Dạ em chào anh [private]. Em đã ghi nhận phản hồi của mình về việc đơn hàng OD600001 nhận hôm qua bị chật sản phẩm ạ.\n\nTuy nhiên, khi kiểm tra mã đơn OD600001 trên hệ thống thì hiện chưa hiển thị thông tin chi tiết sản phẩm. Anh có thể cho em xin tên cụ thể hoặc mã sản phẩm mà anh nhận bị chật, cũng như nhu cầu anh muốn đổi sang size nào để em hỗ trợ kiểm tra quy định và làm thủ tục đổi trả cho mình ngay ạ?"
+      },
+      {
+        "message_id": 2,
+        "role": "customer",
+        "content": "Anh muốn đổi từ size M sang L, giữ màu cũ. Đây là lần đổi đầu tiên; hàng còn nguyên tem, hộp và chưa sử dụng."
+      },
+      {
+        "message_id": 3,
+        "role": "agent",
+        "content": "Dạ em chào anh [private]. Em đã kiểm tra đơn hàng của anh (mã [order_id]) với áo màu be size M. Anh xác nhận giúp em xem mình có muốn chốt đổi sang áo size L này cho đơn hàng luôn không ạ? Em cần kiểm tra lại tồn kho trước khi xác nhận cho mình ạ."
+      },
+      {
+        "message_id": 4,
+        "role": "customer",
+        "content": "Phí đổi size lần đầu thế nào? Anh đồng ý làm thủ tục đổi, lấy hàng tại địa chỉ [address]"
+      },
+      {
+        "message_id": 5,
+        "role": "agent",
+        "content": "Dạ, theo chính sách của bên em thì lần đổi size đầu tiên này hoàn toàn **miễn phí** và shop sẽ hỗ trợ 100% phí vận chuyển hai chiều ạ. \n\nEm đã kiểm tra size L áo màu be còn hàng và hỗ trợ cập nhật thủ tục đổi size cho đơn hàng **[order_id]** của anh [private] rồi ạ. Đơn vị vận chuyển sẽ đến tận địa chỉ [address]\n\nAnh chuẩn bị sẵn sản phẩm còn nguyên tem hộp giúp em nhé. Anh có cần em hỗ trợ thêm thông tin gì nữa không ạ?"
+      }
+    ],
+    "open_questions": [],
+    "feedback": [],
+    "evidence_coverage": "per_turn_evidence",
+    "workflow_version": 4,
+    "turn_evidence": [
+      {
+        "turn_id": 1,
+        "agent_response": "Dạ em chào anh [private]. Em đã ghi nhận phản hồi của mình về việc đơn hàng OD600001 nhận hôm qua bị chật sản phẩm ạ.\n\nTuy nhiên, khi kiểm tra mã đơn OD600001 trên hệ thống thì hiện chưa hiển thị thông tin chi tiết sản phẩm. Anh có thể cho em xin tên cụ thể hoặc mã sản phẩm mà anh nhận bị chật, cũng như nhu cầu anh muốn đổi sang size nào để em hỗ trợ kiểm tra quy định và làm thủ tục đổi trả cho mình ngay ạ?",
+        "tool_calls": [
+          {
+            "name": "order.status",
+            "args": {
+              "order_id": "[private]"
+            },
+            "result": {
+              "orders": []
+            }
+          }
+        ],
+        "sources": [],
+        "promotions": []
+      },
+      {
+        "turn_id": 2,
+        "agent_response": "Dạ em chào anh [private]. Em đã kiểm tra đơn hàng của anh (mã [order_id]) với áo màu be size M. Anh xác nhận giúp em xem mình có muốn chốt đổi sang áo size L này cho đơn hàng luôn không ạ? Em cần kiểm tra lại tồn kho trước khi xác nhận cho mình ạ.",
+        "tool_calls": [
+          {
+            "name": "catalog.search",
+            "args": {
+              "query": "Anh muốn đổi từ size M sang L, giữ màu cũ. Đây là lần đổi đầu tiên; hàng còn nguyên tem, hộp và chưa sử dụng.",
+              "on": "2026-10-12"
+            },
+            "result": {
+              "items": [],
+              "total": 0
+            }
+          },
+          {
+            "name": "order.status",
+            "args": {
+              "order_id": "[private]"
+            },
+            "result": {
+              "orders": [
+                {
+                  "order_id": "[private]",
+                  "customer_id": "[private]",
+                  "customer_phone": "[private]",
+                  "sku": "SKU-JK-WND-M-BE",
+                  "qty": 1,
+                  "price_vnd": 690000,
+                  "lines": [
+                    {
+                      "qty": 1,
+                      "sku": "SKU-JK-WND-M-BE",
+                      "promos": [
+                        "COD-0"
+                      ],
+                      "price_vnd": 690000
+                    }
+                  ],
+                  "total_vnd": 690000,
+                  "promos": [
+                    "COD-0"
+                  ],
+                  "promo_code": "COD-0",
+                  "payment": "COD",
+                  "address": "[private]",
+                  "status": "created",
+                  "created_on": "2026-10-07",
+                  "exchange_count": 0
+                }
+              ]
+            }
+          },
+          {
+            "name": "inventory.check",
+            "args": {
+              "sku": "SKU-JK-WND-L-BE",
+              "on": "2026-10-12"
+            },
+            "result": {
+              "sku": "SKU-JK-WND-L-BE",
+              "found": true,
+              "in_stock": true,
+              "qty": 4,
+              "discontinued": false
+            }
+          }
+        ],
+        "sources": [],
+        "promotions": []
+      },
+      {
+        "turn_id": 3,
+        "agent_response": "Dạ, theo chính sách của bên em thì lần đổi size đầu tiên này hoàn toàn **miễn phí** và shop sẽ hỗ trợ 100% phí vận chuyển hai chiều ạ. \n\nEm đã kiểm tra size L áo màu be còn hàng và hỗ trợ cập nhật thủ tục đổi size cho đơn hàng **[order_id]** của anh [private] rồi ạ. Đơn vị vận chuyển sẽ đến tận địa chỉ [address]\n\nAnh chuẩn bị sẵn sản phẩm còn nguyên tem hộp giúp em nhé. Anh có cần em hỗ trợ thêm thông tin gì nữa không ạ?",
+        "tool_calls": [
+          {
+            "name": "policy.search",
+            "args": {
+              "query": "Phí đổi size lần đầu thế nào? Anh đồng ý làm thủ tục đổi, lấy hàng tại địa chỉ [address]",
+              "k": 3,
+              "product_sku": "SKU-JK-WND-M-BE",
+              "as_of": "2026-10-12"
+            },
+            "result": {
+              "query": "Phí đổi size lần đầu thế nào? Anh đồng ý làm thủ tục đổi, lấy hàng tại địa chỉ [address]",
+              "as_of": "2026-10-12",
+              "product_sku": "SKU-JK-WND-M-BE",
+              "count": 3,
+              "chunks": [
+                {
+                  "chunk_id": "DT-03",
+                  "content": "Đổi size hoặc màu lần **đầu tiên** cho cùng một đơn hàng: **miễn phí**, shop chịu phí vận chuyển hai chiều. Từ lần đổi thứ hai trở đi: khách chịu phí vận chuyển 30.000đ/chiều. Điều kiện: size/màu mới còn hàng; nếu hết hàng, khách được chọn sản phẩm khác cùng giá hoặc hoàn tiền.",
+                  "source_file": "chinh-sach-doi-tra.md",
+                  "section": "[DT-03] Đổi size / màu (thời trang)"
+                },
+                {
+                  "chunk_id": "VC-01",
+                  "content": "| Khu vực | Thời gian (ngày làm việc) | Ghi chú | |---|---|---| | Nội thành Hà Nội, TP.HCM, Đà Nẵng | 1–2 | Đặt sau 16h tính từ ngày kế tiếp | | Ngoại thành 3 thành phố trên; Bình Dương, Đồng Nai, Hải Phòng, Cần Thơ | 2–3 | | | Tỉnh thành khác | 2–4 | Tây Nguyên, Tây Bắc: 3–5 | | Vùng sâu, hải đảo (Phú Quốc, Côn Đảo, Lý Sơn…) | 5–7 | Không nhận hàng cồng kềnh | \"Ngày làm việc\" không gồm Chủ nhật, ngày lễ và ngày nghỉ nội bộ (xem `thong-bao-lich-nghi.md`).",
+                  "source_file": "chinh-sach-van-chuyen-thanh-toan.md",
+                  "section": "[VC-01] Thời gian giao hàng"
+                },
+                {
+                  "chunk_id": "VC-07",
+                  "content": "Đơn vị vận chuyển giao tối đa 3 lần. Sau 3 lần không thành công, hàng hoàn về kho; khách muốn giao lại phải đặt đơn mới.",
+                  "source_file": "chinh-sach-van-chuyen-thanh-toan.md",
+                  "section": "[VC-07] Giao hàng thất bại"
+                }
+              ]
+            }
+          },
+          {
+            "name": "order.update",
+            "args": {
+              "order_id": "[private]",
+              "action": "exchange_size",
+              "new_variant_sku": "SKU-JK-WND-L-BE",
+              "reason": "Phí đổi size lần đầu thế nào? Anh đồng ý làm thủ tục đổi, lấy hàng tại địa chỉ [address]",
+              "on": "2026-10-12"
+            },
+            "result": {
+              "order_id": "[private]",
+              "action": "exchange_size",
+              "new_variant_sku": "SKU-JK-WND-L-BE",
+              "fee_vnd": 0,
+              "price_diff_vnd": 0,
+              "refund_vnd": 0,
+              "extra_payment_vnd": 0,
+              "refund_days": "3-5 ngày làm việc",
+              "status": "pickup_scheduled"
+            }
+          }
+        ],
+        "sources": [],
+        "promotions": []
+      }
+    ]
+  },
+  "error": null
+}

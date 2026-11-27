@@ -1,0 +1,46 @@
+{
+  "id": "e9ddc8d9c6037aae4162f87400ea018bbdae6571576e789b23b5f57f7671f7b3",
+  "reason": "unsupported_claim",
+  "pattern": "Do not state an unverified claim as a fact.",
+  "status": "approved",
+  "scope": "general",
+  "mechanism": "knowledge_gap",
+  "criterion": "Do not state an unverified claim as a fact.",
+  "evidence_refs": [
+    {
+      "job_id": "b397c86dbec833591a56ff6cf0ab0b0c186ccc95fa8f28d3fbcc57f260cf9af4",
+      "message_id": 0,
+      "turn_id": 1,
+      "origin": "turn_detector"
+    }
+  ],
+  "assessment": "unsupported_by_evidence",
+  "report_ref": "b397c86dbec833591a56ff6cf0ab0b0c186ccc95fa8f28d3fbcc57f260cf9af4",
+  "lesson": {
+    "title": "Verify Product History Before Assuming Specific Items",
+    "when": "a customer refers to a item discussed in a previous interaction without naming the specific item or SKU",
+    "do": "ask the customer to confirm the exact product name or lookup the recorded interaction history before asserting a specific item",
+    "otherwise": "express uncertainty about which item was previously discussed instead of assuming a specific product or SKU",
+    "triggers": [
+      "gọi tiếp về món đã hỏi",
+      "khách hỏi lại món cũ",
+      "người nhà đã đồng ý món đã hỏi",
+      "customer calling back about previous item"
+    ],
+    "id": "4378a3bc2ed9d93d81e1f0b941f5ae9b0f974342b8d825335eea7b1d80fa1863",
+    "status": "approved",
+    "scope": "general",
+    "mechanism": "knowledge_gap",
+    "source_refs": [
+      {
+        "job_id": "b397c86dbec833591a56ff6cf0ab0b0c186ccc95fa8f28d3fbcc57f260cf9af4",
+        "message_id": 0,
+        "turn_id": 1,
+        "origin": "turn_detector"
+      }
+    ],
+    "version": 2
+  },
+  "lesson_path": "lessons\\approved\\4378a3bc2ed9d93d81e1f0b941f5ae9b0f974342b8d825335eea7b1d80fa1863.md",
+  "lesson_hash": "0e9d1a75ef41082568fd5fff3b0ccf1caf81a6b956960f4204772144d8c747b6"
+}

@@ -1,0 +1,91 @@
+{
+  "job_id": "61790e94c38f06f9c49abf49b6d39460eaaacf68feb9665b830be1d96c68a013",
+  "gaps": [
+    {
+      "id": "a45ad3e7ffa95b791a8700464d19d315f7bc63acc02435307172dded324e1e4f",
+      "status": "pending_remediation"
+    }
+  ],
+  "scope": "knowledge_gap_and_reflection_v1",
+  "evaluation_cases": [
+    {
+      "id": "5761a75e075ecc573f8019e412d2413820ab549a4c936bbf0a47b88045605db7",
+      "gap_id": "a45ad3e7ffa95b791a8700464d19d315f7bc63acc02435307172dded324e1e4f",
+      "turn_id": 1,
+      "question": "Tôi là [private], số điện thoại [private], đang nhắn qua Fanpage. Chị [private] đây, chị liên hệ lại chuyện hôm trước. Em nhắc đúng món của chị nhé, đừng lấy nhu cầu của mẹ.",
+      "reason": "unsupported_claim",
+      "criterion": "Answer the customer knowledge question completely using explicit, applicable source evidence. If the evidence is insufficient, acknowledge the remaining uncertainty without inventing facts, negative availability claims, alternative procedures or future commitments."
+    }
+  ],
+  "out_of_scope": [],
+  "issue_reviews": [
+    {
+      "job_id": "61790e94c38f06f9c49abf49b6d39460eaaacf68feb9665b830be1d96c68a013",
+      "message_id": 0,
+      "turn_id": 1,
+      "origin": "turn_detector",
+      "mechanism": "knowledge_gap",
+      "verified": true,
+      "claim": "Em nhớ lần trước chị em mình có trao đổi về sản phẩm **SKU-AP-X** (giá 4.890.000đ) dành riêng cho nhu cầu của chị.",
+      "assessment": "unsupported_by_evidence",
+      "evidence_paths": [],
+      "rejection": null,
+      "rejection_reasons": [],
+      "format_retry": true,
+      "verifier_output": {
+        "valid": true,
+        "issue_scope": "business_knowledge",
+        "claim": "Em nhớ lần trước chị em mình có trao đổi về sản phẩm **SKU-AP-X** (giá 4.890.000đ) dành riêng cho nhu cầu của chị.",
+        "assessment": "unsupported_by_evidence",
+        "evidence_paths": [],
+        "decision_reason": "The agent claimed a specific prior interaction history and SKU (SKU-AP-X at 4.890.000đ) for the customer, but there are no tool calls or sources providing evidence of past customer interactions or product details.",
+        "audit": {
+          "support_status": "not_established",
+          "coverage": "complete",
+          "checked_paths": [
+            "evidence.tool_calls",
+            "evidence.sources",
+            "evidence.promotions"
+          ]
+        }
+      },
+      "candidate_claim": "Em nhớ lần trước chị em mình có trao đổi về sản phẩm SKU-AP-X (giá 4.890.000đ) dành riêng cho nhu cầu của chị.",
+      "verification_basis": "evidence_inventory_audit",
+      "evidence_inventory": [
+        "evidence.tool_calls",
+        "evidence.sources",
+        "evidence.promotions"
+      ],
+      "lesson_status": "approved"
+    }
+  ],
+  "detector_error": null,
+  "guardrails": {
+    "version": "learning_guardrails_v1",
+    "input_findings": [],
+    "blocked_lessons": [],
+    "blocked_sources": []
+  },
+  "detection": {
+    "candidate_count": 1,
+    "open_question_count": 0,
+    "processed_count": 1,
+    "skipped_unmatched_question": 0,
+    "skipped_over_limit": 0,
+    "scan": {
+      "turns_available": 3,
+      "turns_scanned": 3,
+      "requests": 3,
+      "errors": [],
+      "schema_retries": 0,
+      "skipped_over_limit": 0
+    },
+    "alignment_rejections": []
+  },
+  "outcome": "gaps_processed",
+  "learning_duration_ms": 10809,
+  "learning_usage": {
+    "input_tokens": 6768,
+    "output_tokens": 588
+  }
+}

@@ -1,0 +1,122 @@
+[11/17/26 23:37:46] INFO     Processing request of type           server.py:733
+                             ListToolsRequest                                  
+[11/17/26 23:37:46] INFO     Processing request of type           server.py:733
+                             ListToolsRequest                                  
+[11/17/26 23:37:47] INFO     Processing request of type           server.py:733
+                             ListToolsRequest                                  
+Direct use of automatic function calling (AFC) in AsyncModels.generate_content is not recommended. Instead, we recommend to use AFC in AsyncChat.send_message. Similarly, direct use of AFC in AsyncModels.generate_content_stream is not recommended. Instead, we recommend to use AFC in AsyncChat.send_message_stream.
+[11/17/26 23:37:52] INFO     Processing request of type           server.py:733
+                             CallToolRequest                                   
+[11/17/26 23:38:12] INFO     Processing request of type           server.py:733
+                             CallToolRequest                                   
+[11/17/26 23:38:14] INFO     Processing request of type           server.py:733
+                             CallToolRequest                                   
+[11/17/26 23:38:36] INFO     Processing request of type           server.py:733
+                             CallToolRequest                                   
+[11/17/26 23:38:37] INFO     Describing index 'policy-telesale'  indexes.py:231
+[11/17/26 23:38:38] INFO     HTTP Request: GET                  _client.py:1025
+                             https://api.pinecone.io/indexes/po                
+                             licy-telesale "HTTP/1.1 200 OK"                   
+                    INFO     Index client created for host      __init__.py:195
+                             https://policy-telesale-kvtrojy.sv                
+                             c.aped-4627-b74a.pinecone.io                      
+                    INFO     Connected to Pinecone policy      knowledge.py:173
+                             index policy-telesale                             
+                    INFO     Searching namespace 'policy-prod' __init__.py:1490
+                             with top_k=20                                     
+[11/17/26 23:38:42] INFO     Processing request of type           server.py:733
+                             CallToolRequest                                   
+                    INFO     Searching namespace 'policy-prod' __init__.py:1490
+                             with top_k=20                                     
+Round 0: loaded 0 patterns from this round 0; lessons_loaded=False
+
+==================================================
+STARTING DEEP AGENT RUN: Chào shop, anh muốn xem Áo khoác gió Windbreak, size M, màu xanh navy, giá hiện tại có phải 690.000 đồng không?
+==================================================
+   -> Context: scope=turn, prompt_chars=1947, recent_messages=0, allowed_tools=['check_inventory', 'get_pricing_quote', 'search_catalog']
+   -> Model request estimate: ~2829 input tokens (system=4448 chars, messages=1947 chars, tools=2090 chars, visible_tools=3)
+   -> Model request estimate: ~3442 input tokens (system=4448 chars, messages=4609 chars, tools=1268 chars, visible_tools=2)
+   -> Model request estimate: ~3277 input tokens (system=4448 chars, messages=5012 chars, tools=371 chars, visible_tools=1)
+   -> Agent Response: Dạ em chào anh Huy. Dạ đúng rồi ạ, Áo khoác gió Windbreak size M màu xanh navy hiện tại có giá chính xác là 690.000 đồng ạ.
+
+Anh có muốn em kiểm tra tình trạng còn hàng hoặc tư vấn thêm thông tin gì về sản phẩm này không anh?
+
+DEEP AGENT RUN COMPLETED!
+==================================================
+
+
+==================================================
+STARTING DEEP AGENT RUN: Anh chỉ tham khảo, chưa đặt đơn. Khi quay lại anh sẽ hỏi thêm điều kiện đổi size.
+==================================================
+   -> Context: scope=turn, prompt_chars=2089, recent_messages=2, allowed_tools=[]
+   -> Model request estimate: ~2179 input tokens (system=4448 chars, messages=2089 chars, tools=0 chars, visible_tools=0)
+   -> Agent Response: Dạ em hiểu rồi ạ. Em đã ghi nhận lại thông tin anh Huy cần tư vấn thêm về điều kiện đổi size cho đợt sau. Khi nào rảnh anh cứ gọi lại cho bên em nhé. Em cảm ơn và chúc anh một ngày vui vẻ ạ!
+
+DEEP AGENT RUN COMPLETED!
+==================================================
+
+
+==================================================
+STARTING DEEP AGENT RUN: Em ghi nhớ giúp sản phẩm này để lần sau mình không phải nói lại nhé.
+==================================================
+   -> Context: scope=turn, prompt_chars=1839, recent_messages=2, allowed_tools=[]
+   -> Model request estimate: ~2096 input tokens (system=4448 chars, messages=1839 chars, tools=0 chars, visible_tools=0)
+   -> Agent Response: Dạ em đã ghi nhớ thông tin áo khoác Navy size M (SKU-JK-WND-M-NAVY) mà anh Huy đang quan tâm rồi ạ. Khi nào anh gọi lại, em sẽ hỗ trợ anh ngay về điều kiện đổi size nhé. Em cảm ơn anh Huy nhiều ạ!
+
+DEEP AGENT RUN COMPLETED!
+==================================================
+
+SC-032/call_1: job=done, changed=0; D:\DOCUMENT\School\SUDO\sudo_code_2026-group_9\outputs\self-agent\coverage30\20261117-232137\round0\workers\SC-032\SC-032-call_1.json
+
+==================================================
+STARTING DEEP AGENT RUN: Anh liên hệ lại theo lịch, vẫn đang cân nhắc món đã hỏi.
+==================================================
+   -> Context: scope=turn, prompt_chars=1510, recent_messages=0, allowed_tools=[]
+   -> Model request estimate: ~1986 input tokens (system=4448 chars, messages=1510 chars, tools=0 chars, visible_tools=0)
+   -> Agent Response: Dạ em chào anh Huy, em gọi lại theo đúng lịch hẹn ạ. Lần trước anh có băn khoăn về điều kiện đổi size cho mẫu áo khoác (SKU-JK-WND-M-NAVY), hiện tại anh đã sẵn sàng chốt đơn hay cần em hỗ trợ thêm thông tin gì nữa không ạ?
+
+DEEP AGENT RUN COMPLETED!
+==================================================
+
+
+==================================================
+STARTING DEEP AGENT RUN: Nếu mua mới hôm nay thì được đổi trong 14 ngày và mất phí 20 nghìn phải không? Hình như đó là bài cũ.
+==================================================
+   -> Context: scope=turn, prompt_chars=3426, recent_messages=2, allowed_tools=['search_catalog']
+   -> Model request estimate: ~2899 input tokens (system=4448 chars, messages=3426 chars, tools=822 chars, visible_tools=1)
+   -> Agent Response: Dạ đúng rồi anh Huy, đó là quy định cũ ạ. Theo chính sách hiện hành áp dụng cho đơn hàng mua mới từ tháng 10/2026, thời gian đổi trả đã được điều chỉnh thành **7 ngày** kể từ khi nhận hàng. 
+
+Đặc biệt, nếu anh cần đổi size lần đầu thì bên em sẽ hỗ trợ **hoàn toàn miễn phí** (chính sách cũ có thu phí 20.000đ) anh nha. 
+
+Hiện tại mẫu áo khoác navy size M anh chọn đang có sẵn, anh có muốn em hỗ trợ chốt đơn giao về địa chỉ của mình luôn không ạ?
+
+DEEP AGENT RUN COMPLETED!
+==================================================
+
+
+==================================================
+STARTING DEEP AGENT RUN: Nếu hàng chưa dùng, còn tem hộp và đổi size lần đầu thì chính sách hiện tại thế nào?
+==================================================
+   -> Context: scope=turn, prompt_chars=3522, recent_messages=2, allowed_tools=[]
+   -> Model request estimate: ~2657 input tokens (system=4448 chars, messages=3522 chars, tools=0 chars, visible_tools=0)
+   -> Agent Response: Dạ anh Huy, theo chính sách hiện tại (áp dụng từ tháng 10/2026), sản phẩm còn nguyên tem hộp, chưa qua sử dụng và có hóa đơn/mã đơn hàng sẽ được hỗ trợ đổi trong vòng **7 ngày** kể từ khi nhận hàng. 
+
+Đặc biệt, nếu anh đổi size lần đầu cho cùng một đơn hàng thì bên em sẽ hỗ trợ **hoàn toàn miễn phí** và chịu phí vận chuyển hai chiều ạ (điều kiện là size mới còn hàng). 
+
+Anh có cần em hỗ trợ kiểm tra size hay lên đơn cho mình luôn không anh?
+
+DEEP AGENT RUN COMPLETED!
+==================================================
+
+
+==================================================
+STARTING DEEP AGENT RUN: Anh hiểu rồi, để xem thêm; chưa lên đơn và chưa hẹn gọi lại nhé.
+==================================================
+   -> Context: scope=turn, prompt_chars=1948, recent_messages=2, allowed_tools=[]
+   -> Model request estimate: ~2132 input tokens (system=4448 chars, messages=1948 chars, tools=0 chars, visible_tools=0)
+   -> Agent Response: Dạ em cảm ơn anh Huy. Anh cứ xem thêm thoải mái ạ. Khi nào anh cần hỗ trợ tư vấn hay đặt hàng thì cứ báo em nhé. Em chúc anh một ngày tốt lành!
+
+DEEP AGENT RUN COMPLETED!
+==================================================
+
+SC-032/call_2: job=done, changed=4; D:\DOCUMENT\School\SUDO\sudo_code_2026-group_9\outputs\self-agent\coverage30\20261117-232137\round0\workers\SC-032\SC-032-call_2.json

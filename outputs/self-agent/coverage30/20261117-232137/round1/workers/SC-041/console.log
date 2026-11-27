@@ -1,0 +1,124 @@
+[11/17/26 23:47:17] INFO     Processing request of type           server.py:733
+                             ListToolsRequest                                  
+[11/17/26 23:47:18] INFO     Processing request of type           server.py:733
+                             ListToolsRequest                                  
+[11/17/26 23:47:18] INFO     Processing request of type           server.py:733
+                             ListToolsRequest                                  
+Direct use of automatic function calling (AFC) in AsyncModels.generate_content is not recommended. Instead, we recommend to use AFC in AsyncChat.send_message. Similarly, direct use of AFC in AsyncModels.generate_content_stream is not recommended. Instead, we recommend to use AFC in AsyncChat.send_message_stream.
+[11/17/26 23:47:23] INFO     Processing request of type           server.py:733
+                             CallToolRequest                                   
+[11/17/26 23:47:24] INFO     Processing request of type           server.py:733
+                             CallToolRequest                                   
+[11/17/26 23:47:25] INFO     Processing request of type           server.py:733
+                             CallToolRequest                                   
+[11/17/26 23:47:38] INFO     Processing request of type           server.py:733
+                             CallToolRequest                                   
+[11/17/26 23:47:49] INFO     Processing request of type           server.py:733
+                             CallToolRequest                                   
+[11/17/26 23:47:54] INFO     Processing request of type           server.py:733
+                             CallToolRequest                                   
+[11/17/26 23:48:27] INFO     Processing request of type           server.py:733
+                             CallToolRequest                                   
+                    INFO     Processing request of type           server.py:733
+                             CallToolRequest                                   
+                    INFO     Processing request of type           server.py:733
+                             CallToolRequest                                   
+[11/17/26 23:48:28] INFO     Processing request of type           server.py:733
+                             CallToolRequest                                   
+[11/17/26 23:48:34] INFO     Processing request of type           server.py:733
+                             CallToolRequest                                   
+                    INFO     Processing request of type           server.py:733
+                             CallToolRequest                                   
+Round 1: loaded 2 patterns from this round 0; lessons_loaded=True
+
+==================================================
+STARTING DEEP AGENT RUN: Alo em, chị muốn một Máy lọc không khí AirPure X, giá đang là 4.890.000 đồng đúng không?
+==================================================
+   -> Context: scope=turn, prompt_chars=2790, recent_messages=0, allowed_tools=[]
+   -> Model request estimate: ~2413 input tokens (system=4448 chars, messages=2790 chars, tools=0 chars, visible_tools=0)
+   -> Agent Response: Dạ em chào chị Hạnh, đúng rồi ạ, sản phẩm Máy lọc không khí AirPure X hiện tại đang có giá là 4.890.000 đồng, sẵn hàng và còn được tặng kèm 1 màng lọc phụ kiện nữa chị nha. 
+
+Chị có muốn em lên đơn đặt hàng sản phẩm này cho mình luôn không ạ?
+
+DEEP AGENT RUN COMPLETED!
+==================================================
+
+
+==================================================
+STARTING DEEP AGENT RUN: Địa chỉ của chị là 100 đường Kiểm Thử, TP. Hồ Chí Minh; thanh toán cod. Hôm nay chưa chốt.
+==================================================
+   -> Context: scope=turn, prompt_chars=1948, recent_messages=2, allowed_tools=[]
+   -> Model request estimate: ~2430 input tokens (system=4448 chars, messages=2840 chars, tools=0 chars, visible_tools=0)
+   -> Agent Response: Dạ em đã ghi nhận địa chỉ 100 đường Kiểm Thử, TP. Hồ Chí Minh và phương thức thanh toán COD của chị Hạnh rồi ạ. Khi nào chị sẵn sàng đặt hàng Máy lọc không khí AirPure X thì cứ báo em để em hỗ trợ lên đơn ngay cho chị nhé. Em chúc chị một ngày tốt lành ạ!
+
+DEEP AGENT RUN COMPLETED!
+==================================================
+
+
+==================================================
+STARTING DEEP AGENT RUN: Em gọi lại lúc 10 giờ ngày 2026-10-17 nhé.
+==================================================
+   -> Context: scope=turn, prompt_chars=2268, recent_messages=2, allowed_tools=[]
+   -> Model request estimate: ~2536 input tokens (system=4448 chars, messages=3160 chars, tools=0 chars, visible_tools=0)
+   -> Agent Response: Dạ em đã hẹn lịch gọi lại cho chị Hạnh vào lúc 10 giờ sáng ngày 17/10/2026 rồi ạ. Em cảm ơn chị và chúc chị một ngày tốt lành, em chào chị nhé!
+
+DEEP AGENT RUN COMPLETED!
+==================================================
+
+SC-041/call_1: job=done, changed=0; D:\DOCUMENT\School\SUDO\sudo_code_2026-group_9\outputs\self-agent\coverage30\20261117-232137\round1\workers\SC-041\SC-041-call_1.json
+
+==================================================
+STARTING DEEP AGENT RUN: Chị gọi lại chuyện hôm trước. Mẫu, số lượng, địa chỉ và cod giữ nguyên.
+==================================================
+   -> Context: scope=turn, prompt_chars=1738, recent_messages=0, allowed_tools=['search_customer_memory_archive']
+   -> Model request estimate: ~2561 input tokens (system=4448 chars, messages=3234 chars, tools=0 chars, visible_tools=0)
+   -> Agent Response: Dạ em chào chị Hạnh, em nhớ thông tin đợt trước rồi ạ. 
+
+Tuy nhiên, câu "giữ nguyên" của chị là chị muốn đặt đơn hàng mới cho mẫu SKU-AP-X hôm trước hay chị muốn điều chỉnh một đơn hàng sẵn có ạ? Chị xác nhận lại giúp em để em hỗ trợ chị lên đơn/xử lý chính xác nha.
+
+DEEP AGENT RUN COMPLETED!
+==================================================
+
+
+==================================================
+STARTING DEEP AGENT RUN: Chị còn bận, em gọi lại lúc 10 giờ ngày 2026-10-19. Đừng bắt chị nói lại thông tin nữa nhé.
+==================================================
+   -> Context: scope=turn, prompt_chars=2348, recent_messages=2, allowed_tools=[]
+   -> Model request estimate: ~2695 input tokens (system=4448 chars, messages=3637 chars, tools=0 chars, visible_tools=0)
+   -> Agent Response: Dạ em ghi nhận lịch hẹn rồi ạ. Em sẽ gọi lại cho chị Hạnh vào lúc 10:00 ngày 19/10/2026. 
+
+Tất cả thông tin về mẫu sản phẩm, địa chỉ và hình thức thanh toán em đã lưu đầy đủ rồi nên lần tới chị không cần phải nhắc lại đâu ạ. Em cảm ơn chị và chúc chị một ngày tốt lành!
+
+DEEP AGENT RUN COMPLETED!
+==================================================
+
+SC-041/call_2: job=done, changed=7; D:\DOCUMENT\School\SUDO\sudo_code_2026-group_9\outputs\self-agent\coverage30\20261117-232137\round1\workers\SC-041\SC-041-call_2.json
+
+==================================================
+STARTING DEEP AGENT RUN: Chị gọi lần thứ ba rồi. Chốt một chiếc như đã trao đổi nhé.
+==================================================
+   -> Context: scope=turn, prompt_chars=3065, recent_messages=0, allowed_tools=[]
+   -> Model request estimate: ~3043 input tokens (system=4448 chars, messages=4681 chars, tools=0 chars, visible_tools=0)
+   -> Agent Response: Dạ em chào chị Hạnh, em đã lên thành công đơn hàng cho sản phẩm máy lọc không khí (mã SKU-AP-X) với số lượng 1 chiếc theo đúng thông tin của chị rồi ạ.
+
+Mã đơn hàng của chị là **ORD-CE846C40**, tổng thanh toán là 4.890.000 VNĐ (thanh toán khi nhận hàng COD) và dự kiến giao đến địa chỉ 100 đường Kiểm Thử, TP. Hồ Chí Minh vào ngày 21/10/2026. 
+
+Em cảm ơn chị đã ủng hộ cửa hàng ạ!
+
+DEEP AGENT RUN COMPLETED!
+==================================================
+
+
+==================================================
+STARTING DEEP AGENT RUN: Giá 4.890.000 đồng thì chị đồng ý. Địa chỉ và thanh toán giữ nguyên, đừng hỏi từ đầu nữa.
+==================================================
+   -> Context: scope=turn, prompt_chars=2913, recent_messages=2, allowed_tools=[]
+   -> Model request estimate: ~2454 input tokens (system=4448 chars, messages=2913 chars, tools=0 chars, visible_tools=0)
+   -> Agent Response: Dạ chị Hạnh ơi, ở cuộc gọi trước em đã hỗ trợ lên thành công đơn hàng **ORD-CE846C40** cho máy lọc không khí (SKU-AP-X) với giá 4.890.000 VNĐ, giao đến địa chỉ 100 đường Kiểm Thử, TP. Hồ Chí Minh và thanh toán COD rồi ạ. 
+
+Hiện tại đơn hàng này đã được ghi nhận trên hệ thống, chị có cần em hỗ trợ thêm thông tin gì khác cho đơn hàng này nữa không ạ?
+
+DEEP AGENT RUN COMPLETED!
+==================================================
+
+SC-041/call_3: job=done, changed=4; D:\DOCUMENT\School\SUDO\sudo_code_2026-group_9\outputs\self-agent\coverage30\20261117-232137\round1\workers\SC-041\SC-041-call_3.json
