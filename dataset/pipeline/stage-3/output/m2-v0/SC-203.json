@@ -1,0 +1,99 @@
+{
+  "scenario_id": "SC-234",
+  "level": "M2",
+  "persona": "khach_da_kenh_mau_thuan",
+  "hard_case": "conflicting_quotes",
+  "customer_phone": "0993186032",
+  "customer_name": "Đức",
+  "honorific": "anh",
+  "notes": "continue_across_channels",
+  "calls": {
+    "call_1": {
+      "channel": "chat_fanpage",
+      "channel_identity": "fb.đức.146",
+      "call_date": "2026-10-26",
+      "customer_turns": [
+        "Anh ơi, em đang cần mua bình sữa cho bé, có sản phẩm nào tốt không?",
+        "Bình sữa Pigeon PPSU 240ml, giá là hai trăm tám mươi chín ngàn, đúng không ạ?",
+        "Em xem lại hôm nay rồi, nếu có gì cần thêm, anh gọi lại cho em lúc mười giờ ngày hai mươi chín tháng mười nhé."
+      ],
+      "customer_goal": "Hỏi về sản phẩm và hẹn xem lại",
+      "facts_established": {
+        "product_advised": "SKU-MB-BOT",
+        "price_quoted_vnd": 289000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-MB-BOT",
+        "price_vnd": 289000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "scheduled_callback_at": "2026-10-29T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0993186032",
+          "callback_at": "2026-10-29T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0993186032",
+      "call_date": "2026-10-29",
+      "customer_turns": [
+        "Anh ơi, em vừa xem qua hai kênh rồi, giá khác nhau. Tại sao cái này 289, cái kia 989?",
+        "Em không hiểu, tại sao giá lại chênh lệch vậy? Đơn hàng của em đã đặt rồi, anh xem giúp.",
+        "Em chỉ chấp nhận giá 289 nếu có lý do hợp lý, không thì em xin rút đơn."
+      ],
+      "days_later": 3,
+      "customer_goal": "Đối chiếu mức giá đã báo qua hai kênh rồi chốt đơn",
+      "facts_established": {
+        "product_advised": "SKU-MB-BOT",
+        "price_quoted_vnd": 289000,
+        "payment": "COD",
+        "delivery_address": "82 Bà Huyện Thanh Quan, phường Nhiêu Lộc, TP. Hồ Chí Minh",
+        "order_status": "created",
+        "reported_price_vnd": 989000
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-MB-BOT",
+        "price_vnd": 289000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "estimated_delivery": "2026-10-31"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-MB-BOT",
+          "price_vnd": 289000
+        }
+      }
+    }
+  }
+}

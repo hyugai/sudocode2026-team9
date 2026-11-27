@@ -1,0 +1,102 @@
+{
+  "scenario_id": "SC-205",
+  "level": "M2",
+  "persona": "khach_so_gia",
+  "hard_case": null,
+  "customer_phone": "0990853801",
+  "customer_name": "Nhung",
+  "honorific": "chị",
+  "notes": "consider_and_decide",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0990853801",
+      "call_date": "2026-10-18",
+      "customer_turns": [
+        "Chị ơi, em đang so sánh giá với nơi khác rồi. Họ báo 6 triệu 170, rẻ hơn 220 nghìn.",
+        "Em muốn hỏi nếu có chương trình giảm giá nào không? Vì giá của chị đây cao hơn một chút.",
+        "Nếu không được giảm, em cũng không mua ngay đâu. Chị tư vấn cho em thêm về bảo hành hay quà tặng đi.",
+        "Em đang cân nhắc, nếu có gì tốt hơn thì chị báo lại nhé."
+      ],
+      "customer_goal": "So báo giá với nơi khác trước khi quyết định",
+      "facts_established": {
+        "product_advised": "SKU-BDL-AIR",
+        "price_quoted_vnd": 6390000,
+        "competitor_price_vnd": 6170000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-BDL-AIR",
+        "price_vnd": 6390000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "scheduled_callback_at": "2026-10-21T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0990853801",
+          "callback_at": "2026-10-21T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0990853801",
+      "call_date": "2026-10-21",
+      "customer_turns": [
+        "Chị ơi, hôm qua em xem lại báo giá, bên họ cũng không giảm. Em quyết định mua theo giá chị.",
+        "Em muốn đặt hàng combo AirPure Y + 2 màng lọc, giá 6 triệu 390.",
+        "Giao hàng đến số 68, Trần Nguyên Đán, Hải Phòng, thanh toán khi nhận hàng.",
+        "Chị ơi, em đang chờ xác nhận đơn nhé."
+      ],
+      "days_later": 3,
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-BDL-AIR",
+        "price_quoted_vnd": 6390000,
+        "payment": "COD",
+        "delivery_address": "Số 68, đường Trần Nguyên Đán, khu dân cư Bích Động Tân Tiến, phường Trần Hưng Đạo, Hải Phòng",
+        "order_status": "created"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "competitor_price_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-BDL-AIR",
+        "price_vnd": 6390000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "estimated_delivery": "2026-10-23"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-BDL-AIR",
+          "price_vnd": 6390000
+        }
+      }
+    }
+  }
+}

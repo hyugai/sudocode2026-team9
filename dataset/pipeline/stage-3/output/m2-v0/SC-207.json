@@ -1,0 +1,105 @@
+{
+  "scenario_id": "SC-238",
+  "level": "M2",
+  "persona": "khach_so_gia",
+  "hard_case": null,
+  "customer_phone": "0905154382",
+  "customer_name": "Thắng",
+  "honorific": "anh",
+  "notes": "continue_across_channels",
+  "calls": {
+    "call_1": {
+      "channel": "zalo_oa",
+      "channel_identity": "zalo_thắng86",
+      "call_date": "2026-10-30",
+      "customer_turns": [
+        "Anh ơi, em vừa so giá bên khác rồi, họ chỉ 1 triệu 870, em muốn anh cũng giảm cho 1 triệu 890 nhé.",
+        "Em xem sản phẩm này rồi, giá em thấy cũng hợp lý, nhưng nếu bên anh có gì ưu đãi thêm thì tốt hơn.",
+        "Hẹn anh gọi lại 10 giờ ngày 31 tháng 10 nhé, em sẽ đợi."
+      ],
+      "customer_goal": "So báo giá với nơi khác trước khi quyết định",
+      "facts_established": {
+        "product_advised": "SKU-AF-4L",
+        "price_quoted_vnd": 1890000,
+        "competitor_price_vnd": 1870000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-AF-4L",
+        "price_vnd": 1890000,
+        "in_stock": true,
+        "active_promos": [
+          "NAM-SHIP0",
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "NAM-SHIP0": "2026-11-05",
+          "COD-0": "2026-12-14"
+        },
+        "scheduled_callback_at": "2026-10-31T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0905154382",
+          "callback_at": "2026-10-31T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0905154382",
+      "call_date": "2026-10-31",
+      "customer_turns": [
+        "Anh ơi, em đã xem lại giá bên anh là 1 triệu 890, em đồng ý mua.",
+        "Giao hàng đến đường Phạm Hùng, phường Cái Răng, Cần Thơ đúng không anh?",
+        "Thanh toán khi nhận hàng thì được, em không cần trả trước.",
+        "Giao hàng nhanh nhất có thể nhé anh."
+      ],
+      "days_later": 1,
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-AF-4L",
+        "price_quoted_vnd": 1890000,
+        "payment": "COD",
+        "delivery_address": "Đường Phạm Hùng, phường Cái Răng, Cần Thơ",
+        "order_status": "created"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "competitor_price_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-AF-4L",
+        "price_vnd": 1890000,
+        "in_stock": true,
+        "active_promos": [
+          "NAM-SHIP0",
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "NAM-SHIP0": "2026-11-05",
+          "COD-0": "2026-12-14"
+        },
+        "estimated_delivery": "2026-11-03"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-AF-4L",
+          "price_vnd": 1890000
+        }
+      }
+    }
+  }
+}

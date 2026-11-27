@@ -1,0 +1,106 @@
+{
+  "scenario_id": "SC-231",
+  "level": "M2",
+  "persona": "khach_da_kenh_mau_thuan",
+  "hard_case": "conflicting_quotes",
+  "customer_phone": "0957990659",
+  "customer_name": "Bảo",
+  "honorific": "anh",
+  "notes": "continue_across_channels",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0957990659",
+      "call_date": "2026-10-23",
+      "customer_turns": [
+        "Anh chào ạ, em đang muốn hỏi về máy lọc không khí Xiaomi Smart 4 Lite.",
+        "Anh báo giá bao nhiêu vậy?",
+        "Giá hai triệu chín trăm chín mươi ngàn, đúng không ạ?",
+        "Em muốn xem lại, anh có thể gọi lại em lúc mười giờ ngày hai mươi bảy tháng mười được không ạ?"
+      ],
+      "customer_goal": "Hỏi về sản phẩm và hẹn xem lại",
+      "facts_established": {
+        "product_advised": "SKU-XM-4L",
+        "price_quoted_vnd": 2990000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-XM-4L",
+        "price_vnd": 2990000,
+        "in_stock": true,
+        "active_promos": [
+          "NAM-SHIP0",
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "NAM-SHIP0": "2026-11-05",
+          "COD-0": "2026-12-14"
+        },
+        "scheduled_callback_at": "2026-10-27T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0957990659",
+          "callback_at": "2026-10-27T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "chat_fanpage",
+      "channel_identity": "fb.bảo.320",
+      "call_date": "2026-10-27",
+      "customer_turns": [
+        "Anh ơi, em nhớ giá máy lọc không khí Xiaomi Smart 4 Lite là ba triệu ba trăm chín mươi ngàn, tại sao trên hotline lại là hai triệu chín trăm chín mươi?",
+        "Một kênh báo ba triệu ba trăm, một kênh báo hai triệu chín trăm. Anh có thể giải thích rõ không ạ?",
+        "Nếu giá hiện hành là hai triệu chín trăm chín mươi, thì anh có thể xin lỗi và giải thích lý do khuyến mãi không ạ?",
+        "Em đồng ý mua nếu được giá đúng như trên hotline, và giao hàng đến A8 Châu Thới.",
+        "Thanh toán khi nhận hàng, được không ạ?"
+      ],
+      "days_later": 4,
+      "customer_goal": "Đối chiếu mức giá đã báo qua hai kênh rồi chốt đơn",
+      "facts_established": {
+        "product_advised": "SKU-XM-4L",
+        "price_quoted_vnd": 2990000,
+        "payment": "COD",
+        "delivery_address": "A8 Châu Thới, phường Hòa Hưng, TP. Hồ Chí Minh",
+        "order_status": "created",
+        "reported_price_vnd": 3390000
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-XM-4L",
+        "price_vnd": 2990000,
+        "in_stock": true,
+        "active_promos": [
+          "NAM-SHIP0",
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "NAM-SHIP0": "2026-11-05",
+          "COD-0": "2026-12-14"
+        },
+        "estimated_delivery": "2026-10-29"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-XM-4L",
+          "price_vnd": 2990000
+        }
+      }
+    }
+  }
+}

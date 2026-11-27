@@ -1,0 +1,96 @@
+{
+  "scenario_id": "SC-331",
+  "level": "M2",
+  "persona": "khach_quay_lai_sau_8_thang",
+  "hard_case": "stale_address",
+  "customer_phone": "0976158464",
+  "customer_name": "Thu",
+  "honorific": "chị",
+  "notes": "resume_with_uncertain_identity_or_history",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0976158464",
+      "call_date": "2026-02-16",
+      "customer_turns": [
+        "Chị ơi, em nhớ là hồi trước em mua cái giày sneaker Urban Classic, giá tám trăm chín mươi nghìn, thanh toán khi nhận hàng.",
+        "À mà em không biết có đúng không nữa, hồi đó em mua lâu rồi, không nhớ rõ.",
+        "Chị giúp em check lại xem có còn hàng không, nếu còn thì em mua lại."
+      ],
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-SN-CAS",
+        "price_quoted_vnd": 890000,
+        "payment": "COD",
+        "delivery_address": "Số 242A, đường Lý Thánh Tông, phường Đồ Sơn, Hải Phòng",
+        "order_status": "created"
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-SN-CAS",
+        "price_vnd": 890000,
+        "in_stock": true,
+        "active_promos": [],
+        "expired_promos": [],
+        "promo_expiry_dates": {},
+        "estimated_delivery": "2026-02-18"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-SN-CAS",
+          "price_vnd": 890000
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0976158464",
+      "call_date": "2026-10-16",
+      "customer_turns": [
+        "Chị ơi, em nhớ là hồi trước em đặt giày ở số 242A, đường Lý Thánh Tông, Đồ Sơn, Hải Phòng.",
+        "Chị ơi, nhà mình ở đâu? À, em không nhớ rõ nữa, nhưng em nghĩ là số 242A, đường Lý Thánh Tông.",
+        "Chị kiểm tra lại giúp em với, nếu đúng thì em xác nhận luôn."
+      ],
+      "days_later": 242,
+      "customer_goal": "Xác nhận thông tin người nhận trước khi tra đơn cũ",
+      "facts_established": {},
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "payment",
+        "delivery_address",
+        "order_status"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-SN-CAS",
+        "price_vnd": 890000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        }
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.status",
+        "args_match": {
+          "order_id": "OD600001"
+        },
+        "must_say_any": [
+          "xác nhận",
+          "địa chỉ"
+        ]
+      }
+    }
+  }
+}

@@ -16,6 +16,7 @@ from types import SimpleNamespace
 STAGE = Path(__file__).resolve().parents[1]
 ROOT = STAGE.parent
 INPUT = STAGE / "input"
+DUPLICATE_REFERENCES = INPUT / "duplicate-references"
 sys.path[:0] = [str(STAGE / "src"), str(ROOT)]
 from blueprint_duplicates import blueprint_signature, is_duplicate_blueprint, read_blueprint_reference
 from common import BLUEPRINTS_FILE, CUSTOMERS_FILE, run_name
@@ -1291,7 +1292,7 @@ def m1_duplicate_references():
     runs = STAGE / "runs"
     versioned = [path for path in runs.glob(f"m1-*/{BLUEPRINTS_FILE}") if M1_RUN_NAME.fullmatch(path.parent.name)]
     archives = sorted([*versioned, *runs.glob(f"run-*/{BLUEPRINTS_FILE}"), *runs.glob(f"run_*/{BLUEPRINTS_FILE}")])
-    bundled = sorted((INPUT / "duplicate-references").glob("*.jsonl"))
+    bundled = sorted(DUPLICATE_REFERENCES.glob("*.jsonl"))
     return [path for path in (published, *archives, *bundled) if path.is_file()]
 
 
@@ -1307,8 +1308,14 @@ def build_dataset(tier: str, seed: int = 2026, crm_customers: list[dict] | None 
             raise ValueError("M2 generation uses the BTC CRM roster.")
         crm_customers = roster
         if m1_blueprints is None:
-            published = STAGE / "output" / BLUEPRINTS_FILE
-            m1_blueprints = published if published.is_file() else INPUT / "m1-blueprints.jsonl"
+            bundled = DUPLICATE_REFERENCES / "m1-blueprints.jsonl"
+            candidates = (
+                bundled,
+                STAGE / "output" / "m1" / BLUEPRINTS_FILE,
+                STAGE / "output" / BLUEPRINTS_FILE,
+                INPUT / "m1-blueprints.jsonl",
+            )
+            m1_blueprints = next((path for path in candidates if path.is_file()), bundled)
         if not m1_blueprints.is_file():
             raise ValueError(f"M1 blueprints are required for M2 generation: {m1_blueprints}")
         if duplicate_references is not None or synthetic:

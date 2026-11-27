@@ -1,0 +1,105 @@
+{
+  "scenario_id": "SC-233",
+  "level": "M2",
+  "persona": "khach_da_kenh_mau_thuan",
+  "hard_case": "conflicting_quotes",
+  "customer_phone": "0965237355",
+  "customer_name": "Xuân",
+  "honorific": "chị",
+  "notes": "continue_across_channels",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0965237355",
+      "call_date": "2026-10-25",
+      "customer_turns": [
+        "Chị ơi, em đang muốn hỏi về máy lọc không khí Samsung AX40 giá bao nhiêu vậy?",
+        "Giá sáu triệu bốn trăm chín mươi ngàn hả chị? Em nghĩ là cao quá nhỉ.",
+        "Chị có thể gọi lại cho em vào mười giờ ngày hai mươi bảy tháng mười được không?"
+      ],
+      "customer_goal": "Hỏi về sản phẩm và hẹn xem lại",
+      "facts_established": {
+        "product_advised": "SKU-SS-AX40",
+        "price_quoted_vnd": 6490000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-SS-AX40",
+        "price_vnd": 6490000,
+        "in_stock": true,
+        "active_promos": [
+          "NAM-SHIP0",
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "NAM-SHIP0": "2026-11-05",
+          "COD-0": "2026-12-14"
+        },
+        "scheduled_callback_at": "2026-10-27T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0965237355",
+          "callback_at": "2026-10-27T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "chat_fanpage",
+      "channel_identity": "fb.xuân.519",
+      "call_date": "2026-10-27",
+      "customer_turns": [
+        "Chị ơi, em vừa xem trên fanpage cũng thấy giá bảy triệu không trăm chín mươi ngàn, khác với giá chị báo hôm trước.",
+        "Em hỏi lại là có khuyến mãi gì không, hay tại sao giá khác nhau vậy?",
+        "Nếu không có lý do gì thì em không mua.",
+        "Giá sáu triệu bốn trăm chín mươi ngàn là đúng rồi, em mua.",
+        "Giao hàng tới Khu vực Thới Mỹ, phường Thới Long, Cần Thơ, thanh toán khi nhận hàng."
+      ],
+      "days_later": 2,
+      "customer_goal": "Đối chiếu mức giá đã báo qua hai kênh rồi chốt đơn",
+      "facts_established": {
+        "product_advised": "SKU-SS-AX40",
+        "price_quoted_vnd": 6490000,
+        "payment": "COD",
+        "delivery_address": "Khu vực Thới Mỹ, phường Thới Long, Cần Thơ",
+        "order_status": "created",
+        "reported_price_vnd": 7090000
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-SS-AX40",
+        "price_vnd": 6490000,
+        "in_stock": true,
+        "active_promos": [
+          "NAM-SHIP0",
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "NAM-SHIP0": "2026-11-05",
+          "COD-0": "2026-12-14"
+        },
+        "estimated_delivery": "2026-10-29"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-SS-AX40",
+          "price_vnd": 6490000
+        }
+      }
+    }
+  }
+}

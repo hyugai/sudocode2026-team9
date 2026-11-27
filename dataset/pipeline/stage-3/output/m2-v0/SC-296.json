@@ -1,0 +1,103 @@
+{
+  "scenario_id": "SC-338",
+  "level": "M2",
+  "persona": "khach_quay_lai_sau_8_thang",
+  "hard_case": "stale_address",
+  "customer_phone": "0924410646",
+  "customer_name": "Sơn",
+  "honorific": "anh",
+  "notes": "resume_with_uncertain_identity_or_history",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0924410646",
+      "call_date": "2026-02-23",
+      "customer_turns": [
+        "Anh hỏi lại là máy hút sữa điện đôi Spectra S1 đúng không?",
+        "Giá là bốn triệu hai trăm chín mươi nghìn, thanh toán khi nhận hàng.",
+        "Địa chỉ giao hàng là Số 126 Hàng Trống, Hà Nội.",
+        "Được rồi, anh cứ báo giá như vậy."
+      ],
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-MB-PUMP1",
+        "price_quoted_vnd": 4290000,
+        "payment": "COD",
+        "delivery_address": "Số 126 Hàng Trống, phường Hoàn Kiếm, Hà Nội",
+        "order_status": "created"
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-MB-PUMP1",
+        "price_vnd": 4290000,
+        "in_stock": true,
+        "active_promos": [],
+        "expired_promos": [],
+        "promo_expiry_dates": {},
+        "estimated_delivery": "2026-02-25"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-MB-PUMP1",
+          "price_vnd": 4290000
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0924410646",
+      "call_date": "2026-10-23",
+      "customer_turns": [
+        "Anh ơi, nhà mình ở đâu?",
+        "Bên em không lưu à?",
+        "Đúng là Số 126 Hàng Trống, Hoàn Kiếm.",
+        "Được rồi, em xác nhận."
+      ],
+      "days_later": 242,
+      "customer_goal": "Xác nhận thông tin người nhận trước khi tra đơn cũ",
+      "facts_established": {},
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "payment",
+        "delivery_address",
+        "order_status"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-MB-PUMP1",
+        "price_vnd": 4290000,
+        "in_stock": true,
+        "active_promos": [
+          "MOM-FREESHIP",
+          "COD-0"
+        ],
+        "expired_promos": [
+          "PUMP-GIFT"
+        ],
+        "promo_expiry_dates": {
+          "MOM-FREESHIP": "2026-11-29",
+          "COD-0": "2026-12-14",
+          "PUMP-GIFT": "2026-10-13"
+        }
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.status",
+        "args_match": {
+          "order_id": "OD600001"
+        },
+        "must_say_any": [
+          "xác nhận",
+          "địa chỉ"
+        ]
+      }
+    }
+  }
+}

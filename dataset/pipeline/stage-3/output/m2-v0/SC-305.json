@@ -1,0 +1,99 @@
+{
+  "scenario_id": "SC-348",
+  "level": "M2",
+  "persona": "khach_ngoai_pham_vi_chuyen_may",
+  "hard_case": "handoff",
+  "customer_phone": "0905218549",
+  "customer_name": "Linh",
+  "honorific": "chị",
+  "notes": "transfer_with_context",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0905218549",
+      "call_date": "2026-11-04",
+      "customer_turns": [
+        "Chị ơi, em đang tìm máy hâm sữa cho bé, có sản phẩm nào an toàn không ạ?",
+        "Chị tư vấn giúp em máy hâm sữa Fatz 4 chức năng được không ạ?",
+        "Giá sản phẩm là bao nhiêu ạ?",
+        "Em thấy giá 490 nghìn, có phải vậy không ạ?",
+        "Chị ơi, em muốn mua, nhưng chưa chắc. Chị có thể gọi lại em vào 10 giờ ngày 6 tháng 11 được không ạ?"
+      ],
+      "customer_goal": "Hỏi về sản phẩm và hẹn xem lại",
+      "facts_established": {
+        "product_advised": "SKU-MB-MON",
+        "price_quoted_vnd": 490000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-MB-MON",
+        "price_vnd": 490000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "scheduled_callback_at": "2026-11-06T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0905218549",
+          "callback_at": "2026-11-06T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0905218549",
+      "call_date": "2026-11-06",
+      "customer_turns": [
+        "Chị ơi, em muốn hỏi về an toàn sử dụng máy hâm sữa này khi không mua ở cửa hàng, có ảnh hưởng không ạ?",
+        "Chị có thể giải thích rõ hơn về quy trình sử dụng an toàn không ạ?",
+        "Chị ơi, em có thể nói chuyện với chuyên viên y tế được không ạ?",
+        "Em thấy chị có thể chuyển máy cho chuyên viên được không ạ?"
+      ],
+      "days_later": 2,
+      "customer_goal": "Hỏi về an toàn sử dụng ngoài phạm vi bán hàng và yêu cầu chuyên viên",
+      "facts_established": {},
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-MB-MON",
+        "price_vnd": 490000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        }
+      },
+      "expected_outcome": "chuyen_may",
+      "success_if": {
+        "tool_called": "handoff.transfer",
+        "args_match": {},
+        "brief_must_contain": [
+          "customer_phone",
+          "customer_name",
+          "escalation_reason",
+          "conversation_summary",
+          "product_advised",
+          "price_quoted_vnd",
+          "open_questions",
+          "next_action",
+          "generated_at"
+        ]
+      }
+    }
+  }
+}

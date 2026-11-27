@@ -1,0 +1,109 @@
+{
+  "scenario_id": "SC-243",
+  "level": "M2",
+  "persona": "khach_so_gia",
+  "hard_case": null,
+  "customer_phone": "0913301756",
+  "customer_name": "Vy",
+  "honorific": "chị",
+  "notes": "continue_across_channels",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0913301756",
+      "call_date": "2026-11-04",
+      "customer_turns": [
+        "Chị ơi, em vừa so giá với bên khác rồi, giá họ chỉ tám trăm bảy mươi ngàn thôi.",
+        "Chị có thể giảm được bao nhiêu không? Em muốn mua ngay mà giá phải hợp lý.",
+        "Màng lọc AirPure Pro mà chị báo giá chín trăm chín mươi ngàn, bên khác rẻ hơn mười hai nghìn.",
+        "Chị có thể ưu đãi em được không? Em đang cân nhắc mua.",
+        "Nếu không giảm, em sẽ xem bên khác."
+      ],
+      "customer_goal": "So báo giá với nơi khác trước khi quyết định",
+      "facts_established": {
+        "product_advised": "SKU-AP-FLT-P",
+        "price_quoted_vnd": 990000,
+        "competitor_price_vnd": 870000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-AP-FLT-P",
+        "price_vnd": 990000,
+        "in_stock": true,
+        "active_promos": [
+          "NAM-SHIP0",
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "NAM-SHIP0": "2026-11-05",
+          "COD-0": "2026-12-14"
+        },
+        "scheduled_callback_at": "2026-11-06T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0913301756",
+          "callback_at": "2026-11-06T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "zalo_oa",
+      "channel_identity": "zalo_vy79",
+      "call_date": "2026-11-06",
+      "customer_turns": [
+        "Chị ơi, em đã nghĩ kỹ rồi, giá chín trăm chín mươi ngàn em đồng ý.",
+        "Giao hàng đến 53A Trần Phú, Chợ Quán, em sẽ thanh toán khi nhận hàng.",
+        "Có bảo hành không chị? Em muốn đảm bảo chất lượng.",
+        "Nếu có quà tặng kèm thì tốt quá, em xin luôn.",
+        "Được rồi, em đặt hàng."
+      ],
+      "days_later": 2,
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-AP-FLT-P",
+        "price_quoted_vnd": 990000,
+        "payment": "COD",
+        "delivery_address": "53A Trần Phú, phường Chợ Quán, TP. Hồ Chí Minh",
+        "order_status": "created"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "competitor_price_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-AP-FLT-P",
+        "price_vnd": 990000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [
+          "NAM-SHIP0"
+        ],
+        "promo_expiry_dates": {
+          "NAM-SHIP0": "2026-11-05",
+          "COD-0": "2026-12-14"
+        },
+        "estimated_delivery": "2026-11-09"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-AP-FLT-P",
+          "price_vnd": 990000
+        }
+      }
+    }
+  }
+}

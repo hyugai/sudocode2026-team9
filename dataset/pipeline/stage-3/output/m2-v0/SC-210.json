@@ -1,0 +1,101 @@
+{
+  "scenario_id": "SC-242",
+  "level": "M2",
+  "persona": "khach_so_gia",
+  "hard_case": null,
+  "customer_phone": "0930976582",
+  "customer_name": "Cường",
+  "honorific": "anh",
+  "notes": "continue_across_channels",
+  "calls": {
+    "call_1": {
+      "channel": "zalo_oa",
+      "channel_identity": "zalo_cường76",
+      "call_date": "2026-11-03",
+      "customer_turns": [
+        "Anh ơi, em vừa so giá bên khác rồi, máy lọc không khí AirPure X bên họ chỉ 4,7 triệu thôi.",
+        "Bên anh có thể giảm được bao nhiêu không? Em muốn mua nhưng giá vẫn còn cao.",
+        "Nếu không giảm thì em xem lại sau.",
+        "Gọi lại em lúc 10h ngày 4/11 nhé."
+      ],
+      "customer_goal": "So báo giá với nơi khác trước khi quyết định",
+      "facts_established": {
+        "product_advised": "SKU-AP-X",
+        "price_quoted_vnd": 4890000,
+        "competitor_price_vnd": 4790000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-AP-X",
+        "price_vnd": 4890000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [
+          "GIFT-FILTER",
+          "AP-SEP"
+        ],
+        "promo_expiry_dates": {
+          "GIFT-FILTER": "2026-10-22",
+          "COD-0": "2026-12-14",
+          "AP-SEP": "2026-09-30"
+        },
+        "scheduled_callback_at": "2026-11-04T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0930976582",
+          "callback_at": "2026-11-04T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0930976582",
+      "call_date": "2026-11-04",
+      "customer_turns": [
+        "Anh ơi, hôm qua em xem lại giá, bên họ vẫn giữ nguyên 4,7 triệu.",
+        "Còn bên anh có thể giảm bớt không? Em đang cân nhắc.",
+        "Nếu không được thì em sẽ mua bên họ.",
+        "Mấy hôm sau em sẽ xem lại."
+      ],
+      "days_later": 1,
+      "customer_goal": "Xem lại báo giá và hoãn quyết định mua",
+      "facts_established": {
+        "product_advised": "SKU-AP-X"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "competitor_price_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-AP-X",
+        "price_vnd": 4890000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [
+          "GIFT-FILTER",
+          "AP-SEP"
+        ],
+        "promo_expiry_dates": {
+          "GIFT-FILTER": "2026-10-22",
+          "COD-0": "2026-12-14",
+          "AP-SEP": "2026-09-30"
+        }
+      },
+      "expected_outcome": "tu_choi",
+      "success_if": {
+        "tool_called": null,
+        "args_match": {}
+      }
+    }
+  }
+}

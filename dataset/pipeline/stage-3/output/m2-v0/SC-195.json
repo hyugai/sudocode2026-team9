@@ -1,0 +1,95 @@
+{
+  "scenario_id": "SC-225",
+  "level": "M2",
+  "persona": "khach_da_kenh_fb_hotline",
+  "hard_case": null,
+  "customer_phone": "0928144976",
+  "customer_name": "Trung",
+  "honorific": "anh",
+  "notes": "continue_across_channels",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0928144976",
+      "call_date": "2026-10-17",
+      "customer_turns": [
+        "Anh ơi, bên em có combo AirPure Y + 2 màng lọc không?",
+        "Giá bao nhiêu vậy anh?",
+        "Ôi 6 triệu 390, đc rồi. Anh ơi, em có thể xem lại sau không?",
+        "Gọi lại em lúc 10h ngày 19 nhé anh.",
+        "Cảm ơn anh!"
+      ],
+      "customer_goal": "Hỏi về sản phẩm và hẹn xem lại",
+      "facts_established": {
+        "product_advised": "SKU-BDL-AIR",
+        "price_quoted_vnd": 6390000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-BDL-AIR",
+        "price_vnd": 6390000,
+        "in_stock": true,
+        "active_promos": [
+          "NAM-SHIP0",
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "NAM-SHIP0": "2026-11-05",
+          "COD-0": "2026-12-14"
+        },
+        "scheduled_callback_at": "2026-10-19T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0928144976",
+          "callback_at": "2026-10-19T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "zalo_oa",
+      "channel_identity": "zalo_trung61",
+      "call_date": "2026-10-19",
+      "customer_turns": [
+        "Ko, anh ơi, em xem lại giá rồi.",
+        "Combo AirPure Y + 2 màng lọc, 6 triệu 390 đúng không?",
+        "Em nghĩ thêm chút, anh ơi.",
+        "Cảm ơn anh, mai em nhắn lại.",
+        "Chào anh!"
+      ],
+      "days_later": 2,
+      "customer_goal": "Xem lại báo giá và hoãn quyết định mua",
+      "facts_established": {
+        "product_advised": "SKU-BDL-AIR"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-BDL-AIR",
+        "price_vnd": 6390000,
+        "in_stock": true,
+        "active_promos": [
+          "NAM-SHIP0",
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "NAM-SHIP0": "2026-11-05",
+          "COD-0": "2026-12-14"
+        }
+      },
+      "expected_outcome": "tu_choi",
+      "success_if": {
+        "tool_called": null,
+        "args_match": {}
+      }
+    }
+  }
+}

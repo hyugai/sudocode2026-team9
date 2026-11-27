@@ -1,0 +1,104 @@
+{
+  "scenario_id": "SC-193",
+  "level": "M2",
+  "persona": "khach_do_du_hoi_nguoi_nha",
+  "hard_case": null,
+  "customer_phone": "0965384535",
+  "customer_name": "Tâm",
+  "honorific": "chị",
+  "notes": "consider_and_decide",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0965384535",
+      "call_date": "2026-10-27",
+      "customer_turns": [
+        "Chị ơi, em đang xem sản phẩm lọc nước trong ngân sách năm trăm nghìn.",
+        "Chị có thể giới thiệu bộ lõi lọc RO 1-2-3 không?",
+        "Giá là ba trăm chín mươi nghìn, đúng không ạ?",
+        "Chị cho em hỏi thêm với, em cần hỏi người nhà một chút.",
+        "Hẹn chị gọi lại lúc mười giờ ngày hai mươi tám tháng mười nhé."
+      ],
+      "customer_goal": "Xem sản phẩm trong ngân sách và hỏi ý kiến người nhà",
+      "facts_established": {
+        "product_advised": "SKU-WF-CORE",
+        "price_quoted_vnd": 390000,
+        "budget_vnd": 500000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-WF-CORE",
+        "price_vnd": 390000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "scheduled_callback_at": "2026-10-28T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0965384535",
+          "callback_at": "2026-10-28T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0965384535",
+      "call_date": "2026-10-28",
+      "customer_turns": [
+        "Chị ơi, em đã hỏi người nhà rồi, họ đồng ý.",
+        "Giá ba trăm chín mươi nghìn, thanh toán khi nhận hàng đúng không?",
+        "Địa chỉ giao hàng là 01 Lê Viết Lượng, Huế.",
+        "Chị xác nhận lại giúp em nhé.",
+        "Em đặt hàng rồi ạ."
+      ],
+      "days_later": 1,
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-WF-CORE",
+        "price_quoted_vnd": 390000,
+        "payment": "COD",
+        "delivery_address": "01 Lê Viết Lượng, Huế",
+        "order_status": "created"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "budget_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-WF-CORE",
+        "price_vnd": 390000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "estimated_delivery": "2026-10-30"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-WF-CORE",
+          "price_vnd": 390000
+        }
+      }
+    }
+  }
+}

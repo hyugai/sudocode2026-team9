@@ -1,0 +1,93 @@
+{
+  "scenario_id": "SC-190",
+  "level": "M2",
+  "persona": "khach_do_du_hoi_nguoi_nha",
+  "hard_case": null,
+  "customer_phone": "0979511174",
+  "customer_name": "Hiền",
+  "honorific": "chị",
+  "notes": "consider_and_decide",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0979511174",
+      "call_date": "2026-10-24",
+      "customer_turns": [
+        "Chị ơi, em đang xem màng lọc thay thế Xiaomi Smart 4, giá năm trăm chín mươi nghìn, em đang hỏi người nhà.",
+        "Chị có thể tư vấn thêm không? Em muốn xem thử.",
+        "Em đang để trong ngân sách một triệu năm trăm nghìn, nếu được thì mua.",
+        "Chị báo lại giá nhé, em sẽ hỏi người nhà.",
+        "Em sẽ gọi lại sau, nếu được thì mua."
+      ],
+      "customer_goal": "Xem sản phẩm trong ngân sách và hỏi ý kiến người nhà",
+      "facts_established": {
+        "product_advised": "SKU-XM-FLT",
+        "price_quoted_vnd": 590000,
+        "budget_vnd": 1500000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-XM-FLT",
+        "price_vnd": 590000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "scheduled_callback_at": "2026-10-27T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0979511174",
+          "callback_at": "2026-10-26T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0979511174",
+      "call_date": "2026-10-27",
+      "customer_turns": [
+        "Chị ơi, hôm trước chị nói rồi mà. Mình xem lại giá màng lọc thay thế Xiaomi Smart 4.",
+        "Giá năm trăm chín mươi nghìn, em không mua ngay.",
+        "Em đang suy nghĩ lại, có thể sẽ gọi lại sau.",
+        "Chị cho em hoãn nhé, em sẽ gọi lại khi quyết định.",
+        "Cảm ơn chị, em sẽ xem thêm."
+      ],
+      "days_later": 3,
+      "customer_goal": "Xem lại báo giá và hoãn quyết định mua",
+      "facts_established": {
+        "product_advised": "SKU-XM-FLT"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "budget_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-XM-FLT",
+        "price_vnd": 590000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        }
+      },
+      "expected_outcome": "tu_choi",
+      "success_if": {
+        "tool_called": null,
+        "args_match": {}
+      }
+    }
+  }
+}

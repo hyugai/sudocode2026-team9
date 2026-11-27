@@ -1,0 +1,94 @@
+{
+  "scenario_id": "SC-211",
+  "level": "M2",
+  "persona": "khach_hoi_nhieu_khong_mua",
+  "hard_case": null,
+  "customer_phone": "0979298416",
+  "customer_name": "Hương",
+  "honorific": "chị",
+  "notes": "consider_and_decide",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0979298416",
+      "call_date": "2026-10-24",
+      "customer_turns": [
+        "Chị ơi, em đang xem combo Spectra S1, máy hâm sữa Fatz và 50 túi trữ sữa. Em muốn hỏi là máy hâm sữa Fatz có thể hâm được bao nhiêu cốc một lần không?",
+        "Còn túi trữ sữa thì có loại nào là chống tràn không ạ? Em nghe nói có loại là dạng túi phẳng, có đúng không?",
+        "Giá em nghe là 4 triệu 790 nghìn, đúng không ạ? Em muốn xem lại cho chắc.",
+        "Chị có thể hướng dẫn em cách sử dụng máy Spectra S1 không ạ? Em chưa biết có cần cắm dây hay không.",
+        "Để xem thêm."
+      ],
+      "customer_goal": "Hỏi kỹ cách sử dụng và cân nhắc thêm trước khi mua",
+      "facts_established": {
+        "product_advised": "SKU-BDL-MOM",
+        "price_quoted_vnd": 4790000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-BDL-MOM",
+        "price_vnd": 4790000,
+        "in_stock": true,
+        "active_promos": [
+          "MOM-FREESHIP",
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "MOM-FREESHIP": "2026-11-29",
+          "COD-0": "2026-12-14"
+        },
+        "scheduled_callback_at": "2026-10-28T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0979298416",
+          "callback_at": "2026-10-28T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0979298416",
+      "call_date": "2026-10-28",
+      "customer_turns": [
+        "Chị ơi, em vẫn đang cân nhắc. Em muốn hỏi lại giá 4 triệu 790 nghìn có còn giữ nguyên không ạ?",
+        "Em thấy người ta bảo máy Spectra S1 có thể sử dụng được 3-4 năm, chị có biết chính xác không?",
+        "Chị có thể nói lại là combo này gồm Spectra S1, máy hâm Fatz và 50 túi trữ sữa đúng không ạ?",
+        "Em nghĩ em sẽ xem thêm đã. Cảm ơn chị."
+      ],
+      "days_later": 4,
+      "customer_goal": "Xem lại báo giá và hoãn quyết định mua",
+      "facts_established": {
+        "product_advised": "SKU-BDL-MOM"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-BDL-MOM",
+        "price_vnd": 4790000,
+        "in_stock": true,
+        "active_promos": [
+          "MOM-FREESHIP",
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "MOM-FREESHIP": "2026-11-29",
+          "COD-0": "2026-12-14"
+        }
+      },
+      "expected_outcome": "tu_choi",
+      "success_if": {
+        "tool_called": null,
+        "args_match": {}
+      }
+    }
+  }
+}

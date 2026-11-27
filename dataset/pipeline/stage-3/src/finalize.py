@@ -7,7 +7,7 @@ import runpy
 from tempfile import TemporaryDirectory
 
 from validate_and_split import (
-    LEGACY_PII_TOKEN, PII, SIMILARITY_LIMIT, below_minimum, call_map,
+    LEGACY_PII_TOKEN, MINIMUMS, PII, SIMILARITY_LIMIT, below_minimum, call_map,
     check_evaluator, deduplicate, normalize, numbered_scenarios, read_json,
     stats_for, strings, write_json, write_jsonl,
 )
@@ -20,7 +20,10 @@ SESSION_FIELDS = (
     "facts_established", "must_carry_over", "must_not_ask", "ground_truth_facts",
     "memory_expectation", "expected_outcome", "success_if",
 )
-STREET = re.compile(r"\b\d+[a-z]?(?:/\d+)*\s+(?:duong|pho|ngo|hem|ngach)\s+[^\n,;.?!]+")
+STREET = re.compile(
+    r"\b(?P<number>\d+[a-z]?(?:/\d+)*)(?:\s*,\s*|\s+)"
+    r"(?P<street>(?:duong|pho|ngo|hem|ngach)\s+[^\n,;.?!]+)"
+)
 
 
 def read_jsonl(path):
@@ -68,8 +71,10 @@ def phone_key(value):
 
 def street_keys(value):
     for match in STREET.finditer(normalize(value)):
+        number = re.sub(r"\b0+(?=\d)", "", match["number"])
         # Vietnamese turns can say "ngõ 282 Kim Giang" for "ngõ 282 đường Kim Giang".
-        yield " ".join(word for word in match[0].split() if word not in ("duong", "pho"))
+        words = [word for word in match["street"].split() if word not in ("duong", "pho")]
+        yield " ".join([number, *words])
 
 
 def privacy_findings(scenario, customer, crm, venues):
@@ -129,7 +134,7 @@ def export(output, scenarios, drops, audit, stats):
             raise
 
 
-def finalize(input_dir, output, *, btc_dir, venue_catalog, batch_size):
+def finalize(input_dir, output, *, btc_dir, venue_catalog, batch_size, allow_m2_multi_session_shortfall=False):
     if batch_size < 1:
         raise ValueError("BATCH_SIZE must be positive.")
     accepted = read_jsonl(input_dir / "transcripts.jsonl")
@@ -177,7 +182,14 @@ def finalize(input_dir, output, *, btc_dir, venue_catalog, batch_size):
     stats["channel_distribution"] = {
         CHANNELS[channel]: count for channel, count in stats["channel_distribution"].items()
     }
-    if failures := below_minimum(stats, tier):
+    failures = below_minimum(stats, tier)
+    if tier == "M2" and allow_m2_multi_session_shortfall and "multi_session_customers" in failures:
+        failures.remove("multi_session_customers")
+        _, minimum_customers, *_ = MINIMUMS[tier]
+        stats["deferred_minimums"] = {
+            "multi_session_customers": {"actual": stats["multi_session_customers"], "minimum": minimum_customers},
+        }
+    if failures:
         raise ValueError(f"{tier} minimums failed: {', '.join(failures)}. Privacy rejections: {len(rejected)}.")
     individual = [scenarios[row["scenario_id"]] for row in retained]
     evaluator = runpy.run_path(str(btc_dir / "BTC-cap-nhat-11-2026/eval/reference_eval.py"))
