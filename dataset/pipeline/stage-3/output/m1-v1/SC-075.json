@@ -1,0 +1,117 @@
+{
+  "scenario_id": "SC-081",
+  "level": "M1",
+  "persona": "khach_so_gia",
+  "hard_case": "expired_promo",
+  "customer_phone": "0992298369",
+  "customer_name": "Ngọc",
+  "honorific": "chị",
+  "notes": "return_after_price_or_stock_change",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0992298369",
+      "call_date": "2026-10-25",
+      "customer_turns": [
+        "Chị ơi, em đang xem giá bên khác chỉ một triệu năm trăm lẻ một nghìn đồng, mà bên chị lại cao hơn một triệu năm trăm hai mươi mốt nghìn.",
+        "Ưu đãi giảm 10% cũng chỉ còn một triệu năm trăm hai mươi mốt nghìn, đúng không chị?",
+        "Em muốn so sánh lại để có thể quyết định mua đúng giá nhất."
+      ],
+      "customer_goal": "So báo giá với nơi khác trước khi quyết định",
+      "facts_established": {
+        "product_advised": "SKU-SN-RUN2-38-TRANG",
+        "price_quoted_vnd": 1521000,
+        "promo_code": "RUN-10",
+        "promo_expiry": "2026-10-25",
+        "competitor_price_vnd": 1501000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN2-38-TRANG",
+        "price_vnd": 1521000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0",
+          "RUN-10"
+        ],
+        "expired_promos": [
+          "RUN2-SALE"
+        ],
+        "promo_expiry_dates": {
+          "RUN-10": "2026-10-25",
+          "COD-0": "2026-12-14",
+          "RUN2-SALE": "2026-10-07"
+        },
+        "scheduled_callback_at": "2026-10-27T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0992298369",
+          "callback_at": "2026-10-26T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0992298369",
+      "call_date": "2026-10-27",
+      "customer_turns": [
+        "Chị ơi, em đã xem lại giá bên họ cũng chỉ một triệu sáu trăm bảy mươi nghìn, mà bên chị lại một triệu sáu trăm chín mươi nghìn.",
+        "Chị có thể giảm thêm được không? Em muốn mua sản phẩm này thật.",
+        "Em thấy giá bên họ cũng tương đương, nếu chị có thể ưu đãi thêm thì em sẽ đặt ngay.",
+        "Vậy nếu chị không giảm, em sẽ phải chọn bên họ rồi.",
+        "Chị giúp em với, em thật sự cần sản phẩm này."
+      ],
+      "days_later": 2,
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-SN-RUN2-38-TRANG",
+        "price_quoted_vnd": 1690000,
+        "payment": "COD",
+        "delivery_address": "Số 503 đường Trần Cao Vân, phường Thanh Khê, Đà Nẵng",
+        "order_status": "created",
+        "competitor_price_vnd": 1670000
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "promo_code",
+        "promo_expiry",
+        "competitor_price_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN2-38-TRANG",
+        "price_vnd": 1690000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [
+          "RUN-10",
+          "RUN2-SALE"
+        ],
+        "promo_expiry_dates": {
+          "RUN-10": "2026-10-25",
+          "COD-0": "2026-12-14",
+          "RUN2-SALE": "2026-10-07"
+        },
+        "estimated_delivery": "2026-10-29"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-SN-RUN2-38-TRANG",
+          "price_vnd": 1690000
+        }
+      }
+    }
+  }
+}

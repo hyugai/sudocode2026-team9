@@ -1,0 +1,96 @@
+{
+  "scenario_id": "SC-180",
+  "level": "M1",
+  "persona": "khach_hoi_ngoai_tai_lieu",
+  "hard_case": "handoff",
+  "customer_phone": "0980737028",
+  "customer_name": "Mai",
+  "honorific": "chị",
+  "notes": "transfer_with_context",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0980737028",
+      "call_date": "2026-10-26",
+      "customer_turns": [
+        "Chị ơi, em đang xem giày sneaker Urban Classic màu đen size bốn mươi mốt, giá tám trăm chín mươi ngàn đồng đúng không?",
+        "Chị cho em hỏi chất liệu của nó là gì vậy? Em thấy trong tài liệu không có thông tin rõ ràng.",
+        "Em muốn hẹn chị gọi lại cho em lúc mười giờ ngày hai mươi tám tháng mười được không?"
+      ],
+      "customer_goal": "Hỏi về sản phẩm và hẹn xem lại",
+      "facts_established": {
+        "product_advised": "SKU-SN-CAS-41-DEN",
+        "price_quoted_vnd": 890000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-SN-CAS-41-DEN",
+        "price_vnd": 890000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "scheduled_callback_at": "2026-10-28T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0980737028",
+          "callback_at": "2026-10-28T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0980737028",
+      "call_date": "2026-10-28",
+      "customer_turns": [
+        "Chị ơi, em muốn hỏi lại về chất liệu của giày Urban Classic màu đen size bốn mươi mốt.",
+        "Em đã hỏi trước đó nhưng chưa rõ. Chị có thể cho em biết chính xác chất liệu là gì không?",
+        "Chị ơi, nếu chị chưa có thông tin thì em xin phép được chuyển sang chuyên viên khác được không?"
+      ],
+      "days_later": 2,
+      "customer_goal": "Yêu cầu chuyên viên xác minh chi tiết chất liệu chưa có trong tài liệu",
+      "facts_established": {},
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-SN-CAS-41-DEN",
+        "price_vnd": 890000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        }
+      },
+      "expected_outcome": "chuyen_may",
+      "success_if": {
+        "tool_called": "handoff.transfer",
+        "args_match": {},
+        "brief_must_contain": [
+          "customer_phone",
+          "customer_name",
+          "escalation_reason",
+          "conversation_summary",
+          "product_advised",
+          "price_quoted_vnd",
+          "open_questions",
+          "next_action",
+          "generated_at"
+        ]
+      }
+    }
+  }
+}

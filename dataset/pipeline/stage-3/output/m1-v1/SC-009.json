@@ -1,0 +1,105 @@
+{
+  "scenario_id": "SC-009",
+  "level": "M1",
+  "persona": "khach_do_du_hoi_nguoi_nha",
+  "hard_case": null,
+  "customer_phone": "0960454146",
+  "customer_name": "Kiên",
+  "honorific": "anh",
+  "notes": "consider_and_decide",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0960454146",
+      "call_date": "2026-10-23",
+      "customer_turns": [
+        "Chị ơi, em đang xem giày chạy bộ RunLite size 41 màu xám, giá một triệu một trăm sáu mươi mốt nghìn.",
+        "Em muốn hỏi ý kiến anh ấy xem có phù hợp không, ngân sách em chỉ có một triệu năm trăm nghìn.",
+        "Chị nói rồi mà, hôm trước em đã bảo rồi."
+      ],
+      "customer_goal": "Xem sản phẩm trong ngân sách và hỏi ý kiến người nhà",
+      "facts_established": {
+        "product_advised": "SKU-SN-RUN1-41-XAM",
+        "price_quoted_vnd": 1161000,
+        "budget_vnd": 1500000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN1-41-XAM",
+        "price_vnd": 1161000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0",
+          "RUN-10"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "RUN-10": "2026-10-25",
+          "COD-0": "2026-12-14"
+        },
+        "scheduled_callback_at": "2026-10-24T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0960454146",
+          "callback_at": "2026-10-24T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0960454146",
+      "call_date": "2026-10-24",
+      "customer_turns": [
+        "Chị ơi, anh ấy đồng ý mua rồi. Em muốn đặt hàng.",
+        "Giao hàng đến Đường ĐH2, thôn Thạch Nham Tây, xã Bà Nà, Đà Nẵng, thanh toán khi nhận.",
+        "Cảm ơn chị, em chốt đơn rồi."
+      ],
+      "days_later": 1,
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-SN-RUN1-41-XAM",
+        "price_quoted_vnd": 1161000,
+        "payment": "COD",
+        "delivery_address": "Đường ĐH2, thôn Thạch Nham Tây, xã Bà Nà, Đà Nẵng",
+        "order_status": "created",
+        "family_approved_purchase": true
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "budget_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN1-41-XAM",
+        "price_vnd": 1161000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0",
+          "RUN-10"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "RUN-10": "2026-10-25",
+          "COD-0": "2026-12-14"
+        },
+        "estimated_delivery": "2026-10-28"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-SN-RUN1-41-XAM",
+          "price_vnd": 1161000
+        }
+      }
+    }
+  }
+}

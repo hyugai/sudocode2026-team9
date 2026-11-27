@@ -1,0 +1,103 @@
+{
+  "scenario_id": "SC-043",
+  "level": "M1",
+  "persona": "khach_da_mua_doi_size",
+  "hard_case": null,
+  "customer_phone": "0980737028",
+  "customer_name": "Mai",
+  "honorific": "chị",
+  "notes": "continue_across_channels",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0980737028",
+      "call_date": "2026-10-15",
+      "customer_turns": [
+        "Chị ơi, em đã đặt đơn rồi ạ, là giày sneaker Urban Classic màu trắng size bốn mươi ba, giá chín trăm bốn mươi ngàn đồng, giao hàng tận nơi ở 531 Vĩnh Khánh.",
+        "Em muốn chốt đơn theo báo giá và điều kiện hiện hành luôn ạ, thanh toán khi nhận hàng.",
+        "Chị nhớ đơn em nhé, nếu hỏi lại mã đơn hay sản phẩm thì em hơi khó chịu đấy ạ."
+      ],
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-SN-CAS-43-TRANG",
+        "price_quoted_vnd": 940000,
+        "payment": "COD",
+        "delivery_address": "531 Vĩnh Khánh, phường Khánh Hội, TP. Hồ Chí Minh",
+        "order_status": "created"
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-SN-CAS-43-TRANG",
+        "price_vnd": 940000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "estimated_delivery": "2026-10-17"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-SN-CAS-43-TRANG",
+          "price_vnd": 940000
+        }
+      }
+    },
+    "call_2": {
+      "channel": "zalo_oa",
+      "channel_identity": "zalo_mai37",
+      "call_date": "2026-10-17",
+      "customer_turns": [
+        "Chị ơi, em nhận hàng rồi, nhưng size bốn mươi ba hơi chật, em muốn đổi sang size bốn mươi mốt ạ.",
+        "Em đã đặt đơn rồi mà, đừng hỏi lại mã đơn nữa, chị nhớ đơn em mà.",
+        "Giày sneaker Urban Classic màu trắng, em muốn đổi sang size bốn mươi mốt, chị hỗ trợ em nhé."
+      ],
+      "days_later": 2,
+      "customer_goal": "Đổi sang size khác sau khi nhận hàng",
+      "facts_established": {
+        "new_variant_sku": "SKU-SN-CAS-41-TRANG"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "payment",
+        "delivery_address",
+        "order_status"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-SN-CAS-43-TRANG",
+        "price_vnd": 940000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "replacement_in_stock": true,
+        "exchange_fee_vnd": 0,
+        "policy_reference": "DT-03"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.update",
+        "args_match": {
+          "order_id": "OD600001",
+          "action": "exchange_size",
+          "new_variant_sku": "SKU-SN-CAS-41-TRANG"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,159 @@
+{
+  "scenario_id": "SC-152",
+  "level": "M1",
+  "persona": "khach_goi_lan_3_het_kien_nhan",
+  "hard_case": "verify_order_identity",
+  "customer_phone": "0913301756",
+  "customer_name": "Vy",
+  "honorific": "chị",
+  "notes": "resume_with_uncertain_identity_or_history",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0913301756",
+      "call_date": "2026-10-19",
+      "customer_turns": [
+        "Chị ơi, em hỏi về giày chạy bộ RunLite hai Pro màu trắng size ba mươi tám.",
+        "Giá bao nhiêu vậy?",
+        "Gọi lại em vào mười giờ ngày hai mươi mốt tháng mười nhé."
+      ],
+      "customer_goal": "Hỏi về sản phẩm và hẹn xem lại",
+      "facts_established": {
+        "product_advised": "SKU-SN-RUN2-38-TRANG",
+        "price_quoted_vnd": 1521000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN2-38-TRANG",
+        "price_vnd": 1521000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0",
+          "RUN-10"
+        ],
+        "expired_promos": [
+          "RUN2-SALE"
+        ],
+        "promo_expiry_dates": {
+          "RUN-10": "2026-10-25",
+          "COD-0": "2026-12-14",
+          "RUN2-SALE": "2026-10-07"
+        },
+        "scheduled_callback_at": "2026-10-21T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0913301756",
+          "callback_at": "2026-10-21T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0913301756",
+      "call_date": "2026-10-21",
+      "customer_turns": [
+        "Em muốn chốt đơn rồi.",
+        "Giá một triệu năm trăm hai mươi mốt ngàn, thanh toán khi nhận hàng.",
+        "Giao đến 53A Trần Phú, phường Chợ Quán, TP. Hồ Chí Minh."
+      ],
+      "days_later": 2,
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-SN-RUN2-38-TRANG",
+        "price_quoted_vnd": 1521000,
+        "payment": "COD",
+        "delivery_address": "53A Trần Phú, phường Chợ Quán, TP. Hồ Chí Minh",
+        "order_status": "created"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN2-38-TRANG",
+        "price_vnd": 1521000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0",
+          "RUN-10"
+        ],
+        "expired_promos": [
+          "RUN2-SALE"
+        ],
+        "promo_expiry_dates": {
+          "RUN-10": "2026-10-25",
+          "COD-0": "2026-12-14",
+          "RUN2-SALE": "2026-10-07"
+        },
+        "estimated_delivery": "2026-10-23"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-SN-RUN2-38-TRANG",
+          "price_vnd": 1521000
+        }
+      }
+    },
+    "call_3": {
+      "channel": "hotline",
+      "channel_identity": "0913301756",
+      "call_date": "2026-10-22",
+      "customer_turns": [
+        "Chị ơi, thông tin người nhận đúng không?",
+        "Thôi khỏi."
+      ],
+      "days_later": 1,
+      "customer_goal": "Xác nhận thông tin người nhận trước khi tra đơn cũ",
+      "facts_established": {},
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "payment",
+        "delivery_address",
+        "order_status"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN2-38-TRANG",
+        "price_vnd": 1521000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0",
+          "RUN-10"
+        ],
+        "expired_promos": [
+          "RUN2-SALE"
+        ],
+        "promo_expiry_dates": {
+          "RUN-10": "2026-10-25",
+          "COD-0": "2026-12-14",
+          "RUN2-SALE": "2026-10-07"
+        }
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.status",
+        "args_match": {
+          "order_id": "OD600001"
+        },
+        "must_say_any": [
+          "xác nhận",
+          "địa chỉ"
+        ],
+        "max_agent_questions": 1
+      }
+    }
+  }
+}

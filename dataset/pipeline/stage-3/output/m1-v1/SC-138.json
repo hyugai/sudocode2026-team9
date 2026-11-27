@@ -1,0 +1,103 @@
+{
+  "scenario_id": "SC-155",
+  "level": "M1",
+  "persona": "khach_quay_lai_sau_8_thang",
+  "hard_case": "stale_address",
+  "customer_phone": "0992298369",
+  "customer_name": "Ngọc",
+  "honorific": "chị",
+  "notes": "resume_with_uncertain_identity_or_history",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0992298369",
+      "call_date": "2026-02-15",
+      "customer_turns": [
+        "Chị ơi, em nhớ là hồi tháng 2, em đã đặt cái giày chạy bộ RunLite hai Pro màu đen size bốn mươi.",
+        "Giá là một triệu sáu trăm chín mươi nghìn, thanh toán khi nhận hàng.",
+        "Địa chỉ giao là Số 503 đường Trần Cao Vân, Thanh Khê, Đà Nẵng.",
+        "Chị giúp em kiểm tra lại đơn xem còn được không ạ?"
+      ],
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-SN-RUN2-40-DEN",
+        "price_quoted_vnd": 1690000,
+        "payment": "COD",
+        "delivery_address": "Số 503 đường Trần Cao Vân, phường Thanh Khê, Đà Nẵng",
+        "order_status": "created"
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN2-40-DEN",
+        "price_vnd": 1690000,
+        "in_stock": true,
+        "active_promos": [],
+        "expired_promos": [],
+        "promo_expiry_dates": {},
+        "estimated_delivery": "2026-02-17"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-SN-RUN2-40-DEN",
+          "price_vnd": 1690000
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0992298369",
+      "call_date": "2026-10-15",
+      "customer_turns": [
+        "Chị ơi, em là khách cũ hồi tháng 2, em đặt giày chạy bộ màu đen size 40.",
+        "Địa chỉ giao là Số 503 Trần Cao Vân, em nhớ không sai.",
+        "Nhà mình ở đâu? Em không nhớ rõ nữa, chị kiểm tra lại giúp em được không?",
+        "Em thấy hôm trước chị hỏi rồi, nhưng em không nhớ rõ địa chỉ nữa."
+      ],
+      "days_later": 242,
+      "customer_goal": "Xác nhận thông tin người nhận trước khi tra đơn cũ",
+      "facts_established": {},
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "payment",
+        "delivery_address",
+        "order_status"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN2-40-DEN",
+        "price_vnd": 1521000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0",
+          "RUN-10"
+        ],
+        "expired_promos": [
+          "RUN2-SALE"
+        ],
+        "promo_expiry_dates": {
+          "RUN-10": "2026-10-25",
+          "COD-0": "2026-12-14",
+          "RUN2-SALE": "2026-10-07"
+        }
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.status",
+        "args_match": {
+          "order_id": "OD600001"
+        },
+        "must_say_any": [
+          "xác nhận",
+          "địa chỉ"
+        ]
+      }
+    }
+  }
+}

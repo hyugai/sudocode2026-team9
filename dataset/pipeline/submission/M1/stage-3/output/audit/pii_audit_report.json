@@ -1,0 +1,6 @@
+{
+  "scope": "synthetic_journeys",
+  "checked_journeys": 124,
+  "guardrail_violations": 0,
+  "rejected_journeys": []
+}

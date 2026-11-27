@@ -1,0 +1,102 @@
+{
+  "scenario_id": "SC-147",
+  "level": "M1",
+  "persona": "khach_da_mua_doi_size",
+  "hard_case": "verify_order_identity",
+  "customer_phone": "0965237355",
+  "customer_name": "Xuân",
+  "honorific": "chị",
+  "notes": "resume_with_uncertain_identity_or_history",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0965237355",
+      "call_date": "2026-11-04",
+      "customer_turns": [
+        "Chị ơi, em đã đặt cái giày sneaker Urban Classic màu đen size 43 rồi.",
+        "Giá chín trăm bốn mươi ngàn, thanh toán khi nhận hàng.",
+        "Giao đến Khu vực Thới Mỹ, phường Thới Long, Cần Thơ.",
+        "Chị nhớ đơn em chứ? Đừng hỏi em phải nói lại lần nữa."
+      ],
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-SN-CAS-43-DEN",
+        "price_quoted_vnd": 940000,
+        "payment": "COD",
+        "delivery_address": "Khu vực Thới Mỹ, phường Thới Long, Cần Thơ",
+        "order_status": "created"
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-SN-CAS-43-DEN",
+        "price_vnd": 940000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "estimated_delivery": "2026-11-06"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-SN-CAS-43-DEN",
+          "price_vnd": 940000
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0965237355",
+      "call_date": "2026-11-06",
+      "customer_turns": [
+        "Chị ơi, em hỏi lại là đơn của em có được xác nhận không?",
+        "Mình đã đặt rồi, không phải hỏi lại đâu.",
+        "Chị biết em là ai không? Đơn của em là ở Thới Long.",
+        "Nếu không nhớ thì em phải nói lại lần nữa rồi."
+      ],
+      "days_later": 2,
+      "customer_goal": "Xác nhận thông tin người nhận trước khi tra đơn cũ",
+      "facts_established": {},
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "payment",
+        "delivery_address",
+        "order_status"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-SN-CAS-43-DEN",
+        "price_vnd": 940000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        }
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.status",
+        "args_match": {
+          "order_id": "OD600001"
+        },
+        "must_say_any": [
+          "xác nhận",
+          "địa chỉ"
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,107 @@
+{
+  "scenario_id": "SC-168",
+  "level": "M1",
+  "persona": "khach_da_mua_doi_size",
+  "hard_case": "order_handoff",
+  "customer_phone": "0932568855",
+  "customer_name": "Lâm",
+  "honorific": "anh",
+  "notes": "transfer_with_context",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0932568855",
+      "call_date": "2026-11-04",
+      "customer_turns": [
+        "Anh ơi, em vừa xem sản phẩm Giày sneaker Urban Classic màu xám size bốn mươi hai, giá tám trăm chín mươi nghìn đồng, thanh toán khi nhận hàng.",
+        "Em muốn đặt hàng theo giá và điều kiện hiện hành, địa chỉ giao hàng là 01 Lý Nam Đế, phường Thành Công, Đắk Lắk.",
+        "Anh kiểm tra giúp em xem còn hàng không, nếu còn thì chốt đơn luôn nhé."
+      ],
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-SN-CAS-42-XAM",
+        "price_quoted_vnd": 890000,
+        "payment": "COD",
+        "delivery_address": "01 Lý Nam Đế, phường Thành Công, Đắk Lắk",
+        "order_status": "created"
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-SN-CAS-42-XAM",
+        "price_vnd": 890000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "estimated_delivery": "2026-11-06"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-SN-CAS-42-XAM",
+          "price_vnd": 890000
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0932568855",
+      "call_date": "2026-11-05",
+      "customer_turns": [
+        "Anh ơi, em muốn đổi size cho đơn vừa mua. Em đã đặt hàng size bốn mươi hai, nhưng lúc nhận hàng em thấy hơi chật.",
+        "Em có số đơn là 168, sản phẩm là Giày sneaker Urban Classic màu xám.",
+        "Anh xem giúp em được không? Nếu được thì đổi size lớn hơn một chút, em sẵn sàng nhận hàng thêm lần nữa."
+      ],
+      "days_later": 1,
+      "customer_goal": "Nhờ chuyên viên xử lý ngoại lệ đổi size cho đơn đã mua",
+      "facts_established": {
+        "order_id": "OD600001"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "payment",
+        "delivery_address",
+        "order_status"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-SN-CAS-42-XAM",
+        "price_vnd": 890000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        }
+      },
+      "expected_outcome": "chuyen_may",
+      "success_if": {
+        "tool_called": "handoff.transfer",
+        "args_match": {},
+        "brief_must_contain": [
+          "customer_phone",
+          "customer_name",
+          "escalation_reason",
+          "conversation_summary",
+          "product_advised",
+          "price_quoted_vnd",
+          "open_questions",
+          "next_action",
+          "generated_at"
+        ]
+      }
+    }
+  }
+}

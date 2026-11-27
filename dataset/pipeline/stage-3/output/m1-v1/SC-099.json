@@ -1,0 +1,100 @@
+{
+  "scenario_id": "SC-108",
+  "level": "M1",
+  "persona": "khach_so_gia",
+  "hard_case": null,
+  "customer_phone": "0925877188",
+  "customer_name": "Huy",
+  "honorific": "anh",
+  "notes": "return_for_post_purchase_support",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0925877188",
+      "call_date": "2026-10-17",
+      "customer_turns": [
+        "Anh ơi, em đang xem sản phẩm giày sneaker Urban Classic màu xám size bốn mươi hai, giá tám trăm chín mươi nghìn đồng, đúng không ạ?",
+        "Mà em thấy bên đối thủ bán cùng sản phẩm này chỉ tám trăm bảy mươi nghìn, anh có thể giảm được bao nhiêu không ạ?",
+        "Nếu anh không giảm, em sẽ mua bên họ, vì giá rẻ hơn.",
+        "Anh xem lại đi, nếu có ưu đãi nào thì em cũng sẵn sàng mua theo."
+      ],
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-SN-CAS-42-XAM",
+        "price_quoted_vnd": 890000,
+        "payment": "COD",
+        "delivery_address": "Số 486 đường Lê Văn Hiến, phường Ngũ Hành Sơn, Đà Nẵng",
+        "order_status": "created",
+        "competitor_price_vnd": 870000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-SN-CAS-42-XAM",
+        "price_vnd": 890000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "estimated_delivery": "2026-10-20"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-SN-CAS-42-XAM",
+          "price_vnd": 890000
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0925877188",
+      "call_date": "2026-10-18",
+      "customer_turns": [
+        "Anh ơi, em vừa đặt đơn hôm qua, anh kiểm tra giúp em xem đơn của em đã được xử lý chưa ạ?",
+        "Em mua giày sneaker Urban Classic màu xám size bốn mươi hai, giá tám trăm chín mươi nghìn đồng, giao đến số 486 đường Lê Văn Hiến, Đà Nẵng.",
+        "Anh xem lại giúp em, nếu đã giao hàng rồi thì em cũng không phiền.",
+        "Nếu còn xử lý, anh thông báo giúp em nhé."
+      ],
+      "days_later": 1,
+      "customer_goal": "Kiểm tra đơn đã mua",
+      "facts_established": {},
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "payment",
+        "delivery_address",
+        "order_status",
+        "competitor_price_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-SN-CAS-42-XAM",
+        "price_vnd": 890000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        }
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.status",
+        "args_match": {
+          "order_id": "OD600001"
+        }
+      }
+    }
+  }
+}

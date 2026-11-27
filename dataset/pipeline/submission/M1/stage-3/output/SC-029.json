@@ -1,0 +1,101 @@
+{
+  "scenario_id": "SC-037",
+  "level": "M1",
+  "persona": "khach_da_kenh_fb_hotline",
+  "hard_case": null,
+  "customer_phone": "0979298416",
+  "customer_name": "Hương",
+  "honorific": "chị",
+  "notes": "continue_across_channels",
+  "calls": {
+    "call_1": {
+      "channel": "zalo_oa",
+      "channel_identity": "zalo_hương95",
+      "call_date": "2026-10-30",
+      "customer_turns": [
+        "K, bn xem sp nồi chiên Lock&Lock 4L đc k? Đc 1.890k.",
+        "Mình đang xem, bn nhắn zalo cho mình xem lại nha.",
+        "Hẹn 10h ngày 2/11 nhé.",
+        "Cảm ơn nha."
+      ],
+      "customer_goal": "Hỏi về sản phẩm và hẹn xem lại",
+      "facts_established": {
+        "product_advised": "SKU-AF-4L",
+        "price_quoted_vnd": 1890000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-AF-4L",
+        "price_vnd": 1890000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "scheduled_callback_at": "2026-11-02T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0979298416",
+          "callback_at": "2026-11-02T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0979298416",
+      "call_date": "2026-11-02",
+      "customer_turns": [
+        "Chào chị, bên em có nhắn zalo hỏi về nồi chiên Lock&Lock 4L 1.890k.",
+        "Àa, bên em nhắn Facebook báo giá 1.890k rồi mà.",
+        "Chị ơi, mình muốn đặt 1 cái, thanh toán khi nhận hàng.",
+        "Giao đến số 1 ngõ 282 Kim Giang, Hà Nội.",
+        "Được rồi, mình chốt đơn."
+      ],
+      "days_later": 3,
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-AF-4L",
+        "price_quoted_vnd": 1890000,
+        "payment": "COD",
+        "delivery_address": "Số 1 ngõ 282 đường Kim Giang, phường Định Công, Hà Nội",
+        "order_status": "created"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-AF-4L",
+        "price_vnd": 1890000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "estimated_delivery": "2026-11-04"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-AF-4L",
+          "price_vnd": 1890000
+        }
+      }
+    }
+  }
+}

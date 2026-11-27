@@ -1,0 +1,137 @@
+{
+  "scenario_id": "SC-071",
+  "level": "M1",
+  "persona": "khach_da_kenh_mau_thuan",
+  "hard_case": "conflicting_quotes",
+  "customer_phone": "0928144976",
+  "customer_name": "Trung",
+  "honorific": "anh",
+  "notes": "continue_across_channels",
+  "calls": {
+    "call_1": {
+      "channel": "chat_fanpage",
+      "channel_identity": "fb.trung.122",
+      "call_date": "2026-10-22",
+      "customer_turns": [
+        "Anh xin hỏi về áo phao lông vũ Warmly màu xanh navy size XL được không?",
+        "Giá bao nhiêu vậy anh?",
+        "Hẹn anh gọi lại lúc mười giờ ngày hai mươi bảy tháng mười được không?"
+      ],
+      "customer_goal": "Hỏi về sản phẩm và hẹn xem lại",
+      "facts_established": {
+        "product_advised": "SKU-JK-DWN-XL-NAVY",
+        "price_quoted_vnd": 1530000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-JK-DWN-XL-NAVY",
+        "price_vnd": 1530000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "scheduled_callback_at": "2026-10-27T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0928144976",
+          "callback_at": "2026-10-26T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "zalo_oa",
+      "channel_identity": "zalo_trung61",
+      "call_date": "2026-10-27",
+      "customer_turns": [
+        "Anh ơi, em hỏi lại giá sản phẩm ở kênh khác là một triệu chín trăm ba mươi ngàn, sao ở đây lại khác?",
+        "Em không hiểu, tại sao giá lại chênh lệch như vậy?",
+        "Anh xin lỗi, em muốn hẹn lại để hỏi rõ hơn."
+      ],
+      "days_later": 5,
+      "customer_goal": "Hỏi về mức giá khác đã được báo qua kênh khác",
+      "facts_established": {
+        "reported_price_vnd": 1930000
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-JK-DWN-XL-NAVY",
+        "price_vnd": 1530000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        }
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": null,
+        "args_match": {}
+      }
+    },
+    "call_3": {
+      "channel": "hotline",
+      "channel_identity": "0928144976",
+      "call_date": "2026-10-28",
+      "customer_turns": [
+        "Anh ơi, em đã kiểm tra giá ở nơi khác, em muốn chốt đơn theo giá một triệu năm trăm ba mươi ngàn.",
+        "Anh có thể giải thích rõ lý do chênh lệch giá không?",
+        "Nếu anh xin lỗi và nói là do khuyến mãi theo thời điểm, em sẽ đồng ý.",
+        "Địa chỉ giao hàng là Đường Tôn Đức Thắng, phường Ô Môn, Cần Thơ.",
+        "Em sẽ thanh toán khi nhận hàng."
+      ],
+      "days_later": 1,
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-JK-DWN-XL-NAVY",
+        "price_quoted_vnd": 1530000,
+        "payment": "COD",
+        "delivery_address": "Đường Tôn Đức Thắng, phường Ô Môn, Cần Thơ",
+        "order_status": "created"
+      },
+      "must_carry_over": [
+        "reported_price_vnd",
+        "price_quoted_vnd"
+      ],
+      "must_not_ask": [],
+      "ground_truth_facts": {
+        "sku": "SKU-JK-DWN-XL-NAVY",
+        "price_vnd": 1530000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "estimated_delivery": "2026-10-30"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-JK-DWN-XL-NAVY",
+          "price_vnd": 1530000
+        }
+      }
+    }
+  }
+}

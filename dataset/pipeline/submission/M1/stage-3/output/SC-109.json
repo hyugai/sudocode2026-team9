@@ -1,0 +1,101 @@
+{
+  "scenario_id": "SC-124",
+  "level": "M1",
+  "persona": "hai_nguoi_chung_sdt",
+  "hard_case": "shared_phone",
+  "customer_phone": "0958421083",
+  "customer_name": "Dung",
+  "honorific": "chị",
+  "notes": "resume_with_uncertain_identity_or_history",
+  "calls": {
+    "call_1": {
+      "channel": "zalo_oa",
+      "channel_identity": "zalo_dung99",
+      "call_date": "2026-11-02",
+      "customer_turns": [
+        "Chị ơi, em đang tìm hiểu máy lọc không khí AirPure Pro, giá bao nhiêu vậy?",
+        "Cảm ơn chị, 7.990.000đ à. Em xem lại đã, nếu có gì thắc mắc em gọi lại.",
+        "Chị ơi, em muốn hẹn chị gọi lại vào 10 giờ ngày 3/11 được không?"
+      ],
+      "customer_goal": "Hỏi về sản phẩm và hẹn xem lại",
+      "facts_established": {
+        "product_advised": "SKU-AP-PRO",
+        "price_quoted_vnd": 7990000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-AP-PRO",
+        "price_vnd": 7990000,
+        "in_stock": true,
+        "active_promos": [
+          "NAM-SHIP0",
+          "COD-0"
+        ],
+        "expired_promos": [
+          "AIR-OCT"
+        ],
+        "promo_expiry_dates": {
+          "AIR-OCT": "2026-10-30",
+          "NAM-SHIP0": "2026-11-05",
+          "COD-0": "2026-12-14"
+        },
+        "scheduled_callback_at": "2026-11-03T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0958421083",
+          "callback_at": "2026-11-03T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0958421083",
+      "call_date": "2026-11-03",
+      "customer_turns": [
+        "Chị ơi, em là người dùng chung số này, chị nhớ không?",
+        "Chị ơi, em vừa nói chuyện với chị hôm qua về máy lọc không khí AirPure Pro, đúng không ạ?",
+        "Chị ơi, em muốn hẹn lại vào 10 giờ ngày 3/11 như đã nói, được không ạ?"
+      ],
+      "days_later": 1,
+      "customer_goal": "Xác nhận đúng người đang gọi trước khi dùng lịch sử",
+      "facts_established": {},
+      "must_carry_over": [],
+      "must_not_ask": [],
+      "ground_truth_facts": {
+        "sku": "SKU-AP-PRO",
+        "price_vnd": 7990000,
+        "in_stock": true,
+        "active_promos": [
+          "NAM-SHIP0",
+          "COD-0"
+        ],
+        "expired_promos": [
+          "AIR-OCT"
+        ],
+        "promo_expiry_dates": {
+          "AIR-OCT": "2026-10-30",
+          "NAM-SHIP0": "2026-11-05",
+          "COD-0": "2026-12-14"
+        }
+      },
+      "memory_expectation": {
+        "customer_id": "C035",
+        "must_not_write_to": "C034"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "crm.get_customer",
+        "args_match": {
+          "phone": "0958421083"
+        },
+        "must_say_any": [
+          "xác nhận",
+          "đang nói chuyện",
+          "đang trao đổi"
+        ]
+      }
+    }
+  }
+}

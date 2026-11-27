@@ -1,0 +1,101 @@
+{
+  "scenario_id": "SC-154",
+  "level": "M1",
+  "persona": "hai_nguoi_chung_sdt",
+  "hard_case": "shared_phone",
+  "customer_phone": "0958421083",
+  "customer_name": "Dung",
+  "honorific": "chị",
+  "notes": "resume_with_uncertain_identity_or_history",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0958421083",
+      "call_date": "2026-10-21",
+      "customer_turns": [
+        "Chào chị, em là Hằng, mẹ em muốn hỏi về giày chạy bộ RunLite hai Pro màu xám size ba mươi chín.",
+        "Giá là một triệu năm trăm hai mươi mốt ngàn đồng đúng không ạ?",
+        "Em muốn hẹn gọi lại vào mười giờ ngày hai mươi ba tháng mười, được không ạ?"
+      ],
+      "customer_goal": "Hỏi về sản phẩm và hẹn xem lại",
+      "facts_established": {
+        "product_advised": "SKU-SN-RUN2-39-XAM",
+        "price_quoted_vnd": 1521000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN2-39-XAM",
+        "price_vnd": 1521000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0",
+          "RUN-10"
+        ],
+        "expired_promos": [
+          "RUN2-SALE"
+        ],
+        "promo_expiry_dates": {
+          "RUN-10": "2026-10-25",
+          "COD-0": "2026-12-14",
+          "RUN2-SALE": "2026-10-07"
+        },
+        "scheduled_callback_at": "2026-10-23T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0958421083",
+          "callback_at": "2026-10-23T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0958421083",
+      "call_date": "2026-10-23",
+      "customer_turns": [
+        "Chào chị, em là Hằng đây. Chị nhớ không, hôm qua em gọi hỏi về giày chạy bộ RunLite hai Pro.",
+        "Chị có nhớ không ạ, em muốn hẹn lại vào mười giờ ngày hai mươi ba tháng mười.",
+        "Chị có chắc là đang nói với đúng người không ạ?"
+      ],
+      "days_later": 2,
+      "customer_goal": "Xác nhận đúng người đang gọi trước khi dùng lịch sử",
+      "facts_established": {},
+      "must_carry_over": [],
+      "must_not_ask": [],
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN2-39-XAM",
+        "price_vnd": 1521000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0",
+          "RUN-10"
+        ],
+        "expired_promos": [
+          "RUN2-SALE"
+        ],
+        "promo_expiry_dates": {
+          "RUN-10": "2026-10-25",
+          "COD-0": "2026-12-14",
+          "RUN2-SALE": "2026-10-07"
+        }
+      },
+      "memory_expectation": {
+        "customer_id": "C035",
+        "must_not_write_to": "C034"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "crm.get_customer",
+        "args_match": {
+          "phone": "0958421083"
+        },
+        "must_say_any": [
+          "xác nhận",
+          "đang nói chuyện",
+          "đang trao đổi"
+        ]
+      }
+    }
+  }
+}

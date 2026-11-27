@@ -1,0 +1,140 @@
+{
+  "scenario_id": "SC-133",
+  "level": "M1",
+  "persona": "khach_goi_lan_3_het_kien_nhan",
+  "hard_case": null,
+  "customer_phone": "0956517883",
+  "customer_name": "Thủy",
+  "honorific": "chị",
+  "notes": "return_for_post_purchase_support",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0956517883",
+      "call_date": "2026-10-21",
+      "customer_turns": [
+        "Chị ơi, em muốn hỏi về cái giày sneaker Urban Classic màu xám size bốn mươi.",
+        "Có bao nhiêu tiền vậy?",
+        "Hẹn em gọi lại lúc mười giờ ngày hai mươi bốn tháng mười được không?"
+      ],
+      "customer_goal": "Hỏi về sản phẩm và hẹn xem lại",
+      "facts_established": {
+        "product_advised": "SKU-SN-CAS-40-XAM",
+        "price_quoted_vnd": 890000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-SN-CAS-40-XAM",
+        "price_vnd": 890000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "scheduled_callback_at": "2026-10-24T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0956517883",
+          "callback_at": "2026-10-24T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0956517883",
+      "call_date": "2026-10-24",
+      "customer_turns": [
+        "Được rồi, em đặt mua cái giày đó. Thanh toán khi nhận hàng.",
+        "Giao đến 178 Phan Huy Chú, phường Khánh Xuân, Đắk Lắk.",
+        "Xong rồi đấy."
+      ],
+      "days_later": 3,
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-SN-CAS-40-XAM",
+        "price_quoted_vnd": 890000,
+        "payment": "COD",
+        "delivery_address": "178 Phan Huy Chú, phường Khánh Xuân, Đắk Lắk",
+        "order_status": "created"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-SN-CAS-40-XAM",
+        "price_vnd": 890000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "estimated_delivery": "2026-10-28"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-SN-CAS-40-XAM",
+          "price_vnd": 890000
+        }
+      }
+    },
+    "call_3": {
+      "channel": "hotline",
+      "channel_identity": "0956517883",
+      "call_date": "2026-10-25",
+      "customer_turns": [
+        "Đơn em đã đặt rồi đúng không?",
+        "Thôi khỏi."
+      ],
+      "days_later": 1,
+      "customer_goal": "Kiểm tra đơn đã mua",
+      "facts_established": {},
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "payment",
+        "delivery_address",
+        "order_status"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-SN-CAS-40-XAM",
+        "price_vnd": 890000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        }
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.status",
+        "args_match": {
+          "order_id": "OD600001"
+        },
+        "max_agent_questions": 1
+      }
+    }
+  }
+}

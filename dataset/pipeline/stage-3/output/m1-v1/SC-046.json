@@ -1,0 +1,105 @@
+{
+  "scenario_id": "SC-052",
+  "level": "M1",
+  "persona": "khach_da_kenh_fb_hotline",
+  "hard_case": null,
+  "customer_phone": "0913301756",
+  "customer_name": "Vy",
+  "honorific": "chị",
+  "notes": "continue_across_channels",
+  "calls": {
+    "call_1": {
+      "channel": "zalo_oa",
+      "channel_identity": "zalo_vy79",
+      "call_date": "2026-10-24",
+      "customer_turns": [
+        "K, bn cho mình hỏi sp giày chạy bộ RunLite size 40 màu trắng có còn không?",
+        "Đc rồi, giá bao nhiêu vậy?",
+        "Ừa, vậy mình xem lại sau. Mình nhắn FB hoặc Zalo rồi nhé.",
+        "Hẹn gọi lại 10h ngày 27/10 nhé."
+      ],
+      "customer_goal": "Hỏi về sản phẩm và hẹn xem lại",
+      "facts_established": {
+        "product_advised": "SKU-SN-RUN1-40-TRANG",
+        "price_quoted_vnd": 1161000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN1-40-TRANG",
+        "price_vnd": 1161000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0",
+          "RUN-10"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "RUN-10": "2026-10-25",
+          "COD-0": "2026-12-14"
+        },
+        "scheduled_callback_at": "2026-10-27T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0913301756",
+          "callback_at": "2026-10-26T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0913301756",
+      "call_date": "2026-10-27",
+      "customer_turns": [
+        "Chào chị, mình là khách hàng đã nhắn Zalo ngày 24/10 về giày RunLite size 40 màu trắng.",
+        "Chị đã báo giá 1.290.000, mình đồng ý. Mình muốn đặt.",
+        "Giao hàng đến 53A Trần Phú, Chợ Quán, HCM.",
+        "Thanh toán khi nhận hàng, được không chị?"
+      ],
+      "days_later": 3,
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-SN-RUN1-40-TRANG",
+        "price_quoted_vnd": 1290000,
+        "payment": "COD",
+        "delivery_address": "53A Trần Phú, phường Chợ Quán, TP. Hồ Chí Minh",
+        "order_status": "created"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN1-40-TRANG",
+        "price_vnd": 1290000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [
+          "RUN-10"
+        ],
+        "promo_expiry_dates": {
+          "RUN-10": "2026-10-25",
+          "COD-0": "2026-12-14"
+        },
+        "estimated_delivery": "2026-10-29"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-SN-RUN1-40-TRANG",
+          "price_vnd": 1290000
+        }
+      }
+    }
+  }
+}

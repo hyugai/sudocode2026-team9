@@ -1,0 +1,107 @@
+{
+  "scenario_id": "SC-169",
+  "level": "M1",
+  "persona": "khach_da_mua_doi_size",
+  "hard_case": "order_handoff",
+  "customer_phone": "0960161055",
+  "customer_name": "Thảo",
+  "honorific": "chị",
+  "notes": "transfer_with_context",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0960161055",
+      "call_date": "2026-10-15",
+      "customer_turns": [
+        "Chị ơi, em đã đặt giày sneaker Urban Classic màu xám size bốn mươi rồi, giá tám trăm chín mươi ngàn đồng, thanh toán khi nhận hàng.",
+        "Địa chỉ giao hàng là 92 Nguyễn Trãi, phường Bến Thành, TP. Hồ Chí Minh, chị nhớ nhé.",
+        "Em mong sớm được nhận hàng, cảm ơn chị."
+      ],
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-SN-CAS-40-XAM",
+        "price_quoted_vnd": 890000,
+        "payment": "COD",
+        "delivery_address": "92 Nguyễn Trãi, phường Bến Thành, TP. Hồ Chí Minh",
+        "order_status": "created"
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-SN-CAS-40-XAM",
+        "price_vnd": 890000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "estimated_delivery": "2026-10-17"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-SN-CAS-40-XAM",
+          "price_vnd": 890000
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0960161055",
+      "call_date": "2026-10-17",
+      "customer_turns": [
+        "Chị ơi, em gọi lại là vì muốn đổi size giày đó, em mua nhầm size lớn rồi.",
+        "Mã đơn của em là gì ấy nhỉ, em nhớ không rõ, chị hỏi lại đi.",
+        "Em không muốn mua thêm gì, chỉ muốn đổi size thôi. Chị giúp em nhé."
+      ],
+      "days_later": 2,
+      "customer_goal": "Nhờ chuyên viên xử lý ngoại lệ đổi size cho đơn đã mua",
+      "facts_established": {
+        "order_id": "OD600001"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "payment",
+        "delivery_address",
+        "order_status"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-SN-CAS-40-XAM",
+        "price_vnd": 890000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        }
+      },
+      "expected_outcome": "chuyen_may",
+      "success_if": {
+        "tool_called": "handoff.transfer",
+        "args_match": {},
+        "brief_must_contain": [
+          "customer_phone",
+          "customer_name",
+          "escalation_reason",
+          "conversation_summary",
+          "product_advised",
+          "price_quoted_vnd",
+          "open_questions",
+          "next_action",
+          "generated_at"
+        ]
+      }
+    }
+  }
+}
