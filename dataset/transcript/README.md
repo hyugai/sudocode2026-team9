@@ -60,7 +60,6 @@ Hai cột đầu theo trang 3, mục C.1 của *SUDO CODE 2026 - Đề Bài Dự
 
 ## Hạn chế
 
-- Giọng vùng miền thực tế của tệp WAV cần được kiểm tra riêng.
 - Tập M1 dùng 35 hồ sơ BTC, với 293/338 phiên hotline. Tập M2 dùng 50 hồ sơ BTC, với 304/344 phiên hotline. Nhật ký xuất M2 ghi rõ mức **50/60 khách đa phiên**.
 - Mỗi tier có hai phản hồi chấm vượt thang điểm và cần xem lại. TF-IDF đo độ giống nhau về từ vựng và có thể bỏ sót các cách diễn đạt tương đương về nghĩa. [Báo cáo M1](M1/README.md) · [Báo cáo M2](M2/README.md)
 
