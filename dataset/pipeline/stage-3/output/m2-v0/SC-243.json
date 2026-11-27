@@ -1,0 +1,132 @@
+{
+  "scenario_id": "SC-282",
+  "level": "M2",
+  "persona": "khach_mua_nhieu_mon",
+  "hard_case": "basket_restock",
+  "customer_phone": "0930048764",
+  "customer_name": "Hà",
+  "honorific": "chị",
+  "notes": "return_after_price_or_stock_change",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0930048764",
+      "call_date": "2026-10-18",
+      "customer_turns": [
+        "Chị ơi, em đang xem máy lọc không khí Xiaomi Smart 4 Pro, giá bao nhiêu vậy?",
+        "Chị ơi, giá năm triệu bốn trăm chín mươi nghìn, đúng không?",
+        "Em có để màng lọc thay thế AirPure X/Y vào giỏ luôn rồi, chị ạ.",
+        "Vì em định mua cả bộ, mà em cũng chưa biết khi nào có hàng.",
+        "Chị ơi, em có thể hẹn chị gọi lại lúc mười giờ ngày mười chín tháng mười không?"
+      ],
+      "customer_goal": "Hỏi về sản phẩm và hẹn xem lại",
+      "facts_established": {
+        "product_advised": "SKU-XM-4P",
+        "price_quoted_vnd": 5490000,
+        "basket_skus": [
+          "SKU-XM-4P",
+          "SKU-AP-FLT-X"
+        ]
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-XM-4P",
+        "price_vnd": 5490000,
+        "in_stock": false,
+        "active_promos": [
+          "COD-0",
+          "XM-COMBO"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "XM-COMBO": "2026-11-14",
+          "COD-0": "2026-12-14"
+        },
+        "restock_expected": "2026-10-19",
+        "scheduled_callback_at": "2026-10-19T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0930048764",
+          "callback_at": "2026-10-19T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0930048764",
+      "call_date": "2026-10-19",
+      "customer_turns": [
+        "Chị ơi, hôm nay có hàng rồi đúng không?",
+        "Em thấy máy lọc không khí Xiaomi Smart 4 Pro vẫn giá năm triệu bốn trăm chín mươi nghìn, đúng không?",
+        "Còn màng lọc AirPure X/Y cũng vẫn còn trong giỏ, đúng không?",
+        "Em muốn đặt mua luôn, thanh toán khi nhận hàng nhé.",
+        "Địa chỉ em giao là số 17 và 19 Nguyễn Văn Trỗi, xã An Lão, Hải Phòng, chị ạ."
+      ],
+      "days_later": 1,
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-XM-4P",
+        "price_quoted_vnd": 5490000,
+        "payment": "COD",
+        "delivery_address": "Số 17 và 19 Nguyễn Văn Trỗi, xã An Lão, Hải Phòng",
+        "order_status": "created",
+        "basket_skus": [
+          "SKU-XM-4P",
+          "SKU-AP-FLT-X"
+        ],
+        "basket_total_vnd": 6180000
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "basket_skus"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-XM-4P",
+        "price_vnd": 5490000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0",
+          "XM-COMBO"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "XM-COMBO": "2026-11-14",
+          "COD-0": "2026-12-14"
+        },
+        "estimated_delivery": "2026-10-21",
+        "basket_lines": [
+          {
+            "sku": "SKU-XM-4P",
+            "qty": 1,
+            "price_vnd": 5490000
+          },
+          {
+            "sku": "SKU-AP-FLT-X",
+            "qty": 1,
+            "price_vnd": 690000
+          }
+        ]
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-XM-4P"
+        },
+        "also_ordered": [
+          "SKU-AP-FLT-X"
+        ],
+        "total_match_vnd": 6180000
+      }
+    }
+  }
+}

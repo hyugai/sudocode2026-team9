@@ -1,0 +1,108 @@
+{
+  "scenario_id": "SC-239",
+  "level": "M2",
+  "persona": "khach_so_gia",
+  "hard_case": null,
+  "customer_phone": "0911265844",
+  "customer_name": "Toàn",
+  "honorific": "anh",
+  "notes": "continue_across_channels",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0911265844",
+      "call_date": "2026-10-31",
+      "customer_turns": [
+        "Anh đang so sánh giá với bên khác rồi mới quyết định mua.",
+        "Bên họ báo 5 triệu 950 ngàn, anh có thể giảm bớt không?",
+        "Tôi cũng đang cân nhắc, nếu anh có ưu đãi gì thì báo tôi luôn.",
+        "Tôi sẽ gọi lại sau nếu có quyết định.",
+        "Gặp anh lúc 10 giờ ngày 2/11 nhé."
+      ],
+      "customer_goal": "So báo giá với nơi khác trước khi quyết định",
+      "facts_established": {
+        "product_advised": "SKU-WF-RO9",
+        "price_quoted_vnd": 5990000,
+        "competitor_price_vnd": 5950000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-WF-RO9",
+        "price_vnd": 5990000,
+        "in_stock": true,
+        "active_promos": [
+          "NAM-SHIP0",
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "NAM-SHIP0": "2026-11-05",
+          "COD-0": "2026-12-14"
+        },
+        "scheduled_callback_at": "2026-11-02T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0911265844",
+          "callback_at": "2026-11-02T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "chat_fanpage",
+      "channel_identity": "fb.toàn.855",
+      "call_date": "2026-11-02",
+      "customer_turns": [
+        "Tôi đã so sánh giá rồi, bên họ 5 triệu 950 ngàn, nhưng anh báo 5 triệu 990 ngàn.",
+        "Tôi thấy giá này cũng hợp lý, có gì ưu đãi không anh?",
+        "Giao hàng đến Cần Thơ, tôi sẽ thanh toán khi nhận hàng.",
+        "Được, tôi đặt hàng rồi. Giao hàng nhanh nhé.",
+        "Cảm ơn anh, nếu có gì thay đổi thì báo tôi."
+      ],
+      "days_later": 2,
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-WF-RO9",
+        "price_quoted_vnd": 5990000,
+        "payment": "COD",
+        "delivery_address": "Số 705 đường 3/2, phường An Bình, Cần Thơ",
+        "order_status": "created"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "competitor_price_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-WF-RO9",
+        "price_vnd": 5990000,
+        "in_stock": true,
+        "active_promos": [
+          "NAM-SHIP0",
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "NAM-SHIP0": "2026-11-05",
+          "COD-0": "2026-12-14"
+        },
+        "estimated_delivery": "2026-11-04"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-WF-RO9",
+          "price_vnd": 5990000
+        }
+      }
+    }
+  }
+}

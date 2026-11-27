@@ -1,0 +1,102 @@
+{
+  "scenario_id": "SC-252",
+  "level": "M2",
+  "persona": "khach_do_du_hoi_nguoi_nha",
+  "hard_case": null,
+  "customer_phone": "0979298416",
+  "customer_name": "Hương",
+  "honorific": "chị",
+  "notes": "continue_across_channels",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0979298416",
+      "call_date": "2026-10-23",
+      "customer_turns": [
+        "Chị ơi, em đang muốn xem máy hâm sữa Fatz 4 chức năng trong ngân sách một triệu đồng.",
+        "Chị báo giá bao nhiêu vậy?",
+        "Gửi em thông tin sản phẩm và cách thanh toán nhé.",
+        "Để em hỏi người nhà đã."
+      ],
+      "customer_goal": "Xem sản phẩm trong ngân sách và hỏi ý kiến người nhà",
+      "facts_established": {
+        "product_advised": "SKU-MB-MON",
+        "price_quoted_vnd": 490000,
+        "budget_vnd": 1000000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-MB-MON",
+        "price_vnd": 490000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "scheduled_callback_at": "2026-10-25T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0979298416",
+          "callback_at": "2026-10-25T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "zalo_oa",
+      "channel_identity": "zalo_hương95",
+      "call_date": "2026-10-25",
+      "customer_turns": [
+        "Chị ơi, hôm trước chị nói rồi mà, em đã hỏi người nhà rồi.",
+        "Giá bốn trăm chín mươi nghìn, em đồng ý.",
+        "Giao hàng đến số 1 ngõ 282 đường Kim Giang, Hà Nội.",
+        "Giao hàng khi nhận hàng nhé."
+      ],
+      "days_later": 2,
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-MB-MON",
+        "price_quoted_vnd": 490000,
+        "payment": "COD",
+        "delivery_address": "Số 1 ngõ 282 đường Kim Giang, phường Định Công, Hà Nội",
+        "order_status": "created"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "budget_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-MB-MON",
+        "price_vnd": 490000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "estimated_delivery": "2026-10-28"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-MB-MON",
+          "price_vnd": 490000
+        }
+      }
+    }
+  }
+}

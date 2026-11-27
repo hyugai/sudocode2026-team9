@@ -1,0 +1,110 @@
+{
+  "scenario_id": "SC-356",
+  "level": "M2",
+  "persona": "khach_ngoai_pham_vi_chuyen_may",
+  "hard_case": "handoff",
+  "customer_phone": "0957990659",
+  "customer_name": "Bảo",
+  "honorific": "anh",
+  "notes": "transfer_with_context",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0957990659",
+      "call_date": "2026-10-22",
+      "customer_turns": [
+        "Anh ơi, em đang tìm máy hút sữa cho mẹ em, có sản phẩm nào an toàn không?",
+        "Có cái máy hút sữa điện đôi Spectra S1 không ạ?",
+        "Giá cái máy đó là bao nhiêu vậy anh?",
+        "Em muốn mua, nhưng chưa biết liệu có an toàn không. Anh tư vấn giúp em nhé.",
+        "Anh báo giá em nghe, em xem lại rồi gọi lại anh nhé."
+      ],
+      "customer_goal": "Hỏi về sản phẩm và hẹn xem lại",
+      "facts_established": {
+        "product_advised": "SKU-MB-PUMP1",
+        "price_quoted_vnd": 4290000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-MB-PUMP1",
+        "price_vnd": 4290000,
+        "in_stock": true,
+        "active_promos": [
+          "MOM-FREESHIP",
+          "COD-0"
+        ],
+        "expired_promos": [
+          "PUMP-GIFT"
+        ],
+        "promo_expiry_dates": {
+          "MOM-FREESHIP": "2026-11-29",
+          "COD-0": "2026-12-14",
+          "PUMP-GIFT": "2026-10-13"
+        },
+        "scheduled_callback_at": "2026-10-24T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0957990659",
+          "callback_at": "2026-10-24T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0957990659",
+      "call_date": "2026-10-24",
+      "customer_turns": [
+        "Anh ơi, em vừa hỏi về máy hút sữa Spectra S1, giờ em muốn hỏi thêm về an toàn khi sử dụng ngoài phạm vi bán hàng.",
+        "Em nghe nói sản phẩm này có thể dùng ở ngoài, nhưng em không biết liệu có vấn đề gì không.",
+        "Anh có thể hướng dẫn em cách sử dụng an toàn không?",
+        "Em có thể nói chuyện với chuyên viên y tế được không?",
+        "Em thấy anh nói chuyện rất rõ ràng, nhưng em muốn hỏi thêm về an toàn. Em có thể được chuyển máy không ạ?"
+      ],
+      "days_later": 2,
+      "customer_goal": "Hỏi về an toàn sử dụng ngoài phạm vi bán hàng và yêu cầu chuyên viên",
+      "facts_established": {},
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-MB-PUMP1",
+        "price_vnd": 4290000,
+        "in_stock": true,
+        "active_promos": [
+          "MOM-FREESHIP",
+          "COD-0"
+        ],
+        "expired_promos": [
+          "PUMP-GIFT"
+        ],
+        "promo_expiry_dates": {
+          "MOM-FREESHIP": "2026-11-29",
+          "COD-0": "2026-12-14",
+          "PUMP-GIFT": "2026-10-13"
+        }
+      },
+      "expected_outcome": "chuyen_may",
+      "success_if": {
+        "tool_called": "handoff.transfer",
+        "args_match": {},
+        "brief_must_contain": [
+          "customer_phone",
+          "customer_name",
+          "escalation_reason",
+          "conversation_summary",
+          "product_advised",
+          "price_quoted_vnd",
+          "open_questions",
+          "next_action",
+          "generated_at"
+        ]
+      }
+    }
+  }
+}

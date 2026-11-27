@@ -1,0 +1,89 @@
+{
+  "scenario_id": "SC-251",
+  "level": "M2",
+  "persona": "khach_do_du_hoi_nguoi_nha",
+  "hard_case": null,
+  "customer_phone": "0985003703",
+  "customer_name": "Oanh",
+  "honorific": "chị",
+  "notes": "continue_across_channels",
+  "calls": {
+    "call_1": {
+      "channel": "chat_fanpage",
+      "channel_identity": "fb.oanh.620",
+      "call_date": "2026-10-22",
+      "customer_turns": [
+        "Chị ơi, em đang xem màng lọc thay thế Xiaomi Smart 4, giá là năm trăm chín mươi nghìn đúng không?",
+        "Em đang trong ngân sách một triệu, để hỏi ý kiến người nhà đã.",
+        "Chị báo giá lại đi, em xem lại."
+      ],
+      "customer_goal": "Xem sản phẩm trong ngân sách và hỏi ý kiến người nhà",
+      "facts_established": {
+        "product_advised": "SKU-XM-FLT",
+        "price_quoted_vnd": 590000,
+        "budget_vnd": 1000000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-XM-FLT",
+        "price_vnd": 590000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "scheduled_callback_at": "2026-10-23T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0985003703",
+          "callback_at": "2026-10-23T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0985003703",
+      "call_date": "2026-10-23",
+      "customer_turns": [
+        "Chị ơi, hôm trước chị nói rồi mà, giá năm trăm chín mươi nghìn. Em xem lại rồi, vẫn chưa quyết.",
+        "Để em hỏi người nhà thêm đã.",
+        "Chị ơi, em hoãn lại nhé, để em suy nghĩ thêm."
+      ],
+      "days_later": 1,
+      "customer_goal": "Xem lại báo giá và hoãn quyết định mua",
+      "facts_established": {
+        "product_advised": "SKU-XM-FLT"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "budget_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-XM-FLT",
+        "price_vnd": 590000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        }
+      },
+      "expected_outcome": "tu_choi",
+      "success_if": {
+        "tool_called": null,
+        "args_match": {}
+      }
+    }
+  }
+}

@@ -1,0 +1,102 @@
+{
+  "scenario_id": "SC-216",
+  "level": "M2",
+  "persona": "khach_da_kenh_fb_hotline",
+  "hard_case": null,
+  "customer_phone": "0990853801",
+  "customer_name": "Nhung",
+  "honorific": "chị",
+  "notes": "continue_across_channels",
+  "calls": {
+    "call_1": {
+      "channel": "zalo_oa",
+      "channel_identity": "zalo_nhung30",
+      "call_date": "2026-10-29",
+      "customer_turns": [
+        "Ko bn, sp áo khoác gió Windbreak đc không?",
+        "Bao nhiêu tiền vậy?",
+        "Hẹn 10h ngày 30/10 nhé.",
+        "Còn hàng ko?",
+        "Okay, em sẽ nhắn lại nếu có thông tin mới."
+      ],
+      "customer_goal": "Hỏi về sản phẩm và hẹn xem lại",
+      "facts_established": {
+        "product_advised": "SKU-JK-WND",
+        "price_quoted_vnd": 690000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-JK-WND",
+        "price_vnd": 690000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "scheduled_callback_at": "2026-10-30T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0990853801",
+          "callback_at": "2026-10-30T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0990853801",
+      "call_date": "2026-10-30",
+      "customer_turns": [
+        "Chị ơi, bên em nhắn Facebook báo áo Windbreak 690k mà.",
+        "Giá vẫn 690k đúng không?",
+        "Giao hàng đến số 68, Trần Nguyên Đán, Hải Phòng.",
+        "Thanh toán khi nhận hàng nhé.",
+        "Được rồi, em đặt đơn luôn."
+      ],
+      "days_later": 1,
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-JK-WND",
+        "price_quoted_vnd": 690000,
+        "payment": "COD",
+        "delivery_address": "Số 68, đường Trần Nguyên Đán, khu dân cư Bích Động Tân Tiến, phường Trần Hưng Đạo, Hải Phòng",
+        "order_status": "created"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-JK-WND",
+        "price_vnd": 690000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "estimated_delivery": "2026-11-02"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-JK-WND",
+          "price_vnd": 690000
+        }
+      }
+    }
+  }
+}

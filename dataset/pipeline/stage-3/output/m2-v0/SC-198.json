@@ -1,0 +1,104 @@
+{
+  "scenario_id": "SC-229",
+  "level": "M2",
+  "persona": "khach_da_kenh_mau_thuan",
+  "hard_case": "conflicting_quotes",
+  "customer_phone": "0932568855",
+  "customer_name": "Lâm",
+  "honorific": "anh",
+  "notes": "continue_across_channels",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0932568855",
+      "call_date": "2026-10-21",
+      "customer_turns": [
+        "Anh muốn hỏi về ghế ngồi ô tô cho bé Chicco, giá bao nhiêu vậy?",
+        "Giá là bốn triệu chín trăm chín mươi nghìn, đúng không?",
+        "Anh hẹn gọi lại lúc mười giờ ngày hai mươi ba tháng mười nhé."
+      ],
+      "customer_goal": "Hỏi về sản phẩm và hẹn xem lại",
+      "facts_established": {
+        "product_advised": "SKU-MB-CAR",
+        "price_quoted_vnd": 4990000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-MB-CAR",
+        "price_vnd": 4990000,
+        "in_stock": true,
+        "active_promos": [
+          "MOM-FREESHIP",
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "MOM-FREESHIP": "2026-11-29",
+          "COD-0": "2026-12-14"
+        },
+        "scheduled_callback_at": "2026-10-23T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0932568855",
+          "callback_at": "2026-10-23T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "zalo_oa",
+      "channel_identity": "zalo_lâm94",
+      "call_date": "2026-10-23",
+      "customer_turns": [
+        "Chị ơi, hôm qua ở kênh khác báo năm triệu một trăm chín mươi nghìn, giờ đây lại báo bốn triệu chín trăm chín mươi nghìn?",
+        "Chị giải thích giúp anh với, tại sao hai giá khác nhau vậy?",
+        "Nếu giá gốc là bốn triệu chín trăm chín mươi nghìn, anh mua luôn. Thanh toán khi nhận hàng, giao đến 01 Lý Nam Đế, phường Thành Công, Đắk Lắk.",
+        "Anh không mua nếu không rõ lý do giảm giá."
+      ],
+      "days_later": 2,
+      "customer_goal": "Đối chiếu mức giá đã báo qua hai kênh rồi chốt đơn",
+      "facts_established": {
+        "product_advised": "SKU-MB-CAR",
+        "price_quoted_vnd": 4990000,
+        "payment": "COD",
+        "delivery_address": "01 Lý Nam Đế, phường Thành Công, Đắk Lắk",
+        "order_status": "created",
+        "reported_price_vnd": 5190000
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-MB-CAR",
+        "price_vnd": 4990000,
+        "in_stock": true,
+        "active_promos": [
+          "MOM-FREESHIP",
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "MOM-FREESHIP": "2026-11-29",
+          "COD-0": "2026-12-14"
+        },
+        "estimated_delivery": "2026-10-27"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-MB-CAR",
+          "price_vnd": 4990000
+        }
+      }
+    }
+  }
+}

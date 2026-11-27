@@ -1,0 +1,155 @@
+{
+  "scenario_id": "SC-328",
+  "level": "M2",
+  "persona": "khach_goi_lan_3_het_kien_nhan",
+  "hard_case": null,
+  "customer_phone": "0925822018",
+  "customer_name": "Quỳnh",
+  "honorific": "chị",
+  "notes": "return_for_post_purchase_support",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0925822018",
+      "call_date": "2026-10-15",
+      "customer_turns": [
+        "Chị ơi, em muốn hỏi nồi chiên không dầu Philips 6.2L bao nhiêu tiền?",
+        "Giá ba triệu chín trăm chín mươi ngàn đúng không?",
+        "Em nghĩ đến chiều thứ sáu, chị gọi lại cho em nhé, mười giờ ngày mười chín tháng mười."
+      ],
+      "customer_goal": "Hỏi về sản phẩm và hẹn xem lại",
+      "facts_established": {
+        "product_advised": "SKU-AF-6L",
+        "price_quoted_vnd": 3990000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-AF-6L",
+        "price_vnd": 3990000,
+        "in_stock": true,
+        "active_promos": [
+          "NAM-SHIP0",
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "NAM-SHIP0": "2026-11-05",
+          "COD-0": "2026-12-14"
+        },
+        "scheduled_callback_at": "2026-10-19T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0925822018",
+          "callback_at": "2026-10-19T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0925822018",
+      "call_date": "2026-10-19",
+      "customer_turns": [
+        "Chị ơi, em đồng ý mua nồi chiên không dầu Philips 6.2L giá ba triệu chín trăm chín mươi ngàn.",
+        "Thanh toán khi nhận hàng, địa chỉ giao hàng là số 1316 đường Bùi Hữu Nghĩa, phường Long Tuyền, Cần Thơ.",
+        "Đơn em đã được tạo rồi đúng không?"
+      ],
+      "days_later": 4,
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-AF-6L",
+        "price_quoted_vnd": 3990000,
+        "payment": "COD",
+        "delivery_address": "Số 1316 đường Bùi Hữu Nghĩa, phường Long Tuyền, Cần Thơ",
+        "order_status": "created"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-AF-6L",
+        "price_vnd": 3990000,
+        "in_stock": true,
+        "active_promos": [
+          "NAM-SHIP0",
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "NAM-SHIP0": "2026-11-05",
+          "COD-0": "2026-12-14"
+        },
+        "estimated_delivery": "2026-10-21"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-AF-6L",
+          "price_vnd": 3990000
+        }
+      }
+    },
+    "call_3": {
+      "channel": "hotline",
+      "channel_identity": "0925822018",
+      "call_date": "2026-10-20",
+      "customer_turns": [
+        "Chị ơi, địa chỉ giao hàng giờ là tổ 10, Nguyễn Chí Thanh, phường Thới An Đông, Cần Thơ.",
+        "Thôi khỏi."
+      ],
+      "days_later": 1,
+      "customer_goal": "Cập nhật nơi giao cho đơn đã mua",
+      "facts_established": {
+        "delivery_address": "Tổ 10, Nguyễn Chí Thanh, phường Thới An Đông, Cần Thơ"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "payment",
+        "delivery_address",
+        "order_status"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-AF-6L",
+        "price_vnd": 3990000,
+        "in_stock": true,
+        "active_promos": [
+          "NAM-SHIP0",
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "NAM-SHIP0": "2026-11-05",
+          "COD-0": "2026-12-14"
+        }
+      },
+      "memory_expectation": {
+        "delivery_address": "Tổ 10, Nguyễn Chí Thanh, phường Thới An Đông, Cần Thơ",
+        "supersedes": {
+          "delivery_address": "Số 1316 đường Bùi Hữu Nghĩa, phường Long Tuyền, Cần Thơ"
+        }
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.update",
+        "args_match": {
+          "order_id": "OD600001",
+          "action": "update_address"
+        },
+        "max_agent_questions": 1
+      }
+    }
+  }
+}

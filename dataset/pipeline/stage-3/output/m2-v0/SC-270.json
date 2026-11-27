@@ -1,0 +1,147 @@
+{
+  "scenario_id": "SC-311",
+  "level": "M2",
+  "persona": "khach_da_mua_doi_size",
+  "hard_case": null,
+  "customer_phone": "0957990659",
+  "customer_name": "Bảo",
+  "honorific": "anh",
+  "notes": "return_for_post_purchase_support",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0957990659",
+      "call_date": "2026-10-19",
+      "customer_turns": [
+        "Anh ơi, em vừa mua giày trekking HikePro màu xám size bốn mươi ba, giá là hai triệu không trăm bốn mươi ngàn đúng không?",
+        "Anh có thể giới thiệu thêm về sản phẩm được không? Em muốn xem lại trước khi quyết định.",
+        "Em muốn hẹn lại để xem thêm, anh hẹn cho em lúc mười giờ ngày hai mươi ba tháng mười nhé."
+      ],
+      "customer_goal": "Hỏi về sản phẩm và hẹn xem lại",
+      "facts_established": {
+        "product_advised": "SKU-SN-TRK-43-XAM",
+        "price_quoted_vnd": 2040000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-SN-TRK-43-XAM",
+        "price_vnd": 2040000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "scheduled_callback_at": "2026-10-23T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0957990659",
+          "callback_at": "2026-10-23T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0957990659",
+      "call_date": "2026-10-23",
+      "customer_turns": [
+        "Anh ơi, em đã xem lại rồi, em muốn chốt đơn theo báo giá và điều kiện hiện hành.",
+        "Mà em muốn giao hàng đến A8 Châu Thới, phường Hòa Hưng, TP. Hồ Chí Minh nhé.",
+        "Em sẽ thanh toán khi nhận hàng, được không anh?"
+      ],
+      "days_later": 4,
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-SN-TRK-43-XAM",
+        "price_quoted_vnd": 2040000,
+        "payment": "COD",
+        "delivery_address": "A8 Châu Thới, phường Hòa Hưng, TP. Hồ Chí Minh",
+        "order_status": "created"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-SN-TRK-43-XAM",
+        "price_vnd": 2040000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "estimated_delivery": "2026-10-27"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-SN-TRK-43-XAM",
+          "price_vnd": 2040000
+        }
+      }
+    },
+    "call_3": {
+      "channel": "hotline",
+      "channel_identity": "0957990659",
+      "call_date": "2026-10-27",
+      "customer_turns": [
+        "Anh ơi, em vừa nhận hàng, nhưng size bốn mươi ba hơi chật. Em muốn đổi sang size bốn mươi hai.",
+        "Giày trekking HikePro màu xám, em muốn đổi size như vậy.",
+        "Anh kiểm tra xem có còn hàng không?"
+      ],
+      "days_later": 4,
+      "customer_goal": "Đổi sang size khác sau khi nhận hàng",
+      "facts_established": {
+        "new_variant_sku": "SKU-SN-TRK-42-XAM"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "payment",
+        "delivery_address",
+        "order_status"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-SN-TRK-43-XAM",
+        "price_vnd": 2040000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "replacement_in_stock": true,
+        "exchange_fee_vnd": 0,
+        "policy_reference": "DT-03"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.update",
+        "args_match": {
+          "order_id": "OD600001",
+          "action": "exchange_size",
+          "new_variant_sku": "SKU-SN-TRK-42-XAM"
+        }
+      }
+    }
+  }
+}

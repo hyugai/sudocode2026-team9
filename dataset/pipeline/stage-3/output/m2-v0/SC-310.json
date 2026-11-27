@@ -1,0 +1,100 @@
+{
+  "scenario_id": "SC-355",
+  "level": "M2",
+  "persona": "khach_ngoai_pham_vi_chuyen_may",
+  "hard_case": "handoff",
+  "customer_phone": "0958421083",
+  "customer_name": "Dung",
+  "honorific": "chị",
+  "notes": "transfer_with_context",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0958421083",
+      "call_date": "2026-10-21",
+      "customer_turns": [
+        "Chị ơi, em đang tìm xe đẩy gấp gọn Joie Pact, giá bao nhiêu vậy?",
+        "Cảm ơn chị, ba triệu bốn trăm chín mươi ngàn đồng. Em muốn đặt xem lại.",
+        "Chị có thể gọi lại cho em lúc mười giờ ngày hai mươi hai tháng mười được không?"
+      ],
+      "customer_goal": "Hỏi về sản phẩm và hẹn xem lại",
+      "facts_established": {
+        "product_advised": "SKU-MB-STR1",
+        "price_quoted_vnd": 3490000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-MB-STR1",
+        "price_vnd": 3490000,
+        "in_stock": true,
+        "active_promos": [
+          "MOM-FREESHIP",
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "MOM-FREESHIP": "2026-11-29",
+          "COD-0": "2026-12-14"
+        },
+        "scheduled_callback_at": "2026-10-22T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0958421083",
+          "callback_at": "2026-10-22T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0958421083",
+      "call_date": "2026-10-22",
+      "customer_turns": [
+        "Chị ơi, em muốn hỏi về an toàn sử dụng xe đẩy này khi không ở trong phạm vi bán hàng.",
+        "Em nghe nói có nhiều loại xe đẩy khác nhau, liệu loại này có an toàn cho bé không?",
+        "Chị có thể chuyển em nối với chuyên viên được không? Em muốn hỏi thêm về yếu tố y tế."
+      ],
+      "days_later": 1,
+      "customer_goal": "Hỏi về an toàn sử dụng ngoài phạm vi bán hàng và yêu cầu chuyên viên",
+      "facts_established": {},
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-MB-STR1",
+        "price_vnd": 3490000,
+        "in_stock": true,
+        "active_promos": [
+          "MOM-FREESHIP",
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "MOM-FREESHIP": "2026-11-29",
+          "COD-0": "2026-12-14"
+        }
+      },
+      "expected_outcome": "chuyen_may",
+      "success_if": {
+        "tool_called": "handoff.transfer",
+        "args_match": {},
+        "brief_must_contain": [
+          "customer_phone",
+          "customer_name",
+          "escalation_reason",
+          "conversation_summary",
+          "product_advised",
+          "price_quoted_vnd",
+          "open_questions",
+          "next_action",
+          "generated_at"
+        ]
+      }
+    }
+  }
+}

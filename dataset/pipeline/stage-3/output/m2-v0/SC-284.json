@@ -1,0 +1,161 @@
+{
+  "scenario_id": "SC-325",
+  "level": "M2",
+  "persona": "khach_goi_lan_3_het_kien_nhan",
+  "hard_case": null,
+  "customer_phone": "0905154382",
+  "customer_name": "Thắng",
+  "honorific": "anh",
+  "notes": "return_for_post_purchase_support",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0905154382",
+      "call_date": "2026-11-02",
+      "customer_turns": [
+        "Anh ơi, máy lọc không khí Xiaomi Smart 4 Pro giá bao nhiêu?",
+        "Giá năm triệu bốn trăm chín mươi ngàn, đúng không?",
+        "Thôi, anh gọi lại cho em lúc mười giờ ngày ba tháng mười một."
+      ],
+      "customer_goal": "Hỏi về sản phẩm và hẹn xem lại",
+      "facts_established": {
+        "product_advised": "SKU-XM-4P",
+        "price_quoted_vnd": 5490000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-XM-4P",
+        "price_vnd": 5490000,
+        "in_stock": true,
+        "active_promos": [
+          "NAM-SHIP0",
+          "COD-0",
+          "XM-COMBO"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "XM-COMBO": "2026-11-14",
+          "NAM-SHIP0": "2026-11-05",
+          "COD-0": "2026-12-14"
+        },
+        "scheduled_callback_at": "2026-11-03T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0905154382",
+          "callback_at": "2026-11-03T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0905154382",
+      "call_date": "2026-11-03",
+      "customer_turns": [
+        "Anh ơi, em muốn mua máy lọc không khí Xiaomi Smart 4 Pro.",
+        "Giá năm triệu bốn trăm chín mươi ngàn, thanh toán khi nhận hàng.",
+        "Địa chỉ giao hàng là Đường Phạm Hùng, phường Cái Răng, Cần Thơ."
+      ],
+      "days_later": 1,
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-XM-4P",
+        "price_quoted_vnd": 5490000,
+        "payment": "COD",
+        "delivery_address": "Đường Phạm Hùng, phường Cái Răng, Cần Thơ",
+        "order_status": "created"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-XM-4P",
+        "price_vnd": 5490000,
+        "in_stock": true,
+        "active_promos": [
+          "NAM-SHIP0",
+          "COD-0",
+          "XM-COMBO"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "XM-COMBO": "2026-11-14",
+          "NAM-SHIP0": "2026-11-05",
+          "COD-0": "2026-12-14"
+        },
+        "estimated_delivery": "2026-11-05"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-XM-4P",
+          "price_vnd": 5490000
+        }
+      }
+    },
+    "call_3": {
+      "channel": "hotline",
+      "channel_identity": "0905154382",
+      "call_date": "2026-11-04",
+      "customer_turns": [
+        "Anh ơi, địa chỉ giao hàng giờ là Đường A10, khu vực 8, phường Hưng Phú, Cần Thơ.",
+        "Thôi khỏi."
+      ],
+      "days_later": 1,
+      "customer_goal": "Cập nhật nơi giao cho đơn đã mua",
+      "facts_established": {
+        "delivery_address": "Đường A10, khu vực 8, phường Hưng Phú, Cần Thơ"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "payment",
+        "delivery_address",
+        "order_status"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-XM-4P",
+        "price_vnd": 5490000,
+        "in_stock": true,
+        "active_promos": [
+          "NAM-SHIP0",
+          "COD-0",
+          "XM-COMBO"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "XM-COMBO": "2026-11-14",
+          "NAM-SHIP0": "2026-11-05",
+          "COD-0": "2026-12-14"
+        }
+      },
+      "memory_expectation": {
+        "delivery_address": "Đường A10, khu vực 8, phường Hưng Phú, Cần Thơ",
+        "supersedes": {
+          "delivery_address": "Đường Phạm Hùng, phường Cái Răng, Cần Thơ"
+        }
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.update",
+        "args_match": {
+          "order_id": "OD600001",
+          "action": "update_address"
+        },
+        "max_agent_questions": 1
+      }
+    }
+  }
+}

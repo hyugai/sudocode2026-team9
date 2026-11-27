@@ -1,0 +1,162 @@
+{
+  "scenario_id": "SC-300",
+  "level": "M2",
+  "persona": "khach_da_mua_doi_size",
+  "hard_case": null,
+  "customer_phone": "0922264686",
+  "customer_name": "Khoa",
+  "honorific": "anh",
+  "notes": "return_for_post_purchase_support",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0922264686",
+      "call_date": "2026-10-29",
+      "customer_turns": [
+        "Anh ơi, em vừa mua giày chạy bộ RunLite hai Pro màu đen size bốn mươi, giá là một triệu sáu trăm chín mươi nghìn đồng.",
+        "Anh có thể hướng dẫn em thêm về sản phẩm không? Em muốn xem lại trước khi quyết định.",
+        "Em muốn hẹn lại gọi lại vào mười giờ ngày hai tháng mười một, được không?"
+      ],
+      "customer_goal": "Hỏi về sản phẩm và hẹn xem lại",
+      "facts_established": {
+        "product_advised": "SKU-SN-RUN2-40-DEN",
+        "price_quoted_vnd": 1690000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN2-40-DEN",
+        "price_vnd": 1690000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [
+          "RUN-10",
+          "RUN2-SALE"
+        ],
+        "promo_expiry_dates": {
+          "RUN-10": "2026-10-25",
+          "COD-0": "2026-12-14",
+          "RUN2-SALE": "2026-10-07"
+        },
+        "scheduled_callback_at": "2026-11-02T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0922264686",
+          "callback_at": "2026-11-02T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0922264686",
+      "call_date": "2026-11-02",
+      "customer_turns": [
+        "Anh ơi, em đã đồng ý mua sản phẩm rồi. Em sẽ thanh toán khi nhận hàng.",
+        "Giao hàng tới số 231 Nguyễn Ngọc Vũ, phường Yên Hòa, Hà Nội nhé.",
+        "Đơn hàng của em là gì ạ? Em đang đợi thông tin."
+      ],
+      "days_later": 4,
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-SN-RUN2-40-DEN",
+        "price_quoted_vnd": 1690000,
+        "payment": "COD",
+        "delivery_address": "Số 231 Nguyễn Ngọc Vũ, phường Yên Hòa, Hà Nội",
+        "order_status": "created"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN2-40-DEN",
+        "price_vnd": 1690000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [
+          "RUN-10",
+          "RUN2-SALE"
+        ],
+        "promo_expiry_dates": {
+          "RUN-10": "2026-10-25",
+          "COD-0": "2026-12-14",
+          "RUN2-SALE": "2026-10-07"
+        },
+        "estimated_delivery": "2026-11-04"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-SN-RUN2-40-DEN",
+          "price_vnd": 1690000
+        }
+      }
+    },
+    "call_3": {
+      "channel": "hotline",
+      "channel_identity": "0922264686",
+      "call_date": "2026-11-06",
+      "customer_turns": [
+        "Anh ơi, em nhận hàng rồi, nhưng size bốn mươi không vừa. Em muốn đổi sang size bốn mươi ba.",
+        "Giày RunLite hai Pro màu đen, size bốn mươi ba có sẵn không ạ?",
+        "Em mong anh xử lý nhanh nhé, vì em đang cần dùng."
+      ],
+      "days_later": 4,
+      "customer_goal": "Đổi sang size khác sau khi nhận hàng",
+      "facts_established": {
+        "new_variant_sku": "SKU-SN-RUN2-43-DEN"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "payment",
+        "delivery_address",
+        "order_status"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN2-40-DEN",
+        "price_vnd": 1690000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [
+          "RUN-10",
+          "RUN2-SALE"
+        ],
+        "promo_expiry_dates": {
+          "RUN-10": "2026-10-25",
+          "COD-0": "2026-12-14",
+          "RUN2-SALE": "2026-10-07"
+        },
+        "replacement_in_stock": true,
+        "exchange_fee_vnd": 0,
+        "policy_reference": "DT-03"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.update",
+        "args_match": {
+          "order_id": "OD600001",
+          "action": "exchange_size",
+          "new_variant_sku": "SKU-SN-RUN2-43-DEN"
+        }
+      }
+    }
+  }
+}

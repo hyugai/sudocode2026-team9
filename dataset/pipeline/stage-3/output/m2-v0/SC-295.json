@@ -1,0 +1,98 @@
+{
+  "scenario_id": "SC-337",
+  "level": "M2",
+  "persona": "khach_quay_lai_sau_8_thang",
+  "hard_case": "stale_address",
+  "customer_phone": "0922808864",
+  "customer_name": "Tú",
+  "honorific": "anh",
+  "notes": "resume_with_uncertain_identity_or_history",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0922808864",
+      "call_date": "2026-02-22",
+      "customer_turns": [
+        "Anh ơi, em nhớ là năm ngoái em đặt cái nồi chiên không dầu Lock&Lock 4L, đúng không ạ?",
+        "Giá lúc đó là một triệu tám trăm chín mươi nghìn, đúng không anh?",
+        "Thanh toán khi nhận hàng, đúng rồi.",
+        "Địa chỉ giao là số 388, đường An Phong, Hải Phòng."
+      ],
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-AF-4L",
+        "price_quoted_vnd": 1890000,
+        "payment": "COD",
+        "delivery_address": "Số 388, đường An Phong, phường An Phong, Hải Phòng",
+        "order_status": "created"
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-AF-4L",
+        "price_vnd": 1890000,
+        "in_stock": true,
+        "active_promos": [],
+        "expired_promos": [],
+        "promo_expiry_dates": {},
+        "estimated_delivery": "2026-02-24"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-AF-4L",
+          "price_vnd": 1890000
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0922808864",
+      "call_date": "2026-10-22",
+      "customer_turns": [
+        "Anh ơi, em nhớ là em đặt cái nồi chiên không dầu 4L, đúng không?",
+        "Cái địa chỉ năm ngoái là số 388, An Phong, Hải Phòng, đúng không anh?",
+        "Nhà mình ở đó không ạ?",
+        "Còn cái giá một triệu tám trăm chín mươi nghìn, anh nhớ không?"
+      ],
+      "days_later": 242,
+      "customer_goal": "Xác nhận thông tin người nhận trước khi tra đơn cũ",
+      "facts_established": {},
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "payment",
+        "delivery_address",
+        "order_status"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-AF-4L",
+        "price_vnd": 1890000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        }
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.status",
+        "args_match": {
+          "order_id": "OD600001"
+        },
+        "must_say_any": [
+          "xác nhận",
+          "địa chỉ"
+        ]
+      }
+    }
+  }
+}

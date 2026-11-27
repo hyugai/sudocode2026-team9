@@ -1,0 +1,149 @@
+{
+  "scenario_id": "SC-326",
+  "level": "M2",
+  "persona": "khach_goi_lan_3_het_kien_nhan",
+  "hard_case": null,
+  "customer_phone": "0911265844",
+  "customer_name": "Toàn",
+  "honorific": "anh",
+  "notes": "return_for_post_purchase_support",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0911265844",
+      "call_date": "2026-11-03",
+      "customer_turns": [
+        "Anh ơi, máy hâm sữa Fatz 4 chức năng bao nhiêu tiền?",
+        "Bốn trăm chín mươi ngàn, đúng không?",
+        "Thôi, anh gọi lại cho em lúc mười giờ ngày năm tháng mười một nhé."
+      ],
+      "customer_goal": "Hỏi về sản phẩm và hẹn xem lại",
+      "facts_established": {
+        "product_advised": "SKU-MB-MON",
+        "price_quoted_vnd": 490000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-MB-MON",
+        "price_vnd": 490000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "scheduled_callback_at": "2026-11-05T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0911265844",
+          "callback_at": "2026-11-05T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0911265844",
+      "call_date": "2026-11-05",
+      "customer_turns": [
+        "Em mua máy hâm sữa Fatz 4 chức năng, giá bốn trăm chín mươi ngàn.",
+        "Giao hàng đến số 705 đường 3/2, phường An Bình, Cần Thơ.",
+        "Thanh toán khi nhận hàng, đúng rồi."
+      ],
+      "days_later": 2,
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-MB-MON",
+        "price_quoted_vnd": 490000,
+        "payment": "COD",
+        "delivery_address": "Số 705 đường 3/2, phường An Bình, Cần Thơ",
+        "order_status": "created"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-MB-MON",
+        "price_vnd": 490000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "estimated_delivery": "2026-11-07"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-MB-MON",
+          "price_vnd": 490000
+        }
+      }
+    },
+    "call_3": {
+      "channel": "hotline",
+      "channel_identity": "0911265844",
+      "call_date": "2026-11-06",
+      "customer_turns": [
+        "Anh ơi, địa chỉ giao hàng giờ là khu dân cư Ngân Thuận, phường Bình Thủy, Cần Thơ.",
+        "Thôi khỏi."
+      ],
+      "days_later": 1,
+      "customer_goal": "Cập nhật nơi giao cho đơn đã mua",
+      "facts_established": {
+        "delivery_address": "Khu dân cư Ngân Thuận, phường Bình Thủy, Cần Thơ"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "payment",
+        "delivery_address",
+        "order_status"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-MB-MON",
+        "price_vnd": 490000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        }
+      },
+      "memory_expectation": {
+        "delivery_address": "Khu dân cư Ngân Thuận, phường Bình Thủy, Cần Thơ",
+        "supersedes": {
+          "delivery_address": "Số 705 đường 3/2, phường An Bình, Cần Thơ"
+        }
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.update",
+        "args_match": {
+          "order_id": "OD600001",
+          "action": "update_address"
+        },
+        "max_agent_questions": 1
+      }
+    }
+  }
+}
