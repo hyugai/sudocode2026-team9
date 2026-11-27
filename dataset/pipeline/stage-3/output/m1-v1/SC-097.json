@@ -1,0 +1,100 @@
+{
+  "scenario_id": "SC-105",
+  "level": "M1",
+  "persona": "khach_do_du_hoi_nguoi_nha",
+  "hard_case": null,
+  "customer_phone": "0964252477",
+  "customer_name": "Trang",
+  "honorific": "chị",
+  "notes": "return_for_post_purchase_support",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0964252477",
+      "call_date": "2026-11-04",
+      "customer_turns": [
+        "Chị ơi, hôm trước chị nói rồi mà.",
+        "Chị muốn mua áo phao lông vũ Warmly màu xanh navy size S, giá một triệu bốn trăm chín mươi nghìn đồng, thanh toán khi nhận hàng.",
+        "Địa chỉ giao hàng là Số 289 đường Nguyễn Công Trứ, phường An Hải, Đà Nẵng.",
+        "Người nhà đã đồng ý mua rồi.",
+        "Chị có thể chốt đơn được không?"
+      ],
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-JK-DWN-S-NAVY",
+        "price_quoted_vnd": 1490000,
+        "payment": "COD",
+        "delivery_address": "Số 289 đường Nguyễn Công Trứ, phường An Hải, Đà Nẵng",
+        "order_status": "created",
+        "family_approved_purchase": true
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-JK-DWN-S-NAVY",
+        "price_vnd": 1490000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "estimated_delivery": "2026-11-06"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-JK-DWN-S-NAVY",
+          "price_vnd": 1490000
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0964252477",
+      "call_date": "2026-11-05",
+      "customer_turns": [
+        "Chị ơi, đơn mình có còn trong hệ thống không?",
+        "Mình muốn kiểm tra lại đơn hàng.",
+        "Mình đã đồng ý mua rồi, giờ có thể giao không?"
+      ],
+      "days_later": 1,
+      "customer_goal": "Kiểm tra đơn đã mua",
+      "facts_established": {},
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "payment",
+        "delivery_address",
+        "order_status",
+        "family_approved_purchase"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-JK-DWN-S-NAVY",
+        "price_vnd": 1490000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        }
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.status",
+        "args_match": {
+          "order_id": "OD600001"
+        }
+      }
+    }
+  }
+}

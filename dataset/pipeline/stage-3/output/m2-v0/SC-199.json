@@ -1,0 +1,104 @@
+{
+  "scenario_id": "SC-230",
+  "level": "M2",
+  "persona": "khach_da_kenh_mau_thuan",
+  "hard_case": "conflicting_quotes",
+  "customer_phone": "0980737028",
+  "customer_name": "Mai",
+  "honorific": "chị",
+  "notes": "continue_across_channels",
+  "calls": {
+    "call_1": {
+      "channel": "zalo_oa",
+      "channel_identity": "zalo_mai37",
+      "call_date": "2026-10-22",
+      "customer_turns": [
+        "Chị ơi, em đang tìm ghế ngồi ô tô cho con, có sản phẩm Chicco không ạ?",
+        "Giá bao nhiêu vậy chị? Em nghe nói có cái giá 4 triệu 990 nghìn.",
+        "Em muốn xem lại sau, chị gọi lại cho em lúc 10 giờ ngày 25 nhé."
+      ],
+      "customer_goal": "Hỏi về sản phẩm và hẹn xem lại",
+      "facts_established": {
+        "product_advised": "SKU-MB-CAR",
+        "price_quoted_vnd": 4990000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-MB-CAR",
+        "price_vnd": 4990000,
+        "in_stock": true,
+        "active_promos": [
+          "MOM-FREESHIP",
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "MOM-FREESHIP": "2026-11-29",
+          "COD-0": "2026-12-14"
+        },
+        "scheduled_callback_at": "2026-10-25T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0980737028",
+          "callback_at": "2026-10-25T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0980737028",
+      "call_date": "2026-10-25",
+      "customer_turns": [
+        "Chị ơi, em vừa xem qua Zalo, giá báo 4 triệu 990 nghìn, nhưng hôm nay gọi hotline lại thấy giá 5 triệu 290 nghìn. Sao khác nhau vậy?",
+        "Em không mua nếu giá không giống nhau. Chị giải thích rõ lý do được không?",
+        "Nếu không giải thích được, em không mua. Em muốn mua đúng giá 4 triệu 990 nghìn.",
+        "Nếu chị đồng ý, em sẽ đặt hàng ngay, thanh toán khi nhận hàng tại 531 Vĩnh Khánh, TP. HCM."
+      ],
+      "days_later": 3,
+      "customer_goal": "Đối chiếu mức giá đã báo qua hai kênh rồi chốt đơn",
+      "facts_established": {
+        "product_advised": "SKU-MB-CAR",
+        "price_quoted_vnd": 4990000,
+        "payment": "COD",
+        "delivery_address": "531 Vĩnh Khánh, phường Khánh Hội, TP. Hồ Chí Minh",
+        "order_status": "created",
+        "reported_price_vnd": 5290000
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-MB-CAR",
+        "price_vnd": 4990000,
+        "in_stock": true,
+        "active_promos": [
+          "MOM-FREESHIP",
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "MOM-FREESHIP": "2026-11-29",
+          "COD-0": "2026-12-14"
+        },
+        "estimated_delivery": "2026-10-28"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-MB-CAR",
+          "price_vnd": 4990000
+        }
+      }
+    }
+  }
+}

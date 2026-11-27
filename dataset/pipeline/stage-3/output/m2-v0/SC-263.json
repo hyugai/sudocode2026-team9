@@ -1,0 +1,153 @@
+{
+  "scenario_id": "SC-303",
+  "level": "M2",
+  "persona": "khach_da_mua_doi_size",
+  "hard_case": null,
+  "customer_phone": "0956517883",
+  "customer_name": "Thủy",
+  "honorific": "chị",
+  "notes": "return_for_post_purchase_support",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0956517883",
+      "call_date": "2026-11-01",
+      "customer_turns": [
+        "Chị ơi, em vừa gọi hỏi về giày chạy bộ RunLite size bốn mươi, màu trắng. Giá là một triệu hai trăm chín mươi nghìn đúng không ạ?",
+        "Em muốn hẹn lại để xem thêm, có thể gọi lại lúc mười giờ ngày năm tháng mười một được không chị?"
+      ],
+      "customer_goal": "Hỏi về sản phẩm và hẹn xem lại",
+      "facts_established": {
+        "product_advised": "SKU-SN-RUN1-40-TRANG",
+        "price_quoted_vnd": 1290000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN1-40-TRANG",
+        "price_vnd": 1290000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [
+          "RUN-10"
+        ],
+        "promo_expiry_dates": {
+          "RUN-10": "2026-10-25",
+          "COD-0": "2026-12-14"
+        },
+        "scheduled_callback_at": "2026-11-05T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0956517883",
+          "callback_at": "2026-11-05T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0956517883",
+      "call_date": "2026-11-05",
+      "customer_turns": [
+        "Chị ơi, em đã quyết định mua giày chạy bộ RunLite size bốn mươi, màu trắng. Giá là một triệu hai trăm chín mươi nghìn đúng không ạ?",
+        "Em giao hàng đến 178 Phan Huy Chú, phường Khánh Xuân, Đắk Lắk. Thanh toán khi nhận hàng nha."
+      ],
+      "days_later": 4,
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-SN-RUN1-40-TRANG",
+        "price_quoted_vnd": 1290000,
+        "payment": "COD",
+        "delivery_address": "178 Phan Huy Chú, phường Khánh Xuân, Đắk Lắk",
+        "order_status": "created"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN1-40-TRANG",
+        "price_vnd": 1290000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [
+          "RUN-10"
+        ],
+        "promo_expiry_dates": {
+          "RUN-10": "2026-10-25",
+          "COD-0": "2026-12-14"
+        },
+        "estimated_delivery": "2026-11-07"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-SN-RUN1-40-TRANG",
+          "price_vnd": 1290000
+        }
+      }
+    },
+    "call_3": {
+      "channel": "hotline",
+      "channel_identity": "0956517883",
+      "call_date": "2026-11-09",
+      "customer_turns": [
+        "Chị ơi, em vừa nhận hàng, nhưng size bốn mươi hơi chật. Em muốn đổi sang size bốn mươi ba, giày chạy bộ RunLite một màu trắng.",
+        "Chị có thể hỗ trợ được không ạ? Em đã mua trước đó rồi mà."
+      ],
+      "days_later": 4,
+      "customer_goal": "Đổi sang size khác sau khi nhận hàng",
+      "facts_established": {
+        "new_variant_sku": "SKU-SN-RUN1-43-TRANG"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "payment",
+        "delivery_address",
+        "order_status"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN1-40-TRANG",
+        "price_vnd": 1290000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [
+          "RUN-10"
+        ],
+        "promo_expiry_dates": {
+          "RUN-10": "2026-10-25",
+          "COD-0": "2026-12-14"
+        },
+        "replacement_in_stock": true,
+        "exchange_fee_vnd": 0,
+        "policy_reference": "DT-03"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.update",
+        "args_match": {
+          "order_id": "OD600001",
+          "action": "exchange_size",
+          "new_variant_sku": "SKU-SN-RUN1-43-TRANG"
+        }
+      }
+    }
+  }
+}

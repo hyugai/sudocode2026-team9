@@ -1,0 +1,41 @@
+{
+  "total_journeys": 124,
+  "total_transcripts": 124,
+  "total_sessions": 266,
+  "multi_session_customers": 50,
+  "three_session_customers": 15,
+  "omnichannel_customers": 26,
+  "hard_edge_case_scenarios": 52,
+  "persona_distribution": {
+    "khach_do_du_hoi_nguoi_nha": 21,
+    "khach_so_gia": 23,
+    "khach_hoi_nhieu_khong_mua": 4,
+    "khach_hoi_ngoai_tai_lieu": 2,
+    "khach_da_kenh_fb_hotline": 8,
+    "khach_da_kenh_mau_thuan": 5,
+    "khach_da_mua_doi_size": 29,
+    "khach_mua_nhieu_mon": 6,
+    "khach_goi_lan_3_het_kien_nhan": 6,
+    "khach_quay_lai_sau_8_thang": 5,
+    "hai_nguoi_chung_sdt": 4,
+    "khach_ngoai_pham_vi_chuyen_may": 11
+  },
+  "channel_distribution": {
+    "hotline": 233,
+    "zalo_oa": 19,
+    "chat_fanpage": 14
+  },
+  "outcome_distribution": {
+    "hen_goi_lai": 106,
+    "chot_don": 134,
+    "tu_choi": 15,
+    "chuyen_may": 11
+  },
+  "tier": "M1",
+  "accepted_transcripts": 124,
+  "duplicates_removed": 0,
+  "privacy_rejections": 0,
+  "guardrail_violations": 0,
+  "cosine_threshold": 0.9,
+  "reference_eval_smoke_check": "passed"
+}

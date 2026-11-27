@@ -1,0 +1,104 @@
+{
+  "scenario_id": "SC-354",
+  "level": "M2",
+  "persona": "khach_ngoai_pham_vi_chuyen_may",
+  "hard_case": "handoff",
+  "customer_phone": "0910285940",
+  "customer_name": "Dũng",
+  "honorific": "anh",
+  "notes": "transfer_with_context",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0910285940",
+      "call_date": "2026-10-20",
+      "customer_turns": [
+        "Anh ơi, em đang tìm combo sữa cho con, có thể giới thiệu sản phẩm Spectra S1 không ạ?",
+        "Có phải sản phẩm này dùng để hút sữa không ạ? Em nghe nói máy này rất tốt.",
+        "Giá bộ combo Spectra S1 + máy hâm sữa Fatz + 50 túi trữ sữa là bốn triệu bảy trăm chín mươi nghìn đồng đúng không ạ?",
+        "Em muốn đặt hàng, nhưng em cần hỏi thêm về cách sử dụng và vệ sinh để đảm bảo an toàn cho con.",
+        "Anh ơi, nếu em muốn hỏi thêm về sản phẩm thì có thể hẹn gọi lại lúc mười giờ ngày hai mươi bốn tháng mười không ạ?"
+      ],
+      "customer_goal": "Hỏi về sản phẩm và hẹn xem lại",
+      "facts_established": {
+        "product_advised": "SKU-BDL-MOM",
+        "price_quoted_vnd": 4790000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-BDL-MOM",
+        "price_vnd": 4790000,
+        "in_stock": true,
+        "active_promos": [
+          "MOM-FREESHIP",
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "MOM-FREESHIP": "2026-11-29",
+          "COD-0": "2026-12-14"
+        },
+        "scheduled_callback_at": "2026-10-24T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0910285940",
+          "callback_at": "2026-10-24T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0910285940",
+      "call_date": "2026-10-24",
+      "customer_turns": [
+        "Anh ơi, em cần hỏi về cách sử dụng máy Spectra S1 để đảm bảo vệ sinh, có thể nói rõ hơn không ạ?",
+        "Em muốn hỏi thêm về liệu có nên dùng sản phẩm này cho trẻ sơ sinh không ạ?",
+        "Anh có thể chuyển em sang chuyên viên y tế được không ạ? Em cần hỏi thêm về an toàn.",
+        "Em có thể hỏi thêm về hướng dẫn sử dụng không ạ?",
+        "Em có phải dược sĩ không ạ? Em cần chuyên gia tư vấn thêm."
+      ],
+      "days_later": 4,
+      "customer_goal": "Hỏi về an toàn sử dụng ngoài phạm vi bán hàng và yêu cầu chuyên viên",
+      "facts_established": {},
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-BDL-MOM",
+        "price_vnd": 4790000,
+        "in_stock": true,
+        "active_promos": [
+          "MOM-FREESHIP",
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "MOM-FREESHIP": "2026-11-29",
+          "COD-0": "2026-12-14"
+        }
+      },
+      "expected_outcome": "chuyen_may",
+      "success_if": {
+        "tool_called": "handoff.transfer",
+        "args_match": {},
+        "brief_must_contain": [
+          "customer_phone",
+          "customer_name",
+          "escalation_reason",
+          "conversation_summary",
+          "product_advised",
+          "price_quoted_vnd",
+          "open_questions",
+          "next_action",
+          "generated_at"
+        ]
+      }
+    }
+  }
+}

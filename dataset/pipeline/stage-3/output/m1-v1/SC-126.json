@@ -1,0 +1,151 @@
+{
+  "scenario_id": "SC-139",
+  "level": "M1",
+  "persona": "khach_goi_lan_3_het_kien_nhan",
+  "hard_case": null,
+  "customer_phone": "0958421083",
+  "customer_name": "Loan",
+  "honorific": "cô",
+  "notes": "return_for_post_purchase_support",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0958421083",
+      "call_date": "2026-10-27",
+      "customer_turns": [
+        "Cô ơi, tôi muốn hỏi về giày sneaker Urban Classic màu xám size bốn mươi ba.",
+        "Giá bao nhiêu?",
+        "Hẹn gọi lại 10 giờ ngày 31 tháng 10.",
+        "Được rồi, cô ơi."
+      ],
+      "customer_goal": "Hỏi về sản phẩm và hẹn xem lại",
+      "facts_established": {
+        "product_advised": "SKU-SN-CAS-43-XAM",
+        "price_quoted_vnd": 940000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-SN-CAS-43-XAM",
+        "price_vnd": 940000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "scheduled_callback_at": "2026-10-31T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0958421083",
+          "callback_at": "2026-10-31T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0958421083",
+      "call_date": "2026-10-31",
+      "customer_turns": [
+        "Chuẩn rồi, tôi mua.",
+        "Giao hàng đến 20 Lâm Hoành, Huế.",
+        "Thanh toán khi nhận hàng.",
+        "Xong chưa?"
+      ],
+      "days_later": 4,
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-SN-CAS-43-XAM",
+        "price_quoted_vnd": 940000,
+        "payment": "COD",
+        "delivery_address": "20 Lâm Hoành, phường Vỹ Dạ, Huế",
+        "order_status": "created"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-SN-CAS-43-XAM",
+        "price_vnd": 940000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "estimated_delivery": "2026-11-03"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-SN-CAS-43-XAM",
+          "price_vnd": 940000
+        }
+      }
+    },
+    "call_3": {
+      "channel": "hotline",
+      "channel_identity": "0958421083",
+      "call_date": "2026-11-01",
+      "customer_turns": [
+        "Cô ơi, địa chỉ giao hàng là 164 Kinh Dương Vương, Huế.",
+        "Thôi khỏi."
+      ],
+      "days_later": 1,
+      "customer_goal": "Cập nhật nơi giao cho đơn đã mua",
+      "facts_established": {
+        "delivery_address": "164 Kinh Dương Vương, phường Thuận An, Huế"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "payment",
+        "delivery_address",
+        "order_status"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-SN-CAS-43-XAM",
+        "price_vnd": 940000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        }
+      },
+      "memory_expectation": {
+        "delivery_address": "164 Kinh Dương Vương, phường Thuận An, Huế",
+        "supersedes": {
+          "delivery_address": "20 Lâm Hoành, phường Vỹ Dạ, Huế"
+        }
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.update",
+        "args_match": {
+          "order_id": "OD600001",
+          "action": "update_address"
+        },
+        "max_agent_questions": 1
+      }
+    }
+  }
+}

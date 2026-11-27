@@ -1,0 +1,103 @@
+{
+  "scenario_id": "SC-157",
+  "level": "M1",
+  "persona": "khach_quay_lai_sau_8_thang",
+  "hard_case": "stale_address",
+  "customer_phone": "0979511174",
+  "customer_name": "Hiền",
+  "honorific": "chị",
+  "notes": "resume_with_uncertain_identity_or_history",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0979511174",
+      "call_date": "2026-02-17",
+      "customer_turns": [
+        "Chị ơi, em nhớ là hồi tháng 2 có gọi đặt cái giày chạy bộ RunLite hai Pro màu xám size bốn mươi đấy.",
+        "Giá là một triệu sáu trăm chín mươi nghìn, thanh toán khi nhận hàng.",
+        "Địa chỉ giao là 232 Lý Nhân Tông, phường Kim Trà, Huế.",
+        "Chị xem giúp em với, nếu còn hàng thì em chốt luôn."
+      ],
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-SN-RUN2-40-XAM",
+        "price_quoted_vnd": 1690000,
+        "payment": "COD",
+        "delivery_address": "232 Lý Nhân Tông, phường Kim Trà, Huế",
+        "order_status": "created"
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN2-40-XAM",
+        "price_vnd": 1690000,
+        "in_stock": true,
+        "active_promos": [],
+        "expired_promos": [],
+        "promo_expiry_dates": {},
+        "estimated_delivery": "2026-02-19"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-SN-RUN2-40-XAM",
+          "price_vnd": 1690000
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0979511174",
+      "call_date": "2026-10-17",
+      "customer_turns": [
+        "Chị ơi, em là khách cũ, hồi tháng 2 có đặt giày chạy bộ RunLite hai Pro màu xám size bốn mươi.",
+        "Có phải em đặt ở 232 Lý Nhân Tông, phường Kim Trà, Huế không?",
+        "Nhà mình ở đó mà, chị xem lại giúp em với.",
+        "Nếu còn hàng thì em chốt đơn luôn."
+      ],
+      "days_later": 242,
+      "customer_goal": "Xác nhận thông tin người nhận trước khi tra đơn cũ",
+      "facts_established": {},
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "payment",
+        "delivery_address",
+        "order_status"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN2-40-XAM",
+        "price_vnd": 1521000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0",
+          "RUN-10"
+        ],
+        "expired_promos": [
+          "RUN2-SALE"
+        ],
+        "promo_expiry_dates": {
+          "RUN-10": "2026-10-25",
+          "COD-0": "2026-12-14",
+          "RUN2-SALE": "2026-10-07"
+        }
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.status",
+        "args_match": {
+          "order_id": "OD600001"
+        },
+        "must_say_any": [
+          "xác nhận",
+          "địa chỉ"
+        ]
+      }
+    }
+  }
+}

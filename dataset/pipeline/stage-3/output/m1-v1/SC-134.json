@@ -1,0 +1,104 @@
+{
+  "scenario_id": "SC-150",
+  "level": "M1",
+  "persona": "khach_da_mua_doi_size",
+  "hard_case": "verify_order_identity",
+  "customer_phone": "0905154382",
+  "customer_name": "Thắng",
+  "honorific": "anh",
+  "notes": "resume_with_uncertain_identity_or_history",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0905154382",
+      "call_date": "2026-10-17",
+      "customer_turns": [
+        "Anh ơi, em gọi lại để chốt đơn rồi. Giày chạy bộ RunLite một màu xám size bốn mươi hai, giá một triệu một trăm sáu mươi mốt ngàn, thanh toán khi nhận hàng.",
+        "Địa chỉ giao hàng là Đường Phạm Hùng, phường Cái Răng, Cần Thơ. Anh nhớ chứ?",
+        "Nếu không nhớ thì em phải phàn nàn một chút, nhưng em chỉ cần xác nhận lại thôi."
+      ],
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-SN-RUN1-42-XAM",
+        "price_quoted_vnd": 1161000,
+        "payment": "COD",
+        "delivery_address": "Đường Phạm Hùng, phường Cái Răng, Cần Thơ",
+        "order_status": "created"
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN1-42-XAM",
+        "price_vnd": 1161000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0",
+          "RUN-10"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "RUN-10": "2026-10-25",
+          "COD-0": "2026-12-14"
+        },
+        "estimated_delivery": "2026-10-20"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-SN-RUN1-42-XAM",
+          "price_vnd": 1161000
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0905154382",
+      "call_date": "2026-10-18",
+      "customer_turns": [
+        "Anh ơi, em là người đã đặt đơn hôm qua. Em muốn xác nhận lại thông tin người nhận.",
+        "Địa chỉ giao hàng là Đường Phạm Hùng, phường Cái Răng, Cần Thơ. Anh nhớ không?",
+        "Nếu không nhớ thì em cũng không cần nói lại, nhưng em chỉ muốn chắc chắn là đơn của em đang được xử lý."
+      ],
+      "days_later": 1,
+      "customer_goal": "Xác nhận thông tin người nhận trước khi tra đơn cũ",
+      "facts_established": {},
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "payment",
+        "delivery_address",
+        "order_status"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN1-42-XAM",
+        "price_vnd": 1161000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0",
+          "RUN-10"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "RUN-10": "2026-10-25",
+          "COD-0": "2026-12-14"
+        }
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.status",
+        "args_match": {
+          "order_id": "OD600001"
+        },
+        "must_say_any": [
+          "xác nhận",
+          "địa chỉ"
+        ]
+      }
+    }
+  }
+}

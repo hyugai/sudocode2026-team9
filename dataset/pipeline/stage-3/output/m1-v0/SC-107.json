@@ -1,0 +1,99 @@
+{
+  "scenario_id": "SC-121",
+  "level": "M1",
+  "persona": "khach_quay_lai_sau_8_thang",
+  "hard_case": "stale_address",
+  "customer_phone": "0958421083",
+  "customer_name": "Dung",
+  "honorific": "chị",
+  "notes": "resume_with_uncertain_identity_or_history",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0958421083",
+      "call_date": "2026-02-18",
+      "customer_turns": [
+        "Chị ơi, em nhớ là hôm trước chị tư vấn nồi chiên không dầu Philips 6.2L đúng không?",
+        "Giá ba triệu chín trăm chín mươi ngàn, thanh toán khi nhận hàng.",
+        "Em đặt rồi, trạng thái đơn là đã tạo rồi ạ."
+      ],
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-AF-6L",
+        "price_quoted_vnd": 3990000,
+        "payment": "COD",
+        "delivery_address": "Số 438, đường Võ Văn Kiệt, phường Vị Thanh, Cần Thơ",
+        "order_status": "created"
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-AF-6L",
+        "price_vnd": 3990000,
+        "in_stock": true,
+        "active_promos": [],
+        "expired_promos": [],
+        "promo_expiry_dates": {},
+        "estimated_delivery": "2026-02-20"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-AF-6L",
+          "price_vnd": 3990000
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0958421083",
+      "call_date": "2026-10-18",
+      "customer_turns": [
+        "Dạ, em nhớ là chị đã báo giá nồi chiên không dầu 6.2L, giá ba triệu chín trăm chín mươi ngàn.",
+        "Thanh toán khi nhận hàng, địa chỉ là Sô 438, đường Võ Văn Kiệt, Cần Thơ.",
+        "Nhà mình ở đó, không đổi rồi ạ.",
+        "Chị kiểm tra giúp em với, nếu không đổi thì chốt đơn luôn đi."
+      ],
+      "days_later": 242,
+      "customer_goal": "Xác nhận thông tin người nhận trước khi tra đơn cũ",
+      "facts_established": {},
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "payment",
+        "delivery_address",
+        "order_status"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-AF-6L",
+        "price_vnd": 3990000,
+        "in_stock": true,
+        "active_promos": [
+          "NAM-SHIP0",
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "NAM-SHIP0": "2026-11-05",
+          "COD-0": "2026-12-14"
+        }
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.status",
+        "args_match": {
+          "order_id": "OD600001"
+        },
+        "must_say_any": [
+          "xác nhận",
+          "địa chỉ"
+        ]
+      }
+    }
+  }
+}

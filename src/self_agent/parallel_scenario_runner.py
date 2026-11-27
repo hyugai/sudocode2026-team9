@@ -9,7 +9,7 @@ import uuid
 
 from .scenario_runner import load_scenarios
 
-DEFAULT_SCENARIOS = Path(__file__).resolve().parents[2] / "dataset/main/m2_transcripts/scenarios_complete"
+DEFAULT_SCENARIOS = Path(__file__).resolve().parents[2] / "dataset/pipeline/final/M2"
 
 
 def utf8_process_env():
@@ -98,7 +98,8 @@ async def run_parallel(scenarios, directory, output, *, workers=2, learning_root
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--scenarios', type=Path, default=DEFAULT_SCENARIOS)
+    parser.add_argument('--scenarios', type=Path, default=DEFAULT_SCENARIOS,
+                        help='Path to a published M2 scenario directory')
     parser.add_argument('--scenario-id', action='append', default=[])
     parser.add_argument('--limit', type=int, default=5, help='0 means all scenarios')
     parser.add_argument('--workers', type=int, choices=(1, 2), default=2)
@@ -107,6 +108,8 @@ def main():
     args = parser.parse_args()
     if args.limit < 0:
         parser.error('--limit must be nonnegative')
+    if not args.scenarios.is_dir():
+        parser.error(f'M2 scenarios are unavailable at {args.scenarios}. Pass --scenarios with a published M2 dataset.')
     scenarios = load_scenarios(args.scenarios, args.scenario_id, args.limit)
     if args.list:
         for scenario in scenarios:

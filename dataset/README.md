@@ -1,5 +1,9 @@
 # Tổng quan dataset và schema kịch bản Sudo Code 2026
 
+Pipeline mới để sinh transcript độc lập từ cấu hình và nguồn BTC: [pipeline/README.md](pipeline/README.md). Có OpenAI, kiểm tra trùng lặp và vòng lặp sửa, snapshot/replay và một JSON cho mỗi phiên; không yêu cầu M1 prefilled hoặc complete làm đầu vào. Corpus có sẵn bên dưới vẫn được giữ nguyên.
+
+Coding agent đã đăng nhập có thể bắt đầu từ [pipeline/HANDS_OFF.md](pipeline/HANDS_OFF.md), chọn profile M1/M2 theo yêu cầu người dùng và xử lý generation/review bằng model đang chọn; không cần API key hoặc model argument. Python quản lý môi trường stdlib, task JSON, checkpoint token/quota, kiểm tra và replay. Runner OpenAI API vẫn là lựa chọn riêng.
+
 ## Nguồn dữ liệu và cấu trúc thư mục
 
 | Đường dẫn | Nguồn | Nội dung và mục đích |

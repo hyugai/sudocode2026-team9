@@ -1,0 +1,115 @@
+{
+  "scenario_id": "SC-268",
+  "level": "M2",
+  "persona": "khach_so_gia",
+  "hard_case": "expired_promo",
+  "customer_phone": "0932568855",
+  "customer_name": "Lâm",
+  "honorific": "anh",
+  "notes": "return_after_price_or_stock_change",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0932568855",
+      "call_date": "2026-09-30",
+      "customer_turns": [
+        "Anh ơi, em vừa so sánh giá bên họ, họ bán chỉ bốn triệu hai trăm ba mươi nghìn.",
+        "Giá bên anh là bốn triệu ba trăm chín mươi nghìn, chênh 160.000. Anh có thể giảm được không?",
+        "Ưu đãi tháng 9 hết ngày ba mươi tháng chín, em muốn mua trước hết hạn.",
+        "Nếu không giảm, em xin hẹn gọi lại lúc mười giờ ngày một tháng mười.",
+        "Anh xem lại giá đi, bên họ đã rẻ hơn rồi."
+      ],
+      "customer_goal": "So báo giá với nơi khác trước khi quyết định",
+      "facts_established": {
+        "product_advised": "SKU-AP-X",
+        "price_quoted_vnd": 4390000,
+        "promo_code": "AP-SEP",
+        "promo_expiry": "2026-09-30",
+        "competitor_price_vnd": 4230000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-AP-X",
+        "price_vnd": 4390000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0",
+          "AP-SEP"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14",
+          "AP-SEP": "2026-09-30"
+        },
+        "scheduled_callback_at": "2026-10-01T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0932568855",
+          "callback_at": "2026-10-01T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0932568855",
+      "call_date": "2026-10-01",
+      "customer_turns": [
+        "Chào anh, em muốn chốt đơn theo giá bốn triệu tám trăm chín mươi nghìn.",
+        "Anh bảo thanh toán khi nhận hàng, em đồng ý.",
+        "Địa chỉ giao là 01 Lý Nam Đế, phường Thành Công, Đắk Lắk.",
+        "Em đã đặt hàng, anh xác nhận lại giúp em nhé.",
+        "Cảm ơn anh, em sẽ đợi giao hàng."
+      ],
+      "days_later": 1,
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-AP-X",
+        "price_quoted_vnd": 4890000,
+        "payment": "COD",
+        "delivery_address": "01 Lý Nam Đế, phường Thành Công, Đắk Lắk",
+        "order_status": "created"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "promo_code",
+        "promo_expiry",
+        "competitor_price_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-AP-X",
+        "price_vnd": 4890000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0",
+          "GIFT-FILTER"
+        ],
+        "expired_promos": [
+          "AP-SEP"
+        ],
+        "promo_expiry_dates": {
+          "GIFT-FILTER": "2026-10-22",
+          "COD-0": "2026-12-14",
+          "AP-SEP": "2026-09-30"
+        },
+        "estimated_delivery": "2026-10-03"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-AP-X",
+          "price_vnd": 4890000
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,96 @@
+{
+  "scenario_id": "SC-199",
+  "level": "M2",
+  "persona": "khach_so_gia",
+  "hard_case": null,
+  "customer_phone": "0977879432",
+  "customer_name": "Loan",
+  "honorific": "chị",
+  "notes": "consider_and_decide",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0977879432",
+      "call_date": "2026-11-02",
+      "customer_turns": [
+        "Chị ơi, em đang so sánh giá máy lọc không khí AirPure Y ở chỗ khác, giá chỉ năm triệu một trăm nghìn.",
+        "Ở chỗ chị là năm triệu hai trăm nghìn, em nghĩ có thể giảm được không?",
+        "Nếu không giảm, em xem lại sau.",
+        "Chị có thể gọi lại cho em lúc mười giờ ngày ba tháng mười một không?"
+      ],
+      "customer_goal": "So báo giá với nơi khác trước khi quyết định",
+      "facts_established": {
+        "product_advised": "SKU-AP-Y",
+        "price_quoted_vnd": 5200000,
+        "competitor_price_vnd": 5100000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-AP-Y",
+        "price_vnd": 5200000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [
+          "GIFT-FILTER"
+        ],
+        "promo_expiry_dates": {
+          "GIFT-FILTER": "2026-10-22",
+          "COD-0": "2026-12-14"
+        },
+        "scheduled_callback_at": "2026-11-03T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0977879432",
+          "callback_at": "2026-11-03T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0977879432",
+      "call_date": "2026-11-03",
+      "customer_turns": [
+        "Chị ơi, em nghĩ lại rồi, giá năm triệu hai trăm nghìn cũng không phải là cao, nhưng em vẫn muốn xem lại.",
+        "Em chưa quyết định mua ngay, chị thông cảm.",
+        "Cảm ơn chị đã tư vấn."
+      ],
+      "days_later": 1,
+      "customer_goal": "Xem lại báo giá và hoãn quyết định mua",
+      "facts_established": {
+        "product_advised": "SKU-AP-Y"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "competitor_price_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-AP-Y",
+        "price_vnd": 5200000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [
+          "GIFT-FILTER"
+        ],
+        "promo_expiry_dates": {
+          "GIFT-FILTER": "2026-10-22",
+          "COD-0": "2026-12-14"
+        }
+      },
+      "expected_outcome": "tu_choi",
+      "success_if": {
+        "tool_called": null,
+        "args_match": {}
+      }
+    }
+  }
+}

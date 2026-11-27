@@ -1,0 +1,104 @@
+{
+  "scenario_id": "SC-254",
+  "level": "M2",
+  "persona": "khach_do_du_hoi_nguoi_nha",
+  "hard_case": null,
+  "customer_phone": "0963279264",
+  "customer_name": "Đạt",
+  "honorific": "anh",
+  "notes": "continue_across_channels",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0963279264",
+      "call_date": "2026-10-25",
+      "customer_turns": [
+        "Chào anh, em đang muốn xem máy lọc không khí trong ngân sách bốn triệu năm trăm nghìn.",
+        "Anh có thể giới thiệu sản phẩm nào phù hợp không?",
+        "Em nghe nói Xiaomi Smart 4 Lite rất tốt, có đúng không ạ?",
+        "Giá sản phẩm là bao nhiêu?",
+        "Chị nói hai triệu chín trăm chín mươi nghìn, đúng không ạ?"
+      ],
+      "customer_goal": "Xem sản phẩm trong ngân sách và hỏi ý kiến người nhà",
+      "facts_established": {
+        "product_advised": "SKU-XM-4L",
+        "price_quoted_vnd": 2990000,
+        "budget_vnd": 4500000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-XM-4L",
+        "price_vnd": 2990000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "scheduled_callback_at": "2026-10-29T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0963279264",
+          "callback_at": "2026-10-29T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "zalo_oa",
+      "channel_identity": "zalo_đạt52",
+      "call_date": "2026-10-29",
+      "customer_turns": [
+        "Anh ơi, em đã hỏi người nhà rồi, họ đồng ý mua.",
+        "Chị báo giá là hai triệu chín trăm chín mươi nghìn, đúng không ạ?",
+        "Em muốn đặt hàng, giao đến số 71 đường Hà Sen, Hải Phòng.",
+        "Cách thanh toán là khi nhận hàng, đúng không ạ?",
+        "Được rồi, em chờ xác nhận nhé."
+      ],
+      "days_later": 4,
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-XM-4L",
+        "price_quoted_vnd": 2990000,
+        "payment": "COD",
+        "delivery_address": "Số 71, đường Hà Sen, đặc khu Cát Hải, Hải Phòng",
+        "order_status": "created"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "budget_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-XM-4L",
+        "price_vnd": 2990000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "estimated_delivery": "2026-10-31"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-XM-4L",
+          "price_vnd": 2990000
+        }
+      }
+    }
+  }
+}

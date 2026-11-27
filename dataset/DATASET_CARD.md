@@ -1,0 +1,207 @@
+# Mô tả bộ dữ liệu transcript và audio
+
+Phần corpus gốc/M2/audio đối chiếu local ngày **16/11/2026**; phần **ma trận M1 pipeline** cập nhật riêng ngày **18/11/2026**. Hai phạm vi được thống kê riêng, không cộng thành một corpus độc lập. Dữ liệu phục vụ phát triển/kiểm thử agent telesales tiếng Việt; số đếm không phải kết quả đánh giá chất lượng agent.
+
+## Mô tả ngắn để bàn giao corpus gốc/M2/audio
+
+- **Cách sinh dữ liệu:** transcript M2 được dựng bằng quy tắc/câu mẫu từ kịch bản và dữ liệu nghiệp vụ BTC, có lời khách và agent mẫu, kiểm tra bằng mock. Audio cũ được manifest ghi nhận sinh bằng OmniVoice Vietnamese với giọng tham chiếu ViMD; không phải cuộc gọi khách hàng thực tế.
+- **Phân bố:** M2 có 358 transcript/156 kịch bản/78 khách, gồm 222 phiên hotline, 68 Fanpage và 68 Zalo OA, bao phủ 12 persona và ba ngành hàng tham chiếu. Audio hiện có gồm 250 lượt khách của 80 phiên thuộc bộ gốc, tổng 29 phút 30,87 giây; metadata chọn giọng có Bắc, Trung, Nam. M2 chưa có audio khớp transcript mới.
+- **Hạn chế:** dữ liệu tổng hợp, có lặp template và chồng lấp nguồn; không phải trace agent thực tế. Audio thiếu lời agent, chưa xác minh accent/nhiễu bằng nghe đánh giá; thiếu tệp giọng tham chiếu local và còn sai khác hash nguồn. Khi chia tập cần giữ cùng khách và kịch bản dẫn xuất cùng nhóm.
+- **Thông tin cá nhân:** artifact mô tả danh tính tổng hợp; generator chỉ che một số mẫu số điện thoại/số nhà trong lời agent, vẫn giữ định danh trong lời khách và metadata. Chưa có bản xuất ẩn danh toàn bộ; quyền dùng/phân phối giọng chưa xác minh độc lập. Trước chia sẻ cần rà soát định danh trong cả văn bản lẫn audio và xác nhận quyền sử dụng nguồn giọng.
+
+Phần dưới ghi chi tiết và căn cứ cho bản mô tả ngắn; các khoảng trống được giữ nguyên để người nhận không nhầm là đã hoàn tất thu âm hoặc xử lý quyền riêng tư.
+
+## Ma trận thống kê M1 từ pipeline — cập nhật 18/11/2026
+
+### Phạm vi, trạng thái và cách đếm
+
+Phần này chỉ mô tả corpus M1 mới trong `pipeline/output/`, **không cộng với corpus gốc/M2 và audio ở `main/`**. Đối chiếu manifest, SHA-256 từng transcript, số phiên đầy đủ theo plan và nhãn accepted; không dùng tổng số file candidate hoặc bản tóm tắt tiến độ làm nguồn đếm. Hai nguồn là [run 10 hành trình đầu](pipeline/output/runs/m1_first_10_v1/) và [run bổ sung](pipeline/output/runs/m1_additional_140_v1/); bộ đã xuất nằm ở [m1_first_10_v1](pipeline/output/m1_first_10_v1/).
+
+Một **hành trình** là một khách tổng hợp qua nhiều phiên; một **transcript** là một phiên gồm cả hai vai; một **lượt nói** là một phát ngôn. Một **file scenario** là bản xuất `SC-XXX.json` của hành trình: có thể đã có đủ transcript nhưng chưa có file scenario. Đơn vị trong các bảng phải đọc riêng, không cộng hành trình và transcript với nhau.
+
+| Đơn vị | Đã có / accepted | Kế hoạch tổng | Còn lại |
+| --- | --- | --- | --- |
+| File scenario đã export | 10 | 150 | 140 file chưa export (gồm cả hành trình chưa sinh) |
+| Hành trình / khách duy nhất | 60 | 150 | 90 hành trình chưa sinh |
+| Transcript | 180 | 360 | 180 phiên chưa sinh |
+| Lượt nói | 1076 | Không ấn định | Không suy từ kế hoạch |
+| Audio gắn với transcript mới | 0 | Ngoài đợt sinh transcript | Chưa thực hiện |
+
+Hiện có **60 hành trình / 180 transcript accepted**, trong đó 10 hành trình / 30 transcript thuộc run đầu đã finalize, 50 hành trình / 150 transcript thuộc run bổ sung đang checkpoint, chưa finalize toàn run. Tất cả hành trình hiện có gồm ba phiên, có hai hotline và một phiên chat; không suy rằng toàn bộ corpus sau khi hoàn tất cũng có phân bố này. Có 538 lượt khách và 538 lượt agent; số lượt/phiên từ 4 đến 8, trung bình 5,98. Đây là số đếm nội dung, không phải điểm chất lượng ngôn ngữ.
+
+**Quy ước tỷ lệ:** ô ghi `n (p%)`; các bảng hành trình dùng mẫu số **60**, bảng kênh dùng **180** transcript. Phần trăm tính trên toàn mẫu của bảng, không phải trong từng hàng; làm tròn một chữ số nên tổng có thể lệch nhẹ 100%. Ô 0 cho biết chưa có mẫu theo nhãn đó. Nhãn persona, hard case, ngành lấy từ plan gắn với transcript accepted; chúng không thay thế kiểm tra ngữ nghĩa của lời thoại.
+
+### Persona × ca khó chính — đơn vị hành trình
+
+| Persona | Không gán ca khó | Đổi ý | Sửa ngân sách | KM hết hạn | Thiếu thông tin | Tổng |
+| --- | --- | --- | --- | --- | --- | --- |
+| Do dự (`hesitant`) | 3 (5,0%) | 4 (6,7%) | 4 (6,7%) | 4 (6,7%) | 5 (8,3%) | 20 (33,3%) |
+| So giá (`price_comparison`) | 6 (10,0%) | 3 (5,0%) | 3 (5,0%) | 4 (6,7%) | 4 (6,7%) | 20 (33,3%) |
+| Đổi sau mua (`exchange`) | 20 (33,3%) | 0 (0,0%) | 0 (0,0%) | 0 (0,0%) | 0 (0,0%) | 20 (33,3%) |
+| **Tổng** | 29 (48,3%) | 7 (11,7%) | 7 (11,7%) | 8 (13,3%) | 9 (15,0%) | 60 (100,0%) |
+
+Mỗi hành trình chỉ có một nhãn ca khó chính hoặc `none`; một cuộc trao đổi có thể đồng thời chạm nhiều quy tắc nghiệp vụ. `none` không có nghĩa không chứa tình huống khó khác. Các ví dụ hết hàng hoặc khác biệt nguồn bảo hành được mô tả riêng dưới đây, không tự đổi nhãn để tăng độ phủ.
+
+### Persona × ngành hàng — đơn vị hành trình
+
+| Persona | Gia dụng | Mẹ & bé | Thời trang | Tổng |
+| --- | --- | --- | --- | --- |
+| Do dự (`hesitant`) | 9 (15,0%) | 6 (10,0%) | 5 (8,3%) | 20 (33,3%) |
+| So giá (`price_comparison`) | 6 (10,0%) | 9 (15,0%) | 5 (8,3%) | 20 (33,3%) |
+| Đổi sau mua (`exchange`) | 0 (0,0%) | 0 (0,0%) | 20 (33,3%) | 20 (33,3%) |
+| **Tổng** | 15 (25,0%) | 15 (25,0%) | 30 (50,0%) | 60 (100,0%) |
+
+**Khoảng trống thấy được:** persona đổi sau mua hiện chỉ có thời trang, do adapter chọn sản phẩm có biến thể để dựng sự kiện đổi. Có đủ ba ngành không chứng minh mọi persona đều phủ cả ba ngành; hai ô ngành còn lại của nhóm exchange là 0, không được diễn giải thành đã thử khiếu nại/đổi hàng gia dụng hoặc mẹ & bé.
+
+### Kênh × vị trí phiên — đơn vị transcript
+
+| Kênh | Phiên 1 | Phiên 2 | Phiên 3 | Tổng |
+| --- | --- | --- | --- | --- |
+| Fanpage | 30 (16,7%) | 0 (0,0%) | 0 (0,0%) | 30 (16,7%) |
+| Zalo OA | 30 (16,7%) | 0 (0,0%) | 0 (0,0%) | 30 (16,7%) |
+| Hotline | 0 (0,0%) | 60 (33,3%) | 60 (33,3%) | 120 (66,7%) |
+| **Tổng** | 60 (33,3%) | 60 (33,3%) | 60 (33,3%) | 180 (100,0%) |
+
+Phân bố hiện tại chỉ có chat ở phiên đầu và hotline ở phiên sau; chưa chứng minh phủ hotline → chat hoặc chat xen giữa các lần gọi. Đếm khách đa kênh theo nhóm cùng `customer_id`/hành trình, không đếm một khách nhiều lần vì có nhiều phiên.
+
+### Kết quả phiên cuối × persona — đơn vị hành trình
+
+| Persona | Tư vấn (`consultation`) | Tạo đơn (`order.create`) | Yêu cầu đổi (`order.update`) | Tổng |
+| --- | --- | --- | --- | --- |
+| Do dự (`hesitant`) | 17 (28,3%) | 3 (5,0%) | 0 (0,0%) | 20 (33,3%) |
+| So giá (`price_comparison`) | 15 (25,0%) | 5 (8,3%) | 0 (0,0%) | 20 (33,3%) |
+| Đổi sau mua (`exchange`) | 0 (0,0%) | 0 (0,0%) | 20 (33,3%) | 20 (33,3%) |
+| **Tổng** | 32 (53,3%) | 8 (13,3%) | 20 (33,3%) | 60 (100,0%) |
+
+| Nhãn kết quả trên mọi phiên | Số transcript / tỷ lệ |
+| --- | --- |
+| consultation | 132 (73,3%) |
+| order.create | 28 (15,6%) |
+| order.update | 20 (11,1%) |
+
+Kết quả trên là nhãn tham chiếu trong transcript/plan, **không phải tool trace hoặc tỷ lệ thành công của sales agent thật**. `consultation` chưa phân biệt được còn cân nhắc với từ chối dứt khoát; muốn thống kê hai loại đó cần nhãn kết quả ngữ nghĩa bổ sung. `order.update` ở đây ghi nhận yêu cầu đổi với `pickup_scheduled`, chưa có nghĩa đổi đã hoàn tất. Bảng hành trình đếm phiên cuối một lần; bảng transcript còn tính phiên tạo đơn trước đó trong cùng hành trình đổi, nên hai tổng `order.create` khác nhau là đúng.
+
+### Quy tắc nghiệp vụ × ví dụ đã đối chiếu lời thoại
+
+Bảng dưới là **mẫu chú giải trên năm hành trình accepted**, không phải thống kê tần suất toàn corpus. `✓` là có đoạn thoại đã đọc đối chiếu cho quy tắc; `—` là chưa gán nhãn trong bảng ví dụ, **không khẳng định quy tắc vắng mặt**. Không lấy số từ khóa hoặc số mục tiêu trong plan làm số ca đã kiểm thử.
+
+| Quy tắc / tình huống | J0032 | J0038 | J0049 | J0055 | J0060 |
+| --- | --- | --- | --- | --- | --- |
+| Phí/thời gian giao có điều kiện | ✓ | ✓ | ✓ | — | — |
+| Phân biệt báo giá / ngân sách / phương thức với thanh toán | ✓ | — | — | ✓ | ✓ |
+| Thông tin bảo hành theo SKU | — | ✓ | ✓ | — | — |
+| Đổi trả / phí đổi khác chênh lệch | — | ✓ | — | — | ✓ |
+| Điều kiện/hiệu lực khuyến mãi | ✓ | — | ✓ | ✓ | — |
+| Không bịa địa chỉ / không lộ giá nội bộ | — | — | — | ✓ | — |
+| Cập nhật hết hàng khi khách quay lại | ✓ | — | — | — | — |
+| Hoàn tiền dự kiến khác đã hoàn | — | — | — | — | ✓ |
+
+Bằng chứng có thể mở trực tiếp trong [transcripts run bổ sung](pipeline/output/runs/m1_additional_140_v1/generation/transcripts/): J0032-S01/S02/S03 (phí, COD, hết hàng); J0038-S02/S03 (catalog 24 tháng ưu tiên policy chung 12 tháng, điều kiện trả); J0049-S01/S02 (bảo hành, ngưỡng MOM-FREESHIP và không tự thêm món); J0055-S01/S02/S03 (hỏi giá không là đặt, không gán địa chỉ để lấy mã, không tiết lộ giá sàn); J0060-S02/S03 (phí/chênh lệch và khoản hoàn chưa thực hiện). Mỗi phiên có `utterances` luân phiên và review có trích dẫn; lời thoại tham chiếu được kiểm tra không có nghĩa agent thật đã thực thi quy tắc.
+
+Muốn đếm quy tắc trên toàn corpus, cần bảng nhãn riêng gồm `journey_id`, `transcript_id`, `turn_index`, `rule`, `evidence`, trạng thái `observed/not_observed/uncertain` và nguồn/phương pháp gán nhãn. Giữ đa nhãn khi một hành trình có nhiều quy tắc; mẫu số và tỷ lệ phải công bố theo đơn vị đã chọn. Chưa có bảng gán nhãn đầy đủ đó, nên không công bố phần trăm phủ nghiệp vụ từ các ví dụ này.
+
+### Giới hạn diễn giải và cập nhật
+
+- Đây là ảnh chụp tiến độ ngày 18/11/2026; đếm lại khi có manifest accepted mới. Kế hoạch 150 hành trình / 360 transcript không phải số đã sinh. Không đếm lại run M1 đầy đủ cũ chứa bản sao J0001 hoặc các bản replay/candidate vào corpus này.
+- Độ cân bằng persona hiện tại không chứng minh tính đại diện khách hàng thực. Mọi hành trình hiện có ba phiên và luồng chat → hotline → hotline, nhóm exchange tập trung thời trang; đây là thiên lệch thiết kế và thứ tự sinh.
+- Có kiểm tra schema/facts/duplicates và review cùng coding agent (`same_agent_self_review`); vẫn có thể bỏ sót lỗi ngữ nghĩa hoặc paraphrase gần trùng. Không gọi đó là đánh giá độc lập, TSR hoặc chất lượng hội thoại được chứng nhận.
+- Chưa có reference event cho callback/handoff, xung đột định danh, yêu cầu xóa dữ liệu/PII masking; không tự gán các ca đó là đã phủ. Chưa tạo audio, ASR hoặc benchmark agent thật cho corpus mới.
+- Pipeline mới không có masker; dùng ID khách tổng hợp `SYN-C...` và địa chỉ có nhãn kiểm thử từ nguồn, không tạo số liên hệ người thật. Giữ đáp án, review, `ground_truth_facts` và `success_if` ngoài prompt của agent được đánh giá. Biện pháp này không xác nhận đã hoàn tất mọi yêu cầu PII trong đề.
+- Các file `pipeline/output/` bị Git ignore; clone chỉ chứa tài liệu và code sẽ không có bằng chứng local để đếm lại. Khi bàn giao corpus cần kèm archive/checkpoint tương ứng; không sửa sealed artifact chỉ để cập nhật báo cáo.
+
+**Cách tính lại:** đọc hai `generation/manifest.json` đã nêu, xác minh đường dẫn/hash, nhóm transcript theo `journey_id` và đối chiếu đủ phiên với `generation/plan/plans.json`. Đếm duy nhất trên nhóm accepted: persona/ca khó/ngành theo plan gắn nhóm, kênh và kết quả theo transcript. Kế hoạch tổng chỉ gồm 10 hành trình của run đầu cộng `settings.selected_journey_ids` (140 ID) của run bổ sung, không cộng mọi plan có trong cả hai snapshot. Đọc riêng manifest export để đếm file `SC-XXX.json`. Đối chiếu tổng hàng/cột về đúng 60 hành trình hoặc 180 transcript và kiểm tra ID khách/hành trình/phiên không trùng trước khi công bố.
+
+## Phụ lục đối chiếu corpus gốc/M2/audio — 16/11/2026
+
+### Phạm vi và đơn vị đếm
+
+Một **kịch bản** gom các phiên thuộc một hành trình kiểm thử; một **transcript** chứa lời khách và lời agent của một phiên; một **lượt nói** là phát ngôn của một người. Một WAV hiện có chỉ chứa một lượt khách, không phải toàn bộ hội thoại.
+
+| Thành phần | Vị trí và mục đích | Quy mô đã đối chiếu |
+| --- | --- | --- |
+| Nguồn BTC | [organizer/](organizer/): CRM seed, catalog, policy, schema, mock và evaluator | Nguồn tham chiếu nghiệp vụ; không cộng vào số hội thoại nhóm tạo |
+| Kịch bản gốc của nhóm | [main/scenarios_complete/](main/scenarios_complete/); bản seed tương ứng ở [scenarios_prefilled/](main/scenarios_prefilled/) | 120 kịch bản SC-001–SC-120, 250 phiên, 812 lượt khách; không có đầy đủ lời agent |
+| Transcript M2 của nhóm | [conversations/](main/m2_transcripts/conversations/), [manifest.jsonl](main/m2_transcripts/manifest.jsonl); [scripts/](main/m2_transcripts/scripts/) để đọc/thu âm | 358 transcript, 156 kịch bản SC-121–SC-276; có cả khách và agent mẫu |
+| Audio của nhóm | [main/audio/](main/audio/); [manifest.csv](main/manifest.csv), [manifest.json](main/manifest.json), [manifest.jsonl](main/manifest.jsonl) | 250 WAV lượt khách, thuộc 80 phiên của 40 kịch bản SC-001–SC-040 |
+
+Manifest là bảng kê đường dẫn và metadata: audio liên kết bằng `scenario_id`, `call_id`, `turn_index` (từ 0), cùng `text_original`, `text_tts`, đường dẫn, thời lượng và SHA-256. Đường dẫn audio tính từ `main/`; đường dẫn trong manifest M2 tính từ `main/m2_transcripts/`.
+
+**Liên kết và độ bao phủ:** 250/812 lượt khách và 80/250 phiên gốc có audio cho lời khách (30,79% lượt; 32% phiên), chưa có lời agent thành tiếng. Bộ M2 có `audio_path: null` ở cả 358 mục manifest và không có tệp audio local; độ bao phủ audio hai người nói là **0/358**. Không ghép WAV cũ với transcript M2 để báo đủ hội thoại có audio.
+
+**Tránh đếm trùng:** 120 kịch bản M2 SC-121–SC-240 mở rộng từ SC-001–SC-120; 36 kịch bản SC-241–SC-276 dùng khách tổng hợp bổ sung. Không cộng 250 phiên gốc và 358 transcript rồi gọi đó là các hội thoại độc lập. Metadata nguồn nằm tại [scenario_metadata.json](main/m2_transcripts/scenario_metadata.json).
+
+### 1. Cách sinh dữ liệu
+
+**Transcript:** bộ gốc có seed cố định và `fields_to_generate`, kết hợp hồ sơ khách, persona, sản phẩm và dữ kiện nghiệp vụ BTC ([hướng dẫn](main/README.md)). Chưa xác minh được model/prompt/lịch sử chạy đã tạo lời thoại gốc; hướng dẫn dùng LLM không phải bằng chứng đã dùng một model cụ thể. Bộ M2 được dựng bằng quy tắc và câu mẫu trong [build_corpus.py](main/m2_transcripts/build_corpus.py), mở rộng lời khách và thêm lời agent, dùng mock BTC để tính giá, tồn kho và thao tác nghiệp vụ. Generator này không chạy agent hoặc gọi TTS; lời agent là đáp án mẫu, không phải trace hệ thống.
+
+Có thêm [bước biên tập ngôn ngữ bằng LLM](main/m2_transcripts/NATURALIZATION.md) sau baseline: gửi lời thoại nguyên văn cùng ràng buộc, lưu prompt/response, kiểm tra và xuất candidate riêng để người duyệt. Bước này không có masker; khi gọi live, tên/số điện thoại/địa chỉ có trong lời thoại sẽ được gửi nguyên văn cho provider. Chưa gọi model thật trong lần triển khai; các số liệu corpus trong tài liệu này vẫn thuộc baseline, không phải dữ liệu đã được LLM biên tập.
+
+**Audio:** [manifest.json](main/manifest.json) ghi model `splendor1811/omnivoice-vietnamese`, revision `f70093f90d78a5b790ff0f066b3629ebcc33cb5d`, OmniVoice `0.2.1`, ngôn ngữ `vi`, tốc độ `1.0`, seed gốc `20261007` và seed từng clip. [Notebook tương ứng](text-to-speech/pipeline-generate-audio/customer_turns_to_omnivoice_vietnamese_vimd_40_scenarios_kaggle.ipynb) chọn một giọng tham chiếu ViMD theo tỉnh/giới tính cho mỗi kịch bản; nguồn `nguyendv02/ViMD_Dataset`, revision `3a5b30157034e7eadd5c75fae1a820c6f9383398`. `text_original` lưu câu gốc, `text_tts` lưu câu đưa vào TTS, có thể đổi chữ số thành cách đọc. Đây là nguồn ghi trong artifact, chưa tái chạy TTS để xác nhận tái lập âm thanh.
+
+**Kiểm tra:** lần rà soát này mở được 250 WAV, đối chiếu SHA-256, thời lượng với manifest và `text_original` với đúng lượt khách nguồn: không có sai lệch. CSV và JSONL tương ứng; 14 trường dùng chung giữa các bản ghi JSON và JSONL nhất quán (cấu trúc/metadata bổ sung khác nhau). Manifest M2 có đủ đường dẫn transcript/kịch bản/script và checksum hợp lệ. Chạy lại validator M2 đạt: 2.021 lệnh mock, 358 điều kiện call và 172 probe âm. Đây là kiểm tra fixture, chưa kiểm tra nghe thủ công toàn bộ audio hoặc chất lượng phản hồi agent.
+
+### 2. Phân bố dữ liệu
+
+| Chỉ tiêu | Kết quả hiện có và đơn vị đếm |
+| --- | --- |
+| Transcript M2 | 358 phiên, 4.308 lượt nói: 2.154 lượt khách và 2.154 lượt agent |
+| Khách M2 | 78 `customer_id` khác nhau: 42 kế thừa nguồn, 36 bổ sung; cả 78 có ít nhất hai phiên trong corpus |
+| Hành trình M2 | 46 khách có hành trình ba phiên; 62 có hai cuộc hotline trong cùng hành trình; 61 có cả gọi và chat trên corpus, trong đó 57 có ngay trong một hành trình |
+| Kênh M2 | 222 hotline (62,01%), 68 Fanpage (18,99%), 68 Zalo OA (18,99%) |
+| Kênh bộ gốc | 150 hotline (60%), 50 Fanpage (20%), 50 Zalo OA (20%) |
+| Ngành hàng tham chiếu | Gia dụng, thời trang, mẹ và bé; catalog có 40 mẫu cha, 128 SKU lá chưa ngừng bán khi tính cả biến thể, không đồng nghĩa luôn còn tồn kho |
+| Audio đo từ header WAV | 250 clip; tổng **1.770,87 giây = 29 phút 30,87 giây**; mono, PCM 16-bit, 24.000 Hz |
+| Vùng miền audio theo metadata | Bắc: 86 clip/14 kịch bản; Trung: 107/17; Nam: 57/9. Đây là nhãn yêu cầu/chọn giọng, chưa chứng minh chất giọng đầu ra qua nghe đánh giá |
+| Người nói audio theo metadata | 40 `speakerID` tham chiếu khác nhau; 125 clip nhãn Nữ, 125 nhãn Nam. Không suy ra đây là 40 người tham gia thu âm cho dự án |
+| Audio nhiễu hiện có | Chưa có nhãn/đo kiểm xác nhận tỷ lệ nhiễu; không báo 0% hay đạt 20% |
+
+Phân bố **kịch bản** theo persona (không phải số phiên):
+
+| Persona | Bộ gốc | M2 |
+| --- | ---: | ---: |
+| Do dự, hỏi người nhà | 10 | 10 |
+| So giá | 10 | 10 |
+| Đã mua, đổi size | 10 | 10 |
+| Hỏi nhiều không mua | 10 | 10 |
+| Gọi lần ba hết kiên nhẫn | 10 | 10 |
+| Đa kênh Fanpage–hotline | 10 | 10 |
+| Ngoài phạm vi, chuyển máy | 10 | 10 |
+| Hỏi ngoài tài liệu | 10 | 10 |
+| Đa kênh có mâu thuẫn | 10 | 10 |
+| Hai người chung số điện thoại | 10 | 10 |
+| Quay lại sau tám tháng | 10 | 10 |
+| Mua nhiều món | 10 | 46 |
+
+**Chỉ là kế hoạch:** [recording_plan.jsonl](main/m2_transcripts/recording_plan.jsonl) có 222 phiên hotline chờ thu/sinh, chia Bắc/Trung/Nam 74/74/74; 45 phiên dự kiến có nhiễu. Thời lượng ước tính trong kế hoạch không phải thời lượng đo và không cộng vào tổng audio hiện có. Nguồn phân bố: [coverage gốc](main/coverage.json), [coverage M2](main/m2_transcripts/coverage.json), manifest và các tệp thực tế.
+
+### 3. Hạn chế
+
+- Lời thoại tổng hợp dựa trên câu mẫu, luân phiên khách–agent; chưa đại diện đầy đủ cho ngắt lời, hội thoại tự nhiên hoặc lỗi ASR ngoài thực tế. M2 thiên về persona mua nhiều món (46/156 kịch bản); mỗi persona còn lại chỉ có 10.
+- Audio cũ chỉ bao phủ bốn nhóm persona đầu ở SC-001–SC-040, thiếu lời agent. M2 chưa có audio hai người nói; theo [requirements.json](main/m2_transcripts/requirements.json), phần audio tối thiểu 100 hội thoại/10.800 giây chưa đạt. Chưa đo chất lượng TTS, accent, nhiễu hoặc diarization trong lần rà soát này.
+- Không tìm thấy 40 tệp `reference_audio_relative` mà manifest audio trỏ tới trong cây local `main/`; chúng không thuộc 250 WAV đầu ra đã kiểm tra. Không thể dùng riêng cây local hiện tại để nghe lại toàn bộ giọng tham chiếu hoặc bảo đảm tái lập TTS. Chưa kiểm tra nội dung/quyền truy cập thư mục Google Drive được liên kết trong README.
+- Ba hash nguồn gốc được lưu cho `schemas/tools.schema.json`, `eval/mock_tools.py`, `eval/reference_eval.py` khác tệp BTC hiện tại; [coverage gốc](main/coverage.json) ghi nhận chưa tìm được phiên bản nguồn tương ứng. Không thay hash lịch sử để che sai khác.
+- Lời agent mẫu, lệnh mock và kiểm tra fixture không chứng minh TSR/RQR/CCR/HR của hệ thống. Rà soát ngữ nghĩa thủ công và chạy agent/simulator cho bộ M2 vẫn được tài liệu nguồn ghi là chờ thực hiện.
+- Khi chia tập, giữ cùng khách và các kịch bản dẫn xuất từ cùng nguồn trong một tập; với ca chung số, giữ nhóm định danh liên quan cùng nhau. Không coi các nhánh scenario cùng khách là một lịch sử liên tục. Giữ `success_if`, `ground_truth_facts`, `private_annotations` và lời agent mẫu ngoài đầu vào của agent được đánh giá.
+
+### 4. Xử lý thông tin cá nhân
+
+**Nguồn và hiện trạng:** [customers.json](main/m2_transcripts/customers.json) mô tả danh tính fixture tổng hợp; generator kế thừa 42 hồ sơ nguồn và tạo 36 danh tính bổ sung. Có tên, số điện thoại, định danh kênh và địa chỉ trong scenario, lời khách hoặc tham số/kết quả mock. Đây là bằng chứng về mục đích tạo fixture, không xác nhận số điện thoại/địa chỉ không trùng người thật và không phải giấy phép liên hệ họ.
+
+**Biện pháp đã có:** hàm `scrub()` trong generator thay số điện thoại dạng 10 chữ số bằng bốn số cuối và bỏ số nhà của mẫu “đường Kiểm Thử” trong **lời agent M2**. Validator kiểm tra hai mẫu này. Rà soát regex `(?<!\d)0\d{9}(?!\d)` trên 4.308 lượt M2 tìm thấy 258 lượt khách chứa số đầy đủ và 0 lượt agent; không hiển thị các giá trị đó trong tài liệu này. Corpus **chưa được ẩn danh toàn bộ**. Bộ mã runtime có [mask_pii](../src/telesale_agent/adapters/rules/pii_utils.py), nhưng điều đó không chứng minh mọi file dataset/metadata đã đi qua cơ chế này.
+
+**Audio và giọng tham chiếu:** manifest giữ `speakerID`, tỉnh/vùng, giới tính, câu tham chiếu và đường dẫn tham chiếu. Manifest/notebook ghi các nhãn giấy phép nguồn: ViMD `CC-BY-NC-ND-4.0`, checkpoint/code OmniVoice `Apache-2.0`, tokenizer `Boson Higgs Audio 2 Community License Agreement`. Đây chỉ là nhãn được artifact ghi lại; lần rà soát local chưa xác minh độc lập điều khoản, sự đồng ý dùng giọng hoặc quyền phân phối audio dẫn xuất. Không suy từ nhãn giấy phép thành quyền dùng giọng cho mọi mục đích.
+
+**Việc còn cần trước khi chia sẻ:** xác minh nguồn/quyền dùng giọng; rà soát tên, số, địa chỉ và định danh kênh trên transcript, script, manifest, `customers.json` và `private_annotations`. Nếu cần xuất bản che thông tin, dùng bảng ánh xạ ổn định theo khách/hồ sơ để giữ liên kết đa phiên, không gộp người chỉ vì chung số. Kiểm tra cả thông tin đọc thành lời trong audio, kể cả số viết bằng chữ; thay văn bản không tự thay được nội dung WAV. Chưa tạo bản xuất đã che thông tin, chưa nghe rà soát toàn bộ audio, và không cam kết đây là bộ dữ liệu công khai đã xử lý xong quyền riêng tư.
+
+### Cách đọc và kiểm tra lại
+
+Đọc transcript theo thứ tự `utterances` (`speaker: customer|agent`); chạy evaluator bằng thư mục `scenarios_complete/` thích hợp, không đưa thư mục `conversations/` vào bộ nạp scenario. Khi kiểm thử: giữ state giữa các call của một scenario, reset giữa các scenario. Không chạy generator nếu chỉ muốn đọc/kiểm tra, vì generator ghi đè artifact.
+
+Từ gốc repo, kiểm tra fixture mà không sinh lại dữ liệu:
+
+```bash
+python3 -B dataset/main/m2_transcripts/validate_corpus.py
+python3 -B -m unittest discover -s dataset/main/m2_transcripts/tests -v
+```
+
+Lần rà soát 16/11/2026 đã chạy validator: **pass**, không có lỗi; kết quả khớp [validation_report.json](main/m2_transcripts/validation_report.json) đã lưu. **9/9 regression test đạt**; mã mock/evaluator BTC phát `ResourceWarning` do file đọc chưa đóng, không gây test thất bại. Các phép đếm, SHA-256 và đo thời lượng WAV nêu trên được đối chiếu bằng Python standard library (`json`, `csv`, `hashlib`, `wave`), không gọi dịch vụ ngoài. Việc xác minh quyền dùng giọng, đánh giá nghe/ngữ nghĩa, bổ sung audio và tạo bản xuất che thông tin vẫn là các khoảng trống thực tế; hoàn thành tài liệu không có nghĩa đã hoàn thành các việc đó.

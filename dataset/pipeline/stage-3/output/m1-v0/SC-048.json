@@ -1,0 +1,107 @@
+{
+  "scenario_id": "SC-058",
+  "level": "M1",
+  "persona": "khach_do_du_hoi_nguoi_nha",
+  "hard_case": null,
+  "customer_phone": "0911265844",
+  "customer_name": "Toàn",
+  "honorific": "anh",
+  "notes": "continue_across_channels",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0911265844",
+      "call_date": "2026-10-30",
+      "customer_turns": [
+        "Chào chị, em đang muốn xem sản phẩm trong ngân sách tám triệu đồng, nhưng cần hỏi ý kiến người nhà.",
+        "Chị có thể giới thiệu sản phẩm nào phù hợp với ngân sách không?",
+        "Em nghe nói là có combo AirPure Y + hai màng lọc, giá sáu triệu ba trăm chín mươi nghìn, đúng không?",
+        "Em sẽ hỏi người nhà rồi gọi lại, chị ơi.",
+        "Chị hẹn em 10 giờ ngày 3 tháng 11 nhé."
+      ],
+      "customer_goal": "Xem sản phẩm trong ngân sách và hỏi ý kiến người nhà",
+      "facts_established": {
+        "product_advised": "SKU-BDL-AIR",
+        "price_quoted_vnd": 6390000,
+        "budget_vnd": 8000000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-BDL-AIR",
+        "price_vnd": 6390000,
+        "in_stock": true,
+        "active_promos": [
+          "NAM-SHIP0",
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "NAM-SHIP0": "2026-11-05",
+          "COD-0": "2026-12-14"
+        },
+        "scheduled_callback_at": "2026-11-03T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0911265844",
+          "callback_at": "2026-11-03T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "chat_fanpage",
+      "channel_identity": "fb.toàn.855",
+      "call_date": "2026-11-03",
+      "customer_turns": [
+        "Chị ơi, hôm trước chị nói rồi mà, em đã đồng ý mua combo AirPure Y + 2 màng lọc.",
+        "Giá là sáu ba chín, em thấy ổn. Thanh toán khi nhận hàng được không?",
+        "Giao hàng đến số 705 đường 3/2, Cần Thơ nhé.",
+        "Chị ơi, em đã chốt đơn rồi."
+      ],
+      "days_later": 4,
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-BDL-AIR",
+        "price_quoted_vnd": 6390000,
+        "payment": "COD",
+        "delivery_address": "Số 705 đường 3/2, phường An Bình, Cần Thơ",
+        "order_status": "created"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "budget_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-BDL-AIR",
+        "price_vnd": 6390000,
+        "in_stock": true,
+        "active_promos": [
+          "NAM-SHIP0",
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "NAM-SHIP0": "2026-11-05",
+          "COD-0": "2026-12-14"
+        },
+        "estimated_delivery": "2026-11-05"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-BDL-AIR",
+          "price_vnd": 6390000
+        }
+      }
+    }
+  }
+}

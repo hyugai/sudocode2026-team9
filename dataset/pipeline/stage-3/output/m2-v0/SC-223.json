@@ -1,0 +1,103 @@
+{
+  "scenario_id": "SC-259",
+  "level": "M2",
+  "persona": "khach_da_mua_doi_size",
+  "hard_case": null,
+  "customer_phone": "0964252477",
+  "customer_name": "Trang",
+  "honorific": "chị",
+  "notes": "continue_across_channels",
+  "calls": {
+    "call_1": {
+      "channel": "zalo_oa",
+      "channel_identity": "zalo_trang63",
+      "call_date": "2026-10-30",
+      "customer_turns": [
+        "Chị ơi, em đã đặt giày sneaker Urban Classic màu xám size bốn mươi rồi.",
+        "Giá là tám trăm chín mươi nghìn, thanh toán khi nhận hàng nhé.",
+        "Giao hàng đến số 289 đường Nguyễn Công Trứ, phường An Hải, Đà Nẵng."
+      ],
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-SN-CAS-40-XAM",
+        "price_quoted_vnd": 890000,
+        "payment": "COD",
+        "delivery_address": "Số 289 đường Nguyễn Công Trứ, phường An Hải, Đà Nẵng",
+        "order_status": "created"
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-SN-CAS-40-XAM",
+        "price_vnd": 890000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "estimated_delivery": "2026-11-02"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-SN-CAS-40-XAM",
+          "price_vnd": 890000
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0964252477",
+      "call_date": "2026-11-03",
+      "customer_turns": [
+        "Chị ơi, em vừa nhận hàng rồi, nhưng size bốn mươi không vừa.",
+        "Em muốn đổi sang size bốn mươi hai, màu xám giống vậy.",
+        "Còn hàng không ạ? Em mong được hỗ trợ nhanh."
+      ],
+      "days_later": 4,
+      "customer_goal": "Đổi sang size khác sau khi nhận hàng",
+      "facts_established": {
+        "new_variant_sku": "SKU-SN-CAS-42-XAM"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "payment",
+        "delivery_address",
+        "order_status"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-SN-CAS-40-XAM",
+        "price_vnd": 890000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "replacement_in_stock": true,
+        "exchange_fee_vnd": 0,
+        "policy_reference": "DT-03"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.update",
+        "args_match": {
+          "order_id": "OD600001",
+          "action": "exchange_size",
+          "new_variant_sku": "SKU-SN-CAS-42-XAM"
+        }
+      }
+    }
+  }
+}

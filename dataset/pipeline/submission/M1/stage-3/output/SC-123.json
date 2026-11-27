@@ -1,0 +1,98 @@
+{
+  "scenario_id": "SC-139",
+  "level": "M1",
+  "persona": "khach_ngoai_pham_vi_chuyen_may",
+  "hard_case": "handoff",
+  "customer_phone": "0911265844",
+  "customer_name": "Toàn",
+  "honorific": "anh",
+  "notes": "transfer_with_context",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0911265844",
+      "call_date": "2026-10-27",
+      "customer_turns": [
+        "Anh ơi, em đang tìm mua túi trữ sữa cho con, có sản phẩm nào an toàn không ạ?",
+        "Chuyên viên tư vấn giúp em với, em muốn mua Túi trữ sữa Sunmum năm mươi túi.",
+        "Giá bao nhiêu ạ? Em nghe nói là một trăm mười chín ngàn đồng.",
+        "Em muốn đặt mua, nhưng chưa chắc. Anh có thể gọi lại em vào mười giờ ngày hai mươi chín tháng mười không ạ?"
+      ],
+      "customer_goal": "Hỏi về sản phẩm và hẹn xem lại",
+      "facts_established": {
+        "product_advised": "SKU-MB-BAG",
+        "price_quoted_vnd": 119000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-MB-BAG",
+        "price_vnd": 119000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "scheduled_callback_at": "2026-10-29T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0911265844",
+          "callback_at": "2026-10-29T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0911265844",
+      "call_date": "2026-10-29",
+      "customer_turns": [
+        "Anh ơi, em muốn hỏi thêm về an toàn sử dụng túi trữ sữa ngoài phạm vi bán hàng. Có ảnh hưởng gì không ạ?",
+        "Em muốn nói chuyện với chuyên viên y tế, không phải người bán hàng.",
+        "Anh có thể chuyển máy cho dược sĩ không ạ?",
+        "Em cần biết rõ hơn để an tâm sử dụng cho con."
+      ],
+      "days_later": 2,
+      "customer_goal": "Hỏi về an toàn sử dụng ngoài phạm vi bán hàng và yêu cầu chuyên viên",
+      "facts_established": {},
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-MB-BAG",
+        "price_vnd": 119000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        }
+      },
+      "expected_outcome": "chuyen_may",
+      "success_if": {
+        "tool_called": "handoff.transfer",
+        "args_match": {},
+        "brief_must_contain": [
+          "customer_phone",
+          "customer_name",
+          "escalation_reason",
+          "conversation_summary",
+          "product_advised",
+          "price_quoted_vnd",
+          "open_questions",
+          "next_action",
+          "generated_at"
+        ]
+      }
+    }
+  }
+}

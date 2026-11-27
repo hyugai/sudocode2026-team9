@@ -1,0 +1,145 @@
+{
+  "scenario_id": "SC-097",
+  "level": "M1",
+  "persona": "khach_goi_lan_3_het_kien_nhan",
+  "hard_case": "third_call_price_change",
+  "customer_phone": "0956517883",
+  "customer_name": "Thủy",
+  "honorific": "chị",
+  "notes": "return_after_price_or_stock_change",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0956517883",
+      "call_date": "2026-10-06",
+      "customer_turns": [
+        "Chị ơi, em muốn hỏi về giày chạy bộ RunLite hai Pro màu xám size bốn mươi ba.",
+        "Giá bao nhiêu vậy chị?",
+        "Ưu đãi giảm 20% đúng không? Hết ngày bảy tháng mười đúng không?",
+        "Em hẹn gọi lại lúc mười giờ ngày bảy."
+      ],
+      "customer_goal": "Hỏi về sản phẩm và hẹn xem lại",
+      "facts_established": {
+        "product_advised": "SKU-SN-RUN2-43-XAM",
+        "price_quoted_vnd": 1392000,
+        "promo_code": "RUN2-SALE",
+        "promo_expiry": "2026-10-07"
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN2-43-XAM",
+        "price_vnd": 1392000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0",
+          "RUN2-SALE"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14",
+          "RUN2-SALE": "2026-10-07"
+        },
+        "scheduled_callback_at": "2026-10-07T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0956517883",
+          "callback_at": "2026-10-07T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0956517883",
+      "call_date": "2026-10-07",
+      "customer_turns": [
+        "Chị ơi, em gọi lại xác nhận giá trước khi hết khuyến mãi.",
+        "Giá lúc trước là một triệu ba trăm chín mươi hai nghìn đúng không?",
+        "Không có thay đổi gì ạ?",
+        "Em đợi chị báo lại."
+      ],
+      "days_later": 1,
+      "customer_goal": "Gọi lại xác nhận mức giá trước khi hết khuyến mãi",
+      "facts_established": {},
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "promo_code",
+        "promo_expiry"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN2-43-XAM",
+        "price_vnd": 1392000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0",
+          "RUN2-SALE"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14",
+          "RUN2-SALE": "2026-10-07"
+        }
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": null,
+        "args_match": {}
+      }
+    },
+    "call_3": {
+      "channel": "hotline",
+      "channel_identity": "0956517883",
+      "call_date": "2026-10-08",
+      "customer_turns": [
+        "Chị ơi, giá đã tăng lên một triệu bảy trăm bốn mươi nghìn rồi đúng không?",
+        "Thanh toán khi nhận hàng, giao đến 178 Phan Huy Chú, Đắk Lắk.",
+        "Em chốt đơn rồi.",
+        "Thôi khỏi."
+      ],
+      "days_later": 1,
+      "customer_goal": "Gọi lần thứ ba, xác nhận giá mới và chốt đơn nhanh",
+      "facts_established": {
+        "product_advised": "SKU-SN-RUN2-43-XAM",
+        "price_quoted_vnd": 1740000,
+        "payment": "COD",
+        "delivery_address": "178 Phan Huy Chú, phường Khánh Xuân, Đắk Lắk",
+        "order_status": "created"
+      },
+      "must_carry_over": [],
+      "must_not_ask": [],
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN2-43-XAM",
+        "price_vnd": 1740000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [
+          "RUN2-SALE"
+        ],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14",
+          "RUN2-SALE": "2026-10-07"
+        },
+        "estimated_delivery": "2026-10-10"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-SN-RUN2-43-XAM",
+          "price_vnd": 1740000
+        },
+        "max_agent_questions": 1
+      }
+    }
+  }
+}

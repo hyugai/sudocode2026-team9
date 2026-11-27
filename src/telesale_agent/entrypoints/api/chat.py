@@ -1,7 +1,6 @@
 import asyncio
 import logging
 import os
-import re
 import secrets
 import json
 import time
@@ -20,11 +19,12 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".
 
 from telesale_agent.bootstrap import build_deepagent_harness_async
 from telesale_agent.adapters.asr.config import ASRConfig
+from telesale_agent.adapters.llm.call_brief_summary import GeminiCallBriefSummarizer
 from telesale_agent.adapters.llm.rate_limits import is_rate_limit_error, provider_cooldown
 from telesale_agent.core.errors import ASRUnavailableError, AudioInputError, AudioTooLargeError
 from telesale_agent.core.models import CallBrief, Channel, TurnInput, ConversationState
 from telesale_agent.core.business_time import business_date
-from telesale_agent.adapters.rules.pii_utils import mask_pii
+from telesale_agent.adapters.rules.pii_utils import mask_call_brief_pii
 from contextlib import asynccontextmanager
 from telesale_agent.adapters.db.app_repository import AppDataNotFound, AppDataRepository, ConversationConflict
 from telesale_agent.adapters.db.checkpoint import CheckpointError
@@ -32,6 +32,7 @@ from telesale_agent.adapters.db.learning import LearningSnapshotTooLarge
 from telesale_agent.adapters.db.customer_identity import CustomerContactError
 from telesale_agent.application.memory.lifecycle import flush_customer_memory
 from telesale_agent.entrypoints.api.auth import COOKIE_NAME, auth_error, get_auth_repository, require_origin, require_user, require_customer
+from telesale_agent.entrypoints.api.call_brief import get_call_brief_summarizer
 
 # Global harness reference
 harness = None
@@ -44,6 +45,7 @@ async def lifespan(app: FastAPI):
     print("🚀 Khởi tạo kết nối MCP Servers cho API Backend...")
     harness = await build_deepagent_harness_async()
     try:
+        app.state.call_brief_summarizer = GeminiCallBriefSummarizer.from_env()
         from self_agent.config import LearningConfig
         if LearningConfig.from_env().enabled:
             from self_agent.backend import build_backend_learning
@@ -183,7 +185,8 @@ class ChatRequest(BaseModel):
         return value.strip()
 
 @app.post("/api/chat", dependencies=[Depends(require_chat_access)])
-async def chat_endpoint(req: ChatRequest, request: Request, repository: AppDataRepository = Depends(get_auth_repository)):
+async def chat_endpoint(req: ChatRequest, request: Request, repository: AppDataRepository = Depends(get_auth_repository),
+                        brief_summarizer: GeminiCallBriefSummarizer | None = Depends(get_call_brief_summarizer)):
     turn_input = TurnInput(
         conversation_id=req.conversation_id,
         text=req.message,
@@ -193,8 +196,8 @@ async def chat_endpoint(req: ChatRequest, request: Request, repository: AppDataR
     )
     repository, user_id = await conversation_owner(request, req.conversation_id, repository)
     if "text/event-stream" in request.headers.get("accept", ""):
-        return stream_chat_turn(turn_input, repository=repository, user_id=user_id)
-    return await run_chat_turn(turn_input, repository=repository, user_id=user_id)
+        return stream_chat_turn(turn_input, repository=repository, user_id=user_id, brief_summarizer=brief_summarizer)
+    return await run_chat_turn(turn_input, repository=repository, user_id=user_id, brief_summarizer=brief_summarizer)
 
 
 @app.post("/api/chat/audio", dependencies=[Depends(require_chat_access)])
@@ -205,6 +208,7 @@ async def audio_chat_endpoint(
     customer_phone: str | None = Form(default=None),
     call_date: date | None = Form(default=None),
     repository: AppDataRepository = Depends(get_auth_repository),
+    brief_summarizer: GeminiCallBriefSummarizer | None = Depends(get_call_brief_summarizer),
 ):
     try:
         if harness is None:
@@ -230,8 +234,8 @@ async def audio_chat_endpoint(
         )
         repository, user_id = await conversation_owner(request, conversation_id.strip(), repository)
         if "text/event-stream" in request.headers.get("accept", ""):
-            return stream_chat_turn(turn_input, repository=repository, user_id=user_id)
-        return await run_chat_turn(turn_input, repository=repository, user_id=user_id)
+            return stream_chat_turn(turn_input, repository=repository, user_id=user_id, brief_summarizer=brief_summarizer)
+        return await run_chat_turn(turn_input, repository=repository, user_id=user_id, brief_summarizer=brief_summarizer)
     finally:
         await file.close()
 
@@ -258,7 +262,7 @@ async def guard_guest_id(conversation_id: str, repository: AppDataRepository) ->
         raise auth_error(503, "Chưa kiểm tra được hội thoại. Hãy thử lại.") from exc
 
 
-def stream_chat_turn(turn_input: TurnInput, *, repository=None, user_id=None) -> StreamingResponse:
+def stream_chat_turn(turn_input: TurnInput, *, repository=None, user_id=None, brief_summarizer=None) -> StreamingResponse:
     """Stream drafts, then one receipt after guardrails and the DB transaction."""
     async def events():
         queue = asyncio.Queue()
@@ -278,7 +282,8 @@ def stream_chat_turn(turn_input: TurnInput, *, repository=None, user_id=None) ->
 
         async def produce():
             try:
-                result = await run_chat_turn(turn_input, repository=repository, user_id=user_id, on_text=on_text, on_status=on_status)
+                result = await run_chat_turn(turn_input, repository=repository, user_id=user_id,
+                                             on_text=on_text, on_status=on_status, brief_summarizer=brief_summarizer)
                 if isinstance(result, JSONResponse):
                     data = json.loads(result.body)
                     event = "error" if result.status_code >= 400 else "done"
@@ -321,7 +326,8 @@ def stream_chat_turn(turn_input: TurnInput, *, repository=None, user_id=None) ->
                              headers={"Cache-Control": "no-store, no-transform", "X-Accel-Buffering": "no"})
 
 
-async def run_chat_turn(turn_input: TurnInput, *, repository: AppDataRepository | None = None, user_id: str | None = None, on_text=None, on_status=None):
+async def run_chat_turn(turn_input: TurnInput, *, repository: AppDataRepository | None = None,
+                        user_id: str | None = None, on_text=None, on_status=None, brief_summarizer=None):
     """Keep text and voice turns in the same ordered conversation."""
     if harness is None:
         raise HTTPException(status_code=503, detail="Agent is not ready")
@@ -394,11 +400,21 @@ async def run_chat_turn(turn_input: TurnInput, *, repository: AppDataRepository 
             if lesson_token is not None:
                 learning_service.reset_chat(lesson_token)
         payload = turn_payload(turn_input, result)
+        summary = None
+        if brief_summarizer is not None and payload["call_brief"] is not None:
+            if on_status:
+                await on_status("brief")
+            messages = [(message.role, message.content) for message in result.state.messages[-8:]]
+            summary = await brief_summarizer.summarize(payload["call_brief"], messages)
+            if summary:
+                payload["call_brief"]["summary"] = summary
         if repository is not None:
             try:
                 if on_status:
                     await on_status("saving")
                 extra = {"learning_hook": learning_service.save_hook("account", result.state, result)} if learning_service else {}
+                if summary:
+                    extra["summary_generated"] = True
                 payload.update(await repository.save_turn(user_id, result.state, turn_input.text,
                                                          result.response_text, payload["call_brief"], **extra))
             except Exception:
@@ -427,21 +443,11 @@ def _call_brief_preview(brief: CallBrief | None) -> dict[str, str | list[str]] |
     """Customer-facing compact view; exclude identifiers and raw CRM/memory."""
     if brief is None:
         return None
-    def display_text(value: str, limit: int) -> str:
-        # Currency facts are numbers, not identity documents. Keep their exact
-        # values while applying the existing PII rules to surrounding prose.
-        parts = re.split(
-            r"(\b(?:budget_vnd|price_vnd|price_quoted_vnd|previous_price_quoted_vnd):\s*\d+(?:\.\d+)?)",
-            value,
-        )
-        return "".join(part if index % 2 else mask_pii(part)[0]
-                       for index, part in enumerate(parts))[:limit]
-
     return {
-        "summary": display_text(brief.summary, 4000),
-        "needs": [display_text(item, 1000) for item in brief.needs[:12]],
-        "objections": [display_text(item, 1000) for item in brief.objections[:12]],
-        "unresolved_issues": [display_text(item, 1000) for item in brief.unresolved_issues[:12]],
+        "summary": mask_call_brief_pii(brief.summary)[:4000],
+        "needs": [mask_call_brief_pii(item)[:1000] for item in brief.needs[:12]],
+        "objections": [mask_call_brief_pii(item)[:1000] for item in brief.objections[:12]],
+        "unresolved_issues": [mask_call_brief_pii(item)[:1000] for item in brief.unresolved_issues[:12]],
     }
 
 

@@ -1,0 +1,107 @@
+{
+  "scenario_id": "SC-006",
+  "level": "M1",
+  "persona": "khach_do_du_hoi_nguoi_nha",
+  "hard_case": null,
+  "customer_phone": "0932448452",
+  "customer_name": "Diệp",
+  "honorific": "chị",
+  "notes": "consider_and_decide",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0932448452",
+      "call_date": "2026-10-20",
+      "customer_turns": [
+        "Chị ơi, em đang xem giày chạy bộ RunLite size ba mươi chín, giá một triệu một trăm sáu mươi mốt nghìn đồng.",
+        "Em thử hỏi người nhà, nhưng họ chưa đồng ý. Chị cho em hỏi thêm về sản phẩm được không?",
+        "Em có ngân sách hai triệu, nếu được hỗ trợ thêm thì em mua ngay.",
+        "Chị ơi, em muốn hẹn lại để hỏi người nhà, có được không?"
+      ],
+      "customer_goal": "Xem sản phẩm trong ngân sách và hỏi ý kiến người nhà",
+      "facts_established": {
+        "product_advised": "SKU-SN-RUN1-39-TRANG",
+        "price_quoted_vnd": 1161000,
+        "budget_vnd": 2000000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN1-39-TRANG",
+        "price_vnd": 1161000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0",
+          "RUN-10"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "RUN-10": "2026-10-25",
+          "COD-0": "2026-12-14"
+        },
+        "scheduled_callback_at": "2026-10-22T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0932448452",
+          "callback_at": "2026-10-22T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0932448452",
+      "call_date": "2026-10-22",
+      "customer_turns": [
+        "Chị ơi, hôm trước chị nói rồi mà. Em đã hỏi người nhà, họ đồng ý mua.",
+        "Em mua giày chạy bộ RunLite size ba mươi chín, giá một triệu một trăm sáu mươi mốt nghìn.",
+        "Giao hàng đến 449 Phạm Văn Đồng, Huế. Thanh toán khi nhận hàng.",
+        "Chị ơi, em đặt đơn rồi nhé."
+      ],
+      "days_later": 2,
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-SN-RUN1-39-TRANG",
+        "price_quoted_vnd": 1161000,
+        "payment": "COD",
+        "delivery_address": "449 Phạm Văn Đồng, phường Mỹ Thượng, Huế",
+        "order_status": "created",
+        "family_approved_purchase": true
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "budget_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN1-39-TRANG",
+        "price_vnd": 1161000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0",
+          "RUN-10"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "RUN-10": "2026-10-25",
+          "COD-0": "2026-12-14"
+        },
+        "estimated_delivery": "2026-10-24"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-SN-RUN1-39-TRANG",
+          "price_vnd": 1161000
+        }
+      }
+    }
+  }
+}

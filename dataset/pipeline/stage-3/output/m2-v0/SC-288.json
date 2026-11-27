@@ -1,0 +1,155 @@
+{
+  "scenario_id": "SC-329",
+  "level": "M2",
+  "persona": "khach_goi_lan_3_het_kien_nhan",
+  "hard_case": null,
+  "customer_phone": "0930976582",
+  "customer_name": "Cường",
+  "honorific": "anh",
+  "notes": "return_for_post_purchase_support",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0930976582",
+      "call_date": "2026-10-16",
+      "customer_turns": [
+        "Anh ơi, xe đẩy gấp gọn Joie Pact có bao nhiêu tiền?",
+        "Giá ba triệu bốn trăm chín mươi nghìn đúng không?",
+        "Hẹn 10 giờ ngày mai gọi lại đi."
+      ],
+      "customer_goal": "Hỏi về sản phẩm và hẹn xem lại",
+      "facts_established": {
+        "product_advised": "SKU-MB-STR1",
+        "price_quoted_vnd": 3490000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-MB-STR1",
+        "price_vnd": 3490000,
+        "in_stock": true,
+        "active_promos": [
+          "MOM-FREESHIP",
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "MOM-FREESHIP": "2026-11-29",
+          "COD-0": "2026-12-14"
+        },
+        "scheduled_callback_at": "2026-10-17T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0930976582",
+          "callback_at": "2026-10-17T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0930976582",
+      "call_date": "2026-10-17",
+      "customer_turns": [
+        "Đúng rồi, tôi mua. Thanh toán khi nhận hàng.",
+        "Địa chỉ giao hàng là số 1 phố Cựu Đôi, Hải Phòng.",
+        "Xong rồi."
+      ],
+      "days_later": 1,
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-MB-STR1",
+        "price_quoted_vnd": 3490000,
+        "payment": "COD",
+        "delivery_address": "Số 1, phố Cựu Đôi, xã Tiên Lãng, Hải Phòng",
+        "order_status": "created"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-MB-STR1",
+        "price_vnd": 3490000,
+        "in_stock": true,
+        "active_promos": [
+          "MOM-FREESHIP",
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "MOM-FREESHIP": "2026-11-29",
+          "COD-0": "2026-12-14"
+        },
+        "estimated_delivery": "2026-10-20"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-MB-STR1",
+          "price_vnd": 3490000
+        }
+      }
+    },
+    "call_3": {
+      "channel": "hotline",
+      "channel_identity": "0930976582",
+      "call_date": "2026-10-18",
+      "customer_turns": [
+        "Tôi đổi địa chỉ giao hàng sang đường 20/8, xã Vĩnh Bảo.",
+        "Thôi khỏi."
+      ],
+      "days_later": 1,
+      "customer_goal": "Cập nhật nơi giao cho đơn đã mua",
+      "facts_established": {
+        "delivery_address": "Đường 20/8, xã Vĩnh Bảo, Hải Phòng"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "payment",
+        "delivery_address",
+        "order_status"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-MB-STR1",
+        "price_vnd": 3490000,
+        "in_stock": true,
+        "active_promos": [
+          "MOM-FREESHIP",
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "MOM-FREESHIP": "2026-11-29",
+          "COD-0": "2026-12-14"
+        }
+      },
+      "memory_expectation": {
+        "delivery_address": "Đường 20/8, xã Vĩnh Bảo, Hải Phòng",
+        "supersedes": {
+          "delivery_address": "Số 1, phố Cựu Đôi, xã Tiên Lãng, Hải Phòng"
+        }
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.update",
+        "args_match": {
+          "order_id": "OD600001",
+          "action": "update_address"
+        },
+        "max_agent_questions": 1
+      }
+    }
+  }
+}

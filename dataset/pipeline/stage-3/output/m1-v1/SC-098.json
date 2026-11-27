@@ -1,0 +1,100 @@
+{
+  "scenario_id": "SC-106",
+  "level": "M1",
+  "persona": "khach_do_du_hoi_nguoi_nha",
+  "hard_case": null,
+  "customer_phone": "0925822018",
+  "customer_name": "Quỳnh",
+  "honorific": "chị",
+  "notes": "return_for_post_purchase_support",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0925822018",
+      "call_date": "2026-10-15",
+      "customer_turns": [
+        "Chị xin hỏi lại giá giày trekking HikePro màu đen size bốn mươi ba nhé.",
+        "Giá là hai triệu không trăm bốn mươi ngàn đồng, đúng không?",
+        "Chị sẽ thanh toán khi nhận hàng, giao đến số 1316 đường Bùi Hữu Nghĩa, Cần Thơ.",
+        "Người nhà chị đã đồng ý mua rồi, chị chỉ cần chốt đơn thôi."
+      ],
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-SN-TRK-43-DEN",
+        "price_quoted_vnd": 2040000,
+        "payment": "COD",
+        "delivery_address": "Số 1316 đường Bùi Hữu Nghĩa, phường Long Tuyền, Cần Thơ",
+        "order_status": "created",
+        "family_approved_purchase": true
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-SN-TRK-43-DEN",
+        "price_vnd": 2040000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "estimated_delivery": "2026-10-17"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-SN-TRK-43-DEN",
+          "price_vnd": 2040000
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0925822018",
+      "call_date": "2026-10-17",
+      "customer_turns": [
+        "Chị muốn hỏi tình trạng đơn hàng rồi.",
+        "Đơn này có giao đúng địa chỉ Sô 1316 Bùi Hữu Nghĩa không?",
+        "Hôm trước chị nói rồi mà.",
+        "Chị đang hỏi là đơn đã được xác nhận chưa."
+      ],
+      "days_later": 2,
+      "customer_goal": "Kiểm tra đơn đã mua",
+      "facts_established": {},
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "payment",
+        "delivery_address",
+        "order_status",
+        "family_approved_purchase"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-SN-TRK-43-DEN",
+        "price_vnd": 2040000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        }
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.status",
+        "args_match": {
+          "order_id": "OD600001"
+        }
+      }
+    }
+  }
+}

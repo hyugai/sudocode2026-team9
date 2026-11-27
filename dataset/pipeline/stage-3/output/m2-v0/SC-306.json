@@ -1,0 +1,109 @@
+{
+  "scenario_id": "SC-349",
+  "level": "M2",
+  "persona": "khach_ngoai_pham_vi_chuyen_may",
+  "hard_case": "handoff",
+  "customer_phone": "0922264686",
+  "customer_name": "Khoa",
+  "honorific": "anh",
+  "notes": "transfer_with_context",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0922264686",
+      "call_date": "2026-10-15",
+      "customer_turns": [
+        "Anh ơi, em đang tìm máy hút sữa cho mẹ chồng, có sản phẩm nào an toàn không?",
+        "Có cái máy hút sữa điện đôi Spectra S1 không ạ? Em nghe nói là tốt.",
+        "Giá cái máy đó là bao nhiêu vậy anh?",
+        "Em thấy giá là bốn triệu hai trăm chín mươi nghìn đồng, đúng không ạ?",
+        "Em muốn hỏi thêm về cách sử dụng, có cần dùng thêm phụ kiện gì không? Anh có thể tư vấn thêm không?"
+      ],
+      "customer_goal": "Hỏi về sản phẩm và hẹn xem lại",
+      "facts_established": {
+        "product_advised": "SKU-MB-PUMP1",
+        "price_quoted_vnd": 4290000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-MB-PUMP1",
+        "price_vnd": 4290000,
+        "in_stock": true,
+        "active_promos": [
+          "MOM-FREESHIP",
+          "COD-0"
+        ],
+        "expired_promos": [
+          "PUMP-GIFT"
+        ],
+        "promo_expiry_dates": {
+          "MOM-FREESHIP": "2026-11-29",
+          "COD-0": "2026-12-14",
+          "PUMP-GIFT": "2026-10-13"
+        },
+        "scheduled_callback_at": "2026-10-18T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0922264686",
+          "callback_at": "2026-10-18T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0922264686",
+      "call_date": "2026-10-18",
+      "customer_turns": [
+        "Anh ơi, em cần hỏi thêm về an toàn khi dùng máy này ngoài phạm vi bán hàng, có vấn đề gì không ạ?",
+        "Máy này có dùng được cho người mẹ bị viêm tuyến vú không ạ?",
+        "Em có thể nhờ chuyên viên tư vấn kỹ hơn không ạ?",
+        "Em nghe nói có thể chuyển máy sang bộ phận y tế, có đúng không ạ?"
+      ],
+      "days_later": 3,
+      "customer_goal": "Hỏi về an toàn sử dụng ngoài phạm vi bán hàng và yêu cầu chuyên viên",
+      "facts_established": {},
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-MB-PUMP1",
+        "price_vnd": 4290000,
+        "in_stock": true,
+        "active_promos": [
+          "MOM-FREESHIP",
+          "COD-0"
+        ],
+        "expired_promos": [
+          "PUMP-GIFT"
+        ],
+        "promo_expiry_dates": {
+          "MOM-FREESHIP": "2026-11-29",
+          "COD-0": "2026-12-14",
+          "PUMP-GIFT": "2026-10-13"
+        }
+      },
+      "expected_outcome": "chuyen_may",
+      "success_if": {
+        "tool_called": "handoff.transfer",
+        "args_match": {},
+        "brief_must_contain": [
+          "customer_phone",
+          "customer_name",
+          "escalation_reason",
+          "conversation_summary",
+          "product_advised",
+          "price_quoted_vnd",
+          "open_questions",
+          "next_action",
+          "generated_at"
+        ]
+      }
+    }
+  }
+}

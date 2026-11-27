@@ -22,13 +22,18 @@ Entry point này giữ các thành phần hiện có: `generate_traces.run_scena
 agent, `trace_extractors` tạo evidence, `team_eval.evaluate_team` chấm bằng công
 thức BTC và metric team. Không gửi ground truth/scoring conditions vào agent.
 
-Mặc định chọn **SC-001 đến SC-040**, gồm **80 call, 250 turn và 250 WAV**.
-Chạy toàn bộ các lượt ở bốn nhóm, tuần tự trên cùng máy/API/model:
+Mặc định chọn **40 tệp scenario đầu** trong `dataset/pipeline/stage-3/output`.
+Runner dùng `scenario_id` bên trong JSON để ghi trace. Tên tệp Stage 3 có thể đã được đánh số lại.
+Hai nhóm text chạy tuần tự trên cùng máy, API và model:
 
 1. `text/baseline_no_memory`: không đọc/ghi learned memory giữa các call.
 2. `text/full`: memory riêng theo scenario, giữ qua các call cùng scenario.
-3. `audio/baseline_no_memory`: WAV thật qua Zipformer local, không memory.
-4. `audio/full`: cùng WAV qua Zipformer và có memory.
+
+Để chạy thêm `audio/baseline_no_memory` và `audio/full`, dùng
+`--scenarios <thư-mục-JSON> --audio-root <thư-mục-WAV>`.
+Có thể chọn riêng từng loại đầu vào bằng `--input-kinds text` hoặc `--input-kinds audio`.
+Đặt `manifest.jsonl` cạnh thư mục WAV và dùng cùng `scenario_id` trong JSON, manifest
+và đường dẫn WAV. Hai nhóm audio dùng Zipformer local với cùng model và dữ liệu đầu vào.
 
 Text dùng `customer_turns_asr` khi scenario có noisy input. Audio dùng đúng WAV
 trong manifest; raw transcript và text đã chuẩn hóa được lưu riêng trong trace.
@@ -36,8 +41,8 @@ Preflight đối chiếu manifest, source text, SHA-256 và nội dung WAV; thi�
 hoặc audio không khớp sẽ dừng, không thay bằng ground-truth text.
 
 Điều kiện môi trường: `.venv` đã cài dependencies, PostgreSQL đang chạy và có
-CRM/catalog seed, Gemini API key trong `.env`, weights Zipformer
-đã có trong `ASR_MODEL_DIR`, FFmpeg khả dụng.
+CRM/catalog seed và Gemini API key trong `.env`. Nhóm audio cần thêm weights
+Zipformer trong `ASR_MODEL_DIR` và FFmpeg.
 Lệnh gọi LLM thật, tạo đơn test và cleanup đúng các `order_id` đã tạo sau scenario.
 Giữ hội thoại trong từng call ở cả hai cấu hình; baseline chỉ loại learned memory
 liên cuộc gọi, vẫn có cùng CRM và business tools.
@@ -462,7 +467,7 @@ Các API key và `DATABASE_URL` được đọc từ `.env`; không được cop
 ```powershell
 .\.venv\Scripts\python.exe src\eval\run_benchmark.py `
   --version benchmark_v7 `
-  --scenarios "dataset\main\scenarios_complete" `
+  --scenarios "dataset\pipeline\stage-3\output" `
   --llm-provider gemini `
   --llm-model gemini-3.6-flash `
   --memory-persister-mode llm_learning `
@@ -481,7 +486,7 @@ Ví dụ trace chỉ chứa ba scenario đầu:
 
 ```powershell
 .\.venv\Scripts\python.exe src\eval\team_eval.py `
-  --scenarios "dataset\main\scenarios_complete" `
+  --scenarios "dataset\pipeline\stage-3\output" `
   --limit 3 `
   --trace "outputs\benchmark\benchmark_v5\trace.jsonl" `
   --out "outputs\benchmark\benchmark_v5\report.json"
@@ -493,7 +498,7 @@ Phải truyền lại cùng `--scenario-id` hoặc `--limit` đã dùng khi gene
 
 ```powershell
 .\.venv\Scripts\python.exe src\eval\memory_judge.py `
-  --scenarios "dataset\main\scenarios_complete" `
+  --scenarios "dataset\pipeline\stage-3\output" `
   --limit 3 `
   --trace "outputs\benchmark\benchmark_v5\trace.jsonl" `
   --provider gemini `
@@ -505,7 +510,7 @@ Sau đó chấm lại và gắn report MWQ:
 
 ```powershell
 .\.venv\Scripts\python.exe src\eval\team_eval.py `
-  --scenarios "dataset\main\scenarios_complete" `
+  --scenarios "dataset\pipeline\stage-3\output" `
   --limit 3 `
   --trace "outputs\benchmark\benchmark_v5\trace.jsonl" `
   --memory-judge-report "outputs\benchmark\benchmark_v5\memory_judge.json" `

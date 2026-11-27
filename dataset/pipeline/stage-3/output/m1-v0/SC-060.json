@@ -1,0 +1,97 @@
+{
+  "scenario_id": "SC-070",
+  "level": "M1",
+  "persona": "khach_so_gia",
+  "hard_case": "out_of_stock",
+  "customer_phone": "0932568855",
+  "customer_name": "Lâm",
+  "honorific": "anh",
+  "notes": "return_after_price_or_stock_change",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0932568855",
+      "call_date": "2026-10-24",
+      "customer_turns": [
+        "Anh đang so giá với bên khác, bên họ báo ba triệu bốn trăm ba mươi nghìn.",
+        "Anh hỏi có thể giảm được không, vì giá bên họ rẻ hơn.",
+        "Anh muốn biết nếu mua hôm nay có được ưu đãi gì không.",
+        "Nếu không giảm, anh sẽ xem lại sau.",
+        "Hẹn anh gọi lại lúc mười giờ ngày hai mươi lăm tháng mười."
+      ],
+      "customer_goal": "So báo giá với nơi khác trước khi quyết định",
+      "facts_established": {
+        "product_advised": "SKU-MB-STR1",
+        "price_quoted_vnd": 3490000,
+        "competitor_price_vnd": 3430000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-MB-STR1",
+        "price_vnd": 3490000,
+        "in_stock": true,
+        "active_promos": [
+          "MOM-FREESHIP",
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "MOM-FREESHIP": "2026-11-29",
+          "COD-0": "2026-12-14"
+        },
+        "scheduled_callback_at": "2026-10-25T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0932568855",
+          "callback_at": "2026-10-25T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0932568855",
+      "call_date": "2026-10-25",
+      "customer_turns": [
+        "Anh gọi lại như hẹn, hỏi xem xe đẩy gấp gọn Joie Pact còn hàng không.",
+        "Bên anh bảo hết hàng rồi, anh không mua được.",
+        "Anh hỏi nếu có thể đổi sang sản phẩm khác được không?",
+        "Nhân viên bảo không có hàng, anh đành thôi.",
+        "Anh cảm ơn và nói sẽ quay lại khi có hàng."
+      ],
+      "days_later": 1,
+      "customer_goal": "Kiểm tra tồn kho và hoãn mua khi hết hàng",
+      "facts_established": {
+        "product_advised": "SKU-MB-STR1"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "competitor_price_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-MB-STR1",
+        "price_vnd": 3490000,
+        "in_stock": false,
+        "active_promos": [
+          "MOM-FREESHIP",
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "MOM-FREESHIP": "2026-11-29",
+          "COD-0": "2026-12-14"
+        }
+      },
+      "expected_outcome": "tu_choi",
+      "success_if": {
+        "tool_called": null,
+        "args_match": {}
+      }
+    }
+  }
+}

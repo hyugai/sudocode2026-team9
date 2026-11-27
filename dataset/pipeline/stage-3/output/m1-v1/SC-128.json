@@ -1,0 +1,98 @@
+{
+  "scenario_id": "SC-142",
+  "level": "M1",
+  "persona": "khach_quay_lai_sau_8_thang",
+  "hard_case": "stale_address",
+  "customer_phone": "0991280845",
+  "customer_name": "Việt",
+  "honorific": "anh",
+  "notes": "return_for_post_purchase_support",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0991280845",
+      "call_date": "2026-02-16",
+      "customer_turns": [
+        "Anh đang gọi để chốt đơn cái giày sneaker Urban Classic màu trắng size bốn mươi ba.",
+        "Giá là chín trăm bốn mươi ngàn, thanh toán khi nhận hàng.",
+        "Địa chỉ giao hàng là Số 109, đường Nguyễn Trãi, phường Ninh Kiều, Cần Thơ.",
+        "Chỗ em ở đó đúng không?"
+      ],
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-SN-CAS-43-TRANG",
+        "price_quoted_vnd": 940000,
+        "payment": "COD",
+        "delivery_address": "Số 109, đường Nguyễn Trãi, phường Ninh Kiều, Cần Thơ",
+        "order_status": "created"
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-SN-CAS-43-TRANG",
+        "price_vnd": 940000,
+        "in_stock": true,
+        "active_promos": [],
+        "expired_promos": [],
+        "promo_expiry_dates": {},
+        "estimated_delivery": "2026-02-18"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-SN-CAS-43-TRANG",
+          "price_vnd": 940000
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0991280845",
+      "call_date": "2026-10-16",
+      "customer_turns": [
+        "Anh nhớ rồi, địa chỉ giao hàng là Số 109, đường Nguyễn Trãi, Ninh Kiều, Cần Thơ.",
+        "Nhà mình ở đó đúng không?",
+        "Bên em không lưu à?",
+        "Thôi được, em cứ giao theo địa chỉ đó nhé."
+      ],
+      "days_later": 242,
+      "customer_goal": "Xác nhận thông tin người nhận trước khi tra đơn cũ",
+      "facts_established": {},
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "payment",
+        "delivery_address",
+        "order_status"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-SN-CAS-43-TRANG",
+        "price_vnd": 940000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        }
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.status",
+        "args_match": {
+          "order_id": "OD600001"
+        },
+        "must_say_any": [
+          "xác nhận",
+          "địa chỉ"
+        ]
+      }
+    }
+  }
+}

@@ -246,8 +246,13 @@ tests/
 /outputs/debug/streaming-ui/
 /outputs/audio-continuation/
 /outputs/noise-augmentation/
+/outputs/audio-regeneration/
 /dataset/text-to-speech/noise_sources/
 /dataset/main/noisy_SC071_SC100/*.zip
+
+# Local audio datasets and regeneration outputs.
+/dataset/audio/
+/outputs/audio-regeneration/
 
 # Runtime data required by the Render image. Customer memory is intentionally
 # reviewable before commit; do not place secrets outside these documented files.

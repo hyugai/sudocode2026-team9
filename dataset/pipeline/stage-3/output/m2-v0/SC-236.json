@@ -1,0 +1,124 @@
+{
+  "scenario_id": "SC-274",
+  "level": "M2",
+  "persona": "khach_do_du_hoi_nguoi_nha",
+  "hard_case": "expired_promo",
+  "customer_phone": "0979511174",
+  "customer_name": "Hiền",
+  "honorific": "chị",
+  "notes": "return_after_price_or_stock_change",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0979511174",
+      "call_date": "2026-11-14",
+      "customer_turns": [
+        "Chị ơi, em đang xem máy lọc không khí Xiaomi Smart 4 Pro trong ngân sách năm triệu năm trăm nghìn.",
+        "Chị báo giá năm triệu bốn trăm chín mươi nghìn, có ưu đãi mua máy tặng màng lọc.",
+        "Ưu đãi hết ngày mười bốn tháng mười một, em muốn hỏi ý kiến người nhà trước.",
+        "Chị hẹn gọi lại cho em lúc mười giờ ngày mười lăm nhé."
+      ],
+      "customer_goal": "Xem sản phẩm trong ngân sách và hỏi ý kiến người nhà",
+      "facts_established": {
+        "product_advised": "SKU-XM-4P",
+        "price_quoted_vnd": 5490000,
+        "promo_code": "XM-COMBO",
+        "promo_expiry": "2026-11-14",
+        "budget_vnd": 5500000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-XM-4P",
+        "price_vnd": 5490000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0",
+          "XM-COMBO"
+        ],
+        "expired_promos": [
+          "AIR-2ND-50",
+          "NAM-SHIP0",
+          "11-11"
+        ],
+        "promo_expiry_dates": {
+          "XM-COMBO": "2026-11-14",
+          "AIR-2ND-50": "2026-11-04",
+          "NAM-SHIP0": "2026-11-05",
+          "COD-0": "2026-12-14",
+          "11-11": "2026-11-12"
+        },
+        "scheduled_callback_at": "2026-11-15T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0979511174",
+          "callback_at": "2026-11-15T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0979511174",
+      "call_date": "2026-11-15",
+      "customer_turns": [
+        "Chị ơi, em đồng ý mua máy lọc không khí Xiaomi Smart 4 Pro.",
+        "Giá năm triệu bốn trăm chín mươi nghìn, thanh toán khi nhận hàng.",
+        "Giao đến 232 Lý Nhân Tông, phường Kim Trà, Huế.",
+        "Chị xác nhận đơn nhé, em đang đợi."
+      ],
+      "days_later": 1,
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-XM-4P",
+        "price_quoted_vnd": 5490000,
+        "payment": "COD",
+        "delivery_address": "232 Lý Nhân Tông, phường Kim Trà, Huế",
+        "order_status": "created"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "promo_code",
+        "promo_expiry",
+        "budget_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-XM-4P",
+        "price_vnd": 5490000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [
+          "XM-COMBO",
+          "AIR-2ND-50",
+          "NAM-SHIP0",
+          "11-11"
+        ],
+        "promo_expiry_dates": {
+          "XM-COMBO": "2026-11-14",
+          "AIR-2ND-50": "2026-11-04",
+          "NAM-SHIP0": "2026-11-05",
+          "COD-0": "2026-12-14",
+          "11-11": "2026-11-12"
+        },
+        "estimated_delivery": "2026-11-17"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-XM-4P",
+          "price_vnd": 5490000
+        }
+      }
+    }
+  }
+}

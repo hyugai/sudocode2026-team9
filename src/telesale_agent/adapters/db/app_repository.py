@@ -14,6 +14,7 @@ from sqlalchemy import case, delete, select
 from sqlalchemy.engine import Engine
 from sqlalchemy.orm import Session, sessionmaker
 
+from telesale_agent.core.history import brief_preview
 from telesale_agent.core.models import ConversationState
 from .app_models import AuthSession, ChatMessage, Conversation, MessageFeedback, User, utc_now
 from .checkpoint import CheckpointError, deserialize_checkpoint, serialize_checkpoint
@@ -81,6 +82,19 @@ def _brief_preview(value: dict[str, Any] | None) -> dict[str, Any] | None:
             raise ValueError("Danh sách call brief không hợp lệ.")
         result[key] = list(items)
     return result
+
+
+def legacy_brief_messages(session: Session, row: Conversation, brief: dict | None) -> list[tuple[str, str]] | None:
+    if brief is None or row.call_brief.get("summary_generated") is True:
+        return None
+    query = (
+        select(ChatMessage.role, ChatMessage.content)
+        .where(ChatMessage.conversation_id == row.id, ChatMessage.turn_number <= row.turn_number)
+        .order_by(ChatMessage.turn_number.desc(), case((ChatMessage.role == "agent", 0), else_=1))
+        .limit(8)
+    )
+    messages = session.execute(query).all()
+    return [(role, content) for role, content in reversed(messages)]
 
 
 class AppDataRepository:
@@ -168,7 +182,8 @@ class AppDataRepository:
                 return {"items": [_conversation(row) for row in rows[:limit]], "has_more": len(rows) > limit}
         return await asyncio.to_thread(read)
 
-    async def get_conversation(self, user_id: str, conversation_id: str, *, limit: int = 50, offset: int = 0) -> dict[str, Any]:
+    async def get_conversation(self, user_id: str, conversation_id: str, *, limit: int = 50, offset: int = 0,
+                               include_brief_messages: bool = False) -> dict[str, Any]:
         def read():
             _page(limit, offset)
             with self.sessions() as session:
@@ -182,8 +197,12 @@ class AppDataRepository:
                           "turn_number": message.turn_number, "created_at": message.created_at,
                           "feedback": {"rating": feedback.rating, "comment": feedback.comment} if feedback else None}
                          for message, feedback in messages[:limit]]
-                return {**_conversation(row), "messages": items, "call_brief": row.call_brief,
-                        "has_more": len(messages) > limit}
+                brief = brief_preview(row.call_brief)
+                detail = {**_conversation(row), "messages": items, "call_brief": brief,
+                          "has_more": len(messages) > limit}
+                if include_brief_messages:
+                    detail["_brief_messages"] = legacy_brief_messages(session, row, brief)
+                return detail
         return await asyncio.to_thread(read)
 
     async def load_state(self, user_id: str, conversation_id: str, *, active_only: bool = False) -> ConversationState:
@@ -199,7 +218,8 @@ class AppDataRepository:
         return await asyncio.to_thread(read)
 
     async def save_turn(self, user_id: str, state: ConversationState, user_text: str,
-                        response_text: str, call_brief: dict[str, Any] | None, *, learning_hook=None) -> dict[str, Any]:
+                        response_text: str, call_brief: dict[str, Any] | None, *, learning_hook=None,
+                        summary_generated: bool = False) -> dict[str, Any]:
         """Only call after the harness; all four changes commit or roll back together."""
         def write():
             _text(user_text, 10000)
@@ -207,6 +227,8 @@ class AppDataRepository:
                 raise ValueError("Câu trả lời không được rỗng.")
             checkpoint = serialize_checkpoint(state)
             preview = _brief_preview(call_brief)
+            if preview is not None and summary_generated:
+                preview["summary_generated"] = True
             if len(state.messages) < 2 or [("user" if m.role == "customer" else m.role, m.content) for m in state.messages[-2:]] != [
                 ("user", user_text), ("agent", response_text)
             ]:

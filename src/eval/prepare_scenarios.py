@@ -3,7 +3,7 @@
 Optional converter for an explicitly supplied external JSONL scenario file.
 
 Current scenarios already exist as individual JSON files in
-``dataset/main/scenarios_complete``; no conversion is needed to evaluate them.
+``dataset/pipeline/stage-3/output``; no conversion is needed to evaluate them.
 
 Usage:
     python src/eval/prepare_scenarios.py --src /path/to/scenarios.jsonl --out /tmp/scenarios
@@ -18,7 +18,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent          # src/eval/
 REPO_ROOT = HERE.parent.parent                  # sudo_code_2026-group_9/
 
-DEFAULT_OUT = REPO_ROOT / "dataset" / "main" / "scenarios_complete"
+DEFAULT_OUT = REPO_ROOT / "outputs" / "eval" / "imported-scenarios"
 
 
 def unpack(src: Path, out: Path):

@@ -1,0 +1,104 @@
+{
+  "scenario_id": "SC-148",
+  "level": "M1",
+  "persona": "khach_da_mua_doi_size",
+  "hard_case": "verify_order_identity",
+  "customer_phone": "0994893949",
+  "customer_name": "Hạnh",
+  "honorific": "chị",
+  "notes": "resume_with_uncertain_identity_or_history",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0994893949",
+      "call_date": "2026-10-15",
+      "customer_turns": [
+        "Chị ơi, em gọi lại về đơn hàng giày chạy bộ RunLite một màu xám size bốn mươi mốt ạ.",
+        "Giá là một triệu một trăm sáu mươi mốt ngàn, thanh toán khi nhận hàng, giao đến 527 Hồng Bàng, phường Chợ Lớn, TP. Hồ Chí Minh.",
+        "Chị nhớ đơn của em chứ? Em đã đặt rồi mà."
+      ],
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-SN-RUN1-41-XAM",
+        "price_quoted_vnd": 1161000,
+        "payment": "COD",
+        "delivery_address": "527 Hồng Bàng, phường Chợ Lớn, TP. Hồ Chí Minh",
+        "order_status": "created"
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN1-41-XAM",
+        "price_vnd": 1161000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0",
+          "RUN-10"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "RUN-10": "2026-10-25",
+          "COD-0": "2026-12-14"
+        },
+        "estimated_delivery": "2026-10-17"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-SN-RUN1-41-XAM",
+          "price_vnd": 1161000
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0994893949",
+      "call_date": "2026-10-18",
+      "customer_turns": [
+        "Chị ơi, em là khách đã đặt đơn giày RunLite size bốn mươi mốt, giá một triệu một trăm sáu mươi mốt, giao 527 Hồng Bàng.",
+        "Chị không nhớ hay sao? Em đã gọi rồi mà.",
+        "Làm ơn nhớ lại đi, em không muốn lặp lại lần nữa."
+      ],
+      "days_later": 3,
+      "customer_goal": "Xác nhận thông tin người nhận trước khi tra đơn cũ",
+      "facts_established": {},
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "payment",
+        "delivery_address",
+        "order_status"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN1-41-XAM",
+        "price_vnd": 1161000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0",
+          "RUN-10"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "RUN-10": "2026-10-25",
+          "COD-0": "2026-12-14"
+        }
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.status",
+        "args_match": {
+          "order_id": "OD600001"
+        },
+        "must_say_any": [
+          "xác nhận",
+          "địa chỉ"
+        ]
+      }
+    }
+  }
+}

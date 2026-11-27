@@ -1,0 +1,119 @@
+{
+  "scenario_id": "SC-083",
+  "level": "M1",
+  "persona": "khach_so_gia",
+  "hard_case": "expired_promo",
+  "customer_phone": "0979511174",
+  "customer_name": "Hiền",
+  "honorific": "chị",
+  "notes": "return_after_price_or_stock_change",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0979511174",
+      "call_date": "2026-10-25",
+      "customer_turns": [
+        "Chị ơi, em đang so sánh giá với bên khác rồi mới quyết định.",
+        "Bên họ bán một triệu bốn trăm sáu mươi mốt nghìn, mà lại có giảm 10% nữa.",
+        "Mấy hôm trước em gọi hỏi giá giày RunLite hai Pro màu xám size ba mươi chín, bên chị cũng giảm 10% đúng không?",
+        "Em muốn hỏi lại giá bên chị, xem có thể ưu đãi thêm không.",
+        "Nếu không được, em sẽ chọn bên họ."
+      ],
+      "customer_goal": "So báo giá với nơi khác trước khi quyết định",
+      "facts_established": {
+        "product_advised": "SKU-SN-RUN2-39-XAM",
+        "price_quoted_vnd": 1521000,
+        "promo_code": "RUN-10",
+        "promo_expiry": "2026-10-25",
+        "competitor_price_vnd": 1461000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN2-39-XAM",
+        "price_vnd": 1521000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0",
+          "RUN-10"
+        ],
+        "expired_promos": [
+          "RUN2-SALE"
+        ],
+        "promo_expiry_dates": {
+          "RUN-10": "2026-10-25",
+          "COD-0": "2026-12-14",
+          "RUN2-SALE": "2026-10-07"
+        },
+        "scheduled_callback_at": "2026-10-27T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0979511174",
+          "callback_at": "2026-10-26T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0979511174",
+      "call_date": "2026-10-27",
+      "customer_turns": [
+        "Chị ơi, em gọi lại như đã hẹn. Bên em xem giá bên họ là một triệu sáu trăm ba mươi nghìn.",
+        "Bên chị hôm qua báo giá một triệu sáu trăm chín mươi, mà không còn ưu đãi nữa rồi.",
+        "Em nghĩ bên họ có thể tốt hơn, vì giá rẻ hơn và cũng không có hạn mức thời gian.",
+        "Chị có thể hỗ trợ em một chút không? Em muốn mua ngay.",
+        "Nếu không được, em sẽ chuyển sang bên họ."
+      ],
+      "days_later": 2,
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-SN-RUN2-39-XAM",
+        "price_quoted_vnd": 1690000,
+        "payment": "COD",
+        "delivery_address": "232 Lý Nhân Tông, phường Kim Trà, Huế",
+        "order_status": "created",
+        "competitor_price_vnd": 1630000
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "promo_code",
+        "promo_expiry",
+        "competitor_price_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN2-39-XAM",
+        "price_vnd": 1690000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [
+          "RUN-10",
+          "RUN2-SALE"
+        ],
+        "promo_expiry_dates": {
+          "RUN-10": "2026-10-25",
+          "COD-0": "2026-12-14",
+          "RUN2-SALE": "2026-10-07"
+        },
+        "estimated_delivery": "2026-10-29"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-SN-RUN2-39-XAM",
+          "price_vnd": 1690000
+        }
+      }
+    }
+  }
+}

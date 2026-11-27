@@ -1,0 +1,94 @@
+{
+  "scenario_id": "SC-067",
+  "level": "M1",
+  "persona": "khach_hoi_ngoai_tai_lieu",
+  "hard_case": "unsupported_question",
+  "customer_phone": "0980737028",
+  "customer_name": "Mai",
+  "honorific": "chị",
+  "notes": "continue_across_channels",
+  "calls": {
+    "call_1": {
+      "channel": "zalo_oa",
+      "channel_identity": "zalo_mai37",
+      "call_date": "2026-10-18",
+      "customer_turns": [
+        "Chị ơi, em đang xem giày chạy bộ RunLite hai Pro màu đen size bốn mươi ba, giá bao nhiêu vậy?",
+        "Chị báo giá một triệu bảy trăm bốn mươi ngàn đồng, em ghi rồi. Em muốn mua nhưng chưa chắc, chị có thể gọi lại cho em lúc mười giờ ngày mười chín không?"
+      ],
+      "customer_goal": "Hỏi về sản phẩm và hẹn xem lại",
+      "facts_established": {
+        "product_advised": "SKU-SN-RUN2-43-DEN",
+        "price_quoted_vnd": 1740000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN2-43-DEN",
+        "price_vnd": 1740000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [
+          "RUN2-SALE"
+        ],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14",
+          "RUN2-SALE": "2026-10-07"
+        },
+        "scheduled_callback_at": "2026-10-19T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0980737028",
+          "callback_at": "2026-10-19T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0980737028",
+      "call_date": "2026-10-19",
+      "customer_turns": [
+        "Chị ơi, em thấy sản phẩm RunLite hai Pro màu đen size bốn mươi ba, nhưng em không biết nó có chống nước không?",
+        "Chị có biết không? Em thử hỏi lại xem có ai biết không.",
+        "Chị ơi, em lấy thông tin đó ở đâu?",
+        "Chị bảo chưa có thông tin, em sẽ kiểm tra. Em hiểu rồi."
+      ],
+      "days_later": 1,
+      "customer_goal": "Yêu cầu thông tin không có trong tài liệu",
+      "facts_established": {
+        "product_advised": "SKU-SN-RUN2-43-DEN"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN2-43-DEN",
+        "price_vnd": 1740000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [
+          "RUN2-SALE"
+        ],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14",
+          "RUN2-SALE": "2026-10-07"
+        }
+      },
+      "expected_outcome": "tu_choi",
+      "success_if": {
+        "tool_called": null,
+        "args_match": {},
+        "agent_must_say": "không có thông tin"
+      }
+    }
+  }
+}

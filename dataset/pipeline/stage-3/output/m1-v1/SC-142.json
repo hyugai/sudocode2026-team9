@@ -1,0 +1,101 @@
+{
+  "scenario_id": "SC-159",
+  "level": "M1",
+  "persona": "khach_quay_lai_sau_8_thang",
+  "hard_case": "stale_address",
+  "customer_phone": "0960454146",
+  "customer_name": "Kiên",
+  "honorific": "anh",
+  "notes": "resume_with_uncertain_identity_or_history",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0960454146",
+      "call_date": "2026-02-19",
+      "customer_turns": [
+        "Anh nhớ là năm ngoái em đặt cái giày chạy bộ RunLite hai Pro màu đen size bốn mươi ba, đúng không?",
+        "Giá lúc đó là một triệu bảy trăm bốn mươi nghìn, thanh toán khi nhận hàng.",
+        "Địa chỉ giao là Đường ĐH2, thôn Thạch Nham Tây, xã Bà Nà, Đà Nẵng.",
+        "Anh nhớ không, em đã đặt rồi mà? Giờ em muốn chốt đơn tiếp."
+      ],
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-SN-RUN2-43-DEN",
+        "price_quoted_vnd": 1740000,
+        "payment": "COD",
+        "delivery_address": "Đường ĐH2, thôn Thạch Nham Tây, xã Bà Nà, Đà Nẵng",
+        "order_status": "created"
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN2-43-DEN",
+        "price_vnd": 1740000,
+        "in_stock": true,
+        "active_promos": [],
+        "expired_promos": [],
+        "promo_expiry_dates": {},
+        "estimated_delivery": "2026-02-21"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-SN-RUN2-43-DEN",
+          "price_vnd": 1740000
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0960454146",
+      "call_date": "2026-10-19",
+      "customer_turns": [
+        "Anh ơi, em hỏi lại coi địa chỉ giao hàng có đúng không? Nhà mình ở Đường ĐH2, thôn Thạch Nham Tây, xã Bà Nà, Đà Nẵng.",
+        "Bên em không lưu à? Em nhớ là năm ngoái đặt rồi.",
+        "Có thể kiểm tra lại không ạ? Đúng là địa chỉ cũ mà.",
+        "Nếu không đúng thì em phải sửa lại, chứ không muốn bị giao nhầm."
+      ],
+      "days_later": 242,
+      "customer_goal": "Xác nhận thông tin người nhận trước khi tra đơn cũ",
+      "facts_established": {},
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "payment",
+        "delivery_address",
+        "order_status"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN2-43-DEN",
+        "price_vnd": 1740000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [
+          "RUN2-SALE"
+        ],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14",
+          "RUN2-SALE": "2026-10-07"
+        }
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.status",
+        "args_match": {
+          "order_id": "OD600001"
+        },
+        "must_say_any": [
+          "xác nhận",
+          "địa chỉ"
+        ]
+      }
+    }
+  }
+}

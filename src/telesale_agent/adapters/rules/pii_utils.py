@@ -25,6 +25,9 @@ PII_PATTERNS: list[tuple[re.Pattern[str], str]] = [
     # Full Vietnamese phone numbers: 10 digits starting with 0 (standalone)
     (re.compile(r"(?<!\d)(0\d{9})(?!\d)"), "[SĐT ĐÃ ẨN]"),
 ]
+_CURRENCY_FACT = re.compile(
+    r"(\b(?:budget_vnd|price_vnd|price_quoted_vnd|previous_price_quoted_vnd):\s*\d+(?:\.\d+)?)"
+)
 
 
 def mask_pii(text: str) -> tuple[str, list[str]]:
@@ -44,3 +47,9 @@ def mask_pii(text: str) -> tuple[str, list[str]]:
             violations.append(replacement)
             text = new_text
     return text, violations
+
+
+def mask_call_brief_pii(text: str) -> str:
+    """Preserve amounts in normalized budget and price facts."""
+    return "".join(part if index % 2 else mask_pii(part)[0]
+                   for index, part in enumerate(_CURRENCY_FACT.split(text)))

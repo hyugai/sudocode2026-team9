@@ -9,7 +9,7 @@ from sqlalchemy.orm import sessionmaker
 
 from telesale_agent.core.history import brief_preview, memory_preview
 from .app_models import ChatMessage, Conversation, User
-from .app_repository import AppDataNotFound, _page
+from .app_repository import AppDataNotFound, _page, legacy_brief_messages
 from .checkpoint import CheckpointError, deserialize_checkpoint
 from .voice_store import turns
 
@@ -105,7 +105,7 @@ class SalesmanRepository:
                 return {"items": items[offset:offset + limit], "total": len(items), "has_more": offset + limit < len(items)}
         return await asyncio.to_thread(read)
 
-    async def get(self, source, conversation_id, limit=50, offset=0):
+    async def get(self, source, conversation_id, limit=50, offset=0, *, include_brief_messages=False):
         _page(limit, offset)
         def read():
             with self.sessions() as session:
@@ -127,15 +127,19 @@ class SalesmanRepository:
                     messages = session.scalars(select(ChatMessage).where(ChatMessage.conversation_id == row.id).order_by(
                         ChatMessage.turn_number, case((ChatMessage.role == "user", 0), else_=1), ChatMessage.id
                     ).offset(offset).limit(limit + 1)).all()
-                    return {
+                    brief = brief_preview(row.call_brief)
+                    detail = {
                         "id": row.id, "source": "chat", "status": row.status, "updated_at": row.updated_at,
                         "customer_id": row.customer_id, "customer_phone": identity.get("phone") if isinstance(identity, dict) else None,
-                        "turn_number": row.turn_number, "user": owner, "call_brief": brief_preview(row.call_brief),
+                        "turn_number": row.turn_number, "user": owner, "call_brief": brief,
                         "memory": memory, "snapshot_at": row.updated_at if memory else None,
                         "messages": [{"id": message.id, "role": message.role, "content": message.content,
                                       "created_at": message.created_at} for message in messages[:limit]],
                         "has_more": len(messages) > limit, "next_offset": offset + min(limit, len(messages)),
                     }
+                    if include_brief_messages:
+                        detail["_brief_messages"] = legacy_brief_messages(session, row, brief)
+                    return detail
                 rows = _ordered_turns(self._voice_rows(session, conversation_id))
                 if not rows:
                     raise AppDataNotFound()
@@ -161,7 +165,12 @@ class SalesmanRepository:
                             brief = candidate_brief
                             if memory is None:
                                 snapshot_at = _date(payload["snapshot_at"])
-                return {**item, "user": users.get(item["user_id"]), "messages": messages[offset:offset + limit],
-                        "call_brief": brief, "memory": memory, "snapshot_at": snapshot_at,
-                        "has_more": offset + limit < len(messages), "next_offset": offset + len(messages[offset:offset + limit])}
+                page = messages[offset:offset + limit]
+                detail = {**item, "user": users.get(item["user_id"]), "messages": page,
+                          "call_brief": brief, "memory": memory, "snapshot_at": snapshot_at,
+                          "has_more": offset + limit < len(messages), "next_offset": offset + len(page)}
+                if include_brief_messages and brief is not None:
+                    detail["_brief_messages"] = [(message["role"], message["content"])
+                                                 for message in messages if not message["incomplete"]][-8:]
+                return detail
         return await asyncio.to_thread(read)

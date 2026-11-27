@@ -1,0 +1,103 @@
+{
+  "scenario_id": "SC-115",
+  "level": "M1",
+  "persona": "khach_da_mua_doi_size",
+  "hard_case": null,
+  "customer_phone": "0932448452",
+  "customer_name": "Diệp",
+  "honorific": "chị",
+  "notes": "return_for_post_purchase_support",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0932448452",
+      "call_date": "2026-10-24",
+      "customer_turns": [
+        "Chị ơi, em vừa đặt áo khoác gió Windbreak màu đen size L, giá sáu trăm chín mươi nghìn đồng, thanh toán khi nhận hàng.",
+        "Giao hàng đến 449 Phạm Văn Đồng, phường Mỹ Thượng, Huế nhé.",
+        "Em mong shop nhớ đơn của em, nếu hỏi lại mã đơn hay sản phẩm em mua, em sẽ hơi bực một chút."
+      ],
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-JK-WND-L-DEN",
+        "price_quoted_vnd": 690000,
+        "payment": "COD",
+        "delivery_address": "449 Phạm Văn Đồng, phường Mỹ Thượng, Huế",
+        "order_status": "created"
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-JK-WND-L-DEN",
+        "price_vnd": 690000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "estimated_delivery": "2026-10-28"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-JK-WND-L-DEN",
+          "price_vnd": 690000
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0932448452",
+      "call_date": "2026-10-28",
+      "customer_turns": [
+        "Chị ơi, em vừa nhận hàng rồi, nhưng size L hơi to, em muốn đổi sang size M nhé.",
+        "Áo khoác gió Windbreak màu đen size M, ạ.",
+        "Em hy vọng được đổi, nếu cần thêm thông tin gì thì chị cứ báo, em sẵn sàng."
+      ],
+      "days_later": 4,
+      "customer_goal": "Đổi sang size khác sau khi nhận hàng",
+      "facts_established": {
+        "new_variant_sku": "SKU-JK-WND-M-DEN"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "payment",
+        "delivery_address",
+        "order_status"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-JK-WND-L-DEN",
+        "price_vnd": 690000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "replacement_in_stock": true,
+        "exchange_fee_vnd": 0,
+        "policy_reference": "DT-03"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.update",
+        "args_match": {
+          "order_id": "OD600001",
+          "action": "exchange_size",
+          "new_variant_sku": "SKU-JK-WND-M-DEN"
+        }
+      }
+    }
+  }
+}

@@ -9,6 +9,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from telesale_agent.adapters.db.app_repository import AppDataNotFound
 from telesale_agent.adapters.db.salesman_repository import SalesmanRepository
 from .auth import auth_error, get_auth_repository, require_salesman
+from .call_brief import get_call_brief_summarizer, summarize_saved_brief
 from .conversations import no_store
 
 
@@ -35,7 +36,7 @@ async def list_conversations(q: str = Query("", max_length=200), source: Literal
 @router.get("/conversations/{source}/{conversation_id}")
 async def get_conversation(source: Literal["chat", "voice"], conversation_id: str,
                            limit: int = Query(50, ge=1, le=100), offset: int = Query(0, ge=0),
-                           repository=Depends(history_repository)):
+                           repository=Depends(history_repository), summarizer=Depends(get_call_brief_summarizer)):
     if not conversation_id or len(conversation_id) > 160:
         raise auth_error(422, "Mã hội thoại không hợp lệ.")
     if source == "chat":
@@ -43,4 +44,5 @@ async def get_conversation(source: Literal["chat", "voice"], conversation_id: st
             conversation_id = str(UUID(conversation_id))
         except ValueError as exc:
             raise auth_error(422, "Mã hội thoại Chat không hợp lệ.") from exc
-    return await repository.get(source, conversation_id, limit, offset)
+    detail = await repository.get(source, conversation_id, limit, offset, include_brief_messages=summarizer is not None)
+    return await summarize_saved_brief(detail, summarizer)

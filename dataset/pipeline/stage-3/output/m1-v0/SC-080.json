@@ -1,0 +1,147 @@
+{
+  "scenario_id": "SC-093",
+  "level": "M1",
+  "persona": "khach_da_mua_doi_size",
+  "hard_case": null,
+  "customer_phone": "0954742843",
+  "customer_name": "Giang",
+  "honorific": "chị",
+  "notes": "return_for_post_purchase_support",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0954742843",
+      "call_date": "2026-10-23",
+      "customer_turns": [
+        "Chị ơi, em vừa mua giày sneaker Urban Classic đen bốn mươi, giá tám trăm chín mươi nghìn đồng.",
+        "Chị có thể cho em xin thêm thông tin về sản phẩm không ạ? Em muốn xem lại trước khi quyết định.",
+        "Em muốn hẹn lại gọi lại lúc mười giờ ngày hai mươi bảy tháng mười, được không chị?"
+      ],
+      "customer_goal": "Hỏi về sản phẩm và hẹn xem lại",
+      "facts_established": {
+        "product_advised": "SKU-SN-CAS-40-DEN",
+        "price_quoted_vnd": 890000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-SN-CAS-40-DEN",
+        "price_vnd": 890000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "scheduled_callback_at": "2026-10-27T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0954742843",
+          "callback_at": "2026-10-27T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0954742843",
+      "call_date": "2026-10-27",
+      "customer_turns": [
+        "Chị ơi, em đã xem lại rồi. Em đồng ý mua sản phẩm là giày sneaker Urban Classic đen bốn mươi, giá tám trăm chín mươi nghìn đồng.",
+        "Em muốn đặt hàng, thanh toán khi nhận hàng. Địa chỉ giao là Buôn Krông A, xã Ea Tu, Đắk Lắk.",
+        "Em mong được giao đúng thời gian nhé."
+      ],
+      "days_later": 4,
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-SN-CAS-40-DEN",
+        "price_quoted_vnd": 890000,
+        "payment": "COD",
+        "delivery_address": "Buôn Krông A, xã Ea Tu, Đắk Lắk",
+        "order_status": "created"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-SN-CAS-40-DEN",
+        "price_vnd": 890000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "estimated_delivery": "2026-10-29"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-SN-CAS-40-DEN",
+          "price_vnd": 890000
+        }
+      }
+    },
+    "call_3": {
+      "channel": "hotline",
+      "channel_identity": "0954742843",
+      "call_date": "2026-10-31",
+      "customer_turns": [
+        "Chị ơi, em nhận hàng rồi. Em muốn đổi sang size bốn mươi ba của giày sneaker Urban Classic đen.",
+        "Chị xem giúp em đơn đã đặt rồi, em không biết có được đổi không. Em nhớ là có chính sách DT-03.",
+        "Chị giúp em xử lý đổi size nhé, em không muốn giữ cái bốn mươi nữa."
+      ],
+      "days_later": 4,
+      "customer_goal": "Đổi sang size khác sau khi nhận hàng",
+      "facts_established": {
+        "new_variant_sku": "SKU-SN-CAS-43-DEN"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "payment",
+        "delivery_address",
+        "order_status"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-SN-CAS-40-DEN",
+        "price_vnd": 890000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "replacement_in_stock": true,
+        "exchange_fee_vnd": 0,
+        "policy_reference": "DT-03"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.update",
+        "args_match": {
+          "order_id": "OD600001",
+          "action": "exchange_size",
+          "new_variant_sku": "SKU-SN-CAS-43-DEN"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,89 @@
+{
+  "scenario_id": "SC-027",
+  "level": "M1",
+  "persona": "khach_hoi_nhieu_khong_mua",
+  "hard_case": null,
+  "customer_phone": "0964252477",
+  "customer_name": "Trang",
+  "honorific": "chị",
+  "notes": "consider_and_decide",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0964252477",
+      "call_date": "2026-10-20",
+      "customer_turns": [
+        "Chị ơi, em đang xem giày trekking HikePro màu xám size bốn mươi hai, có thể cho em hỏi thêm về cách sử dụng không ạ?",
+        "Em nghe nói là giày này có đệm êm, nhưng có chống nước không ạ? Em đi dã ngoại nhiều nên cần chắc chắn.",
+        "Chị ơi, giá là một triệu chín trăm chín mươi nghìn, có phải là giá gốc không ạ? Em muốn so sánh với mấy nơi khác.",
+        "Cảm ơn chị, em nghĩ xem thêm đã. Chị giúp em đặt giờ gọi lại lúc mười giờ ngày hai mươi mốt tháng mười được không ạ?"
+      ],
+      "customer_goal": "Hỏi kỹ cách sử dụng và cân nhắc thêm trước khi mua",
+      "facts_established": {
+        "product_advised": "SKU-SN-TRK-42-XAM",
+        "price_quoted_vnd": 1990000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-SN-TRK-42-XAM",
+        "price_vnd": 1990000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "scheduled_callback_at": "2026-10-21T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0964252477",
+          "callback_at": "2026-10-21T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0964252477",
+      "call_date": "2026-10-21",
+      "customer_turns": [
+        "Chị ơi, em vừa xem lại giá giày HikePro màu xám size bốn mươi hai. Giá một triệu chín trăm chín mươi nghìn, có đúng không ạ?",
+        "Em vẫn đang cân nhắc, nhưng em thấy giá này hơi cao. Chị có thể giảm được không ạ?",
+        "Chị ơi, em nghĩ em chưa mua được. Em cần thời gian xem thêm sản phẩm khác.",
+        "Cảm ơn chị, em để xem thêm đã."
+      ],
+      "days_later": 1,
+      "customer_goal": "Xem lại báo giá và hoãn quyết định mua",
+      "facts_established": {
+        "product_advised": "SKU-SN-TRK-42-XAM"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-SN-TRK-42-XAM",
+        "price_vnd": 1990000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        }
+      },
+      "expected_outcome": "tu_choi",
+      "success_if": {
+        "tool_called": null,
+        "args_match": {}
+      }
+    }
+  }
+}

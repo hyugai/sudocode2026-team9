@@ -1,0 +1,90 @@
+{
+  "scenario_id": "SC-032",
+  "level": "M1",
+  "persona": "khach_hoi_nhieu_khong_mua",
+  "hard_case": null,
+  "customer_phone": "0922808864",
+  "customer_name": "Tú",
+  "honorific": "anh",
+  "notes": "consider_and_decide",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0922808864",
+      "call_date": "2026-10-25",
+      "customer_turns": [
+        "Anh ơi, em muốn hỏi là màng lọc thay thế AirPure X/Y có dùng được cho máy lọc không khí của hãng khác không?",
+        "Có phải loại màng này dùng được cho cả máy lọc không khí trong nhà và văn phòng không?",
+        "Giá bao nhiêu vậy anh? Em nghe nói là sáu trăm chín mươi nghìn.",
+        "Anh có thể giới thiệu thêm về cách thay màng lọc không? Em muốn biết rõ hơn trước khi quyết định.",
+        "Em nghĩ em cần xem thêm thông tin, để xem thêm."
+      ],
+      "customer_goal": "Hỏi kỹ cách sử dụng và cân nhắc thêm trước khi mua",
+      "facts_established": {
+        "product_advised": "SKU-AP-FLT-X",
+        "price_quoted_vnd": 690000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-AP-FLT-X",
+        "price_vnd": 690000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "scheduled_callback_at": "2026-10-29T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0922808864",
+          "callback_at": "2026-10-29T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0922808864",
+      "call_date": "2026-10-29",
+      "customer_turns": [
+        "Anh ơi, em muốn hỏi lại giá màng lọc AirPure X/Y có phải là sáu trăm chín mươi nghìn không?",
+        "Em nghe nói là sản phẩm này vẫn còn hàng, đúng không ạ?",
+        "Em chưa muốn mua ngay, chỉ muốn xem lại giá và cân nhắc thêm.",
+        "Em nghĩ em sẽ quyết định sau, để xem thêm."
+      ],
+      "days_later": 4,
+      "customer_goal": "Xem lại báo giá và hoãn quyết định mua",
+      "facts_established": {
+        "product_advised": "SKU-AP-FLT-X"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-AP-FLT-X",
+        "price_vnd": 690000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        }
+      },
+      "expected_outcome": "tu_choi",
+      "success_if": {
+        "tool_called": null,
+        "args_match": {}
+      }
+    }
+  }
+}

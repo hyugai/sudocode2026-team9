@@ -1,0 +1,104 @@
+{
+  "scenario_id": "SC-128",
+  "level": "M1",
+  "persona": "khach_da_mua_doi_size",
+  "hard_case": "verify_order_identity",
+  "customer_phone": "0979511174",
+  "customer_name": "Hiền",
+  "honorific": "chị",
+  "notes": "resume_with_uncertain_identity_or_history",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0979511174",
+      "call_date": "2026-10-16",
+      "customer_turns": [
+        "Chị ơi, em gọi là khách hàng đã đặt máy lọc không khí AirPure Y rồi ạ.",
+        "Giá là năm triệu hai trăm nghìn, thanh toán khi nhận hàng, giao đến 232 Lý Nhân Tông, Huế.",
+        "Em mong shop nhớ đơn của em, đừng hỏi lại nữa nhé."
+      ],
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-AP-Y",
+        "price_quoted_vnd": 5200000,
+        "payment": "COD",
+        "delivery_address": "232 Lý Nhân Tông, phường Kim Trà, Huế",
+        "order_status": "created"
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-AP-Y",
+        "price_vnd": 5200000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0",
+          "GIFT-FILTER"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "GIFT-FILTER": "2026-10-22",
+          "COD-0": "2026-12-14"
+        },
+        "estimated_delivery": "2026-10-19"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-AP-Y",
+          "price_vnd": 5200000
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0979511174",
+      "call_date": "2026-10-17",
+      "customer_turns": [
+        "Chị ơi, em gọi lại là đơn AirPure Y ạ.",
+        "Giao đến 232 Lý Nhân Tông, Huế, thanh toán khi nhận hàng, năm triệu hai trăm nghìn.",
+        "Chị biết em rồi chứ? Em không muốn nhắc lại lần nữa."
+      ],
+      "days_later": 1,
+      "customer_goal": "Xác nhận thông tin người nhận trước khi tra đơn cũ",
+      "facts_established": {},
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "payment",
+        "delivery_address",
+        "order_status"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-AP-Y",
+        "price_vnd": 5200000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0",
+          "GIFT-FILTER"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "GIFT-FILTER": "2026-10-22",
+          "COD-0": "2026-12-14"
+        }
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.status",
+        "args_match": {
+          "order_id": "OD600001"
+        },
+        "must_say_any": [
+          "xác nhận",
+          "địa chỉ"
+        ]
+      }
+    }
+  }
+}

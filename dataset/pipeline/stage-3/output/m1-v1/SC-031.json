@@ -1,0 +1,103 @@
+{
+  "scenario_id": "SC-034",
+  "level": "M1",
+  "persona": "khach_do_du_hoi_nguoi_nha",
+  "hard_case": null,
+  "customer_phone": "0994893949",
+  "customer_name": "Hạnh",
+  "honorific": "chị",
+  "notes": "continue_across_channels",
+  "calls": {
+    "call_1": {
+      "channel": "zalo_oa",
+      "channel_identity": "zalo_hạnh44",
+      "call_date": "2026-10-27",
+      "customer_turns": [
+        "Chị ơi, em đang xem giày trekking HikePro màu xám size ba mươi chín, giá một triệu chín trăm chín mươi ngàn, em thấy trong ngân sách ba triệu. Em muốn hỏi ý kiến anh trai xem có nên mua không.",
+        "Chị ơi, em đang xem sản phẩm rồi. Giá như vậy có ổn không? Em muốn hỏi người nhà trước.",
+        "Chị ơi, em có thể hẹn gọi lại vào mười giờ ngày ba mươi tháng mười không?",
+        "Hôm trước chị nói rồi mà, em đang hỏi người nhà."
+      ],
+      "customer_goal": "Xem sản phẩm trong ngân sách và hỏi ý kiến người nhà",
+      "facts_established": {
+        "product_advised": "SKU-SN-TRK-39-XAM",
+        "price_quoted_vnd": 1990000,
+        "budget_vnd": 3000000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-SN-TRK-39-XAM",
+        "price_vnd": 1990000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "scheduled_callback_at": "2026-10-30T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0994893949",
+          "callback_at": "2026-10-30T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0994893949",
+      "call_date": "2026-10-30",
+      "customer_turns": [
+        "Chị ơi, người nhà em đồng ý mua rồi. Em muốn chốt đơn.",
+        "Em muốn giao hàng đến 527 Hồng Bàng, phường Chợ Lớn, TP. Hồ Chí Minh. Thanh toán khi nhận hàng được không?",
+        "Chị ơi, em đã chọn sản phẩm rồi, giá một triệu chín trăm chín mươi ngàn đúng không?",
+        "Chị ơi, em đồng ý mua."
+      ],
+      "days_later": 3,
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-SN-TRK-39-XAM",
+        "price_quoted_vnd": 1990000,
+        "payment": "COD",
+        "delivery_address": "527 Hồng Bàng, phường Chợ Lớn, TP. Hồ Chí Minh",
+        "order_status": "created",
+        "family_approved_purchase": true
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "budget_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-SN-TRK-39-XAM",
+        "price_vnd": 1990000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "estimated_delivery": "2026-11-02"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-SN-TRK-39-XAM",
+          "price_vnd": 1990000
+        }
+      }
+    }
+  }
+}

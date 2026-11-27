@@ -1,0 +1,102 @@
+{
+  "scenario_id": "SC-134",
+  "level": "M1",
+  "persona": "khach_ngoai_pham_vi_chuyen_may",
+  "hard_case": "handoff",
+  "customer_phone": "0984726714",
+  "customer_name": "Hoa",
+  "honorific": "chị",
+  "notes": "transfer_with_context",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0984726714",
+      "call_date": "2026-10-22",
+      "customer_turns": [
+        "Chị ơi, em đang tìm xe đẩy gấp gọn cho mẹ em, có sản phẩm nào an toàn không ạ?",
+        "Chị tư vấn giúp em với, xe đẩy Joie Pact có được không ạ?",
+        "Giá sản phẩm là ba triệu bốn trăm chín mươi nghìn đồng phải không chị?",
+        "Em muốn chị gọi lại cho em vào mười giờ ngày hai mươi ba tháng mười được không ạ?"
+      ],
+      "customer_goal": "Hỏi về sản phẩm và hẹn xem lại",
+      "facts_established": {
+        "product_advised": "SKU-MB-STR1",
+        "price_quoted_vnd": 3490000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-MB-STR1",
+        "price_vnd": 3490000,
+        "in_stock": true,
+        "active_promos": [
+          "MOM-FREESHIP",
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "MOM-FREESHIP": "2026-11-29",
+          "COD-0": "2026-12-14"
+        },
+        "scheduled_callback_at": "2026-10-23T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0984726714",
+          "callback_at": "2026-10-23T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0984726714",
+      "call_date": "2026-10-23",
+      "customer_turns": [
+        "Chị ơi, em muốn hỏi về độ an toàn khi dùng xe đẩy này ngoài phạm vi bán hàng không ạ?",
+        "Em đọc thông tin sản phẩm rồi mà vẫn không rõ, chị có thể giải thích thêm không ạ?",
+        "Chị ơi, em có thể nói chuyện với chuyên viên được không ạ?",
+        "Em thấy chị nói hôm qua là Joie Pact, đúng không ạ?"
+      ],
+      "days_later": 1,
+      "customer_goal": "Hỏi về an toàn sử dụng ngoài phạm vi bán hàng và yêu cầu chuyên viên",
+      "facts_established": {},
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-MB-STR1",
+        "price_vnd": 3490000,
+        "in_stock": true,
+        "active_promos": [
+          "MOM-FREESHIP",
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "MOM-FREESHIP": "2026-11-29",
+          "COD-0": "2026-12-14"
+        }
+      },
+      "expected_outcome": "chuyen_may",
+      "success_if": {
+        "tool_called": "handoff.transfer",
+        "args_match": {},
+        "brief_must_contain": [
+          "customer_phone",
+          "customer_name",
+          "escalation_reason",
+          "conversation_summary",
+          "product_advised",
+          "price_quoted_vnd",
+          "open_questions",
+          "next_action",
+          "generated_at"
+        ]
+      }
+    }
+  }
+}

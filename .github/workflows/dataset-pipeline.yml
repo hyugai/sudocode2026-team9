@@ -1,0 +1,37 @@
+name: Dataset pipeline
+
+on:
+  pull_request:
+    paths:
+      - "dataset/pipeline/**"
+      - "dataset/organizer/**"
+      - "scripts/check_dataset_pipeline.py"
+      - ".github/workflows/dataset-pipeline.yml"
+  push:
+    paths:
+      - "dataset/pipeline/**"
+      - "dataset/organizer/**"
+      - "scripts/check_dataset_pipeline.py"
+      - ".github/workflows/dataset-pipeline.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  offline:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.11", "3.13"]
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Check the BTC catalog and mock tools
+        run: python -B dataset/pipeline/stage-1/input/eval/mock_tools.py --selftest
+      - name: Reproduce the published Stage 3 dataset offline
+        run: python -B scripts/check_dataset_pipeline.py

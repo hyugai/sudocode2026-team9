@@ -1,0 +1,98 @@
+{
+  "scenario_id": "SC-174",
+  "level": "M1",
+  "persona": "khach_ngoai_pham_vi_chuyen_may",
+  "hard_case": "handoff",
+  "customer_phone": "0911265844",
+  "customer_name": "Toàn",
+  "honorific": "anh",
+  "notes": "transfer_with_context",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0911265844",
+      "call_date": "2026-10-20",
+      "customer_turns": [
+        "Anh ơi, em đang muốn hỏi về sản phẩm giày sneaker Urban Classic màu trắng size bốn mươi mốt.",
+        "Em nghe nói là sản phẩm này có độ đệm tốt, nhưng em không biết giá bao nhiêu.",
+        "Em muốn hẹn lại để xem tiếp, anh có thể gọi lại cho em lúc mười giờ ngày hai mươi ba tháng mười không?",
+        "Giá là tám trăm chín mươi ngàn đồng đúng không anh?"
+      ],
+      "customer_goal": "Hỏi về sản phẩm và hẹn xem lại",
+      "facts_established": {
+        "product_advised": "SKU-SN-CAS-41-TRANG",
+        "price_quoted_vnd": 890000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-SN-CAS-41-TRANG",
+        "price_vnd": 890000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "scheduled_callback_at": "2026-10-23T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0911265844",
+          "callback_at": "2026-10-23T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0911265844",
+      "call_date": "2026-10-23",
+      "customer_turns": [
+        "Anh ơi, em có câu hỏi về sản phẩm này, em muốn hỏi là giày sneaker Urban Classic có phù hợp để người thân em đang hồi phục sau chấn thương không?",
+        "Em muốn xem lại sản phẩm, anh có thể chuyển cho chuyên viên hỗ trợ được không?",
+        "Em cũng muốn hỏi là sản phẩm này có an toàn không, và có phải là loại có độ đệm tốt không?",
+        "Em đồng ý để chuyên viên hỗ trợ, anh có thể chuyển máy được không?"
+      ],
+      "days_later": 3,
+      "customer_goal": "Hỏi sản phẩm có phù hợp với người thân đang hồi phục sau chấn thương và đồng ý để chuyên viên hỗ trợ",
+      "facts_established": {},
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-SN-CAS-41-TRANG",
+        "price_vnd": 890000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        }
+      },
+      "expected_outcome": "chuyen_may",
+      "success_if": {
+        "tool_called": "handoff.transfer",
+        "args_match": {},
+        "brief_must_contain": [
+          "customer_phone",
+          "customer_name",
+          "escalation_reason",
+          "conversation_summary",
+          "product_advised",
+          "price_quoted_vnd",
+          "open_questions",
+          "next_action",
+          "generated_at"
+        ]
+      }
+    }
+  }
+}

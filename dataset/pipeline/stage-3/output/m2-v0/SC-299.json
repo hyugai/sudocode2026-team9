@@ -1,0 +1,90 @@
+{
+  "scenario_id": "SC-342",
+  "level": "M2",
+  "persona": "hai_nguoi_chung_sdt",
+  "hard_case": "shared_phone",
+  "customer_phone": "0958421083",
+  "customer_name": "Loan",
+  "honorific": "cô",
+  "notes": "resume_with_uncertain_identity_or_history",
+  "calls": {
+    "call_1": {
+      "channel": "chat_fanpage",
+      "channel_identity": "fb.hải.186",
+      "call_date": "2026-10-29",
+      "customer_turns": [
+        "Chào cô, mình là Lan. Mình muốn hỏi về máy lọc nước RO Karofi 9 lõi có giá năm triệu chín trăm chín mươi nghìn đồng không ạ?",
+        "Cảm ơn cô. Mình sẽ xem lại và gọi lại cô vào mười giờ ngày hai tháng mười một nhé."
+      ],
+      "customer_goal": "Hỏi về sản phẩm và hẹn xem lại",
+      "facts_established": {
+        "product_advised": "SKU-WF-RO9",
+        "price_quoted_vnd": 5990000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-WF-RO9",
+        "price_vnd": 5990000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "scheduled_callback_at": "2026-11-02T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0958421083",
+          "callback_at": "2026-11-02T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0958421083",
+      "call_date": "2026-11-02",
+      "customer_turns": [
+        "Chào cô, cô có phải là Lan không ạ? Mình là người dùng chung số này.",
+        "Vâng, cô Lan là người đã hỏi về máy lọc nước RO Karofi 9 lõi và hẹn gọi lại vào mười giờ ngày hai tháng mười một.",
+        "Cảm ơn cô. Mình sẽ gọi lại cô đúng giờ đó."
+      ],
+      "days_later": 4,
+      "customer_goal": "Xác nhận đúng người đang gọi trước khi dùng lịch sử",
+      "facts_established": {},
+      "must_carry_over": [],
+      "must_not_ask": [],
+      "ground_truth_facts": {
+        "sku": "SKU-WF-RO9",
+        "price_vnd": 5990000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        }
+      },
+      "memory_expectation": {
+        "customer_id": "C034",
+        "must_not_write_to": "C035"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "crm.get_customer",
+        "args_match": {
+          "phone": "0958421083"
+        },
+        "must_say_any": [
+          "xác nhận",
+          "đang nói chuyện",
+          "đang trao đổi"
+        ]
+      }
+    }
+  }
+}

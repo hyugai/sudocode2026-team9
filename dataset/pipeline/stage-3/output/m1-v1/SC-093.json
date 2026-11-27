@@ -1,0 +1,136 @@
+{
+  "scenario_id": "SC-101",
+  "level": "M1",
+  "persona": "khach_mua_nhieu_mon",
+  "hard_case": "basket_reprice",
+  "customer_phone": "0954742843",
+  "customer_name": "Giang",
+  "honorific": "chị",
+  "notes": "return_after_price_or_stock_change",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0954742843",
+      "call_date": "2026-10-25",
+      "customer_turns": [
+        "Chị ơi, em đang xem mấy cái giày chạy bộ RunLite, nghe nói là êm chân lắm. Chị có thể tư vấn thêm không ạ?",
+        "Nếu em mua một cái giày trắng size 38, giá bao nhiêu vậy chị?",
+        "Ờ, 1 triệu 161 nghìn ư? Thế có khuyến mãi không chị? Em nghe nói là giảm 10% cho cái giày này.",
+        "Ưu đãi hết ngày 25 tháng 10 hả chị? Em xem lại thì thấy đang còn hạn, có đúng không ạ?",
+        "Chị ơi, em đang cân nhắc. Nếu em không mua ngay, có thể chị hẹn gọi lại em vào 10 giờ ngày 27 tháng 10 không ạ?"
+      ],
+      "customer_goal": "Hỏi về sản phẩm và hẹn xem lại",
+      "facts_established": {
+        "product_advised": "SKU-SN-RUN1-38-TRANG",
+        "price_quoted_vnd": 1161000,
+        "promo_code": "RUN-10",
+        "promo_expiry": "2026-10-25",
+        "basket_skus": [
+          "SKU-SN-RUN1-38-TRANG",
+          "SKU-SN-RUN2-39-DEN"
+        ]
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN1-38-TRANG",
+        "price_vnd": 1161000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0",
+          "RUN-10"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "RUN-10": "2026-10-25",
+          "COD-0": "2026-12-14"
+        },
+        "scheduled_callback_at": "2026-10-27T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0954742843",
+          "callback_at": "2026-10-26T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0954742843",
+      "call_date": "2026-10-27",
+      "customer_turns": [
+        "Chị ơi, em vừa xem lại giỏ hàng, thấy hai cái giày RunLite vẫn còn trong giỏ.",
+        "Giá hôm nay là 1 triệu 290 nghìn ư? Thanh toán khi nhận hàng được không chị?",
+        "Điều kiện giao hàng là Buôn Krông A, xã Ea Tu, Đắk Lắk đúng không ạ?",
+        "Chị ơi, tổng tiền giỏ hàng là 2 triệu 980 nghìn ư? Thôi được rồi, em đặt luôn.",
+        "Thế là bao nhiêu tất cả vậy chị?"
+      ],
+      "days_later": 2,
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-SN-RUN1-38-TRANG",
+        "price_quoted_vnd": 1290000,
+        "payment": "COD",
+        "delivery_address": "Buôn Krông A, xã Ea Tu, Đắk Lắk",
+        "order_status": "created",
+        "basket_skus": [
+          "SKU-SN-RUN1-38-TRANG",
+          "SKU-SN-RUN2-39-DEN"
+        ],
+        "basket_total_vnd": 2980000
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "promo_code",
+        "promo_expiry",
+        "basket_skus"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN1-38-TRANG",
+        "price_vnd": 1290000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [
+          "RUN-10"
+        ],
+        "promo_expiry_dates": {
+          "RUN-10": "2026-10-25",
+          "COD-0": "2026-12-14"
+        },
+        "estimated_delivery": "2026-10-29",
+        "basket_lines": [
+          {
+            "sku": "SKU-SN-RUN1-38-TRANG",
+            "qty": 1,
+            "price_vnd": 1290000
+          },
+          {
+            "sku": "SKU-SN-RUN2-39-DEN",
+            "qty": 1,
+            "price_vnd": 1690000
+          }
+        ]
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-SN-RUN1-38-TRANG"
+        },
+        "also_ordered": [
+          "SKU-SN-RUN2-39-DEN"
+        ],
+        "total_match_vnd": 2980000
+      }
+    }
+  }
+}

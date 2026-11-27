@@ -1,0 +1,106 @@
+{
+  "scenario_id": "SC-054",
+  "level": "M1",
+  "persona": "khach_da_kenh_fb_hotline",
+  "hard_case": null,
+  "customer_phone": "0992298369",
+  "customer_name": "Ngọc",
+  "honorific": "chị",
+  "notes": "continue_across_channels",
+  "calls": {
+    "call_1": {
+      "channel": "zalo_oa",
+      "channel_identity": "zalo_ngọc53",
+      "call_date": "2026-10-26",
+      "customer_turns": [
+        "K, bn cho mình hỏi sp giày chạy bộ RunLite xám size 41 còn không?",
+        "Có thì báo giá luôn nha.",
+        "Mình xem lại sau, nếu có thì gọi lại nhé.",
+        "Mình nhắn fb rồi, nếu ko thấy thì gọi 090xxx ạ."
+      ],
+      "customer_goal": "Hỏi về sản phẩm và hẹn xem lại",
+      "facts_established": {
+        "product_advised": "SKU-SN-RUN1-41-XAM",
+        "price_quoted_vnd": 1290000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN1-41-XAM",
+        "price_vnd": 1290000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [
+          "RUN-10"
+        ],
+        "promo_expiry_dates": {
+          "RUN-10": "2026-10-25",
+          "COD-0": "2026-12-14"
+        },
+        "scheduled_callback_at": "2026-10-30T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0992298369",
+          "callback_at": "2026-10-30T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0992298369",
+      "call_date": "2026-10-30",
+      "customer_turns": [
+        "Chào chị, mình là khách đã nhắn Zalo hôm 26/10.",
+        "Chị nhớ không? Mình muốn đặt giày chạy bộ RunLite xám size 41.",
+        "Giá 1,29 triệu, thanh toán khi nhận hàng.",
+        "Giao đến số 503 Trần Cao Vân, Đà Nẵng nhé."
+      ],
+      "days_later": 4,
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-SN-RUN1-41-XAM",
+        "price_quoted_vnd": 1290000,
+        "payment": "COD",
+        "delivery_address": "Số 503 đường Trần Cao Vân, phường Thanh Khê, Đà Nẵng",
+        "order_status": "created"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN1-41-XAM",
+        "price_vnd": 1290000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [
+          "RUN-10"
+        ],
+        "promo_expiry_dates": {
+          "RUN-10": "2026-10-25",
+          "COD-0": "2026-12-14"
+        },
+        "estimated_delivery": "2026-11-02"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-SN-RUN1-41-XAM",
+          "price_vnd": 1290000
+        }
+      }
+    }
+  }
+}

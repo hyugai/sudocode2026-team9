@@ -1,6 +1,7 @@
 """Synthetic SQLite API integration; optional PostgreSQL migration tests below."""
 import asyncio
 from datetime import timedelta
+import json
 import os
 from types import SimpleNamespace
 import unittest
@@ -8,6 +9,7 @@ from unittest.mock import AsyncMock, patch
 from uuid import uuid4
 
 from fastapi.testclient import TestClient
+from langchain_core.messages import AIMessage
 from sqlalchemy import create_engine, text, update
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.ext.compiler import compiles
@@ -17,8 +19,10 @@ from telesale_agent.adapters.db.app_models import APP_TABLES, Conversation, utc_
 from telesale_agent.adapters.db.app_repository import AppDataRepository
 from telesale_agent.adapters.db.models import Customer
 from telesale_agent.adapters.db.voice_store import VoiceStore, metadata, turns
+from telesale_agent.adapters.llm.call_brief_summary import GeminiCallBriefSummarizer
 from telesale_agent.core.models import ConversationState, CustomerIdentity, Message
 from telesale_agent.entrypoints.api import auth, chat
+from telesale_agent.entrypoints.api.call_brief import get_call_brief_summarizer
 
 
 class DemoHarness:
@@ -145,13 +149,24 @@ class SalesmanAPITests(unittest.TestCase):
             self.assertEqual(self.client.post(path, json=body).status_code, 401)
 
     def test_text_and_upload_saved_through_http_are_visible_to_salesman(self):
+        text_summary = "Khách hàng muốn tìm hiểu về máy lọc. Synee đã ghi nhận nhu cầu này."
+        audio_summary = "Khách hàng đã gửi bản ghi âm để tiếp tục trao đổi về máy lọc."
+        model = SimpleNamespace(ainvoke=AsyncMock(side_effect=[AIMessage(text_summary), AIMessage(audio_summary)]))
+        summarizer = GeminiCallBriefSummarizer(model)
+        chat.app.dependency_overrides[get_call_brief_summarizer] = lambda: summarizer
         self.login("a")
         identifier = self.client.post("/api/conversations", json={}).json()["id"]
         with patch.object(chat, "harness", DemoHarness()), patch.object(chat.provider_cooldown, "remaining", return_value=0):
-            response = self.client.post("/api/chat", json={"conversation_id": identifier, "message": "Tôi cần máy lọc", "customer_phone": "0900000000"}, headers={"X-Conversation-Mode": "account"})
+            response = self.client.post("/api/chat", json={"conversation_id": identifier, "message": "Tôi cần máy lọc", "customer_phone": "0900000000"}, headers={"X-Conversation-Mode": "account", "Accept": "text/event-stream"})
             self.assertEqual(response.status_code, 200, response.text)
+            event = next(event for event in response.text.split("\n\n") if event.startswith("event: done\n"))
+            self.assertEqual(json.loads(event.removeprefix("event: done\ndata: "))["call_brief"]["summary"], text_summary)
             response = self.client.post("/api/chat/audio", data={"conversation_id": identifier}, files={"file": ("demo.wav", b"synthetic", "audio/wav")}, headers={"X-Conversation-Mode": "account"})
             self.assertEqual(response.status_code, 200, response.text)
+            self.assertEqual(response.json()["call_brief"]["summary"], audio_summary)
+            self.assertEqual(response.json()["call_brief"]["needs"], ["Bản ghi âm kiểm thử"])
+        customer_detail = self.client.get(f"/api/conversations/{identifier}").json()
+        self.assertEqual(customer_detail["call_brief"], response.json()["call_brief"])
         self.client.post("/api/auth/logout")
         self.login()
         data = self.client.get(f"/api/salesman/conversations/chat/{identifier}").json()
@@ -159,6 +174,41 @@ class SalesmanAPITests(unittest.TestCase):
         self.assertEqual(data["messages"][0]["content"], "Tôi cần máy lọc")
         self.assertEqual(data["messages"][2]["content"], "Bản ghi âm kiểm thử")
         self.assertEqual(data["turn_number"], 2)
+        self.assertEqual(data["call_brief"], customer_detail["call_brief"])
+        self.assertEqual(model.ainvoke.await_count, 2)
+
+    def test_legacy_briefs_use_saved_conversation_and_are_reused_across_views(self):
+        identifier = self.conversation(content="Tôi muốn hỏi phí vận chuyển. Liên hệ 0901234567.")
+        self.voice(1)
+        self.voice(2, interrupted=True, snapshot=False)
+        chat_summary = "Khách hàng muốn biết phí vận chuyển."
+        voice_summary = "Khách hàng đã trao đổi với Synee trong lượt đầu."
+        model = SimpleNamespace(ainvoke=AsyncMock(side_effect=[AIMessage(chat_summary), AIMessage(voice_summary)]))
+        summarizer = GeminiCallBriefSummarizer(model)
+        chat.app.dependency_overrides[get_call_brief_summarizer] = lambda: summarizer
+
+        self.login("a")
+        customer = self.client.get(f"/api/conversations/{identifier}?limit=1").json()
+        self.assertEqual(customer["call_brief"]["summary"], chat_summary)
+        self.assertNotIn("_brief_messages", customer)
+        prompt = model.ainvoke.call_args.args[0][-1][1]
+        self.assertIn("phí vận chuyển", prompt)
+        self.assertIn("Chào bạn", prompt)
+        self.assertNotIn("0901234567", prompt)
+
+        self.client.post("/api/auth/logout")
+        self.login()
+        salesman = self.client.get(f"/api/salesman/conversations/chat/{identifier}?limit=1&offset=1").json()
+        self.assertEqual(salesman["call_brief"], customer["call_brief"])
+        model.ainvoke.assert_awaited_once()
+
+        voice = self.client.get("/api/salesman/conversations/voice/live-demo").json()
+        self.assertEqual(voice["call_brief"]["summary"], voice_summary)
+        prompt = model.ainvoke.call_args.args[0][-1][1]
+        self.assertIn("Khách lượt 1", prompt)
+        self.assertNotIn("Khách lượt 2", prompt)
+        stored = asyncio.run(self.repository.get_conversation(self.users["a"]["id"], identifier))
+        self.assertEqual(stored["call_brief"]["summary"], "Tư vấn")
 
     def test_account_voice_binds_owner_and_guest_still_requires_access_code(self):
         from fastapi import FastAPI

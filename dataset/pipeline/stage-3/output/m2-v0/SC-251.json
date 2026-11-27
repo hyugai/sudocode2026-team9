@@ -1,0 +1,118 @@
+{
+  "scenario_id": "SC-290",
+  "level": "M2",
+  "persona": "khach_da_mua_doi_size",
+  "hard_case": "exchange_after_restock",
+  "customer_phone": "0913301756",
+  "customer_name": "Vy",
+  "honorific": "chị",
+  "notes": "return_after_price_or_stock_change",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0913301756",
+      "call_date": "2026-10-18",
+      "customer_turns": [
+        "Chị ơi, em muốn đặt cái giày chạy bộ RunLite hai Pro màu đen size bốn mươi.",
+        "Giá là một triệu năm trăm hai mươi mốt ngàn đúng không chị?",
+        "Em sẽ thanh toán khi nhận hàng, địa chỉ giao là 53A Trần Phú, phường Chợ Quán, TP. HCM.",
+        "Chị kiểm tra giúp em xem còn size bốn mươi không nhé."
+      ],
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-SN-RUN2-40-DEN",
+        "price_quoted_vnd": 1521000,
+        "payment": "COD",
+        "delivery_address": "53A Trần Phú, phường Chợ Quán, TP. Hồ Chí Minh",
+        "order_status": "created",
+        "requested_replacement_sku": "SKU-SN-RUN2-41-DEN"
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN2-40-DEN",
+        "price_vnd": 1521000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0",
+          "RUN-10"
+        ],
+        "expired_promos": [
+          "RUN2-SALE"
+        ],
+        "promo_expiry_dates": {
+          "RUN-10": "2026-10-25",
+          "COD-0": "2026-12-14",
+          "RUN2-SALE": "2026-10-07"
+        },
+        "estimated_delivery": "2026-10-20",
+        "replacement_in_stock": false
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-SN-RUN2-40-DEN",
+          "price_vnd": 1521000
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0913301756",
+      "call_date": "2026-10-24",
+      "customer_turns": [
+        "Chị ơi, em vừa nhận hàng, nhưng size bốn mươi bị chật quá.",
+        "Em muốn đổi sang size bốn mươi mốt của cùng loại giày RunLite hai Pro màu đen.",
+        "Chị kiểm tra giúp em xem size đó còn không? Em cần đổi để vừa chân hơn.",
+        "Chị nhớ đơn của em không? Em đặt từ hôm 18, địa chỉ 53A Trần Phú."
+      ],
+      "days_later": 6,
+      "customer_goal": "Đổi sang size khác sau khi nhận hàng",
+      "facts_established": {
+        "new_variant_sku": "SKU-SN-RUN2-41-DEN"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "payment",
+        "delivery_address",
+        "order_status",
+        "requested_replacement_sku"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN2-40-DEN",
+        "price_vnd": 1521000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0",
+          "RUN-10"
+        ],
+        "expired_promos": [
+          "RUN2-SALE"
+        ],
+        "promo_expiry_dates": {
+          "RUN-10": "2026-10-25",
+          "COD-0": "2026-12-14",
+          "RUN2-SALE": "2026-10-07"
+        },
+        "replacement_in_stock": true,
+        "exchange_fee_vnd": 0,
+        "policy_reference": "DT-03"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.update",
+        "args_match": {
+          "order_id": "OD600001",
+          "action": "exchange_size",
+          "new_variant_sku": "SKU-SN-RUN2-41-DEN"
+        }
+      }
+    }
+  }
+}

@@ -75,7 +75,14 @@ def atomic_json(path: Path, payload: dict | list) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     temporary = path.with_name(path.name + ".partial")
     temporary.write_text(json.dumps(payload, ensure_ascii=False, indent=2, allow_nan=False) + "\n", encoding="utf-8")
-    temporary.replace(path)
+    for attempt in range(6):
+        try:
+            temporary.replace(path)
+            return
+        except PermissionError:
+            if attempt == 5:
+                raise
+            time.sleep(0.1 * (attempt + 1))
 
 
 def pcm_info(path: Path) -> dict:
@@ -210,16 +217,32 @@ def prepare_noise_bank(noise_dir: Path) -> dict:
     return {profile["code"]: bank[profile["code"]] for profile in PROFILES}
 
 
+def assign_noise(number: int, call_index: int, counters: dict,
+                 snr_levels_db: tuple[float, ...] = (20.0, 15.0, 10.0)) -> tuple[dict, float]:
+    profile_index = (number - 71 + 2 * call_index) % len(PROFILES)
+    profile = PROFILES[profile_index]
+    code = profile["code"]
+    occurrence = counters.get(code, 0)
+    counters[code] = occurrence + 1
+    return profile, float(snr_levels_db[(profile_index + occurrence) % len(snr_levels_db)])
+
+
 def build_calls(input_root: Path, start: int = 71, end: int = 100,
-                snr_levels_db: tuple[float, ...] = (20.0, 15.0, 10.0)) -> list[dict]:
-    if not 71 <= start <= end <= 100:
-        raise ValueError("This pipeline only processes SC-071..SC-100.")
+                snr_levels_db: tuple[float, ...] = (20.0, 15.0, 10.0), *,
+                scenario_ids: list[str] | None = None) -> list[dict]:
+    if scenario_ids is None:
+        if not 71 <= start <= end <= 100:
+            raise ValueError("This pipeline only processes SC-071..SC-100 by default.")
+        scenario_ids = [f"SC-{number:03d}" for number in range(start, end + 1)]
+    if (not scenario_ids or len(set(scenario_ids)) != len(scenario_ids)
+            or not all(re.fullmatch(r"SC-\d{3}", sid) for sid in scenario_ids)):
+        raise ValueError("Expected a non-empty list of unique scenario IDs (SC-xxx).")
     if not snr_levels_db or not all(math.isfinite(value) for value in snr_levels_db):
         raise ValueError("SNR levels must be finite and non-empty.")
     counters = {profile["code"]: 0 for profile in PROFILES}
     calls = []
-    for number in range(start, end + 1):
-        sid = f"SC-{number:03d}"
+    for sid in scenario_ids:
+        number = int(sid[3:])
         path = input_root / "scenarios_complete" / f"{sid}.json"
         scenario = json.loads(path.read_text(encoding="utf-8-sig"))
         if scenario.get("scenario_id") != sid or not isinstance(scenario.get("calls"), dict) or not scenario["calls"]:
@@ -230,11 +253,8 @@ def build_calls(input_root: Path, start: int = 71, end: int = 100,
             turns = call.get("customer_turns")
             if not isinstance(turns, list) or not turns:
                 raise ValueError(f"{sid}/{cid}: no customer_turns.")
-            profile_index = (number - 71 + 2 * call_index) % len(PROFILES)
-            profile = PROFILES[profile_index]
+            profile, snr = assign_noise(number, call_index, counters, snr_levels_db)
             code = profile["code"]
-            snr = float(snr_levels_db[(profile_index + counters[code]) % len(snr_levels_db)])
-            counters[code] += 1
             tasks = []
             for index, text in enumerate(turns):
                 if not isinstance(text, str) or not text.strip():
@@ -331,7 +351,7 @@ def export_reports(output_dir: Path, manifest: dict) -> None:
     with (output_dir / "noise_manifest.jsonl").open("w", encoding="utf-8") as stream:
         for row in rows:
             stream.write(json.dumps(row, ensure_ascii=False, allow_nan=False) + "\n")
-    lines = ["# Nhiễu nền đã thêm vào SC-071–SC-100", "",
+    lines = ["# Nhiễu nền đã thêm vào audio", "",
              "Mỗi dòng là một WAV. Nhãn mô tả môi trường gốc; không khẳng định từng sự kiện âm thanh xuất hiện trong mọi đoạn.",
              "SNR mục tiêu được đặt theo cuộc gọi bằng năng lượng các frame có tiếng nói. SNR từng lượt có thể khác vì nền biến thiên tự nhiên.",
              "SNR cao hơn nghĩa là tiếng nền nhẹ hơn. Cùng một nền và một hệ số trộn được giữ trong mỗi cuộc gọi.", "",
@@ -397,16 +417,18 @@ def validate_results(input_root: Path, output_dir: Path, manifest: dict) -> dict
 
 def run_pipeline(input_root: Path, output_dir: Path, noise_dir: Path, *, start: int = 71, end: int = 100,
                  base_seed: int = 20261118, snr_levels_db: tuple[float, ...] = (20.0, 15.0, 10.0),
-                 peak_ceiling: float = 0.97, export_zip: bool = True) -> dict:
+                 peak_ceiling: float = 0.97, export_zip: bool = True,
+                 scenario_ids: list[str] | None = None) -> dict:
     input_root, output_dir, noise_dir = Path(input_root).resolve(), Path(output_dir).resolve(), Path(noise_dir).resolve()
     if (output_dir == input_root or output_dir.is_relative_to(input_root / "audio")
             or (output_dir / "audio").resolve() == (input_root / "audio").resolve()):
         raise ValueError("Choose a separate output directory; source WAVs/manifests must remain unchanged.")
     if not 0 < peak_ceiling < 0.999:
         raise ValueError("peak_ceiling must be between 0 and 0.999.")
-    calls = build_calls(input_root, start, end, snr_levels_db)
+    calls = build_calls(input_root, start, end, snr_levels_db, scenario_ids=scenario_ids)
+    selected_ids = list(dict.fromkeys(call["scenario_id"] for call in calls))
     expected = sum(len(call["tasks"]) for call in calls)
-    print(f"Found {end - start + 1} scenarios / {len(calls)} calls / {expected} source WAVs.", flush=True)
+    print(f"Found {len(selected_ids)} scenarios / {len(calls)} calls / {expected} source WAVs.", flush=True)
     bank = prepare_noise_bank(noise_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
     manifest_path = output_dir / "noise_manifest.json"
@@ -422,7 +444,7 @@ def run_pipeline(input_root: Path, output_dir: Path, noise_dir: Path, *, start: 
                                         "noise_source_file": source["relative_path"], "noise_source_sha256": source["source_sha256"],
                                         "noise_source_url": source["source_url"], "noise_license": source["license"], "status": "pending"}
     manifest = {"pipeline_version": PIPELINE_VERSION, "created_at_utc": datetime.now(timezone.utc).isoformat(),
-                "scenario_ids": [f"SC-{i:03d}" for i in range(start, end + 1)],
+                "scenario_ids": selected_ids,
                 "expected_files": expected, "base_seed": base_seed, "peak_ceiling": peak_ceiling,
                 "snr_levels_db": list(snr_levels_db), "snr_definition": "energy-gated 20 ms frames, -35 dB relative frame energy; one noise gain per call",
                 "noise_sources": bank, "results": results}
@@ -477,7 +499,8 @@ def run_pipeline(input_root: Path, output_dir: Path, noise_dir: Path, *, start: 
     if validation["issues"]:
         raise RuntimeError(f"{len(validation['issues'])} validation issues; see {output_dir / 'validation.json'}")
     if export_zip:
-        archive_path = output_dir / f"noisy_SC{start:03d}_SC{end:03d}.zip"
+        zip_name = f"noisy_SC{start:03d}_SC{end:03d}.zip" if scenario_ids is None else "noisy_selected_scenarios.zip"
+        archive_path = output_dir / zip_name
         temporary = archive_path.with_name(archive_path.name + ".partial")
         with zipfile.ZipFile(temporary, "w", compression=zipfile.ZIP_DEFLATED) as archive:
             for row in results.values():

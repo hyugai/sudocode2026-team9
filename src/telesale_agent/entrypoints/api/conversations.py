@@ -12,6 +12,7 @@ from telesale_agent.adapters.db.app_repository import AppDataNotFound, AppDataRe
 from telesale_agent.adapters.db.checkpoint import CheckpointError, CheckpointTooLargeError
 from telesale_agent.adapters.db.learning import LearningSnapshotTooLarge
 from .auth import NO_STORE, auth_error, get_auth_repository, require_origin, require_customer
+from .call_brief import get_call_brief_summarizer, summarize_saved_brief
 from telesale_agent.application.memory.lifecycle import flush_customer_memory
 
 
@@ -65,8 +66,11 @@ async def list_conversations(limit: int = Query(20, ge=1, le=100), offset: int =
 
 @router.get("/conversations/{conversation_id}")
 async def get_conversation(conversation_id: UUID, limit: int = Query(50, ge=1, le=100), offset: int = Query(0, ge=0),
-                           user: dict = Depends(require_customer), repository: AppDataRepository = Depends(repository_dependency)):
-    return await repository.get_conversation(user["id"], str(conversation_id), limit=limit, offset=offset)
+                           user: dict = Depends(require_customer), repository: AppDataRepository = Depends(repository_dependency),
+                           summarizer=Depends(get_call_brief_summarizer)):
+    detail = await repository.get_conversation(user["id"], str(conversation_id), limit=limit, offset=offset,
+                                               include_brief_messages=summarizer is not None)
+    return await summarize_saved_brief(detail, summarizer)
 
 
 @router.post("/conversations/{conversation_id}/end", dependencies=[Depends(require_origin)])
