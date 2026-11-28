@@ -1,117 +1,89 @@
 # Quyết định thiết kế và lý do
 
-> Ghi nhận ngày 18/11/2026 từ hiện trạng repository. Các lựa chọn bên dưới **đã thể hiện trong code**; phần lý do/đánh đổi là diễn giải kỹ thuật từ implementation và tài liệu hiện có, không phải biên bản phê duyệt hay lịch sử quyết định của nhóm.
+> Ghi nhận từ hiện trạng repository và đối chiếu trực tiếp với đề bài **SUDO CODE 2026 — Vòng 1**. Tài liệu tập trung vào **5 quyết định kiến trúc cốt lõi** định hình hệ thống Synee AI.
 
-Liên quan: [hệ thống](system-architecture.md), [harness](agent-harness-loop.md), [bộ nhớ](memory-design.md), [tool](tool-catalog.md).
+Liên quan: [hệ thống](system-architecture.md), [harness](agent-harness-loop.md), [bộ nhớ](memory-design.md), [tool](tool-catalog.md), [self-learning](self-learning.md).
 
-## ADR-01 — Application điều phối, DeepAgent xử lý model/tool loop
+---
 
-**Bối cảnh:** tư vấn ngôn ngữ tự nhiên cần linh hoạt, còn identity, xác nhận mua hàng, dữ liệu bắt buộc và ghi kết quả cần được kiểm soát rõ.
+## ADR-01 — Chọn DeepAgent cho model/tool loop, Application giữ quyền điều phối
 
-**Lựa chọn:** application sở hữu resolve/hydrate, perception, retrieval, routing, read prefetch, mutation đã xác nhận và persistence. DeepAgent nhận context/tool còn được phép để tiếp tục reasoning và tạo câu trả lời.
+**Bối cảnh:** Đề bài yêu cầu thiết kế Agent Harness theo vòng lặp `Perceive → Resolve Identity → Retrieve → Plan → Guardrail → Act → Observe → Persist`. Tư vấn tiếng Việt cần linh hoạt, nhưng nhận diện khách hàng, kiểm tra dữ liệu bắt buộc, chặn bịa giá và ghi nhận kết quả giao dịch phải được kiểm soát chặt chẽ.
 
-**Lý do:** những bước đã có đủ dữ liệu được thực hiện theo quy tắc, giảm việc model phải tự lập lại chuỗi đọc hoặc đoán arguments. Evidence từ application vẫn đi chung trace với model tool calls.
+**Lựa chọn:** Tách đôi trách nhiệm:
+- **Application layer** sở hữu các bước tất định (deterministic): nhận diện khách hàng (`resolve/hydrate`), chuẩn hóa đầu vào (`perception`), truy hồi ngữ cảnh (`retrieval`), định tuyến intent (`routing`), đọc trước dữ liệu (`read prefetch`), thực thi mutation đã xác nhận và lưu trữ (`persistence`).
+- **DeepAgent** đảm nhận vòng lặp reasoning và gọi tool trong phạm vi context và danh sách tool được phép ở lượt đó.
 
-**Đánh đổi:** logic nghiệp vụ trải qua executor, routing và response grounding; cần duy trì nhất quán khi thêm intent/tool mới. Giới hạn graph không phải tổng budget của toàn bộ lượt.
+**Lý do:** Các bước đã có đủ dữ liệu được chạy theo quy tắc cố định, giúp giảm số lần LLM phải tự đoán arguments hoặc lặp lại chuỗi đọc thừa, giảm độ trễ và hạn chế sai sót nghiệp vụ. Bằng chứng từ Application vẫn đi chung trace với tool calls của DeepAgent.
+
+**Đánh đổi:** Luồng xử lý đi qua nhiều lớp (executor, routing, response grounding), nên khi thêm intent hoặc tool mới cần cập nhật đồng bộ cả policy và routing để giữ tính nhất quán.
 
 Căn cứ: [turn orchestration](../../src/telesale_agent/application/deepagent/turn.py), [tool policy](../../src/telesale_agent/application/conversation/tool_policy.py).
 
-## ADR-02 — Chat/file audio và Voice realtime có hai vòng điều phối
+---
 
-**Bối cảnh:** file ghi âm là input theo lượt; microphone realtime cần vừa nhận, phát audio vừa xử lý transcript và ngắt lời.
+## ADR-02 — Kiến trúc Memory phân tầng (EverOS-style) bao phủ đủ 4 tầng theo đề bài
 
-**Lựa chọn:** Chat/file audio dùng DeepAgent; file chạy Zipformer local. Voice dùng Gemini Live và controller riêng, tái sử dụng shared services, memory và registry thay vì chạy lại Chat harness cho từng audio chunk.
+**Bối cảnh:** Đề bài xác định thiết kế lớp bộ nhớ là phần quan trọng nhất, yêu cầu bao phủ đủ 4 tầng (**Working**, **Episodic**, **Profile**, **Semantic / KB**), đồng thời phải xử lý được bài toán *ghi có chọn lọc*, *khách đổi ý* (vô hiệu hóa giá trị cũ) và *truy vết nguồn gốc ký ức*.
 
-**Lý do:** giữ đường audio liên tục và giảm phụ thuộc vào việc hoàn tất NLU/persistence trước mỗi phần âm thanh; vẫn dùng chung identity và dữ liệu đã học.
+**Lựa chọn:** Tổ chức bộ nhớ theo hướng EverOS (lấy `customer_id` làm trung tâm, tách biệt nguồn sự thật) để ánh xạ trực tiếp 4 tầng của đề bài:
+1. **Working Memory:** `ConversationState` trong RAM + `CallBrief` gọn nhẹ theo lượt (kết hợp `bounded context` và tin nhắn gần nhất).
+2. **Episodic Memory:** `episodes/episode-YYYY-MM-DD.md` lưu tóm tắt từng cuộc gọi/tương tác (kèm `source_id` chống ghi trùng) và `foresights/` gợi ý hướng tiếp nối cho lần sau.
+3. **Profile Memory:** `user.md`, `behaviors.md` và `facts.md` (upsert theo key-value JSON để không tồn tại hai giá trị mâu thuẫn khi khách đổi ý), đi kèm `atomic_facts/` ghi nhật ký thay đổi có nguồn lượt (`source`).
 
-**Đánh đổi:** hai state/protocol khác nhau, chuyển chế độ không mang nguyên history sang. Guard final text của Chat không duyệt trước từng audio chunk Live; phải kiểm thử riêng interruption, playback và transcript completion.
+**Lý do:** Đảm bảo không trộn lẫn dữ kiện lịch sử cá nhân với giá/tồn kho biến động theo thời gian thực; tránh phình prompt khi hội thoại kéo dài nhiều phiên; đồng thời giữ quyền ghi bộ nhớ ở phía Application/Persister (không để agent tư vấn tự ý ghi đè dữ liệu giao dịch). Hỗ trợ cả lưu Markdown local lẫn snapshot trên Object Storage qua một contract thống nhất.
 
-Căn cứ: [Voice controller](../../src/telesale_agent/application/realtime/controller.py), [shared services](../../src/telesale_agent/application/conversation/services.py).
+**Đánh đổi:** Cần duy trì cơ chế merge và ưu tiên nguồn cho từng trường dữ kiện; chế độ `LLMPersister` (tạo `episodes` và `foresights`) làm tăng thêm một phần độ trễ và token sau mỗi lượt so với chỉ ghi `facts` tất định.
 
-## ADR-03 — Bounded context và checkpoint mặc định theo turn
+Căn cứ: [fact persistence](../../src/telesale_agent/application/memory/persist.py), [LLM persister](../../src/telesale_agent/adapters/llm/llm_persist.py), [prompt/context](../../src/telesale_agent/application/deepagent/context/prompt.py).
 
-**Bối cảnh:** replay transcript và tool outputs qua mọi lượt làm prompt tăng, tốn token và khó giữ dữ kiện hiện tại nổi bật.
+---
 
-**Lựa chọn:** graph thread riêng cho từng turn; application đưa compact CallBrief, facts theo ưu tiên và recent messages có giới hạn vào lượt mới. CallBrief projection chạy cục bộ.
+## ADR-03 — Chọn MCP Tool thay vì Multi-Agent (A2A)
 
-**Lý do:** continuity dựa vào dữ kiện đã chọn thay vì phụ thuộc toàn bộ raw graph history; dựng brief không thêm một model request mỗi lượt.
+**Bối cảnh:** Mục C.3 của đề bài cho phép chọn **MCP (Model Context Protocol)** hoặc **A2A / Multi-Agent**, với yêu cầu chứng minh độ phù hợp kiến trúc và tránh tạo multi-agent chỉ mang tính hình thức (chuỗi prompt tuần tự).
 
-**Đánh đổi:** projection có thể bỏ sót chi tiết; khi cần có archive lookup. Giới hạn prompt không dọn toàn bộ RAM checkpoint và không bảo đảm tool output trong lượt luôn nhỏ. Có thể đổi scope `conversation`, nhưng phải chấp nhận history tăng.
+**Lựa chọn:** Chọn kiến trúc **MCP** — đóng gói toàn bộ năng lực nghiệp vụ, tri thức và quy trình thành các MCP server tách biệt (**Business**, **Knowledge**, **Workflow**) giao tiếp qua `stdio`, kết hợp thu hẹp quyền tool theo từng lượt (intent routing) và theo kênh (Chat có quyền ghi khi xác nhận; Realtime Voice chỉ được cấp tool đọc).
 
-Căn cứ: [prompt/context](../../src/telesale_agent/application/deepagent/context/prompt.py), [fact selector](../../src/telesale_agent/application/deepagent/context/facts.py).
+**Lý do:**
+- Bài toán telesale cốt lõi cần **trạng thái nhất quán và độ trễ thấp** (TTFT p95 ≤ 3s, Total Latency p95 ≤ 8s). Dùng một agent điều phối gọi MCP tool trực tiếp tránh được chi phí giao tiếp, truyền ngữ cảnh và độ trễ tích lũy giữa nhiều agent (Orchestrator → Memory Agent → Advisor → Compliance Agent).
+- MCP giúp chuẩn hóa schema, tách biệt logic nghiệp vụ/DB khỏi LLM và dễ tái sử dụng chung một bộ tool cho cả Chat (DeepAgent) lẫn Voice (Gemini Live) mà không phải viết lại tích hợp.
+- Kiểm soát guardrail và phân quyền ngay tại tầng backend/MCP thay vì trông chờ vào việc agent này kiểm tra agent kia qua prompt.
 
-## ADR-04 — Customer memory do application ghi, tách khỏi nghiệp vụ và instructions
+**Đánh đổi:** Phát sinh chi phí quản lý vòng đời process MCP (`stdin/stdout`) và yêu cầu đồng bộ chặt chẽ giữa tool registry, canonical name mapping và policy kiểm tra tham số ở backend.
 
-**Bối cảnh:** sở thích khách, giá hiện tại và quy tắc agent có nguồn sự thật cũng như vòng đời khác nhau.
+Căn cứ: [MCP runtime](../../src/telesale_agent/adapters/mcp/runtime.py), [DeepAgent runtime](../../src/telesale_agent/application/deepagent/runtime.py).
 
-**Lựa chọn:** CRM/order/catalog ở PostgreSQL; learned memory theo `customer_id`; instructions nạp từ file lúc startup. Facts thay đổi dùng upsert. Persister lấy customer evidence và verified tool results, không xem lời agent là chứng cứ giao dịch.
+---
 
-**Lý do:** tránh lẫn ghi nhớ lịch sử với giá/tồn kho mới, tránh canonical facts chứa nhiều giá trị hiện tại cho cùng key và giữ quyền ghi ngoài agent tư vấn.
+## ADR-04 — Dùng Gemini API cho LLM & Voice Realtime, kết hợp Zipformer ASR chạy local
 
-**Đánh đổi:** phải định nghĩa nguồn/merge cho từng field. Merge hiện cho customer candidates ưu tiên khi trùng sau lọc, không có quy tắc toàn cục tool luôn thắng. Metadata provenance/timestamp chưa được chuẩn hóa đầy đủ trên từng canonical value.
+**Bối cảnh:** Đề bài quy định *ASR bắt buộc chạy được local*, còn *LLM được phép dùng API* để nhóm không bị chặn bởi phần cứng, ưu tiên thiết kế dữ liệu, bộ nhớ và đánh giá thay vì tự train hay chạy model nặng trên máy yếu.
 
-Căn cứ: [fact persistence](../../src/telesale_agent/application/memory/persist.py), [runtime instructions](../../src/telesale_agent/application/deepagent/runtime.py).
+**Lựa chọn:**
+- **Chat & Reasoning / Learning:** Dùng **Gemini API** (`gemini-3.6-flash` qua `LLM_PROVIDER=gemini`) cho DeepAgent, tóm tắt `LLMPersister` và phân tích bài học.
+- **Voice Realtime (tùy chọn nâng cao):** Dùng **Gemini Live API** (`gemini-3.8-live`) với controller riêng hỗ trợ audio hai chiều và ngắt lời (barge-in).
+- **ASR (file ghi âm):** Chạy **Zipformer tiếng Việt** hoàn toàn local trên CPU để chuyển audio thành text trước khi đưa vào luồng Chat.
 
-## ADR-05 — Tool nghiệp vụ qua MCP, quyền được thu hẹp theo lượt và kênh
+**Lý do:** Gemini API đáp ứng tốt tiếng Việt tự nhiên, hỗ trợ function calling ổn định cho chuỗi MCP tool và đạt ngưỡng độ trễ p95 của đề bài mà không đòi hỏi GPU cục bộ. Việc giữ Zipformer local vừa tuân thủ ràng buộc đề bài, vừa tách bạch khâu nhận dạng giọng nói (đo WER/CER) khỏi khâu suy luận.
 
-**Bối cảnh:** model không cần toàn bộ tool schema trong mọi câu hỏi; Voice chưa có cơ chế đối soát write khi interruption/reconnect.
+**Đánh đổi:** Phụ thuộc kết nối mạng, hạn mức quota và chi phí API của Google Gemini cho phần suy luận/live voice; cần lớp che PII (`phone`, địa chỉ...) trước khi gửi transcript ra ngoài ở các luồng log/học.
 
-**Lựa chọn:** ba MCP process chia Business, Knowledge, Workflow; chuẩn hóa tên trong trace. Chat có intent routing và call limits; shell/filesystem tool bị ẩn, general-purpose subagent bị tắt. Voice chỉ công bố tool đọc và kiểm tra lại arguments/policy tại backend.
+Căn cứ: [Voice controller](../../src/telesale_agent/application/realtime/controller.py), [DeepAgent runtime](../../src/telesale_agent/application/deepagent/runtime.py).
 
-**Lý do:** giảm schema/context không cần thiết, giữ nghiệp vụ sau interface rõ và không để quyền tool phụ thuộc chỉ vào lời nhắc model. Identity/ngày của Voice do backend bind.
+---
 
-**Đánh đổi:** thêm vòng đời process/stdin-stdout và yêu cầu đồng bộ registry, canonical mapping, schema, policy. Mutation Voice cần operation ledger/idempotency/reconciliation trước khi mở quyền. Callback/handoff hiện chưa có hàng đợi bền vững.
+## ADR-05 — Vòng lặp Self-Learning (Knowledge Gap Loop & Lesson Router) cải tiến không cần fine-tune
 
-Căn cứ: [MCP runtime](../../src/telesale_agent/adapters/mcp/runtime.py), [DeepAgent runtime](../../src/telesale_agent/application/deepagent/runtime.py), [Voice dispatcher](../../src/telesale_agent/application/realtime/tool_dispatch.py).
+**Bối cảnh:** Đề bài (Mục C.5 & Tiêu chí đánh giá số 5 — 13%) đặt ràng buộc **không được huấn luyện lại / fine-tune mô hình**, mọi cải tiến theo thời gian phải đến từ dữ liệu, bộ nhớ, kịch bản/prompt và điều phối, có cơ chế kiểm chứng và kiểm soát an toàn.
 
-## ADR-06 — Một memory contract, nhiều backend và persister
+**Lựa chọn:** Xây dựng **Self-Learning Service & Learning Worker** chạy bất đồng bộ sau khi kết thúc phiên (Chat và Voice):
+1. Gom transcript (đã che PII), kết quả tool và feedback vào PostgreSQL dưới dạng job có cơ chế retry.
+2. Worker chạy **Knowledge Gap Loop** để đối chiếu lỗi với bằng chứng tool thực tế, phát hiện khoảng trống tri thức (`search_policy`) và sinh các bài học có cấu trúc (`When / Do / Otherwise`) lưu trên Object Storage.
+3. Ở các phiên Chat mới, **Chat Lesson Router** tự động chọn tối đa 3 bài học đã được duyệt (`approved`, giới hạn tổng 2.400 ký tự/lượt) để nạp vào ngữ cảnh trước khi trả lời.
 
-**Bối cảnh:** phát triển local, triển khai cloud và evaluation cần cùng semantics nhưng khác yêu cầu lưu trữ/tái lập.
+**Lý do:** Đáp ứng trực tiếp yêu cầu *"tự cải tiến từ feedback mà không fine-tune"* của đề bài một cách có hệ thống và đo lường được. Việc chỉ lưu bài học sau khi đối chiếu bằng chứng và tách riêng kho `approved` giúp ngăn agent học nhầm (ví dụ: học thói quen hứa đại để chốt đơn) và giữ an toàn nếu kho lesson gặp sự cố (Chat vẫn hoạt động bình thường).
 
-**Lựa chọn:** file Markdown mặc định; object-storage snapshot khi cấu hình; in-memory repository cho evaluation/disabled. Durable mode mặc định dùng LLM learning; có deterministic persister chỉ ghi facts.
+**Đánh đổi:** Cần cấu hình thêm PostgreSQL learning tables và Object Storage (S3-compatible) để lưu trữ bài học/artifacts; các thay đổi hiệu quả phụ thuộc vào chất lượng bước kiểm chứng trước khi đưa bài học vào trạng thái `approved`.
 
-**Lý do:** Markdown dễ kiểm tra/migrate; snapshot gom cập nhật remote; repository/persister tách rời giúp evaluation giữ upsert semantics mà không sửa seed thật. LLM learning bổ sung episode/foresight bên cạnh canonical facts.
-
-**Đánh đổi:** LLM learning tăng latency, token và độ biến thiên; deterministic mode không tự học episode/foresight. File không có transaction toàn lượt; snapshot remote chưa có distributed CAS. Cấu hình mode phải được ghi rõ khi so sánh benchmark.
-
-Căn cứ: [bootstrap](../../src/telesale_agent/bootstrap.py), [write session](../../src/telesale_agent/adapters/memory/write_session.py), [LLM persister](../../src/telesale_agent/adapters/llm/llm_persist.py).
-
-## ADR-07 — Buffer memory remote trong RAM và vận hành một backend writer
-
-**Bối cảnh:** ghi nhiều file/object trong mỗi turn làm đường phản hồi phụ thuộc I/O remote; nhiều session của cùng khách phải nhìn thấy cập nhật mới.
-
-**Lựa chọn:** object backend được bọc bằng `BufferedCustomerMemoryStore`; publish snapshot RAM, flush khi idle/shutdown, retry upload và theo dõi version. Chat/Voice dùng customer writer trong process; Voice giữ lease PostgreSQL cho một worker.
-
-**Lý do:** giảm remote I/O trên đường xử lý từng lượt, chia sẻ snapshot mới giữa các session cùng process và tuần tự hóa ghi trong phạm vi hiện tại.
-
-**Đánh đổi:** snapshot RAM chưa flush không crash-durable. Chat chưa có durable memory journal tương đương Voice; lease/khóa nội bộ chưa đủ cho scale nhiều process. Nếu mở rộng nhiều worker cần cơ chế điều phối session và writer phân tán.
-
-Căn cứ: [RAM buffer](../../src/telesale_agent/adapters/memory/buffered.py), [coordinator](../../src/telesale_agent/application/memory/coordinator.py), [Voice lease](../../src/telesale_agent/application/realtime/session.py).
-
-## ADR-08 — Journal và prepared batch cho memory Voice
-
-**Bối cảnh:** lượt Voice có thể kết thúc bởi completion, interruption hoặc disconnect; retry không nên học lại episode hay append lặp.
-
-**Lựa chọn:** chỉ chốt memory từ input đã hoàn chỉnh; lưu journal pending/prepared, ghi operations bằng RecordingRepository rồi replay. Append dùng source marker, upsert kiểm tra previous/current value; remote buffer trì hoãn journal committed tới sau upload.
-
-**Lý do:** tách việc chuẩn bị memory khỏi apply; batch đã chuẩn bị có thể được phát lại mà không gọi lại LLM learning và hạn chế ghi đè fact mới.
-
-**Đánh đổi:** PostgreSQL và memory store không có transaction chung; recovery chỉ cứu job đã ghi journal. Quét recovery chạy khi manager initialize, chưa có worker định kỳ xử lý mọi pending job. Cơ chế này chưa phải ledger cho mutation nghiệp vụ.
-
-Căn cứ: [memory coordinator](../../src/telesale_agent/application/memory/coordinator.py), [Voice journal store](../../src/telesale_agent/adapters/db/voice_store.py).
-
-## ADR-09 — SSE tách bản nháp khỏi kết quả cuối
-
-**Bối cảnh:** người dùng cần phản hồi sớm, nhưng grounding, ghi memory và lưu hội thoại có thể còn đang chạy sau khi model bắt đầu sinh text.
-
-**Lựa chọn:** Chat hỗ trợ JSON hoặc SSE. SSE phát bản nháp `text` và trạng thái; `done` mang final response sau kiểm tra/lưu. Task đang chạy tiếp tục hoàn tất khi client ngắt kết nối, không tự replay lượt.
-
-**Lý do:** hiển thị tiến độ sớm mà vẫn có mốc kết quả cuối và giảm nguy cơ gửi lại mutation chỉ vì stream đứt.
-
-**Đánh đổi:** bản nháp có thể khác final response và chưa qua final guard. DB, memory và business mutation không có transaction chung; nếu kết quả lưu chưa rõ, client phải kiểm tra lịch sử trước khi retry. `done` cũng không đồng nghĩa remote memory buffer đã flush.
-
-Căn cứ: [Chat API/SSE](../../src/telesale_agent/entrypoints/api/chat.py), [agent streaming và final guard](../../src/telesale_agent/application/deepagent/turn.py).
-
-## Những quyết định còn mở
-
-Các mục sau là hướng cần thiết kế tiếp, **chưa được ghi nhận là đã triển khai**: distributed memory writer/CAS; durable journal cho memory Chat; mutation ledger cho Voice; schema/TTL/retention cho memory; hàng đợi callback/handoff thực tế; ranh giới duyệt nội dung audio trước phát. Phần này không giả định nhóm đã chọn giải pháp cụ thể.
+Căn cứ: [tài liệu Self-learning](self-learning.md), [tích hợp self_agent](../../src/self_agent/README.md).
