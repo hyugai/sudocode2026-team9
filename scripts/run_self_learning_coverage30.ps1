@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-Run the fixed coverage subset of 30 main scenarios through the existing two-round runner.
+Run the fixed coverage subset of 30 M1 scenarios through the existing two-round runner.
 .DESCRIPTION
 Validates the selection and source hashes before any LLM/DB work. -List is offline.
 No changes to learning, end-session timing, routing, judge or runtime isolation.
@@ -15,24 +15,31 @@ param(
 )
 $ErrorActionPreference = 'Stop'
 $repoRoot = Split-Path -Parent $PSScriptRoot
-$selectionPath = Join-Path $repoRoot 'dataset/main/selections/self_learning_coverage30.json'
+$selectionPath = Join-Path $repoRoot 'dataset/transcript/selections/self_learning_coverage30.json'
 $selection = Get-Content -LiteralPath $selectionPath -Raw -Encoding utf8 | ConvertFrom-Json
-if ($selection.schema_version -ne 1) { throw 'Unsupported coverage selection version.' }
+if ($selection.schema_version -ne 2) { throw 'Unsupported coverage selection version.' }
 $entries = @($selection.scenarios)
 $ids = @($entries | ForEach-Object { [string]$_.scenario_id })
 if ($ids.Count -ne 30 -or @($ids | Select-Object -Unique).Count -ne 30) {
     throw 'Coverage selection must contain exactly 30 unique scenarios.'
 }
+if (@($entries.source_file | Select-Object -Unique).Count -ne 30) {
+    throw 'Coverage selection must contain exactly 30 unique source files.'
+}
 $scenarioDir = Join-Path $repoRoot $selection.source_directory
 foreach ($entry in $entries) {
     $sid = [string]$entry.scenario_id
-    if ($sid -notmatch '^SC-(\d{3})$') { throw "Invalid scenario ID: $sid" }
-    $number = [int]$Matches[1]
-    if ($number -lt 1 -or $number -gt 120) { throw "Scenario outside SC-001 through SC-120: $sid" }
-    $sourcePath = Join-Path $scenarioDir ($sid + '.json')
+    if ($sid -notmatch '^SC-\d{3}$') { throw "Invalid scenario ID: $sid" }
+    $sourceFile = [string]$entry.source_file
+    if ($sourceFile -notmatch '^SC-\d{3}\.json$') { throw "Invalid scenario source file: $sourceFile" }
+    $sourcePath = Join-Path $scenarioDir $sourceFile
     $actualHash = (Get-FileHash -LiteralPath $sourcePath -Algorithm SHA256).Hash.ToLowerInvariant()
     if ($actualHash -ne [string]$entry.source_sha256) {
         throw "Dataset changed for $sid. Review and update the selection before starting a new experiment."
+    }
+    $scenario = Get-Content -LiteralPath $sourcePath -Raw -Encoding utf8 | ConvertFrom-Json
+    if ([string]$scenario.scenario_id -ne $sid) {
+        throw "Scenario ID mismatch: $sourceFile contains $($scenario.scenario_id), expected $sid."
     }
 }
 if (-not $OutputDir) {
@@ -51,8 +58,12 @@ $options = @{
 if ($Judge) { $options.Judge = $true }
 if ($Strict) { $options.Strict = $true }
 if ($List) { $options.List = $true }
-Write-Output 'Fixed coverage selection: 30 SC, 12 personas, 13 hard-case labels including standard.'
-Write-Output '63 sessions / 202 customer turns per round; both rounds: 126 sessions / 404 customer turns.'
+$summary = $selection.summary
+Write-Output ("Fixed coverage selection: {0} SC, {1} personas, {2} hard-case labels including standard." -f `
+    $summary.scenario_count, $summary.persona_count, $summary.hard_case_label_count_including_standard)
+Write-Output ("{0} sessions / {1} customer turns per round; both rounds: {2} sessions / {3} customer turns." -f `
+    $summary.sessions_per_round, $summary.customer_turns_per_round, `
+    (2 * $summary.sessions_per_round), (2 * $summary.customer_turns_per_round))
 try {
     & (Join-Path $PSScriptRoot 'run_self_learning_parallel_two_rounds.ps1') @options
 } finally {

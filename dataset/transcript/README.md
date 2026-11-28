@@ -63,6 +63,30 @@ Hai cột đầu theo trang 3, mục C.1 của *SUDO CODE 2026 - Đề Bài Dự
 - Tập M1 dùng 35 hồ sơ BTC, với 293/338 phiên hotline. Tập M2 dùng 50 hồ sơ BTC, với 304/344 phiên hotline. Nhật ký xuất M2 ghi rõ mức **50/60 khách đa phiên**.
 - Mỗi tier có hai phản hồi chấm vượt thang điểm và cần xem lại. TF-IDF đo độ giống nhau về từ vựng và có thể bỏ sót các cách diễn đạt tương đương về nghĩa. [Báo cáo M1](M1/README.md) · [Báo cáo M2](M2/README.md)
 
+## Coverage30 cho self-learning
+
+[Bộ chọn Coverage30 v2](selections/self_learning_coverage30.json) ánh xạ 30 vị trí
+trong bộ chọn cũ sang các scenario có hành vi tương ứng trong `M1/`. Bộ chọn phủ
+12 persona và toàn bộ 17 nhãn `hard_case` của M1 (tính cả `standard`), gồm
+66 phiên và 244 lượt khách mỗi vòng. Hai vòng có tổng cộng 132 phiên và 488 lượt.
+
+Chạy tại gốc repo để kiểm tra lựa chọn và SHA-256, không gọi LLM/DB:
+
+```powershell
+.\scripts\run_self_learning_coverage30.ps1 -List
+```
+
+Bỏ `-List` để chạy hai vòng; thêm `-Judge` nếu cần chấm bằng LLM. Có thể truyền
+`-PythonExe` để chọn Python trong môi trường ảo.
+
+Mỗi mục lưu `legacy_scenario_id`, metadata cũ và hash cũ để truy vết ánh xạ.
+`source_file` là tên file dùng để kiểm tra hash; `scenario_id` bên trong JSON là
+ID truyền cho runner. Hai giá trị này có thể khác nhau sau bước đánh số file xuất.
+Đây là ánh xạ theo hành vi, không phải cùng transcript với các run Coverage30 cũ;
+không đối chiếu trực tiếp điểm số trước và sau thay bộ chọn. Nhãn ASR nhiễu và
+phiên bản chính sách cũ không còn trong M1, nên bộ chọn mới không tuyên bố phủ
+hai nhóm này. Không cần `dataset/main/audio` để chạy Coverage30 bằng text.
+
 ## Cách xử lý thông tin cá nhân khi trợ lý trả lời
 
 Trước khi gửi phản hồi, bộ lọc dò các mẫu số điện thoại, CCCD/CMND và số tài khoản ngân hàng rồi thay giá trị khớp bằng nhãn che tương ứng, chẳng hạn như `[SĐT ĐÃ ẨN]`. Khi lọc bản tóm tắt cuộc gọi, hệ thống giữ nguyên các trường giá và ngân sách đã chuẩn hóa để tránh che nhầm số tiền. Phản hồi chứa nội dung bị cấm được thay bằng lời từ chối.

@@ -1,0 +1,808 @@
+{
+  "schema_version": 2,
+  "name": "self_learning_coverage30_m1_v2",
+  "source_directory": "dataset/transcript/M1",
+  "selection_method": "Semantic mapping of the 30 legacy coverage slots to published M1 scenarios, covering all current M1 persona and hard_case labels; fixed before inference, without model-outcome selection.",
+  "evaluation_scope": "Seen-scenario two-round experiment; not a held-out or population-weighted sample.",
+  "migration": {
+    "previous_selection_name": "self_learning_coverage30_v1",
+    "previous_selection_sha256": "702e2e21888c335b31ee42b11a21da6a95bebecbb4b56b8d3c92a4698bd1ec04",
+    "mapping_basis": "Analogous persona and conversation behavior; not transcript-equivalent or interchangeable with historical runs.",
+    "source_identity": "source_file identifies the JSON filename; scenario_id is the internal ID used by the runner. They may differ.",
+    "changed_coverage": "Legacy ASR-noise and old-policy-version labels do not exist in M1 and are not claimed. Current metadata and statistics are recomputed from source files."
+  },
+  "coverage_groups": [
+    {
+      "id": "consultation_stock",
+      "label": "T? v?n, h?t h?ng v? nh?p l?i h?ng",
+      "scenario_ids": [
+        "SC-001",
+        "SC-088",
+        "SC-089"
+      ],
+      "legacy_scenario_ids": [
+        "SC-001",
+        "SC-003",
+        "SC-006"
+      ]
+    },
+    {
+      "id": "promotion_expiry",
+      "label": "So gi? tr??c v? sau khuy?n m?i",
+      "scenario_ids": [
+        "SC-081",
+        "SC-082"
+      ],
+      "legacy_scenario_ids": [
+        "SC-012",
+        "SC-019"
+      ]
+    },
+    {
+      "id": "size_exchange",
+      "label": "??i size sau mua v? chuy?n y?u c?u ??n h?ng",
+      "scenario_ids": [
+        "SC-090",
+        "SC-168"
+      ],
+      "legacy_scenario_ids": [
+        "SC-021",
+        "SC-026"
+      ]
+    },
+    {
+      "id": "research_price_change",
+      "label": "Kh?ch h?i nhi?u v? gi? thay ??i gi?a c?c phi?n",
+      "scenario_ids": [
+        "SC-095",
+        "SC-096"
+      ],
+      "legacy_scenario_ids": [
+        "SC-031",
+        "SC-032"
+      ]
+    },
+    {
+      "id": "three_calls",
+      "label": "Ba l?n li?n h?: gi?, x?c minh ng??i nh?n v? chuy?n m?y",
+      "scenario_ids": [
+        "SC-097",
+        "SC-152",
+        "SC-170"
+      ],
+      "legacy_scenario_ids": [
+        "SC-041",
+        "SC-044",
+        "SC-045"
+      ]
+    },
+    {
+      "id": "cross_channel_followup",
+      "label": "Ti?p n?i Zalo sang hotline",
+      "scenario_ids": [
+        "SC-051",
+        "SC-054"
+      ],
+      "legacy_scenario_ids": [
+        "SC-051",
+        "SC-054"
+      ]
+    },
+    {
+      "id": "out_of_scope",
+      "label": "Ngo?i ph?m vi t? v?n v? chuy?n ng??i ph? tr?ch",
+      "scenario_ids": [
+        "SC-172",
+        "SC-173"
+      ],
+      "legacy_scenario_ids": [
+        "SC-062",
+        "SC-066"
+      ]
+    },
+    {
+      "id": "unsupported_question",
+      "label": "Th?ng tin s?n ph?m ch?a c? ngu?n v? chuy?n ng??i ph? tr?ch",
+      "scenario_ids": [
+        "SC-030",
+        "SC-063",
+        "SC-179"
+      ],
+      "legacy_scenario_ids": [
+        "SC-071",
+        "SC-074",
+        "SC-075"
+      ]
+    },
+    {
+      "id": "cross_channel_price",
+      "label": "M?u thu?n b?o gi? qua Fanpage, Zalo v? hotline",
+      "scenario_ids": [
+        "SC-068",
+        "SC-069",
+        "SC-073"
+      ],
+      "legacy_scenario_ids": [
+        "SC-081",
+        "SC-084",
+        "SC-085"
+      ]
+    },
+    {
+      "id": "shared_identity",
+      "label": "Hai ng??i d?ng chung s? ?i?n tho?i",
+      "scenario_ids": [
+        "SC-153",
+        "SC-154"
+      ],
+      "legacy_scenario_ids": [
+        "SC-091",
+        "SC-095"
+      ]
+    },
+    {
+      "id": "returning_customer",
+      "label": "Kh?ch c? quay l?i, thay ??i gi? v? ??a ch?",
+      "scenario_ids": [
+        "SC-099",
+        "SC-142",
+        "SC-155"
+      ],
+      "legacy_scenario_ids": [
+        "SC-101",
+        "SC-104",
+        "SC-110"
+      ]
+    },
+    {
+      "id": "basket_followup",
+      "label": "Gi? nhi?u m?n, t?nh l?i gi? v? h? tr? sau mua",
+      "scenario_ids": [
+        "SC-101",
+        "SC-104",
+        "SC-144"
+      ],
+      "legacy_scenario_ids": [
+        "SC-111",
+        "SC-114",
+        "SC-115"
+      ]
+    }
+  ],
+  "summary": {
+    "scenario_count": 30,
+    "persona_count": 12,
+    "hard_case_label_count_including_standard": 17,
+    "sessions_per_round": 66,
+    "customer_turns_per_round": 244,
+    "persona_counts": {
+      "hai_nguoi_chung_sdt": 2,
+      "khach_da_kenh_fb_hotline": 2,
+      "khach_da_kenh_mau_thuan": 3,
+      "khach_da_mua_doi_size": 2,
+      "khach_do_du_hoi_nguoi_nha": 1,
+      "khach_goi_lan_3_het_kien_nhan": 3,
+      "khach_hoi_ngoai_tai_lieu": 3,
+      "khach_hoi_nhieu_khong_mua": 2,
+      "khach_mua_nhieu_mon": 3,
+      "khach_ngoai_pham_vi_chuyen_may": 2,
+      "khach_quay_lai_sau_8_thang": 3,
+      "khach_so_gia": 4
+    },
+    "hard_case_counts": {
+      "basket_reprice": 2,
+      "conflicting_quotes": 3,
+      "exchange_after_promo": 1,
+      "expired_promo": 2,
+      "handoff": 3,
+      "order_handoff": 1,
+      "out_of_stock": 1,
+      "research_price_change": 2,
+      "restock": 1,
+      "return_after_promo": 1,
+      "shared_phone": 2,
+      "stale_address": 2,
+      "standard": 4,
+      "third_call_handoff": 1,
+      "third_call_price_change": 1,
+      "unsupported_question": 2,
+      "verify_order_identity": 1
+    },
+    "channels": [
+      "chat_fanpage",
+      "hotline",
+      "zalo_oa"
+    ],
+    "input_modes": []
+  },
+  "limitations": [
+    "Covers all published M1 persona/hard_case labels, not every product, wording or combination.",
+    "M1 contains no explicit input_mode labels; an empty input_modes list does not certify ASR or teencode coverage.",
+    "Text replay only; no end-to-end audio recognition test.",
+    "Legacy slots are mapped by analogous behavior; do not compare new scores directly against historical coverage30 scores.",
+    "Some scenarios share a customer or template; do not treat all turns as independent observations.",
+    "Reflection, identity, handoff and tool actions need separate/manual review beyond the current knowledge-gap judge.",
+    "This subset is not an adversarial prompt-injection benchmark."
+  ],
+  "scenarios": [
+    {
+      "scenario_id": "SC-001",
+      "source_file": "SC-001.json",
+      "coverage_group": "consultation_stock",
+      "selection_reason": "Lu?ng t? v?n, h?i ? ki?n ng??i nh? r?i quay l?i ch?t ??n.",
+      "legacy_scenario_id": "SC-001",
+      "legacy_persona": "khach_do_du_hoi_nguoi_nha",
+      "legacy_hard_case": null,
+      "legacy_source_sha256": "621d484d48c488ff60a479534df132ccecee559b127a94307bb3e5005457c519",
+      "persona": "khach_do_du_hoi_nguoi_nha",
+      "hard_case": null,
+      "channels": [
+        "hotline"
+      ],
+      "input_modes": [],
+      "session_count": 2,
+      "customer_turn_count": 8,
+      "source_sha256": "3ee8dd31721377541b2c43ab6e2df5d47d8b3b1cbb0cf2a2b2d336308e37deeb"
+    },
+    {
+      "scenario_id": "SC-088",
+      "source_file": "SC-081.json",
+      "coverage_group": "consultation_stock",
+      "selection_reason": "Ki?m tra l?i t?n kho khi kh?ch so gi? v? quay l?i mua; persona m?i l? kh?ch so gi?.",
+      "legacy_scenario_id": "SC-003",
+      "legacy_persona": "khach_do_du_hoi_nguoi_nha",
+      "legacy_hard_case": "het_hang_luc_tu_van_nhap_lai_truoc_khi_chot",
+      "legacy_source_sha256": "58b892cab0fd1fd3cdc8668ab1816b8f4c1c94cfb5091d6bc81221cd482720e8",
+      "persona": "khach_so_gia",
+      "hard_case": "out_of_stock",
+      "channels": [
+        "hotline"
+      ],
+      "input_modes": [],
+      "session_count": 2,
+      "customer_turn_count": 10,
+      "source_sha256": "075c9170056b09ee6e5be4dad0a09ec2ffd8b97ebb4592da86122d0a5ef0c28e"
+    },
+    {
+      "scenario_id": "SC-089",
+      "source_file": "SC-082.json",
+      "coverage_group": "consultation_stock",
+      "selection_reason": "Kh?ch quay l?i sau khi s?n ph?m ???c nh?p l?i; persona m?i l? kh?ch so gi?.",
+      "legacy_scenario_id": "SC-006",
+      "legacy_persona": "khach_do_du_hoi_nguoi_nha",
+      "legacy_hard_case": "het_hang_luc_tu_van_nhap_lai_truoc_khi_chot",
+      "legacy_source_sha256": "5efe49ac1a45e729c234f4ae844c49d0b1206595077ae714b181c47829d0fae9",
+      "persona": "khach_so_gia",
+      "hard_case": "restock",
+      "channels": [
+        "hotline"
+      ],
+      "input_modes": [],
+      "session_count": 2,
+      "customer_turn_count": 7,
+      "source_sha256": "db3b1cc60db27a60453cb70e71dbcccfd48e378ff683aaecbf71fc8f2f035b94"
+    },
+    {
+      "scenario_id": "SC-081",
+      "source_file": "SC-075.json",
+      "coverage_group": "promotion_expiry",
+      "selection_reason": "??i chi?u gi? v? ?i?u ki?n khuy?n m?i ?? h?t h?n gi?a hai phi?n.",
+      "legacy_scenario_id": "SC-012",
+      "legacy_persona": "khach_so_gia",
+      "legacy_hard_case": "doi_khuyen_mai_het_han",
+      "legacy_source_sha256": "87ce828d3b7c9b80f27cfcab088eed9ba4609afeeb634fee3588c4e57320cbe7",
+      "persona": "khach_so_gia",
+      "hard_case": "expired_promo",
+      "channels": [
+        "hotline"
+      ],
+      "input_modes": [],
+      "session_count": 2,
+      "customer_turn_count": 8,
+      "source_sha256": "f3eb4146cfd4fb1588b2c4728a9ba2767850817400a850d693e26686bb843731"
+    },
+    {
+      "scenario_id": "SC-082",
+      "source_file": "SC-076.json",
+      "coverage_group": "promotion_expiry",
+      "selection_reason": "Bi?n th? so gi? tr??c v? sau khuy?n m?i tr?n size kh?c.",
+      "legacy_scenario_id": "SC-019",
+      "legacy_persona": "khach_so_gia",
+      "legacy_hard_case": "doi_khuyen_mai_het_han",
+      "legacy_source_sha256": "c7e87c0567d47b587b8d0474982031493f3fabd31afc3493d6d5ec9791207819",
+      "persona": "khach_so_gia",
+      "hard_case": "expired_promo",
+      "channels": [
+        "hotline"
+      ],
+      "input_modes": [],
+      "session_count": 2,
+      "customer_turn_count": 8,
+      "source_sha256": "ad151681e0e40032634c71d9c9d7b664116d80a9cb95e8515ae7a089e59371ca"
+    },
+    {
+      "scenario_id": "SC-090",
+      "source_file": "SC-083.json",
+      "coverage_group": "size_exchange",
+      "selection_reason": "??i size sau khi nh?n h?ng v? sau thay ??i khuy?n m?i.",
+      "legacy_scenario_id": "SC-021",
+      "legacy_persona": "khach_da_mua_doi_size",
+      "legacy_hard_case": "doi_size_sau_khi_nhan_hang",
+      "legacy_source_sha256": "ab81f3ed8971d8c329dba6f5ff13d1ff04a02b91e37a7d61fc46769394a3d32a",
+      "persona": "khach_da_mua_doi_size",
+      "hard_case": "exchange_after_promo",
+      "channels": [
+        "hotline"
+      ],
+      "input_modes": [],
+      "session_count": 2,
+      "customer_turn_count": 6,
+      "source_sha256": "f47aac291732f9386cda6d88ec491a02f442870926220792c0c3205fb5545c86"
+    },
+    {
+      "scenario_id": "SC-168",
+      "source_file": "SC-149.json",
+      "coverage_group": "size_exchange",
+      "selection_reason": "??i size cho ??n ?? mua v? chuy?n y?u c?u c?ng ng? c?nh ??n h?ng.",
+      "legacy_scenario_id": "SC-026",
+      "legacy_persona": "khach_da_mua_doi_size",
+      "legacy_hard_case": "doi_size_sau_khi_nhan_hang",
+      "legacy_source_sha256": "78705b729d28b92f8bb7a2ad73b11e6bcc86c5cb625d94d57ff90d76eff10294",
+      "persona": "khach_da_mua_doi_size",
+      "hard_case": "order_handoff",
+      "channels": [
+        "hotline"
+      ],
+      "input_modes": [],
+      "session_count": 2,
+      "customer_turn_count": 6,
+      "source_sha256": "531ed75ec072c4491f865f3ee08e6af0056219279978c1288b4664b1745be280"
+    },
+    {
+      "scenario_id": "SC-095",
+      "source_file": "SC-088.json",
+      "coverage_group": "research_price_change",
+      "selection_reason": "Kh?ch h?i nhi?u, ch?a ch?t mua, quay l?i h?i gi? sau khuy?n m?i; thay nh?m ch?nh s?ch c?.",
+      "legacy_scenario_id": "SC-031",
+      "legacy_persona": "khach_hoi_nhieu_khong_mua",
+      "legacy_hard_case": "phien_ban_chinh_sach_cu",
+      "legacy_source_sha256": "90fd8a9ca493fb25d1aa36e66afbbaceadca4dd8f4f14f1a321ceefec08d0abe",
+      "persona": "khach_hoi_nhieu_khong_mua",
+      "hard_case": "research_price_change",
+      "channels": [
+        "hotline"
+      ],
+      "input_modes": [],
+      "session_count": 2,
+      "customer_turn_count": 10,
+      "source_sha256": "04a482786f595ecf904b2f2378377c67df6cae84ab845391c6ad20dc0e7be149"
+    },
+    {
+      "scenario_id": "SC-096",
+      "source_file": "SC-089.json",
+      "coverage_group": "research_price_change",
+      "selection_reason": "Gi? ng? c?nh s?n ph?m khi kh?ch h?i l?i gi?; kh?ng c?n nh?n phi?n b?n ch?nh s?ch c?.",
+      "legacy_scenario_id": "SC-032",
+      "legacy_persona": "khach_hoi_nhieu_khong_mua",
+      "legacy_hard_case": "phien_ban_chinh_sach_cu",
+      "legacy_source_sha256": "0aa851126d4fee225cc2365f9bad0f46e0c41d32f81f6fd72fb1e1df32d7d85c",
+      "persona": "khach_hoi_nhieu_khong_mua",
+      "hard_case": "research_price_change",
+      "channels": [
+        "hotline"
+      ],
+      "input_modes": [],
+      "session_count": 2,
+      "customer_turn_count": 10,
+      "source_sha256": "96f28540ee1c258cac52af70a1255d91da19fed19f9db2de7036df4592edeb9b"
+    },
+    {
+      "scenario_id": "SC-097",
+      "source_file": "SC-090.json",
+      "coverage_group": "three_calls",
+      "selection_reason": "Ba l?n li?n h?, c?n nh? b?o gi? tr??c khi khuy?n m?i h?t h?n.",
+      "legacy_scenario_id": "SC-041",
+      "legacy_persona": "khach_goi_lan_3_het_kien_nhan",
+      "legacy_hard_case": "goi_lan_ba_mat_kien_nhan",
+      "legacy_source_sha256": "52f9ee768b00700dd004d1794b25f1a77e42476ad3efbfdad3b87be692e340aa",
+      "persona": "khach_goi_lan_3_het_kien_nhan",
+      "hard_case": "third_call_price_change",
+      "channels": [
+        "hotline"
+      ],
+      "input_modes": [],
+      "session_count": 3,
+      "customer_turn_count": 12,
+      "source_sha256": "e398febc620a5821a6c628604ce8751cf4d342f85c918f9490ec3e0323da2f61"
+    },
+    {
+      "scenario_id": "SC-152",
+      "source_file": "SC-135.json",
+      "coverage_group": "three_calls",
+      "selection_reason": "Ba l?n li?n h? v? x?c minh th?ng tin ng??i nh?n; thay bi?n th? ASR c?.",
+      "legacy_scenario_id": "SC-044",
+      "legacy_persona": "khach_goi_lan_3_het_kien_nhan",
+      "legacy_hard_case": "asr_loi_va_teencode",
+      "legacy_source_sha256": "fdd50b2c31b8107ad035b53dd0821df5b8888b682fe6e1c3d5ddf05e80779f45",
+      "persona": "khach_goi_lan_3_het_kien_nhan",
+      "hard_case": "verify_order_identity",
+      "channels": [
+        "hotline"
+      ],
+      "input_modes": [],
+      "session_count": 3,
+      "customer_turn_count": 8,
+      "source_sha256": "b90ae366c57cc38dc02f60a082fa6d617660133febd8ff020cceb77c05ccae5a"
+    },
+    {
+      "scenario_id": "SC-170",
+      "source_file": "SC-151.json",
+      "coverage_group": "three_calls",
+      "selection_reason": "Ba l?n li?n h? r?i chuy?n ng??i ph? tr?ch c?ng ng? c?nh ?? trao ??i.",
+      "legacy_scenario_id": "SC-045",
+      "legacy_persona": "khach_goi_lan_3_het_kien_nhan",
+      "legacy_hard_case": "phien_ban_chinh_sach_cu",
+      "legacy_source_sha256": "bc118747c2d3c9c4868a72782bdeb858c2e47918571f75a4a6e4e4d684166c69",
+      "persona": "khach_goi_lan_3_het_kien_nhan",
+      "hard_case": "third_call_handoff",
+      "channels": [
+        "hotline"
+      ],
+      "input_modes": [],
+      "session_count": 3,
+      "customer_turn_count": 9,
+      "source_sha256": "f5bd086e62b0869c986233366f4358dd1ff40be0856011fe24a5a5996385cb3e"
+    },
+    {
+      "scenario_id": "SC-051",
+      "source_file": "SC-045.json",
+      "coverage_group": "cross_channel_followup",
+      "selection_reason": "Ti?p n?i tin nh?n Zalo sang hotline, c? l?i kh?ch vi?t t?t.",
+      "legacy_scenario_id": "SC-051",
+      "legacy_persona": "khach_da_kenh_fb_hotline",
+      "legacy_hard_case": "asr_loi_va_teencode",
+      "legacy_source_sha256": "1af9719fad618d6a1e683a1cf4103ac068d44b0749a6d0229cdb335cd1eb56c6",
+      "persona": "khach_da_kenh_fb_hotline",
+      "hard_case": null,
+      "channels": [
+        "hotline",
+        "zalo_oa"
+      ],
+      "input_modes": [],
+      "session_count": 2,
+      "customer_turn_count": 7,
+      "source_sha256": "e48368b3dfc1e6962c9578f4ef7bc62c2c0333ac5cfa0bed7e5ca87afe017c38"
+    },
+    {
+      "scenario_id": "SC-054",
+      "source_file": "SC-048.json",
+      "coverage_group": "cross_channel_followup",
+      "selection_reason": "Nh? s?n ph?m v? trao ??i Zalo khi kh?ch g?i hotline.",
+      "legacy_scenario_id": "SC-054",
+      "legacy_persona": "khach_da_kenh_fb_hotline",
+      "legacy_hard_case": "phien_ban_chinh_sach_cu",
+      "legacy_source_sha256": "4eec5c8bc256cb29be650f76fa571c084351431f62b23fce21ce7c0ab6fe483e",
+      "persona": "khach_da_kenh_fb_hotline",
+      "hard_case": null,
+      "channels": [
+        "hotline",
+        "zalo_oa"
+      ],
+      "input_modes": [],
+      "session_count": 2,
+      "customer_turn_count": 8,
+      "source_sha256": "b822bc885f35fc31a39ddcff67babbcf81f9d23c13cc927860dfba595d5d4b4e"
+    },
+    {
+      "scenario_id": "SC-172",
+      "source_file": "SC-152.json",
+      "coverage_group": "out_of_scope",
+      "selection_reason": "C?u h?i ph? h?p cho ng??i h?i ph?c sau ch?n th??ng c?n chuy?n ng??i ph? tr?ch.",
+      "legacy_scenario_id": "SC-062",
+      "legacy_persona": "khach_ngoai_pham_vi_chuyen_may",
+      "legacy_hard_case": "cau_hoi_y_te_can_chuyen_may",
+      "legacy_source_sha256": "301e404837956d789829c01ad41aafa7ad88f9b347f844f406f5fa7e8569eb0b",
+      "persona": "khach_ngoai_pham_vi_chuyen_may",
+      "hard_case": "handoff",
+      "channels": [
+        "hotline"
+      ],
+      "input_modes": [],
+      "session_count": 2,
+      "customer_turn_count": 6,
+      "source_sha256": "ea02b03e4e4d02719153d4183511019a2d605a99ae8f3d4e3edff0c592dc01ab"
+    },
+    {
+      "scenario_id": "SC-173",
+      "source_file": "SC-153.json",
+      "coverage_group": "out_of_scope",
+      "selection_reason": "Bi?n th? c?u h?i ngo?i ph?m vi v? s?n ph?m th?i trang v? ch?n th??ng.",
+      "legacy_scenario_id": "SC-066",
+      "legacy_persona": "khach_ngoai_pham_vi_chuyen_may",
+      "legacy_hard_case": "doi_khuyen_mai_het_han",
+      "legacy_source_sha256": "2f92d536757c0e9e37a32e3b8d5301ea06fa28623b8ec2eb89dcc715ef64cdcf",
+      "persona": "khach_ngoai_pham_vi_chuyen_may",
+      "hard_case": "handoff",
+      "channels": [
+        "hotline"
+      ],
+      "input_modes": [],
+      "session_count": 2,
+      "customer_turn_count": 6,
+      "source_sha256": "41889dec0eeb9cabf80b6b5f61e45f235d8c9ac0d5aa2e469d8de2409601ef51"
+    },
+    {
+      "scenario_id": "SC-030",
+      "source_file": "SC-027.json",
+      "coverage_group": "unsupported_question",
+      "selection_reason": "C?u h?i ch?t li?u/ch?ng n??c ch?a c? ngu?n x?c minh.",
+      "legacy_scenario_id": "SC-071",
+      "legacy_persona": "khach_hoi_ngoai_tai_lieu",
+      "legacy_hard_case": "cau_hoi_ngoai_tai_lieu",
+      "legacy_source_sha256": "73f22ecec7f64ed9f67d1600da99d76eb7c47545b9b3a1a1701c94522e090781",
+      "persona": "khach_hoi_ngoai_tai_lieu",
+      "hard_case": "unsupported_question",
+      "channels": [
+        "hotline"
+      ],
+      "input_modes": [],
+      "session_count": 2,
+      "customer_turn_count": 8,
+      "source_sha256": "5f6c83f10ffee1a9290d23798edf4036ad827cf6b2423504b24ed84bc720ed5b"
+    },
+    {
+      "scenario_id": "SC-063",
+      "source_file": "SC-057.json",
+      "coverage_group": "unsupported_question",
+      "selection_reason": "C?u h?i ch?t li?u ch?a c? ngu?n khi chuy?n t? Fanpage sang hotline.",
+      "legacy_scenario_id": "SC-074",
+      "legacy_persona": "khach_hoi_ngoai_tai_lieu",
+      "legacy_hard_case": "asr_loi_va_teencode",
+      "legacy_source_sha256": "669a01920e962d4cb28ea281e953e2e5f06b73b9ff6fa29bdc8379fdcbd18de0",
+      "persona": "khach_hoi_ngoai_tai_lieu",
+      "hard_case": "unsupported_question",
+      "channels": [
+        "chat_fanpage",
+        "hotline"
+      ],
+      "input_modes": [],
+      "session_count": 2,
+      "customer_turn_count": 6,
+      "source_sha256": "57ace8c8e1e646ad59235759222df966b0def1bcffb4d5abd1a495ec45fba14a"
+    },
+    {
+      "scenario_id": "SC-179",
+      "source_file": "SC-156.json",
+      "coverage_group": "unsupported_question",
+      "selection_reason": "C?u h?i ch?t li?u c?n chuy?n ng??i ph? tr?ch c?ng ng? c?nh.",
+      "legacy_scenario_id": "SC-075",
+      "legacy_persona": "khach_hoi_ngoai_tai_lieu",
+      "legacy_hard_case": "phien_ban_chinh_sach_cu",
+      "legacy_source_sha256": "74d4989cc8097a6b908b24f0468b6da0f826d6ad54deba7b2ea29d798f56673a",
+      "persona": "khach_hoi_ngoai_tai_lieu",
+      "hard_case": "handoff",
+      "channels": [
+        "hotline"
+      ],
+      "input_modes": [],
+      "session_count": 2,
+      "customer_turn_count": 6,
+      "source_sha256": "2beee234204bd03b844b8995a8e2d8d8b59dd565283197132d68a2f36c70c34c"
+    },
+    {
+      "scenario_id": "SC-068",
+      "source_file": "SC-062.json",
+      "coverage_group": "cross_channel_price",
+      "selection_reason": "??i chi?u b?o gi? m?u thu?n qua Fanpage, Zalo v? hotline.",
+      "legacy_scenario_id": "SC-081",
+      "legacy_persona": "khach_da_kenh_mau_thuan",
+      "legacy_hard_case": "gia_da_kenh_thay_doi_theo_khuyen_mai",
+      "legacy_source_sha256": "c7eed297b20e7452f299252837b15cf4d9e4513eb0c070064689590982be2919",
+      "persona": "khach_da_kenh_mau_thuan",
+      "hard_case": "conflicting_quotes",
+      "channels": [
+        "chat_fanpage",
+        "hotline",
+        "zalo_oa"
+      ],
+      "input_modes": [],
+      "session_count": 3,
+      "customer_turn_count": 9,
+      "source_sha256": "3ef8590013643b62453bfc068a16a0b29e446fa0e76f625f724109e245f74533"
+    },
+    {
+      "scenario_id": "SC-069",
+      "source_file": "SC-063.json",
+      "coverage_group": "cross_channel_price",
+      "selection_reason": "Bi?n th? gi? m?u thu?n tr?n m?u s?n ph?m kh?c; kh?ng g?n nh?n ASR.",
+      "legacy_scenario_id": "SC-084",
+      "legacy_persona": "khach_da_kenh_mau_thuan",
+      "legacy_hard_case": "asr_loi_va_teencode",
+      "legacy_source_sha256": "6b7ff27442c11e920b5b90bdf72a5dc2c7c1ea9b85dd555f68d11b9a9871da95",
+      "persona": "khach_da_kenh_mau_thuan",
+      "hard_case": "conflicting_quotes",
+      "channels": [
+        "chat_fanpage",
+        "hotline",
+        "zalo_oa"
+      ],
+      "input_modes": [],
+      "session_count": 3,
+      "customer_turn_count": 10,
+      "source_sha256": "0d39cea61ab0e6445a0e9b5af61fcd354c410b78fbe80741078568c62e2e7f1a"
+    },
+    {
+      "scenario_id": "SC-073",
+      "source_file": "SC-067.json",
+      "coverage_group": "cross_channel_price",
+      "selection_reason": "Gi?i th?ch gi? gi?a ba k?nh theo d? li?u hi?n h?nh.",
+      "legacy_scenario_id": "SC-085",
+      "legacy_persona": "khach_da_kenh_mau_thuan",
+      "legacy_hard_case": "phien_ban_chinh_sach_cu",
+      "legacy_source_sha256": "ff7a1f9c66cd96173c46f714dc47fdabc7bd0fce11535975836e87a6c3250a20",
+      "persona": "khach_da_kenh_mau_thuan",
+      "hard_case": "conflicting_quotes",
+      "channels": [
+        "chat_fanpage",
+        "hotline",
+        "zalo_oa"
+      ],
+      "input_modes": [],
+      "session_count": 3,
+      "customer_turn_count": 10,
+      "source_sha256": "1576cee30fe7270524600266f49e464ce09c9866f2c2846ccc6c4955647ee4ee"
+    },
+    {
+      "scenario_id": "SC-153",
+      "source_file": "SC-136.json",
+      "coverage_group": "shared_identity",
+      "selection_reason": "Ph?n bi?t kh?ch khi c? l?ch s? d?ng chung s? ?i?n tho?i.",
+      "legacy_scenario_id": "SC-091",
+      "legacy_persona": "hai_nguoi_chung_sdt",
+      "legacy_hard_case": "hai_nguoi_chung_sdt",
+      "legacy_source_sha256": "fb629cbc825e6ff1325dc349980f9f6205ca41f1345f23fc7e0cd053f54208e6",
+      "persona": "hai_nguoi_chung_sdt",
+      "hard_case": "shared_phone",
+      "channels": [
+        "hotline"
+      ],
+      "input_modes": [],
+      "session_count": 2,
+      "customer_turn_count": 6,
+      "source_sha256": "64ba49b4ed056e585d681d783f4764643207ae0178e7afd81e2139d08fa4d8b1"
+    },
+    {
+      "scenario_id": "SC-154",
+      "source_file": "SC-137.json",
+      "coverage_group": "shared_identity",
+      "selection_reason": "Bi?n th? m? v? con d?ng chung s?, c?n x?c minh ??ng ng??i.",
+      "legacy_scenario_id": "SC-095",
+      "legacy_persona": "hai_nguoi_chung_sdt",
+      "legacy_hard_case": "phien_ban_chinh_sach_cu",
+      "legacy_source_sha256": "2d1900f7750984dc342275e94db797c025253c9d5ada38083b06518353b97afa",
+      "persona": "hai_nguoi_chung_sdt",
+      "hard_case": "shared_phone",
+      "channels": [
+        "hotline"
+      ],
+      "input_modes": [],
+      "session_count": 2,
+      "customer_turn_count": 6,
+      "source_sha256": "8cfa6fee78a3b125da198978d9f67069c0934d3ac879a4d0b593b1151e3c3008"
+    },
+    {
+      "scenario_id": "SC-099",
+      "source_file": "SC-092.json",
+      "coverage_group": "returning_customer",
+      "selection_reason": "Kh?ch c? quay l?i sau nhi?u th?ng v?i ?i?u ki?n gi?/khuy?n m?i m?i.",
+      "legacy_scenario_id": "SC-101",
+      "legacy_persona": "khach_quay_lai_sau_8_thang",
+      "legacy_hard_case": "khach_cu_ttl_sku_ngung_ban",
+      "legacy_source_sha256": "34c34e2b539aaa037dd16eead6486fbc5c1895862774e59c9f4fa7b4bd102d35",
+      "persona": "khach_quay_lai_sau_8_thang",
+      "hard_case": "return_after_promo",
+      "channels": [
+        "hotline"
+      ],
+      "input_modes": [],
+      "session_count": 2,
+      "customer_turn_count": 8,
+      "source_sha256": "b39e2d4a76b44c9e9d7baee35b25da472c1d8c7f9158d6929d931ba98b497737"
+    },
+    {
+      "scenario_id": "SC-142",
+      "source_file": "SC-128.json",
+      "coverage_group": "returning_customer",
+      "selection_reason": "X?c minh l?i ??a ch? giao h?ng c?a kh?ch c? trong h? tr? sau mua.",
+      "legacy_scenario_id": "SC-104",
+      "legacy_persona": "khach_quay_lai_sau_8_thang",
+      "legacy_hard_case": "asr_loi_va_teencode",
+      "legacy_source_sha256": "b575254a43d1e689d65c10768eed49288fee0c29095d6456118dbebf24e72185",
+      "persona": "khach_quay_lai_sau_8_thang",
+      "hard_case": "stale_address",
+      "channels": [
+        "hotline"
+      ],
+      "input_modes": [],
+      "session_count": 2,
+      "customer_turn_count": 8,
+      "source_sha256": "46a70acd2c640b5494e764939d64a381ffe9265eb6638d9bcb931695671d7126"
+    },
+    {
+      "scenario_id": "SC-155",
+      "source_file": "SC-138.json",
+      "coverage_group": "returning_customer",
+      "selection_reason": "Ti?p t?c l?ch s? kh?ch c? nh?ng kh?ng m?c nhi?n d?ng ??a ch? ?? c?.",
+      "legacy_scenario_id": "SC-110",
+      "legacy_persona": "khach_quay_lai_sau_8_thang",
+      "legacy_hard_case": "doi_khuyen_mai_het_han",
+      "legacy_source_sha256": "8dd00a8e9bf6c6f046e86c55a92dc0514c44b1115982f6753ba609b0d2c69dd4",
+      "persona": "khach_quay_lai_sau_8_thang",
+      "hard_case": "stale_address",
+      "channels": [
+        "hotline"
+      ],
+      "input_modes": [],
+      "session_count": 2,
+      "customer_turn_count": 8,
+      "source_sha256": "583f8b6f47f33dfeae06b80968477db3a6b050327126885ae8eaa9d1d33c6aab"
+    },
+    {
+      "scenario_id": "SC-101",
+      "source_file": "SC-093.json",
+      "coverage_group": "basket_followup",
+      "selection_reason": "Gi? nhi?u m?n c?n t?nh l?i gi? khi kh?ch quay l?i.",
+      "legacy_scenario_id": "SC-111",
+      "legacy_persona": "khach_mua_nhieu_mon",
+      "legacy_hard_case": "doi_y_gio_hang_nhieu_mon",
+      "legacy_source_sha256": "a45dbd53c97cc82124f4a5ecafe6a0eb022eb5e6e6ee99d8547dd32097c42b39",
+      "persona": "khach_mua_nhieu_mon",
+      "hard_case": "basket_reprice",
+      "channels": [
+        "hotline"
+      ],
+      "input_modes": [],
+      "session_count": 2,
+      "customer_turn_count": 10,
+      "source_sha256": "a21484e6865de886277279fcfefece8779337572b1b1bbb2509abf85f102640f"
+    },
+    {
+      "scenario_id": "SC-104",
+      "source_file": "SC-096.json",
+      "coverage_group": "basket_followup",
+      "selection_reason": "Bi?n th? gi? nhi?u m?n sau thay ??i gi?, kh?ng g?n nh?n ASR.",
+      "legacy_scenario_id": "SC-114",
+      "legacy_persona": "khach_mua_nhieu_mon",
+      "legacy_hard_case": "asr_loi_va_teencode",
+      "legacy_source_sha256": "afb72b0893c8962801303f2d53624ec32a5c0d2a46ae4b6bf5af52bbf6f2ef54",
+      "persona": "khach_mua_nhieu_mon",
+      "hard_case": "basket_reprice",
+      "channels": [
+        "hotline"
+      ],
+      "input_modes": [],
+      "session_count": 2,
+      "customer_turn_count": 10,
+      "source_sha256": "352410a53072d66d4179fd2b991ac967f6e552f6f41392bc94872f6888b8689b"
+    },
+    {
+      "scenario_id": "SC-144",
+      "source_file": "SC-129.json",
+      "coverage_group": "basket_followup",
+      "selection_reason": "Gi? ??ng hai s?n ph?m v? ng? c?nh ??n trong h? tr? sau mua.",
+      "legacy_scenario_id": "SC-115",
+      "legacy_persona": "khach_mua_nhieu_mon",
+      "legacy_hard_case": "phien_ban_chinh_sach_cu",
+      "legacy_source_sha256": "4f75c9ef545cbc20ef5a09b61ee378cadb5fbb1648fcc42012b8eeef4dbf432b",
+      "persona": "khach_mua_nhieu_mon",
+      "hard_case": null,
+      "channels": [
+        "hotline"
+      ],
+      "input_modes": [],
+      "session_count": 2,
+      "customer_turn_count": 10,
+      "source_sha256": "0871600e6c6fcb5e717697f4e7bf4def8c21891c6f174e757c37548bb05a0a8e"
+    }
+  ]
+}
