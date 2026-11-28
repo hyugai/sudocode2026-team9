@@ -56,8 +56,12 @@ Tài liệu mô tả kiến trúc hệ thống và kết quả đánh giá hiệ
 │   └── eval/             # Script chạy benchmark và chấm điểm kết quả
 ├── scripts/              # Lệnh khởi động, migration, ingest policy, tải ASR
 ├── dataset/
-│   ├── organizer/        # JSON catalog/CRM và tài liệu policy gốc
-│   └── main/             # Kịch bản đánh giá, manifest và file audio
+│   ├── organizer/        # Policy, dữ liệu RAG, schema và bộ chấm tham chiếu BTC
+│   ├── transcript/       # Kịch bản M1/M2, bộ chọn Coverage30 và pipeline sinh lời thoại
+│   │   └── src/stage-1/input/catalog/ # Dữ liệu catalog/CRM dùng để seed database
+│   ├── text-to-speech/   # Pipeline sinh audio M1 bằng TTS và trộn nhiễu nền
+│   ├── audio/            # Notebook thử nghiệm TTS và phân tích dữ liệu giọng nói
+│   └── test_data_btc/    # Audio mẫu D01–D04, transcript, alignment và manifest
 ├── data/memory-root/     # Hướng dẫn agent và file bộ nhớ khách hàng
 ├── tests/                # Kiểm thử backend
 └── docs/                 # Tài liệu kiến trúc và triển khai
