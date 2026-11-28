@@ -10,8 +10,11 @@ from telesale_agent.core.basket import (
     mentioned_catalog_items,
     stated_payment_method,
 )
+from telesale_agent.core.business_time import business_date
 from telesale_agent.core.models import TurnContext
 from telesale_agent.application.customer_text import literal_customer_text
+from telesale_agent.application.price_language import stated_price_context
+from telesale_agent.application.deepagent.context.facts import _known_fact
 from telesale_agent.application.tools.protocol import (
     canonical_tool_args as _canonical_tool_args,
     canonical_tool_name as _canonical_tool_name,
@@ -72,6 +75,7 @@ class ReadToolExecutor:
         and are fed to the normal memory persister as AgentSteps.
         """
         remaining = set(allowed_tools)
+        context.input.metadata.pop("quote_subject_unresolved", None)
         calls: list[dict[str, Any]] = []
         call_date = context.input.metadata.get("call_date")
         order_workflow = "check_order_status" in remaining
@@ -253,21 +257,50 @@ class ReadToolExecutor:
             if options and not checkout_sku:
                 amount = accepted_price or pending.get("accepted_price_vnd")
                 if (amount is not None or not checkout) and 2 <= len(options) <= 4:
+                    saved = _known_fact(context, "checkout_option_quotes")
+                    historical_matches = {
+                        sku for sku, quote in saved.items()
+                        if isinstance(quote, dict) and quote.get("price_vnd") == amount
+                    } if amount is not None and isinstance(saved, dict) and saved.keys() == options.keys() else set()
                     quotes = {}
                     for sku in options:
                         call = await invoke(
-                            "get_pricing_quote", {**pricing_args, "sku": sku, "qty": 1}, fresh=final_checkout,
+                            "get_pricing_quote", {**pricing_args, "sku": sku, "qty": 1},
+                            fresh=final_checkout or bool(historical_matches),
                         )
                         result = call.get("result") if call else None
-                        if isinstance(result, dict) and not result.get("error") and type(result.get("final_price_vnd")) is int:
+                        if (
+                            isinstance(result, dict) and not result.get("error")
+                            and result.get("sku") == sku
+                            and type(result.get("final_price_vnd")) is int
+                        ):
                             quotes[sku] = (call, result["final_price_vnd"])
                         if call:
                             call["_checkout_alternative"] = True
-                    matches = [sku for sku, (_, price) in quotes.items() if price == amount]
-                    if len(quotes) == len(options) and len(matches) == 1:
-                        checkout_sku = matches[0]
-                        quotes[checkout_sku][0].pop("_checkout_alternative", None)
-                        memory["verified_checkout_sku"] = checkout_sku
+                    if not checkout and quotes:
+                        context.checkout_option_quotes = {
+                            sku: {
+                                "price_vnd": price,
+                                "quoted_on": business_date(call_date).isoformat(),
+                                "promo_codes": [
+                                    promo["promo_code"] for promo in call["result"].get("applied_promos", [])
+                                    if isinstance(promo, dict) and promo.get("promo_code")
+                                ],
+                            }
+                            for sku, (call, price) in quotes.items()
+                        }
+                    if len(quotes) == len(options) and amount is not None:
+                        matches = {sku for sku, (_, price) in quotes.items() if price == amount}
+                        # A current offer can confirm the old SKU, but a conflict
+                        # between today's prices and the remembered set needs clarification.
+                        candidates = matches | historical_matches
+                        if len(candidates) == 1:
+                            checkout_sku = candidates.pop()
+                            selected_call = quotes[checkout_sku][0]
+                            selected_call.pop("_checkout_alternative", None)
+                            if checkout_sku in historical_matches:
+                                selected_call["prior_checkout_quote"] = saved[checkout_sku]
+                            memory["verified_checkout_sku"] = checkout_sku
                 needs_variant = not checkout_sku
             if checkout and (checkout_sku or needs_variant):
                 memory["pending_order"] = {**pending, "sku": checkout_sku, "needs_variant": needs_variant}
@@ -338,10 +371,11 @@ class ReadToolExecutor:
 
         # A price-only follow-up can reuse the variant persisted by the prior
         # catalog/inventory turn, avoiding another model call just to choose SKU.
-        if "get_pricing_quote" in remaining or "get_order_quote" in remaining:
+        pricing_tools = {"get_pricing_quote", "get_order_quote"}
+        if remaining.intersection(pricing_tools):
             skus = selected_multi_skus or basket_skus
             if not skus:
-                sku = checkout_sku or current_turn_sku or _known_variant_sku(context)
+                sku = checkout_sku or current_turn_sku or _known_variant_sku(context, allow_inferred=False)
                 skus = [sku] if sku else []
             names = {str(item["sku"]): str(item["name"]) for item in catalog_items
                      if isinstance(item, dict) and item.get("sku") and item.get("name")}
@@ -355,6 +389,15 @@ class ReadToolExecutor:
                 pricing_args.update(sku=lines[0]["sku"], qty=lines[0]["qty"])
                 await invoke("get_pricing_quote", pricing_args, fresh=final_checkout)
                 remaining.discard("get_order_quote")
+            elif not lines and (
+                not context.perception or context.perception.intent != "ask_product"
+                or "báo giá lại" in literal_customer_text(context.input).casefold()
+                or "competitor_price_vnd" in stated_price_context(literal_customer_text(context.input))
+            ):
+                # Prevent the model from choosing a catalog SKU based solely
+                # on a competitor price or an unspecified quote request.
+                remaining.difference_update(pricing_tools)
+                context.input.metadata["quote_subject_unresolved"] = True
 
         return calls, frozenset(remaining)
 

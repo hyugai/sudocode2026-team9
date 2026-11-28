@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import os
 import logging
+import re
 import time
 from collections.abc import Awaitable, Callable
 
@@ -39,7 +40,9 @@ from telesale_agent.application.deepagent.tools.protocol import (
     tool_calls_to_steps as _tool_calls_to_steps,
 )
 from telesale_agent.application.deepagent.context.callback import declines_callback, ground_callback_response
+from telesale_agent.application.deepagent.context.facts import load_previous_price_context
 from telesale_agent.application.customer_text import is_closing_turn
+from telesale_agent.application.price_language import COMPETITOR
 from telesale_agent.application.deepagent.context.order import (
     checkout_progress,
     checkout_requested,
@@ -50,6 +53,7 @@ from telesale_agent.application.deepagent.response import (
     asks_about_water_resistance,
     ground_checkout_response,
     ground_current_stock_claims,
+    ground_previous_price_context,
     ground_basket_recap,
     ground_unverified_unit_question,
     ground_water_resistance,
@@ -132,6 +136,7 @@ async def run_turn_impl(
     # TTFT/Total, Call Brief does not subtract offline ASR from this interval.
     identity_started = backend_started if new_call and turn_input.customer_hint else None
     call_brief_ms = await prepare_context(harness, context, identity_started=identity_started, on_status=on_status)
+    load_previous_price_context(context)
 
     precomputed_parts = ["persisted_" + key for key in ("facts", "episodes", "atomic_facts", "foresights")
                          if (context.state.customer_memory or {}).get(key)]
@@ -217,9 +222,15 @@ async def run_turn_impl(
     )
     
     first_text_at = None
+    previous_prices = context.state.working_memory.get("previous_price_context") or {}
     verify_before_streaming = bool(
-        context.state.working_memory.get("callback_reply") or declines_callback(context.input.text)
+        context.state.working_memory.get("callback_reply") or declines_callback(context.input.text, context=context)
         or context.state.working_memory.get("pending_order") or mutation_calls
+        or context.input.metadata.get("quote_subject_unresolved")
+        or (previous_prices.get("budget_vnd") and (
+            orchestrated_calls or allowed_tools.intersection({"get_pricing_quote", "get_order_quote"})
+        ))
+        or (previous_prices.get("competitor_price_vnd") and re.search(COMPETITOR, context.input.text or "", re.I))
         or asks_about_water_resistance(context)
     )
     if on_status:
@@ -361,7 +372,16 @@ async def prepare_response(harness, context, tool_calls, response_text, *, baske
     response_text = ground_basket_recap(
         context, basket_evidence if basket_evidence is not None else tool_calls, response_text
     )
+    if context.input.metadata.get("quote_subject_unresolved"):
+        question = "Dạ, mình đang quan tâm mẫu nào ạ?"
+        if any(message.role == "agent" and question in message.content for message in context.state.messages):
+            response_text = "Dạ, khi mình có tên hoặc mã mẫu, em sẽ kiểm tra giá và ưu đãi cho mình ạ."
+        else:
+            response_text = question + " Em sẽ kiểm tra giá và ưu đãi của đúng mẫu cho mình."
     response_text = ground_checkout_response(context, tool_calls, response_text)
+    response_text = ground_previous_price_context(
+        context, basket_evidence if basket_evidence is not None else tool_calls, response_text
+    )
 
     response_text = ground_callback_response(context, response_text)
 

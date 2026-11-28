@@ -16,6 +16,7 @@ from telesale_agent.application.deepagent.context.order import (
     checkout_requested,
 )
 from telesale_agent.application.customer_text import is_closing_turn
+from telesale_agent.application.price_language import COMPETITOR, stated_price_context
 from telesale_agent.application.deepagent.understanding.unverified_question import (
     asks_about_unresolved_question,
     unit_specific_question,
@@ -161,6 +162,75 @@ def _format_vnd(value: Any) -> str:
         return f"{int(value):,}".replace(",", ".") + " đồng"
     except (TypeError, ValueError):
         return ""
+
+
+def _verified_purchase_amount(
+    tool_calls: list[dict[str, Any]], call_date: str | None,
+) -> tuple[int, str | None] | None:
+    """Prefer an order total, then a cart quote or one unambiguous unit quote."""
+    amounts: dict[int, set[tuple[int, str | None]]] = {}
+    for call in tool_calls:
+        result = call.get("result") or {}
+        args = call.get("args") or {}
+        if not isinstance(result, dict) or not isinstance(args, dict):
+            continue
+        if result.get("error") or call.get("_checkout_alternative") or (
+            call_date and args.get("on") not in (None, call_date)
+        ):
+            continue
+        name = call.get("name")
+        if name == "order.create" and result.get("order_id"):
+            rank, amount = 3, result.get("total_vnd")
+            sku = args.get("sku") if args.get("qty", 1) == 1 else None
+        elif name == "pricing.quote_order":
+            rank, amount, sku = 2, result.get("total_vnd"), None
+        elif name == "pricing.get_quote" and args.get("qty", 1) == 1:
+            rank, amount = 1, result.get("final_price_vnd")
+            sku = result.get("sku") or args.get("sku")
+            if not isinstance(sku, str) or not sku:
+                continue
+        else:
+            continue
+        if type(amount) is int and amount > 0:
+            amounts.setdefault(rank, set()).add((amount, sku if isinstance(sku, str) else None))
+    candidates = amounts[max(amounts)] if amounts else set()
+    return next(iter(candidates)) if len(candidates) == 1 else None
+
+
+def ground_previous_price_context(
+    context: TurnContext, tool_calls: list[dict[str, Any]], response: str,
+) -> str:
+    """Use past price references once when they help the current buying decision."""
+    previous = context.state.working_memory.get("previous_price_context") or {}
+    if not context.identity or previous.get("customer_id") != context.identity.customer_id or is_closing_turn(context):
+        return response
+    budget = previous.get("budget_vnd")
+    competitor = previous.get("competitor_price_vnd")
+    comparison = competitor and re.search(COMPETITOR, context.input.text or "", re.IGNORECASE)
+    if not budget and not comparison:
+        return response
+
+    quote = _verified_purchase_amount(tool_calls, context.input.metadata.get("call_date"))
+    if not quote and not comparison:
+        return response
+    references = {}
+    for text in [*(message.content for message in context.state.messages if message.role == "agent"), response]:
+        references.update(stated_price_context(text))
+    notes = []
+    if budget and quote and references.get("budget_vnd") != budget:
+        fit = "nằm trong" if quote[0] <= budget else "cao hơn"
+        notes.append(f"Mức giá vừa kiểm tra {fit} ngân sách {_format_vnd(budget)} mình nêu lần trước ạ.")
+    if comparison and references.get("competitor_price_vnd") != competitor:
+        note = f"Lần trước mình cho biết bên họ báo {_format_vnd(competitor)} ạ."
+        if quote and quote[1] and quote[1] == previous.get("variant_sku"):
+            difference = quote[0] - competitor
+            if difference:
+                direction = "cao hơn" if difference > 0 else "thấp hơn"
+                note += f" Giá bên em vừa kiểm tra cho mẫu này {direction} mức tham khảo đó {_format_vnd(abs(difference))}."
+            else:
+                note += " Giá bên em vừa kiểm tra cho mẫu này bằng mức tham khảo đó."
+        notes.append(note)
+    return " ".join([*notes, response]).strip()
 
 
 def _basket_product_names(context: TurnContext, tool_calls=()) -> dict[str, str]:

@@ -5,7 +5,9 @@ from unittest.mock import AsyncMock
 import pytest
 from langchain_core.messages import AIMessage
 
+from telesale_agent.adapters.memory import InMemoryCustomerMemoryRepository
 from telesale_agent.adapters.memory.turn_persist import _tool_memory_candidates
+from telesale_agent.application.memory.persist import persist_turn_memory
 from telesale_agent.core.models import (
     ActionPlan,
     ActionResult,
@@ -1435,6 +1437,28 @@ async def test_customer_calling_back_clears_pending_callback():
 
 
 @pytest.mark.asyncio
+@pytest.mark.parametrize("earlier_message, schedules", [
+    ("Chị ơi, em đang xem giày chạy bộ.", False),
+    ("Em ơi, chị đang xem giày chạy bộ.", True),
+])
+async def test_callback_direction_uses_the_customers_form_of_address(earlier_message, schedules):
+    harness, tool = _callback_harness("Dạ, bên em sẽ gọi lại cho mình ạ.")
+    state = ConversationState("callback", messages=[Message("customer", earlier_message)])
+    response = await harness.run_turn(TurnInput(
+        "callback", text="Em gọi lại cho chị sau, khoảng mười giờ ngày hai mươi tám tháng mười.",
+        customer_hint="0912345678", metadata={"call_date": "2026-10-27"},
+    ), state)
+
+    if schedules:
+        tool.ainvoke.assert_awaited_once()
+        assert tool.ainvoke.call_args.args[0]["callback_at"] == "2026-10-28T10:00"
+        assert "10:00 ngày 28/10/2026" in response.response_text
+    else:
+        tool.ainvoke.assert_not_awaited()
+        assert "bên em sẽ gọi lại" not in response.response_text
+
+
+@pytest.mark.asyncio
 @pytest.mark.parametrize("text, expected", [
     ("Anh nhắn lại cho em lúc mười giờ ngày hai mươi tháng mười được không?", "đồng ý để bên em gọi"),
     ("Chờ anh 10 giờ ngày 4 tháng 11 nhé.", "hay mình sẽ chủ động liên hệ"),
@@ -1447,6 +1471,46 @@ async def test_callback_clarifies_channel_or_caller_without_promising_unverified
     tool.ainvoke.assert_not_awaited()
     assert "đã hẹn gọi lại" not in response.response_text
     assert expected in response.response_text
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("first_turn", [
+    "Em đang hỏi người nhà, chị có thể nhắn lại cho em được không?",
+    "Chị nhắn lại cho em lúc mười giờ ngày hai mươi tháng mười được không?",
+])
+async def test_followup_time_alone_preserves_the_message_channel(first_turn):
+    harness, tool = _callback_harness("Dạ, bên em sẽ gọi lại và sẽ gửi lại thông tin qua tin nhắn ạ.")
+    state = ConversationState("message-followup")
+
+    async def turn(text):
+        return await harness.run_turn(TurnInput(
+            "message-followup", text=text, customer_hint="0912345678", metadata={"call_date": "2026-10-17"},
+        ), state)
+
+    await turn(first_turn)
+    result = await turn("Hẹn 10 giờ ngày 20 tháng 10 nhé.")
+    tool.ainvoke.assert_not_awaited()
+    assert "muốn được nhắn lại vào 10:00 ngày 20/10/2026" in result.response_text
+    assert "sẽ gửi lại" not in result.response_text
+
+
+@pytest.mark.asyncio
+async def test_message_request_switches_to_phone_after_agreement():
+    harness, tool = _callback_harness()
+    state = ConversationState("message-switch")
+
+    async def turn(text):
+        return await harness.run_turn(TurnInput(
+            "message-switch", text=text, customer_hint="0912345678", metadata={"call_date": "2026-10-18"},
+        ), state)
+
+    offer = await turn("Anh nhắn lại cho em lúc mười giờ ngày hai mươi tháng mười được không?")
+    assert "đồng ý để bên em gọi" in offer.response_text
+    tool.ainvoke.assert_not_awaited()
+    result = await turn("Vâng, em đợi anh.")
+    tool.ainvoke.assert_awaited_once()
+    assert result.tool_calls[0]["args"]["callback_at"] == "2026-10-20T10:00"
+    assert "đã hẹn gọi lại" in result.response_text
 
 
 @pytest.mark.asyncio
@@ -1730,6 +1794,78 @@ async def test_read_prefetch_reuses_successful_result_within_call():
     assert len(pricing.calls) == 1
     assert first[0].get("_cached") is None
     assert second[0]["_cached"] is True
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("other_price", [1_690_000, 1_161_000])
+async def test_checkout_rechecks_saved_option_prices_without_using_expired_offer(other_price):
+    first_sku = "SKU-SN-RUN1-38-DEN"
+    second_sku = "SKU-SN-RUN2-38-DEN"
+    options = {first_sku: "RunLite 1", second_sku: "RunLite 2 Pro"}
+    customer = CustomerIdentity(customer_id="C001", phone="0984726714")
+    repository = InMemoryCustomerMemoryRepository()
+    repository.upsert_fact(customer.customer_id, "checkout_product_options", options)
+
+    async def quote(args):
+        sku = args["sku"]
+        expired = args["on"] == "2026-10-27"
+        prices = {first_sku: 1_290_000, second_sku: other_price} if expired else {
+            first_sku: 1_161_000, second_sku: 1_521_000,
+        }
+        return {
+            "sku": sku,
+            "final_price_vnd": prices[sku],
+            "applied_promos": [] if expired else [{"promo_code": "RUN-10"}],
+        }
+
+    create = AsyncMock()
+    harness = DeepAgentHarness()
+    harness.mcp_tools = {
+        "get_pricing_quote": SimpleNamespace(ainvoke=quote),
+        "check_inventory": SimpleNamespace(ainvoke=AsyncMock(return_value={"in_stock": True, "qty": 2})),
+        "create_new_order": SimpleNamespace(ainvoke=create),
+    }
+    advice = TurnContext(
+        input=TurnInput(conversation_id="advice", text="Giá hai mẫu bao nhiêu?",
+                        metadata={"call_date": "2026-10-22"}),
+        state=ConversationState("advice", customer_memory=repository.load(customer.customer_id)),
+        call_brief=CallBrief(customer_id=customer.customer_id,
+                            remembered_preferences={"facts": {"checkout_product_options": options}}),
+        identity=customer,
+    )
+    await harness._prefetch_read_tools(advice, frozenset({"get_pricing_quote"}))
+    persist_turn_memory(repository, advice)
+    facts = repository.load(customer.customer_id)["facts"]
+    assert facts["checkout_option_quotes"] == {
+        first_sku: {"price_vnd": 1_161_000, "quoted_on": "2026-10-22", "promo_codes": ["RUN-10"]},
+        second_sku: {"price_vnd": 1_521_000, "quoted_on": "2026-10-22", "promo_codes": ["RUN-10"]},
+    }
+    assert "variant_sku" not in facts
+
+    checkout = TurnContext(
+        input=TurnInput(
+            conversation_id="checkout",
+            text="Em muốn đặt hàng giá 1.161.000, giao đến 10 Hoàng Diệu, Đà Nẵng, thanh toán COD.",
+            metadata={"call_date": "2026-10-27"},
+        ),
+        state=ConversationState("checkout", customer_memory=repository.load(customer.customer_id)),
+        call_brief=CallBrief(customer_id=customer.customer_id, remembered_preferences={"facts": facts}),
+        identity=customer,
+    )
+    calls, remaining = await harness._prefetch_read_tools(
+        checkout, frozenset({"create_new_order", "get_pricing_quote", "check_inventory"}),
+    )
+    await harness._execute_confirmed_mutation(checkout, remaining, calls)
+    pending = checkout.state.working_memory["pending_order"]
+    create.assert_not_awaited()
+    if other_price == 1_161_000:
+        assert pending["needs_variant"]
+        assert all("prior_checkout_quote" not in call for call in calls)
+    else:
+        assert pending["sku"] == first_sku
+        assert pending["price_changed"]
+        assert pending["price_vnd"] == 1_290_000
+        assert calls[0]["prior_checkout_quote"] == facts["checkout_option_quotes"][first_sku]
 
 
 @pytest.mark.asyncio

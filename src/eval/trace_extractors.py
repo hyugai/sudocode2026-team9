@@ -4,10 +4,11 @@ import json
 import re
 import unicodedata
 from datetime import date
-from decimal import Decimal
 from typing import Any
 
 from telesale_agent.application.asr_normalization import normalize_asr_transcript
+from telesale_agent.application.price_language import AMOUNT as _AMOUNT, MONEY_UNIT, money_value, stated_price_context
+from telesale_agent.core.basket import mentioned_catalog_items
 
 
 _SLOT_PATTERNS: list[tuple[str, re.Pattern[str]]] = [
@@ -40,13 +41,16 @@ _REQUEST = re.compile(
 )
 _SENTENCE = re.compile(r"(?<=[?？!])\s*|(?<=[.;])\s+|[\r\n]+")
 _SKU = re.compile(r"\bSKU-[A-Z0-9-]+\b", re.I)
-_AMOUNT = r"\d+(?:[.,]\d+|\s\d{3}(?!\d))*"
 _PRICE = re.compile(
-    rf"(?P<label>\bgiá(?:\s+niêm\s+yết)?|\btổng(?:\s+(?:tiền|cộng|đơn(?:\s+hàng)?))?|\bcòn)"
-    rf"\s*(?:(?:bán|hiện tại|hôm nay|chính xác|là|chỉ|vẫn|còn|giữ nguyên|:)\s*)*"
-    rf"[*\s]*(?P<amount>{_AMOUNT})(?!\d)(?:\s*(?P<unit>triệu|nghìn|ngàn|tr|k|đồng|vnd|₫|đ))?",
+    rf"(?P<label>\bchênh\s+lệch(?:\s+giá)?|\bhoàn\s+lại|\bthanh\s+toán\s+bổ\s+sung"
+    rf"|\bgiá(?:\s+niêm\s+yết)?|\btổng(?:\s+(?:tiền|cộng|đơn(?:\s+hàng)?))?|\bcòn)"
+    rf"\s*(?:(?:bán|ưu đãi|khuyến mãi|hiện tại|hôm nay|chính xác|chính hãng|chính thức|là|chỉ|vẫn|còn|giữ nguyên|:)\s*)*"
+    rf"[*\s]*(?P<amount>{_AMOUNT})(?!\d|[.,]\d)(?:\s*(?P<unit>{MONEY_UNIT}))?",
     re.I,
 )
+_NON_MONEY_SUFFIX = re.compile(r"\s*(?:%|phần\s+trăm|đôi\b|chiếc\b|sản\s+phẩm\b|ngày\b|tháng\b)", re.I)
+_CUSTOMER_QUOTE = re.compile(r"\b(?:anh|chị|mình)\s+(?:đã\s+)?(?:tham\s+khảo|báo\s+lại|so\s+ở\s+nơi\s+khác)\b", re.I)
+_SELLER_QUOTE = re.compile(r"\b(?:bên\s+em|bên\s+mình|cửa\s+hàng)\b", re.I)
 _STOCK = re.compile(
     r"\b(?P<empty>hết\s+hàng|chưa\s+có\s+hàng|không\s+(?:còn\s+hàng|sẵn\s+hàng|có\s+sẵn|có\s+hàng))"
     r"|\b(?:còn\s+hàng|có\s+sẵn|sẵn\s+hàng|sẵn\s+có)\b", re.I,
@@ -99,26 +103,13 @@ def extract_questions(response_text: str) -> list[dict[str, str]]:
     return questions
 
 
-def money_value(amount: str) -> int | None:
-    """Read a stated amount using the same Vietnamese ITN as ASR."""
-    compact = re.sub(r"(?<=\d)\s+(?=\d{3}\b)", "", normalize_asr_transcript(amount))
-    match = re.fullmatch(r"(\d+(?:[.,]\d+)*)\s*(triệu|tr|nghìn|ngàn|k|đồng|vnd|₫|đ)?", compact)
-    if not match:
-        return None
-    number, unit = match.groups()
-    if unit in {"triệu", "tr", "nghìn", "ngàn", "k"}:
-        decimal = number.replace(",", ".")
-        if decimal.count(".") > 1:
-            return None
-        return int(Decimal(decimal) * (1_000_000 if unit in {"triệu", "tr"} else 1000))
-    return int(re.sub(r"[.,]", "", number))
-
-
 def extract_claims(
     tool_calls: list[dict[str, Any]],
     *,
     response_text: str,
     call_date: str | None = None,
+    catalog_items: list[dict[str, Any]] | None = None,
+    price_subject_sku: str | None = None,
 ) -> list[dict[str, Any]]:
     """Extract spoken claims; a price need not agree with a tool to be scored.
 
@@ -140,19 +131,32 @@ def extract_claims(
         for call in tool_calls
         if call.get("name") == "pricing.get_quote"
         and isinstance((call.get("args") or {}).get("sku"), str)
+        and isinstance(call.get("result"), dict) and not call["result"].get("error")
     }
+    items = {str(item["sku"]).upper(): item for item in catalog_items or [] if item.get("sku")}
+    for call in tool_calls:
+        if call.get("name") == "catalog.search" and isinstance(call.get("result"), dict):
+            items.update({str(item["sku"]).upper(): item for item in call["result"].get("items", [])
+                          if isinstance(item, dict) and item.get("sku")})
+    item_list = list(items.values())
+    prices: list[tuple[str, int, str, str | None]] = []
     for sentence in _SENTENCE.split(response_text):
         if sentence.rstrip().endswith(("?", "？")):
             continue
         normalized = normalize_asr_transcript(sentence)
+        competitor_price = stated_price_context(normalized).get("competitor_price_vnd")
+        if competitor_price is not None:
+            add("competitor_price_vnd", competitor_price, sentence)
         previous_end = 0
+        sentence_sku = None
         for match in _PRICE.finditer(normalized):
             label = match["label"]
             unit = match["unit"] or ""
             value = money_value(f"{match['amount']} {unit}")
             prefix = normalized[previous_end:match.start()]
             previous_end = match.end()
-            if value is None or (label == "còn" and not unit and value < 1000):
+            suffix = normalized[match.end():]
+            if value is None or _NON_MONEY_SUFFIX.match(suffix) or (not unit and value < 1000):
                 continue
             if not _asserted_policy(normalized, match):
                 continue
@@ -160,11 +164,31 @@ def extract_claims(
             if label.startswith("tổng"):
                 add("total_vnd", value, sentence)
                 continue
-            add(field, value, sentence)
+            if label.startswith("chênh"):
+                if re.search(r"\bhoàn\s+lại\b", suffix):
+                    add("price_diff_vnd", -value, sentence)
+                    add("refund_vnd", value, sentence)
+                elif re.search(r"\b(?:thanh\s+toán|trả)\s+bổ\s+sung\b", suffix):
+                    add("price_diff_vnd", value, sentence)
+                    add("extra_payment_vnd", value, sentence)
+                else:
+                    add("price_difference_amount_vnd", value, sentence)
+                continue
+            if label.startswith(("hoàn", "thanh")):
+                add("refund_vnd" if label.startswith("hoàn") else "extra_payment_vnd", value, sentence)
+                continue
+            if not _SELLER_QUOTE.search(prefix) and _CUSTOMER_QUOTE.match(suffix.lstrip()):
+                add("competitor_price_vnd", value, sentence)
+                continue
             mentioned = {sku.upper() for sku in _SKU.findall(prefix)}
-            candidates = mentioned or (quote_skus if len(quote_skus) == 1 else set())
-            if len(candidates) == 1:
-                add(f"{field}_{next(iter(candidates))}", value, sentence)
+            named = mentioned_catalog_items(prefix, item_list) if item_list and not mentioned else []
+            if len(named) == 1:
+                parent = str(named[0]["sku"]).upper()
+                mentioned = {sku for sku in quote_skus if sku == parent or sku.startswith(parent + "-")}
+            if len(mentioned) == 1:
+                sentence_sku = next(iter(mentioned))
+            sku = sentence_sku or (next(iter(quote_skus)) if len(quote_skus) == 1 and not named else None)
+            prices.append((field, value, sentence, sku))
         for match in _STOCK.finditer(sentence):
             if _asserted_policy(sentence, match):
                 add("in_stock", not bool(match["empty"]), match[0])
@@ -201,6 +225,17 @@ def extract_claims(
             else:
                 value = int(number) * (12 if field == "warranty_months" and match[2].casefold() == "năm" else 1)
             add(field, int(value), match[0])
+    # BTC v2 uses an unqualified price slot for the scenario's main SKU.
+    # In a comparison, retain other quotes as SKU-specific claims only when
+    # the response also quotes the primary SKU with identifiable evidence.
+    subject = (price_subject_sku or "").upper()
+    scoped_fields = {field for field, _, _, sku in prices if sku and sku == subject}
+    for field, value, sentence, sku in prices:
+        if field not in scoped_fields or not sku or sku == subject:
+            add(field, value, sentence)
+        if sku:
+            add(f"{field}_{sku}", value, sentence)
+
     for match in re.finditer(r"đổi(?:\s+size)?[^.!?;]{0,25}miễn\s*phí", response_text, re.I):
         if _asserted_policy(response_text, match) and not re.search(r"không\s+miễn", match[0], re.I):
             add("exchange_fee_vnd", 0, match[0])
@@ -293,11 +328,12 @@ _TOOL_SLOT_NAMES = {
     "new_variant_sku": ("variant_sku",),
     "price_vnd": ("price_quoted_vnd",),
     "payment_method": ("payment",),
+    "address": ("address", "delivery_address"),
+    "shipping_address": ("delivery_address",),
     "qty": ("quantity",),
 }
 _TEXT_SLOT_PATTERNS = {
     "room_area_m2": (rf"({_AMOUNT})\s*(?:m[²2]|mét vuông)",),
-    "budget_vnd": (rf"ngân sách(?:\s+(?:là|khoảng|tầm))?\s+({_AMOUNT})",),
     "size": (r"\b(?:size|cỡ)\s+(\d+|s|m|l|xl)\b",),
     "color": (r"\bmàu\s+(đen|trắng|xanh|đỏ|be|hồng|nâu|xám|vàng|tím)\b",),
     "quantity": (r"\b(\d+)\s+(?:máy|chiếc|cái|bộ|đôi)\b",),
@@ -310,27 +346,99 @@ def _comparable_fact(value: Any) -> str:
     return "".join(c for c in folded if not unicodedata.combining(c)).replace("đ", "d")
 
 
+def extract_exchange_facts_used(
+    tool_calls: list[dict[str, Any]], prior_facts: dict[str, Any],
+) -> list[str]:
+    """Identify old-order facts consumed by a verified size exchange."""
+    order_id = prior_facts.get("order_id")
+    prior_variant = prior_facts.get("variant_sku")
+    prior_product = prior_facts.get("product_advised")
+    prior_sku = prior_variant or prior_product
+    if not (isinstance(order_id, str) and order_id and isinstance(prior_sku, str) and prior_sku):
+        return []
+
+    original_order = None
+    for call in tool_calls:
+        result = call.get("result")
+        if call.get("name") == "order.status":
+            orders = result.get("orders") if isinstance(result, dict) and not result.get("error") else None
+            matches = [order for order in (orders or []) if isinstance(order, dict) and order.get("order_id") == order_id]
+            original_order = matches[0] if len(matches) == 1 else None
+            continue
+        args = call.get("args")
+        if (call.get("name") != "order.update" or original_order is None
+                or not isinstance(result, dict) or result.get("error") or not isinstance(args, dict)):
+            continue
+        new_sku = args.get("new_variant_sku")
+        if (
+            args.get("action") != "exchange_size"
+            or result.get("action") != "exchange_size"
+            or args.get("order_id") != order_id
+            or result.get("order_id") != order_id
+            or result.get("status") != "pickup_scheduled"
+            or not isinstance(new_sku, str) or not new_sku
+            or result.get("new_variant_sku") != new_sku
+        ):
+            continue
+
+        old_sku = original_order.get("sku")
+        if not isinstance(old_sku, str) or old_sku.upper() != prior_sku.upper() or new_sku.upper() == old_sku.upper():
+            continue
+        # The lookup precedes the update, so use this snapshot rather than
+        # the brief refreshed after the old SKU has been superseded.
+        used = ["variant_sku"] if prior_variant else []
+        product = str(prior_product or old_sku).upper()
+        if old_sku.upper() == product or old_sku.upper().startswith(product + "-"):
+            used.append("product_advised")
+        old_price = original_order.get("price_vnd")
+        prior_price = prior_facts.get("price_quoted_vnd", prior_facts.get("price_vnd"))
+        if (type(old_price) in (int, float) and type(prior_price) in (int, float)
+                and old_price == prior_price and type(result.get("price_diff_vnd")) in (int, float)):
+            used.append("price_quoted_vnd")
+        return used
+    return []
+
+
 def extract_facts_used(
     response_text: str,
     tool_calls: list[dict[str, Any]],
     prior_facts: dict[str, Any],
     *,
     current_brief: Any = None,
+    stated_this_call: dict[str, int] | None = None,
 ) -> list[str]:
     """Match values from prior-call writes against the brief and visible evidence."""
     if not prior_facts:
         return []
     current = getattr(current_brief, "remembered_preferences", {}).get("facts", {}) if current_brief else prior_facts
     evidence: dict[str, list[Any]] = {}
+    option_facts_used: list[str] = []
+    prior_quotes = prior_facts.get("checkout_option_quotes")
 
     def remember(key: str, value: Any) -> None:
         if key in prior_facts:
             evidence.setdefault(key, []).append(value)
 
     for call in tool_calls:
+        result = call.get("result") or {}
+        if isinstance(result, dict) and (result.get("error") or result.get("found") is False):
+            continue
         args = call.get("args") or {}
         if not isinstance(args, dict):
             continue
+        recalled_quote = call.get("prior_checkout_quote")
+        if (
+            call.get("name") == "pricing.get_quote"
+            and isinstance(prior_quotes, dict) and isinstance(recalled_quote, dict)
+            and isinstance(args.get("sku"), str) and prior_quotes.get(args["sku"]) == recalled_quote
+            and isinstance(result, dict) and result.get("sku") == args["sku"]
+            and type(result.get("final_price_vnd")) is int
+        ):
+            option_facts_used.extend(("product_advised", "variant_sku"))
+            # The old price can identify the variant even after a promotion
+            # expires. Only a matching current quote verifies the old amount.
+            if result["final_price_vnd"] == recalled_quote.get("price_vnd"):
+                option_facts_used.append("price_quoted_vnd")
         for item in [args, *(args.get("lines") or [])]:
             if not isinstance(item, dict):
                 continue
@@ -357,10 +465,14 @@ def extract_facts_used(
     for key, patterns in _TEXT_SLOT_PATTERNS.items():
         for pattern in patterns:
             for value in re.findall(pattern, normalized, re.I):
-                remember(key, money_value(value) if key == "budget_vnd" else value)
+                remember(key, value)
+    for key, value in stated_price_context(normalized).items():
+        remember(key, value)
     for claim in extract_claims([], response_text=" ".join(statements)):
         if claim["field"] == "price_vnd":
             remember("price_quoted_vnd", claim["value"])
+        elif claim["field"] == "competitor_price_vnd":
+            remember("competitor_price_vnd", claim["value"])
     for match in _CHILDREN.finditer(normalized):
         remember("has_children", not bool(match["no"]))
     for key in ("product_advised", "variant_sku", "order_id", "promo_code", "payment", "address", "blocker"):
@@ -370,9 +482,18 @@ def extract_facts_used(
             if re.search(rf"(?<!\w){re.escape(token)}(?!\w)", _comparable_fact(" ".join(statements))):
                 remember(key, value)
 
-    return [
+    used = [
         key for key, value in prior_facts.items()
         if value is not None
+        and (stated_this_call or {}).get(key) != value
         and _comparable_fact(value) == _comparable_fact(current.get(key))
         and any(_comparable_fact(candidate) == _comparable_fact(value) for candidate in evidence.get(key, []))
     ]
+    if "variant_sku" in used and "product_advised" not in used:
+        variant = str(prior_facts["variant_sku"]).upper()
+        parent = str(prior_facts.get("product_advised") or variant).upper()
+        if parent == str(current.get("product_advised") or variant).upper() and (
+            variant == parent or variant.startswith(parent + "-")
+        ):
+            used.append("product_advised")
+    return list(dict.fromkeys([*used, *option_facts_used, *extract_exchange_facts_used(tool_calls, prior_facts)]))

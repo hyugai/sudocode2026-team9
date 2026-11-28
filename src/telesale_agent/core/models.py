@@ -197,6 +197,7 @@ class TurnContext:
     completed_intents: list[str] = field(default_factory=list)
     tool_results: JsonObject = field(default_factory=dict)
     steps: list[AgentStep] = field(default_factory=list)
+    checkout_option_quotes: JsonObject | None = None
 
 
 @dataclass(slots=True)

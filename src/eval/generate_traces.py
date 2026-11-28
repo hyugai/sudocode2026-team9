@@ -50,6 +50,7 @@ def _env_flag(name: str, default: bool = False) -> bool:
 # Trace dependencies
 # ---------------------------------------------------------------------------
 from telesale_agent.core.models import Channel, ConversationState, TurnInput  # noqa: E402
+from telesale_agent.application.price_language import stated_price_context  # noqa: E402
 from eval.model_config import configure_eval_model, permanent_provider_error  # noqa: E402
 from eval.trace_extractors import (  # noqa: E402
     extract_claims,
@@ -79,6 +80,8 @@ def _extract_tool_calls(result) -> list[dict]:
             "name": call.get("name"),
             "args": call.get("args") or {},
             "result": call.get("result"),
+            **({"prior_checkout_quote": call["prior_checkout_quote"]}
+               if "prior_checkout_quote" in call else {}),
         }
         for call in (result.tool_calls or [])
     ]
@@ -164,6 +167,8 @@ async def run_scenario(
     for call_key in sorted(calls_spec.keys()):  # call_1, call_2, ...
         spec = calls_spec[call_key]
         prior_facts = {cid: facts.copy() for cid, facts in persisted_facts.items()}
+        catalog_items: dict[str, dict] = {}
+        stated_this_call: dict[str, int] = {}
         if config == "full":
             try:
                 seed_history(spec.get("seed_history", []))
@@ -300,6 +305,7 @@ async def run_scenario(
                 )
                 is_baseline = config == "baseline_no_memory"
                 response_text = result.response_text or ""
+                stated_this_call.update(stated_price_context(turn_input.text or ""))
                 trace_memory_writes = [] if is_baseline else (result.memory_writes or [])
                 customer_id = getattr(getattr(result, "call_brief", None), "customer_id", None)
                 for write in trace_memory_writes:
@@ -331,12 +337,15 @@ async def run_scenario(
                         else extract_facts_used(
                             response_text, tool_calls, prior_facts.get(customer_id, {}),
                             current_brief=result.call_brief,
+                            stated_this_call=stated_this_call,
                         )
                     ),
                     "claims": extract_claims(
                         tool_calls,
                         call_date=call_date,
                         response_text=response_text,
+                        catalog_items=list(catalog_items.values()),
+                        price_subject_sku=(spec.get("ground_truth_facts") or {}).get("sku"),
                     ),
                     "tool_calls": tool_calls,
                     "memory_writes": trace_memory_writes,
@@ -346,6 +355,11 @@ async def run_scenario(
                     "latency": latency,
                     "runner_total_ms": total_ms,
                 }
+                for call in tool_calls:
+                    if call["name"] == "catalog.search" and isinstance(call["result"], dict):
+                        for item in call["result"].get("items", []):
+                            if isinstance(item, dict) and item.get("sku"):
+                                catalog_items[item["sku"]] = item
                 if audio_info:
                     row["audio"] = audio_info
                 if turn_idx == 1:

@@ -13,7 +13,7 @@ from fastapi.testclient import TestClient
 from langchain_core.messages import AIMessage
 from telesale_agent.application.deepagent.turn import run_turn_impl, prepare_response
 from telesale_agent.adapters.rules.pii_guardrail import PIIGuardrail
-from telesale_agent.core.models import TurnInput, TurnContext, CustomerIdentity, CallBrief, ConversationState, Perception, Channel
+from telesale_agent.core.models import TurnInput, TurnContext, CustomerIdentity, CallBrief, ConversationState, Perception, Channel, Message
 
 
 class CompleteTurnTests(unittest.IsolatedAsyncioTestCase):
@@ -151,6 +151,91 @@ class CompleteTurnTests(unittest.IsolatedAsyncioTestCase):
         answer = await prepare_response(SimpleNamespace(guardrail=None), context, calls, "Đã lên đơn.", basket_evidence=calls + calls)
         self.assertEqual(answer.count("Máy A — mã đơn ORD-A"), 1)
         self.assertEqual(answer.count("Máy B — mã đơn ORD-B"), 1)
+
+    async def test_price_comparison_cannot_quote_an_unmentioned_product(self):
+        from telesale_agent.application.tools.reads import ReadToolExecutor
+
+        text = "Bên họ báo 1 triệu 590 nghìn, em muốn hỏi giá bên anh."
+        context = TurnContext(input=TurnInput("comparison", text=text), state=ConversationState("comparison"))
+        context.perception = Perception(transcript=text, intent="price_objection", entities={
+            "sku": "SKU-AP-Y", "product_name": "AirPure Y",
+        })
+        search = AsyncMock(return_value={"items": []})
+        price = AsyncMock(return_value={"final_price_vnd": 5_200_000})
+        reader = ReadToolExecutor({"search_catalog": SimpleNamespace(ainvoke=search),
+                                   "get_pricing_quote": SimpleNamespace(ainvoke=price)})
+        calls, tools = await reader.prefetch(context, frozenset({"search_catalog", "check_inventory", "get_pricing_quote"}))
+        self.assertEqual(search.await_args.args[0]["query"], text)
+        self.assertNotIn("get_pricing_quote", tools)
+        price.assert_not_awaited()
+        answer = await prepare_response(SimpleNamespace(guardrail=None), context, calls, "AirPure Y có giá 5.200.000đ.")
+        self.assertIn("quan tâm mẫu nào", answer)
+        self.assertNotIn("5.200.000", answer)
+        context.state.messages.append(Message("agent", answer))
+        repeated = await prepare_response(SimpleNamespace(guardrail=None), context, calls, "AirPure Y có giá 5.200.000đ.")
+        self.assertNotIn("?", repeated)
+        self.assertNotIn("5.200.000", repeated)
+
+    async def test_spoken_budget_and_competitor_quote_are_customer_memory(self):
+        from telesale_agent.adapters.llm.llm_perceive import canonicalize_memory_deltas
+        from telesale_agent.adapters.memory.in_memory import InMemoryCustomerMemoryRepository
+        from telesale_agent.application.memory.persist import persist_turn_memory
+
+        text = "Ngân sách của em là hai triệu, còn bên họ báo một triệu sáu trăm nghìn."
+        facts = canonicalize_memory_deltas({"budget_vnd": 10, "competitor_price_vnd": 11, "price_vnd": 12}, text)
+        self.assertEqual(facts, {"budget_vnd": 2_000_000, "competitor_price_vnd": 1_600_000})
+        repository = InMemoryCustomerMemoryRepository()
+        state = ConversationState("price-context", memory_deltas=facts.copy())
+        context = TurnContext(input=TurnInput("price-context", text=text), state=state)
+        context.identity = CustomerIdentity(customer_id="customer")
+        writes = persist_turn_memory(repository, context)
+        self.assertEqual({w["provenance"] for w in writes}, {"customer"})
+        self.assertEqual(repository.load("customer")["facts"], facts)
+        comparison = "Em vừa so giá với nơi khác rồi ạ. Họ báo giá 1.610.000 đồng."
+        self.assertEqual(canonicalize_memory_deltas({}, comparison), {"competitor_price_vnd": 1_610_000})
+
+    async def test_returning_customer_reuses_price_context_against_verified_quote(self):
+        from telesale_agent.application.deepagent.context.facts import load_previous_price_context
+
+        sku = "SKU-SN-RUN2-39-XAM"
+        state = ConversationState("returning", customer_memory={"facts": {
+            "variant_sku": sku, "budget_vnd": 1_700_000, "competitor_price_vnd": 1_650_000,
+        }})
+        context = TurnContext(input=TurnInput("returning", text="Giá mẫu này so với bên họ thế nào?",
+                                             metadata={"call_date": "2026-10-28"}), state=state)
+        context.identity = CustomerIdentity(customer_id="customer")
+        load_previous_price_context(context)
+        quote = {"name": "pricing.get_quote", "args": {"sku": sku, "on": "2026-10-28"},
+                 "result": {"sku": sku, "final_price_vnd": 1_690_000}}
+        harness = SimpleNamespace(guardrail=None)
+        stale = {**quote, "args": {**quote["args"], "on": "2026-10-27"}}
+        unverified = await prepare_response(harness, context, [stale], "Mình cho em xin tên mẫu ạ?")
+        self.assertIn("bên họ báo 1.650.000 đồng", unverified)
+        self.assertNotIn("ngân sách", unverified)
+        self.assertNotIn("40.000 đồng", unverified)
+
+        answer = await prepare_response(harness, context, [quote], "Em có thể hỗ trợ lên đơn ạ.")
+        self.assertIn("nằm trong ngân sách 1.700.000 đồng", answer)
+        self.assertIn("bên họ báo 1.650.000 đồng", answer)
+        self.assertIn("cao hơn mức tham khảo đó 40.000 đồng", answer)
+        state.messages.append(Message("agent", answer))
+        followup = await prepare_response(harness, context, [quote], "Em có thể hỗ trợ lên đơn ạ.")
+        self.assertNotIn("1.650.000", followup)
+        self.assertNotIn("1.700.000", followup)
+
+    async def test_current_customer_amounts_replace_earlier_call_references(self):
+        from telesale_agent.application.deepagent.context.facts import load_previous_price_context
+
+        state = ConversationState("updated", customer_memory={"facts": {
+            "budget_vnd": 2_000_000, "competitor_price_vnd": 1_600_000,
+        }})
+        context = TurnContext(input=TurnInput("updated", text="Ngân sách còn 1,5 triệu. Bên họ cũng có giá 1,4 triệu."), state=state)
+        context.identity = CustomerIdentity(customer_id="customer")
+        load_previous_price_context(context)
+        context.input.text = "Mức đó so với bên họ thì sao ạ?"
+        quote = {"name": "pricing.get_quote", "args": {"sku": "SKU-X"}, "result": {"final_price_vnd": 1_450_000}}
+        answer = await prepare_response(SimpleNamespace(guardrail=None), context, [quote], "Em kiểm tra rồi ạ.")
+        self.assertEqual(answer, "Em kiểm tra rồi ạ.")
 
 
 class CompleteChatAPITests(unittest.TestCase):

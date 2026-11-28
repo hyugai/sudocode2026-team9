@@ -1,0 +1,89 @@
+{
+  "scenario_id": "SC-030",
+  "level": "M1",
+  "persona": "khach_hoi_ngoai_tai_lieu",
+  "hard_case": "unsupported_question",
+  "customer_phone": "0925877188",
+  "customer_name": "Huy",
+  "honorific": "anh",
+  "notes": "consider_and_decide",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0925877188",
+      "call_date": "2026-10-23",
+      "customer_turns": [
+        "Anh ơi, em muốn hỏi về giày trekking HikePro màu đen size bốn mươi ba.",
+        "Em nghe nói là có giá hai triệu không trăm bốn mươi nghìn đồng, đúng không anh?",
+        "Anh ơi, nếu em muốn đặt hàng thì em nên gọi lại lúc nào?",
+        "Anh nói lúc mười giờ ngày hai mươi bốn tháng mười được không?"
+      ],
+      "customer_goal": "Hỏi về sản phẩm và hẹn xem lại",
+      "facts_established": {
+        "product_advised": "SKU-SN-TRK-43-DEN",
+        "price_quoted_vnd": 2040000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-SN-TRK-43-DEN",
+        "price_vnd": 2040000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        }
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": null,
+        "args_match": {},
+        "must_not_call_tools": [
+          "schedule.callback"
+        ]
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0925877188",
+      "call_date": "2026-10-24",
+      "customer_turns": [
+        "Anh ơi, em muốn hỏi thêm về chất liệu giày HikePro đó có chống nước không?",
+        "Em thấy trên mạng có người nói là có, nhưng em không biết chính xác là thế nào.",
+        "Anh có thể cho em biết thông tin chi tiết hơn được không?",
+        "Em thấy thông tin này không có trong tài liệu của shop, anh có biết không?"
+      ],
+      "days_later": 1,
+      "customer_goal": "Yêu cầu thông tin không có trong tài liệu",
+      "facts_established": {
+        "product_advised": "SKU-SN-TRK-43-DEN"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-SN-TRK-43-DEN",
+        "price_vnd": 2040000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        }
+      },
+      "expected_outcome": "tu_choi",
+      "success_if": {
+        "tool_called": null,
+        "args_match": {},
+        "agent_must_say": "không có thông tin"
+      }
+    }
+  }
+}

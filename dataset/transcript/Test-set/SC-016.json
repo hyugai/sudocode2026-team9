@@ -1,0 +1,110 @@
+{
+  "scenario_id": "SC-017",
+  "level": "M1",
+  "persona": "khach_so_gia",
+  "hard_case": null,
+  "customer_phone": "0977879432",
+  "customer_name": "Loan",
+  "honorific": "chị",
+  "notes": "consider_and_decide",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0977879432",
+      "call_date": "2026-10-31",
+      "customer_turns": [
+        "Chị ơi, em đang so sánh giá với nơi khác rồi ạ. Họ báo giá một triệu sáu trăm mười nghìn cho Giày chạy bộ RunLite hai Pro màu trắng size bốn mươi.",
+        "Mà bên chị là một triệu sáu trăm chín mươi nghìn, chênh 80 nghìn. Chị có thể giảm giá không ạ?",
+        "Em đang cân nhắc mua, nhưng nếu không có ưu đãi thì em nghĩ lại."
+      ],
+      "customer_goal": "So báo giá với nơi khác trước khi quyết định",
+      "facts_established": {
+        "product_advised": "SKU-SN-RUN2-40-TRANG",
+        "price_quoted_vnd": 1690000,
+        "competitor_price_vnd": 1610000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN2-40-TRANG",
+        "price_vnd": 1690000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [
+          "RUN-10",
+          "RUN2-SALE"
+        ],
+        "promo_expiry_dates": {
+          "RUN-10": "2026-10-25",
+          "COD-0": "2026-12-14",
+          "RUN2-SALE": "2026-10-07"
+        }
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": null,
+        "args_match": {},
+        "must_not_call_tools": [
+          "schedule.callback"
+        ]
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0977879432",
+      "call_date": "2026-11-04",
+      "customer_turns": [
+        "Chị ơi, em đã xem qua rồi. Giá bên chị là một triệu sáu trăm chín mươi nghìn, còn bên họ là một triệu sáu trăm mười nghìn.",
+        "Em đã đồng ý với giá bên chị, nhưng cần thanh toán khi nhận hàng và giao đến 67A Hoàng Quốc Việt, phường An Cựu, Huế.",
+        "Em đặt hàng rồi ạ. Cảm ơn chị."
+      ],
+      "days_later": 4,
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-SN-RUN2-40-TRANG",
+        "price_quoted_vnd": 1690000,
+        "payment": "COD",
+        "delivery_address": "67A Hoàng Quốc Việt, phường An Cựu, Huế",
+        "order_status": "created",
+        "competitor_price_vnd": 1610000
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "competitor_price_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN2-40-TRANG",
+        "price_vnd": 1690000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [
+          "RUN-10",
+          "RUN2-SALE"
+        ],
+        "promo_expiry_dates": {
+          "RUN-10": "2026-10-25",
+          "COD-0": "2026-12-14",
+          "RUN2-SALE": "2026-10-07"
+        },
+        "estimated_delivery": "2026-11-06"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-SN-RUN2-40-TRANG",
+          "price_vnd": 1690000
+        }
+      }
+    }
+  }
+}
