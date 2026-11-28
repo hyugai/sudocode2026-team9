@@ -241,3 +241,14 @@ def normalize_asr_transcript(transcript: str) -> str:
     text = _DATE.sub(_normalize_date, text)
     text = _PHONE.sub(_normalize_phone, text)
     return _MONEY.sub(_normalize_money, text)
+
+
+def normalize_spoken_product_size(text: str) -> str:
+    """Convert numbers only when introduced by a product size qualifier."""
+    def replace(match: re.Match) -> str:
+        size = _small_integer(match["number"].casefold().split())
+        return f"size {size}" if size is not None else match[0]
+
+    return re.sub(
+        rf"\b(?:size|cỡ)\s+(?P<number>{_NUMBER_PHRASE})\b", replace, text, flags=re.I,
+    )

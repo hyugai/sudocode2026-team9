@@ -177,6 +177,7 @@ def create_chat_model(
             callbacks=[usage_tracking_callback],
             rate_limiter=_benchmark_rate_limiter(),
             reasoning_effort=os.environ.get("GROQ_REASONING_EFFORT") or None,
+            **({"base_url": endpoint} if (endpoint := _first_env("LLM_API_ENDPOINT")) else {}),
         )
 
     try:
@@ -195,6 +196,8 @@ def create_chat_model(
         "callbacks": [usage_tracking_callback],
         "rate_limiter": _benchmark_rate_limiter(),
     }
+    if endpoint := _first_env("LLM_API_ENDPOINT"):
+        gemini_options["base_url"] = endpoint
     if not _gemini_uses_fixed_sampling(config.model):
         gemini_options["temperature"] = temperature
     # Gemini 3+ thinks by default and bills thinking tokens as output tokens.

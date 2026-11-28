@@ -22,8 +22,8 @@ for stream in (sys.stdout,sys.stderr):
 os.environ["PYTHONIOENCODING"] = "utf-8"
 from dotenv import load_dotenv
 from eval.benchmark_support import (DEFAULT_SCENARIOS, validate_inputs, turn_keys, trace_health,
-                                    compare_metrics, machine_metadata)
-from eval.team_eval import REFERENCE, evaluate_team, select_scenarios
+                                    compare_metrics, load_scenario_inputs, m1_acceptance, machine_metadata)
+from eval.team_eval import REFERENCE, btc_v2_report, evaluate_team, reference_sha256, select_scenarios
 from eval.model_config import configure_eval_model, permanent_provider_error
 
 
@@ -38,6 +38,7 @@ def print_metrics(label, report):
     print(f"\n=== {label} ===",flush=True)
     for key in ("repeat_question_rate","context_carryover_rate","task_success_rate","hallucination_rate","tool_call_accuracy"):
         print(f"{key}: {report[key]['value']}%",flush=True)
+    print(f"HR price & promo (BTC gate): {report['hallucination_rate']['price_promo_only']['value']}%")
     print(f"HR price only: {report['hallucination_rate']['price_only']['value']}%")
     print(f"Calls-to-close: {report['calls_to_close']['value']}; avg turns/call: {report['avg_turns_per_call']}")
     print(f"Guardrail violations: {report['guardrail_violations']['total']}")
@@ -46,7 +47,6 @@ def print_metrics(label, report):
     print(f"MWQ: {report['memory_write_quality'].get('status')}; aggregate: {json.dumps(report['memory_write_quality'].get('aggregate'))}")
     cost = report["estimated_cost_per_call"]
     print(f"Estimated cost/call USD: {cost['average_per_call_usd']} (pricing configured: {cost['configured']})")
-    print(f"HR price/promo: {report['hallucination_rate']['price_promo_only']['value']}%")
     for key in ("ttft","total","ttfa","call_brief","request_complete","persistence"):
         print(f"Latency {key}: {json.dumps(report['latency'][key])}")
     print(f"Latency mode: {report['latency']['measurement_mode']}")
@@ -62,10 +62,24 @@ def asr_report(scenarios,trace,out):
         for call,spec in scenario["calls"].items():
             for turn,text in enumerate(spec.get("customer_turns",[]),1):
                 key = f"{sid}/{call}/{turn}"
-                gt.append({"id":key,"full_text":text,"noisy":spec.get("input_mode")=="noisy"})
+                gt.append({
+                    "id": key,
+                    "full_text": text,
+                    "noisy": spec.get(
+                        "audio_noisy",
+                        spec.get("input_mode") in {"noisy", "asr_transcript"}
+                        or bool(spec.get("customer_turns_asr"))
+                    ),
+                })
+    expected_turns = {
+        (sid, call): len(spec.get("customer_turns", []))
+        for sid, scenario in scenarios.items()
+        for call, spec in scenario["calls"].items()
+    }
     for (sid,call),rows in trace.items():
+        limit = expected_turns.get((sid, call), 0)
         for row in rows:
-            if "_error" not in row:
+            if "_error" not in row and 1 <= int(row["turn"]) <= limit:
                 hy[f"{sid}/{call}/{row['turn']}"] = {"text":row.get("normalized_customer_text",row["customer_text"])}
     out.mkdir(exist_ok=True)
     write_json(out / "ground_truth.json",{"dialogues":gt})
@@ -83,6 +97,7 @@ async def run_arm(args,scenarios,kind,config,run_dir):
     arm_dir = run_dir / kind / config
     arm_dir.mkdir(parents=True)
     os.environ["CUSTOMER_MEMORY_ROOT"] = str(arm_dir / "memory")
+    os.environ["CUSTOMER_MEMORY_BACKEND"] = "file"
     trace = defaultdict(list)
     total_rows = 0
     started = time.perf_counter()
@@ -107,7 +122,7 @@ async def run_arm(args,scenarios,kind,config,run_dir):
                         rows = [{"scenario_id":sid,"call":call,"turn":turn,"agent_text":"","customer_text":"",
                                  "tool_calls":[],"claims":[],"facts_used":[],"questions":[],"memory_writes":[],
                                  "latency":{},"_error":f"scenario setup failed: {type(exc).__name__}: {exc}"}
-                                for s,call,turn in sorted(turn_keys({sid:scenario}))]
+                                for s,call,turn in sorted(turn_keys({sid:scenario}, include_closing_turn=True))]
                     for row in rows:
                         row["latency_warmup"] = total_rows < 3
                         total_rows += 1
@@ -157,6 +172,7 @@ async def run_arm(args,scenarios,kind,config,run_dir):
 
 async def run(args,scenarios,run_dir,metadata):
     reports,comparisons = {},{}
+    btc_reports, acceptance = {}, {}
     blocked_reason = None
     for kind in args.input_kinds:
         reports[kind] = {}
@@ -173,21 +189,36 @@ async def run(args,scenarios,run_dir,metadata):
             write_json(run_dir / "results.partial.json",reports)
         comparisons[kind] = compare_metrics(reports[kind]["full"]["system"],reports[kind]["baseline_no_memory"]["system"])
         print(f"\n[Acceptance {kind}] {json.dumps(comparisons[kind],ensure_ascii=False)}",flush=True)
+        full_trace = run_dir / kind / "full" / "trace.jsonl"
+        baseline_trace = run_dir / kind / "baseline_no_memory" / "trace.jsonl"
+        if full_trace.is_file() and baseline_trace.is_file():
+            btc_reports[kind] = btc_v2_report(
+                scenarios, full_trace, baseline_trace,
+                scenarios_path=getattr(args, "scenarios", None),
+                asr_path=getattr(args, "btc_asr_dir", None),
+            )
+        else:
+            btc_reports[kind] = {"error": "BTC v2 suite scoring requires both full and baseline trace files."}
+        acceptance[kind] = m1_acceptance(
+            btc_reports[kind], reports[kind]["full"]["system"], reports[kind]["baseline_no_memory"]["system"]
+        )
+        print(f"[BTC M1 {kind}] {json.dumps(acceptance[kind], ensure_ascii=False)}", flush=True)
     finished = datetime.now().astimezone().isoformat()
     metadata["precomputed_parts"] = sorted({part for modes in reports.values() for arm in modes.values()
                                              for part in arm["system"]["latency"].get("precomputed_parts",[])})
     all_valid = all(arm["system"]["trace_health"]["valid"] and not arm["error"] for modes in reports.values() for arm in modes.values())
+    all_valid = all_valid and all(c["status"] != "invalid" for c in acceptance.values())
     result = {"metadata":{**metadata,"finished_at":finished},
               "status":"blocked_provider" if blocked_reason else "completed" if all_valid else "completed_with_errors",
               "blocked_reason":blocked_reason,
-              "reports":reports,"comparison":comparisons}
+              "reports":reports,"comparison":comparisons,"btc_v2":btc_reports,"m1_acceptance":acceptance}
     write_json(run_dir / "report.json",result)
     metadata["finished_at"] = finished
     write_json(run_dir / "metadata.json",metadata)
     print(f"\n[Suite] {result['status']}: {run_dir / 'report.json'}",flush=True)
     if not all_valid:
         return 2
-    return 0 if all(c["status"]=="pass" for c in comparisons.values()) else 3
+    return 0 if all(c["status"]=="pass" for c in acceptance.values()) else 3
 
 
 async def run_asr_only(args,scenarios,run_dir,metadata):
@@ -237,8 +268,9 @@ def main():
     parser.add_argument("--version",default="benchmark_v"+datetime.now().strftime("%Y%m%d%H%M%S"))
     parser.add_argument("--scenarios",type=Path,default=DEFAULT_SCENARIOS)
     parser.add_argument("--audio-root",type=Path,help="WAV directory with a sibling manifest.jsonl")
+    parser.add_argument("--btc-asr-dir", type=Path, help="Full-dialogue ASR artifacts for BTC scoring")
     parser.add_argument("--output-root",type=Path,default=ROOT / "outputs/benchmark")
-    parser.add_argument("--limit",type=int,default=40)
+    parser.add_argument("--limit",type=int,help="Select the first N scenarios. Default: all scenarios in the directory.")
     parser.add_argument("--input-kinds",nargs="+",choices=["text","audio"],
                         help="Defaults to text, or text and audio when --audio-root is supplied")
     parser.add_argument("--llm-provider",help="Eval provider (default: gemini; override with EVAL_LLM_PROVIDER)")
@@ -259,7 +291,7 @@ def main():
     args = parser.parse_args()
     if args.profile and args.asr_only:
         parser.error("--profile measures complete turns; use --asr-only without --profile")
-    if args.limit<=0 or args.sleep<0 or args.request_timeout<=0 or args.max_consecutive_failures<1 or args.model_retries<0 or (args.request_interval is not None and args.request_interval<0):
+    if (args.limit is not None and args.limit<=0) or args.sleep<0 or args.request_timeout<=0 or args.max_consecutive_failures<1 or args.model_retries<0 or (args.request_interval is not None and args.request_interval<0):
         parser.error("limit/timeout/failure threshold must be positive; sleep must be nonnegative")
     if not args.version or Path(args.version).name!=args.version or args.version in (".",".."):
         parser.error("version must be a single directory name")
@@ -282,12 +314,16 @@ def main():
         model = configure_eval_model(args.llm_provider,args.llm_model,request_interval=args.request_interval)
     except ValueError as exc:
         parser.error(str(exc))
-    scenarios = select_scenarios(REFERENCE.load_scenarios(str(args.scenarios)),limit=args.limit)
-    if len(scenarios)!=args.limit:
-        parser.error("Dataset contains fewer scenarios than requested")
     try:
+        scenarios = select_scenarios(load_scenario_inputs(args.scenarios), limit=args.limit)
+        if args.limit is not None and len(scenarios) != args.limit:
+            raise ValueError("Dataset contains fewer scenarios than requested")
+        args.limit = len(scenarios)
         selection = validate_inputs(scenarios,args.audio_root if "audio" in args.input_kinds else None)
-    except (ValueError,OSError) as exc:
+        if args.btc_asr_dir is not None:
+            from eval.run_asr import validate_btc_asr
+            validate_btc_asr(args.btc_asr_dir)
+    except (ValueError,OSError,KeyError) as exc:
         parser.error(str(exc))
     print(f"[Preflight] {json.dumps(selection,ensure_ascii=False)}",flush=True)
     if args.preflight_only:
@@ -309,6 +345,7 @@ def main():
              "storage_per_mb":"EVAL_MEMORY_STORAGE_USD_PER_MB","fixed_call":"EVAL_FIXED_CALL_USD"}
     args.pricing = {k:float(os.environ[v]) if os.environ.get(v) else None for k,v in rates.items()}
     metadata = {"started_at":datetime.now().astimezone().isoformat(),"hardware":machine_metadata(),
+                "reference_sha256":reference_sha256(),
                 "selection":selection,"dataset_sha256":hashlib.sha256(json.dumps(scenarios,ensure_ascii=False,sort_keys=True).encode()).hexdigest(),
                 "provider":model.provider,"model":model.model,
                 "temperature":None if model.provider=="gemini" and model.model=="gemini-3.6-flash" else 0.3,
@@ -321,11 +358,11 @@ def main():
                 "memory_persister_mode":args.memory_persister_mode,"warmup_turns_per_arm":3,
                 "input_kinds":args.input_kinds,"command":subprocess.list2cmdline([sys.executable,*sys.argv]),
                 "measurement_mode":"non_streaming",
-                "profile":args.profile,"memory_backend":os.environ.get("CUSTOMER_MEMORY_BACKEND","file"),
+                "profile":args.profile,"memory_backend":"file",
                 "timing_boundary":"harness entry to complete guarded answer before persistence; TTFT=Total; offline ASR subtracted; request completion reported separately",
                 "latency_guide":"dataset/organizer/eval/huong-dan-do-latency.md",
                 "precomputed_parts":[],"precomputed_parts_policy":"observed per turn before current-turn persistence",
-                "freshness":"CRM/profile/order history reloaded at call entry; remembered SKU inventory/promotions rechecked; cross-channel interaction source unavailable"}
+                "freshness":"CRM profile, recorded sessions and order history reloaded at call entry; remembered SKU inventory/promotions rechecked"}
     source_paths = sorted((ROOT / "src/eval").glob("*.py")) + [
         ROOT / "src/telesale_agent/application/deepagent" / name
         for name in ("turn.py", "harness.py")]

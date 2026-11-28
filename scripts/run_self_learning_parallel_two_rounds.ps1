@@ -16,7 +16,7 @@ param(
 )
 $ErrorActionPreference = 'Stop'
 $repoRoot = Split-Path -Parent $PSScriptRoot
-if (-not $ScenarioDir) { $ScenarioDir = Join-Path $repoRoot 'dataset/main/scenarios_complete' }
+if (-not $ScenarioDir) { $ScenarioDir = Join-Path $repoRoot 'dataset/transcript/M1' }
 if (-not $OutputDir) { $OutputDir = Join-Path $repoRoot ('outputs/self-agent/parallel-two-rounds/' + (Get-Date -Format 'yyyyMMdd-HHmmss')) }
 $savedPath = $env:PYTHONPATH
 $savedFlag = $env:KNOWLEDGE_GAP_LOOP_ENABLED

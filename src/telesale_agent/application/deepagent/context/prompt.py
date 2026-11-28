@@ -7,9 +7,9 @@ import os
 from typing import Any
 
 from telesale_agent.core.models import Message, TurnContext
+from telesale_agent.application.customer_text import is_closing_turn
 from telesale_agent.application.deepagent.understanding.policy_intent import deferred_policy_topic
 from telesale_agent.application.deepagent.tools.protocol import compact_orchestrated_result
-from telesale_agent.application.deepagent.context.callback import _callback_adjustment_note
 from telesale_agent.application.deepagent.context.order import (
     _delivery_address,
     _payment_method,
@@ -63,7 +63,11 @@ def build_base_user_message(
     prior_messages: list[Message],
 ) -> tuple[str, str]:
     """Project CRM, memory, recent dialogue and retrieval into one prompt."""
-    user_text = context.input.text or "[Audio]"
+    user_text = (
+        "[Closing turn: no further customer input]"
+        if is_closing_turn(context)
+        else (context.input.text or "[Audio]")
+    )
     from telesale_agent.application.customer_addressing import addressing_instruction
     notes: list[str] = [addressing_instruction(context)]
     if context.identity and context.identity.customer_id:
@@ -174,8 +178,9 @@ def append_orchestration_context(
         message += (
             "\n\n[Basket product names in Customer Brief came from catalog.search. "
             "Use those exact names for their SKUs; never guess a product "
-            "name from an SKU abbreviation. A cart total needs current-date "
-            "pricing.get_quote for every basket item.]"
+            "name from an SKU abbreviation. A multi-item or multi-unit cart total "
+            "needs current-date get_order_quote (pricing.quote_order) with all "
+            "lines; never call pricing.get_quote separately per item.]"
         )
     if deferred_policy_topic(context.input.text):
         message += (
@@ -183,29 +188,83 @@ def append_orchestration_context(
             "Acknowledge and remember the topic; do not explain or quote "
             "current policy in this turn unless it was retrieved now.]"
         )
+    closing = is_closing_turn(context)
     pending_order = context.state.working_memory.get("pending_order")
     if isinstance(pending_order, dict) and pending_order:
         missing_order_fields = []
+        if pending_order.get("needs_variant"):
+            missing_order_fields.append("exact product variant")
+        if pending_order.get("price_changed"):
+            missing_order_fields.append(
+                f"customer consent to the verified price of {pending_order['price_vnd']} VND"
+            )
         if not _delivery_address(context):
             missing_order_fields.append("delivery address")
         if not _payment_method(context):
             missing_order_fields.append("payment method")
         if missing_order_fields:
+            if closing:
+                message += (
+                    "\n\n[Closing turn: no order was created because required "
+                    "information is still missing ("
+                    + ", ".join(missing_order_fields)
+                    + "). Briefly note that the order has not been placed yet "
+                    "and close politely without asking new or repeated questions "
+                    "and without claiming an order ID.]"
+                )
+            else:
+                message += (
+                    "\n\n[Required order information missing: "
+                    + ", ".join(missing_order_fields)
+                    + ". Ask only for these missing fields. Do not ask again "
+                    "for known product, price, quantity, address, or payment "
+                    "fields, and do not claim that an order was created.]"
+                )
+    if closing:
+        created_this_turn = any(
+            call.get("name") == "order.create"
+            and isinstance(call.get("result"), dict)
+            and call["result"].get("order_id")
+            and not call["result"].get("error")
+            for call in mutation_calls
+        )
+        last_order = context.state.working_memory.get("last_created_order")
+        if created_this_turn:
             message += (
-                "\n\n[Required order information missing: "
-                + ", ".join(missing_order_fields)
-                + ". Ask only for these missing fields. Do not ask again "
-                "for known product, price, quantity, address, or payment "
-                "fields, and do not claim that an order was created.]"
+                "\n\n[Closing turn: order.create succeeded above. Concisely read "
+                "back the confirmed order (products, verified prices/total, "
+                "delivery address, payment method, order ID, estimated delivery "
+                "if present) and close the call politely. Do not ask any new questions.]"
+            )
+        elif isinstance(last_order, dict) and last_order.get("order_id"):
+            message += (
+                "\n\n[Closing turn: an order was already created earlier in this "
+                "call: "
+                + json.dumps(last_order, ensure_ascii=False)
+                + ". Concisely read back the confirmed order details and close "
+                "the call politely. Do not create another order and do not ask "
+                "any new questions.]"
+            )
+        else:
+            message += (
+                "\n\n[Closing turn: the customer has finished speaking. Give a "
+                "brief, polite wrap-up summarizing only verified outcomes from "
+                "this call. Do not invent prices, stock, or order IDs, and do "
+                "not ask any new or repeated questions.]"
             )
 
-    if context.state.working_memory.get("order_update_blocker") == "order_not_found":
+    exchange_blocker = context.state.working_memory.get("order_update_blocker")
+    if exchange_blocker == "order_not_found":
         message += (
             "\n\n[Verified order lookup found no matching order. Do not "
             "claim that an exchange/update succeeded and do not call "
             "update_order. Ask for an alternative order identifier only "
             "if needed to continue.]"
         )
+    elif exchange_blocker == "variant_missing":
+        message += "\n\n[The order is verified. Ask which size the customer wants to exchange to.]"
+    elif exchange_blocker in {"variant_unverified", "update_failed"}:
+        message += "\n\n[The exchange was not completed. Report the verified result and avoid a confirmation.]"
 
     exchange_target = _requested_exchange_sku(context)
     exchange_executed = any(
@@ -250,12 +309,12 @@ def append_orchestration_context(
             )
             + "]"
         )
-        if _callback_adjustment_note(orchestrated_calls):
-            message += (
-                "\n\n[The callback tool moved the requested time. Tell the "
-                "customer the final callback_at from the verified result and "
-                "why it changed. Never confirm moved_from as the final schedule.]"
-            )
+    if context.state.working_memory.get("callback_reply"):
+        message += (
+            "\n\n[The application will supply the callback confirmation or "
+            "the question for missing scheduling fields. Answer any other "
+            "customer requests without repeating or changing the callback details.]"
+        )
 
     allowed_tool_text = ", ".join(sorted(allowed_tools)) or "none"
     message += (
@@ -271,7 +330,9 @@ def append_orchestration_context(
         f"turn is: {allowed_tool_text}. Never call a tool outside this "
         "allowlist even if general instructions mention it. Do not claim "
         "price, stock, order, or address facts without corresponding verified "
-        "context/tool results. If the customer did not ask about price, do "
+        "context/tool results. Do not claim a callback was booked unless the verified "
+        "schedule.callback result has a callback ID and an effective time. "
+        "If the customer did not ask about price, do "
         "not call pricing and do not state a price. Do not repeat a tool call. "
         "After the necessary allowed tools succeed, answer immediately. Keep "
         "the final answer concise and always finish the last sentence.]"

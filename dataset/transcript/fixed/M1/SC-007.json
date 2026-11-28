@@ -1,0 +1,106 @@
+{
+  "scenario_id": "SC-007",
+  "level": "M1",
+  "persona": "khach_do_du_hoi_nguoi_nha",
+  "hard_case": null,
+  "customer_phone": "0992298369",
+  "customer_name": "Ngọc",
+  "honorific": "chị",
+  "notes": "consider_and_decide",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0992298369",
+      "call_date": "2026-10-21",
+      "customer_turns": [
+        "Chị muốn xem giày chạy bộ RunLite size 40, màu trắng. Giá bao nhiêu vậy?",
+        "Giá một triệu một trăm sáu mươi mốt nghìn, đúng không? Chị chưa mua, để hỏi người nhà.",
+        "Chị không biết có phù hợp không, để hỏi người nhà đã.",
+        "Chị sẽ gọi lại sau, khoảng mười giờ ngày 24 tháng 10."
+      ],
+      "customer_goal": "Xem sản phẩm trong ngân sách và hỏi ý kiến người nhà",
+      "facts_established": {
+        "product_advised": "SKU-SN-RUN1-40-TRANG",
+        "price_quoted_vnd": 1161000,
+        "budget_vnd": 2500000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN1-40-TRANG",
+        "price_vnd": 1161000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0",
+          "RUN-10"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "RUN-10": "2026-10-25",
+          "COD-0": "2026-12-14"
+        }
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": null,
+        "args_match": {},
+        "must_not_call_tools": [
+          "schedule.callback"
+        ]
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0992298369",
+      "call_date": "2026-10-24",
+      "customer_turns": [
+        "Chị đã hỏi người nhà rồi, họ đồng ý mua.",
+        "Chị sẽ đặt mua giày RunLite size 40, màu trắng, giá một triệu một trăm sáu mốt nghìn.",
+        "Giao hàng đến số 503 đường Trần Cao Vân, Đà Nẵng. Thanh toán khi nhận hàng.",
+        "Chị cảm ơn, đặt hàng rồi."
+      ],
+      "days_later": 3,
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-SN-RUN1-40-TRANG",
+        "price_quoted_vnd": 1161000,
+        "payment": "COD",
+        "delivery_address": "Số 503 đường Trần Cao Vân, phường Thanh Khê, Đà Nẵng",
+        "order_status": "created",
+        "family_approved_purchase": true
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "budget_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN1-40-TRANG",
+        "price_vnd": 1161000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0",
+          "RUN-10"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "RUN-10": "2026-10-25",
+          "COD-0": "2026-12-14"
+        },
+        "estimated_delivery": "2026-10-28"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-SN-RUN1-40-TRANG",
+          "price_vnd": 1161000
+        }
+      }
+    }
+  }
+}

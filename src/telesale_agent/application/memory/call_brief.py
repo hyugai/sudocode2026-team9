@@ -227,16 +227,25 @@ class FreshCallBrief:
         brief = await self.builder.build_call_brief(context)
         if context.state.turn_number == 0:
             facts = (context.state.customer_memory or {}).get("facts",{})
-            sku = facts.get("product_advised") or facts.get("variant_sku")
+            remembered_skus = dict.fromkeys(
+                sku for sku in [facts.get("variant_sku") or facts.get("product_advised"),
+                                *(item.get("sku") for item in brief.products_advised)]
+                if sku
+            )
             on = business_date(context.input.metadata.get("call_date"))
+            profile = context.state.customer_profile or {}
+            crm_sessions = profile.get("sessions", [])
             current = {"checked_on":on.isoformat(),
                        "crm_profile_and_order_history":"reloaded by customer_context.hydrate",
-                       "cross_channel_interactions":"not available in current CRM adapter"}
-            if sku:
-                current["inventory"] = self.db.check_stock(sku,on)
-                profile = context.state.customer_profile or {}
-                products = self.db.search_products(sku=sku).get("items",[])
-                cart_skus = [sku] + [product["sku"] for product in products if product.get("sku")]
+                       "crm_sessions_checked":len(crm_sessions),
+                       "latest_crm_session_date":max((str(session.get("date", "")) for session in crm_sessions), default=None)}
+            if remembered_skus:
+                stock = {sku: self.db.check_stock(sku, on) for sku in remembered_skus}
+                current["inventory"] = next(iter(stock.values()))
+                current["inventory_by_sku"] = stock
+                products = [product for sku in remembered_skus
+                            for product in self.db.search_products(sku=sku).get("items", [])]
+                cart_skus = [*remembered_skus, *(p["sku"] for p in products if p.get("sku"))]
                 current["active_promotions"] = self.db.get_active_promotions(
                     cart_skus, [p.get("category","") for p in products], profile.get("region"), on)
                 brief.active_promotions = current["active_promotions"]
@@ -250,7 +259,8 @@ class FreshCallBrief:
                             brief.stale_warnings.append(
                                 f"Ưu đãi {code} đã báo trước đây không còn được xác nhận hiệu lực."
                             )
-                if not current["inventory"].get("in_stock"):
-                    brief.stale_warnings.append(f"Sản phẩm {sku} hiện không còn hàng để bán.")
+                for sku, item in stock.items():
+                    if not item.get("in_stock"):
+                        brief.stale_warnings.append(f"Sản phẩm {sku} hiện không còn hàng để bán.")
             brief.verified_customer_data = {**brief.verified_customer_data,"freshness_check":current}
         return brief

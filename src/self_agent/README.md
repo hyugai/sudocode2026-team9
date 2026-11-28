@@ -106,7 +106,7 @@ Từ repository root:
 .\scripts\run_self_learning_focus.ps1 -Workers 2 -Judge
 ```
 
-Chọn các `scenario_id` SC-004, SC-007, SC-012, SC-014 và SC-015 từ `dataset/pipeline/stage-3/output`.
+Chọn các `scenario_id` SC-004, SC-007, SC-012, SC-014 và SC-015 từ `dataset/transcript/M1`.
 Vòng 0 mới → học → freeze → vòng 1. Hai SC chạy song song, các call trong SC vẫn
 tuần tự và giữ user RAM; SC độc lập không chia sẻ user memory. Cùng khách không
 chạy đồng thời. Chờ worker vòng 0 kết thúc rồi freeze lesson từ job hợp lệ.

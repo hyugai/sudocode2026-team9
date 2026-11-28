@@ -145,6 +145,11 @@ def _should_adopt_product(context: TurnContext, sku: Any) -> bool:
         return True
     if str(current).upper() == sku.upper():
         return True
+    pending = context.state.working_memory.get("pending_order") or {}
+    if pending.get("sku") == sku and not pending.get("needs_variant"):
+        return True
+    if context.state.working_memory.get("verified_checkout_sku") == sku:
+        return True
 
     text = (context.input.text or "").casefold()
     if sku.casefold() in text:
@@ -173,6 +178,13 @@ def _tool_memory_candidates(context: TurnContext) -> dict[str, Any]:
             or "update_order" in (context.perception.intents or [])
         )
     )
+    checked_skus = {
+        step.plan.arguments.get("sku")
+        for step in context.steps
+        if step.plan.tool_name == "inventory.check"
+        and step.action_result.output.get("found") is not False
+        and not step.action_result.output.get("error")
+    }
     for step in context.steps:
         name = step.plan.tool_name
         args = step.plan.arguments or {}
@@ -209,6 +221,18 @@ def _tool_memory_candidates(context: TurnContext) -> dict[str, Any]:
                 item for item in output.get("items", []) if isinstance(item, dict)
             ]
             candidates.update(_basket_memory_candidates(context, items))
+            # Persist a small set of catalog-grounded alternatives so a later
+            # call can resolve an exact price without repeating the product.
+            from telesale_agent.application.deepagent.context.order import catalog_variant_options
+            options = catalog_variant_options(items)
+            variant_products = sum(bool(item.get("variants")) for item in items)
+            if options:
+                candidates["checkout_product_options"] = (
+                    options if 2 <= len(options) <= 4 and len(options) == variant_products
+                    and not candidates.get("basket_skus") else {}
+                )
+                if facts.get("checkout_variant_sku") not in options:
+                    candidates["checkout_variant_sku"] = None
             variant_skus = [
                 variant.get("variant_sku")
                 for item in items
@@ -226,7 +250,7 @@ def _tool_memory_candidates(context: TurnContext) -> dict[str, Any]:
                     if pending.get("variant_sku"):
                         candidates["pending_variant_sku"] = pending["variant_sku"]
                         candidates["pending_size"] = pending.get("size")
-                elif _should_adopt_product(context, args["sku"]):
+                elif len(checked_skus) == 1 and _should_adopt_product(context, args["sku"]):
                     candidates.update(_variant_facts(args["sku"]))
         elif name == "pricing.get_quote":
             sku = args.get("sku")
@@ -235,6 +259,8 @@ def _tool_memory_candidates(context: TurnContext) -> dict[str, Any]:
                 if output.get("final_price_vnd") is not None:
                     candidates["price_vnd"] = output["final_price_vnd"]
                     candidates["price_quoted_vnd"] = output["final_price_vnd"]
+                    if context.state.working_memory.get("verified_checkout_sku") == sku:
+                        candidates["checkout_variant_sku"] = sku
                 promos = output.get("applied_promos") or []
                 if promos:
                     promo_codes = [
@@ -277,6 +303,8 @@ def _tool_memory_candidates(context: TurnContext) -> dict[str, Any]:
                 candidates["payment"] = args["payment"]
             order_id = output.get("order_id")
             if isinstance(order_id, str) and order_id:
+                candidates["checkout_product_options"] = {}
+                candidates["checkout_variant_sku"] = None
                 candidates["order_id"] = order_id
                 sku = args.get("sku")
                 if isinstance(sku, str) and sku:

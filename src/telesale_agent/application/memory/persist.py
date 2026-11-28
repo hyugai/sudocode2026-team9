@@ -38,6 +38,9 @@ def persist_turn_memory(
         # Order IDs must come from successful tool results, never a model or
         # customer-provided mapping that could overwrite verified orders.
         "order_ids_by_sku",
+        "order_id",
+        "checkout_product_options",
+        "checkout_variant_sku",
     }
     customer_candidates = {
         key: value

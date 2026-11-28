@@ -19,7 +19,10 @@ def _normalize(value: str) -> str:
 
 def _product_names(name: str) -> list[str]:
     full = _normalize(name)
-    short = re.sub(r"^may loc khong khi\s+", "", full)
+    short = re.sub(
+        r"^(?:may loc khong khi|giay (?:chay bo|sneaker|trekking)|ao (?:khoac gio|phao long vu))\s+",
+        "", full,
+    )
     return list(dict.fromkeys([full, short]))
 
 
@@ -133,11 +136,65 @@ def declines_order_creation(customer_text: str) -> bool:
     text = _normalize(customer_text)
     return bool(
         re.search(
-            r"\b(?:chua|khong|dung)\b[^.!?]{0,30}"
+            r"\b(?:chua|khong|dung|khoan|tam dung)\b[^.!?]{0,30}"
             r"\b(?:len don|chot(?: don)?|dat(?: mua| hang| don)?|tao don|mua(?: ngay)?)\b",
             text,
         )
     )
+
+
+def confirms_order_creation(
+    customer_text: str, *, has_address: bool = False, has_payment: bool = False
+) -> bool:
+    """Require present-tense purchase consent before collecting checkout details."""
+    if declines_order_creation(customer_text) or re.search(
+        r"\b(?:cach|lam sao|huong dan)\s+(?:de\s+)?(?:dat hang|dat don|mua hang)\b", _normalize(customer_text)
+    ):
+        return False
+    clauses = map(_normalize, re.split(r"[.!?;]", customer_text))
+    text = " ".join(s for s in clauses if s and not re.search(r"\b(?:neu|mien la|voi dieu kien)\b", s))
+    if re.search(r"\b(?:da (?:dat (?:don|hang)|chot don)|dat (?:don|hang) roi)\b", text) and not re.search(
+        r"\b(?:muon (?:dat|chot|mua)|(?:giup|nho).{0,35}(?:dat don|chot don)|dat lai|chot don luon)\b",
+        text,
+    ):
+        return False
+    quantity = (
+        r"(?:\d+|mot|hai|ba|bon|nam)\s*"
+        r"(?:chiec|cai|bo|san pham|may|doi|hop|binh|goi|cuon|cay|ao|quan)\b"
+    )
+    details = has_address or has_payment
+    return bool(
+        re.search(r"\b(?:len don|chot don|dat mua|dat hang|dat don|tao don)\b", text)
+        or (re.search(r"\b(?:muon mua|quyet dinh mua|dong y mua|xac nhan mua)\b", text) and not re.search(
+            r"\b(?:chua chac|chi tham khao|dang can nhac)\b", text
+        ) and (has_address or not re.search(r"\b(?:nguoi nha|minh hoi y kien|gia dinh) dong y mua\b", text)))
+        or re.search(r"\bmuon dat(?: nhe| nha| a)?$", text)
+        or re.search(rf"\b(?:mua|lay|chot|dat)\s+(?:cho\s+(?:anh|chi|em|toi)\s+)?{quantity}", text)
+        or (re.search(rf"\b{quantity}", text)
+            and (details or re.search(r"\b(?:chap nhan|dong y|lay luon|mua luon|chot)\b", text)))
+        or (details and re.search(r"\b(?:chap nhan|dong y)\b", text))
+    )
+
+
+def stated_payment_method(customer_text: str) -> str | None:
+    text = _normalize(customer_text)
+    bank = bool(
+        re.search(r"\b(?:chuyen khoan|bank|transfer)\b", text)
+        and not re.search(r"\b(?:khong|chua)\s+(?:muon\s+)?(?:chuyen khoan|bank|transfer)\b", text)
+    )
+    cod = bool(
+        re.search(r"\b(?:cod|(?:thanh toan|tra tien) khi nhan(?: hang)?)\b", text)
+        and not re.search(
+            r"\b(?:khong|chua)\s+(?:muon\s+)?(?:cod|(?:thanh toan|tra tien) khi nhan)\b", text
+        )
+    )
+    if bank and cod:
+        return None
+    if bank:
+        return "bank"
+    if cod:
+        return "COD"
+    return None
 
 
 def starts_basket_checkout(customer_text: str) -> bool:

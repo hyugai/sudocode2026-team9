@@ -9,8 +9,9 @@ from collections import Counter
 from datetime import datetime
 from typing import Any
 
-from telesale_agent.core.basket import declines_order_creation, starts_basket_checkout
+from telesale_agent.core.basket import declines_order_creation
 from telesale_agent.core.models import TurnContext
+from telesale_agent.application.customer_text import is_closing_turn
 from telesale_agent.application.tools.protocol import (
     canonical_tool_args as _canonical_tool_args,
     canonical_tool_name as _canonical_tool_name,
@@ -19,8 +20,6 @@ from telesale_agent.application.tools.protocol import (
 from telesale_agent.application.deepagent.context.order import (
     _basket_skus,
     _basket_lines,
-    _current_turn_has_delivery_address,
-    _current_turn_payment_method,
     _customer_phone,
     _delivery_address,
     _known_variant_sku,
@@ -30,12 +29,23 @@ from telesale_agent.application.deepagent.context.order import (
     _quantity,
     _requested_exchange_sku,
     _single_order,
+    accepted_checkout_price,
+    checkout_progress,
+    checkout_requested,
+    declines_exchange,
+    exchange_continues,
+    requests_exchange,
 )
-from telesale_agent.application.deepagent.context.callback import _requested_callback_at
-from telesale_agent.application.conversation.tool_policy import (
-    is_explicit_callback_request,
-    is_medical_handoff_request,
+from telesale_agent.application.deepagent.context.callback import (
+    callback_confirmation,
+    declines_callback,
+    pending_callback_slots,
+    propose_callback_for_message_request,
+    requested_callback_at,
+    verified_callback_at,
 )
+from telesale_agent.application.conversation.tool_policy import is_medical_handoff_request
+from telesale_agent.core.business_time import business_date
 
 
 def _clip_text(value: Any, limit: int) -> str:
@@ -95,112 +105,79 @@ class MutationToolExecutor:
                 # prices, promotion eligibility and order lookups stale.
                 context.state.working_memory.pop("read_tool_cache", None)
 
-        callback_requested = is_explicit_callback_request(context.input.text)
-        if "mcp_schedule_callback" in remaining and callback_requested:
-            callback_at = _requested_callback_at(context)
-            phone = _customer_phone(context)
-            if callback_at and phone:
-                args: dict[str, Any] = {
-                    "customer_phone": phone,
-                    "callback_at": callback_at,
-                    "note": _clip_text(context.input.text, 240),
-                }
-                if call_date:
-                    args["on"] = call_date
-                await invoke("mcp_schedule_callback", args)
+        memory = context.state.working_memory
+        memory.pop("callback_reply", None)
+        slots = pending_callback_slots(context)
+        if declines_callback(context.input.text):
+            memory.pop("pending_callback", None)
+        elif slots is not None:
+            if slots.get("date") and slots["date"] < business_date(call_date).isoformat():
+                slots["date"] = None
+            callback_at = requested_callback_at(slots)
+            known_phone = _customer_phone(context)
+            phone = (
+                known_phone if re.fullmatch(r"\+?\d{8,15}", known_phone or "")
+                else slots.get("phone") or memory.get("callback_phone")
+            )
+            missing = [
+                label for value, label in (
+                    (slots.get("date"), "ngày"),
+                    (slots.get("time"), "giờ"),
+                    (phone, "số điện thoại"),
+                ) if not value
+            ]
+            if missing:
+                memory["pending_callback"] = slots
+                memory["callback_reply"] = (
+                    f"Dạ, anh/chị cho bên em xin {' và '.join(missing)} để hẹn gọi lại được không ạ?"
+                )
+            elif callback_at and phone:
+                memory.pop("pending_callback", None)
+                completed = memory.setdefault("completed_callbacks", {}).setdefault(phone, {})
+                result = completed.get(callback_at)
+                if not verified_callback_at(result) and "mcp_schedule_callback" in self.mcp_tools:
+                    args: dict[str, Any] = {
+                        "customer_phone": phone,
+                        "callback_at": callback_at,
+                        "note": _clip_text(context.input.text, 240),
+                    }
+                    if call_date:
+                        args["on"] = call_date
+                    await invoke("mcp_schedule_callback", args)
+                    result = calls[-1]["result"]
+                if actual := verified_callback_at(result):
+                    completed[callback_at] = result
+                    if slots.get("phone"):
+                        memory["callback_phone"] = phone
+                    memory["callback_reply"] = callback_confirmation(result, actual)
+                else:
+                    memory["callback_reply"] = (
+                        "Dạ, bên em chưa xác nhận được lịch gọi lại. Anh/chị có thể yêu cầu đặt lại lịch ạ."
+                    )
+        elif proposal := propose_callback_for_message_request(context):
+            memory["callback_reply"] = proposal
         # Scheduling is identity/time bound and must never fall back to model-
         # invented arguments or retry after a deterministic attempt.
         remaining.discard("mcp_schedule_callback")
 
-        remembered_basket = _basket_skus(context)
         if declines_order_creation(context.input.text or ""):
-            context.state.working_memory.pop("pending_order", None)
-        elif remembered_basket and starts_basket_checkout(context.input.text or ""):
-            # This is checkout consent, not merely a remembered address. Keep
-            # it only within the live conversation until payment completes.
-            pending = context.state.working_memory.get("pending_order")
-            pending = dict(pending) if isinstance(pending, dict) else {}
-            pending.update(
-                basket_skus=remembered_basket,
-                address=_delivery_address(context),
-                checkout_confirmed=True,
-            )
-            context.state.working_memory["pending_order"] = pending
-        pending_order = context.state.working_memory.get("pending_order")
-        address = _delivery_address(context)
-        create_negated = declines_order_creation(context.input.text or "")
-        qty_unit_pattern = (
-            r"(?:\d+|một|hai|ba|bốn|năm)\s*"
-            r"(?:chiếc|cái|bộ|sản\s*phẩm|máy|đôi|hộp|bình|gói|cuộn|cây|áo|quần)"
+            memory.pop("pending_order", None)
+            memory.pop("checkout_price_reference_vnd", None)
+        pending_order_state = memory.get("pending_order")
+        closing_checkout = bool(
+            is_closing_turn(context)
+            and isinstance(pending_order_state, dict)
+            and pending_order_state.get("checkout_confirmed")
         )
-        explicit_address = _current_turn_has_delivery_address(
-            context,
-            allow_bare_reply=bool(
-                isinstance(pending_order, dict)
-                and pending_order
-                and not pending_order.get("address")
-            ),
-        )
-        explicit_payment = _current_turn_payment_method(context)
-        explicit_purchase = (
-            any(
-                signal in text
-                for signal in (
-                    "lên đơn",
-                    "chốt đơn",
-                    "đặt mua",
-                    "đặt hàng",
-                    "tạo đơn",
-                )
-            )
-            or bool(
-                re.search(
-                    rf"\b(?:mua|lấy|chốt|đặt)\s+(?:cho\s+(?:anh|chị|em|tôi)\s+)?"
-                    rf"{qty_unit_pattern}\b",
-                    text,
-                    flags=re.IGNORECASE,
-                )
-            )
-            or bool(
-                re.search(rf"\b{qty_unit_pattern}\b", text, flags=re.IGNORECASE)
-                and (
-                    any(
-                        p in text
-                        for p in (
-                            "chấp nhận",
-                            "đồng ý",
-                            "lấy luôn",
-                            "mua luôn",
-                            "chốt",
-                        )
-                    )
-                    or explicit_address
-                    or explicit_payment
-                )
-            )
-            or (
-                any(p in text for p in ("chấp nhận", "đồng ý"))
-                and bool(explicit_address or explicit_payment)
-            )
-        )
-        pending_progress = bool(
-            isinstance(pending_order, dict)
-            and pending_order
-            and (
-                (not pending_order.get("address") and explicit_address)
-                or (not pending_order.get("payment") and explicit_payment)
-                or (pending_order.get("checkout_confirmed") and explicit_payment)
-            )
-        )
-        create_confirmed = not create_negated and (
-            explicit_purchase or pending_progress
-        )
-        if "create_new_order" in remaining and create_confirmed:
-            pending_order = (
-                pending_order if isinstance(pending_order, dict) else {}
-            )
+        if "create_new_order" in remaining and (
+            checkout_requested(context) or checkout_progress(context) or closing_checkout
+        ):
+            pending_order = memory.get("pending_order") or {}
+            accepted_price = accepted_checkout_price(context) or pending_order.get("accepted_price_vnd")
+            address = _delivery_address(context)
+            payment = _payment_method(context)
             remembered_basket = _basket_skus(context)
-            single_sku = (
+            single_sku = None if pending_order.get("needs_variant") else (
                 pending_order.get("sku")
                 or _latest_verified_sku(verified_calls)
                 or _known_variant_sku(context)
@@ -213,7 +190,6 @@ class MutationToolExecutor:
                                   if isinstance(item, dict) and item.get("sku") and item.get("name")})
             requested = _basket_lines(context, target_skus, names)
             quantity = _quantity(context)
-            payment = _payment_method(context) or pending_order.get("payment")
             phone = _customer_phone(context)
             customer_id = context.identity.customer_id if context.identity else None
             memory = context.state.working_memory
@@ -251,7 +227,13 @@ class MutationToolExecutor:
                     isinstance(stock, dict) and stock.get("in_stock") is True
                     and int(stock.get("qty") or 0) >= needed
                 )
-            if all_items_verified and phone and customer_id and payment and address:
+            price_changed = bool(
+                accepted_price is not None
+                and len(units) == 1
+                and units[0]["final_price_vnd"] != accepted_price
+            )
+            created = False
+            if all_items_verified and not price_changed and phone and customer_id and payment and address:
                 args: dict[str, Any] = {
                     "customer_phone": phone, "customer_id": customer_id,
                     "payment_method": payment, "address": address,
@@ -275,19 +257,27 @@ class MutationToolExecutor:
                         args["promo_code"] = promo["promo_code"]
                 if call_date:
                     args["on"] = call_date
+                call_count = len(calls)
                 await invoke("create_new_order", args)
-                result = calls[-1].get("result")
-                if isinstance(result, dict) and not result.get("error") and result.get("order_id"):
+                result = calls[-1].get("result") if len(calls) > call_count else None
+                created = bool(isinstance(result, dict) and not result.get("error") and result.get("order_id"))
+                if created:
                     for sku in counts:
                         created_orders[sku] = result["order_id"]
                     completed[signature] = {sku: result["order_id"] for sku in counts}
-                    context.state.working_memory.pop("pending_order", None)
-                else:
-                    context.state.working_memory["pending_order"] = {
-                        "lines": requested, "sku": target_skus[0] if len(target_skus) == 1 else None,
-                        "payment": payment, "address": address, "checkout_confirmed": True,
+                    context.state.working_memory["last_created_order"] = {
+                        "order_id": result["order_id"],
+                        "lines": args.get("lines") or [
+                            {"sku": args["sku"], "qty": args.get("qty", 1), "price_vnd": args.get("price_vnd")}
+                        ],
+                        "total_vnd": result.get("total_vnd"),
+                        "address": args.get("address"),
+                        "payment": args.get("payment_method"),
+                        "estimated_delivery": result.get("estimated_delivery"),
                     }
-            elif target_skus:
+                    context.state.working_memory.pop("pending_order", None)
+                    memory.pop("checkout_price_reference_vnd", None)
+            if not previous and not created:
                 pending_payload: dict[str, Any] = {
                     "sku": target_skus[0] if len(target_skus) == 1 else None,
                     "payment": payment,
@@ -300,10 +290,15 @@ class MutationToolExecutor:
                     pending_payload["quantity"] = quantity
                 if len(units) == 1:
                     pending_payload["price_vnd"] = units[0]["final_price_vnd"]
+                if accepted_price is not None:
+                    pending_payload["accepted_price_vnd"] = accepted_price
+                if pending_order.get("needs_variant"):
+                    pending_payload["needs_variant"] = True
+                if price_changed:
+                    pending_payload["price_changed"] = True
                 if address:
                     pending_payload["address"] = address
-                if pending_order.get("checkout_confirmed"):
-                    pending_payload["checkout_confirmed"] = True
+                pending_payload["checkout_confirmed"] = True
                 context.state.working_memory["pending_order"] = pending_payload
 
         # order.create is a deterministic, identity-bound mutation. Never
@@ -312,16 +307,11 @@ class MutationToolExecutor:
         # accepted as a fallback.
         remaining.discard("create_new_order")
 
-        update_confirmed = any(
-            signal in text
-            for signal in (
-                "làm thủ tục đổi",
-                "làm thủ tục",
-                "thực hiện đổi",
-                "đổi cho anh",
-                "đổi cho chị",
-                "tiến hành đổi",
-            )
+        if declines_exchange(context.input.text):
+            memory.pop("pending_exchange", None)
+            memory.pop("order_update_blocker", None)
+        update_confirmed = not declines_exchange(context.input.text) and (
+            requests_exchange(context.input.text) or exchange_continues(context) or "làm thủ tục" in text
         )
         if "update_order" in remaining and update_confirmed:
             status_result = _orchestrated_result(
@@ -330,12 +320,20 @@ class MutationToolExecutor:
             order = _single_order(status_result)
             # Never fall back to a remembered ID after the current verified
             # lookup returned no unique order; that memory is stale/ambiguous.
+            if order and context.identity and (
+                not context.identity.customer_id
+                or order.get("customer_id") not in {None, context.identity.customer_id}
+            ):
+                order = None
             order_id = order.get("order_id") if order else None
-            new_sku = _requested_exchange_sku(context)
+            new_sku = _requested_exchange_sku(context, owned_sku=order.get("sku")) if order else None
             stock = _orchestrated_result(
                 verified_calls, "inventory.check", sku=new_sku
             )
-            if (
+            if new_sku and order and new_sku == order.get("sku"):
+                memory.pop("pending_exchange", None)
+                memory.pop("order_update_blocker", None)
+            elif (
                 isinstance(order_id, str)
                 and order_id
                 and new_sku
@@ -350,12 +348,21 @@ class MutationToolExecutor:
                 }
                 if call_date:
                     args["on"] = call_date
+                previous_call_count = len(calls)
                 await invoke("update_order", args)
-                context.state.working_memory.pop("order_update_blocker", None)
+                result = calls[-1]["result"] if len(calls) > previous_call_count else None
+                if isinstance(result, dict) and not result.get("error") and result.get("order_id"):
+                    memory.pop("pending_exchange", None)
+                    memory.pop("order_update_blocker", None)
+                    memory.pop("read_tool_cache", None)
+                else:
+                    memory["order_update_blocker"] = "update_failed"
             elif not isinstance(order_id, str) or not order_id:
-                context.state.working_memory["order_update_blocker"] = (
-                    "order_not_found"
-                )
+                memory["order_update_blocker"] = "order_not_found"
+            elif not new_sku:
+                memory["order_update_blocker"] = "variant_missing"
+            else:
+                memory["order_update_blocker"] = "variant_unverified"
         # Like create, updates are accepted only through the verified gate.
         remaining.discard("update_order")
 

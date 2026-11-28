@@ -498,6 +498,8 @@ def write_allocation(directory: Path, plan: dict, rows: list[dict]) -> None:
                "replaces_scenario_id",
                "noise", "noise_code", "noise_start_seconds", "noise_end_seconds", "snr_target_db", "snr_actual_db",
                "duration_seconds", "sampling_steps", "render_gain_db", "sha256"]
+    if plan.get("source_dataset"):
+        columns[1:1] = ["source_scenario_id", "source_honorific", "voice_honorific_mismatch"]
     with (directory / "audio_allocation.csv").open("w", encoding="utf-8-sig", newline="") as stream:
         writer = csv.DictWriter(stream, fieldnames=columns, extrasaction="ignore")
         writer.writeheader()
@@ -506,6 +508,8 @@ def write_allocation(directory: Path, plan: dict, rows: list[dict]) -> None:
         "created_at_utc": datetime.now(timezone.utc).isoformat(), "reference_license": REFERENCE_LICENSE,
         "transcript_sha256": plan["transcript_sha256"], "legacy_transcript_scenarios": plan["legacy_transcript_scenarios"],
         "scenario_replacements": plan.get("scenario_replacements", {}),
+        "source_dataset": plan.get("source_dataset"),
+        "source_file_sha256": plan.get("source_file_sha256", {}),
         "expected_wavs": len(plan["tasks"]), "actual_wavs": sum(bool(row.get("sha256")) for row in rows),
         "results": rows,
     })
@@ -521,20 +525,32 @@ def write_allocation(directory: Path, plan: dict, rows: list[dict]) -> None:
              "| Nhóm | Kịch bản | WAV |", "| --- | ---: | ---: |"]
     if not planned:
         lines.insert(3, f"OmniVoice Vietnamese dùng {rows[0]['sampling_steps']} bước lấy mẫu cho toàn bộ WAV.")
+    if plan.get("source_dataset"):
+        source_ids = {row["scenario_id"] for row in rows if row["source_scenario_id"] != row["scenario_id"]}
+        mismatches = {row["scenario_id"] for row in rows if row["voice_honorific_mismatch"]}
+        lines[3:3] = [f"Nguồn lời là `{plan['source_dataset']}`. Mã audio lấy từ tên tệp xuất bản.",
+                      f"{len(source_ids)} kịch bản có mã gốc khác tên tệp. "
+                      f"{len(mismatches)} kịch bản có xưng hô khác giới tính giọng theo bảng cũ."]
     labels = {"new_transcript": "Transcript mới", "legacy_scenario": "JSON kịch bản cũ"}
     for field in ["gender", "region", "province", "transcript_source"]:
         for value, count in sorted(Counter(row[field] for row in rows).items()):
             scenarios = {row["scenario_id"] for row in rows if row[field] == value}
             lines.append(f"| {labels.get(value, value)} | {len(scenarios)} | {count} |")
-    lines += ["", "| Scenario | Giới tính | Tỉnh | Vùng | Nguồn lời | Số WAV | Speaker | Reference |",
-              "| --- | --- | --- | --- | --- | ---: | --- | --- |"]
+    headers = ["Scenario", "Giới tính", "Tỉnh", "Vùng", "Nguồn lời", "Số WAV", "Speaker", "Reference"]
+    if plan.get("source_dataset"):
+        headers[1:1] = ["Mã gốc", "Xưng hô nguồn", "Khác giới tính giọng"]
+    lines += ["", "| " + " | ".join(headers) + " |", "| " + " | ".join(["---"] * len(headers)) + " |"]
     for sid in plan["scenario_ids"]:
         group = [row for row in rows if row["scenario_id"] == sid]
         first = group[0]
-        lines.append("| " + " | ".join(str(value) for value in [
+        values = [
             sid, first["gender"], first["province"], first["region"], labels[first["transcript_source"]],
             len(group), first.get("speaker_id") or "—", first.get("reference_filename") or "—",
-        ]) + " |")
+        ]
+        if plan.get("source_dataset"):
+            values[1:1] = [first["source_scenario_id"], first["source_honorific"],
+                           "Có" if first["voice_honorific_mismatch"] else "Không"]
+        lines.append("| " + " | ".join(map(str, values)) + " |")
     if any(row.get("noise") for row in rows):
         lines += ["", ("| Nền dự kiến | WAV |" if planned else "| Nền đã thêm | WAV |"), "| --- | ---: |"]
         for value, count in sorted(Counter(row.get("noise") or "Audio sạch" for row in rows).items()):

@@ -1,0 +1,97 @@
+{
+  "scenario_id": "SC-278",
+  "level": "M2",
+  "persona": "khach_do_du_hoi_nguoi_nha",
+  "hard_case": "out_of_stock",
+  "customer_phone": "0956517883",
+  "customer_name": "Thủy",
+  "honorific": "chị",
+  "notes": "return_after_price_or_stock_change",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0956517883",
+      "call_date": "2026-10-17",
+      "customer_turns": [
+        "Chị ơi, em đang xem máy lọc không khí AirPure Pro, giá bảy triệu sáu trăm chín mươi nghìn, em vừa đủ ngân sách tám triệu năm trăm nghìn.",
+        "Chị tư vấn thêm cho em xem người nhà có đồng ý không nhé.",
+        "Em hỏi lại sau, nếu được thì em gọi lại."
+      ],
+      "customer_goal": "Xem sản phẩm trong ngân sách và hỏi ý kiến người nhà",
+      "facts_established": {
+        "product_advised": "SKU-AP-PRO",
+        "price_quoted_vnd": 7690000,
+        "budget_vnd": 8500000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-AP-PRO",
+        "price_vnd": 7690000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0",
+          "AIR-OCT"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "AIR-OCT": "2026-10-30",
+          "COD-0": "2026-12-14"
+        }
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": null,
+        "args_match": {},
+        "must_not_call_tools": [
+          "schedule.callback"
+        ]
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0956517883",
+      "call_date": "2026-10-18",
+      "customer_turns": [
+        "Chị ơi, hôm trước chị nói rồi mà, máy AirPure Pro hết hàng rồi.",
+        "Em muốn hỏi là khi nào có hàng lại, có thể gọi lại cho em lúc mười giờ ngày hai mươi mốt tháng mười không?",
+        "Em để hỏi người nhà thêm, nếu được thì em mua."
+      ],
+      "days_later": 1,
+      "customer_goal": "Hẹn trao đổi lại sau khi sản phẩm hết hàng",
+      "facts_established": {
+        "product_advised": "SKU-AP-PRO"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "budget_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-AP-PRO",
+        "price_vnd": 7690000,
+        "in_stock": false,
+        "active_promos": [
+          "COD-0",
+          "AIR-OCT"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "AIR-OCT": "2026-10-30",
+          "COD-0": "2026-12-14"
+        },
+        "restock_expected": "2026-10-21",
+        "scheduled_callback_at": "2026-10-21T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0956517883",
+          "callback_at": "2026-10-21T10:00"
+        }
+      }
+    }
+  }
+}

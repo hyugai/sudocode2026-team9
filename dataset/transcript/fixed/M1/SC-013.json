@@ -1,0 +1,110 @@
+{
+  "scenario_id": "SC-014",
+  "level": "M1",
+  "persona": "khach_so_gia",
+  "hard_case": null,
+  "customer_phone": "0932157116",
+  "customer_name": "Nga",
+  "honorific": "chị",
+  "notes": "consider_and_decide",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0932157116",
+      "call_date": "2026-10-28",
+      "customer_turns": [
+        "Chị ơi, em đang so sánh giá bên họ, họ chỉ một triệu sáu trăm bảy mươi nghìn, rẻ hơn hai nghìn.",
+        "Em muốn biết bên chị có thể giảm được không? Cứ thế này em chọn bên họ rồi.",
+        "Chị xem lại giá đi, em đang cân nhắc đây."
+      ],
+      "customer_goal": "So báo giá với nơi khác trước khi quyết định",
+      "facts_established": {
+        "product_advised": "SKU-SN-RUN2-39-DEN",
+        "price_quoted_vnd": 1690000,
+        "competitor_price_vnd": 1670000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN2-39-DEN",
+        "price_vnd": 1690000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [
+          "RUN-10",
+          "RUN2-SALE"
+        ],
+        "promo_expiry_dates": {
+          "RUN-10": "2026-10-25",
+          "COD-0": "2026-12-14",
+          "RUN2-SALE": "2026-10-07"
+        }
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": null,
+        "args_match": {},
+        "must_not_call_tools": [
+          "schedule.callback"
+        ]
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0932157116",
+      "call_date": "2026-10-29",
+      "customer_turns": [
+        "Chị ơi, em đã xem lại giá bên họ rồi, họ cũng không giảm. Em đồng ý mua theo giá chị.",
+        "Em muốn đặt hàng, giao hàng tận nhà đi.",
+        "Giao đến Tổ dân phố Bồ Điền, phường Phong Thái, Huế nhé."
+      ],
+      "days_later": 1,
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-SN-RUN2-39-DEN",
+        "price_quoted_vnd": 1690000,
+        "payment": "COD",
+        "delivery_address": "Tổ dân phố Bồ Điền, phường Phong Thái, Huế",
+        "order_status": "created",
+        "competitor_price_vnd": 1670000
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "competitor_price_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN2-39-DEN",
+        "price_vnd": 1690000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [
+          "RUN-10",
+          "RUN2-SALE"
+        ],
+        "promo_expiry_dates": {
+          "RUN-10": "2026-10-25",
+          "COD-0": "2026-12-14",
+          "RUN2-SALE": "2026-10-07"
+        },
+        "estimated_delivery": "2026-10-31"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-SN-RUN2-39-DEN",
+          "price_vnd": 1690000
+        }
+      }
+    }
+  }
+}

@@ -62,4 +62,8 @@ def configure_eval_model(
         "EVAL_LLM_MODEL": config.model,
         "EVAL_REQUEST_INTERVAL_SECONDS": str(interval),
     })
+    if endpoint := os.environ.get("EVAL_LLM_ENDPOINT"):
+        os.environ["LLM_API_ENDPOINT"] = endpoint
+    if database_url := os.environ.get("EVAL_DATABASE_URL"):
+        os.environ["DATABASE_URL"] = database_url
     return config

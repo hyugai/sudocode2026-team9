@@ -119,7 +119,7 @@ docker compose down
 <details>
 <summary><strong>Chi tiết về Docker Volumes, Network & Tùy chọn mở rộng</strong></summary>
 
-- **Dữ liệu & Volumes:** PostgreSQL, Chroma, bộ nhớ khách hàng và cache model nằm trong Docker volumes. Compose dùng DB và Chroma riêng trong Docker, không tự nhập dữ liệu từ `telesale_pgdata` hay `data/chroma_db/`. Memory chỉ được tạo bởi `scripts/migrate_memory.py` từ `dataset/organizer/catalog/crm_seed.json`, trong volume `customer_memory_crm`; không copy hay bind-mount `data/memory-root/users/` trên máy. Image chỉ chứa ba file hướng dẫn agent (`agent.md`, `soul.md`, `tools.md`). Chạy lại sẽ giữ nguyên memory đã có và chỉ tạo thư mục cho khách chưa được seed. Volume memory cũ của cấu hình trước không còn được dùng. Nếu phát hiện catalog/CRM bị seed dở, bước `init` sẽ dừng để kiểm tra thay vì tự xóa dữ liệu.
+- **Dữ liệu & Volumes:** PostgreSQL, Chroma, bộ nhớ khách hàng và cache model nằm trong Docker volumes. Compose dùng DB và Chroma riêng trong Docker, không tự nhập dữ liệu từ `telesale_pgdata` hay `data/chroma_db/`. Memory chỉ được tạo bởi `scripts/migrate_memory.py` từ `dataset/transcript/src/stage-1/input/catalog/crm_seed.json`, trong volume `customer_memory_crm`; không copy hay bind-mount `data/memory-root/users/` trên máy. Image chỉ chứa ba file hướng dẫn agent (`agent.md`, `soul.md`, `tools.md`). Chạy lại sẽ giữ nguyên memory đã có và chỉ tạo thư mục cho khách chưa được seed. Volume memory cũ của cấu hình trước không còn được dùng. Nếu phát hiện catalog/CRM bị seed dở, bước `init` sẽ dừng để kiểm tra thay vì tự xóa dữ liệu.
 - **Cổng & DB:** PostgreSQL mở tại `127.0.0.1:5432` trên máy; database/user `telesale`, password `telesale_dev_password`, SSL tắt. Trong mạng Docker, backend dùng `postgres:5432`. Đảm bảo các cổng `5432`, `8000`, `3000` không bị dịch vụ khác sử dụng.
 - **URL backend cho web:** Trình duyệt dùng `NEXT_PUBLIC_API_BASE_URL=http://localhost:8000`; Next.js tải catalog phía server và chuyển tiếp API qua `API_BACKEND_URL=http://backend:10000`. Image web giữ biến nội bộ này cả khi build lẫn khi chạy, vì `localhost` trong container web không trỏ đến backend.
 - **Tùy chọn tích hợp sẵn trong image Docker:**
@@ -218,11 +218,11 @@ Khi thấy thông báo `Local data ready` là hoàn tất. Script sẽ tự đ�
 
 | Script | Mục đích |
 | :--- | :--- |
-| `migrate_catalog.py` | Tạo bảng và seed catalog, tồn kho, khuyến mãi, CRM, đơn mẫu từ `dataset/organizer/catalog/`. Nếu DB đã seed, chỉ chạy `--orders-only` để bổ sung cột đơn hàng còn thiếu. |
+| `migrate_catalog.py` | Tạo bảng và seed catalog, tồn kho, khuyến mãi, CRM, đơn mẫu từ `dataset/transcript/src/stage-1/input/catalog/`. Nếu DB đã seed, chỉ chạy `--orders-only` để bổ sung cột đơn hàng còn thiếu. |
 | `migrate_app_data.py` | Tạo/cập nhật schema đăng nhập, phiên tài khoản, lịch sử Chat, feedback và vai trò Salesman. |
 | `migrate_voice.py` | Tạo journal ghi lượt hội thoại Voice. |
 | `migrate_learning.py` | Tạo bảng lưu phiên, lượt chat và hàng đợi cho Self-learning. |
-| `migrate_memory.py` | Tạo memory từ `dataset/organizer/catalog/crm_seed.json`: hồ sơ, các phiên cũ và lịch sử đơn hàng. Chỉ tạo cho khách chưa có thư mục, không ghi đè memory hiện có. Docker tự chạy ở bước `init`; chạy thủ công dùng `CUSTOMER_MEMORY_ROOT` hoặc mặc định `data/memory-root/users/`. |
+| `migrate_memory.py` | Tạo memory từ `dataset/transcript/src/stage-1/input/catalog/crm_seed.json`: hồ sơ, các phiên cũ và lịch sử đơn hàng. Chỉ tạo cho khách chưa có thư mục, không ghi đè memory hiện có. Docker tự chạy ở bước `init`; chạy thủ công dùng `CUSTOMER_MEMORY_ROOT` hoặc mặc định `data/memory-root/users/`. |
 | `ingest_policy.py --if-empty` | Nạp Markdown từ `dataset/organizer/policy/` vào `data/chroma_db/`. *(Lần đầu cần mạng để tải embedding model).* |
 
 > [!NOTE]
@@ -337,24 +337,23 @@ Các runner gọi pipeline trực tiếp nên có thể chạy khi Web và API �
 > [!WARNING]
 > Nên dùng DB riêng cho benchmark vì một số kịch bản có thể tạo đơn hàng test. Các bài test tư vấn yêu cầu DB dev đã seed và API key của model đánh giá; benchmark audio cần tải sẵn model Zipformer (mục 4.2).
 
-### Các lệnh chạy nhanh
+### Chấm chéo BTC M1
+
+Chuẩn bị hai database eval từ cùng một bản seed catalog và CRM. Trước mỗi
+lệnh sinh trace, đặt kết nối của cấu hình tương ứng trong
+`EVAL_DATABASE_URL` và dùng cùng API key, endpoint và model cho cả hai cấu hình.
+Các biến môi trường được mô tả trong `.env.example`.
 
 ```powershell
-# Chạy thử 1 kịch bản text
-.\.venv\Scripts\python.exe -X utf8 src\eval\run_suite.py --input-kinds text --limit 1
-
-# Kiểm tra kịch bản, manifest và file WAV trước khi gọi LLM
-.\.venv\Scripts\python.exe -X utf8 src\eval\run_suite.py --preflight-only
-
-# Đo riêng WER/CER của Zipformer local (không gọi LLM)
-.\.venv\Scripts\python.exe -X utf8 src\eval\run_suite.py --asr-only
-
-# Chạy 40 kịch bản text + audio, so sánh hai chế độ bộ nhớ
-.\.venv\Scripts\python.exe -X utf8 src\eval\run_suite.py --limit 40
+python run_eval.py --scenarios $datasetDir --config baseline_no_memory --out outputs/eval/baseline.jsonl
+python run_eval.py --scenarios $datasetDir --config full --out outputs/eval/full.jsonl
+python -X utf8 dataset/organizer/eval/reference_eval.py --scenarios $datasetDir --trace outputs/eval/full.jsonl --baseline outputs/eval/baseline.jsonl --out outputs/eval/btc_report.json
 ```
 
-- Dữ liệu mặc định: `dataset/main/scenarios_complete/`, `dataset/main/audio/` và `dataset/main/manifest.jsonl`.
-- Kết quả xuất ra: `outputs/benchmark/<version>/` (dùng `--llm-provider` và `--llm-model` nếu muốn đổi model).
+Đặt `$datasetDir` thành đường dẫn thư mục JSON BTC cung cấp. Runner mặc định
+chạy toàn bộ thư mục. Thêm `--preflight-only` để kiểm tra đầu vào trước.
+Hướng dẫn xuất ASR nguyên hội thoại, chạy benchmark cặp và đọc các ngưỡng
+nghiệm thu nằm trong [tài liệu eval](src/eval/README.md).
 
 ### Các script benchmark khác
 

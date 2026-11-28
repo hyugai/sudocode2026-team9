@@ -38,22 +38,31 @@ from telesale_agent.core.models import (
 _ROOT = Path(__file__).resolve().parents[1]
 
 
-@pytest.mark.parametrize("scenario_id,expected", [
-    ("SC-112", ["SKU-MB-PUMP2", "SKU-FAN-SEN"]),
-    ("SC-115", ["SKU-MB-STER", "SKU-FAN-SEN"]),
-    ("SC-116", ["SKU-AP-X", "SKU-FAN-SEN"]),
-    ("SC-118", ["SKU-MB-PUMP1", "SKU-FAN-SEN"]),
-    ("SC-120", ["SKU-SS-AX40", "SKU-FAN-SEN"]),
+@pytest.mark.parametrize("text,expected", [
+    pytest.param(
+        "Chào shop, chị mua đồ cho nhà mới, đang tính Máy hút sữa điện đôi Medela Swing Maxi với Quạt đứng Senko TS16.",
+        ["SKU-MB-PUMP2", "SKU-FAN-SEN"], id="SC-112",
+    ),
+    pytest.param(
+        "Shop tư vấn giúp nhé, chị mua đồ cho nhà mới, đang tính Máy tiệt trùng sấy khô Moaz Bebe với Quạt đứng Senko TS16.",
+        ["SKU-MB-STER", "SKU-FAN-SEN"], id="SC-115",
+    ),
+    pytest.param(
+        "Chào em, anh mua đồ cho nhà mới, đang tính Máy lọc không khí AirPure X với Quạt đứng Senko TS16.",
+        ["SKU-AP-X", "SKU-FAN-SEN"], id="SC-116",
+    ),
+    pytest.param(
+        "Shop ơi, anh mua đồ cho nhà mới, đang tính Máy hút sữa điện đôi Spectra S1 với Quạt đứng Senko TS16.",
+        ["SKU-MB-PUMP1", "SKU-FAN-SEN"], id="SC-118",
+    ),
+    pytest.param(
+        "Alo, shop nghe rõ không? anh mua đồ cho nhà mới, đang tính Máy lọc không khí Samsung AX40 với Quạt đứng Senko TS16.",
+        ["SKU-SS-AX40", "SKU-FAN-SEN"], id="SC-120",
+    ),
 ])
-def test_real_scenario_first_turn_resolves_only_named_catalog_items(scenario_id, expected):
-    scenario_path = (
-        _ROOT / "dataset" / "iterative-refinement"
-        / "scenarios_complete dataset" / f"{scenario_id}.json"
-    )
-    catalog_path = _ROOT / "dataset" / "organizer" / "catalog" / "products.json"
-    scenario = json.loads(scenario_path.read_text(encoding="utf-8"))
+def test_real_scenario_first_turn_resolves_only_named_catalog_items(text, expected):
+    catalog_path = _ROOT / "dataset" / "pipeline" / "stage-1" / "input" / "catalog" / "products.json"
     catalog = json.loads(catalog_path.read_text(encoding="utf-8"))["products"]
-    text = scenario["calls"]["call_1"]["customer_turns"][0]
 
     assert is_multi_product_request(text)
     assert [item["sku"] for item in mentioned_catalog_items(text, catalog)] == expected

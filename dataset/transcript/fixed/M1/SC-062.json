@@ -1,0 +1,143 @@
+{
+  "scenario_id": "SC-068",
+  "level": "M1",
+  "persona": "khach_da_kenh_mau_thuan",
+  "hard_case": "conflicting_quotes",
+  "customer_phone": "0905218549",
+  "customer_name": "Linh",
+  "honorific": "chị",
+  "notes": "continue_across_channels",
+  "calls": {
+    "call_1": {
+      "channel": "chat_fanpage",
+      "channel_identity": "fb.linh.398",
+      "call_date": "2026-10-19",
+      "customer_turns": [
+        "Chị hỏi về giày chạy bộ RunLite hai Pro màu trắng size bốn mươi ba được không?",
+        "Giá bao nhiêu vậy chị?",
+        "Thôi được, chị sẽ xem lại và gọi lại vào mười giờ ngày hai mươi tháng mười."
+      ],
+      "customer_goal": "Hỏi về sản phẩm và hẹn xem lại",
+      "facts_established": {
+        "product_advised": "SKU-SN-RUN2-43-TRANG",
+        "price_quoted_vnd": 1740000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN2-43-TRANG",
+        "price_vnd": 1740000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [
+          "RUN2-SALE"
+        ],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14",
+          "RUN2-SALE": "2026-10-07"
+        }
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": null,
+        "args_match": {},
+        "must_not_call_tools": [
+          "schedule.callback"
+        ]
+      }
+    },
+    "call_2": {
+      "channel": "zalo_oa",
+      "channel_identity": "zalo_linh18",
+      "call_date": "2026-10-20",
+      "customer_turns": [
+        "Chị đang gọi lại như đã hẹn. Chị hỏi lại là giá hôm qua là một triệu bảy trăm bốn mươi nghìn, nhưng hôm nay lại là một triệu tám trăm bốn mươi nghìn, tại sao vậy?",
+        "Chị muốn biết có phải do khuyến mãi thời điểm khác không?",
+        "Chị không muốn trả cao hơn, nếu không có lý do rõ ràng thì chị không mua."
+      ],
+      "days_later": 1,
+      "customer_goal": "Hỏi về mức giá khác đã được báo qua kênh khác",
+      "facts_established": {
+        "reported_price_vnd": 1840000
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN2-43-TRANG",
+        "price_vnd": 1740000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [
+          "RUN2-SALE"
+        ],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14",
+          "RUN2-SALE": "2026-10-07"
+        }
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": null,
+        "args_match": {}
+      }
+    },
+    "call_3": {
+      "channel": "hotline",
+      "channel_identity": "0905218549",
+      "call_date": "2026-10-21",
+      "customer_turns": [
+        "Chị đồng ý mua theo giá một triệu bảy trăm bốn mươi nghìn như hôm qua.",
+        "Chị muốn giao hàng đến số 24 đường Hoàng Diệu, khối 3, phường Điện Bàn, Đà Nẵng.",
+        "Chị sẽ thanh toán khi nhận hàng."
+      ],
+      "days_later": 1,
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-SN-RUN2-43-TRANG",
+        "price_quoted_vnd": 1740000,
+        "payment": "COD",
+        "delivery_address": "Số 24 đường Hoàng Diệu, khối 3, phường Điện Bàn, Đà Nẵng",
+        "order_status": "created"
+      },
+      "must_carry_over": [
+        "reported_price_vnd",
+        "price_quoted_vnd"
+      ],
+      "must_not_ask": [],
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN2-43-TRANG",
+        "price_vnd": 1740000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [
+          "RUN2-SALE"
+        ],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14",
+          "RUN2-SALE": "2026-10-07"
+        },
+        "estimated_delivery": "2026-10-23"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-SN-RUN2-43-TRANG",
+          "price_vnd": 1740000
+        }
+      }
+    }
+  }
+}

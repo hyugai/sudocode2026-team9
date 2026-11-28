@@ -7,30 +7,35 @@ import json
 import zipfile
 from pathlib import Path
 
+from add_background_noise import sha256_file
 from regenerate_transcript_audio import DEFAULT_OUTPUT, MAIN, NOTEBOOK, REPO, read_plan
 
 
-def package(reference_source: Path, output: Path) -> None:
+def package(reference_source: Path | None, output: Path, *, inference_config: dict | None = None,
+            bundle_name: str = "kaggle_audio_regeneration_input.zip", notebook_path: Path | None = None) -> None:
     plan = read_plan(output)
     source = output / "references"
     bank = json.loads((source / "reference_bank.json").read_text(encoding="utf-8"))
-    archive_path = output / "kaggle_audio_regeneration_input.zip"
-    with zipfile.ZipFile(archive_path, "w", compression=zipfile.ZIP_DEFLATED) as archive:
+    archive_path = output / bundle_name
+    partial_path = archive_path.with_suffix(".zip.partial")
+    with zipfile.ZipFile(partial_path, "w", compression=zipfile.ZIP_DEFLATED) as archive:
         for name in ["audio_plan.json", *[f"scenarios_complete/{sid}.json" for sid in plan["scenario_ids"]]]:
             archive.write(output / name, name)
         archive.write(NOTEBOOK, NOTEBOOK.relative_to(REPO).as_posix())
         for name in ["regenerate_transcript_audio.py", "add_background_noise.py"]:
             archive.write(REPO / "scripts" / name, f"scripts/{name}")
-        inference = json.loads((MAIN / "manifest.json").read_text(encoding="utf-8"))["inference_config"]
+        inference = inference_config or json.loads((MAIN / "manifest.json").read_text(encoding="utf-8"))["inference_config"]
         archive.writestr("dataset/main/manifest.json", json.dumps({"inference_config": inference}))
         archive.write(source / "reference_bank.json", "references/reference_bank.json")
         for row in bank.values():
             relative = row["ref_audio_relative"]
             archive.write(output / relative, relative)
-        archive.write(reference_source / "cache/vimd_metadata.parquet", "cache/vimd_metadata.parquet")
+        if reference_source is not None:
+            archive.write(reference_source / "cache/vimd_metadata.parquet", "cache/vimd_metadata.parquet")
         for file in sorted((output / "runtime/demand16k").rglob("*")):
             if file.is_file() and file.suffix in {".json", ".wav"}:
                 archive.write(file, file.relative_to(output).as_posix())
+    partial_path.replace(archive_path)
     print(f"Input ZIP: {archive_path} ({len(bank)} verified references)")
 
     cells = []
@@ -43,15 +48,28 @@ def package(reference_source: Path, output: Path) -> None:
             cell.update(execution_count=None, outputs=[])
         cells.append(cell)
 
+    work_name = plan.get("kaggle_work_dir", "SC001_SC100_regenerated")
     missing = ", ".join(plan["legacy_transcript_scenarios"]) or "không có"
-    add("markdown", f"""# Sinh lại audio SC-001–SC-100
+    if plan.get("source_dataset"):
+        heading = f"Sinh audio {plan['source_dataset']} trên Kaggle"
+        source_note = (f"Lời lấy từ {plan['source_dataset']}, theo tên tệp SC-001.json đến SC-100.json. "
+                       "Bảng kết quả ghi cả mã gốc trong JSON và mã tệp. Reference ViMD dùng đúng bảng cũ "
+                       "theo mã tệp. Cột xưng hô cho biết khi giới tính giọng khác với transcript. "
+                       "Gói input có sẵn reference và nhiễu DEMAND.")
+    else:
+        heading = "Sinh lại audio SC-001–SC-100"
+        source_note = f"Các mã dùng lời từ JSON cũ vì thiếu trong transcript mới gồm {missing}."
+    total_calls = len({(row["scenario_id"], row["call_id"]) for row in plan["tasks"]})
+    noisy_wavs = sum(row["requires_noise"] for row in plan["tasks"])
+    add("markdown", f"""# {heading}
 
 Notebook tạo WAV từ lời khách hàng, dùng bảng giới tính và tỉnh của bộ cũ. SC-071–SC-100
 được trộn nền thật DEMAND sau khi sinh WAV sạch. Mỗi lượt khách hàng có một file WAV.
 
-Input gồm {len(plan['tasks'])} lượt. Các mã dùng lời từ JSON cũ vì thiếu trong transcript mới gồm {missing}.
+Input gồm {len(plan['scenario_ids'])} kịch bản, {total_calls} cuộc gọi và {len(plan['tasks'])} lượt, trong đó {noisy_wavs} lượt thêm nhiễu.
+{source_note}
 
-Upload gói kaggle_audio_regeneration_input.zip thành Dataset riêng tư rồi chọn Add Input.
+Upload gói `{bundle_name}` thành Dataset riêng tư rồi chọn Add Input.
 Bật Internet và GPU trong Session options. Chạy tất cả các ô. Output gồm ZIP audio và bảng phân bổ.
 """)
     add("code", """
@@ -74,19 +92,25 @@ subprocess.check_call([
 """)
     add("code", """
 from pathlib import PurePosixPath
+from hashlib import sha256
 
 INPUTS = Path('/kaggle/input')
-WORK = Path('/kaggle/working/SC001_SC100_regenerated')
-SEED_DIR = Path('/tmp/regen_audio_input')
+WORK = Path('/kaggle/working') / @@WORK_NAME@@
+SEED_DIR = Path('/tmp') / WORK.name
+INPUT_ZIP = @@INPUT_ZIP@@
+PLAN_SHA256 = @@PLAN_SHA256@@
 WORK.mkdir(parents=True, exist_ok=True)
-files = list(INPUTS.rglob('audio_plan.json'))
+files = [path for path in INPUTS.rglob('audio_plan.json')
+         if sha256(path.read_bytes()).hexdigest() == PLAN_SHA256]
 if len(files) == 1:
     bundle = files[0].parent
 elif not files:
-    archives = list(INPUTS.rglob('kaggle_audio_regeneration_input.zip'))
+    archives = list(INPUTS.rglob(INPUT_ZIP))
     if len(archives) != 1:
-        raise RuntimeError('Add Input một gói kaggle_audio_regeneration_input.zip.')
+        raise RuntimeError(f'Add Input một gói {INPUT_ZIP}.')
     with zipfile.ZipFile(archives[0]) as archive:
+        if sha256(archive.read('audio_plan.json')).hexdigest() != PLAN_SHA256:
+            raise ValueError('Gói input không khớp với notebook này.')
         for info in archive.infolist():
             relative = PurePosixPath(info.filename)
             if info.is_dir():
@@ -119,12 +143,22 @@ import regenerate_transcript_audio as pipeline
 
 plan = pipeline.read_plan(WORK)
 print('Số WAV dự kiến:', len(plan['tasks']))
-print('Dùng lời cũ:', ', '.join(plan['legacy_transcript_scenarios']))
-""")
+""".replace("@@WORK_NAME@@", repr(work_name)).replace("@@INPUT_ZIP@@", repr(bundle_name))
+       .replace("@@PLAN_SHA256@@", repr(sha256_file(output / "audio_plan.json"))))
     add("code", """
 from huggingface_hub import snapshot_download
+import json
 
-pipeline.prepare_references(WORK, WORK, workers=6)
+if plan.get('source_dataset'):
+    bank = json.loads((WORK / 'references/reference_bank.json').read_text(encoding='utf-8'))
+    key = pipeline.old_helpers()['province_key']
+    bad = [sid for sid, voice in plan['voices'].items()
+           if not pipeline.reference_valid(WORK, bank.get(sid), voice, key)]
+    if bad:
+        raise ValueError(f'Reference tải lên bị thiếu, hỏng hoặc sai nhãn: {bad}. Attach lại gói đúng.')
+    print(f'Đã xác minh {len(bank)} reference cũ.')
+else:
+    pipeline.prepare_references(WORK, WORK, workers=6)
 MODEL_DIR = Path('/tmp/regen_audio_model')
 snapshot_download(
     'splendor1811/omnivoice-vietnamese',
@@ -139,20 +173,29 @@ snapshot_download(
 """)
     add("code", """
 NUM_STEPS = 16
-pipeline.generate(WORK, MODEL_DIR, limit=None, num_steps=NUM_STEPS)
+MAX_TURNS = None  # Đặt 3 để thử. Đặt lại None rồi chạy lại ô này để sinh đủ.
+pipeline.generate(WORK, MODEL_DIR, limit=MAX_TURNS, num_steps=NUM_STEPS)
 """)
     add("code", """
-pipeline.finalize(WORK, WORK / 'runtime/demand16k')
-print(WORK / 'audio_SC001_SC100.zip')
-print(WORK / 'result/audio_allocation.csv')
-print(WORK / 'result/audio_allocation.md')
+if MAX_TURNS is None:
+    pipeline.finalize(WORK, WORK / 'runtime/demand16k')
+    print(WORK / 'audio_SC001_SC100.zip')
+    print(WORK / 'result/audio_allocation.csv')
+    print(WORK / 'result/audio_allocation.md')
+else:
+    from IPython.display import Audio, display
+    for row in plan['tasks'][:MAX_TURNS]:
+        wav = WORK / 'clean' / row['path']
+        if wav.is_file():
+            print(row['task_id'])
+            display(Audio(filename=str(wav)))
 """)
-    add("markdown", """
+    add("markdown", f"""
 Trong Kaggle dùng **Save Version → Save & Run All** để lưu kết quả cả phiên.
-File SC001_SC100_regenerated/audio_SC001_SC100.zip chỉ xuất hiện khi đã xác minh đủ WAV.
+File `{work_name}/audio_SC001_SC100.zip` chỉ xuất hiện khi đã xác minh đủ WAV.
 Bảng audio_allocation.csv ghi nguồn lời, giọng mẫu ViMD và SNR từng lượt có nền.
 """)
-    target = output / "regenerate_SC001_SC100_Kaggle.ipynb"
+    target = notebook_path or output / "regenerate_SC001_SC100_Kaggle.ipynb"
     notebook = {
         "cells": cells, "nbformat": 4, "nbformat_minor": 5,
         "metadata": {"kernelspec": {"display_name": "Python 3", "name": "python3", "language": "python"}},

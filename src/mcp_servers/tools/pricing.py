@@ -60,12 +60,16 @@ class PricingCalculator:
         self.product = cache(self._product)
 
     def _product(self, sku: str) -> tuple[dict[str, Any], dict[str, Any]]:
+        if not sku or not sku.strip():
+            return {}, {}
         items = self.db.search_products(sku=sku, include_discontinued=True)["items"]
         if not items:
             return {}, {}
         product = items[0]
         variant = next((v for v in product.get("variants", [])
                         if v["variant_sku"] == sku), {})
+        if product.get("sku") != sku and not variant:
+            return {}, {}
         return product, variant
 
     def quote(

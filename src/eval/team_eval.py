@@ -8,18 +8,21 @@ module adds team-owned operational metrics without changing that file.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import importlib.util
 import json
 import statistics
+import subprocess
 import sys
 from copy import deepcopy
 from pathlib import Path
+from tempfile import TemporaryDirectory
 from types import ModuleType
 from typing import Any
 
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from eval.benchmark_support import measured_latency, trace_health, compare_metrics
+from eval.benchmark_support import measured_latency, trace_health, compare_metrics, m1_acceptance
 
 
 if hasattr(sys.stdout, "reconfigure"):
@@ -54,6 +57,88 @@ def _load_reference() -> ModuleType:
 
 
 REFERENCE = _load_reference()
+
+
+def reference_sha256() -> str:
+    return hashlib.sha256(REFERENCE_EVAL.read_bytes()).hexdigest()
+
+
+def _with_promo_claim_labels(scenarios: dict[str, Any]) -> dict[str, Any]:
+    """Expose individual labeled promotions to BTC's exact-match claim scorer."""
+    scoring_scenarios = {}
+    for scenario_id, scenario in scenarios.items():
+        calls = {}
+        for call_id, spec in scenario["calls"].items():
+            facts = spec.get("ground_truth_facts") or {}
+            dates = facts.get("promo_expiry_dates")
+            labels = {
+                f"promo_expiry_{code.upper()}": expiry for code, expiry in dates.items()
+            } if isinstance(dates, dict) else {}
+            code = facts.get("promo_code")
+            if isinstance(code, str):
+                if facts.get("promo_expiry") is not None:
+                    labels.setdefault(f"promo_expiry_{code.upper()}", facts["promo_expiry"])
+                if isinstance(facts.get("promo_active"), bool):
+                    labels[f"promo_{code.upper()}_active"] = facts["promo_active"]
+            for key, active in (("active_promos", True), ("expired_promos", False)):
+                for promo in facts.get(key) or []:
+                    promo_code = promo.get("promo_code") if isinstance(promo, dict) else promo
+                    if isinstance(promo_code, str):
+                        labels.setdefault(f"promo_{promo_code.upper()}_active", active)
+            calls[call_id] = {
+                **spec, "ground_truth_facts": {**labels, **facts}
+            } if labels else spec
+        scoring_scenarios[scenario_id] = {**scenario, "calls": calls}
+    return scoring_scenarios
+
+
+def btc_v2_report(
+    scenarios: dict[str, Any],
+    trace_path: str | Path,
+    baseline_path: str | Path | None = None,
+    *,
+    scenarios_path: str | Path | None = None,
+    asr_path: str | Path | None = None,
+    rag_path: str | Path | None = None,
+) -> dict[str, Any]:
+    """Return the unmodified JSON from BTC's CLI or its failure diagnostic."""
+    try:
+        with TemporaryDirectory(prefix="btc-v2-") as directory:
+            root = Path(directory)
+            if scenarios_path is not None and REFERENCE.load_scenarios(scenarios_path) == scenarios:
+                scenario_dir = Path(scenarios_path)
+            else:
+                # A selected subset needs its own directory because BTC loads every file.
+                scenario_dir = root / "scenarios"
+                scenario_dir.mkdir()
+                for index, scenario in enumerate(scenarios.values()):
+                    (scenario_dir / f"{index:06d}.json").write_text(
+                        json.dumps(scenario, ensure_ascii=False), encoding="utf-8"
+                    )
+
+            report_path = root / "report.json"
+            command = [
+                sys.executable, "-X", "utf8", str(REFERENCE_EVAL),
+                "--scenarios", str(scenario_dir),
+                "--trace", str(trace_path),
+                "--out", str(report_path),
+            ]
+            if baseline_path is not None:
+                command.extend(["--baseline", str(baseline_path)])
+            if asr_path is not None:
+                command.extend(["--asr", str(asr_path)])
+            if rag_path is not None:
+                command.extend(["--rag", str(rag_path)])
+            subprocess.run(
+                command, check=True, stdout=subprocess.DEVNULL,
+                stderr=subprocess.PIPE, encoding="utf-8",
+            )
+            return json.loads(report_path.read_text(encoding="utf-8"))
+    except subprocess.CalledProcessError as exc:
+        detail = (exc.stderr or "").strip().splitlines()
+        return {"error": detail[-1] if detail else "BTC v2 scoring failed", "exit_code": exc.returncode}
+    except (OSError, json.JSONDecodeError) as exc:
+        return {"error": str(exc)}
 
 
 def _pct(numerator: int, denominator: int) -> float | None:
@@ -347,6 +432,43 @@ def rag_recall(qa_path: Path, results_path: Path) -> dict[str, Any]:
         ),
         len(answerable),
     )
+    output["by_type_recall@5"] = {
+        question_type: _pct(
+            sum(
+                1
+                for question in questions
+                if question.get("type") == question_type
+                and question.get("relevant_chunk_ids")
+                and (
+                    set(question["relevant_chunk_ids"])
+                    & {
+                        chunk.split("#")[0]
+                        for chunk in results.get(question["qid"], {}).get(
+                            "retrieved_chunk_ids", []
+                        )[:5]
+                    }
+                )
+            ),
+            sum(
+                1
+                for question in questions
+                if question.get("type") == question_type
+                and question.get("relevant_chunk_ids")
+            ),
+        )
+        for question_type in (
+            "single",
+            "multi_hop",
+            "version_conflict",
+            "numeric",
+            "unanswerable",
+            "restricted",
+        )
+    }
+    output["note"] = (
+        "version_accuracy và chất lượng câu trả lời (answer) chấm bằng LLM-judge/tay "
+        "theo expected_answer; file này chỉ chấm retrieval + abstain."
+    )
     return output
 
 
@@ -379,7 +501,7 @@ def evaluate_team(
     memory_judge_report: str | None = None,
     warmup_turns: int = 3,
 ) -> dict[str, Any]:
-    result = REFERENCE.evaluate(scenarios, trace)
+    result = REFERENCE.evaluate(_with_promo_claim_labels(scenarios), trace)
     result["trace_health"] = trace_health(scenarios, trace)
     result["latency"] = measured_latency(trace, REFERENCE, warmup_turns)
     # Preserve the official score for exact reproduction; enforce actual
@@ -413,7 +535,12 @@ def evaluate_team(
                 reasons.extend(extra)
             checks.append(bool(ok))
             if not ok:
-                failures.append({"scenario":sid,"call":call,"reasons":reasons})
+                failures.append({
+                    "scenario": sid,
+                    "call": call,
+                    "hard_case": scenario.get("hard_case"),
+                    "reasons": reasons,
+                })
         if checks:
             total += 1
             passed += int(all(checks))
@@ -527,6 +654,7 @@ def main() -> int:
     report: dict[str, Any] = {
         "evaluator": "team_eval_v2",
         "reference_evaluator": str(REFERENCE_EVAL),
+        "reference_sha256": reference_sha256(),
         "n_scenarios": len(scenarios),
         "system": system,
     }
@@ -542,6 +670,16 @@ def main() -> int:
         report["asr"] = REFERENCE.wer_cer(args.asr)
     if args.rag:
         report["rag"] = rag_recall(Path(args.rag_qa), Path(args.rag))
+    report["btc_v2"] = btc_v2_report(
+        scenarios,
+        args.trace,
+        args.baseline,
+        scenarios_path=args.scenarios,
+        asr_path=args.asr,
+        rag_path=args.rag,
+    )
+    if args.baseline:
+        report["m1_acceptance"] = m1_acceptance(report["btc_v2"], system, report["baseline"])
 
     output_path = Path(args.out)
     output_path.parent.mkdir(parents=True, exist_ok=True)
@@ -553,6 +691,7 @@ def main() -> int:
     print(f"CCR: {system['context_carryover_rate']['value']}%")
     print(f"TSR: {system['task_success_rate']['value']}%")
     print(f"HR: {system['hallucination_rate']['value']}%")
+    print(f"HR (price & promo - BTC gate): {system['hallucination_rate']['price_promo_only']['value']}%")
     print(f"HR (price only): {system['hallucination_rate']['price_only']['value']}%")
     print(f"Tool-Call Accuracy: {system['tool_call_accuracy']['value']}%")
     print(f"Latency: {json.dumps(system['latency'], ensure_ascii=False)}")

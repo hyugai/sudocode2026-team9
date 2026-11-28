@@ -11,12 +11,17 @@ from typing import Any, NotRequired, TypedDict
 
 from telesale_agent.core.basket import (
     asks_basket_total,
+    confirms_order_creation,
     declines_order_creation,
     is_basket_recap_request,
     is_multi_product_request,
+    stated_payment_method,
     starts_basket_checkout,
 )
+from telesale_agent.core.address import extract_explicit_delivery_address
 from telesale_agent.core.models import Perception
+from telesale_agent.application.deepagent.context.callback import is_explicit_callback_request
+from telesale_agent.application.deepagent.context.order import requests_exchange, requests_order_status
 from telesale_agent.application.deepagent.understanding.policy_intent import deferred_policy_topic
 
 
@@ -102,37 +107,6 @@ def is_policy_explanation_request(transcript: str | None) -> bool:
             "lần đầu",
         )
     ) or bool(re.search(r"\bđổi\s+trong\s+\d+\s+ngày\b", text))
-
-
-def is_explicit_callback_request(transcript: str | None) -> bool:
-    """Distinguish a new callback request from "I am calling back" history."""
-    text = (transcript or "").casefold()
-    if not any(phrase in text for phrase in ("gọi lại", "liên hệ lại", "hẹn gọi")):
-        return False
-    customer_is_caller = re.search(
-        r"\b(?:chị|anh|tôi|mình)\s+(?:đã\s+)?(?:gọi|liên\s+hệ)\s+lại"
-        r"(?:\s+(?:chuyện|theo|về|như))?",
-        text,
-    )
-    agent_is_caller = re.search(
-        r"(?:\b(?:em|shop|bên\s+em)\s+(?:hãy\s+)?(?:gọi|liên\s+hệ)\s+lại\b|"
-        r"\b(?:gọi|liên\s+hệ)\s+lại\s+cho\s+(?:chị|anh|tôi|mình)\b|"
-        r"\bhẹn\s+(?:em|shop|bên\s+em)?\s*gọi\b)",
-        text,
-    )
-    # Vietnamese customers commonly omit the object in an imperative such as
-    # "gọi lại lúc 10 giờ ngày ...".  A concrete future time makes that form
-    # unambiguous, while "chị gọi lại chuyện hôm trước" remains call history.
-    timed_bare_imperative = bool(
-        re.search(
-            r"(?:gọi|liên\s+hệ)\s+lại[^.!?]{0,50}"
-            r"(?:\d{1,2}\s*(?::\s*\d{2}|giờ)|20\d{2}-\d{2}-\d{2})",
-            text,
-        )
-    )
-    return bool(agent_is_caller or timed_bare_imperative) and not (
-        customer_is_caller and not re.search(r"\b(?:em|shop|bên\s+em)\b", text)
-    )
 
 
 def is_medical_handoff_request(
@@ -227,16 +201,8 @@ def select_tools_for_turn(
             "hơi rộng",
         )
     )
-    update_confirmation = any(
-        phrase in text
-        for phrase in (
-            "làm thủ tục đổi",
-            "thực hiện đổi",
-            "đổi cho anh",
-            "đổi cho chị",
-            "tiến hành đổi",
-        )
-    ) or ("làm thủ tục" in text and "update_order" in intents)
+    update_confirmation = requests_exchange(text) or ("làm thủ tục" in text and "update_order" in intents)
+    status_request = requests_order_status(text)
     basket_swap = bool(facts.get("basket_skus")) and bool(
         re.search(
             r"(?:\b(?:bỏ|hủy)\b[^.!?]{0,60}\bthay\b|"
@@ -253,45 +219,13 @@ def select_tools_for_turn(
         if not exchange_signal:
             selected.add("search_catalog")
     order_negated = declines_order_creation(transcript or "")
-    qty_unit_pattern = (
-        r"(?:\d+|một|hai|ba|bốn|năm)\s*"
-        r"(?:chiếc|cái|bộ|sản\s*phẩm|máy|đôi|hộp|bình|gói|cuộn|cây|áo|quần)"
-    )
-    purchase_confirmation = bool(
-        re.search(
-            rf"\b(?:mua|lấy|chốt|đặt)\s+(?:cho\s+(?:anh|chị|em|tôi)\s+)?"
-            rf"{qty_unit_pattern}\b",
-            text,
-        )
-    ) or bool(
-        re.search(rf"\b{qty_unit_pattern}\b", text)
-        and any(
-            p in text
-            for p in ("chấp nhận", "đồng ý", "lấy luôn", "mua luôn", "chốt")
-        )
-    )
-    has_explicit_address = bool(
-        re.search(
-            r"(?:địa\s*chỉ(?:\s+(?:giao|nhận)\s+hàng)?\s*(?:là|:)?|"
-            r"(?:giờ\s+)?giao(?:\s+(?:đến|về|qua|tới))?(?:\s+cho\s+(?:anh|chị|em|tôi))?)\s+"
-            r"(?:số\s+)?\d+",
-            text,
-        )
-    )
-    has_explicit_payment = bool(
-        re.search(r"\b(?:cod\b|chuyển\s*khoản|tiền\s*mặt|bank|transfer)\b", text)
-    )
+    has_explicit_address = bool(extract_explicit_delivery_address(transcript or ""))
+    has_explicit_payment = bool(stated_payment_method(transcript or ""))
     if not order_negated and (
-        any(
-            word in text
-            for word in ("lên đơn", "chốt đơn", "đặt mua", "đặt hàng", "tạo đơn")
+        confirms_order_creation(
+            transcript or "", has_address=has_explicit_address, has_payment=has_explicit_payment,
         )
-        or purchase_confirmation
         or (has_explicit_address and has_explicit_payment)
-        or (
-            any(p in text for p in ("chấp nhận", "đồng ý"))
-            and (has_explicit_address or has_explicit_payment)
-        )
     ):
         selected.add("create_new_order")
         selected.update({"check_inventory", "get_pricing_quote"})
@@ -301,6 +235,8 @@ def select_tools_for_turn(
         selected.update({"create_new_order", "check_inventory", "get_pricing_quote"})
     if exchange_signal:
         selected.update({"check_order_status", "check_inventory"})
+    if status_request:
+        selected.add("check_order_status")
     if update_confirmation:
         selected.update({"check_order_status", "check_inventory", "update_order"})
 
@@ -328,7 +264,7 @@ def select_tools_for_turn(
     if (
         is_policy_explanation_request(text)
         and not explicit_order_reference
-        and not update_confirmation
+        and not update_confirmation and not status_request
     ):
         selected.discard("check_order_status")
         selected.discard("update_order")

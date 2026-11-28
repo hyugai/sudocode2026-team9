@@ -58,6 +58,7 @@ class PostgresClient:
         *,
         include_discontinued: bool = False,
         min_room_area_m2: int | None = None,
+        limit: int | None = 20,
     ):
         with self.get_session() as session:
             stmt = session.query(Product)
@@ -104,7 +105,7 @@ class PostgresClient:
                         } for v in p.variants
                     ]
                 })
-            return {"items": results[:20], "total": len(results)}
+            return {"items": results[:limit], "total": len(results)}
 
     def check_stock(self, sku: str, target_date: date) -> dict:
         with self.get_session() as session:
@@ -461,9 +462,9 @@ class PostgresClient:
             query = session.query(Order, Customer.phone).join(Customer)
             if order_id:
                 query = query.filter(Order.order_id == order_id)
-            elif customer_phone:
+            if customer_phone:
                 query = query.filter(Customer.phone == customer_phone)
-            else:
+            if not order_id and not customer_phone:
                 return []
             return [
                 self._serialize_order(order, customer_phone=phone)

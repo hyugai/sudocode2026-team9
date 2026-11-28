@@ -18,7 +18,7 @@ from pathlib import Path
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-PIPELINE_DIR = REPO_ROOT / "dataset/text-to-speech/pipeline-generate-audio"
+PIPELINE_DIR = REPO_ROOT / "dataset/audio/pipeline-generate-audio"
 BASE_NOTEBOOK = PIPELINE_DIR / "customer_turns_to_omnivoice_vietnamese_vimd_40_scenarios_kaggle.ipynb"
 
 

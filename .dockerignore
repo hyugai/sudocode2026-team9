@@ -17,6 +17,8 @@ src/web
 dataset
 !dataset/organizer/
 !dataset/organizer/**
+!dataset/transcript/src/stage-1/input/catalog/
+!dataset/transcript/src/stage-1/input/catalog/**
 models
 outputs
 tmp

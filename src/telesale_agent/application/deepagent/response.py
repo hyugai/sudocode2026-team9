@@ -12,7 +12,10 @@ from telesale_agent.application.deepagent.context.order import (
     _delivery_address,
     _known_variant_sku,
     _payment_method,
+    checkout_progress,
+    checkout_requested,
 )
+from telesale_agent.application.customer_text import is_closing_turn
 from telesale_agent.application.deepagent.understanding.unverified_question import (
     asks_about_unresolved_question,
     unit_specific_question,
@@ -24,6 +27,32 @@ _CURRENT_STOCK_ASSERTION = re.compile(
     r"\b(?:còn\s+hàng|có\s+sẵn\s+hàng|có\s+hàng)\b",
     re.IGNORECASE,
 )
+_WATER_RESISTANCE = re.compile(r"\b(?:chống nước|chống thấm)\b", re.IGNORECASE)
+_ORDER_CONFIRMED = re.compile(
+    r"\bđã\s+(?:tạo|lên|chốt|đặt)\s+(?:thành công\s+)?đơn\b"
+    r"|\bđơn(?:\s+hàng)?\b[^.!?\n]{0,45}\bđã\s+(?:được\s+)?(?:tạo|ghi nhận|xác nhận|chốt)\b",
+    re.IGNORECASE,
+)
+
+
+def asks_about_water_resistance(context: TurnContext) -> bool:
+    return bool(_WATER_RESISTANCE.search(context.input.text or ""))
+
+
+def ground_water_resistance(context: TurnContext, tool_calls: list[dict[str, Any]], response: str) -> str:
+    if not asks_about_water_resistance(context):
+        return response
+    items = {
+        item["sku"]: item for call in tool_calls if call.get("name") == "catalog.search"
+        for item in (call.get("result") or {}).get("items", []) if item.get("sku")
+    }
+    if len(items) == 1:
+        attributes = next(iter(items.values())).get("attributes") or {}
+        if type(attributes.get("waterproof")) is bool:
+            if attributes["waterproof"]:
+                return "Dạ, thông tin sản phẩm của bên em xác nhận mẫu này có tính năng chống nước ạ."
+            return "Dạ, thông tin sản phẩm của bên em xác nhận mẫu này không có tính năng chống nước ạ."
+    return "Dạ, bên em chưa có thông tin xác nhận về khả năng chống nước của mẫu này. Em sẽ kiểm tra thêm ạ."
 
 
 def ground_unverified_unit_question(
@@ -255,14 +284,15 @@ def ground_basket_recap(
 def ground_multi_item_order_confirmation(
     context: TurnContext,
     tool_calls: list[dict[str, Any]],
-    response_text: str,
-) -> str:
+    response_text: str | None,
+) -> str | None:
     """Confirm verified single-basket or split orders using returned IDs."""
     created = [
         call for call in tool_calls
         if call.get("name") == "order.create"
         and isinstance(call.get("result"), dict)
         and call["result"].get("order_id")
+        and not call["result"].get("error")
     ]
     skus = _basket_skus(context)
     names = _basket_product_names(context, tool_calls)
@@ -316,6 +346,67 @@ def ground_multi_item_order_confirmation(
         if isinstance(delivery_date, str) and delivery_date:
             confirmation += f"\nDự kiến giao: {delivery_date}."
     return confirmation
+
+
+def ground_checkout_response(context: TurnContext, tool_calls: list[dict[str, Any]], response: str) -> str:
+    """Report the recorded order outcome and ask only for missing checkout data."""
+    basket_confirmation = ground_multi_item_order_confirmation(context, tool_calls, None)
+    if basket_confirmation is not None:
+        return basket_confirmation
+
+    for call in tool_calls:
+        result = call.get("result") or {}
+        args = call.get("args") or {}
+        if call.get("name") == "order.create" and result.get("order_id") and not result.get("error"):
+            if args.get("lines"):
+                return response
+            total = _format_vnd(result.get("total_vnd", args.get("price_vnd")))
+            reply = f"Dạ, bên em đã tạo đơn {result['order_id']} ạ."
+            if total:
+                reply += f" Tổng tiền: {total}."
+            if args.get("address"):
+                reply += f" Giao đến {args['address']}."
+            if args.get("payment"):
+                reply += f" Thanh toán: {args['payment']}."
+            return reply
+    memory = context.state.working_memory
+    if duplicates := memory.get("order_create_duplicate_prevented"):
+        order_ids = ", ".join(dict.fromkeys(duplicates.values()))
+        return f"Dạ, bên em đã có đơn {order_ids} cho yêu cầu này ạ."
+    pending = memory.get("pending_order") or {}
+    unverified_confirmation = bool(_ORDER_CONFIRMED.search(response)) and not (
+        (memory.get("last_created_order") or {}).get("order_id")
+        or any(call.get("name") == "order.status" and (call.get("result") or {}).get("orders") for call in tool_calls)
+    )
+    in_checkout = pending.get("checkout_confirmed") and (
+        checkout_requested(context) or checkout_progress(context) or is_closing_turn(context)
+    )
+    if not in_checkout and not unverified_confirmation:
+        return response
+    if not pending:
+        return "Dạ, bên em chưa xác nhận được đơn hàng này trên hệ thống ạ."
+    if is_closing_turn(context):
+        return "Dạ, đơn của mình chưa được tạo. Em cảm ơn anh/chị đã liên hệ ạ."
+    if pending.get("needs_variant") or not (pending.get("sku") or pending.get("lines")):
+        return "Dạ, anh/chị cho em xin phiên bản sản phẩm chính xác để em hoàn tất đơn ạ?"
+    if pending.get("price_changed"):
+        price = _format_vnd(pending["price_vnd"])
+        return f"Dạ, giá hiện tại là {price}. Anh/chị có đồng ý đặt hàng với mức giá này không ạ?"
+    missing = []
+    if not _delivery_address(context):
+        missing.append("địa chỉ giao hàng")
+    if not _payment_method(context):
+        missing.append("phương thức thanh toán")
+    if missing:
+        return "Dạ để hoàn tất đơn, mình cho em xin " + " và ".join(missing) + " ạ?"
+    if any(
+        call.get("name") == "inventory.check"
+        and (call.get("args") or {}).get("sku") == pending.get("sku")
+        and (call.get("result") or {}).get("in_stock") is False
+        for call in tool_calls
+    ):
+        return "Dạ, phiên bản mình chọn đang hết hàng nên bên em chưa tạo đơn ạ."
+    return "Dạ, bên em chưa xác nhận được đơn hàng này trên hệ thống ạ."
 
 
 def _safe_fallback_response(

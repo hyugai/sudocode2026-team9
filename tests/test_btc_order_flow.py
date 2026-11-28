@@ -26,7 +26,7 @@ from mcp_servers.tools.pricing import PricingCalculator
 from test_btc_pricing import FixtureDB
 from eval.team_eval import evaluate_team, REFERENCE
 
-DATA = ROOT / "dataset/pipeline/stage-1/input/catalog"
+DATA = ROOT / "dataset/transcript/src/stage-1/input/catalog"
 PRODUCTS = json.loads((DATA / "products.json").read_text(encoding="utf-8"))["products"]
 PROMOS = json.loads((DATA / "promotions.json").read_text(encoding="utf-8"))["promotions"]
 PRICING = {k: None for k in ("input_per_million", "output_per_million", "tool_call", "memory_write", "storage_per_mb", "fixed_call")}
@@ -127,6 +127,162 @@ class OrchestrationTests(unittest.IsolatedAsyncioTestCase):
         calls, _ = await ReadToolExecutor({"get_pricing_quote": tool, "get_order_quote": basket}).prefetch(item, frozenset({"get_pricing_quote", "get_order_quote"}))
         self.assertEqual(calls[0]["name"], "pricing.get_quote")
         basket.ainvoke.assert_not_awaited()
+
+    async def test_empty_lines_prefetch_preserves_get_order_quote(self):
+        item = TurnContext(
+            input=TurnInput("test-empty", text="Báo giá hai máy lọc không khí giúp chị.", customer_hint="0900000000", metadata={"call_date": "2026-10-15"}),
+            state=ConversationState("test-empty", turn_number=0, customer_profile={"phone": "0900000000"}),
+            identity=CustomerIdentity(customer_id="C-test", phone="0900000000"),
+            perception=Perception(transcript="Báo giá hai máy lọc không khí giúp chị.", intent="ask_product"),
+        )
+        quote_order = SimpleNamespace(ainvoke=AsyncMock())
+        get_quote = SimpleNamespace(ainvoke=AsyncMock())
+        calls, remaining = await ReadToolExecutor(
+            {"get_order_quote": quote_order, "get_pricing_quote": get_quote}
+        ).prefetch(item, frozenset({"get_pricing_quote", "get_order_quote"}))
+        self.assertEqual(calls, [])
+        self.assertIn("get_order_quote", remaining)
+        self.assertIn("get_pricing_quote", remaining)
+
+    async def test_closing_turn_executes_confirmed_pending_multiline_order_and_reads_back(self):
+        from langchain_core.messages import AIMessage
+        from telesale_agent.application.deepagent.turn import run_turn_impl
+
+        lines = [{"sku": "SKU-AP-PRO", "qty": 2}]
+        quote = PricingCalculator(FixtureDB(), date(2026, 10, 15)).quote_order(lines)
+        inventory = SimpleNamespace(ainvoke=AsyncMock(return_value={"in_stock": True, "qty": 10}))
+        quote_order = SimpleNamespace(ainvoke=AsyncMock(return_value=quote))
+        get_quote = SimpleNamespace(ainvoke=AsyncMock())
+        create_order = SimpleNamespace(
+            ainvoke=AsyncMock(return_value={"order_id": "ORD-CLOSE-1", "status": "created", "total_vnd": 11_685_000, "estimated_delivery": "2026-10-17"})
+        )
+        mcp_tools = {
+            "check_inventory": inventory,
+            "get_order_quote": quote_order,
+            "get_pricing_quote": get_quote,
+            "create_new_order": create_order,
+        }
+        reads = ReadToolExecutor(mcp_tools)
+        mutations = MutationToolExecutor(mcp_tools)
+        seen_runtime_contexts = []
+
+        async def fake_agent(payload, config=None, context=None):
+            seen_runtime_contexts.append(context)
+            return {"messages": [AIMessage(content="Dạ em đã lên đơn xong ạ.")]}
+
+        perceive = SimpleNamespace(perceive=AsyncMock())
+        state = ConversationState(
+            "conv-close",
+            turn_number=2,
+            identity=CustomerIdentity(customer_id="C-test", phone="0900000000"),
+            customer_profile={"phone": "0900000000"},
+            customer_memory={"facts": {
+                "basket_product_names": {"SKU-AP-PRO": "Máy lọc không khí AirPure Pro"},
+            }},
+            working_memory={
+                "pending_order": {
+                    "lines": lines,
+                    "address": "12 Nguyễn Trãi, Hà Nội",
+                    "payment": "bank",
+                    "checkout_confirmed": True,
+                }
+            },
+        )
+        brief = CallBrief(
+            customer_id="C-test",
+            remembered_preferences={"facts": {"basket_product_names": {"SKU-AP-PRO": "Máy lọc không khí AirPure Pro"}}},
+        )
+        harness = SimpleNamespace(
+            agent=SimpleNamespace(ainvoke=fake_agent),
+            asr=None,
+            identity=None,
+            customer_context=None,
+            perceive=perceive,
+            retrieve=None,
+            call_brief=SimpleNamespace(build_call_brief=AsyncMock(return_value=brief)),
+            persist=None,
+            guardrail=None,
+            _prefetch_read_tools=reads.prefetch,
+            _execute_confirmed_mutation=mutations.execute,
+        )
+        turn_input = TurnInput(
+            conversation_id="conv-close",
+            text="",
+            customer_hint="0900000000",
+            metadata={"call_date": "2026-10-15", "call_key": "call_1", "closing_turn": True},
+        )
+        result = await run_turn_impl(harness, turn_input, state)
+        perceive.perceive.assert_not_awaited()
+        get_quote.ainvoke.assert_not_awaited()
+        quote_order.ainvoke.assert_awaited_once()
+        create_order.ainvoke.assert_awaited_once()
+        self.assertEqual(
+            create_order.ainvoke.call_args.args[0]["lines"],
+            [
+                {"sku": "SKU-AP-PRO", "qty": 1, "price_vnd": 7_690_000},
+                {"sku": "SKU-AP-PRO", "qty": 1, "price_vnd": 3_995_000},
+            ],
+        )
+        self.assertEqual(seen_runtime_contexts[0]["allowed_tools"], [])
+        self.assertIn("ORD-CLOSE-1", result.response_text)
+        self.assertIn("11.685.000", result.response_text)
+        self.assertNotIn("pending_order", state.working_memory)
+        self.assertEqual(state.working_memory["last_created_order"]["order_id"], "ORD-CLOSE-1")
+
+    async def test_closing_turn_without_confirmed_pending_order_never_creates_order(self):
+        from langchain_core.messages import AIMessage
+        from telesale_agent.application.deepagent.turn import run_turn_impl
+
+        create_order = SimpleNamespace(ainvoke=AsyncMock())
+        reads = ReadToolExecutor({"create_new_order": create_order})
+        mutations = MutationToolExecutor({"create_new_order": create_order})
+        seen_contexts = []
+
+        async def fake_agent(payload, config=None, context=None):
+            seen_contexts.append((payload, context))
+            return {"messages": [AIMessage(content="Dạ cảm ơn anh chị đã liên hệ ạ.")]}
+
+        state = ConversationState(
+            "conv-no-order",
+            turn_number=1,
+            identity=CustomerIdentity(customer_id="C-test", phone="0900000000"),
+            customer_profile={"phone": "0900000000"},
+        )
+        harness = SimpleNamespace(
+            agent=SimpleNamespace(ainvoke=fake_agent),
+            asr=None,
+            identity=None,
+            customer_context=None,
+            perceive=SimpleNamespace(perceive=AsyncMock()),
+            retrieve=None,
+            call_brief=None,
+            persist=None,
+            guardrail=None,
+            _prefetch_read_tools=reads.prefetch,
+            _execute_confirmed_mutation=mutations.execute,
+        )
+        result = await run_turn_impl(
+            harness,
+            TurnInput(conversation_id="conv-no-order", text="", metadata={"call_date": "2026-10-15", "closing_turn": True}),
+            state,
+        )
+        create_order.ainvoke.assert_not_awaited()
+        self.assertEqual(result.tool_calls, [])
+        self.assertEqual(seen_contexts[0][1]["allowed_tools"], [])
+        self.assertIn("Closing turn", seen_contexts[0][0]["messages"][0]["content"])
+
+    async def test_prompt_uses_quote_order_guidance_and_closing_readback_for_existing_order(self):
+        from telesale_agent.application.deepagent.context.prompt import append_orchestration_context, build_base_user_message
+
+        item = context(text="")
+        item.input.metadata["closing_turn"] = True
+        item.state.working_memory["last_created_order"] = {"order_id": "ORD-99", "total_vnd": 11_685_000}
+        user_text, base = build_base_user_message(item, [])
+        prompt = append_orchestration_context(item, base, frozenset(), [], [])
+        self.assertIn("Closing turn", user_text)
+        self.assertIn("pricing.quote_order", prompt)
+        self.assertNotIn("pricing.get_quote for every basket item", prompt)
+        self.assertIn("ORD-99", prompt)
 
     async def test_one_order_keeps_distinct_unit_prices_and_prevents_duplicate(self):
         item = context()

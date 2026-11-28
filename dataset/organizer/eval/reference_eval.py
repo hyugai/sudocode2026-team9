@@ -418,7 +418,7 @@ def rag_eval(qa_path, results_path):
     ans = [q for q in qa if q["type"] not in ("unanswerable", "restricted")]
     out["false_abstain_rate"] = pct(sum(1 for q in ans if res.get(q["qid"], {}).get("abstained")), len(ans))
     out["by_type_recall@5"] = {t: pct(sum(1 for q in qa if q["type"] == t and q["relevant_chunk_ids"] and set(q["relevant_chunk_ids"]) & set(c.split("#")[0] for c in res.get(q["qid"], {}).get("retrieved_chunk_ids", [])[:5])),
-                                      sum(1 for q in qa if q["type"] == t and q["relevant_chunk_ids"])) for t in ("single", "multi_hop", "version_conflict", "numeric")}
+                                      sum(1 for q in qa if q["type"] == t and q["relevant_chunk_ids"])) for t in ("single", "multi_hop", "version_conflict", "numeric", "unanswerable", "restricted")}
     out["note"] = "version_accuracy và chất lượng câu trả lời (answer) chấm bằng LLM-judge/tay theo expected_answer; file này chỉ chấm retrieval + abstain."
     return out
 
@@ -442,7 +442,11 @@ if __name__ == "__main__":
         rq_b, rq_s = base["repeat_question_rate"]["value"], full["repeat_question_rate"]["value"]
         rep["comparison"] = {
             "rqr_relative_reduction_pct": round((rq_b - rq_s) / rq_b * 100, 1) if rq_b else None,
-            "meets_rqr_threshold_40pct": bool(rq_b and (rq_b - rq_s) / rq_b >= 0.40),
+            # rq_b = 0 (baseline không hỏi thừa câu nào): nếu hệ thống cũng 0 → không áp dụng (None), BGK xét CCR thay thế;
+            # nếu hệ thống > 0 → không đạt.
+            "meets_rqr_threshold_40pct": (bool((rq_b - rq_s) / rq_b >= 0.40) if rq_b
+                                          else (None if not rq_s else False)),
+            "rqr_note": None if rq_b else "Baseline có RQR = 0 → ngưỡng giảm 40% không áp dụng; BGK đánh giá bằng CCR (hệ thống không hỏi gì cũng có RQR = 0).",
             "meets_tsr_70pct": bool(full["task_success_rate"]["value"] is not None and full["task_success_rate"]["value"] >= 70),
             "meets_hr_price_5pct": bool(full["hallucination_rate"]["price_promo_only"]["value"] is not None and full["hallucination_rate"]["price_promo_only"]["value"] <= 5),
         }

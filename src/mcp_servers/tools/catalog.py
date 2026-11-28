@@ -9,6 +9,7 @@ from typing import Any
 
 from telesale_agent.adapters.db.client import db_client
 from mcp_servers.tools.pricing import PricingCalculator
+from telesale_agent.application.asr_normalization import normalize_spoken_product_size
 from telesale_agent.core.basket import mentioned_catalog_items
 from telesale_agent.core.business_time import business_date
 
@@ -35,6 +36,12 @@ def catalog_search(
 
     BTC tool name: catalog.search
     """
+    if query:
+        query = normalize_spoken_product_size(query)
+        query = re.sub(
+            r"\b(runlite)\s+(một|hai)\b",
+            lambda match: f"{match[1]} {1 if match[2].casefold() == 'một' else 2}", query, flags=re.I,
+        )
     result = db_client.search_products(
         query=query,
         category=category,
@@ -48,10 +55,21 @@ def catalog_search(
     # Multi-item utterances do not match one product name as a whole. Resolve
     # every catalog product literally mentioned in the customer query inside
     # this same tool execution, so the agent does not need repeated searches.
-    catalog = db_client.search_products(max_price_vnd=max_price_vnd, min_room_area_m2=min_room_area_m2)
+    catalog = db_client.search_products(
+        category=category, max_price_vnd=max_price_vnd, min_room_area_m2=min_room_area_m2, limit=None,
+    )
     mentioned_items = mentioned_catalog_items(query, catalog.get("items", []))
     if mentioned_items:
-        return _filter_requested_variants({"items": mentioned_items}, query)
+        return _filter_requested_variants({"items": mentioned_items[:20], "total": len(mentioned_items)}, query)
+
+    runlite = re.search(r"\bRunLite(?:\s+(?:1|2)(?:\s+Pro)?)?\b", query, re.I)
+    if runlite:
+        result = db_client.search_products(
+            query=runlite[0], category=category, max_price_vnd=max_price_vnd,
+            min_room_area_m2=min_room_area_m2,
+        )
+        if result.get("items"):
+            return _filter_requested_variants(result, query)
 
     # LLM queries often include variant words ("Urban Classic 39 đen") and a
     # human category ("Giày sneaker") that do not literally match DB columns.
@@ -60,19 +78,28 @@ def catalog_search(
     stopwords = {
         "giày", "giay", "sneaker", "size", "màu", "mau",
         "đen", "den", "trắng", "trang", "xám", "xam",
+        "navy", "be",
     }
+    # Strip the size qualifier separately. A number in the product name
+    # (RunLite 1, RunLite 2 Pro) still identifies the model.
+    product_query = re.sub(r"\bsize\s+(?:\d{1,3}|xs|s|m|l|xl|xxl)\b", " ", query, flags=re.I)
     tokens = [
         token
-        for token in re.findall(r"[\w-]+", query, flags=re.UNICODE)
-        if token.casefold() not in stopwords and not token.isdigit()
+        for token in re.findall(r"[\w-]+", product_query, flags=re.UNICODE)
+        if token.casefold() not in stopwords and not (token.isdigit() and len(token) == 2)
     ]
     compact_query = " ".join(tokens).strip()
     if compact_query and compact_query.casefold() != query.casefold():
         result = db_client.search_products(
             query=compact_query,
+            category=category,
             max_price_vnd=max_price_vnd,
             min_room_area_m2=min_room_area_m2,
         )
+        if not result.get("items"):
+            phrase = f" {_search_text(compact_query)} "
+            items = [item for item in catalog.get("items", []) if phrase in f" {_search_text(item['name'])} "]
+            result = {"items": items[:20], "total": len(items)}
     return _filter_requested_variants(result, query)
 
 
@@ -83,8 +110,11 @@ def _filter_requested_variants(
     if not query or not result.get("items"):
         return result
 
-    normalized = query.casefold()
-    size_match = re.search(r"\b(\d{2}|s|m|l|xl)\b", normalized)
+    normalized = _search_text(query)
+    size_match = re.search(r"\b(?:size|co)\s+(\d{1,3}|xxs|xs|s|m|l|xl|xxl)\b", normalized)
+    if not size_match:
+        # Also accept compact queries such as "Urban Classic 41 đen".
+        size_match = re.search(r"\b(3[5-9]|4\d|50)(?:$|\s+(?=(?:mau\s+)?(?:den|trang|xam|navy|be)\b))", normalized)
     requested_size = size_match.group(1) if size_match else None
     color_aliases = {
         "đen": "den",
@@ -97,7 +127,7 @@ def _filter_requested_variants(
         "be": "be",
     }
     requested_color = next(
-        (value for key, value in color_aliases.items() if key in normalized),
+        (value for key, value in color_aliases.items() if re.search(rf"\b{key}\b", normalized)),
         None,
     )
     if not requested_size and not requested_color:
@@ -117,6 +147,8 @@ def _filter_requested_variants(
                 or str(variant.get("color", "")).casefold() == requested_color
             )
         ]
+        if variants and not item["variants"]:
+            item["variant_not_matched"] = True
     return result
 
 

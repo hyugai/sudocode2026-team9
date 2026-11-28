@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from telesale_agent.core.models import TurnInput
+from telesale_agent.core.models import TurnContext, TurnInput
 
 
 def literal_customer_text(turn_input: TurnInput) -> str:
@@ -16,3 +16,14 @@ def literal_customer_text(turn_input: TurnInput) -> str:
         if isinstance(value, str) and value.strip():
             return value
     return turn_input.text or ""
+
+
+def is_closing_turn(context: TurnContext) -> bool:
+    """Return True for the post-call agent closing turn with empty customer text."""
+    if context.input.metadata.get("closing_turn"):
+        return True
+    return (
+        context.input.audio is None
+        and (context.input.text or "").strip() == ""
+        and context.state.turn_number > 0
+    )

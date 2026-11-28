@@ -38,14 +38,21 @@ from telesale_agent.application.deepagent.tools.protocol import (
     message_text as _message_text,
     tool_calls_to_steps as _tool_calls_to_steps,
 )
-from telesale_agent.application.deepagent.context.callback import _callback_adjustment_note
-from telesale_agent.application.deepagent.context.order import _delivery_address
+from telesale_agent.application.deepagent.context.callback import declines_callback, ground_callback_response
+from telesale_agent.application.customer_text import is_closing_turn
+from telesale_agent.application.deepagent.context.order import (
+    checkout_progress,
+    checkout_requested,
+    exchange_continues,
+)
 from telesale_agent.application.deepagent.response import (
     _safe_fallback_response,
+    asks_about_water_resistance,
+    ground_checkout_response,
     ground_current_stock_claims,
     ground_basket_recap,
-    ground_multi_item_order_confirmation,
     ground_unverified_unit_question,
+    ground_water_resistance,
 )
 from telesale_agent.application.deepagent.context.prompt import (
     DEFAULT_RECENT_MESSAGE_COUNT as _DEFAULT_RECENT_MESSAGE_COUNT,
@@ -158,19 +165,28 @@ async def run_turn_impl(
         candidate_facts = context.call_brief.remembered_preferences.get("facts")
         if isinstance(candidate_facts, dict):
             memory_facts = candidate_facts
-    allowed_tools = select_tools_for_turn(
-        context.perception,
-        context.input.text,
-        memory_facts,
-    )
-    if (
-        context.state.working_memory.get("pending_order")
-        and _delivery_address(context)
-    ):
-        allowed_tools = frozenset(
-            set(allowed_tools)
-            | {"create_new_order", "check_inventory", "get_pricing_quote", "get_order_quote"}
+    closing_turn = is_closing_turn(context)
+    if closing_turn:
+        pending_order = context.state.working_memory.get("pending_order")
+        if isinstance(pending_order, dict) and pending_order.get("checkout_confirmed"):
+            allowed_tools = frozenset(
+                {"create_new_order", "check_inventory", "get_pricing_quote", "get_order_quote"}
+            )
+        else:
+            allowed_tools = frozenset()
+    else:
+        allowed_tools = select_tools_for_turn(
+            context.perception,
+            context.input.text,
+            memory_facts,
         )
+    if checkout_requested(context) or checkout_progress(context):
+            allowed_tools = frozenset(
+                set(allowed_tools)
+                | {"create_new_order", "check_inventory", "get_pricing_quote", "get_order_quote"}
+            )
+    if not closing_turn and exchange_continues(context):
+        allowed_tools = allowed_tools | {"check_order_status", "check_inventory", "update_order"}
     if on_status and allowed_tools:
         await on_status("tools")
     prefetched_calls, allowed_tools = await harness._prefetch_read_tools(
@@ -182,6 +198,8 @@ async def run_turn_impl(
         allowed_tools,
         prefetched_calls,
     )
+    if closing_turn:
+        allowed_tools = frozenset()
     orchestrated_calls = [*prefetched_calls, *mutation_calls]
     enriched_user_msg = append_orchestration_context(
         context,
@@ -199,6 +217,11 @@ async def run_turn_impl(
     )
     
     first_text_at = None
+    verify_before_streaming = bool(
+        context.state.working_memory.get("callback_reply") or declines_callback(context.input.text)
+        or context.state.working_memory.get("pending_order") or mutation_calls
+        or asks_about_water_resistance(context)
+    )
     if on_status:
         await on_status("generating")
     with usage_stage("main_agent"):
@@ -206,7 +229,7 @@ async def run_turn_impl(
             payload = {"messages": [{"role": "user", "content": enriched_user_msg}]}
             runtime_context = {"allowed_tools": sorted(allowed_tools),
                                "customer_id": context.identity.customer_id if context.identity else None}
-            if on_text is None:
+            if on_text is None or verify_before_streaming:
                 result = await harness.agent.ainvoke(payload, config=config, context=runtime_context)
             else:
                 result, draft, message_key, tool_message = {}, "", None, False
@@ -254,7 +277,9 @@ async def run_turn_impl(
         *extract_deepagent_tool_calls(messages),
     ]
     steps = _tool_calls_to_steps(tool_calls)
-    context.steps = steps
+    context.steps = [
+        step for step, call in zip(steps, tool_calls) if not call.get("_checkout_alternative")
+    ]
     context.tool_results = {
         str(call.get("id")): call.get("result") for call in tool_calls
     }
@@ -265,13 +290,17 @@ async def run_turn_impl(
             if response_text:
                 break
 
-    if not response_text.strip():
+    if (not response_text.strip() or "[System Context:" in response_text
+            or response_text.startswith(("Model call limits exceeded:", "Tool call limits exceeded:"))):
         response_text = _safe_fallback_response(context, orchestrated_calls)
 
     if on_status:
         await on_status("checking")
     response_text = await prepare_response(harness, context, tool_calls, response_text,
                                            basket_evidence=[*orchestrated_calls, *tool_calls])
+    if on_text and verify_before_streaming and response_text:
+        first_text_at = time.perf_counter()
+        await on_text(response_text)
 
     response_ready = time.perf_counter()
     # Non-streaming TTFT/Total end when the complete guarded answer is ready.
@@ -325,19 +354,16 @@ async def prepare_response(harness, context, tool_calls, response_text, *, baske
     response_text = ground_unverified_unit_question(
         context, tool_calls, response_text
     )
+    response_text = ground_water_resistance(context, tool_calls, response_text)
     response_text = ground_current_stock_claims(
         context, tool_calls, response_text
     )
     response_text = ground_basket_recap(
         context, basket_evidence if basket_evidence is not None else tool_calls, response_text
     )
-    response_text = ground_multi_item_order_confirmation(
-        context, tool_calls, response_text
-    )
+    response_text = ground_checkout_response(context, tool_calls, response_text)
 
-    callback_note = _callback_adjustment_note(tool_calls)
-    if callback_note and callback_note not in response_text:
-        response_text = f"{response_text.rstrip()}\n\n{callback_note}".strip()
+    response_text = ground_callback_response(context, response_text)
 
     if harness.guardrail and response_text:
         context.plan = ActionPlan(

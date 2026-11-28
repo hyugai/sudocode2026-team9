@@ -4,10 +4,34 @@ Thư mục `src/eval/` chứa pipeline chạy scenario, ghi trace, chấm metric
 
 Chạy tất cả lệnh trong tài liệu này từ thư mục gốc repository bằng PowerShell.
 
-## Chạy bộ đánh giá 40 scenario đầu bằng một lệnh
+## Chấm chéo BTC M1
+
+Dùng `run_eval.py` ở gốc repo theo README. Runner xuất một dòng trace cho
+mỗi lượt cùng `<tên-trace>.metadata.json`. Dùng hai bản DB test từ cùng một seed
+để các thao tác cập nhật đơn có cùng trạng thái ban đầu. Đặt `EVAL_DATABASE_URL`
+trước mỗi lệnh và dùng cùng `EVAL_LLM_PROVIDER`, `EVAL_LLM_MODEL`,
+`EVAL_LLM_ENDPOINT` cho hai cấu hình. Mỗi trace full có thư mục memory riêng.
+
+### ASR nguyên hội thoại
+
+Mỗi ID phải có một WAV với cả hai phía hội thoại. Runner chấp nhận
+`<audio-root>/<id>.wav` hoặc `<audio-root>/<id>/<id>.wav`.
 
 ```powershell
-.\.venv\Scripts\python.exe -X utf8 src\eval\run_suite.py
+python -X utf8 src/eval/run_asr.py --ground-truth $groundTruthFile --audio-root dataset/test_data_btc --out outputs/eval/btc_asr
+python -X utf8 dataset/organizer/eval/reference_eval.py --scenarios $datasetDir --trace outputs/eval/full.jsonl --baseline outputs/eval/baseline.jsonl --asr outputs/eval/btc_asr --out outputs/eval/btc_report.json
+```
+
+`$groundTruthFile` trỏ tới `asr/ground_truth.json` BTC cung cấp. Báo cáo
+ghi WER/CER trên transcript Zipformer, Entity Accuracy sau ITN và thời gian
+trên mỗi phút audio. Thư mục xuất có thể truyền vào suite bằng `--btc-asr-dir`.
+Audio public D01–D04 dùng kiểm tra pipeline. BTC xếp hạng bằng audio private.
+
+## Benchmark cặp
+
+```powershell
+python -X utf8 src/eval/run_suite.py --scenarios $datasetDir --preflight-only
+python -X utf8 src/eval/run_suite.py --scenarios $datasetDir
 ```
 
 Eval mặc định dùng **Gemini `gemini-3.6-flash`**, với cấu hình riêng cho process benchmark.
@@ -22,7 +46,7 @@ Entry point này giữ các thành phần hiện có: `generate_traces.run_scena
 agent, `trace_extractors` tạo evidence, `team_eval.evaluate_team` chấm bằng công
 thức BTC và metric team. Không gửi ground truth/scoring conditions vào agent.
 
-Mặc định chọn **40 tệp scenario đầu** trong `dataset/pipeline/stage-3/output`.
+Mặc định chạy toàn bộ JSON trong `dataset/transcript/M1`. Truyền `--limit 40` để chạy 40 ca đầu.
 Runner dùng `scenario_id` bên trong JSON để ghi trace. Tên tệp Stage 3 có thể đã được đánh số lại.
 Hai nhóm text chạy tuần tự trên cùng máy, API và model:
 
@@ -65,19 +89,22 @@ audio/{full,baseline_no_memory}/
     memory/
 ```
 
-`comparison.text` và `comparison.audio` kiểm tra riêng:
+`btc_v2` chứa JSON do script BTC xuất từ scenario gốc. Các metric có bổ sung nhãn
+KM và kiểm tra kết quả mutation nằm trong `reports` và `comparison`.
+`m1_acceptance` dùng điểm BTC và latency loại warm-up để kiểm tra:
 
 - RQR giảm tương đối `(baseline - full) / baseline * 100 >= 40%`.
 - TSR của full `>= 70%`.
-- HR **chỉ giá** của full `<= 5%`; giá/khuyến mãi tổng hợp vẫn được báo riêng.
+- HR **giá & khuyến mãi** (`price_promo_only`, khớp chuẩn `reference_eval.py` của BTC) của full `<= 5%`; HR chỉ giá (`price_only`) vẫn được báo riêng để tham khảo.
 
-Baseline RQR bằng 0 hoặc không có claim giá kiểm chứng được trả `inconclusive`.
+Baseline RQR bằng 0 trả `fail` nếu full RQR `> 0`, và trả `inconclusive` (BGK xét CCR thay thế) nếu full RQR `= 0`; không có claim giá/KM kiểm chứng được cũng trả `inconclusive`.
 Trace thiếu/trùng lượt, có `_error` hoặc failed LLM request trả `invalid`;
 không được dùng làm bằng chứng đạt ngưỡng. Có failed request đã phục hồi vẫn
 được đánh dấu cần review để không che lỗi NLU fallback.
 
-Exit code: `0` chạy đầy đủ và đạt cả ba ngưỡng ở mọi modality;
-`2` lỗi/incomplete trace; `3` chạy đầy đủ nhưng chưa đạt hoặc chưa đủ bằng chứng.
+Mỗi modality cần ít nhất 100 lượt đo sau warm-up ở cả hai cấu hình. Ngưỡng full gồm TTFT p95 3 giây, Total p95 8 giây và Call Brief tối đa 5 giây.
+
+Exit code `0` khi đạt cả chất lượng và latency, `2` khi trace hoặc bộ chấm lỗi, và `3` khi chưa đạt hoặc chưa đủ bằng chứng.
 Lỗi billing/auth/model access không tự hết khi chờ (401/402/403/404) làm suite
 dừng sớm với `status=blocked_provider`. Những nhóm chưa chạy được đánh dấu
 `skipped`, không được coi là pass. Ví dụ Google trả 402 “prepayment credits
@@ -120,7 +147,7 @@ kết luận p95/SLA đạt ngưỡng.
 .\.venv\Scripts\python.exe -X utf8 src\eval\run_suite.py --preflight-only
 
 # Đo riêng ASR đủ 250 WAV, không gọi LLM
-.\.venv\Scripts\python.exe -X utf8 src\eval\run_suite.py --asr-only
+.\.venv\Scripts\python.exe -X utf8 src\eval\run_suite.py --asr-only --scenarios $datasetDir --audio-root $turnWavDir
 
 # Pilot một scenario ở cả bốn nhóm
 .\.venv\Scripts\python.exe -X utf8 src\eval\run_suite.py --limit 1
@@ -163,7 +190,7 @@ kết luận p95/SLA đạt ngưỡng.
   tồn kho/khuyến mãi của SKU đã nhớ. Wrapper `FreshCallBrief` dùng chung cho
   runtime và eval; eval kiểm tra theo `call_date`, runtime theo ngày hiện tại.
   `precomputed_parts` chỉ khai báo memory đã có trước persistence lượt này.
-  CRM chưa có nguồn tương tác đa kênh riêng nên chưa chứng nhận freshness đa kênh đầy đủ.
+  Bước hydrate đọc lại các phiên đã lưu trong CRM theo ngày của cuộc gọi.
 - Loại 3 lượt warm-up đầu mỗi nhóm; tính p95 bằng `REFERENCE.p95` từ
   `reference_eval.py`. Chạy toàn bộ bộ test, tối thiểu 100 lượt; runner hiện
   yêu cầu ít nhất 100 mẫu còn lại sau warm-up để đánh dấu đủ mẫu.
@@ -467,7 +494,7 @@ Các API key và `DATABASE_URL` được đọc từ `.env`; không được cop
 ```powershell
 .\.venv\Scripts\python.exe src\eval\run_benchmark.py `
   --version benchmark_v7 `
-  --scenarios "dataset\pipeline\stage-3\output" `
+  --scenarios "dataset\transcript\M1" `
   --llm-provider gemini `
   --llm-model gemini-3.6-flash `
   --memory-persister-mode llm_learning `
@@ -486,7 +513,7 @@ Ví dụ trace chỉ chứa ba scenario đầu:
 
 ```powershell
 .\.venv\Scripts\python.exe src\eval\team_eval.py `
-  --scenarios "dataset\pipeline\stage-3\output" `
+  --scenarios "dataset\transcript\M1" `
   --limit 3 `
   --trace "outputs\benchmark\benchmark_v5\trace.jsonl" `
   --out "outputs\benchmark\benchmark_v5\report.json"
@@ -498,7 +525,7 @@ Phải truyền lại cùng `--scenario-id` hoặc `--limit` đã dùng khi gene
 
 ```powershell
 .\.venv\Scripts\python.exe src\eval\memory_judge.py `
-  --scenarios "dataset\pipeline\stage-3\output" `
+  --scenarios "dataset\transcript\M1" `
   --limit 3 `
   --trace "outputs\benchmark\benchmark_v5\trace.jsonl" `
   --provider gemini `
@@ -510,7 +537,7 @@ Sau đó chấm lại và gắn report MWQ:
 
 ```powershell
 .\.venv\Scripts\python.exe src\eval\team_eval.py `
-  --scenarios "dataset\pipeline\stage-3\output" `
+  --scenarios "dataset\transcript\M1" `
   --limit 3 `
   --trace "outputs\benchmark\benchmark_v5\trace.jsonl" `
   --memory-judge-report "outputs\benchmark\benchmark_v5\memory_judge.json" `

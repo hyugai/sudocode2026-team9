@@ -1,0 +1,88 @@
+{
+  "scenario_id": "SC-029",
+  "level": "M1",
+  "persona": "khach_hoi_nhieu_khong_mua",
+  "hard_case": null,
+  "customer_phone": "0905218549",
+  "customer_name": "Linh",
+  "honorific": "chị",
+  "notes": "consider_and_decide",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0905218549",
+      "call_date": "2026-10-22",
+      "customer_turns": [
+        "Chị ơi, em đang xem áo phao lông vũ Warmly màu xanh navy size S, có thể cho em hỏi là nó có chống nước không ạ?",
+        "Và em muốn biết là áo này có giữ nhiệt tốt không, em ở miền Bắc, mùa đông lạnh lắm.",
+        "Chị báo giá là một triệu bốn trăm chín mươi nghìn, em thấy hơi đắt, có thể giảm không ạ?",
+        "Em đang cân nhắc thêm, để xem thêm."
+      ],
+      "customer_goal": "Hỏi kỹ cách sử dụng và cân nhắc thêm trước khi mua",
+      "facts_established": {
+        "product_advised": "SKU-JK-DWN-S-NAVY",
+        "price_quoted_vnd": 1490000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-JK-DWN-S-NAVY",
+        "price_vnd": 1490000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        }
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": null,
+        "args_match": {},
+        "must_not_call_tools": [
+          "schedule.callback"
+        ]
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0905218549",
+      "call_date": "2026-10-25",
+      "customer_turns": [
+        "Chị ơi, em đã xem lại giá áo phao lông vũ Warmly màu xanh navy size S là một triệu bốn trăm chín mươi nghìn, đúng không ạ?",
+        "Em nghĩ em chưa sẵn sàng mua, có thể để em xem thêm một hôm nữa không ạ?",
+        "Có thể chị nhắn lại thông tin này qua tin nhắn được không? Em muốn so sánh thêm.",
+        "Để xem thêm."
+      ],
+      "days_later": 3,
+      "customer_goal": "Xem lại báo giá và hoãn quyết định mua",
+      "facts_established": {
+        "product_advised": "SKU-JK-DWN-S-NAVY"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-JK-DWN-S-NAVY",
+        "price_vnd": 1490000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        }
+      },
+      "expected_outcome": "tu_choi",
+      "success_if": {
+        "tool_called": null,
+        "args_match": {}
+      }
+    }
+  }
+}

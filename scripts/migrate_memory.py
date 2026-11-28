@@ -12,7 +12,7 @@ import tempfile
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-SEED_FILE = PROJECT_ROOT / "dataset" / "organizer" / "catalog" / "crm_seed.json"
+SEED_FILE = PROJECT_ROOT / "dataset/transcript/src/stage-1/input/catalog/crm_seed.json"
 DEFAULT_MEMORY_ROOT = PROJECT_ROOT / "data" / "memory-root" / "users"
 
 
