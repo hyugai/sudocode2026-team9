@@ -21,6 +21,9 @@ Tài liệu mô tả kiến trúc hệ thống và kết quả đánh giá hiệ
   - [5.1. Self-learning](#51-self-learning)
   - [5.2. Real-time Voice (Gemini Live)](#52-real-time-voice-gemini-live)
 - [6. Benchmark & Đánh giá](#6-benchmark--đánh-giá)
+  - [6.1. Chuẩn bị chấm chéo BTC M1](#61-chuẩn-bị-chấm-chéo-btc-m1)
+  - [6.2. Chạy hai cấu hình và chấm điểm](#62-chạy-hai-cấu-hình-và-chấm-điểm)
+  - [6.3. Chấm cùng ASR theo quy trình BTC](#63-chấm-cùng-asr-theo-quy-trình-btc)
 
 ---
 
@@ -336,28 +339,68 @@ Schema journal đã được tạo ở mục 4.2. Để kích hoạt:
 
 ## 6. Benchmark & Đánh giá
 
-Các runner gọi pipeline trực tiếp nên có thể chạy khi Web và API đang tắt (chạy từ gốc repo).
+Eval M1 chạy các lượt khách trong kịch bản qua cùng một pipeline tư vấn, ghi một dòng JSONL cho mỗi lượt phản hồi của agent. Hai cấu hình dùng cùng kịch bản, model, CRM và công cụ nghiệp vụ.
 
-> [!WARNING]
-> Nên dùng DB riêng cho benchmark vì một số kịch bản có thể tạo đơn hàng test. Các bài test tư vấn yêu cầu DB dev đã seed và API key của model đánh giá; benchmark audio cần tải sẵn model Zipformer (mục 4.2).
+- `baseline_no_memory` tắt bộ nhớ học được giữa các cuộc gọi. Agent vẫn giữ lịch sử trong cuộc gọi hiện tại.
+- `full` lưu bộ nhớ khách hàng vào thư mục riêng của lần chạy và dùng lại giữa các cuộc gọi trong cùng kịch bản.
 
-### Chấm chéo BTC M1
+Trace chứa câu hỏi, dữ kiện dùng lại, phát ngôn có thể kiểm chứng, tool calls và latency. File `*.metadata.json` ghi cấu hình chạy, phạm vi dữ liệu và kết quả kiểm tra trace. Bộ chấm BTC dùng hai trace để tính Repeat-Question Rate (RQR), Context Carryover Rate (CCR), Task Success Rate (TSR), Hallucination Rate, Calls-to-Close và các chỉ số latency. Runner text đo TTFT, Total và Call Brief, còn TTFA để trống vì cần đầu ra âm thanh.
 
-Chuẩn bị hai database eval từ cùng một bản seed catalog và CRM. Trước mỗi
-lệnh sinh trace, đặt kết nối của cấu hình tương ứng trong
-`EVAL_DATABASE_URL` và dùng cùng API key, endpoint và model cho cả hai cấu hình.
-Các biến môi trường được mô tả trong `.env.example`.
+### 6.1. Chuẩn bị chấm chéo BTC M1
+
+Mở PowerShell ở gốc repo và kích hoạt môi trường đã cài backend ở mục 4.1 bằng `& .\.venv\Scripts\Activate.ps1`. Runner gọi pipeline trực tiếp, có thể chạy khi Web và API đang tắt.
+
+- Trỏ `$datasetDir` tới thư mục chỉ chứa các JSON kịch bản. Dùng `test_set/public_sample` của gói đầy đủ để thử, rồi thay bằng thư mục bộ ẩn khi BTC cung cấp. Runner lấy `scenario_id` bên trong JSON.
+- Trỏ `$btcDir` tới gói BTC có bản `eval/reference_eval.py` dùng cho đợt chấm. Dùng đúng script từ gói đó để tái lập điểm chấm chéo.
+- Đặt API key trong `.env` theo [mẫu biến môi trường](.env.example). Eval mặc định dùng `gemini-3.6-flash`. Đặt `EVAL_LLM_PROVIDER`, `EVAL_LLM_MODEL` và `EVAL_LLM_ENDPOINT` nếu BTC cấp cấu hình khác, rồi dùng cùng cấu hình cho cả hai lượt.
+- Chuẩn bị hai database PostgreSQL dành riêng cho eval, mỗi database có cùng dữ liệu seed catalog và CRM. Với database trống, đặt `DATABASE_URL` trỏ tới database cần seed rồi chạy `python -X utf8 scripts/migrate_catalog.py`. Runner tạo đơn mẫu trong DB của cấu hình đang chạy và dọn các đơn nó đã tạo sau mỗi kịch bản.
+
+### 6.2. Chạy hai cấu hình và chấm điểm
+
+`run_eval.py` ở gốc repo nhận đúng ba tham số bắt buộc theo quy trình BTC gồm `--scenarios`, `--config` và `--out`. Thay các đường dẫn và chuỗi kết nối mẫu dưới đây bằng giá trị đã chuẩn bị.
 
 ```powershell
-python run_eval.py --scenarios $datasetDir --config baseline_no_memory --out outputs/eval/baseline.jsonl
-python run_eval.py --scenarios $datasetDir --config full --out outputs/eval/full.jsonl
-python -X utf8 dataset/organizer/eval/reference_eval.py --scenarios $datasetDir --trace outputs/eval/full.jsonl --baseline outputs/eval/baseline.jsonl --out outputs/eval/btc_report.json
+$datasetDir = 'D:\du-lieu\BTC\test_set\public_sample'
+$btcDir = 'D:\du-lieu\BTC-cap-nhat-11-2026-v2'
+$baselineDbUrl = 'postgresql+psycopg2://telesale:MAT_KHAU@127.0.0.1:5432/telesale_eval_baseline?sslmode=disable'
+$fullDbUrl = 'postgresql+psycopg2://telesale:MAT_KHAU@127.0.0.1:5432/telesale_eval_full?sslmode=disable'
+$runDir = Join-Path 'outputs/eval' ('btc-m1-' + (Get-Date -Format 'yyyyMMdd_HHmmss'))
+$baselineTrace = Join-Path $runDir 'baseline.jsonl'
+$fullTrace = Join-Path $runDir 'full.jsonl'
+$btcScorer = Join-Path $btcDir 'eval/reference_eval.py'
+
+python run_eval.py --scenarios $datasetDir --config full --out $fullTrace --preflight-only
+if ($LASTEXITCODE -ne 0) { throw 'Đầu vào eval chưa hợp lệ' }
+
+$env:EVAL_DATABASE_URL = $baselineDbUrl
+python run_eval.py --scenarios $datasetDir --config baseline_no_memory --out $baselineTrace
+if ($LASTEXITCODE -ne 0) { throw 'Kiểm tra baseline.metadata.json và log của runner' }
+
+$env:EVAL_DATABASE_URL = $fullDbUrl
+python run_eval.py --scenarios $datasetDir --config full --out $fullTrace
+if ($LASTEXITCODE -ne 0) { throw 'Kiểm tra full.metadata.json và log của runner' }
+
+python -X utf8 $btcScorer --scenarios $datasetDir --trace $fullTrace --baseline $baselineTrace --out (Join-Path $runDir 'btc_report.json')
 ```
 
-Đặt `$datasetDir` thành đường dẫn thư mục JSON BTC cung cấp. Runner mặc định
-chạy toàn bộ thư mục. Thêm `--preflight-only` để kiểm tra đầu vào trước.
-Hướng dẫn xuất ASR nguyên hội thoại, chạy benchmark cặp và đọc các ngưỡng
-nghiệm thu nằm trong [tài liệu eval](src/eval/README.md).
+`--preflight-only` kiểm tra danh sách kịch bản, cuộc gọi và lượt khách trước khi chạy agent. Hai lệnh sinh trace mặc định chạy toàn bộ thư mục. Nếu benchmark nội bộ cần đếm đúng các lượt khách có sẵn trong JSON, thêm `--no-closing-turn` vào cả hai lệnh để bỏ lượt kết thúc tự động. Dùng thư mục output mới cho mỗi lần chạy.
+
+### 6.3. Chấm cùng ASR theo quy trình BTC
+
+Cài dependencies voice và tải Zipformer theo mục 4.2. Dùng `asr/ground_truth.json` của BTC và thư mục WAV tương ứng. Mỗi ID cần một WAV nguyên hội thoại, lưu theo dạng `<ID>.wav` hoặc `<ID>/<ID>.wav` trong thư mục audio.
+
+```powershell
+$groundTruth = Join-Path $btcDir 'asr/ground_truth.json'
+$audioRoot = 'D:\du-lieu\BTC\audio'
+$asrDir = Join-Path $runDir 'asr'
+
+python -X utf8 src/eval/run_asr.py --ground-truth $groundTruth --audio-root $audioRoot --out $asrDir
+if ($LASTEXITCODE -ne 0) { throw 'Kiểm tra ground truth, WAV và model ASR' }
+
+python -X utf8 $btcScorer --scenarios $datasetDir --trace $fullTrace --baseline $baselineTrace --asr $asrDir --out (Join-Path $runDir 'btc_report_with_asr.json')
+```
+
+`run_asr.py` chạy nhận dạng cục bộ và xuất `ground_truth.json` cùng `hypotheses.json` cho tham số `--asr`. Đầu ra gồm bản chép và entity theo hội thoại. Để chấm entity theo lượt hoặc diarization, cần bổ sung kết quả phân đoạn tương ứng. Chấm thử bằng audio public D01–D04, rồi dùng ground truth và WAV của đợt chấm khi BTC cung cấp. Xem cách chạy benchmark nội bộ và đọc ngưỡng chất lượng, latency trong [tài liệu eval](src/eval/README.md).
 
 ### Các script benchmark khác
 
