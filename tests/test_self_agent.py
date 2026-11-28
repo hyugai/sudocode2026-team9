@@ -1097,8 +1097,9 @@ class Tests(unittest.IsolatedAsyncioTestCase):
 
     async def test_scenarios_end_each_call_and_report_changes(self):
         from self_agent.scenario_runner import replay, load_scenarios, DEFAULT_SCENARIOS
-        audit = json.loads((DEFAULT_SCENARIOS / "audit/dataset_stats.json").read_text(encoding="utf-8"))
-        self.assertEqual(len(load_scenarios(DEFAULT_SCENARIOS, limit=0)), audit["total_journeys"])
+        scenarios = load_scenarios(DEFAULT_SCENARIOS, limit=0)
+        self.assertEqual(len(scenarios), 157)
+        self.assertTrue(all(scenario["level"] == "M1" for scenario in scenarios))
         with TemporaryDirectory() as root:
             class Chat(Base):
                 def reset_customer_memory(self): pass

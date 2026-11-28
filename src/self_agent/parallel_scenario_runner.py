@@ -9,7 +9,7 @@ import uuid
 
 from .scenario_runner import load_scenarios
 
-DEFAULT_SCENARIOS = Path(__file__).resolve().parents[2] / "dataset/pipeline/final/M2"
+DEFAULT_SCENARIOS = Path(__file__).resolve().parents[2] / "dataset/transcript/M2"
 
 
 def utf8_process_env():

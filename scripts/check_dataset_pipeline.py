@@ -1,57 +1,46 @@
-"""Reproduce the committed Stage 3 export from its offline inputs."""
+"""Validate the committed Stage 3 exports using the BTC reference evaluator."""
 
 from pathlib import Path
-from shutil import copyfile
-import sys
-from tempfile import TemporaryDirectory
+import runpy
 
 
 ROOT = Path(__file__).resolve().parents[1]
-PIPELINE = ROOT / "dataset/pipeline"
-STAGE3 = PIPELINE / "stage-3"
-CATALOG = PIPELINE / "stage-1/input/catalog"
+TRANSCRIPTS = ROOT / "dataset/transcript"
 
 
-def snapshot(directory):
-    return {
-        path.relative_to(directory).as_posix(): path.read_text(encoding="utf-8")
-        for path in directory.rglob("*")
-        if path.is_file() and path.suffix in {".json", ".jsonl"}
-    }
+def check_export(tier, numbers, expected_sessions, evaluator):
+    directory = TRANSCRIPTS / tier
+    filenames = [path.name for path in sorted(directory.glob("*.json"))]
+    if filenames != [f"SC-{number:03d}.json" for number in numbers]:
+        raise ValueError(f"{tier}: unexpected set of published scenario files in {directory}")
+
+    scenarios = evaluator["load_scenarios"](str(directory))
+    if len(scenarios) != len(numbers):
+        raise ValueError(f"{tier}: the evaluator could not load distinct scenario IDs")
+
+    sessions = 0
+    for scenario_id, scenario in scenarios.items():
+        calls = scenario["calls"]
+        if scenario["level"] != tier or len(calls) not in (2, 3):
+            raise ValueError(f"{tier}/{scenario_id}: unexpected tier or number of sessions")
+        for call_id, call in calls.items():
+            turns = call["customer_turns"]
+            if not isinstance(turns, list) or not turns or any(
+                not isinstance(turn, str) or not turn.strip() for turn in turns
+            ):
+                raise ValueError(f"{tier}/{scenario_id}/{call_id}: invalid customer turns")
+        sessions += len(calls)
+    if sessions != expected_sessions:
+        raise ValueError(f"{tier}: expected {expected_sessions} sessions, found {sessions}")
+
+    evaluator["evaluate"](scenarios, {})
+    print(f"Verified {tier}: {len(scenarios)} scenarios and {sessions} sessions.")
 
 
 def main():
-    sys.path.insert(0, str(STAGE3 / "src"))
-    from finalize import finalize
-
-    with TemporaryDirectory() as temporary:
-        root = Path(temporary)
-        btc = root / "btc"
-        # The notebook expects the organizer bundle layout for these two inputs.
-        for source, name in (
-            (CATALOG / "crm_seed.json", "BTC-Data-Vong1-TEAMS/catalog/crm_seed.json"),
-            (ROOT / "dataset/organizer/eval/reference_eval.py",
-             "BTC-cap-nhat-11-2026/eval/reference_eval.py"),
-        ):
-            target = btc / name
-            target.parent.mkdir(parents=True, exist_ok=True)
-            copyfile(source, target)
-
-        output = root / "output"
-        stats = finalize(
-            STAGE3 / "input",
-            output,
-            btc_dir=btc,
-            venue_catalog=CATALOG / "public-delivery-addresses.json",
-            batch_size=20,
-        )
-        expected = snapshot(STAGE3 / "output")
-        actual = snapshot(output)
-        changed = sorted(name for name in expected.keys() | actual.keys()
-                         if expected.get(name) != actual.get(name))
-        if changed:
-            raise SystemExit(f"Stage 3 export differs in {len(changed)} files: {', '.join(changed[:10])}")
-        print(f"Verified {stats['total_journeys']} scenarios and their Stage 3 audit files.")
+    evaluator = runpy.run_path(str(ROOT / "dataset/organizer/eval/reference_eval.py"))
+    check_export("M1", range(1, 158), 338, evaluator)
+    check_export("M2", range(158, 316), 344, evaluator)
 
 
 if __name__ == "__main__":

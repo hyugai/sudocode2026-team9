@@ -14,7 +14,7 @@ from package_audio_regeneration import package
 from regenerate_transcript_audio import DEFAULT_OUTPUT, IDS, REPO, old_helpers, plan_turns, reference_valid
 
 
-SOURCE = REPO / "dataset/pipeline/stage-3/output/m1-v1"
+SOURCE = REPO / "dataset/transcript/M1"
 NOTEBOOK_PATH = REPO / (
     "dataset/text-to-speech/pipeline-generate-audio/"
     "m1_v1_omnivoice_vietnamese_SC001_SC100_kaggle.ipynb"

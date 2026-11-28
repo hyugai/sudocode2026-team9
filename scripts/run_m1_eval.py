@@ -13,13 +13,12 @@ from tempfile import TemporaryDirectory
 
 
 ROOT = Path(__file__).resolve().parents[1]
-SCENARIOS = ROOT / "dataset/pipeline/stage-3/output/m1-v1"
 AUDIO = ROOT / "dataset/audio"
 AUDIO_PLAN = ROOT / "outputs/audio-regeneration/m1-v1-kaggle/audio_plan.json"
 OUTPUT = ROOT / "outputs/benchmark"
 
 sys.path.insert(0, str(ROOT / "src"))
-from eval.benchmark_support import audio_path
+from eval.benchmark_support import DEFAULT_SCENARIOS, audio_path
 
 
 def prepare_audio(files: list[Path], metadata: dict, bundle: Path) -> None:
@@ -96,7 +95,7 @@ def main() -> int:
     if not args.preflight_only and ((OUTPUT / version).exists() or bundle_path.exists()):
         parser.error("Output already exists; choose a new --version")
 
-    files = sorted(SCENARIOS.glob("SC-*.json"))
+    files = sorted(DEFAULT_SCENARIOS.glob("SC-*.json"))
     metadata = None
     local_manifest = AUDIO.parent / "audio_manifest.json"
     if args.mode != "text":
@@ -115,7 +114,7 @@ def main() -> int:
             print("[M1 inputs] Noise labels come from the generation plan. WAV checksums are calculated locally.", flush=True)
 
     if not files:
-        parser.error(f"No matching scenario files in {SCENARIOS}")
+        parser.error(f"No matching scenario files in {DEFAULT_SCENARIOS}")
     limit = len(files) if args.limit is None else args.limit
     if not 1 <= limit <= len(files):
         parser.error(f"--limit must be between 1 and {len(files)} for mode {args.mode}")
@@ -129,7 +128,7 @@ def main() -> int:
             command.extend([flag, value])
 
     if metadata is None:
-        command.extend(["--scenarios", str(SCENARIOS), "--input-kinds", "text"])
+        command.extend(["--scenarios", str(DEFAULT_SCENARIOS), "--input-kinds", "text"])
         return subprocess.run(command, cwd=ROOT).returncode
 
     OUTPUT.mkdir(parents=True, exist_ok=True)

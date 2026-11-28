@@ -46,7 +46,7 @@ Entry point này giữ các thành phần hiện có: `generate_traces.run_scena
 agent, `trace_extractors` tạo evidence, `team_eval.evaluate_team` chấm bằng công
 thức BTC và metric team. Không gửi ground truth/scoring conditions vào agent.
 
-Mặc định chạy toàn bộ JSON trong `dataset/pipeline/stage-3/output/m1-v1`. Truyền `--limit 40` để chạy 40 ca đầu.
+Mặc định chạy toàn bộ JSON trong `dataset/transcript/M1`. Truyền `--limit 40` để chạy 40 ca đầu.
 Runner dùng `scenario_id` bên trong JSON để ghi trace. Tên tệp Stage 3 có thể đã được đánh số lại.
 Hai nhóm text chạy tuần tự trên cùng máy, API và model:
 
@@ -494,7 +494,7 @@ Các API key và `DATABASE_URL` được đọc từ `.env`; không được cop
 ```powershell
 .\.venv\Scripts\python.exe src\eval\run_benchmark.py `
   --version benchmark_v7 `
-  --scenarios "dataset\pipeline\stage-3\output" `
+  --scenarios "dataset\transcript\M1" `
   --llm-provider gemini `
   --llm-model gemini-3.6-flash `
   --memory-persister-mode llm_learning `
@@ -513,7 +513,7 @@ Ví dụ trace chỉ chứa ba scenario đầu:
 
 ```powershell
 .\.venv\Scripts\python.exe src\eval\team_eval.py `
-  --scenarios "dataset\pipeline\stage-3\output" `
+  --scenarios "dataset\transcript\M1" `
   --limit 3 `
   --trace "outputs\benchmark\benchmark_v5\trace.jsonl" `
   --out "outputs\benchmark\benchmark_v5\report.json"
@@ -525,7 +525,7 @@ Phải truyền lại cùng `--scenario-id` hoặc `--limit` đã dùng khi gene
 
 ```powershell
 .\.venv\Scripts\python.exe src\eval\memory_judge.py `
-  --scenarios "dataset\pipeline\stage-3\output" `
+  --scenarios "dataset\transcript\M1" `
   --limit 3 `
   --trace "outputs\benchmark\benchmark_v5\trace.jsonl" `
   --provider gemini `
@@ -537,7 +537,7 @@ Sau đó chấm lại và gắn report MWQ:
 
 ```powershell
 .\.venv\Scripts\python.exe src\eval\team_eval.py `
-  --scenarios "dataset\pipeline\stage-3\output" `
+  --scenarios "dataset\transcript\M1" `
   --limit 3 `
   --trace "outputs\benchmark\benchmark_v5\trace.jsonl" `
   --memory-judge-report "outputs\benchmark\benchmark_v5\memory_judge.json" `

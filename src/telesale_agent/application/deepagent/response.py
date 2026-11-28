@@ -284,14 +284,15 @@ def ground_basket_recap(
 def ground_multi_item_order_confirmation(
     context: TurnContext,
     tool_calls: list[dict[str, Any]],
-    response_text: str,
-) -> str:
+    response_text: str | None,
+) -> str | None:
     """Confirm verified single-basket or split orders using returned IDs."""
     created = [
         call for call in tool_calls
         if call.get("name") == "order.create"
         and isinstance(call.get("result"), dict)
         and call["result"].get("order_id")
+        and not call["result"].get("error")
     ]
     skus = _basket_skus(context)
     names = _basket_product_names(context, tool_calls)
@@ -349,12 +350,16 @@ def ground_multi_item_order_confirmation(
 
 def ground_checkout_response(context: TurnContext, tool_calls: list[dict[str, Any]], response: str) -> str:
     """Report the recorded order outcome and ask only for missing checkout data."""
+    basket_confirmation = ground_multi_item_order_confirmation(context, tool_calls, None)
+    if basket_confirmation is not None:
+        return basket_confirmation
+
     for call in tool_calls:
         result = call.get("result") or {}
         args = call.get("args") or {}
         if call.get("name") == "order.create" and result.get("order_id") and not result.get("error"):
             if args.get("lines"):
-                return response  # The existing cart readback lists its constituent lines.
+                return response
             total = _format_vnd(result.get("total_vnd", args.get("price_vnd")))
             reply = f"Dạ, bên em đã tạo đơn {result['order_id']} ạ."
             if total:

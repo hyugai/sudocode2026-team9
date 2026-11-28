@@ -23,8 +23,9 @@ RUN mkdir -p src && python -m pip install -e ".[voice,realtime,learning]"
 COPY src ./src
 COPY scripts ./scripts
 COPY dataset/organizer ./dataset/organizer
-# Only static agent instructions belong in the image. Customer memory is seeded
-# by init from organizer/catalog/crm_seed.json into a dedicated Docker volume.
+COPY dataset/transcript/src/stage-1/input/catalog ./dataset/transcript/src/stage-1/input/catalog
+# Only static agent instructions belong in the image. The init service seeds
+# customer memory from the catalog into a dedicated Docker volume.
 COPY data/memory-root/agents/telesales_agent/agent.md \
      data/memory-root/agents/telesales_agent/soul.md \
      data/memory-root/agents/telesales_agent/tools.md ./data/memory-root/agents/telesales_agent/

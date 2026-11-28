@@ -29,7 +29,7 @@ _COLOR = {
     "đen": "den", "trắng": "trang", "xanh": "xanh", "đỏ": "do",
     "be": "be", "hồng": "hong", "nâu": "nau", "xám": "xam",
 }
-DEFAULT_CATALOG = Path(__file__).resolve().parents[2] / "dataset/pipeline/stage-1/input/catalog/products.json"
+DEFAULT_CATALOG = Path(__file__).resolve().parents[2] / "dataset/transcript/src/stage-1/input/catalog/products.json"
 
 
 def load_product_aliases(catalog: Path) -> dict[str, str]:

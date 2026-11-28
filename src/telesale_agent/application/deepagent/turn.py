@@ -51,7 +51,6 @@ from telesale_agent.application.deepagent.response import (
     ground_checkout_response,
     ground_current_stock_claims,
     ground_basket_recap,
-    ground_multi_item_order_confirmation,
     ground_unverified_unit_question,
     ground_water_resistance,
 )
@@ -361,9 +360,6 @@ async def prepare_response(harness, context, tool_calls, response_text, *, baske
     )
     response_text = ground_basket_recap(
         context, basket_evidence if basket_evidence is not None else tool_calls, response_text
-    )
-    response_text = ground_multi_item_order_confirmation(
-        context, tool_calls, response_text
     )
     response_text = ground_checkout_response(context, tool_calls, response_text)
 

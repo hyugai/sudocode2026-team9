@@ -6,7 +6,7 @@ import { applianceSubcategories, categoryFor, filterProducts as filterCatalog, p
 import { getProductDetails, products } from "../utils/demo-catalog.ts";
 import { productIllustrationFor } from "../utils/product-illustrations.ts";
 
-const sourceCatalog = new URL("../../../dataset/pipeline/stage-1/input/catalog/", import.meta.url);
+const sourceCatalog = new URL("../../../dataset/transcript/src/stage-1/input/catalog/", import.meta.url);
 const source = JSON.parse(await readFile(new URL("products.json", sourceCatalog)));
 const filterProducts = (category, subcategory, search) => filterCatalog(category, subcategory, search, products);
 

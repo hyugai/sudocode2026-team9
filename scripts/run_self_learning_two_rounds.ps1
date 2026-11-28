@@ -11,7 +11,7 @@ param(
 )
 $ErrorActionPreference = 'Stop'
 $repoRoot = Split-Path -Parent $PSScriptRoot
-if (-not $ScenarioDir) { $ScenarioDir = Join-Path $repoRoot 'dataset/main/m2_transcripts/scenarios_complete' }
+if (-not $ScenarioDir) { $ScenarioDir = Join-Path $repoRoot 'dataset/transcript/M2' }
 if (-not $OutputDir) { $OutputDir = Join-Path $repoRoot ('outputs/self-agent/two-rounds/' + (Get-Date -Format 'yyyyMMdd-HHmmss')) }
 if (Test-Path -LiteralPath $OutputDir) { throw 'Choose a new output directory to preserve the previous experiment.' }
 $oldPath = $env:PYTHONPATH

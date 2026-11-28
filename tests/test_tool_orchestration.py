@@ -1,5 +1,4 @@
 import json
-from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import AsyncMock
 
@@ -1322,11 +1321,11 @@ def _callback_harness(draft="Dạ, em đã ghi nhận yêu cầu ạ.", *, sched
 async def test_callback_replay_matches_benchmark_utterance(
     scenario_id, filename, expected_at, btc_pass, holiday_variant
 ):
+    from eval.benchmark_support import DEFAULT_SCENARIOS
     from eval.generate_traces import run_scenario
     from eval.team_eval import REFERENCE
 
-    directory = Path(__file__).resolve().parents[1] / "dataset/pipeline/stage-3/output/m1-v1"
-    scenario = json.loads((directory / f"{filename}.json").read_text(encoding="utf-8"))
+    scenario = json.loads((DEFAULT_SCENARIOS / f"{filename}.json").read_text(encoding="utf-8"))
     assert scenario["scenario_id"] == scenario_id
     spec = scenario["calls"]["call_1"]
     scenario["calls"] = {"call_1": spec}
