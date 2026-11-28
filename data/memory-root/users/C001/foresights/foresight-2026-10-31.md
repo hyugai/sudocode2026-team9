@@ -1,1 +1,0 @@
-- Báo lại giá bán hiện tại và tình trạng còn hàng của sản phẩm có giá 4.890.000 đồng cho khách hàng
