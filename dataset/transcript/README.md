@@ -33,7 +33,7 @@ TF-IDF dùng toàn bộ lời khách của mỗi hội thoại. Một hội tho�
 | Hạng mục dataset | M1 | Bộ dữ liệu đã sinh |
 | --- | --- | --- |
 | Số cuộc hội thoại (dạng transcript) | ≥ 120 | 157 |
-| Trong đó có audio (thu thật hoặc sinh bằng TTS) | ≥ 40 cuộc / ≥ 1 giờ | 100 hội thoại / 1 giờ 10 phút 59 giây |
+| Trong đó có audio (thu thật hoặc sinh bằng TTS) | ≥ 40 cuộc / ≥ 1 giờ | 100 cuộc / 1 giờ 10 phút 59 giây |
 | Khách hàng đa phiên (≥ 2 cuộc gọi cùng 1 khách) | ≥ 30 khách | 35 khách có ít nhất 2 cuộc gọi hotline trong cùng một hội thoại |
 | Khách có cả cuộc gọi + chat (đa kênh) | ≥ 10 khách | 21 khách có hotline và chat trong cùng một hội thoại |
 | Ngành hàng · giọng vùng miền | 1 ngành · 2 miền | 1 ngành thời trang · 2 nhãn vùng miền (Trung và Nam) |
@@ -49,7 +49,7 @@ Bảng M2 tính trên cả hai đợt, gồm 157 hội thoại M1 và 158 hội 
 | Hạng mục dataset | M2 | Bộ dữ liệu đã sinh |
 | --- | --- | --- |
 | Số cuộc hội thoại (dạng transcript) | ≥ 250 | 315 |
-| Trong đó có audio (thu thật hoặc sinh bằng TTS) | ≥ 100 / ≥ 3 giờ | 100 hội thoại / 1 giờ 10 phút 59 giây. Còn thiếu 1 giờ 49 phút 1 giây. |
+| Trong đó có audio (thu thật hoặc sinh bằng TTS) | ≥ 100 cuộc / ≥ 3 giờ | 100 cuộc / 1 giờ 10 phút 59 giây |
 | Khách hàng đa phiên (≥ 2 cuộc gọi cùng 1 khách) | ≥ 60 (có khách ≥ 3 phiên) | 50 khách có ít nhất 2 cuộc gọi hotline trong cùng một hội thoại, trong đó 37 khách có hội thoại 3 phiên |
 | Khách có cả cuộc gọi + chat (đa kênh) | ≥ 30 khách | 33 khách có hotline và chat trong cùng một hội thoại |
 | Ngành hàng · giọng vùng miền | 3 ngành · 3 miền | 3 ngành (thời trang, gia dụng, mẹ và bé) · 3 nhãn vùng miền (Bắc, Trung, Nam) |
