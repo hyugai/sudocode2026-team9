@@ -40,16 +40,15 @@
           "RUN-10": "2026-10-25",
           "COD-0": "2026-12-14",
           "RUN2-SALE": "2026-10-07"
-        },
-        "scheduled_callback_at": "2026-10-27T10:00"
+        }
       },
       "expected_outcome": "hen_goi_lai",
       "success_if": {
-        "tool_called": "schedule.callback",
-        "args_match": {
-          "customer_phone": "0992298369",
-          "callback_at": "2026-10-26T10:00"
-        }
+        "tool_called": null,
+        "args_match": {},
+        "must_not_call_tools": [
+          "schedule.callback"
+        ]
       }
     },
     "call_2": {

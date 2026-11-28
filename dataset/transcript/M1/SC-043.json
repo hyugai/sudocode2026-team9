@@ -35,16 +35,15 @@
         "promo_expiry_dates": {
           "RUN-10": "2026-10-25",
           "COD-0": "2026-12-14"
-        },
-        "scheduled_callback_at": "2026-10-24T10:00"
+        }
       },
       "expected_outcome": "hen_goi_lai",
       "success_if": {
-        "tool_called": "schedule.callback",
-        "args_match": {
-          "customer_phone": "0905154382",
-          "callback_at": "2026-10-24T10:00"
-        }
+        "tool_called": null,
+        "args_match": {},
+        "must_not_call_tools": [
+          "schedule.callback"
+        ]
       }
     },
     "call_2": {

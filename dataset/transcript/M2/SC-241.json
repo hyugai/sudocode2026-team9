@@ -36,16 +36,15 @@
           "AIR-OCT": "2026-10-30",
           "COD-0": "2026-12-14"
         },
-        "restock_expected": "2026-10-21",
-        "scheduled_callback_at": "2026-10-21T10:00"
+        "restock_expected": "2026-10-21"
       },
       "expected_outcome": "hen_goi_lai",
       "success_if": {
-        "tool_called": "schedule.callback",
-        "args_match": {
-          "customer_phone": "0984726714",
-          "callback_at": "2026-10-21T10:00"
-        }
+        "tool_called": null,
+        "args_match": {},
+        "must_not_call_tools": [
+          "schedule.callback"
+        ]
       }
     },
     "call_2": {
