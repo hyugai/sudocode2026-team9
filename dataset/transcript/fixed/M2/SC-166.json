@@ -1,0 +1,105 @@
+{
+  "scenario_id": "SC-192",
+  "level": "M2",
+  "persona": "khach_do_du_hoi_nguoi_nha",
+  "hard_case": null,
+  "customer_phone": "0929486628",
+  "customer_name": "Nam",
+  "honorific": "anh",
+  "notes": "consider_and_decide",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0929486628",
+      "call_date": "2026-10-26",
+      "customer_turns": [
+        "Chào anh, em đang muốn xem máy tiệt trùng sấy khô Moaz Bebe, giá bao nhiêu vậy anh?",
+        "À, một triệu tám trăm chín mươi nghìn ạ? Em xin hỏi thêm là ngân sách của em là ba triệu năm trăm nghìn, có mua được không?",
+        "Em cần hỏi người nhà một chút, anh cho em hỏi lại được không?",
+        "Em sẽ gọi lại vào mười giờ ngày ba mươi tháng mười."
+      ],
+      "customer_goal": "Xem sản phẩm trong ngân sách và hỏi ý kiến người nhà",
+      "facts_established": {
+        "product_advised": "SKU-MB-STER",
+        "price_quoted_vnd": 1890000,
+        "budget_vnd": 3500000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-MB-STER",
+        "price_vnd": 1890000,
+        "in_stock": true,
+        "active_promos": [
+          "MOM-FREESHIP",
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "MOM-FREESHIP": "2026-11-29",
+          "COD-0": "2026-12-14"
+        }
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": null,
+        "args_match": {},
+        "must_not_call_tools": [
+          "schedule.callback"
+        ]
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0929486628",
+      "call_date": "2026-10-30",
+      "customer_turns": [
+        "Chào anh, em đã hỏi người nhà rồi, hôm trước chị nói rồi mà.",
+        "Em đồng ý mua máy tiệt trùng sấy khô Moaz Bebe, giá một triệu tám trăm chín mươi nghìn.",
+        "Giao hàng đến số 45 phố Nghĩa Tân, phường Nghĩa Đô, Hà Nội nhé anh.",
+        "Thanh toán khi nhận hàng, em xin cảm ơn."
+      ],
+      "days_later": 4,
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-MB-STER",
+        "price_quoted_vnd": 1890000,
+        "payment": "COD",
+        "delivery_address": "Số 45 phố Nghĩa Tân, phường Nghĩa Đô, Hà Nội",
+        "order_status": "created"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "budget_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-MB-STER",
+        "price_vnd": 1890000,
+        "in_stock": true,
+        "active_promos": [
+          "MOM-FREESHIP",
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "MOM-FREESHIP": "2026-11-29",
+          "COD-0": "2026-12-14"
+        },
+        "estimated_delivery": "2026-11-02"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-MB-STER",
+          "price_vnd": 1890000
+        }
+      }
+    }
+  }
+}

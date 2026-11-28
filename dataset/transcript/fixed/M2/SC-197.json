@@ -1,0 +1,99 @@
+{
+  "scenario_id": "SC-228",
+  "level": "M2",
+  "persona": "khach_da_kenh_mau_thuan",
+  "hard_case": "conflicting_quotes",
+  "customer_phone": "0964252477",
+  "customer_name": "Trang",
+  "honorific": "chị",
+  "notes": "continue_across_channels",
+  "calls": {
+    "call_1": {
+      "channel": "chat_fanpage",
+      "channel_identity": "fb.trang.394",
+      "call_date": "2026-10-20",
+      "customer_turns": [
+        "Chị ơi, mình muốn hỏi về Combo AirPure Y + 2 màng lọc. Giá bao nhiêu vậy?",
+        "Cảm ơn, mình ghi lại rồi. Mình sẽ xem lại và gọi lại chị vào mười giờ ngày mai nhé.",
+        "Có thể ghi nhớ là mình sẽ gọi lại vào mười giờ ngày hai mươi mốt tháng mười không ạ?"
+      ],
+      "customer_goal": "Hỏi về sản phẩm và hẹn xem lại",
+      "facts_established": {
+        "product_advised": "SKU-BDL-AIR",
+        "price_quoted_vnd": 6390000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-BDL-AIR",
+        "price_vnd": 6390000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        }
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": null,
+        "args_match": {},
+        "must_not_call_tools": [
+          "schedule.callback"
+        ]
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0964252477",
+      "call_date": "2026-10-21",
+      "customer_turns": [
+        "Chị ơi, mình vừa xem qua giá ở hai kênh. Ở đây báo sáu triệu ba trăm chín mươi nghìn, nhưng một nơi khác lại là sáu triệu bốn trăm chín mươi nghìn. Sao lại khác nhau vậy?",
+        "Chị giải thích cho mình rõ là vì sao lại có sự chênh lệch này được không? Mình chỉ muốn mua đúng giá hiện hành thôi.",
+        "Nếu giá đúng là sáu triệu ba trăm chín mươi nghìn thì mình mua luôn. Mình có thể thanh toán khi nhận hàng, địa chỉ là Số 289 đường Nguyễn Công Trứ, phường An Hải, Đà Nẵng.",
+        "Chị xin lỗi vì mình hơi bực, nhưng mình chỉ muốn mua đúng giá đã báo."
+      ],
+      "days_later": 1,
+      "customer_goal": "Đối chiếu mức giá đã báo qua hai kênh rồi chốt đơn",
+      "facts_established": {
+        "product_advised": "SKU-BDL-AIR",
+        "price_quoted_vnd": 6390000,
+        "payment": "COD",
+        "delivery_address": "Số 289 đường Nguyễn Công Trứ, phường An Hải, Đà Nẵng",
+        "order_status": "created",
+        "reported_price_vnd": 6490000
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-BDL-AIR",
+        "price_vnd": 6390000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "estimated_delivery": "2026-10-23"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-BDL-AIR",
+          "price_vnd": 6390000
+        }
+      }
+    }
+  }
+}

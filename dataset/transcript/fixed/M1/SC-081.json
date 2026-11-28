@@ -1,0 +1,103 @@
+{
+  "scenario_id": "SC-088",
+  "level": "M1",
+  "persona": "khach_so_gia",
+  "hard_case": "out_of_stock",
+  "customer_phone": "0993186032",
+  "customer_name": "Đức",
+  "honorific": "anh",
+  "notes": "return_after_price_or_stock_change",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0993186032",
+      "call_date": "2026-10-16",
+      "customer_turns": [
+        "Anh ơi, em vừa so giá bên khác rồi, họ bán chỉ một triệu năm trăm lẻ một ngàn.",
+        "Em hỏi lại giá bên anh, bên anh là một triệu năm trăm hai mươi mốt ngàn.",
+        "Anh có thể giảm được không? Em đang cân nhắc mua.",
+        "Nếu không giảm thì anh có ưu đãi gì không? Như quà tặng hay bảo hành dài hơn?",
+        "Em đợi anh trả lời nha."
+      ],
+      "customer_goal": "So báo giá với nơi khác trước khi quyết định",
+      "facts_established": {
+        "product_advised": "SKU-SN-RUN2-41-DEN",
+        "price_quoted_vnd": 1521000,
+        "competitor_price_vnd": 1501000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN2-41-DEN",
+        "price_vnd": 1521000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0",
+          "RUN-10"
+        ],
+        "expired_promos": [
+          "RUN2-SALE"
+        ],
+        "promo_expiry_dates": {
+          "RUN-10": "2026-10-25",
+          "COD-0": "2026-12-14",
+          "RUN2-SALE": "2026-10-07"
+        }
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": null,
+        "args_match": {},
+        "must_not_call_tools": [
+          "schedule.callback"
+        ]
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0993186032",
+      "call_date": "2026-10-17",
+      "customer_turns": [
+        "Anh ơi, em hôm qua hỏi size bốn mươi mốt giày RunLite hai Pro màu đen rồi.",
+        "Giờ em kiểm tra lại, bên anh có còn hàng không?",
+        "Chị ấy nói là hết, em hơi tiếc. Nhưng em hiểu, nếu có hàng em sẽ gọi lại.",
+        "Em cảm ơn anh, nếu có hàng thì anh nhắn em nhé.",
+        "Chúc anh một ngày tốt lành."
+      ],
+      "days_later": 1,
+      "customer_goal": "Kiểm tra lại đúng size đã hỏi rồi hoãn mua vì hết hàng",
+      "facts_established": {},
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "competitor_price_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN2-41-DEN",
+        "price_vnd": 1521000,
+        "in_stock": false,
+        "active_promos": [
+          "COD-0",
+          "RUN-10"
+        ],
+        "expired_promos": [
+          "RUN2-SALE"
+        ],
+        "promo_expiry_dates": {
+          "RUN-10": "2026-10-25",
+          "COD-0": "2026-12-14",
+          "RUN2-SALE": "2026-10-07"
+        },
+        "restock_expected": "2026-10-24"
+      },
+      "expected_outcome": "tu_choi",
+      "success_if": {
+        "tool_called": "inventory.check",
+        "args_match": {
+          "sku": "SKU-SN-RUN2-41-DEN"
+        }
+      }
+    }
+  }
+}

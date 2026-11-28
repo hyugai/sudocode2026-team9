@@ -1,0 +1,94 @@
+{
+  "scenario_id": "SC-204",
+  "level": "M2",
+  "persona": "khach_so_gia",
+  "hard_case": null,
+  "customer_phone": "0991280845",
+  "customer_name": "Việt",
+  "honorific": "anh",
+  "notes": "consider_and_decide",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0991280845",
+      "call_date": "2026-10-17",
+      "customer_turns": [
+        "Anh ơi, em đang so sánh giá máy lọc nước RO Kangaroo 10 lõi với bên khác.",
+        "Bên họ báo sáu triệu sáu trăm chín mươi ngàn, mà bên anh lại sáu triệu tám trăm chín mươi ngàn.",
+        "Anh có thể giảm giá không? Em muốn chọn bên rẻ hơn một chút.",
+        "Nếu không giảm, em sẽ xem lại sau."
+      ],
+      "customer_goal": "So báo giá với nơi khác trước khi quyết định",
+      "facts_established": {
+        "product_advised": "SKU-WF-RO10",
+        "price_quoted_vnd": 6890000,
+        "competitor_price_vnd": 6690000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-WF-RO10",
+        "price_vnd": 6890000,
+        "in_stock": true,
+        "active_promos": [
+          "NAM-SHIP0",
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "NAM-SHIP0": "2026-11-05",
+          "COD-0": "2026-12-14"
+        }
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": null,
+        "args_match": {},
+        "must_not_call_tools": [
+          "schedule.callback"
+        ]
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0991280845",
+      "call_date": "2026-10-19",
+      "customer_turns": [
+        "Anh ơi, em xem lại báo giá rồi. Giá bên anh vẫn cao hơn bên họ 200 nghìn.",
+        "Em vẫn muốn mua nhưng có thể đổi sang sản phẩm khác nếu bên anh có khuyến mãi.",
+        "Nếu không có ưu đãi gì thì em sẽ xem lại sau.",
+        "Em không mua ngay được."
+      ],
+      "days_later": 2,
+      "customer_goal": "Xem lại báo giá và hoãn quyết định mua",
+      "facts_established": {
+        "product_advised": "SKU-WF-RO10"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "competitor_price_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-WF-RO10",
+        "price_vnd": 6890000,
+        "in_stock": true,
+        "active_promos": [
+          "NAM-SHIP0",
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "NAM-SHIP0": "2026-11-05",
+          "COD-0": "2026-12-14"
+        }
+      },
+      "expected_outcome": "tu_choi",
+      "success_if": {
+        "tool_called": null,
+        "args_match": {}
+      }
+    }
+  }
+}

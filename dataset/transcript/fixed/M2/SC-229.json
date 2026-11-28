@@ -1,0 +1,110 @@
+{
+  "scenario_id": "SC-266",
+  "level": "M2",
+  "persona": "khach_so_gia",
+  "hard_case": "expired_promo",
+  "customer_phone": "0992298369",
+  "customer_name": "Ngọc",
+  "honorific": "chị",
+  "notes": "return_after_price_or_stock_change",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0992298369",
+      "call_date": "2026-10-25",
+      "customer_turns": [
+        "Chị ơi, em đang so sánh giá với nơi khác, bên họ báo giá một triệu không trăm bốn mươi mốt nghìn.",
+        "Giày RunLite một, giá một triệu một trăm sáu mươi mốt nghìn, có ưu đãi giảm 10% nữa.",
+        "Ưu đãi hết ngày hai mươi lăm tháng mười, em muốn biết bên chị có thể giảm được bao nhiêu không?",
+        "Nếu không giảm, em sẽ chọn bên họ."
+      ],
+      "customer_goal": "So báo giá với nơi khác trước khi quyết định",
+      "facts_established": {
+        "product_advised": "SKU-SN-RUN1",
+        "price_quoted_vnd": 1161000,
+        "promo_code": "RUN-10",
+        "promo_expiry": "2026-10-25",
+        "competitor_price_vnd": 1041000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN1",
+        "price_vnd": 1161000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0",
+          "RUN-10"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "RUN-10": "2026-10-25",
+          "COD-0": "2026-12-14"
+        }
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": null,
+        "args_match": {},
+        "must_not_call_tools": [
+          "schedule.callback"
+        ]
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0992298369",
+      "call_date": "2026-10-27",
+      "customer_turns": [
+        "Chị ơi, em đang cân nhắc mua giày RunLite một.",
+        "Giá bên chị là một triệu hai trăm chín mươi nghìn, em thấy hơi cao so với đối thủ.",
+        "Em có thể thanh toán khi nhận hàng không?",
+        "Giao hàng đến số 503 đường Trần Cao Vân, phường Thanh Khê, Đà Nẵng được không?"
+      ],
+      "days_later": 2,
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-SN-RUN1",
+        "price_quoted_vnd": 1290000,
+        "payment": "COD",
+        "delivery_address": "Số 503 đường Trần Cao Vân, phường Thanh Khê, Đà Nẵng",
+        "order_status": "created"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "promo_code",
+        "promo_expiry",
+        "competitor_price_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN1",
+        "price_vnd": 1290000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [
+          "RUN-10"
+        ],
+        "promo_expiry_dates": {
+          "RUN-10": "2026-10-25",
+          "COD-0": "2026-12-14"
+        },
+        "estimated_delivery": "2026-10-29"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-SN-RUN1",
+          "price_vnd": 1290000
+        }
+      }
+    }
+  }
+}

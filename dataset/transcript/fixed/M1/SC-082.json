@@ -1,0 +1,137 @@
+{
+  "scenario_id": "SC-089",
+  "level": "M1",
+  "persona": "khach_so_gia",
+  "hard_case": "restock",
+  "customer_phone": "0901304118",
+  "customer_name": "Yến",
+  "honorific": "chị",
+  "notes": "return_after_price_or_stock_change",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0901304118",
+      "call_date": "2026-10-23",
+      "customer_turns": [
+        "Chị ơi, em đang xem sản phẩm Giày chạy bộ RunLite hai Pro màu đen size bốn mươi mốt, giá bên các bạn là một triệu năm trăm hai mươi mốt nghìn.",
+        "Nhưng em thấy bên đối thủ chỉ một triệu năm trăm lẻ một nghìn, rẻ hơn mười nghìn. Chị có thể giảm thêm không?",
+        "Em muốn so sánh giá trước khi quyết định."
+      ],
+      "customer_goal": "So báo giá với nơi khác trước khi quyết định",
+      "facts_established": {
+        "product_advised": "SKU-SN-RUN2-41-DEN",
+        "price_quoted_vnd": 1521000,
+        "competitor_price_vnd": 1501000,
+        "basket_skus": [
+          "SKU-SN-RUN2-41-DEN",
+          "SKU-JK-DWN-L-NAVY"
+        ]
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN2-41-DEN",
+        "price_vnd": 1521000,
+        "in_stock": false,
+        "active_promos": [
+          "COD-0",
+          "RUN-10"
+        ],
+        "expired_promos": [
+          "RUN2-SALE"
+        ],
+        "promo_expiry_dates": {
+          "RUN-10": "2026-10-25",
+          "COD-0": "2026-12-14",
+          "RUN2-SALE": "2026-10-07"
+        },
+        "restock_expected": "2026-10-24"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": null,
+        "args_match": {},
+        "must_not_call_tools": [
+          "schedule.callback"
+        ]
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0901304118",
+      "call_date": "2026-10-24",
+      "customer_turns": [
+        "Chị ơi, hôm nay em gọi lại vì thấy sản phẩm đã có hàng. Em muốn chốt đơn theo giá một triệu năm trăm hai mươi mốt nghìn.",
+        "Em chọn thanh toán khi nhận hàng, địa chỉ là Số 02 đường Hoàng Diệu, phường Hội An, Đà Nẵng.",
+        "Giá bên em đang có là một triệu năm trăm lẻ một nghìn, nhưng em muốn theo giá các bạn vì chất lượng tốt hơn.",
+        "Chị có thể xác nhận đơn giúp em được không?"
+      ],
+      "days_later": 1,
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-SN-RUN2-41-DEN",
+        "price_quoted_vnd": 1521000,
+        "payment": "COD",
+        "delivery_address": "Số 02 đường Hoàng Diệu, phường Hội An, Đà Nẵng",
+        "order_status": "created",
+        "basket_skus": [
+          "SKU-SN-RUN2-41-DEN",
+          "SKU-JK-DWN-L-NAVY"
+        ],
+        "basket_total_vnd": 3011000,
+        "competitor_price_vnd": 1501000
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "competitor_price_vnd",
+        "basket_skus"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN2-41-DEN",
+        "price_vnd": 1521000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0",
+          "RUN-10"
+        ],
+        "expired_promos": [
+          "RUN2-SALE"
+        ],
+        "promo_expiry_dates": {
+          "RUN-10": "2026-10-25",
+          "COD-0": "2026-12-14",
+          "RUN2-SALE": "2026-10-07"
+        },
+        "estimated_delivery": "2026-10-28",
+        "basket_lines": [
+          {
+            "sku": "SKU-SN-RUN2-41-DEN",
+            "qty": 1,
+            "price_vnd": 1521000
+          },
+          {
+            "sku": "SKU-JK-DWN-L-NAVY",
+            "qty": 1,
+            "price_vnd": 1490000
+          }
+        ]
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-SN-RUN2-41-DEN"
+        },
+        "also_ordered": [
+          "SKU-JK-DWN-L-NAVY"
+        ],
+        "total_match_vnd": 3011000
+      }
+    }
+  }
+}

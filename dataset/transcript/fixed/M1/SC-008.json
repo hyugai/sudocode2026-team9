@@ -1,0 +1,106 @@
+{
+  "scenario_id": "SC-008",
+  "level": "M1",
+  "persona": "khach_do_du_hoi_nguoi_nha",
+  "hard_case": null,
+  "customer_phone": "0979511174",
+  "customer_name": "Hiền",
+  "honorific": "chị",
+  "notes": "consider_and_decide",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0979511174",
+      "call_date": "2026-10-22",
+      "customer_turns": [
+        "Chị ơi, em đang xem giày chạy bộ RunLite màu đen size 41, giá là một triệu một trăm sáu mươi mốt nghìn.",
+        "Em có ngân sách ba triệu, hỏi ý kiến chị xem sao.",
+        "Chị cho em hỏi là người nhà có đồng ý không?"
+      ],
+      "customer_goal": "Xem sản phẩm trong ngân sách và hỏi ý kiến người nhà",
+      "facts_established": {
+        "product_advised": "SKU-SN-RUN1-41-DEN",
+        "price_quoted_vnd": 1161000,
+        "budget_vnd": 3000000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN1-41-DEN",
+        "price_vnd": 1161000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0",
+          "RUN-10"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "RUN-10": "2026-10-25",
+          "COD-0": "2026-12-14"
+        }
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": null,
+        "args_match": {},
+        "must_not_call_tools": [
+          "schedule.callback"
+        ]
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0979511174",
+      "call_date": "2026-10-27",
+      "customer_turns": [
+        "Chị ơi, hôm trước chị nói rồi mà, người nhà đã đồng ý mua.",
+        "Giá giờ là một triệu hai trăm chín mươi nghìn, thanh toán khi nhận hàng.",
+        "Giao hàng đến 232 Lý Nhân Tông, phường Kim Trà, Huế.",
+        "Em đồng ý mua rồi."
+      ],
+      "days_later": 5,
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-SN-RUN1-41-DEN",
+        "price_quoted_vnd": 1290000,
+        "payment": "COD",
+        "delivery_address": "232 Lý Nhân Tông, phường Kim Trà, Huế",
+        "order_status": "created",
+        "family_approved_purchase": true
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "budget_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN1-41-DEN",
+        "price_vnd": 1290000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [
+          "RUN-10"
+        ],
+        "promo_expiry_dates": {
+          "RUN-10": "2026-10-25",
+          "COD-0": "2026-12-14"
+        },
+        "estimated_delivery": "2026-10-29"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-SN-RUN1-41-DEN",
+          "price_vnd": 1290000
+        }
+      }
+    }
+  }
+}

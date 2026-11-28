@@ -1,0 +1,104 @@
+{
+  "scenario_id": "SC-272",
+  "level": "M2",
+  "persona": "khach_so_gia",
+  "hard_case": "restock",
+  "customer_phone": "0957990659",
+  "customer_name": "Bảo",
+  "honorific": "anh",
+  "notes": "return_after_price_or_stock_change",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0957990659",
+      "call_date": "2026-10-23",
+      "customer_turns": [
+        "Anh đang so sánh giá với nơi khác rồi mới quyết định mua.",
+        "Giá bên họ là một triệu năm trăm lẻ một ngàn, rẻ hơn 20 ngàn so với anh báo.",
+        "Anh có thể giảm giá cho em không?",
+        "Nếu không giảm, anh có thể nói về ưu đãi gì đi kèm không?"
+      ],
+      "customer_goal": "So báo giá với nơi khác trước khi quyết định",
+      "facts_established": {
+        "product_advised": "SKU-SN-RUN2-41-DEN",
+        "price_quoted_vnd": 1521000,
+        "competitor_price_vnd": 1501000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN2-41-DEN",
+        "price_vnd": 1521000,
+        "in_stock": false,
+        "active_promos": [
+          "COD-0",
+          "RUN-10"
+        ],
+        "expired_promos": [
+          "RUN2-SALE"
+        ],
+        "promo_expiry_dates": {
+          "RUN-10": "2026-10-25",
+          "COD-0": "2026-12-14",
+          "RUN2-SALE": "2026-10-07"
+        },
+        "restock_expected": "2026-10-24"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": null,
+        "args_match": {},
+        "must_not_call_tools": [
+          "schedule.callback"
+        ]
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0957990659",
+      "call_date": "2026-10-24",
+      "customer_turns": [
+        "Anh ơi, sản phẩm RunLite hai Pro size 41 màu đen đã về chưa ạ?",
+        "Em nghe nói là hôm nay sẽ về. Em muốn hỏi lại để chắc chắn.",
+        "Nếu đã về, em xin hẹn lại 10 giờ ngày 27 tháng 10 nhé.",
+        "Em sẽ xem lại giá rồi gọi lại anh."
+      ],
+      "days_later": 1,
+      "customer_goal": "Xác nhận sản phẩm đã về hàng và hẹn quyết định sau khi xem lại giá",
+      "facts_established": {
+        "product_advised": "SKU-SN-RUN2-41-DEN"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "competitor_price_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN2-41-DEN",
+        "price_vnd": 1521000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0",
+          "RUN-10"
+        ],
+        "expired_promos": [
+          "RUN2-SALE"
+        ],
+        "promo_expiry_dates": {
+          "RUN-10": "2026-10-25",
+          "COD-0": "2026-12-14",
+          "RUN2-SALE": "2026-10-07"
+        }
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": null,
+        "args_match": {},
+        "must_not_call_tools": [
+          "schedule.callback"
+        ]
+      }
+    }
+  }
+}

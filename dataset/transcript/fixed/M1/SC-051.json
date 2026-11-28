@@ -1,0 +1,109 @@
+{
+  "scenario_id": "SC-057",
+  "level": "M1",
+  "persona": "khach_da_kenh_fb_hotline",
+  "hard_case": null,
+  "customer_phone": "0928144976",
+  "customer_name": "Trung",
+  "honorific": "anh",
+  "notes": "continue_across_channels",
+  "calls": {
+    "call_1": {
+      "channel": "zalo_oa",
+      "channel_identity": "zalo_trung61",
+      "call_date": "2026-10-29",
+      "customer_turns": [
+        "Ko bt sp nà nè, bn xem giúp mk coi có đc ko? Giày chạy bộ RunLite 2 Pro màu đen size 38 nha.",
+        "Báo giá 1,69 triệu à? Thôi thì ok, mk sẽ xem lại.",
+        "Hẹn 10h ngày 1/11 nha, bên em nhắn zalo lại nhé.",
+        "Ko cần gọi nữa, nếu có gì thì nhắn zalo."
+      ],
+      "customer_goal": "Hỏi về sản phẩm và hẹn xem lại",
+      "facts_established": {
+        "product_advised": "SKU-SN-RUN2-38-DEN",
+        "price_quoted_vnd": 1690000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN2-38-DEN",
+        "price_vnd": 1690000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [
+          "RUN-10",
+          "RUN2-SALE"
+        ],
+        "promo_expiry_dates": {
+          "RUN-10": "2026-10-25",
+          "COD-0": "2026-12-14",
+          "RUN2-SALE": "2026-10-07"
+        }
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": null,
+        "args_match": {},
+        "must_not_call_tools": [
+          "schedule.callback"
+        ]
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0928144976",
+      "call_date": "2026-11-01",
+      "customer_turns": [
+        "À bên em nhắn zalo báo là 1,69 triệu rồi mà.",
+        "Mk muốn đặt, thanh toán khi nhận hàng nhé.",
+        "Giao hàng đến đường Tôn Đức Thắng, phường Ô Môn, Cần Thơ.",
+        "Được rồi, mk cám ơn."
+      ],
+      "days_later": 3,
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-SN-RUN2-38-DEN",
+        "price_quoted_vnd": 1690000,
+        "payment": "COD",
+        "delivery_address": "Đường Tôn Đức Thắng, phường Ô Môn, Cần Thơ",
+        "order_status": "created"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN2-38-DEN",
+        "price_vnd": 1690000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [
+          "RUN-10",
+          "RUN2-SALE"
+        ],
+        "promo_expiry_dates": {
+          "RUN-10": "2026-10-25",
+          "COD-0": "2026-12-14",
+          "RUN2-SALE": "2026-10-07"
+        },
+        "estimated_delivery": "2026-11-03"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-SN-RUN2-38-DEN",
+          "price_vnd": 1690000
+        }
+      }
+    }
+  }
+}
