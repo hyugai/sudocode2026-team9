@@ -1,0 +1,103 @@
+{
+  "scenario_id": "SC-206",
+  "level": "M2",
+  "persona": "khach_so_gia",
+  "hard_case": null,
+  "customer_phone": "0976158464",
+  "customer_name": "Thu",
+  "honorific": "chị",
+  "notes": "consider_and_decide",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0976158464",
+      "call_date": "2026-10-19",
+      "customer_turns": [
+        "Chị ơi, em đang so sánh giá với nơi khác rồi mới quyết định mua.",
+        "Bên họ báo 450 nghìn, bên chị là 690 nghìn, có đúng không ạ?",
+        "Chị có thể giảm được bao nhiêu không? Em muốn mua gấp.",
+        "Nếu không giảm thì em phải xem nơi khác trước.",
+        "Chị ơi, em có thể mua 2 cái, có được giảm không?"
+      ],
+      "customer_goal": "So báo giá với nơi khác trước khi quyết định",
+      "facts_established": {
+        "product_advised": "SKU-AP-FLT-X",
+        "price_quoted_vnd": 690000,
+        "competitor_price_vnd": 450000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-AP-FLT-X",
+        "price_vnd": 690000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        }
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": null,
+        "args_match": {},
+        "must_not_call_tools": [
+          "schedule.callback"
+        ]
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0976158464",
+      "call_date": "2026-10-23",
+      "customer_turns": [
+        "Chị ơi, em đã xem bên khác rồi, giá họ thấp hơn. Nhưng nếu bên chị có bảo hành tốt, em có thể mua.",
+        "Em muốn đặt hàng 2 cái, giá 690 nghìn, thanh toán khi nhận hàng đúng không ạ?",
+        "Địa chỉ giao hàng là số 242A, lý Thánh Tông, em ghi đúng rồi.",
+        "Chị có thể giao trong bao lâu? Em cần gấp.",
+        "Okay, em sẽ đặt hàng rồi. Cảm ơn chị."
+      ],
+      "days_later": 4,
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-AP-FLT-X",
+        "price_quoted_vnd": 690000,
+        "payment": "COD",
+        "delivery_address": "Số 242A, đường Lý Thánh Tông, phường Đồ Sơn, Hải Phòng",
+        "order_status": "created"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "competitor_price_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-AP-FLT-X",
+        "price_vnd": 690000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "estimated_delivery": "2026-10-27"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-AP-FLT-X",
+          "price_vnd": 690000
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,93 @@
+{
+  "scenario_id": "SC-050",
+  "level": "M1",
+  "persona": "khach_hoi_nhieu_khong_mua",
+  "hard_case": null,
+  "customer_phone": "0905218549",
+  "customer_name": "Linh",
+  "honorific": "chị",
+  "notes": "continue_across_channels",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0905218549",
+      "call_date": "2026-10-22",
+      "customer_turns": [
+        "Chị ơi, em đang xem sản phẩm giày chạy bộ RunLite size 38 màu trắng, có thể cho em hỏi thêm về cách vệ sinh và bảo quản không ạ?",
+        "Giá là một triệu một trăm sáu mươi mốt nghìn đúng không chị? Em muốn chắc chắn là không có chi phí phát sinh nào nữa.",
+        "Chị có thể tư vấn thêm về chất liệu đế và độ êm chân không ạ? Em đang phân vân vì muốn chọn loại tốt nhất.",
+        "Em cảm ơn chị, để xem thêm vài thông tin rồi sẽ gọi lại."
+      ],
+      "customer_goal": "Hỏi kỹ cách sử dụng và cân nhắc thêm trước khi mua",
+      "facts_established": {
+        "product_advised": "SKU-SN-RUN1-38-TRANG",
+        "price_quoted_vnd": 1161000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN1-38-TRANG",
+        "price_vnd": 1161000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0",
+          "RUN-10"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "RUN-10": "2026-10-25",
+          "COD-0": "2026-12-14"
+        }
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": null,
+        "args_match": {},
+        "must_not_call_tools": [
+          "schedule.callback"
+        ]
+      }
+    },
+    "call_2": {
+      "channel": "zalo_oa",
+      "channel_identity": "zalo_linh18",
+      "call_date": "2026-10-27",
+      "customer_turns": [
+        "Chị ơi, em xem lại giá của giày chạy bộ RunLite size 38 màu trắng là một triệu một trăm sáu mốt nghìn đúng không ạ?",
+        "Em đang cân nhắc thêm, có lẽ em chưa cần mua ngay. Chờ xem thêm sản phẩm khác nữa.",
+        "Chị ơi, có thể chị báo lại giá em một lần nữa không ạ? Em muốn chắc chắn là đúng như hôm trước.",
+        "Cảm ơn chị, để em về xem lại rồi sẽ quyết định."
+      ],
+      "days_later": 5,
+      "customer_goal": "Xem lại báo giá và hoãn quyết định mua",
+      "facts_established": {
+        "product_advised": "SKU-SN-RUN1-38-TRANG"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN1-38-TRANG",
+        "price_vnd": 1290000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [
+          "RUN-10"
+        ],
+        "promo_expiry_dates": {
+          "RUN-10": "2026-10-25",
+          "COD-0": "2026-12-14"
+        }
+      },
+      "expected_outcome": "tu_choi",
+      "success_if": {
+        "tool_called": null,
+        "args_match": {}
+      }
+    }
+  }
+}

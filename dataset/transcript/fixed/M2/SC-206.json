@@ -1,0 +1,99 @@
+{
+  "scenario_id": "SC-237",
+  "level": "M2",
+  "persona": "khach_da_kenh_mau_thuan",
+  "hard_case": "conflicting_quotes",
+  "customer_phone": "0930048764",
+  "customer_name": "Hà",
+  "honorific": "chị",
+  "notes": "continue_across_channels",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0930048764",
+      "call_date": "2026-10-29",
+      "customer_turns": [
+        "Chị ơi, em đang muốn hỏi về Combo AirPure Y + 2 màng lọc. Giá bao nhiêu vậy?",
+        "Chị báo sáu triệu ba trăm chín mươi nghìn, em ghi rồi. Em hẹn xem lại vào mười giờ ngày ba mươi mốt tháng mười nhé.",
+        "Được rồi, em sẽ gọi lại nếu có gì thắc mắc."
+      ],
+      "customer_goal": "Hỏi về sản phẩm và hẹn xem lại",
+      "facts_established": {
+        "product_advised": "SKU-BDL-AIR",
+        "price_quoted_vnd": 6390000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-BDL-AIR",
+        "price_vnd": 6390000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        }
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": null,
+        "args_match": {},
+        "must_not_call_tools": [
+          "schedule.callback"
+        ]
+      }
+    },
+    "call_2": {
+      "channel": "zalo_oa",
+      "channel_identity": "zalo_hà50",
+      "call_date": "2026-10-31",
+      "customer_turns": [
+        "Chị ơi, em vừa xem lại giá trên Zalo, thấy báo bảy triệu ba trăm chín mươi nghìn. Sao khác với lần trước vậy?",
+        "Chị nói giá trên hotline là sáu triệu ba trăm chín mươi nghìn, nhưng trên Zalo lại là bảy triệu. Chênh nhau một triệu, em không hiểu sao.",
+        "Em muốn chốt đơn rồi, nhưng phải rõ giá thật. Nếu là khuyến mãi thì em hiểu, nhưng phải giải thích rõ.",
+        "Okay, em sẽ chuyển khoản ngay nếu chị báo đúng giá em nhớ."
+      ],
+      "days_later": 2,
+      "customer_goal": "Đối chiếu mức giá đã báo qua hai kênh rồi chốt đơn",
+      "facts_established": {
+        "product_advised": "SKU-BDL-AIR",
+        "price_quoted_vnd": 6390000,
+        "payment": "COD",
+        "delivery_address": "Số 17 và 19 Nguyễn Văn Trỗi, xã An Lão, Hải Phòng",
+        "order_status": "created",
+        "reported_price_vnd": 7390000
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-BDL-AIR",
+        "price_vnd": 6390000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "estimated_delivery": "2026-11-03"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-BDL-AIR",
+          "price_vnd": 6390000
+        }
+      }
+    }
+  }
+}

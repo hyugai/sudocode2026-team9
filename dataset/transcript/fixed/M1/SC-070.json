@@ -1,0 +1,109 @@
+{
+  "scenario_id": "SC-076",
+  "level": "M1",
+  "persona": "khach_do_du_hoi_nguoi_nha",
+  "hard_case": "expired_promo",
+  "customer_phone": "0925822018",
+  "customer_name": "Quỳnh",
+  "honorific": "chị",
+  "notes": "return_after_price_or_stock_change",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0925822018",
+      "call_date": "2026-10-25",
+      "customer_turns": [
+        "Chị ơi, em đang xem giày RunLite trắng size 39, giá một triệu một trăm sáu mươi mốt, có ưu đãi giảm 10%, nhưng ưu đãi hết ngày 25. Em xin hỏi là em có nên mua không?",
+        "Chị ơi, em đang trong ngân sách hai triệu năm trăm ngàn, em muốn hỏi người nhà xem sao.",
+        "Chị có thể nhắn lại cho em vào 10 giờ ngày 27 không? Để em hỏi người nhà xong rồi quyết."
+      ],
+      "customer_goal": "Xem sản phẩm trong ngân sách và hỏi ý kiến người nhà",
+      "facts_established": {
+        "product_advised": "SKU-SN-RUN1-39-TRANG",
+        "price_quoted_vnd": 1161000,
+        "promo_code": "RUN-10",
+        "promo_expiry": "2026-10-25",
+        "budget_vnd": 2500000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN1-39-TRANG",
+        "price_vnd": 1161000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0",
+          "RUN-10"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "RUN-10": "2026-10-25",
+          "COD-0": "2026-12-14"
+        }
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": null,
+        "args_match": {},
+        "must_not_call_tools": [
+          "schedule.callback"
+        ]
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0925822018",
+      "call_date": "2026-10-27",
+      "customer_turns": [
+        "Chị ơi, hôm trước chị nói rồi mà, em đã hỏi người nhà rồi. Người nhà đồng ý mua, giờ em muốn chốt đơn.",
+        "Giá giờ là một triệu hai trăm chín mươi, thanh toán khi nhận hàng, giao đến số 1316 Bùi Hữu Nghĩa, Cần Thơ.",
+        "Chị có thể làm đơn giúp em không? Em đồng ý."
+      ],
+      "days_later": 2,
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-SN-RUN1-39-TRANG",
+        "price_quoted_vnd": 1290000,
+        "payment": "COD",
+        "delivery_address": "Số 1316 đường Bùi Hữu Nghĩa, phường Long Tuyền, Cần Thơ",
+        "order_status": "created",
+        "family_approved_purchase": true
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "promo_code",
+        "promo_expiry",
+        "budget_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN1-39-TRANG",
+        "price_vnd": 1290000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [
+          "RUN-10"
+        ],
+        "promo_expiry_dates": {
+          "RUN-10": "2026-10-25",
+          "COD-0": "2026-12-14"
+        },
+        "estimated_delivery": "2026-10-29"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-SN-RUN1-39-TRANG",
+          "price_vnd": 1290000
+        }
+      }
+    }
+  }
+}

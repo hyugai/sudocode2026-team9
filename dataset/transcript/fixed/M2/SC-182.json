@@ -1,0 +1,89 @@
+{
+  "scenario_id": "SC-210",
+  "level": "M2",
+  "persona": "khach_hoi_nhieu_khong_mua",
+  "hard_case": null,
+  "customer_phone": "0985003703",
+  "customer_name": "Oanh",
+  "honorific": "chị",
+  "notes": "consider_and_decide",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0985003703",
+      "call_date": "2026-10-23",
+      "customer_turns": [
+        "Chị ơi, máy lọc nước RO Karofi 9 lõi có lọc được cả vi khuẩn và virus không ạ?",
+        "Em có nghe nói máy lọc nước RO thường không giữ lại khoáng chất. Vậy máy này thì sao?",
+        "Giá năm triệu chín trăm chín mươi nghìn đồng, có phải là giá khuyến mãi không chị?",
+        "Chị tư vấn thêm về cách thay lõi lọc nhé, bao lâu thì thay một lần?",
+        "Để xem thêm"
+      ],
+      "customer_goal": "Hỏi kỹ cách sử dụng và cân nhắc thêm trước khi mua",
+      "facts_established": {
+        "product_advised": "SKU-WF-RO9",
+        "price_quoted_vnd": 5990000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-WF-RO9",
+        "price_vnd": 5990000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        }
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": null,
+        "args_match": {},
+        "must_not_call_tools": [
+          "schedule.callback"
+        ]
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0985003703",
+      "call_date": "2026-10-27",
+      "customer_turns": [
+        "Chị ơi, giá hôm trước là 5.990.000, giờ có giảm không ạ?",
+        "Máy này có hỗ trợ lọc nước giếng không ạ? Em ở quê nên nước giếng thường có nhiều bùn.",
+        "Chị có thể giải thích lại về công nghệ RO 9 lõi được không ạ?",
+        "Em vẫn đang cân nhắc, để xem thêm"
+      ],
+      "days_later": 4,
+      "customer_goal": "Xem lại báo giá và hoãn quyết định mua",
+      "facts_established": {
+        "product_advised": "SKU-WF-RO9"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-WF-RO9",
+        "price_vnd": 5990000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        }
+      },
+      "expected_outcome": "tu_choi",
+      "success_if": {
+        "tool_called": null,
+        "args_match": {}
+      }
+    }
+  }
+}

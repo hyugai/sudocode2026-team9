@@ -1,0 +1,107 @@
+{
+  "scenario_id": "SC-269",
+  "level": "M2",
+  "persona": "khach_so_gia",
+  "hard_case": "out_of_stock",
+  "customer_phone": "0980737028",
+  "customer_name": "Mai",
+  "honorific": "chị",
+  "notes": "return_after_price_or_stock_change",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0980737028",
+      "call_date": "2026-10-16",
+      "customer_turns": [
+        "Chị ơi, em vừa so giá bên khác rồi, giá họ chỉ một triệu năm trăm lẻ một ngàn thôi.",
+        "Mấy bên kia cũng bán sản phẩm đó, nhưng giá rẻ hơn một chút.",
+        "Chị có thể hỗ trợ giảm giá được không?",
+        "Nếu không giảm thì bên em cũng không mua nữa.",
+        "Chị có thể cho em biết chương trình nào để em cân nhắc không?"
+      ],
+      "customer_goal": "So báo giá với nơi khác trước khi quyết định",
+      "facts_established": {
+        "product_advised": "SKU-SN-RUN2-41-DEN",
+        "price_quoted_vnd": 1521000,
+        "competitor_price_vnd": 1501000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN2-41-DEN",
+        "price_vnd": 1521000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0",
+          "RUN-10"
+        ],
+        "expired_promos": [
+          "RUN2-SALE"
+        ],
+        "promo_expiry_dates": {
+          "RUN-10": "2026-10-25",
+          "COD-0": "2026-12-14",
+          "RUN2-SALE": "2026-10-07"
+        }
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": null,
+        "args_match": {},
+        "must_not_call_tools": [
+          "schedule.callback"
+        ]
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0980737028",
+      "call_date": "2026-10-17",
+      "customer_turns": [
+        "Chị ơi, hôm nay em gọi lại vì sản phẩm hết hàng rồi.",
+        "Chị có thể báo em biết khi nào có hàng lại không?",
+        "Em muốn được báo khi có hàng để em kịp so sánh giá.",
+        "Nếu có quà tặng hay bảo hành tốt hơn, chị có thể nói em nghe không?",
+        "Chị hẹn em 10 giờ ngày 20 tháng 10 nhé."
+      ],
+      "days_later": 1,
+      "customer_goal": "Hẹn trao đổi lại sau khi sản phẩm hết hàng",
+      "facts_established": {
+        "product_advised": "SKU-SN-RUN2-41-DEN"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "competitor_price_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN2-41-DEN",
+        "price_vnd": 1521000,
+        "in_stock": false,
+        "active_promos": [
+          "COD-0",
+          "RUN-10"
+        ],
+        "expired_promos": [
+          "RUN2-SALE"
+        ],
+        "promo_expiry_dates": {
+          "RUN-10": "2026-10-25",
+          "COD-0": "2026-12-14",
+          "RUN2-SALE": "2026-10-07"
+        },
+        "restock_expected": "2026-10-24",
+        "scheduled_callback_at": "2026-10-20T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0980737028",
+          "callback_at": "2026-10-20T10:00"
+        }
+      }
+    }
+  }
+}

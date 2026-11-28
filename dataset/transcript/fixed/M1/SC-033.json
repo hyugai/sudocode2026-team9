@@ -1,0 +1,88 @@
+{
+  "scenario_id": "SC-036",
+  "level": "M1",
+  "persona": "khach_do_du_hoi_nguoi_nha",
+  "hard_case": null,
+  "customer_phone": "0913301756",
+  "customer_name": "Vy",
+  "honorific": "chị",
+  "notes": "continue_across_channels",
+  "calls": {
+    "call_1": {
+      "channel": "zalo_oa",
+      "channel_identity": "zalo_vy79",
+      "call_date": "2026-10-29",
+      "customer_turns": [
+        "Chị ơi, em đang xem giày trekking HikePro màu trắng size bốn mươi ba.",
+        "Giá là hai triệu không trăm bốn mươi ngàn, đúng không ạ?",
+        "Em đang trong ngân sách hai triệu năm trăm ngàn, nên cần hỏi ý kiến người nhà trước."
+      ],
+      "customer_goal": "Xem sản phẩm trong ngân sách và hỏi ý kiến người nhà",
+      "facts_established": {
+        "product_advised": "SKU-SN-TRK-43-TRANG",
+        "price_quoted_vnd": 2040000,
+        "budget_vnd": 2500000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-SN-TRK-43-TRANG",
+        "price_vnd": 2040000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        }
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": null,
+        "args_match": {},
+        "must_not_call_tools": [
+          "schedule.callback"
+        ]
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0913301756",
+      "call_date": "2026-10-30",
+      "customer_turns": [
+        "Hôm trước chị nói rồi mà, em đang xem lại giá hai triệu không trăm bốn mươi ngàn.",
+        "Chị ơi, em chưa quyết được, để hỏi người nhà thêm.",
+        "Mong chị hiểu, em cần thời gian."
+      ],
+      "days_later": 1,
+      "customer_goal": "Xem lại báo giá và hoãn quyết định mua",
+      "facts_established": {
+        "product_advised": "SKU-SN-TRK-43-TRANG"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "budget_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-SN-TRK-43-TRANG",
+        "price_vnd": 2040000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        }
+      },
+      "expected_outcome": "tu_choi",
+      "success_if": {
+        "tool_called": null,
+        "args_match": {}
+      }
+    }
+  }
+}
