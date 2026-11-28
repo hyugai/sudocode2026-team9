@@ -40,6 +40,7 @@ def persist_turn_memory(
         "order_ids_by_sku",
         "order_id",
         "checkout_product_options",
+        "checkout_option_quotes",
         "checkout_variant_sku",
     }
     customer_candidates = {

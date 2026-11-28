@@ -61,7 +61,7 @@ _ROOT = Path(__file__).resolve().parents[1]
     ),
 ])
 def test_real_scenario_first_turn_resolves_only_named_catalog_items(text, expected):
-    catalog_path = _ROOT / "dataset" / "pipeline" / "stage-1" / "input" / "catalog" / "products.json"
+    catalog_path = _ROOT / "dataset" / "transcript" / "src" / "stage-1" / "input" / "catalog" / "products.json"
     catalog = json.loads(catalog_path.read_text(encoding="utf-8"))["products"]
 
     assert is_multi_product_request(text)

@@ -1,0 +1,103 @@
+{
+  "scenario_id": "SC-001",
+  "level": "M1",
+  "persona": "khach_do_du_hoi_nguoi_nha",
+  "hard_case": null,
+  "customer_phone": "0905218549",
+  "customer_name": "Linh",
+  "honorific": "chị",
+  "notes": "consider_and_decide",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0905218549",
+      "call_date": "2026-10-15",
+      "customer_turns": [
+        "Chị ơi, em đang xem áo phao lông vũ Warmly màu xanh navy size L, giá bao nhiêu vậy?",
+        "Cảm ơn chị. Một triệu bốn trăm chín mươi nghìn, đúng không?",
+        "Em chỉ có một triệu năm trăm nghìn thôi, không biết có thể thương lượng không?",
+        "Chị ơi, em cần hỏi người nhà một chút, có thể hẹn lại 10 giờ ngày 16 tháng 10 được không?"
+      ],
+      "customer_goal": "Xem sản phẩm trong ngân sách và hỏi ý kiến người nhà",
+      "facts_established": {
+        "product_advised": "SKU-JK-DWN-L-NAVY",
+        "price_quoted_vnd": 1490000,
+        "budget_vnd": 1500000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-JK-DWN-L-NAVY",
+        "price_vnd": 1490000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "scheduled_callback_at": "2026-10-16T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0905218549",
+          "callback_at": "2026-10-16T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0905218549",
+      "call_date": "2026-10-16",
+      "customer_turns": [
+        "Chị ơi, hôm trước chị nói rồi mà, người nhà đồng ý mua rồi.",
+        "Em muốn đặt hàng, áo phao lông vũ Warmly màu xanh navy size L, giá một triệu bốn trăm chín mươi nghìn.",
+        "Giao hàng đến số 24 đường Hoàng Diệu, Đà Nẵng nhé, thanh toán khi nhận hàng.",
+        "Cảm ơn chị, em đợi giao hàng nha."
+      ],
+      "days_later": 1,
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-JK-DWN-L-NAVY",
+        "price_quoted_vnd": 1490000,
+        "payment": "COD",
+        "delivery_address": "Số 24 đường Hoàng Diệu, khối 3, phường Điện Bàn, Đà Nẵng",
+        "order_status": "created",
+        "family_approved_purchase": true
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "budget_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-JK-DWN-L-NAVY",
+        "price_vnd": 1490000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "estimated_delivery": "2026-10-19"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-JK-DWN-L-NAVY",
+          "price_vnd": 1490000
+        }
+      }
+    }
+  }
+}

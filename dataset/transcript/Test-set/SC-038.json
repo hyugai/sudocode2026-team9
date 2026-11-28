@@ -1,0 +1,104 @@
+{
+  "scenario_id": "SC-044",
+  "level": "M1",
+  "persona": "khach_da_mua_doi_size",
+  "hard_case": null,
+  "customer_phone": "0977879432",
+  "customer_name": "Loan",
+  "honorific": "chị",
+  "notes": "continue_across_channels",
+  "calls": {
+    "call_1": {
+      "channel": "zalo_oa",
+      "channel_identity": "zalo_loan90",
+      "call_date": "2026-10-16",
+      "customer_turns": [
+        "Chị ơi, em đã đặt đơn rồi ạ, giày sneaker Urban Classic màu đen size bốn mươi mốt, giá tám trăm chín mươi nghìn đồng, thanh toán khi nhận hàng.",
+        "Địa chỉ giao hàng là 67A Hoàng Quốc Việt, phường An Cựu, Huế. Mong chị giao hàng đúng hạn nhé.",
+        "Em cũng muốn hỏi là nếu có vấn đề gì về size thì có được đổi không ạ?",
+        "Vâng, em xác nhận chốt đơn này. Chị tạo đơn giúp em theo thông tin em đã cung cấp nhé."
+      ],
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-SN-CAS-41-DEN",
+        "price_quoted_vnd": 890000,
+        "payment": "COD",
+        "delivery_address": "67A Hoàng Quốc Việt, phường An Cựu, Huế",
+        "order_status": "created"
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-SN-CAS-41-DEN",
+        "price_vnd": 890000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "estimated_delivery": "2026-10-19"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-SN-CAS-41-DEN",
+          "price_vnd": 890000
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0977879432",
+      "call_date": "2026-10-19",
+      "customer_turns": [
+        "Chị ơi, em vừa nhận hàng, nhưng size bốn mươi mốt hơi chật. Em muốn đổi sang size bốn mươi ba luôn.",
+        "Giày vẫn nguyên tem, em cần được đổi kích cỡ nhanh nhất có thể.",
+        "Mong chị hỗ trợ em nhé, em đã mua sản phẩm này rồi mà."
+      ],
+      "days_later": 3,
+      "customer_goal": "Đổi sang size khác sau khi nhận hàng",
+      "facts_established": {
+        "new_variant_sku": "SKU-SN-CAS-43-DEN"
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "payment",
+        "delivery_address",
+        "order_status"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-SN-CAS-41-DEN",
+        "price_vnd": 890000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "replacement_in_stock": true,
+        "exchange_fee_vnd": 0,
+        "policy_reference": "DT-03"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.update",
+        "args_match": {
+          "order_id": "OD600001",
+          "action": "exchange_size",
+          "new_variant_sku": "SKU-SN-CAS-43-DEN"
+        }
+      }
+    }
+  }
+}

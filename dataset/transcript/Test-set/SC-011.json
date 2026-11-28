@@ -1,0 +1,113 @@
+{
+  "scenario_id": "SC-012",
+  "level": "M1",
+  "persona": "khach_do_du_hoi_nguoi_nha",
+  "hard_case": null,
+  "customer_phone": "0905154382",
+  "customer_name": "Thắng",
+  "honorific": "anh",
+  "notes": "consider_and_decide",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0905154382",
+      "call_date": "2026-10-26",
+      "customer_turns": [
+        "Chào anh, em đang xem giày chạy bộ RunLite hai Pro màu đen size ba mươi tám.",
+        "Giá là một triệu sáu trăm chín mươi ngàn, em thấy trong ngân sách ba triệu năm trăm ngàn.",
+        "Để hỏi người nhà đã.",
+        "Anh có thể gọi lại cho em lúc mười giờ ngày ba mươi tháng mười không?"
+      ],
+      "customer_goal": "Xem sản phẩm trong ngân sách và hỏi ý kiến người nhà",
+      "facts_established": {
+        "product_advised": "SKU-SN-RUN2-38-DEN",
+        "price_quoted_vnd": 1690000,
+        "budget_vnd": 3500000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN2-38-DEN",
+        "price_vnd": 1690000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [
+          "RUN-10",
+          "RUN2-SALE"
+        ],
+        "promo_expiry_dates": {
+          "RUN-10": "2026-10-25",
+          "COD-0": "2026-12-14",
+          "RUN2-SALE": "2026-10-07"
+        },
+        "scheduled_callback_at": "2026-10-30T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0905154382",
+          "callback_at": "2026-10-30T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "hotline",
+      "channel_identity": "0905154382",
+      "call_date": "2026-10-30",
+      "customer_turns": [
+        "Anh ơi, hôm trước chị nói rồi mà.",
+        "Người nhà đồng ý mua rồi. Chị giao hàng tới Đường Phạm Hùng, phường Cái Răng, Cần Thơ.",
+        "Thanh toán khi nhận hàng là được chứ?",
+        "Giao hàng nhanh nhé anh."
+      ],
+      "days_later": 4,
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-SN-RUN2-38-DEN",
+        "price_quoted_vnd": 1690000,
+        "payment": "COD",
+        "delivery_address": "Đường Phạm Hùng, phường Cái Răng, Cần Thơ",
+        "order_status": "created",
+        "family_approved_purchase": true
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "budget_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-SN-RUN2-38-DEN",
+        "price_vnd": 1690000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [
+          "RUN-10",
+          "RUN2-SALE"
+        ],
+        "promo_expiry_dates": {
+          "RUN-10": "2026-10-25",
+          "COD-0": "2026-12-14",
+          "RUN2-SALE": "2026-10-07"
+        },
+        "estimated_delivery": "2026-11-02"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-SN-RUN2-38-DEN",
+          "price_vnd": 1690000
+        }
+      }
+    }
+  }
+}

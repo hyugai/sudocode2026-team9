@@ -16,7 +16,7 @@ from unittest.mock import AsyncMock, patch, Mock
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
 from eval.benchmark_support import (validate_inputs,trace_health,measured_latency,compare_metrics)
 from eval.team_eval import btc_v2_report, evaluate_team, REFERENCE, REFERENCE_EVAL, rag_recall
-from eval.trace_extractors import extract_claims,extract_facts_used,extract_questions
+from eval.trace_extractors import extract_claims,extract_exchange_facts_used,extract_facts_used,extract_questions
 
 PRICING = {k:None for k in ("input_per_million","output_per_million","tool_call","memory_write","storage_per_mb","fixed_call")}
 
@@ -459,6 +459,98 @@ class MetricTests(unittest.TestCase):
         self.assertEqual(extract_facts_used("Phòng chị rộng 35 m².", [], prior), [])
         changed = SimpleNamespace(remembered_preferences={"facts": {"room_area_m2": 35}})
         self.assertEqual(extract_facts_used("Phòng chị rộng 25 m².", [], prior, current_brief=changed), [])
+
+    def test_price_claims_distinguish_stock_discount_competitor_and_exchange(self):
+        claims = extract_claims([], response_text=(
+            "Còn 5 đôi và có giá là 1.740.000 VNĐ. Mức giảm giá 50%. "
+            "Sản phẩm giá 1 triệu 590 nghìn anh tham khảo có thể khác mẫu. "
+            "Chênh lệch giá là 219.000đ và bên em sẽ hoàn lại khoản này."
+        ))
+        self.assertEqual({c["field"]: c["value"] for c in claims}, {
+            "price_vnd": 1_740_000, "competitor_price_vnd": 1_590_000,
+            "price_diff_vnd": -219_000, "refund_vnd": 219_000,
+        })
+
+    def test_multiple_quotes_keep_each_spoken_price_with_its_product(self):
+        primary, alternate = "SKU-SN-RUN1-38-DEN", "SKU-SN-RUN2-38-DEN"
+        catalog = [{"sku": "SKU-SN-RUN1", "name": "Giày chạy bộ RunLite 1"},
+                   {"sku": "SKU-SN-RUN2", "name": "Giày chạy bộ RunLite 2 Pro"}]
+        tools = [{"name": "pricing.get_quote", "args": {"sku": sku}, "result": {"final_price_vnd": amount}}
+                 for sku, amount in [(primary, 1_161_000), (alternate, 1_521_000)]]
+        values = {(c["field"], c["value"]) for c in extract_claims(
+            tools, response_text="RunLite 1 giá 1.500.000đ. RunLite 2 Pro giá 1.521.000đ.",
+            catalog_items=catalog, price_subject_sku=primary,
+        )}
+        self.assertEqual(values, {
+            ("price_vnd", 1_500_000), (f"price_vnd_{primary}", 1_500_000),
+            (f"price_vnd_{alternate}", 1_521_000),
+        })
+
+    def test_fact_carryover_normalizes_verified_variant_and_excludes_current_echo(self):
+        sku = "SKU-SN-CAS-43-DEN"
+        facts = {"product_advised": "SKU-SN-CAS", "variant_sku": sku, "budget_vnd": 2_000_000}
+        quote = {"name": "pricing.get_quote", "args": {"sku": sku}, "result": {"final_price_vnd": 940_000}}
+        answer = "Mẫu này phù hợp ngân sách 2 triệu của mình."
+        self.assertEqual(set(extract_facts_used(answer, [quote], facts)),
+                         {"variant_sku", "product_advised", "budget_vnd"})
+        failed = {**quote, "result": {"error": "unknown_sku"}}
+        self.assertEqual(extract_facts_used(answer, [failed], facts, stated_this_call={"budget_vnd": 2_000_000}), [])
+
+    def test_size_exchange_tracks_old_order_facts_after_brief_is_refreshed(self):
+        old_sku, new_sku = "SKU-SN-CAS-40-DEN", "SKU-SN-CAS-43-DEN"
+        facts = {"order_id": "ORD-1", "product_advised": "SKU-SN-CAS",
+                 "variant_sku": old_sku, "price_quoted_vnd": 890_000}
+        lookup = {"name": "order.status", "result": {"orders": [
+            {"order_id": "ORD-1", "sku": old_sku, "price_vnd": 890_000},
+        ]}}
+        args = {"order_id": "ORD-1", "action": "exchange_size", "new_variant_sku": new_sku}
+        update = {"name": "order.update", "args": args,
+                  "result": {**args, "status": "pickup_scheduled", "price_diff_vnd": 0}}
+        brief = SimpleNamespace(remembered_preferences={"facts": {**facts, "variant_sku": new_sku}})
+        used = extract_facts_used("Đã hẹn thu hồi.", [lookup, update], facts, current_brief=brief)
+        self.assertTrue({"product_advised", "variant_sku", "price_quoted_vnd"} <= set(used))
+
+        failed = {**update, "result": {**update["result"], "error": "update_failed"}}
+        other_order = {**facts, "order_id": "ORD-9"}
+        for tools, prior in (([lookup], facts), ([update, lookup], facts),
+                             ([lookup, failed], facts), ([lookup, update], other_order)):
+            with self.subTest(tools=tools, prior=prior):
+                self.assertEqual(extract_exchange_facts_used(tools, prior), [])
+        changed_price = {**facts, "price_quoted_vnd": 940_000}
+        self.assertEqual(extract_exchange_facts_used([lookup, update], changed_price),
+                         ["variant_sku", "product_advised"])
+
+    def test_checkout_ccr_requires_selected_option_from_prior_call(self):
+        sku = "SKU-SN-RUN1-38-DEN"
+        option = {"price_vnd": 1_161_000, "quoted_on": "2026-10-22", "promo_codes": ["RUN-10"]}
+        prior = {"checkout_option_quotes": {sku: option}}
+        tool = {
+            "name": "pricing.get_quote",
+            "args": {"sku": sku, "on": "2026-10-27"},
+            "result": {"sku": sku, "final_price_vnd": 1_161_000},
+        }
+        self.assertEqual(extract_facts_used("", [tool], prior), [])
+        selected = {**tool, "prior_checkout_quote": option}
+        self.assertEqual(extract_facts_used("", [selected], prior),
+                         ["product_advised", "variant_sku", "price_quoted_vnd"])
+        expired = {**selected, "result": {"sku": sku, "final_price_vnd": 1_290_000}}
+        self.assertEqual(extract_facts_used("", [expired], prior), ["product_advised", "variant_sku"])
+
+    def test_promotional_price_claims_keep_each_named_variant(self):
+        primary = "SKU-SN-RUN1-40-TRANG"
+        alternative = "SKU-SN-RUN2-40-TRANG"
+        tools = [{"name": "pricing.get_quote", "args": {"sku": sku}, "result": {"sku": sku}}
+                 for sku in (primary, alternative)]
+        items = [{"sku": "SKU-SN-RUN1", "name": "Giày chạy bộ RunLite 1"},
+                 {"sku": "SKU-SN-RUN2", "name": "Giày chạy bộ RunLite 2 Pro"}]
+        claims = extract_claims(
+            tools, catalog_items=items, price_subject_sku=primary,
+            response_text="RunLite 1 có giá ưu đãi là 1.161.000đ. RunLite 2 Pro có giá là 1.521.000đ.",
+        )
+        prices = {(claim["field"], claim["value"]) for claim in claims}
+        self.assertEqual(prices, {("price_vnd", 1_161_000),
+                                  (f"price_vnd_{primary}", 1_161_000),
+                                  (f"price_vnd_{alternative}", 1_521_000)})
 
     def test_asr_turns_default_customer_input_mode_to_asr_transcript(self):
         from eval.generate_traces import run_scenario

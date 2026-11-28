@@ -43,7 +43,7 @@ def _single_variant_sku(result: Any) -> str | None:
         return str(items[0]["sku"])
     return None
 
-def _known_variant_sku(context: TurnContext) -> str | None:
+def _known_variant_sku(context: TurnContext, *, allow_inferred: bool = True) -> str | None:
     """Resolve a previously verified SKU without asking the model to infer it."""
     pending = context.state.working_memory.get("pending_order") or {}
     if pending.get("needs_variant"):
@@ -53,7 +53,10 @@ def _known_variant_sku(context: TurnContext) -> str | None:
     verified = context.state.working_memory.get("verified_checkout_sku")
     if verified:
         return verified
-    if context.perception and isinstance(context.perception.entities, dict):
+    explicit_sku = re.search(r"\bSKU-[A-Z0-9-]+\b", literal_customer_text(context.input), re.I)
+    if explicit_sku:
+        return explicit_sku[0].upper()
+    if allow_inferred and context.perception and isinstance(context.perception.entities, dict):
         for key in ("variant_sku", "sku"):
             value = context.perception.entities.get(key)
             if isinstance(value, str) and value:
@@ -597,6 +600,12 @@ def _catalog_query(context: TurnContext) -> str:
         None,
     )
     text = normalize_spoken_product_size(literal_customer_text(context.input))
+    if product and not mentioned_catalog_items(
+        f"{text} {context.input.text or ''}", [{"sku": "candidate", "name": str(product)}]
+    ):
+        # NLU can suggest search terms, but the customer must name the item.
+        # Keep the literal utterance available for fuzzy catalog matching.
+        product = None
     literal_size = re.search(r"\b(?:size|cỡ)\s+(\d{1,3}|xxs|xs|s|m|l|xl|xxl)\b", text, re.I)
     literal_color = re.search(r"\bmàu\s+(đen|trắng|xám|(?:xanh\s+)?navy|be)\b", text, re.I)
     if not product and literal_size and literal_color:

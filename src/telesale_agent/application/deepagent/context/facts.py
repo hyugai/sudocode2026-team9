@@ -4,7 +4,31 @@ from __future__ import annotations
 
 from typing import Any
 
+from telesale_agent.application.price_language import stated_price_context
 from telesale_agent.core.models import TurnContext
+
+
+def load_previous_price_context(context: TurnContext) -> None:
+    """Keep only earlier-call price references the current customer has not replaced."""
+    working = context.state.working_memory
+    customer_id = context.identity.customer_id if context.identity else None
+    if not customer_id:
+        working.pop("previous_price_context", None)
+        return
+
+    previous = working.get("previous_price_context")
+    if not isinstance(previous, dict) or previous.get("customer_id") != customer_id:
+        facts = (context.state.customer_memory or {}).get("facts") or {}
+        previous = {"customer_id": customer_id,
+                    "variant_sku": facts.get("variant_sku") or facts.get("product_advised")}
+        for key in ("budget_vnd", "competitor_price_vnd"):
+            value = facts.get(key)
+            if type(value) in (int, float) and value > 0 and value % 1 == 0:
+                previous[key] = int(value)
+        working["previous_price_context"] = previous
+
+    for field in stated_price_context(context.input.text or ""):
+        previous.pop(field, None)
 
 
 def _known_fact(context: TurnContext, key: str) -> Any:
@@ -88,6 +112,8 @@ def _select_brief_facts(
                 "previous_promo_code",
                 "price_quoted_vnd",
                 "promo_code",
+                "budget_vnd",
+                "competitor_price_vnd",
                 "variant_sku",
                 "product_advised",
             ]

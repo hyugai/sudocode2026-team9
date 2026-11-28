@@ -24,6 +24,13 @@ _SELF_CALLBACK = re.compile(
     r"|\b(?:anh|chị|cô|chú)\s+ơi[, ]+em\s+(?:gọi|liên hệ) lại\b"
     rf"|\b(?:nếu có gì|để)\s+{_SPEAKER}\s+(?:gọi|liên hệ) lại\b"
 )
+_CALLBACK_PARTICIPANTS = re.compile(
+    rf"\b(?P<caller>{_SPEAKER})\s+(?:gọi|liên hệ) lại\s+cho\s+(?P<recipient>{_SPEAKER})\b"
+)
+_CUSTOMER_ADDRESS = re.compile(
+    rf"\b(?P<agent>{_SPEAKER})\s+(?:ơi\s*,?|(?:có thể\s+)?(?:cho|giúp|hỗ trợ))"
+    rf"\s+(?P<customer>{_SPEAKER})\b"
+)
 _DECLINES_CALLBACK = re.compile(
     rf"\b(?:không cần|đừng|khỏi|thôi không|hủy)\s+(?:lịch\s+)?{_CALLBACK}\b"
 )
@@ -58,6 +65,7 @@ _WAITING_FOR_CONTACT = re.compile(
 )
 _AMBIGUOUS_WAITING = re.compile(rf"^\s*(?:chờ|đợi)\s+{_SPEAKER}\b")
 _MESSAGE_REQUEST = re.compile(r"\b(?:nhắn(?:\s+tin)?|gửi\s+tin\s+nhắn)\s+lại\b")
+_PHONE_CALL = re.compile(r"\bgọi\s+(?:lại|điện(?:\s+thoại)?)\b")
 _CALLBACK_CHANNEL_CONSENT = re.compile(
     rf"\s*(?:dạ(?:\s+được)?|vâng|ừ|được|đồng ý)"
     rf"(?:[, ]+(?:{_SPEAKER}\s+)?(?:sẽ\s+)?đợi\s+{_SPEAKER})?"
@@ -67,28 +75,49 @@ _CALLBACK_PROMISE = re.compile(
     rf"\b(?:đã|sẽ|xin phép)\s+[^.!?\n]{{0,50}}(?:{_CALLBACK}|lịch hẹn)\b"
     r"|\bhẹn (?:gặp|liên hệ) lại\b|\b(?:bên em|em)\s+hẹn gọi lại\b"
 )
-_MESSAGE_PROMISE = re.compile(r"\b(?:đã|sẽ)\s+[^.!?\n]{0,50}(?:nhắn|gửi tin nhắn)\s+lại\b")
+_MESSAGE_PROMISE = re.compile(
+    r"\b(?:đã|sẽ)\s+[^.!?\n]{0,50}(?:nhắn(?:\s+tin)?\s+lại|gửi\b[^.!?\n]{0,60}\btin nhắn)\b"
+)
 
 
-def declines_callback(transcript: str | None) -> bool:
+def _customer_will_call(text: str, context: TurnContext | None) -> bool:
+    if _SELF_CALLBACK.search(text):
+        return True
+    match = _CALLBACK_PARTICIPANTS.search(text)
+    if context is None or not match:
+        return False
+    # In Vietnamese, the same pronouns can name either participant. Use how
+    # the customer addressed the agent earlier in this call to resolve them.
+    caller, recipient = match.group("caller", "recipient")
+    for message in reversed(context.state.messages[-12:]):
+        if message.role != "customer":
+            continue
+        for address in _CUSTOMER_ADDRESS.finditer(message.content.casefold()):
+            customer, agent = address.group("customer", "agent")
+            if {customer, agent} == {caller, recipient}:
+                return caller == customer
+    return False
+
+
+def declines_callback(transcript: str | None, *, context: TurnContext | None = None) -> bool:
     text = (transcript or "").casefold()
     if _DECLINES_CALLBACK.search(text):
         return True
     # Leave the earlier appointment request available when the speaker later
     # clarifies that the agent should call them.
-    return bool(_SELF_CALLBACK.search(text) and not re.search(
+    return bool(_customer_will_call(text, context) and not re.search(
         rf"\b(?:đợi|chờ)\s+{_SPEAKER}\s+(?:gọi|liên hệ) lại\b"
         rf"|\b{_SPEAKER}\s+(?:có thể|hãy|vui lòng)\s+(?:gọi|liên hệ) lại\b", text
     ))
 
 
-def is_explicit_callback_request(transcript: str | None) -> bool:
+def is_explicit_callback_request(transcript: str | None, *, context: TurnContext | None = None) -> bool:
     """Recognize requests directed to the agent and ignore call history."""
     text = (transcript or "").casefold()
-    if declines_callback(text):
+    if declines_callback(text, context=context):
         return False
     for clause in re.split(r"[.!?;\n]+", text):
-        if _SELF_CALLBACK.search(clause):
+        if _customer_will_call(clause, context):
             continue
         match = re.search(rf"\b{_CALLBACK}\b", clause)
         if _CALLBACK_HISTORY.search(clause):
@@ -191,14 +220,26 @@ def _callback_slots(context: TurnContext) -> tuple[dict[str, str | None], bool]:
 def pending_callback_slots(context: TurnContext) -> dict[str, str | None] | None:
     """Collect explicit slots, or merge a short reply to a pending callback."""
     text = (context.input.text or "").casefold()
-    proposed = context.state.working_memory.pop("callback_channel_proposal", None)
-    if declines_callback(text):
+    memory = context.state.working_memory
+    proposed = memory.pop("callback_channel_proposal", None)
+    if declines_callback(text, context=context):
         return None
-    pending = context.state.working_memory.get("pending_callback")
-    explicit = is_explicit_callback_request(text)
-    if proposed and (explicit or _CALLBACK_CHANNEL_CONSENT.fullmatch(text)):
+    pending = memory.get("pending_callback")
+    explicit = is_explicit_callback_request(text, context=context)
+    asks_for_phone = explicit and _PHONE_CALL.search(text)
+    if proposed and (asks_for_phone or _CALLBACK_CHANNEL_CONSENT.fullmatch(text)):
         slots, _ = _callback_slots(context)
+        memory.pop("pending_message_followup", None)
         return {**proposed, **slots}
+    if _MESSAGE_REQUEST.search(text) and not asks_for_phone:
+        return None
+    pending_message = memory.get("pending_message_followup")
+    if pending_message is not None:
+        if not asks_for_phone:
+            return None
+        slots, _ = _callback_slots(context)
+        memory.pop("pending_message_followup", None)
+        return {**pending_message, **slots}
     waiting = _WAITING_FOR_CONTACT.match(text) and not _MESSAGE_REQUEST.search(text)
     if not explicit and not pending and not waiting:
         return None
@@ -212,18 +253,32 @@ def pending_callback_slots(context: TurnContext) -> dict[str, str | None] | None
     return {**(pending or {}), **slots}
 
 
-def propose_callback_for_message_request(context: TurnContext) -> str | None:
-    """Offer a phone call at the requested time and wait for channel consent."""
-    if not _MESSAGE_REQUEST.search((context.input.text or "").casefold()):
+def handle_message_followup(context: TurnContext) -> str | None:
+    """Keep a message preference while collecting the requested date and time."""
+    text = (context.input.text or "").casefold()
+    memory = context.state.working_memory
+    pending = memory.get("pending_message_followup")
+    requested = _MESSAGE_REQUEST.search(text)
+    if not requested and pending is None:
         return None
-    slots, _ = _callback_slots(context)
+    slots, bare_reply = _callback_slots(context)
+    if not requested and not (slots and (bare_reply or is_explicit_callback_request(text, context=context))):
+        memory.pop("pending_message_followup", None)
+        return None
+    slots = {**(pending or {}), **slots}
+    if slots.get("date") and slots["date"] < business_date(context.input.metadata.get("call_date")).isoformat():
+        slots["date"] = None
+    memory.pop("pending_callback", None)
+    memory["pending_message_followup"] = slots
     at = requested_callback_at(slots)
-    if not at or datetime.fromisoformat(at).date() < business_date(context.input.metadata.get("call_date")):
-        return None
-    context.state.working_memory.pop("pending_callback", None)
-    context.state.working_memory["callback_channel_proposal"] = slots
+    if not at:
+        missing = " và ".join(label for key, label in (("date", "ngày"), ("time", "giờ")) if not slots.get(key))
+        return f"Dạ, em ghi nhận anh/chị muốn được nhắn lại. Mình cho em xin {missing} mong muốn ạ?"
     when = datetime.fromisoformat(at).strftime("%H:%M ngày %d/%m/%Y")
-    return f"Dạ, bên em có thể hẹn gọi lại vào {when}. Anh/chị đồng ý để bên em gọi vào giờ đó không ạ?"
+    if requested and pending is None:
+        memory["callback_channel_proposal"] = slots
+        return f"Dạ, bên em có thể hẹn gọi lại vào {when}. Anh/chị đồng ý để bên em gọi vào giờ đó không ạ?"
+    return f"Dạ, em ghi nhận anh/chị muốn được nhắn lại vào {when} ạ."
 
 
 def _normalize_callback_at(value: Any) -> str | None:
@@ -302,7 +357,7 @@ def ground_callback_response(context: TurnContext, response: str) -> str:
     """Use the verified tool result or slot question in callback responses."""
     reply = context.state.working_memory.get("callback_reply")
     text = (context.input.text or "").casefold()
-    message_requested = _MESSAGE_REQUEST.search(text)
+    message_requested = _MESSAGE_REQUEST.search(text) or "pending_message_followup" in context.state.working_memory
     ambiguous = _AMBIGUOUS_WAITING.match(text) and requested_callback_at(_callback_slots(context)[0])
     if not reply and not message_requested and not ambiguous and not _CALLBACK_PROMISE.search(response.casefold()):
         return response
@@ -327,7 +382,7 @@ def ground_callback_response(context: TurnContext, response: str) -> str:
         filtered.append("Dạ, bên em có thể hẹn gọi lại. Nếu muốn đặt lịch gọi, mình cho em xin ngày và giờ gọi lại ạ.")
     elif ambiguous:
         filtered.append("Dạ, anh/chị muốn bên em gọi lại hay mình sẽ chủ động liên hệ vào giờ đó ạ?")
-    elif len(filtered) < sum(bool(s.strip()) for s in sentences) and not declines_callback(context.input.text):
+    elif len(filtered) < sum(bool(s.strip()) for s in sentences) and not declines_callback(context.input.text, context=context):
         filtered.append("Dạ, bên em chưa đặt lịch gọi lại ạ.")
     if not filtered:
         return "Dạ, khi nào cần hỗ trợ thêm, anh/chị cứ liên hệ bên em ạ."

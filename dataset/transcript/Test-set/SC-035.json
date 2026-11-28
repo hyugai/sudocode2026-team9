@@ -1,0 +1,104 @@
+{
+  "scenario_id": "SC-040",
+  "level": "M1",
+  "persona": "khach_so_gia",
+  "hard_case": null,
+  "customer_phone": "0957990659",
+  "customer_name": "Bảo",
+  "honorific": "anh",
+  "notes": "continue_across_channels",
+  "calls": {
+    "call_1": {
+      "channel": "hotline",
+      "channel_identity": "0957990659",
+      "call_date": "2026-11-02",
+      "customer_turns": [
+        "Anh ơi, em vừa so sánh giá bên khác được 860 nghìn rồi, giá anh đang báo 940 nghìn có hơi cao không ạ?",
+        "Em muốn mua giày sneaker Urban Classic màu xám size 43, nhưng giá bên anh cao hơn 80 nghìn so với nơi khác.",
+        "Có chương trình giảm giá gì không anh? Em đang cân nhắc mua nếu có thể được giá tốt hơn.",
+        "Nếu không được giảm, em sẽ thử tìm nơi khác. Nhưng nếu anh có quà tặng kèm hoặc bảo hành tốt, em có thể cân nhắc.",
+        "Anh ơi, em muốn hẹn lại vào 10 giờ ngày 6 tháng 11 nhé, nếu có thể được giá tốt hơn."
+      ],
+      "customer_goal": "So báo giá với nơi khác trước khi quyết định",
+      "facts_established": {
+        "product_advised": "SKU-SN-CAS-43-XAM",
+        "price_quoted_vnd": 940000,
+        "competitor_price_vnd": 860000
+      },
+      "ground_truth_facts": {
+        "sku": "SKU-SN-CAS-43-XAM",
+        "price_vnd": 940000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "scheduled_callback_at": "2026-11-06T10:00"
+      },
+      "expected_outcome": "hen_goi_lai",
+      "success_if": {
+        "tool_called": "schedule.callback",
+        "args_match": {
+          "customer_phone": "0957990659",
+          "callback_at": "2026-11-06T10:00"
+        }
+      }
+    },
+    "call_2": {
+      "channel": "chat_fanpage",
+      "channel_identity": "fb.bảo.320",
+      "call_date": "2026-11-06",
+      "customer_turns": [
+        "Anh ơi, em đã xem lại giá và thấy bên anh vẫn 940 nghìn, còn bên khác 860 nghìn. Em muốn mua theo giá anh hiện tại.",
+        "Em đã đặt hàng rồi, giao đến A8 Châu Thới, phường Hòa Hưng, TP.HCM. Thanh toán khi nhận hàng nhé.",
+        "Giá 940 nghìn là ổn, em thấy sản phẩm cũng tốt. Em muốn chốt đơn luôn.",
+        "Cảm ơn anh, em sẽ đợi giao hàng. Nếu có gì bất tiện, em sẽ phản hồi lại."
+      ],
+      "days_later": 4,
+      "customer_goal": "Chốt đơn theo báo giá và điều kiện hiện hành",
+      "facts_established": {
+        "product_advised": "SKU-SN-CAS-43-XAM",
+        "price_quoted_vnd": 940000,
+        "payment": "COD",
+        "delivery_address": "A8 Châu Thới, phường Hòa Hưng, TP. Hồ Chí Minh",
+        "order_status": "created",
+        "competitor_price_vnd": 860000
+      },
+      "must_carry_over": [
+        "product_advised",
+        "price_quoted_vnd",
+        "competitor_price_vnd"
+      ],
+      "must_not_ask": [
+        "product_advised"
+      ],
+      "ground_truth_facts": {
+        "sku": "SKU-SN-CAS-43-XAM",
+        "price_vnd": 940000,
+        "in_stock": true,
+        "active_promos": [
+          "COD-0"
+        ],
+        "expired_promos": [],
+        "promo_expiry_dates": {
+          "COD-0": "2026-12-14"
+        },
+        "estimated_delivery": "2026-11-09"
+      },
+      "memory_expectation": {
+        "order_status": "created"
+      },
+      "expected_outcome": "chot_don",
+      "success_if": {
+        "tool_called": "order.create",
+        "args_match": {
+          "sku": "SKU-SN-CAS-43-XAM",
+          "price_vnd": 940000
+        }
+      }
+    }
+  }
+}

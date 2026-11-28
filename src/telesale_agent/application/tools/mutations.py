@@ -40,7 +40,7 @@ from telesale_agent.application.deepagent.context.callback import (
     callback_confirmation,
     declines_callback,
     pending_callback_slots,
-    propose_callback_for_message_request,
+    handle_message_followup,
     requested_callback_at,
     verified_callback_at,
 )
@@ -108,8 +108,9 @@ class MutationToolExecutor:
         memory = context.state.working_memory
         memory.pop("callback_reply", None)
         slots = pending_callback_slots(context)
-        if declines_callback(context.input.text):
+        if declines_callback(context.input.text, context=context):
             memory.pop("pending_callback", None)
+            memory.pop("pending_message_followup", None)
         elif slots is not None:
             if slots.get("date") and slots["date"] < business_date(call_date).isoformat():
                 slots["date"] = None
@@ -154,8 +155,8 @@ class MutationToolExecutor:
                     memory["callback_reply"] = (
                         "Dạ, bên em chưa xác nhận được lịch gọi lại. Anh/chị có thể yêu cầu đặt lại lịch ạ."
                     )
-        elif proposal := propose_callback_for_message_request(context):
-            memory["callback_reply"] = proposal
+        elif followup := handle_message_followup(context):
+            memory["callback_reply"] = followup
         # Scheduling is identity/time bound and must never fall back to model-
         # invented arguments or retry after a deterministic attempt.
         remaining.discard("mcp_schedule_callback")

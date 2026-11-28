@@ -134,7 +134,7 @@ def _basket_memory_candidates(
 
 def _should_adopt_product(context: TurnContext, sku: Any) -> bool:
     """Prevent an agent-recommended alternative from becoming customer memory."""
-    if not isinstance(sku, str) or not sku:
+    if not isinstance(sku, str) or not sku or context.input.metadata.get("quote_subject_unresolved"):
         return False
     memory = context.state.customer_memory or {}
     facts = memory.get("facts", {}) if isinstance(memory, dict) else {}
@@ -367,4 +367,12 @@ def _tool_memory_candidates(context: TurnContext) -> dict[str, Any]:
                 candidates["callback_at"] = output["callback_at"]
             if output.get("moved_from"):
                 candidates["callback_requested_at"] = output["moved_from"]
+    options = candidates.get("checkout_product_options", facts.get("checkout_product_options"))
+    if "checkout_product_options" in candidates or context.checkout_option_quotes is not None:
+        previous = facts.get("checkout_option_quotes")
+        previous = previous if isinstance(previous, dict) else {}
+        quotes = {**previous, **(context.checkout_option_quotes or {})}
+        candidates["checkout_option_quotes"] = {
+            sku: quotes[sku] for sku in (options or {}) if sku in quotes
+        }
     return candidates
