@@ -8,6 +8,8 @@ Agent sử dụng dữ liệu sản phẩm, CRM, tồn kho và chính sách từ
 
 Tài liệu mô tả kiến trúc hệ thống và kết quả đánh giá hiệu năng (benchmark) được tổng hợp tại: [Link](https://drive.google.com/drive/folders/1XrpHdxwW4ANGoQY0pMw_DpifY_E0WPoH?usp=drive_link)
 
+- [Tệp âm thanh trên Google Drive](https://drive.google.com/drive/folders/1_k-TuLra1Lca7YTOzMqlH-xNT54Ftrlk?usp=sharing)
+
 ## Mục lục
 
 - [1. Tính năng chính](#1-tính-năng-chính)
