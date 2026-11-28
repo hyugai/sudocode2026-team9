@@ -4,6 +4,8 @@
 
 Agent sử dụng dữ liệu sản phẩm, CRM, tồn kho và chính sách từ PostgreSQL & Vector Store để tư vấn khách hàng, thực hiện nghiệp vụ qua MCP và lưu trữ ngữ cảnh cho các lần chăm sóc tiếp theo.
 
+[**Mở ứng dụng web Synee AI**](https://agentweb-alpha.vercel.app/)
+
 ## Tài liệu 
 
 Tài liệu mô tả kiến trúc hệ thống và kết quả đánh giá hiệu năng (benchmark) được tổng hợp tại: [Link](https://drive.google.com/drive/folders/1XrpHdxwW4ANGoQY0pMw_DpifY_E0WPoH?usp=drive_link)
